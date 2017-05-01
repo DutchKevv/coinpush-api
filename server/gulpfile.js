@@ -95,28 +95,27 @@ gulp.task('shared:copy-assets', () => {
  * CUSTOM CUSTOM CUSTOM CUSTOM CUSTOM
  *
  **************************************************************/
-gulp.task('custom:build', ['custom:copy-assets'], callback => {
-    buildCustom(null, callback);
+gulp.task('custom:build' /*, ['custom:copy-assets']*/, callback => {
+    console.log('GULP GULP', 'build');
+
+	callback();
+   //  buildCustom(null, callback);
 });
 
-gulp.task('custom:watch', (callback) => {
-    gulp.watch('../custom/**/*.*', event => buildCustom(event.path));
-
-   // watcher.on('change', event => buildCustom(event.path));
-
-    callback();
+gulp.task('custom:watch', () => {
+   // gulp.watch('./../custom/**/*.ts', event => buildCustom(event.path));
 });
 
 gulp.task('custom:copy-assets', (callback) => {
-    let inputPath = argv['input-path'] ? _getInputAbsoluteRootFolder(argv['input-path']) : path.join(__dirname, 'custom'),
+   /* let inputPath = argv['input-path'] ? _getInputAbsoluteRootFolder(argv['input-path']) : path.join(__dirname, 'custom'),
         outputPath = argv['output-path'] ? _getOutputAbsoluteRootFolder(argv['output-path']) : path.join(__dirname, '_builds');
 
-    gulp.src([inputPath + '/**/*.json'])
+    gulp.src([inputPath + '/!**!/!*.json'])
         .pipe(gulp.dest(outputPath))
         .on('error', (error) => {
             console.log(error);
         })
-        .on('end', callback);
+        .on('end', callback);*/
 });
 
 function startChildProcess(callback) {
@@ -150,13 +149,13 @@ function buildCustom(rootPath, callback = () => {
     let inputPath = rootPath ? _getInputAbsoluteRootFolder(rootPath) : path.resolve('..', 'custom'),
         outputPath = rootPath ? _getOutputAbsoluteRootFolder(rootPath) : path.resolve('..', '_builds');
 
-    let tsProject = ts.createProject(path.resolve('../custom/tsconfig.json')),
+    let tsProject = ts.createProject(path.resolve(__dirname, '../custom/tsconfig.json')),
         tsResult = gulp.src(`${inputPath}/**/*.ts`)
             .pipe(sourcemaps.init()) // This means sourcemaps will be generated
             .pipe(tsProject());
 
     return tsResult.js
-        .pipe(sourcemaps.write()) // Now the sourcemaps are added to the .js file
+        .pipe(sourcemaps.write()) // Now the sourcemaps are added
         .pipe(gulp.dest(outputPath))
         .on('end', callback);
 }

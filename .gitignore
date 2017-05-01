@@ -5,6 +5,7 @@
 npm-debug.*
 node_modules
 testem.log
+/dist
 
 #System Files
 .DS_Store
@@ -31,4 +32,5 @@ Thumbs.db
 # Electron
 /electron/builds
 /electron/tmp
+/electron/dist
 

@@ -5,7 +5,6 @@ const Highcharts = require('highcharts');
 
 // Themes
 import {HighchartsDefaultTheme} from './themes/theme.default';
-import './themes/theme.dark';
 
 @Directive({
 	selector: '[chart-report]',

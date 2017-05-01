@@ -1,29 +1,38 @@
 {
   "name": "tradejs-desktop",
   "description": "TradeJS desktop wrapper",
-  "main": "main",
+  "version": "0.0.1",
+  "main": "main.js",
   "scripts": {
     "postinstall": "electron-rebuild",
     "start": "electron ../",
     "build": "node packager",
-    "build:windows": "node packager --platform=win32",
+    "build:windows": "./node_modules/.bin/build --win --projectDir=../",
+    "build:windows2": "node packager --platform=win32",
     "build:mac": "node packager --platform=darwin",
     "build:linux": "node packager --platform=linux"
   },
-  "dependencies": {
-    "electron": "1.6.2",
-    "electron-prebuilt-compile": "^1.6.2",
-    "minimist": "^1.2.0"
-  },
   "devDependencies": {
-    "cross-env": "^4.0.0",
-    "debug": "^2.6.1",
-    "electron": "1.6.2",
-    "electron-builder": "16.6.1",
-    "electron-packager": "8.6.0",
+    "cross-env": "4.0.0",
+    "debug": "2.6.6",
+    "electron": "1.6.6",
+    "electron-builder": "17.1.1",
     "electron-prebuilt": "1.4.13",
-    "electron-rebuild": "^1.5.7"
+    "electron-prebuilt-compile": "1.6.6",
+    "electron-rebuild": "1.5.7",
+    "minimist": "1.2.0",
+    "mkdirp": "^0.5.1"
   },
   "author": "Kewin Brandsma",
-  "private": false
+  "private": false,
+  "build": {
+    "asar": false,
+    "appId": "your.id",
+    "mac": {
+      "category": "your.app.category.type"
+    }
+  },
+  "dependencies": {
+    "node-gyp": "^3.6.0"
+  }
 }

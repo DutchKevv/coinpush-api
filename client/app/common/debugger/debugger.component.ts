@@ -3,13 +3,14 @@ declare var $: any;
 
 import * as _ from 'lodash';
 import {SocketService} from '../../services/socket.service';
-import {Component, ElementRef, OnInit, OnDestroy} from '@angular/core';
+import {Component, ElementRef, OnInit, OnDestroy, ChangeDetectionStrategy} from '@angular/core';
 import 'jquery-resizable-dom';
 
 @Component({
 	selector: 'debugger',
 	templateUrl: './debugger.component.html',
-	styleUrls: ['./debugger.component.scss']
+	styleUrls: ['./debugger.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class DebuggerComponent implements OnInit, OnDestroy {

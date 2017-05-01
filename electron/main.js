@@ -4,7 +4,6 @@ if (process.argv[0].indexOf('.exe') > -1) {
 	process.env.NODE_ENV = 'production';
 }
 
-
 const url = require('url');
 const path = require('path');
 
@@ -18,8 +17,14 @@ function createWindow() {
     // Create the browser window.
     win = new BrowserWindow({
         backgroundColor: '#2d2d2d',
-        show: true
-    });
+        show: true,
+		webPreferences: {
+            // webSecurity: false
+        },
+		width: 1200,
+        height: 900,
+        fullScreen: true
+	});
 
     // win.setFullScreen(true);
 
@@ -28,11 +33,10 @@ function createWindow() {
     if (process.env.NODE_ENV === 'production') {
         win.loadURL(`file://${path.join(__dirname, '..', 'client', 'dist').replace(/\\/g,"/")}/index.html`);
 		win.webContents.openDevTools();
-
 		server = require('../server/app').default;
     } else {
         win.loadURL('http://localhost:4200');
-        // win.webContents.openDevTools();
+        win.webContents.openDevTools();
     }
 
     // Emitted when the window is closed.

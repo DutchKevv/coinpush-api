@@ -1,10 +1,5 @@
 import Indicator from '../Indicator';
 
-export interface IInputs {
-	period: number;
-	shift?: number;
-}
-
 export default class MA extends Indicator {
 
 	public get value() {

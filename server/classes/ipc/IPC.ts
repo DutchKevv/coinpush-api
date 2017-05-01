@@ -116,7 +116,8 @@ export default class IPC extends Base {
 		this._ipc = require('node-ipc');
 
 		this._ipc.config.id = this.id;
-		this._ipc.config.retry = 5;
+		this._ipc.config.retry = 200;
+		this._ipc.config.maxRetries = 10;
 		this._ipc.config.silent = true;
 		this._ipc.config.logInColor = true;
 		this._ipc.config.requiresHandshake = true;
@@ -141,6 +142,10 @@ export default class IPC extends Base {
 
 				this._ipc.server.on('socket.disconnected', (socket, destroyedSocketID) => {
 					this._ipc.log('client ' + destroyedSocketID + ' has disconnected!');
+				});
+
+				this._ipc.server.on('disconnected', (socket, destroyedSocketID) => {
+					this._ipc.log(`${this._ipc.config.id} disconnected`);
 				});
 			});
 

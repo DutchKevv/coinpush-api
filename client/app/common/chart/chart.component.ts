@@ -3,6 +3,7 @@ import {ElementRef, OnInit, Input, Component, ChangeDetectionStrategy, OnDestroy
 import {InstrumentModel} from '../../models/instrument.model';
 
 import {HighchartsDefaultTheme} from './themes/theme.default';
+import './themes/theme.dark';
 import {InstrumentsService} from '../../services/instruments.service';
 import {IndicatorModel} from '../../models/indicator';
 import {SocketService} from '../../services/socket.service';
@@ -247,6 +248,7 @@ export class ChartComponent implements OnInit, OnDestroy {
 								data: drawBuffer.data,
 								color: drawBuffer.style.color,
 								yAxis: 0,
+								ordinal: true,
 								dataGrouping: {
 									enabled: false
 								}

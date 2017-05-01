@@ -35,6 +35,8 @@ const
  */
 export default class App extends Base {
 
+	public isWin = /^win/.test(process.platform);
+
 	public controllers: {
 		config?: ConfigController,
 		account?: AccountController,
@@ -52,6 +54,10 @@ export default class App extends Base {
 
 	public get ipc() {
 		return this._ipc;
+	}
+
+	public get io() {
+		return this._io;
 	}
 
 	public async init(): Promise<any> {

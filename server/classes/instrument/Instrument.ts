@@ -12,6 +12,8 @@ export default class Instrument extends InstrumentCache {
 	async init() {
 		await super.init();
 		await this._setIPCEvents();
+
+		await this.loadTemplate('default');
 	}
 
 	async tick(timestamp, bid, ask): Promise<void> {
@@ -21,10 +23,14 @@ export default class Instrument extends InstrumentCache {
 		}
 	}
 
-	toggleTimeFrame(timeFrame) {
+	toggleTimeFrame(timeFrame: string) {
 		this.timeFrame = timeFrame;
 
 		return this.reset();
+	}
+
+	async loadTemplate(template: string) {
+
 	}
 
 	addIndicator(name, options): any {
@@ -47,6 +53,12 @@ export default class Instrument extends InstrumentCache {
 
 	removeIndicator(id) {
 		delete this.indicators[id];
+	}
+
+	removeAllIndicators() {
+		for (let id in this.indicators) {
+			this.removeIndicator(id);
+		}
 	}
 
 	getIndicatorData(id: string, count?: number, shift?: number) {
@@ -116,8 +128,9 @@ export default class Instrument extends InstrumentCache {
 
 		for (let id in this.indicators) {
 			indicators.push(this.indicators[id].options);
-			this.removeIndicator(id);
 		}
+
+		this.removeAllIndicators();
 
 		await super.reset();
 

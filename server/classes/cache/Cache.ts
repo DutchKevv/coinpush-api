@@ -50,7 +50,6 @@ export default class Cache extends WorkerChild {
 		await this._ipc.startServer();
 	}
 
-
 	public async read(instrument: string, timeFrame: string, from?: number, until?: number, count?: number,
 						bufferOnly = true): Promise<any> {
 

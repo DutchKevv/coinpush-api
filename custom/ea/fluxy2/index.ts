@@ -9,6 +9,7 @@ export default class MyEA extends EA implements IEA {
 	MA3: any;
 	MA4: any;
 
+
 	public async onInit(): Promise<any> {
 
 		this.MA1 = this.addIndicator('MA', {
@@ -32,6 +33,7 @@ export default class MyEA extends EA implements IEA {
 		});
 	}
 
+
 	public async onTick(timestamp, bid, ask): Promise<void> {
 		if (this.MA1.value > bid * 1.002) {
 			if (!this.orderManager.orders.length) {
@@ -44,9 +46,11 @@ export default class MyEA extends EA implements IEA {
 				});
 			}
 		} else {
-			if (this.MA1.value < bid && this.orderManager.orders.length)
+			if (this.MA1.value < bid && this.orderManager.orders.length) {
+
+			}
 				await this.orderManager.close(this.orderManager.orders[0].id, bid, ask);
 		}
 	}
-
 }
+

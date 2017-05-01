@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
+import {Component, OnInit, OnDestroy, ChangeDetectionStrategy, Input} from '@angular/core';
 import {SocketService} from '../../services/socket.service';
 import {InstrumentsService} from '../../services/instruments.service';
 
@@ -10,7 +10,7 @@ import {InstrumentsService} from '../../services/instruments.service';
 
 export class InstrumentListComponent implements OnInit, OnDestroy {
 
-	public instruments: Array<string>;
+	@Input() instruments: Array<string> = [];
 
 	private data: any = {};
 
@@ -27,6 +27,7 @@ export class InstrumentListComponent implements OnInit, OnDestroy {
 			if (instrumentList)
 				this.instruments = instrumentList.map(instrument => instrument.instrument);
 		});
+
 		this.onTick = this.onTick.bind(this);
 	}
 
@@ -34,6 +35,12 @@ export class InstrumentListComponent implements OnInit, OnDestroy {
 		tick.direction = this.data[tick.instrument] && this.data[tick.instrument].bid > tick.bid ? 'down' : 'up';
 
 		this.data[tick.instrument] = tick;
+	}
+
+
+
+	updatePrice() {
+
 	}
 
 	ngOnDestroy() {

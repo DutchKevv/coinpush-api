@@ -6,7 +6,10 @@ const
 	argv = require('minimist')(process.argv.slice(2)),
 	packager = require('electron-packager'),
 	rebuild = require('electron-rebuild').default,
-	rootSrc = path.join(__dirname, '..');
+	rootSrc = path.join(__dirname, '..'),
+	electronInstaller = require('electron-winstaller'),
+
+	OUT_PATH = './builds';
 
 const options = {
 	dir: rootSrc,
@@ -14,9 +17,11 @@ const options = {
 	electronVersion: '1.6.2',
 	name: 'TradeJS',
 	appId: 'tradejs',
-	out: './builds',
+	out: OUT_PATH,
 	overwrite: true,
 	platform: argv.platform || os.platform(),
+	icon: './assets/icon.icns',
+	asar: true,
 	afterCopy: [(buildPath, electronVersion, platform, arch, callback) => {
 		// console.log('buidl apfadsfadsfsd', buildPath);
 		let rebuildPath = path.join(__dirname, 'builds', `TradeJS-${platform}-${arch}`, 'resource', 'app', 'server');
@@ -51,4 +56,14 @@ const options = {
 
 packager(options, (err, appPaths) => {
 	console.log(err, appPaths);
+
+	var resultPromise = electronInstaller.createWindowsInstaller({
+		appDirectory: './builds/TradeJS-win32-x64',
+		outputDirectory: 'out',
+		authors: 'My App Inc.',
+		exe: 'TradeJS.exe'
+	});
+
+	resultPromise.then(() => console.log("It worked!"), console.error);
 });
+
