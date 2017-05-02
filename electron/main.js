@@ -32,6 +32,7 @@ function createWindow() {
 
     if (process.env.NODE_ENV === 'production') {
         win.loadURL(`file://${path.join(__dirname, '..', 'client', 'dist').replace(/\\/g,"/")}/index.html`);
+
 		win.webContents.openDevTools();
 		server = require('../server/app').default;
     } else {

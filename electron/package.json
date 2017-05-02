@@ -6,7 +6,7 @@
   "scripts": {
     "postinstall": "electron-rebuild",
     "start": "electron ../",
-    "build": "node packager",
+    "build": "node builder",
     "build:windows": "./node_modules/.bin/build --win --projectDir=../",
     "build:windows2": "node packager --platform=win32",
     "build:mac": "node packager --platform=darwin",

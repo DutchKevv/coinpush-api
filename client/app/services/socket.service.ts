@@ -10,6 +10,17 @@ export class SocketService {
 	}
 
 	init() {
-		this.socket = io('http://localhost:3000');
+		this.socket = io(this._getUrl());
+	}
+
+	private _getUrl(): string {
+		// Electron
+		if (window.location.protocol === 'file:') {
+			return 'http://localhost:3000';
+
+		// Browser | external
+		} else {
+			return window.location.hostname + ':3000';
+		}
 	}
 }

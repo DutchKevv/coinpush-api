@@ -91,7 +91,9 @@
 <script>if (window.module) module = window.module;</script>
 
 <script>
-    if (window && window.process && window.process.type) {
+	window.isElectron = (window && window.process && window.process.type);
+
+    if (window.isElectron) {
     	console.log('load electron..');
 //        var el = document.createElement('script');
 //        el.setAttribute('src','electron.js');

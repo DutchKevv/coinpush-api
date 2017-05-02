@@ -47,9 +47,8 @@ export default class MyEA extends EA implements IEA {
 			}
 		} else {
 			if (this.MA1.value < bid && this.orderManager.orders.length) {
-
-			}
 				await this.orderManager.close(this.orderManager.orders[0].id, bid, ask);
+			}
 		}
 	}
 }
