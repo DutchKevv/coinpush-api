@@ -1,4 +1,4 @@
 node_modules
-electron/builds
-cache
+/dist
+_cache
 .idea

@@ -27,7 +27,7 @@ export class HeaderComponent {
 
 		// Electron
 		if (window.electron) {
-			win = window.electron.openWindow(url);
+			win = window.electron.openWindow(url, {parent: Window});
 		}
 		else {
 			win = window.open(url, 'editor');

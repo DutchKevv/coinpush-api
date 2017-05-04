@@ -1,13 +1,19 @@
 'use strict';
 
-if (process.argv[0].indexOf('.exe') > -1) {
+if (process.env.NODE_ENV !== 'development') {
 	process.env.NODE_ENV = 'production';
 }
 
-const url = require('url');
-const path = require('path');
+const
+    path = require('path'),
+	{app, BrowserWindow, Menu} = require('electron');
 
-const {app, BrowserWindow, Menu} = require('electron');
+	// // Avoid minimist to not have to include node_modules into electron package
+	// argv = (() => {
+	// 	let argv = {};
+	// 	process.argv.slice(2).forEach(arg => argv[arg.split('=')[0].split('-').slice(-1)[0]] = arg.split('=')[1]);
+	// 	return argv;
+	// })();
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -19,25 +25,25 @@ function createWindow() {
         backgroundColor: '#2d2d2d',
         show: true,
 		webPreferences: {
-            // webSecurity: false
+            webSecurity: false
         },
 		width: 1200,
-        height: 900,
-        fullScreen: true
+        height: 900
 	});
 
     // win.setFullScreen(true);
 
     console.log('__dirname', path.join(__dirname, '..', 'client', 'dist').replace(/\\/g,"/") + '/index.html');
 
-    if (process.env.NODE_ENV === 'production') {
-        win.loadURL(`file://${path.join(__dirname, '..', 'client', 'dist').replace(/\\/g,"/")}/index.html`);
-
+    if (process.env.NODE_ENV === 'development') {
+		win.loadURL('http://localhost:4200');
 		win.webContents.openDevTools();
+
 		server = require('../server/app').default;
+
     } else {
-        win.loadURL('http://localhost:4200');
-        win.webContents.openDevTools();
+		win.loadURL(`file://${path.join(__dirname, '..', 'client', 'dist').replace(/\\/g,"/")}/index.html`);
+		server = require('../server/app').default;
     }
 
     // Emitted when the window is closed.

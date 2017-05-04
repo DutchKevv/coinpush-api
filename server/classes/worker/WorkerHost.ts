@@ -1,6 +1,6 @@
 declare var clearInterval: any;
 
-import {fork, spawn}           from 'child_process';
+import {fork}    from 'child_process';
 import * as _debug      from 'debug';
 import Base             from '../Base';
 
@@ -45,14 +45,11 @@ export default class WorkerHost extends Base {
 			}),
 
 			childOpt = {
-				stdio: ['pipe', process.stdout, process.stderr, 'ipc'],
-				cwd: __dirname,
-				env: process.env,
+				stdio: ['pipe', process.stdout, process.stderr, 'ipc']
 			};
 
 		// TODO - FUCKING ELECTRON!
-		this._child = fork(this.opt.path, [...process.execArgv, `--settings=${childArgv}`], childOpt);
-		// this._child = spawn('node', [this.opt.path, ...process.execArgv, `--settings=${childArgv}`], childOpt);
+		this._child = fork(this.opt.path, [`--settings=${childArgv}`], childOpt);
 
 		this._child.on('close', code => {
 			debug(`${this.id} exited with code ${code}`);

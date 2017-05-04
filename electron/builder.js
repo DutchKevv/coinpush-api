@@ -32,7 +32,10 @@ builder.build({
 				perMachine: false,
 				allowToChangeInstallationDirectory: true,
 				license: path.join(__dirname, '..', 'license.txt'),
-				// requestExecutionLevel: 'admin'
+				allowElevation: true
+			},
+			portable: {
+				requestExecutionLevel: 'admin'
 			},
 			afterPack: function (options) {
 				// console.log('OPTIONS', options);

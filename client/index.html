@@ -69,6 +69,7 @@
 
     <script>
        window.tradeJsStartTime = Date.now();
+	   window.isElectron = (window.process && window.process.type);
     </script>
 </head>
 <body>
@@ -89,16 +90,5 @@
 <script src="assets/js/jquery/jquery.min.js"></script>
 <!-- Insert this line after script imports -->
 <script>if (window.module) module = window.module;</script>
-
-<script>
-	window.isElectron = (window && window.process && window.process.type);
-
-    if (window.isElectron) {
-    	console.log('load electron..');
-//        var el = document.createElement('script');
-//        el.setAttribute('src','electron.js');
-//        document.head.appendChild(el);
-    }
-</script>
 </body>
 </html>
