@@ -20,7 +20,6 @@
     "electron-prebuilt": "1.4.13",
     "electron-prebuilt-compile": "1.6.6",
     "electron-rebuild": "1.5.7",
-    "minimist": "1.2.0",
     "mkdirp": "0.5.1"
   },
   "author": "Kewin Brandsma",

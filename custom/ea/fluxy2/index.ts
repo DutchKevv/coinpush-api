@@ -57,7 +57,7 @@ export default class MyEA extends EA implements IEA {
 				// Close order
 				await this.orderManager.close(this.orderManager.orders[0].id, bid, ask);
 
-				console.log('test22');
+				console.log('test22222');
 			}
 		}
 	}
