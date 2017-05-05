@@ -1,3 +1,4 @@
+import {SocketService} from '../../services/socket.service';
 declare let $: any;
 
 import {Component, ViewChild, AfterViewInit} from '@angular/core';
@@ -19,10 +20,16 @@ export class EditorComponent implements AfterViewInit {
 	@ViewChild(FileTreeComponent) fileTree: FileTreeComponent;
 	@ViewChild(JSEditorComponent) jsEditor: JSEditorComponent;
 
-	constructor(private _router: Router) {
+	constructor(private _router: Router,
+				private _socketService: SocketService) {
 	}
 
 	ngAfterViewInit(): void {
+
+
+		this._socketService.socket.on('editor:changed', () => {
+			this.jsEditor.reloadCurrentFile();
+		});
 
 		this.fileTree.$el.off('select_node.jstree').on('select_node.jstree', (e: any, data: any) => {
 			if (data.node && data.node.data && data.node.data.isFile) {

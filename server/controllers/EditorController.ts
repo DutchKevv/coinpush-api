@@ -3,7 +3,7 @@ import * as path    from 'path';
 import * as _debug  from 'debug';
 // import * as watch 	from 'node-watch';
 import * as watch 	from 'watch';
-import {spawn}      from 'child_process';
+import {fork, spawn}      from 'child_process';
 
 const dirTree = require('directory-tree');
 const debug = _debug('TradeJS:EditorController');
@@ -34,13 +34,9 @@ export default class EditorController {
 	}
 
 	public async save(filePath, content) {
-		console.log('dfasdfsfasfasfs', filePath);
 		await this._writeToFile(filePath, content);
 
-		let inputPath = this._getCustomAbsoluteRootFolder(filePath),
-			outputPath = this._getBuildAbsoluteRootFolder(filePath);
-
-		return this._compile(inputPath, outputPath);
+		// return this._compile(inputPath, outputPath);
 	}
 
 	public getDirectoryTree() {
@@ -91,21 +87,8 @@ export default class EditorController {
 		});
 	}
 
-	// TODO: Bit of a hacky way to get root folder
-	private _getFileRelativeRootFolder(filePath: string): string {
-		return filePath.split('/').splice(1, 2).join('/');
-	}
-
-	private _getCustomAbsoluteRootFolder(filePath: string): string {
-		return path.join(this.app.controllers.config.get().path.custom, this._getFileRelativeRootFolder(filePath));
-	}
-
-	private _getBuildAbsoluteRootFolder(filePath: string): string {
-		return path.join(this.app.controllers.config.get().path.custom, '..', '_builds', this._getFileRelativeRootFolder(filePath));
-	}
-
 	private _startWatcher() {
-		watch.watchTree(this.pathCustom, function (fileNames, curr, prev) {
+		watch.watchTree(this.pathCustom, async (fileNames, curr, prev) => {
 			if (typeof fileNames === 'object' && prev === null && curr === null) {
 				let paths = Object.keys(fileNames);
 
@@ -115,11 +98,19 @@ export default class EditorController {
 				// Finished walking the tre
 				// console.log('asdasdasd', fileNames);
 			} else if (prev === null) {
+				debug('file:new', fileNames);
+				this.app._io.sockets.emit('editor:changed', {});
+				await this._compile(this._getCustomAbsoluteRootFolder(fileNames), this._getBuildAbsoluteRootFolder(fileNames));
 				// f is a new file
 			} else if (curr.nlink === 0) {
+				debug('file:removed', fileNames);
+				this.app._io.sockets.emit('editor:changed', {});
+				await this._compile(this._getCustomAbsoluteRootFolder(fileNames), this._getBuildAbsoluteRootFolder(fileNames));
 				// f was removed
 			} else {
-				console.log('asfasdfsfsdf', fileNames);
+				debug('file:changed', fileNames);
+				this.app._io.sockets.emit('editor:changed', {});
+				await this._compile(this._getCustomAbsoluteRootFolder(fileNames), this._getBuildAbsoluteRootFolder(fileNames));
 				// f was changed
 			}
 		})
@@ -133,6 +124,19 @@ export default class EditorController {
 		//
 		// 	console.log(filePath, ' changed.', result);
 		// });
+	}
+
+	// TODO: Bit of a hacky way to get root folder
+	private _getFileRelativeRootFolder(filePath: string): string {
+		return filePath.split('/').splice(1, 2).join('/');
+	}
+
+	private _getCustomAbsoluteRootFolder(filePath: string): string {
+		return path.join(this.app.controllers.config.get().path.custom, this._getFileRelativeRootFolder(filePath));
+	}
+
+	private _getBuildAbsoluteRootFolder(filePath: string): string {
+		return path.join(this.app.controllers.config.get().path.custom, '..', '_builds', this._getFileRelativeRootFolder(filePath));
 	}
 
 	/**

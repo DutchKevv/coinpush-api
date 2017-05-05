@@ -40,14 +40,13 @@ gulp.task('server:dev', callback => runSequence(
 	'server:watch',
 	'custom:build',
 	'server:run',
-	'custom:watch',
     callback
 ))
 ;
 gulp.task('server:run', startChildProcess);
 gulp.task('server:kill', killChildProcess);
 gulp.task('server:watch', () => {
-    gulp.watch(['./**/*.ts', '!./node_modules/',  '!node_modules/**/*.*'], () => runSequence('server:kill', 'server:build', 'custom:build', 'server:run'));
+    gulp.watch(['./**/*.ts', '!node_modules'], () => runSequence('server:kill', 'server:build', 'custom:build', 'server:run'));
 });
 
 gulp.task('server:build', ['shared:copy-assets'], () => {
@@ -96,14 +95,7 @@ gulp.task('shared:copy-assets', () => {
  *
  **************************************************************/
 gulp.task('custom:build' /*, ['custom:copy-assets']*/, callback => {
-    console.log('GULP GULP', 'build');
-
-	callback();
-   //  buildCustom(null, callback);
-});
-
-gulp.task('custom:watch', () => {
-   // gulp.watch('./../custom/**/*.ts', event => buildCustom(event.path));
+    buildCustom(null, callback);
 });
 
 gulp.task('custom:copy-assets', (callback) => {
