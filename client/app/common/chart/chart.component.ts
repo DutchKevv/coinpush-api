@@ -33,7 +33,7 @@ export class ChartComponent implements OnInit, OnDestroy {
 	private _zoomMin = 1;
 
 	private _scrollOffset = -1;
-	private _scrollSpeedStep = 8;
+	private _scrollSpeedStep = 14;
 	private _scrollSpeedMin = 1;
 	private _scrollSpeedMax = 20;
 
@@ -309,7 +309,7 @@ export class ChartComponent implements OnInit, OnDestroy {
 		else if (shift > this._scrollSpeedMax)
 			shift = this._scrollSpeedMax;
 
-		requestAnimationFrame(() => this._updateViewPort(true, event.wheelDelta > 0 ? -shift : shift));
+		this._updateViewPort(true, event.wheelDelta > 0 ? -shift : shift);
 
 		return false;
 	}

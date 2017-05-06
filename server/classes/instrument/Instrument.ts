@@ -1,7 +1,11 @@
 import * as path        from 'path';
 import InstrumentCache  from './InstrumentCache';
 
-const PATH_INDICATORS = path.join(__dirname, '../../../shared/indicators');
+
+const
+	debug = require('debug')('TradeJS:Instrument'),
+
+	PATH_INDICATORS = path.join(__dirname, '../../../shared/indicators');
 
 export default class Instrument extends InstrumentCache {
 
@@ -34,6 +38,8 @@ export default class Instrument extends InstrumentCache {
 	}
 
 	addIndicator(name, options): any {
+		debug('add indicator: ' + name);
+
 		let indicator = null;
 		options.name = name;
 
@@ -52,6 +58,7 @@ export default class Instrument extends InstrumentCache {
 	}
 
 	removeIndicator(id) {
+		debug('remove indicator: ' + id);
 		delete this.indicators[id];
 	}
 

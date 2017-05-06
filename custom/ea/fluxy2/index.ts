@@ -33,7 +33,6 @@ export default class MyEA extends EA implements IEA {
 		});
 	}
 
-
 	public async onTick(timestamp, bid, ask): Promise<void> {
 		
 		if (this.MA1.value > bid * 1.001) {
@@ -57,7 +56,7 @@ export default class MyEA extends EA implements IEA {
 				// Close order
 				await this.orderManager.close(this.orderManager.orders[0].id, bid, ask);
 
-				console.log('test22222');
+				console.log('test11788bier');
 			}
 		}
 	}

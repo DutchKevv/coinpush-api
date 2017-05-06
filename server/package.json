@@ -18,6 +18,7 @@
     "NodeJS"
   ],
   "scripts": {
+    "postinstall": "electron-rebuild -w sqlite3 -v 1.6.6 && node copy-sql3-binary --version=53",
     "start": "cross-env DEBUG=TradeJS:* gulp server:dev --web",
     "lint": "gulp tslint",
     "dist": "build",
@@ -53,7 +54,7 @@
     "mkdirp": "0.5.1",
     "moment": "*",
     "node-ipc": "git://github.com/RIAEvangelist/node-ipc.git#v9.x",
-    "node-watch": "^0.5.2",
+    "node-watch": "0.5.2",
     "nodemon": "1.11.0",
     "readable-timespan": "1.2.0",
     "request": "2.81.0",
@@ -66,8 +67,8 @@
     "sqlite3-transactions": "0.0.5",
     "tree-kill": "1.1.0",
     "tslint": "5.1.0",
-    "typescript": "^2.3.2",
-    "watch": "^1.0.2"
+    "typescript": "2.3.2",
+    "watch": "1.0.2"
   },
   "devDependencies": {
     "@types/body-parser": "1.16.3",
@@ -83,6 +84,7 @@
     "@types/node": "7.0.12",
     "@types/socket.io": "1.4.29",
     "@types/socket.io-client": "1.4.29",
-    "@types/sqlite3": "2.2.33"
+    "@types/sqlite3": "2.2.33",
+    "electron-rebuild": "1.5.7"
   }
 }

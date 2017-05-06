@@ -33,7 +33,7 @@ export default class WorkerHost extends Base {
 
 	async _fork() {
 
-		debug(`Creating | path=${this.opt.path}] | id=${this.id}`);
+		debug(`Creating | id=${this.id}`);
 
 		// Merge given options
 		let childArgv = JSON.stringify({
@@ -60,7 +60,7 @@ export default class WorkerHost extends Base {
 
 			this._child.once('message', message => {
 				if (message === '__ready') {
-					debug(`Created | path=${this.opt.path} | id=${this.id} | pid=${this._child.pid}`);
+					debug(`Created | id=${this.id} | pid=${this._child.pid}`);
 					resolve();
 				} else {
 					reject(message);

@@ -4,13 +4,12 @@
   "version": "0.0.1",
   "main": "main.js",
   "scripts": {
-    "postinstall": "electron-rebuild",
     "start": "cross-env NODE_ENV=development electron ../",
     "build": "node builder",
-    "build:windows": "./node_modules/.bin/build --win --projectDir=../",
-    "build:windows2": "node packager --platform=win32",
-    "build:mac": "node packager --platform=darwin",
-    "build:linux": "node packager --platform=linux"
+    "build:windows": "node builder --platform=windows",
+    "build:mac": "node builder --platform=mac",
+    "build:linux": "node builder --platform=linux",
+    "rebuild-sqlite3:mac": "cd node_modules/sqlite3 && npm run prepublish && node-gyp configure --module_name=node_sqlite3 --module_path=../lib/binding/node-v47-darwin-x64 && node-gyp rebuild --target=0.36.4 --arch=x64 --target_platform=darwin --dist-url=https://atom.io/download/atom-shell --module_name=node_sqlite3 --module_path=../lib/binding/node-v53-darwin-x64"
   },
   "devDependencies": {
     "cross-env": "4.0.0",
