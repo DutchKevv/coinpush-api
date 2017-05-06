@@ -1,4 +1,4 @@
-@import '../../../style/variables/_variables.scss';
+@import '../../style/variables/variables';
 
 :host {
 
@@ -6,22 +6,18 @@
         padding: 0 15px;
         border-right: 1px solid $border-color-grey;
         float: right;
-        line-height: 12px;
+        line-height: 20px;
         color: $font-color-light;
-        font-size: $font-size-xs;
+        font-size: $font-size-s;
 
         &:first-child {
             padding-right: 0;
             border-right: 0;
 
             span, a {
-                margin-right: 5px;
+                margin-right: 10px;
             }
         }
-
-        //&:first-child {
-        //    padding-right: 0;
-        //}
     }
 
     a {
@@ -32,13 +28,12 @@
 
 .circle {
     border-radius: 50%;
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
     box-shadow: 0 0 1px 1px rgba(100, 100, 100, 0.2);
-    margin-top: 2px;
+    margin-top: 6px;
     margin-right: 10px;
     float: right;
-    /* width and height can be anything, as long as they're equal */
 }
 
 /* Create the animation blocks */
@@ -49,27 +44,24 @@
 
 /* Spinning, gradient circle; CSS only! */
 .circle.ok {
+    background: green;
     background-image: -moz-radial-gradient(45px 45px 45deg, circle cover, lightgreen 0%, green 100%, darkgreen 95%);
     background-image: -webkit-radial-gradient(45px 45px, circle cover, lightgreen, green);
     background-image: radial-gradient(45px 45px 45deg, circle cover, lightgreen 0%, green 100%, darkgreen 95%);
 }
 
 .circle.warning {
+    background: orange;
     background-image: -moz-radial-gradient(45px 45px 45deg, circle cover, yellow 0%, orange 100%, red 95%);
     background-image: -webkit-radial-gradient(45px 45px, circle cover, yellow, orange);
     background-image: radial-gradient(45px 45px 45deg, circle cover, yellow 0%, orange 100%, red 95%);
 }
 
 .circle.error {
+    background: red;
     background-image: -moz-radial-gradient(45px 45px 45deg, circle cover, orange 0%, red 100%, darkred 95%);
     background-image: -webkit-radial-gradient(45px 45px, circle cover, red, darkred);
     background-image: radial-gradient(45px 45px 45deg, circle cover, orange 0%, red 100%, darkred 95%);
-}
-
-.circle.booting {
-    background-image: -moz-radial-gradient(45px 45px 45deg, circle cover, purple 0%, purple 100%, purple 95%);
-    background-image: -webkit-radial-gradient(45px 45px, circle cover, purple, purple);
-    background-image: radial-gradient(45px 45px 45deg, circle cover, purple 0%, purple 100%, purple 95%);
 }
 
 .circle.animate {

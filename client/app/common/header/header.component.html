@@ -33,9 +33,9 @@
                     <li><a>Preferences</a></li>
                     <li role="separator" class="divider"></li>
                     <li class="dropdown-header">User</li>
-                    <li *ngIf="systemService.systemState.loggedIn === true"><a (click)="userService.logout()">Logout
+                    <li *ngIf="systemService.systemState.connected === true"><a (click)="userService.logout()">Logout
                         broker</a></li>
-                    <li *ngIf="systemService.systemState.loggedIn === false"><a (click)="userService.login()">Login
+                    <li *ngIf="systemService.systemState.connected === false"><a (click)="userService.login()">Login
                         broker</a></li>
                     <li role="separator" class="divider"></li>
                     <li class="dropdown-header">System</li>

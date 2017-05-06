@@ -27,14 +27,9 @@ export class SystemService {
 			this._systemState = new SystemState(systemState);
 
 			if (!this._initialLoginShown) {
-				if (!this._systemState.booting && this._systemState.loggedIn === false) {
+				if (!this._systemState.booting && this._systemState.connected === false) {
 					this._initialLoginShown = true;
-
-					// Dirty trick to let app load on the first time
-					// TODO: Should have never been here.....
-					setTimeout(() => {
-						this._userService.login();
-					}, 3000);
+					this._userService.login();
 				}
 			}
 			console.log('system state update', systemState);

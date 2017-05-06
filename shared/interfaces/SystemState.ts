@@ -1,6 +1,6 @@
 export interface ISystemState {
 	booting: boolean;
-	loggedIn: boolean;
+	connected: boolean;
 	state: number;
 	code: number;
 	message?: string;

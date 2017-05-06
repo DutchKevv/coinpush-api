@@ -1,4 +1,4 @@
-import Base from "../../Base";
+import Base from '../../Base';
 import * as constants from '../../../../shared/constants/broker';
 
 const OANDAAdapter = require('./oanda-adapter/index');

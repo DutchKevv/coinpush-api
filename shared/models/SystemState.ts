@@ -3,7 +3,7 @@ import {ISystemState} from '../interfaces/SystemState';
 export class SystemState implements ISystemState {
 
 	public booting = false;
-	public loggedIn = false;
+	public connected = false;
 	public state = null;
 	public code = null;
 	public message = '';

@@ -39,7 +39,7 @@ export class AppComponent implements AfterViewInit {
 
 			window.setTimeout(() => {
 				document.body.removeChild(elLoadScreen);
-			}, 400);
+			}, 0);
 		}, minDiff);
 	}
 }

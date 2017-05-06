@@ -17,25 +17,16 @@ export class UserService {
 				private _cookieService: CookieService,
 				private _modalService: ModalService,
 				private _socketService: SocketService) {
-
-		// TODO - HACK Make sure socket is initialized
-		setTimeout(() => {
-			this.init();
-		}, 0);
 	}
 
-	get loggedIn() {
-		return this.model.loggedIn;
+	get connected() {
+		return this.model.connected;
 	}
 
 	init() {
 		this._socketService.socket.on('user-details', () => {
 
 		});
-
-		setInterval(() => {
-			// console.log(this.model.loggedIn);
-		}, 1500);
 	}
 
 	login() {
@@ -46,7 +37,7 @@ export class UserService {
 			model: this.model,
 			buttons: [
 				{value: 'login', text: 'Login', type: 'primary'},
-				{text: 'Stay offline', type: 'default'}
+				{text: 'Offline', type: 'default'}
 			],
 			onClickButton(value) {
 				if (value === 'login') {
@@ -54,7 +45,7 @@ export class UserService {
 					$.post('http://localhost:3000/login', this.model, (response, status) => {
 
 						if (status === 'success') {
-							this.model.loggedIn = true;
+							this.model.connected = true;
 
 							self._modalService.destroy(loginComponentRef);
 
@@ -74,7 +65,7 @@ export class UserService {
 			$.get('http://localhost:3000/logout', (response, status) => {
 				if (status === 'success') {
 
-					this.model.loggedIn = false;
+					this.model.connected = false;
 
 					resolve({
 						status: 'success'

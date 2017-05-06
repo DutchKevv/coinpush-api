@@ -1,8 +1,8 @@
-import Base from "../../classes/Base";
+import Base from '../../classes/Base';
 
 export default class AccountManager extends Base {
 
-	private _equality: number = 10000;
+	private _equality = 10000;
 
 	public get equality() {
 		return this._equality;

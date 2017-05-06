@@ -38,14 +38,14 @@ export default class App extends Base {
 	public isWin = /^win/.test(process.platform);
 
 	public controllers: {
-		config?: ConfigController,
-		account?: AccountController,
-		system?: SystemController,
-		broker?: BrokerController,
-		cache?: CacheController,
-		editor?: EditorController,
-		instrument?: InstrumentController
-	} = {};
+		config: ConfigController,
+		account: AccountController,
+		system: SystemController,
+		broker: BrokerController,
+		cache: CacheController,
+		editor: EditorController,
+		instrument: InstrumentController
+	} = <any>{};
 
 	private _ipc: IPC = new IPC({id: 'main'});
 	private _http: any = null;
@@ -65,7 +65,7 @@ export default class App extends Base {
 		// Make sure the app can be cleaned up on termination
 		this._setProcessListeners();
 
-		// Initialize ConfigController to build config object used throughout app
+		// Initialize ConfigController first so other controllers can use config
 		this.controllers.config = new ConfigController(this.opt, this);
 		let config = await this.controllers.config.init();
 
@@ -83,6 +83,9 @@ export default class App extends Base {
 		this.controllers.editor = new EditorController({path: config.path.custom}, this);
 		this.controllers.instrument = new InstrumentController({}, this);
 
+		// Start public API so client can follow booting process
+		await this._initAPI();
+
 		// Initialize controllers
 		await this.controllers.system.init();
 		await this.controllers.broker.init();
@@ -90,8 +93,7 @@ export default class App extends Base {
 		await this.controllers.instrument.init();
 		await this.controllers.editor.init();
 
-		// Start public API so client can follow booting process
-		await this._initAPI();
+		await this.controllers.broker.loadBrokerApi('oanda');
 
 		this.controllers.system.update({booting: false});
 
@@ -190,6 +192,10 @@ export default class App extends Base {
 			this.controllers.system.on('change', state => {
 				this._io.sockets.emit('system:state', state);
 			});
+
+			// this.controllers.broker.on('connected', (state: boolean) => {
+			// 	this._io.sockets.emit('system:state', state);
+			// });
 
 			this.controllers.instrument.on('created', instrument => {
 				this._io.sockets.emit('instrument:created', {

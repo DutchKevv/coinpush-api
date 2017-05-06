@@ -9,7 +9,6 @@ import {EditorComponent}  from './pages/editor/editor.component';
 
 // Components
 import {HeaderComponent}  from './common/header/header.component';
-import {DebuggerComponent} from './common/debugger/debugger.component';
 import {FooterComponent}  from './common/footer/footer.component';
 import {FileTreeComponent}  from './common/file-tree/file-tree.component';
 import {JSEditorComponent}  from './common/jseditor/jseditor.component';
@@ -29,7 +28,7 @@ import {ReportComponent} from './common/report/report.component';
 import {LoggedInGuard} from './guards/loggedin.guard';
 import {UserService} from './services/user.service';
 import {LoginComponent} from './common/login/login.component';
-import {StatusComponent} from './common/footer/status/status.component';
+import {StatusComponent} from './common/status/status.component';
 import {SystemService} from './services/system.service';
 import {ConstantsService} from './services/constants.service';
 import {DialogComponent} from './common/dialog/dialog.component';
@@ -51,7 +50,6 @@ import {BacktestReportsComponent} from './common/backtest-report/backtest-report
 		AppComponent,
 		LoginComponent,
 		HeaderComponent,
-		DebuggerComponent,
 		FooterComponent,
 		HomeComponent,
 		EditorComponent,

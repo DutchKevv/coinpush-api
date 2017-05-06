@@ -44,7 +44,7 @@ export class ModalAnchorDirective {
 	}
 
 	destroy(modalComponentRef) {
-		let $el = $(modalComponentRef._nativeElement.firstElementChild);
+		let $el = $(this.modalComponentRef.instance.elementRef.nativeElement.firstElementChild);
 
 		$el.on('hidden.bs.modal', function () {
 			modalComponentRef.destroy();

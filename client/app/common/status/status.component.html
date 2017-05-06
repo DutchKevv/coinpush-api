@@ -1,0 +1,37 @@
+<div style="text-align: right">
+
+    <ng-container *ngIf="systemService.systemState.booting">
+        <div class="spinner" style="margin: 0; width: 12px; height: 12px; float:left; margin-top: 4px;">
+            <div class="dot1"></div>
+            <div class="dot2"></div>
+
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="systemService.systemState.booting === false">
+        <!-- OK -->
+        <ng-container *ngIf="systemService.systemState.state === constantsService.constants.SYSTEM_STATE_OK">
+            <div class="circle ok"></div>
+        </ng-container>
+
+        <!-- Errors -->
+        <ng-container *ngIf="systemService.systemState.state !== constantsService.constants.SYSTEM_STATE_OK">
+            <div class="circle error"></div>
+
+            <ng-container *ngIf="!systemService.systemState.connected">
+                <ng-container *ngIf="systemService.systemState.code === constantsService.constants.SYSTEM_STATE_CODE_NO_SERVER_CONNECTION">
+                    <span>Connection to server lost</span>
+                </ng-container>
+                <ng-container *ngIf="systemService.systemState.code !== constantsService.constants.SYSTEM_STATE_CODE_NO_SERVER_CONNECTION">
+                    <a (click)="onClickLogin()">No broker connection</a>
+                </ng-container>
+            </ng-container>
+
+
+        </ng-container>
+    </ng-container>
+</div>
+
+<div>
+    Workers {{systemService.systemState.workers}} / {{systemService.systemState.cpu}}
+</div>

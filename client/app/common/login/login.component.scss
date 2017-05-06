@@ -12,6 +12,10 @@ label {
     background: $background-light;
 }
 
+.modal-footer button {
+    margin-left: 10px;
+}
+
 .modal .close span {
     color: $font-color-light;
 }
