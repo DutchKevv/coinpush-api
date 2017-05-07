@@ -4,6 +4,7 @@ declare var $: any;
 import * as _ from 'lodash';
 import {SocketService} from '../../services/socket.service';
 import {Component, ElementRef, OnInit, OnDestroy, ChangeDetectionStrategy} from '@angular/core';
+import * as moment from 'moment';
 import 'jquery-resizable-dom';
 
 @Component({
@@ -34,8 +35,9 @@ export class FooterComponent implements OnInit, OnDestroy {
 		this._setWindowResizeHandle();
 		this._setDragger();
 
-		this.socketService.socket.on('debug', data => {
-			this.messages.push(data);
+		this.socketService.socket.on('debug', message => {
+			message.timePretty = moment.unix(message.time).format('DD MMM YY hh:mm:ss');
+			this.messages.push(message);
 		});
 	}
 

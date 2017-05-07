@@ -101,8 +101,6 @@ export default class App extends Base {
 	}
 
 	public debug(type: string, text: string, data?: Object, socket?: Socket): void {
-		let date = new Date();
-
 		if (type === 'error')
 			console.warn('ERROR', text);
 
@@ -113,8 +111,7 @@ export default class App extends Base {
 		socket = socket || this._io.sockets;
 
 		socket.emit('debug', {
-			time: date.getTime(),
-			timePretty: date,
+			time: Date.now(),
 			type: type,
 			text: text,
 			data: data
