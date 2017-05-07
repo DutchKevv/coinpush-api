@@ -10,12 +10,9 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - g++-4.8
-      - libgnome-keyring-dev
       - icnsutils
       - graphicsmagick
       - xz-utils
-      - rpm
-      - bsdtar
 
 install:
   - cd client
