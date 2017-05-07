@@ -42,9 +42,9 @@ console.log('SDFSDFSDFSDDF', target);
  * Build
  */
 builder.build({
-    targets: Platform.MAC.createTarget(),
+    target: new Platform(...target),
     projectDir: '../',
-    platform: 'osx',
+    // platform: 'osx',
     config: {
         compression: 'normal',
         artifactName: 'TradeJS ${version}.${ext}',
@@ -71,24 +71,24 @@ builder.build({
             requestExecutionLevel: 'admin'
         },
         afterPack: function (options) {
-            // console.log('OPTIONS', options);
+            console.log('OPTIONS OPTIONS OPTIONS OPTIONS', options);
 
-            if (platform === 'windows') {
-                return new Promise((resolve, reject) => {
-
-                    let from = path.join(__dirname, '..', 'server', 'node_modules', 'sqlite3', 'bin', 'win32-x64-53', 'sqlite3.node'),
-                        to = path.join(options.appOutDir, 'resources', 'app', 'server', 'node_modules', 'sqlite3', 'lib', 'binding', 'node-v53-win32-x64', 'node_sqlite3.node');
-
-                    mkdirp(path.dirname(to), err => {
-                        if (err) return reject(err);
-
-                        fs
-                            .createReadStream(from)
-                            .pipe(fs.createWriteStream(to))
-                            .on('finish', resolve)
-                    });
-                });
-            }
+            // if (platform === 'windows') {
+            //     return new Promise((resolve, reject) => {
+            //
+            //         let from = path.join(__dirname, '..', 'server', 'node_modules', 'sqlite3', 'bin', 'win32-x64-53', 'sqlite3.node'),
+            //             to = path.join(options.appOutDir, 'resources', 'app', 'server', 'node_modules', 'sqlite3', 'lib', 'binding', 'node-v53-win32-x64', 'node_sqlite3.node');
+            //
+            //         mkdirp(path.dirname(to), err => {
+            //             if (err) return reject(err);
+            //
+            //             fs
+            //                 .createReadStream(from)
+            //                 .pipe(fs.createWriteStream(to))
+            //                 .on('finish', resolve)
+            //         });
+            //     });
+            // }
         },
         files: [
             '!_cache/*',
