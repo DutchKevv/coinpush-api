@@ -1,8 +1,5 @@
-os:
-  - osx
-  - linux
+os: osx
 osx_image: xcode8.3
-dist: trusty
 language: node_js
 node_js:
   - 7.10.0
@@ -22,7 +19,7 @@ install:
   - npm run build
   - cd ../electron
   - npm install --silent
-  - node_modules/.bin/build --projectDir=../ --platform=all
+  - node_modules/.bin/build --projectDir=../ --platform=all --version=1.6.6
 #  - npm run build:windows
 
 deploy:
