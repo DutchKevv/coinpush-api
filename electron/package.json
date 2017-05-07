@@ -5,11 +5,11 @@
   "main": "main.js",
   "scripts": {
     "start": "cross-env NODE_ENV=development electron ../",
-    "build": "node builder",
-    "build:windows": "node builder --platform=windows",
-    "build:mac": "node builder --platform=mac",
-    "build:linux": "node builder --platform=linux",
-    "rebuild-sqlite3:mac": "cd node_modules/sqlite3 && npm run prepublish && node-gyp configure --module_name=node_sqlite3 --module_path=../lib/binding/node-v47-darwin-x64 && node-gyp rebuild --target=0.36.4 --arch=x64 --target_platform=darwin --dist-url=https://atom.io/download/atom-shell --module_name=node_sqlite3 --module_path=../lib/binding/node-v53-darwin-x64"
+    "build": "build --config=./electron/config.json --projectDir=../",
+    "build:all": "build -mwl --config=./electron/config.json --projectDir=../",
+    "build:windows": "build -w --config=./electron/config.json --projectDir=../",
+    "build:mac": "build -m --config=./electron/config.json --projectDir=../",
+    "build:linux": "build -l --config=./electron/config.json --projectDir=../"
   },
   "devDependencies": {
     "cross-env": "4.0.0",
@@ -23,13 +23,6 @@
   },
   "author": "Kewin Brandsma",
   "private": false,
-  "build": {
-    "asar": false,
-    "appId": "your.id",
-    "mac": {
-      "category": "your.app.category.type"
-    }
-  },
   "dependencies": {
     "node-gyp": "3.6.1"
   }
