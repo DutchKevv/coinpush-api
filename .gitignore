@@ -22,6 +22,7 @@ Thumbs.db
 /server/config/tradejs.config.json
 /server/**/*.js
 !/server/gulpfile.js
+!/server/copy-sql3-binary.js
 /server/**/*.map
 
 # Shared
