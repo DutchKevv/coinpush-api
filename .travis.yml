@@ -9,15 +9,21 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - g++-4.8
+      - libgnome-keyring-dev
+      - icnsutils
+      - graphicsmagick
+      - xz-utils
+      - rpm
+      - bsdtar
 
 install:
   - cd client
-  - npm install
+  - npm install --silent
   - npm run build
   - cd ../server
-  - npm install
+  - npm install --silent
   - npm run build
   - cd ../electron
-  - npm install
+  - npm install --silent
   - npm run build:mac
   - npm run build:windows
