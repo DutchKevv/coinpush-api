@@ -45,6 +45,40 @@ export default class EA extends Instrument implements IEA {
 		this.onInit();
 	}
 
+	public report() {
+		return {
+			tickCount: this.tickCount,
+			equality: this.accountManager.equality,
+			orders: this.orderManager.closedOrders,
+			data: this._backtestData
+		};
+	}
+
+	async tick(timestamp, bid, ask): Promise<void> {
+		await super.tick(timestamp, bid, ask);
+
+		if (this.live === false) {
+			this.orderManager.tick()
+		}
+
+		await this.onTick(timestamp, bid, ask);
+	}
+
+	public onTick(timestamp, bid, ask) {
+		console.log('CUSTOM ONTICK SHOULD BE CALLED')
+	}
+
+	public async onInit() {
+	}
+
+	protected addOrder(orderOptions) {
+		this.orderManager.add(Object.assign(orderOptions, {openTime: this.time}));
+	}
+
+	protected closeOrder(id, bid, ask) {
+		this.orderManager.close(this.time, id, bid, ask)
+	}
+
 	async runBackTest(): Promise<any> {
 
 		let count = 2000,
@@ -83,6 +117,7 @@ export default class EA extends Instrument implements IEA {
 					if (candles[i] >= until) {
 						candles = candles.splice(0, i - 1);
 						lastBatch = true;
+
 						break;
 					}
 				}
@@ -100,31 +135,5 @@ export default class EA extends Instrument implements IEA {
 		this._backtestData.endTime = Date.now();
 
 		this._ipc.send('main', '@run:end', undefined, false);
-	}
-
-	report() {
-		return {
-			tickCount: this.tickCount,
-			equality: this.accountManager.equality,
-			orders: this.orderManager.closedOrders,
-			data: this._backtestData
-		};
-	}
-
-	async tick(timestamp, bid, ask): Promise<void> {
-		await super.tick(timestamp, bid, ask);
-
-		if (this.live === false) {
-			this.orderManager.tick()
-		}
-
-		await this.onTick(timestamp, bid, ask);
-	}
-
-	public onTick(timestamp, bid, ask) {
-		console.log('CUSTOM ONTICK SHOULD BE CALLED')
-	}
-
-	public async onInit() {
 	}
 }

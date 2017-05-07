@@ -27,36 +27,23 @@ export default class CacheDataLayer {
 
 					let tableName = this._getTableName(instrument, timeFrame),
 						columns = ['time', 'openBid', 'highBid', 'lowBid', 'closeBid', 'volume'],
-						queryString;
+						queryString, needsReverse = false;
 
 					debug(`DataLayer: Read ${tableName} from ${new Date(from)} until ${new Date(until)} count ${count}`);
 
-					queryString = `SELECT ${columns.join(',')}  FROM ${tableName} `;
+					queryString = `SELECT ${columns.join(',')} FROM ${tableName} `;
 
-					if (count) {
-						if (until) {
-							queryString += `WHERE time <= ${until} ORDER BY time LIMIT ${count} `;
-						} else {
-							queryString += `WHERE time >= ${from} ORDER BY time LIMIT ${count} `;
-						}
+					if (until) {
+						queryString += `WHERE time <= ${until} ORDER BY time DESC LIMIT ${count}`;
+						needsReverse = true;
 					} else {
-						count = 300;
-
-						if (from && until) {
-							queryString += `WHERE time >= ${from} AND time <= ${until} ORDER BY time DESC LIMIT ${count}`;
-						}
-						else if (from) {
-							queryString += `WHERE time >= ${from} ORDER BY time DESC LIMIT ${count}`;
-						}
-						else {
-
-						}
+						queryString += `WHERE time >= ${from} ORDER BY time LIMIT ${count}  `;
 					}
 
 					this._db.all(queryString, (err, rows) => {
 
-						if (err) {
-							return reject(err);
+						if (until) {
+							rows = rows.reverse();
 						}
 
 						let i = 0, len = rows.length,

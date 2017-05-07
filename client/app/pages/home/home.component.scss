@@ -1,3 +1,5 @@
+@import '../../style/variables/variables';
+
 .chart-overview-column {
     right: 0;
 }
@@ -32,6 +34,11 @@ header {
     text-align: center;
     margin-top: 50px;
     display: block;
+}
+
+.three-column:first-child {
+    background: $background-light;
+
 }
 
 .three-column:nth-child(2) {

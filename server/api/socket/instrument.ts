@@ -8,7 +8,7 @@ module.exports = (app: App, socket) => {
 	});
 
 	// Destroy
-	socket.on('instrumentdestroy', (options, cb) => {
+	socket.on('instrument:destroy', (options, cb) => {
 		app.controllers.instrument.destroy(options.id);
 		cb(null);
 	});

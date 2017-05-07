@@ -6,8 +6,8 @@ import {SocketService} from '../../services/socket.service';
 
 @Component({
 	selector: 'js-editor',
-	template: '<div></div>',
-	styleUrls: ['./jseditor.component.css']
+	templateUrl: './jseditor.component.html',
+	styleUrls: ['./jseditor.component.scss']
 })
 
 export class JSEditorComponent implements AfterViewInit {
@@ -16,15 +16,23 @@ export class JSEditorComponent implements AfterViewInit {
 
 	ace: any;
 	currentFile: any;
-	editorEl: HTMLElement;
 	socket: any;
 
-	constructor(private el: ElementRef, socket: SocketService) {
+	bannerState: string;
+	bannerText: string;
+
+	private _$el;
+	private _$banner;
+	private _editorEl: HTMLElement;
+
+	constructor(private _elementRef: ElementRef, socket: SocketService) {
 		this.socket = socket.socket;
 	}
 
 	ngAfterViewInit() {
-		this.editorEl = this.el.nativeElement.firstElementChild;
+		this._$el = $(this._elementRef.nativeElement);
+		this._$banner = this._$el.find('.banner');
+		this._editorEl = this._$el.find('.editor')[0];
 
 		this.setEditor();
 	}
@@ -38,7 +46,7 @@ export class JSEditorComponent implements AfterViewInit {
 	setEditor() {
 		ace.require('ace/config').set('workerPath', '/assets/js/ace/');
 
-		this.editor = ace.edit(this.editorEl);
+		this.editor = ace.edit(this._editorEl);
 		this.editor.setTheme('ace/theme/tomorrow_night_bright');
 		this.editor.getSession().setMode('ace/mode/typescript');
 
@@ -69,22 +77,33 @@ export class JSEditorComponent implements AfterViewInit {
 	}
 
 	reloadCurrentFile() {
-		this.socket.emit('file:load', {path: this.currentFile}, (err: any, result: any) => {
-			try {
-				this.editor.session.setValue(result);
-			} catch (err) {
-				console.log(err);
-			}
-		});
+		this.loadFile(this.currentFile);
 	}
 
 	saveFile() {
 		return new Promise((resolve, reject) => {
 			let content = this.editor.getValue();
 
-			this.socket.emit('file:save', {path: this.currentFile, content: content}, () => {
+			this.socket.emit('file:save', {path: this.currentFile, content: content}, (err) => {
+				if (err) {
+					this.showBanner('error', 'File not saved: ' + err);
+					return reject();
+				}
+
+				this.showBanner('success', 'File saved');
 				resolve();
 			});
 		});
+	}
+
+	showBanner(state: string, text: string) {
+		this.bannerState = state;
+		this.bannerText = text;
+
+		this._$banner.addClass('fade-in');
+
+		setTimeout(() => {
+			this._$banner.removeClass('fade-in');
+		}, 5000)
 	}
 }

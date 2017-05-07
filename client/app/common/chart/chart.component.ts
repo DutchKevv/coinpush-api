@@ -204,12 +204,12 @@ export class ChartComponent implements OnInit, OnDestroy {
 		this._chart.yAxis[0].removePlotLine('current-price');
 
 		this._chart.yAxis[0].addPlotLine({
-			value: bar[1],
+			value: bar[4],
 			color: '#646467',
 			width: 1,
 			id: 'current-price',
 			label: {
-				text: `<div class='chart-current-price-label' style='background:white;'>${bar[1]}</div>`,
+				text: `<div class='chart-current-price-label' style='background:white;'>${bar[4]}</div>`,
 				align: 'right',
 				x: 5,
 				y: 2,
@@ -319,6 +319,8 @@ export class ChartComponent implements OnInit, OnDestroy {
 	}
 
 	static _prepareData(data: any) {
+		// data = data.reverse();
+
 		let length = data.length,
 			volume = new Array(length),
 			i = 0;

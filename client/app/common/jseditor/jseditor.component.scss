@@ -1,0 +1,26 @@
+.banner {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 2;
+
+    padding: 5px;
+    border-radius: 0 0 0 5px;
+
+    opacity: 0;
+    transition: opacity 1s;
+
+}
+
+.banner.fade-in {
+    opacity: 1;
+}
+
+.banner-success {
+    background: lightgreen;
+    color: black;
+}
+
+.ace_editor {
+    height: 100%;
+}

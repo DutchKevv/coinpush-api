@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import {Directive, ElementRef, OnInit, Input, AfterViewInit} from '@angular/core';
+import * as moment from 'moment';
 
 const Highcharts = require('highcharts');
 
@@ -63,14 +64,13 @@ export class ChartReportDirective implements OnInit, AfterViewInit {
 
 		// Clone a new settings object
 		let settings = <any>_.cloneDeep(HighchartsDefaultTheme);
-
 		delete settings.chart;
-		// settings.chart.marginLeft = 100;
 
 		settings.series = [{
 			name: 'base',
 			data: data
 		}];
+
 
 		settings.plotOptions.line = {
 			marker: {
@@ -83,8 +83,11 @@ export class ChartReportDirective implements OnInit, AfterViewInit {
 			formatter: function () {
 				return `<ul>
 <li> ${this.x}</li>
-<li><span>Equality</span>: ${this.y}</li>
-<li><span>Profit</span>: ${this.point.data.profit}</li>
+<li><span>Equality</span>: &euro; ${this.y}</li>
+<li><span>open</span>: ${moment.unix(this.point.data.openTime / 1000).format('DD MMM YY hh:mm:ss')}</li>
+<li><span>close</span>: ${moment.unix(this.point.data.closeTime / 1000).format('DD MMM YY hh:mm:ss')}</li>
+<li><span>CloseValue</span>: &euro; ${this.point.data.closeValue}</li>
+<li><span>Profit</span>: &euro; ${this.point.data.profit.toFixed(2)}</li>
 </ul>`;
 			}
 		};
@@ -119,7 +122,7 @@ export class ChartReportDirective implements OnInit, AfterViewInit {
 
 
 	private _prepareData(data) {
-		return data.map(order => ({y: order.equality, data: order})).reverse();
+		return data.map(order => ({y: order.equality, data: order}));
 	}
 }
 

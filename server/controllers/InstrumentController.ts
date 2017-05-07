@@ -136,7 +136,7 @@ export default class InstrumentController extends Base {
 	}
 
 	public destroy(id: string): void {
-
+		debug('destroying - ' + id)
 		if (this._instruments[id]) {
 			this._instruments[id].worker.kill();
 			this._instruments[id] = null;

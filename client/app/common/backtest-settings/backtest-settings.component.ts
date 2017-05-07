@@ -22,6 +22,7 @@ export class BacktestSettingsComponent implements OnInit, AfterViewInit {
 		until: new Date(),
 		equality: 10000,
 		currency: 'euro',
+		leverage: '10',
 		pips: '10'
 	};
 
@@ -73,6 +74,7 @@ export class BacktestSettingsComponent implements OnInit, AfterViewInit {
 	}
 
 	run() {
+		this.report = null;
 		this.isRunning = true;
 		this.toggleLoading(true);
 

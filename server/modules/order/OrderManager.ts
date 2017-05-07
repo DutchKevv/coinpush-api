@@ -43,11 +43,10 @@ export default class OrderManager extends Base {
 
 		if (this._accountManager.equality < orderPrice) {
 			console.log('NOT ENOUGH FUNDS');
-			return;
+			return false;
 		}
 
 		order.id = this._unique++;
-		order.openTime = Date.now();
 
 		if (this.options.live) {
 
@@ -64,7 +63,7 @@ export default class OrderManager extends Base {
 		return _.find(this._orders, {id})
 	}
 
-	public close(id: number, bid: number, ask: number) {
+	public close(time, id: number, bid: number, ask: number) {
 		let order = _.remove(this._orders, {id})[0];
 
 		// TODO: Debug warning 'Order not found)
@@ -76,10 +75,19 @@ export default class OrderManager extends Base {
 		if (this.options.live) {
 
 		} else {
-			order.closeTime = Date.now();
-			order.profit = order.ask - bid;
+			order.closeTime = time || Date.now();
+
+			// TODO: Check for correctness
+			if (order.type === 'sell') {
+				order.closeValue = bid * order.count;
+				order.profit = (bid - order.ask) * order.count;
+			} else {
+				order.closeValue = ask * order.count;
+				order.profit = (ask * order.bid) * order.count;
+			}
+
+			this._accountManager.addEquality(order.closeValue);
 			order.equality = this._accountManager.equality;
-			this._accountManager.addEquality(order.bid);
 			this._closedOrders.push(order);
 		}
 	}

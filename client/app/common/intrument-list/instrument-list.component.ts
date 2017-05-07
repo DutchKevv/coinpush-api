@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy, ChangeDetectionStrategy, Input} from '@angular/core';
+import {Component, OnInit, OnDestroy, Input} from '@angular/core';
 import {SocketService} from '../../services/socket.service';
 import {InstrumentsService} from '../../services/instruments.service';
 
@@ -27,8 +27,6 @@ export class InstrumentListComponent implements OnInit, OnDestroy {
 			if (instrumentList)
 				this.instruments = instrumentList.map(instrument => instrument.instrument);
 		});
-
-		this.onTick = this.onTick.bind(this);
 	}
 
 	onTick(tick) {
@@ -36,7 +34,6 @@ export class InstrumentListComponent implements OnInit, OnDestroy {
 
 		this.data[tick.instrument] = tick;
 	}
-
 
 
 	updatePrice() {

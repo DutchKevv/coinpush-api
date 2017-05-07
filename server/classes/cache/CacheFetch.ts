@@ -26,8 +26,9 @@ export default class Fetcher {
 
 	public async fetch(brokerApi: BrokerApi, instrument: string, timeFrame: string, from: number, until: number, count: number) {
 		
-		debug(`Fetching ${instrument} on ${timeFrame} from ${new Date(from)} until ${new Date(until)} count ${count}`);
 
+
+		let startTime = Date.now();
 		// Store chunk date as pending
 		// this._setPendingRequest(instrument, timeFrame, from, until);
 
@@ -36,7 +37,9 @@ export default class Fetcher {
 			// Quality check, make sure every tick has a timestamp AFTER the previous tick
 			// (Just to be sure)
 			let i = 0, len = candles.length,
-				lastT;
+				lastT, parseTime = Date.now();
+
+			debug(`Fetching ${instrument} on ${timeFrame} took ${(parseTime - startTime) / 1000} seconds`);
 
 			for (; i < len; i++) {
 				if (lastT && lastT >= candles[i].time) {
@@ -65,6 +68,8 @@ export default class Fetcher {
 					}
 				}
 			}
+
+			debug(`Parsing ${instrument} on ${timeFrame} took ${(Date.now() - parseTime) / 1000} seconds`);
 
 			// Remove from pending requests
 			// this._clearPendingRequest(instrument, timeFrame, from, until);

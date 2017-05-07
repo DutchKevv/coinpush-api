@@ -29,8 +29,6 @@ export default class BackTest extends EventEmitter {
 
 	startTime = null;
 	endTime = null;
-	startFetchingTime = null;
-	endFetchingTime = null;
 	report: any = {};
 
 	EAs = [];
@@ -56,6 +54,7 @@ export default class BackTest extends EventEmitter {
 		// Create instrument instances
 		this.EAs = await Promise.all(this.instruments.map(instrument => {
 			return this.app.controllers.instrument.create(instrument, this.timeFrame, false, EAPath, {
+				leverage: this.opt.leverage,
 				equality: this.opt.equality,
 				from: this.from,
 				until: this.until

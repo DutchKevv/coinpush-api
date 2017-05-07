@@ -145,7 +145,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 
 	public storePosition() {
-		this._cookieService.putObject(`instrument-${this.model.data.id}`, this.getPosition())
+		this._cookieService.putObject(`instrument-${this.model.data.id}-p`, this.getPosition())
 	}
 
 	public restorePosition(position?: any): void {

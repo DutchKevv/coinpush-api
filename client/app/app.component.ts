@@ -31,15 +31,13 @@ export class AppComponent implements AfterViewInit {
 		let minDiff = 1500,
 			elLoadScreen = <any>document.getElementById('loadScreen');
 
-		document.body.className = 'animate';
+		// document.body.className = 'animate';
+
+		elLoadScreen.style.opacity = 1;
+		this.element.nativeElement.style.opacity = 1;
 
 		window.setTimeout(() => {
-			elLoadScreen.style.opacity = 1;
-			this.element.nativeElement.style.opacity = 1;
-
-			window.setTimeout(() => {
-				document.body.removeChild(elLoadScreen);
-			}, 0);
-		}, minDiff);
+			document.body.removeChild(elLoadScreen);
+		}, 0);
 	}
 }

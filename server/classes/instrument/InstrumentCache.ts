@@ -12,11 +12,14 @@ export default class InstrumentCache extends WorkerChild {
 	protected tickCount = 0;
 	protected ticks: any = [];
 
-	protected _map: CacheMapper = new CacheMapper();
+	protected time: number;
+	protected bid: number;
+	protected ask: number;
 
 	protected from: number;
 	protected until: number;
 
+	private _map: CacheMapper = new CacheMapper();
 	private _readyHandler = Promise.resolve();
 
 	public async init() {
@@ -89,6 +92,10 @@ export default class InstrumentCache extends WorkerChild {
 
 					if (tick) {
 						++this.tickCount;
+
+						this.time = candle[0];
+						this.bid = candle[1];
+						this.ask = candle[2];
 
 						await this.tick(candle[0], candle[1], candle[2]);
 					}
