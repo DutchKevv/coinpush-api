@@ -6,8 +6,9 @@ node_js:
 
 before_install:
   - brew update
-  - brew install wine --without-x11
-  - brew install mono
+#  - brew install gnu-tar graphicsmagick xz
+#  - brew install wine --without-x11
+#  - brew install mono
 
 install:
   - cd client
@@ -19,4 +20,4 @@ install:
   - cd ../electron
   - npm install --silent
   - npm run build:mac
-  - npm run build:windows
+#  - npm run build:windows
