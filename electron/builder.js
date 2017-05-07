@@ -43,6 +43,7 @@ console.log('SDFSDFSDFSDDF', target);
  */
 builder.build({
     target: new Platform(...target),
+    plaform: 'all',
     projectDir: '../',
     // platform: 'osx',
     config: {
