@@ -1,0 +1,15 @@
+{
+  "appId": "com.example.app",
+  "electronVersion": "1.6.6",
+  "productName": "TradeJS",
+  "files": [
+    "!_cache/*",
+    "!client/node_modules/*",
+    "!electron/node_modules/*",
+    "!electron/assets/*"
+  ],
+  "mac": {
+    "category": "your.app.category.type",
+    "icon": "./electron/assets/icon"
+  }
+}

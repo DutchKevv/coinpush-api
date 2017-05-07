@@ -35,7 +35,6 @@ else if (argv.platform === 'linux' || (!argv.platform && /^linux/.test(process.p
     platform = 'linux';
 }
 
-console.log('SDFSDFSDFSDDF', target);
 
 /**
  *
