@@ -35,15 +35,16 @@ else if (argv.platform === 'linux' || (!argv.platform && /^linux/.test(process.p
     platform = 'linux';
 }
 
-console.log('SDFSDFSDFSDDF', argv.platform, argv.platform);
+console.log('SDFSDFSDFSDDF', target);
 
 /**
  *
  * Build
  */
 builder.build({
-    target: new Platform(...target),
+    targets: Platform.MAC.createTarget(),
     projectDir: '../',
+    platform: 'osx',
     config: {
         compression: 'normal',
         artifactName: 'TradeJS ${version}.${ext}',
