@@ -42,7 +42,7 @@ console.log('SDFSDFSDFSDDF', argv.platform, argv.platform);
  * Build
  */
 builder.build({
-    target: Platform.mac,
+    target: new Platform(...target),
     projectDir: '../',
     config: {
         compression: 'normal',
