@@ -1,18 +1,13 @@
-dist: trusty
+os: osx
+osx_image: xcode8.3
 language: node_js
 node_js:
   - 7.10.0
-env:
-  - CXX=g++-4.8
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - g++-4.8
-      - icnsutils
-      - graphicsmagick
-      - xz-utils
+
+before_install:
+  - brew update
+  - brew install wine --without-x11
+  - brew install mono
 
 install:
   - cd client
