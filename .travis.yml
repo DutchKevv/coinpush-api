@@ -8,14 +8,12 @@ language: node_js
 node_js:
   - 7.10.0
 
-# before_install:
-#  - brew update
-#  - brew install gnu-tar graphicsmagick xz
-#  - brew install wine --without-x11
-#  - brew install mono
-
-before_install:
-  - brew install rpm
+addons:
+  apt:
+    packages:
+      - icnsutils
+      - graphicsmagick
+      - xz-utils
 
 install:
   - cd client
