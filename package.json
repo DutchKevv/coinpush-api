@@ -4,7 +4,6 @@
   "main": "electron/main.js",
   "version": "0.0.1",
   "scripts": {
-    "postinstall": "electron-rebuild",
     "start": "electron . --electron=true",
     "build:windows": "node packager --platform=win32",
     "build:mac": "electron-packager ./ TradeJS --platform=darwin --overwrite --ignore=/e2e --ignore=/src/client",
