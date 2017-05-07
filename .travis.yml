@@ -10,6 +10,9 @@ node_js:
 #  - brew install wine --without-x11
 #  - brew install mono
 
+before_install:
+  - brew install rpm
+  
 install:
   - cd client
   - npm install --silent
