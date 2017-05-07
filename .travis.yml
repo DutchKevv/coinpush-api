@@ -2,5 +2,10 @@ language: node_js
 node_js:
   - 7.10.0
 
-cd client
-npm install
+install:
+  - cd client
+  - npm install
+  - cd ../server
+  - npm install
+  - cd ../electron
+  - npm install
