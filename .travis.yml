@@ -13,7 +13,11 @@ addons:
 install:
   - cd client
   - npm install
+  - npm run build
   - cd ../server
   - npm install
+  - npm run build
   - cd ../electron
   - npm install
+  - npm run build:mac
+  - npm run build:windows
