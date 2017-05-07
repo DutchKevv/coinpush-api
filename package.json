@@ -1,26 +1,12 @@
 {
   "name": "tradejs",
+  "author": "Kewin Brandsma",
   "description": "TradeJS desktop wrapper",
   "main": "electron/main.js",
   "version": "0.0.1",
-  "scripts": {
-    "start": "electron . --electron=true",
-    "build:windows": "node packager --platform=win32",
-    "build:mac": "electron-packager ./ TradeJS --platform=darwin --overwrite --ignore=/e2e --ignore=/src/client",
-    "build:linux": "electron-packager ./ TradeJS --platform=linux --overwrite --ignore=/e2e --ignore=/src/client",
-    "rebuild": "electron-rebuild ./ TradeJS --platform=darwin --overwrite --ignore=/e2e --ignore=/src/client -f -w sqlite3"
-  },
   "devDependencies": {
     "cross-env": "^4.0.0",
     "debug": "^2.6.1"
   },
-  "author": "Kewin Brandsma",
-  "private": false,
-  "build": {
-    "appId": "your.id",
-    "asar": false,
-    "mac": {
-      "category": "your.app.category.type"
-    }
-  }
+  "private": false
 }
