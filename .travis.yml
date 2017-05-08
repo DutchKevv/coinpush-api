@@ -1,7 +1,6 @@
 os:
   - linux
   - osx
-
 osx_image: xcode8.3
 dist: trusty
 language: node_js
@@ -28,15 +27,24 @@ install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then npm run build:linux; fi
 
 deploy:
-  skip_cleanup: true
-  overwrite: true
   provider: releases
-    api_key:
-      secure: f4WPy5QPD73b1nmj-8cQ_A
-  file:
-    - dist/TradeJS-0.0.1.dmg
-    - dist/tradejs-0.0.1.deb
-#    - if [[ "$TRAVIS_OS_NAME" == "osx" ]] ; then "dist/TradeJS-0.0.1.dmg"; fi
-#    - if [[ "$TRAVIS_OS_NAME" == "linux" ]] ; then "dist/tradejs-0.0.1.deb"; fi
-#  on:
-#    tags: true
+  api_key:
+    secure: f4WPy5QPD73b1nmj-8cQ_A
+  file: "dist/tradejs-0.0.1.deb"
+  skip_cleanup: true
+  on:
+    tags: true
+
+#deploy:
+#  provider: releases
+#  api_key:
+#    secure: f4WPy5QPD73b1nmj-8cQ_A
+#  file:
+#    - dist/TradeJS-0.0.1.dmg
+#    - dist/tradejs-0.0.1.deb
+#   skip_cleanup: true
+#    overwrite: true
+##    - if [[ "$TRAVIS_OS_NAME" == "osx" ]] ; then "dist/TradeJS-0.0.1.dmg"; fi
+##    - if [[ "$TRAVIS_OS_NAME" == "linux" ]] ; then "dist/tradejs-0.0.1.deb"; fi
+##  on:
+##    tags: true
