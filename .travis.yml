@@ -27,16 +27,23 @@ install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then npm run build:mac; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then npm run build:linux; fi
 
-deploy:
-  provider: releases
-  api_key:
-    secure: f4WPy5QPD73b1nmj-8cQ_A
-      if ([ "$TRAVIS_OS_NAME" == "osx" ]) &&
-        file: "dist/mac/TradeJS-0.0.1.dmg"
-      else
-        file: "dist/mac/TradeJS-0.0.1.dmg"
-      fi
+if ([ "$TRAVIS_OS_NAME" == "osx" ]) &&
+  deploy:
+    provider: releases
+    api_key:
+      secure: f4WPy5QPD73b1nmj-8cQ_A
+      file: "dist/mac/TradeJS-0.0.1.dmg"
+    skip_cleanup: true
+    on:
+      tags: true
+else
+  deploy:
+    provider: releases
+    api_key:
+      secure: f4WPy5QPD73b1nmj-8cQ_A
+      file: "dist/mac/TradeJS-0.0.1.dmg"
+    skip_cleanup: true
+    on:
+      tags: true
+fi
 
-  skip_cleanup: true
-  on:
-    tags: true
