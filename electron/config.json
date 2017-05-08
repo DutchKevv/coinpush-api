@@ -13,10 +13,18 @@
     "icon": "./electron/assets/icon"
   },
   "win": {
-    "icon": "./electron/assets/icon"
+    "icon": "./electron/assets/icon",
+    "publisherName": "H.K.Brandsma"
   },
   "linux": {
     "icon": "electron/assets/",
     "maintainer": "kewin@frontend-freelance.com"
+  },
+  "nsis": {
+    "oneClick": false,
+    "perMachine": false,
+    "allowToChangeInstallationDirectory": true,
+    "license": "license.txt",
+    "allowElevation": true
   }
 }

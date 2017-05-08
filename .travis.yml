@@ -17,6 +17,8 @@ install:
 - npm install --silent
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then npm run build:mac; fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then npm run build:linux; fi
+- cd ../
+
 deploy:
   provider: releases
   skip_cleanup: true
