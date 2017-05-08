@@ -1,6 +1,6 @@
 # Test against the latest version of this Node.js version
 environment:
-  nodejs_version: "7.10.0"
+  nodejs_version: "7"
 
 # Install scripts. (runs after repo cloning)
 install:
@@ -16,4 +16,4 @@ install:
   - cd ../
 
 # Don't actually build.
-build: off
+# build: off
