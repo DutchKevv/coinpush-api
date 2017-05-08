@@ -8,12 +8,12 @@ language: node_js
 node_js:
   - 7.10.0
 
-addons:
-  apt:
-    packages:
-      - icnsutils
-      - graphicsmagick
-      - xz-utils
+#addons:
+#  apt:
+#    packages:
+#      - icnsutils
+#      - graphicsmagick
+#      - xz-utils
 
 install:
   - cd client

@@ -1,8 +1,10 @@
 {
-  "name": "tradejs-server",
+  "name": "tradejs",
   "version": "0.0.11",
   "description": "Javascript Trading Client",
   "email": "kewin@frontend-freelance.com",
+  "author": "Kewin Brandsma",
+  "private": false,
   "license": "Apache License 2.0",
   "repository": {
     "type": "git",
@@ -32,8 +34,6 @@
     "_server:build": "tsc -p ./server",
     "node-ipc": "git://github.com/RIAEvangelist/node-ipc.git#v9.x"
   },
-  "author": "Kewin Brandsma",
-  "private": false,
   "dependencies": {
     "backbone-events-standalone": "0.2.7",
     "body-parser": "1.17.1",

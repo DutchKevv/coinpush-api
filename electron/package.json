@@ -1,16 +1,17 @@
 {
-  "name": "tradejs-desktop",
+  "name": "tradejs",
+  "author": "Kewin Brandsma",
+  "email": "kewin@frontend-freelance.com",
   "description": "TradeJS desktop wrapper",
   "version": "0.0.1",
   "main": "main.js",
-  "email": "kewin@frontend-freelance.com",
   "scripts": {
     "start": "cross-env NODE_ENV=development electron ../",
     "build": "build --config=./electron/config.json --projectDir=../",
-    "build:all": "build -mwl --config=./electron/config.json --projectDir=../",
-    "build:windows": "build -w --config=./electron/config.json --projectDir=../",
-    "build:mac": "build --mac --config=./electron/config.json --projectDir=../",
-    "build:linux": "build --linux deb tar.xz --config=./electron/config.json --projectDir=../"
+    "build:all": "build -mwl --config=./electron/config.json --projectDir=../ --publish=never",
+    "build:windows": "build -w --config=./electron/config.json --projectDir=../ --publish=never",
+    "build:mac": "build --mac --config=./electron/config.json --projectDir=../ --publish=never",
+    "build:linux": "build --linux deb --config=./electron/config.json --projectDir=../ --publish=never"
   },
   "devDependencies": {
     "cross-env": "4.0.0",
@@ -22,7 +23,6 @@
     "electron-rebuild": "1.5.7",
     "mkdirp": "0.5.1"
   },
-  "author": "Kewin Brandsma",
   "private": false,
   "dependencies": {
     "node-gyp": "3.6.1"
