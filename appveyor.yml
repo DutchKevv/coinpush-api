@@ -1,7 +1,3 @@
-# Test against the latest version of this Node.js version
-environment:
-  nodejs_version: "7"
-
 platform:
   - x64
 
