@@ -27,7 +27,7 @@ install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then npm run build:mac; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then npm run build:linux; fi
 
-if ([ "$TRAVIS_OS_NAME" == "osx" ]) &&
+if ([ "$TRAVIS_OS_NAME" == "osx" ])
   deploy:
     provider: releases
     api_key:
