@@ -26,5 +26,6 @@
     "allowToChangeInstallationDirectory": true,
     "license": "license.txt",
     "allowElevation": true
-  }
+  },
+  "asar": false
 }
