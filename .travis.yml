@@ -31,10 +31,10 @@ deploy:
   skip_cleanup: true
   overwrite: true
   provider: releases
-  api_key: f4WPy5QPD73b1nmj-8cQ_A
-    file:
-      - if [[ "$TRAVIS_OS_NAME" == "osx" ]] ; then "dist/TradeJS-0.0.1.dmg"; fi
-      - if [[ "$TRAVIS_OS_NAME" == "linux" ]] ; then "dist/tradejs-0.0.1.deb"; fi
+    api_key:
+      secure: f4WPy5QPD73b1nmj-8cQ_A
+  file:
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]] ; then "dist/TradeJS-0.0.1.dmg"; fi
+    - if [[ "$TRAVIS_OS_NAME" == "linux" ]] ; then "dist/tradejs-0.0.1.deb"; fi
   on:
     tags: true
-
