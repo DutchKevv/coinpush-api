@@ -1,6 +1,6 @@
 os:
 - linux
-- osx
+#- osx
 osx_image: xcode8.3
 dist: trusty
 language: node_js
