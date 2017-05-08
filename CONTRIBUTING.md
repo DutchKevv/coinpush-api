@@ -71,4 +71,4 @@ Before you submit your pull request consider the following guidelines:
 
 ### Code styling
 
-TODO. For now please take a look around in the code, its pretty default I guess
+TODO. For now please take a look around in the code, its pretty default.
