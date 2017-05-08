@@ -2,6 +2,7 @@
   "name": "tradejs-server",
   "version": "0.0.11",
   "description": "Javascript Trading Client",
+  "email": "kewin@frontend-freelance.com",
   "license": "Apache License 2.0",
   "repository": {
     "type": "git",

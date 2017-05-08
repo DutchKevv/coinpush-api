@@ -12,5 +12,11 @@
   "mac": {
     "category": "your.app.category.type",
     "icon": "./electron/assets/icon"
+  },
+  "win": {
+    "icon": "./electron/assets/icon"
+  },
+  "linux": {
+    "icon": "electron/assets/"
   }
 }
