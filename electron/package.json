@@ -8,8 +8,8 @@
     "build": "build --config=./electron/config.json --projectDir=../",
     "build:all": "build -mwl --config=./electron/config.json --projectDir=../",
     "build:windows": "build -w --config=./electron/config.json --projectDir=../",
-    "build:mac": "build -m --config=./electron/config.json --projectDir=../",
-    "build:linux": "build -l --config=./electron/config.json --projectDir=../"
+    "build:mac": "build --mac --config=./electron/config.json --projectDir=../",
+    "build:linux": "build --linux deb tar.xz --config=./electron/config.json --projectDir=../"
   },
   "devDependencies": {
     "cross-env": "4.0.0",
