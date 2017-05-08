@@ -1,0 +1,28 @@
+os:
+  - linux
+  - osx
+
+osx_image: xcode8.3
+dist: trusty
+language: node_js
+node_js:
+  - 7.10.0
+
+addons:
+  apt:
+    packages:
+      - icnsutils
+      - graphicsmagick
+      - xz-utils
+
+install:
+  - cd client
+  - npm install --silent
+  - npm run build
+  - cd ../server
+  - npm install --silent
+  - npm run build
+  - cd ../electron
+  - npm install --silent
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then npm run build:mac; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then npm run build:linux; fi

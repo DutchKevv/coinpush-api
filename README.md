@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/DutchKevv/TradeJS.svg?branch=master)](https://travis-ci.org/DutchKevv/TradeJS)
+
 ![Alt text](doc/logo/TradeJS-medium.png?raw=true "Title")
 
 ## A full featured stock trading client + server that includes a full IDE and backtest environment. But can be you used with your preferred IDE also! (unlike MetaTrader/cloud9 etc) 
