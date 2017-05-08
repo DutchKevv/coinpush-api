@@ -2,6 +2,7 @@
   "name": "tradejs",
   "author": "Kewin Brandsma",
   "description": "TradeJS desktop wrapper",
+  "email": "kewin@frontend-freelance.com",
   "main": "electron/main.js",
   "version": "0.0.1",
   "devDependencies": {

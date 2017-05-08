@@ -3,6 +3,7 @@
   "description": "TradeJS desktop wrapper",
   "version": "0.0.1",
   "main": "main.js",
+  "email": "kewin@frontend-freelance.com",
   "scripts": {
     "start": "cross-env NODE_ENV=development electron ../",
     "build": "build --config=./electron/config.json --projectDir=../",
