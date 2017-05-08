@@ -30,7 +30,9 @@ deploy:
   provider: releases
   api_key:
     secure: f4WPy5QPD73b1nmj-8cQ_A
-  file: "dist/tradejs-0.0.1.deb"
+  file:
+   - "dist/TradeJS-0.0.1.dmg"
+   - "dist/tradejs-0.0.1.deb"
   skip_cleanup: true
   on:
     tags: true
