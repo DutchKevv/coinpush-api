@@ -31,7 +31,12 @@ deploy:
   provider: releases
   api_key:
     secure: f4WPy5QPD73b1nmj-8cQ_A
-  file: "dist/mac/TradeJS-0.0.1.dmg"
+      if ([ "$TRAVIS_OS_NAME" == "osx" ]) &&
+        file: "dist/mac/TradeJS-0.0.1.dmg"
+      else
+        file: "dist/mac/TradeJS-0.0.1.dmg"
+      fi
+
   skip_cleanup: true
   on:
     tags: true

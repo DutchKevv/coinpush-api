@@ -2,6 +2,7 @@
   "appId": "com.example.app",
   "electronVersion": "1.6.6",
   "productName": "TradeJS",
+  "publish": "never",
   "files": [
     "!_cache/*",
     "!client/node_modules/*",
