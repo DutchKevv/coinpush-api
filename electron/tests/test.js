@@ -21,6 +21,8 @@ global.before(function () {
     chai.use(chaiAsPromised);
 });
 
+app.start();
+
 describe('Window', function () {
     beforeEach(function () {
         return app.start();
