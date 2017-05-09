@@ -11,7 +11,8 @@
     "build:all": "build -mwl --config=./electron/config.json --projectDir=../ --publish=never",
     "build:windows": "build --win --config=./electron/config.json --projectDir=../ --publish=never",
     "build:mac": "build --mac --config=./electron/config.json --projectDir=../ --publish=never",
-    "build:linux": "build --linux --config=./electron/config.json --projectDir=../ --publish=never"
+    "build:linux": "build --linux --config=./electron/config.json --projectDir=../ --publish=never",
+    "test:e2e": "./node_modules/mocha/bin/mocha tests/test.js --timeout 15000"
   },
   "devDependencies": {
     "cross-env": "4.0.0",
@@ -27,6 +28,9 @@
   },
   "private": false,
   "dependencies": {
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
+    "mocha": "^3.3.0",
     "node-gyp": "3.6.1"
   }
 }

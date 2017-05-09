@@ -15,6 +15,7 @@
   ],
   "scripts": {
     "start": "ng serve --aot",
+    "test:e2e": "./node_modules/mocha/bin/mocha tests/test.js",
     "build": "ng build --prod --aot",
     "lint": "gulp tslint"
   },

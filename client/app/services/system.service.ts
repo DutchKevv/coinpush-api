@@ -17,10 +17,13 @@ export class SystemService {
 
 	init() {
 
-		this._socketService.socket.on('disconnect', () => {
-			this._systemState.state = this._constantsService.constants.SYSTEM_STATE_ERROR;
-			this._systemState.code = this._constantsService.constants.SYSTEM_STATE_CODE_NO_SERVER_CONNECTION;
-			this._systemState.workers = 0;
+		this._socketService.socket.on('connect_error', () => {
+			// wait 5 seconds then try again
+			if (!this._socketService.socket.connected) {
+				this._systemState.state = this._constantsService.constants.SYSTEM_STATE_ERROR;
+				this._systemState.code = this._constantsService.constants.SYSTEM_STATE_CODE_NO_SERVER_CONNECTION;
+				this._systemState.workers = 0;
+			}
 		});
 
 		this._socketService.socket.on('system:state', (systemState: SystemState) => {
@@ -32,6 +35,7 @@ export class SystemService {
 					this._userService.login();
 				}
 			}
+
 			console.log('system state update', systemState);
 		});
 	}

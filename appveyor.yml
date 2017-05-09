@@ -1,14 +1,12 @@
-# Test against the latest version of this Node.js version
+os: unstable
 environment:
   nodejs_version: "7.9.0"
 
 platform:
   - x64
 
-# Install scripts. (runs after repo cloning)
 install:
   - ps: Install-Product node 7.9.0 x64
-#  - ps: Update-NodeJsInstallation (Get-NodeJsLatestBuild $env:nodejs_version)
   - cd client
   - npm install --silent
   - npm run build
@@ -20,7 +18,6 @@ install:
   - npm run build
   - cd ../
 
-# Don't actually build.
 build: off
 
 artifacts:

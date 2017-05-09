@@ -20,10 +20,10 @@
 
             <ng-container *ngIf="!systemService.systemState.connected">
                 <ng-container *ngIf="systemService.systemState.code === constantsService.constants.SYSTEM_STATE_CODE_NO_SERVER_CONNECTION">
-                    <span>Connection to server lost</span>
+                    <a class="error-message">No server connection</a>
                 </ng-container>
                 <ng-container *ngIf="systemService.systemState.code !== constantsService.constants.SYSTEM_STATE_CODE_NO_SERVER_CONNECTION">
-                    <a (click)="onClickLogin()">No broker connection</a>
+                    <a (click)="onClickLogin()" class="error-message">No broker connection</a>
                 </ng-container>
             </ng-container>
 

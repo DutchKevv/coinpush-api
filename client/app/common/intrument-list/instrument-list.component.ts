@@ -1,6 +1,8 @@
 import {Component, OnInit, OnDestroy, Input} from '@angular/core';
 import {SocketService} from '../../services/socket.service';
 import {InstrumentsService} from '../../services/instruments.service';
+import {SystemService} from '../../services/system.service';
+import {SystemState} from '../../../../shared/models/SystemState';
 
 @Component({
 	selector: 'instrument-list',
@@ -14,18 +16,19 @@ export class InstrumentListComponent implements OnInit, OnDestroy {
 
 	private data: any = {};
 
-	constructor(protected socketService: SocketService,
+	constructor(private _socketService: SocketService,
 				protected instrumentsService: InstrumentsService) {
 	}
 
 	ngOnInit() {
 		this.onTick = this.onTick.bind(this);
 
-		this.socketService.socket.on('tick', this.onTick.bind(this));
+		this._socketService.socket.on('tick', this.onTick.bind(this));
 
-		this.socketService.socket.emit('instrument:list', {}, (err, instrumentList) => {
-			if (instrumentList)
-				this.instruments = instrumentList.map(instrument => instrument.instrument);
+		this._socketService.socket.on('system:state', (systemState: SystemState) => {
+			if (systemState.connected) {
+				this._load();
+			}
 		});
 	}
 
@@ -35,12 +38,14 @@ export class InstrumentListComponent implements OnInit, OnDestroy {
 		this.data[tick.instrument] = tick;
 	}
 
-
-	updatePrice() {
-
+	private _load() {
+		this._socketService.socket.emit('instrument:list', {}, (err, instrumentList) => {
+			if (instrumentList)
+				this.instruments = instrumentList.map(instrument => instrument.instrument);
+		});
 	}
 
 	ngOnDestroy() {
-		this.socketService.socket.off('tick', this.onTick);
+		this._socketService.socket.off('tick', this.onTick);
 	}
 }
