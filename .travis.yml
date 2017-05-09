@@ -15,7 +15,8 @@ install:
 - npm run build
 - cd ../electron
 - npm install --silent
-- npm run build
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then npm run build:mac; fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then npm run build:linux; fi
 - cd ../
 
 deploy:

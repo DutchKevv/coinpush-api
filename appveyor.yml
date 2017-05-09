@@ -30,5 +30,4 @@ deploy:
     secure: wG46ZMDX3zZXH6/ik+eVR8iJ6Yqww34vGKwgKdwpN2jWwiyYfkg3vjtnESa/ptSF
   artifact: dist/TradeJS-0.0.1.exe
   on:
-    branch: development
     appveyor_repo_tag: true
