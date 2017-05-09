@@ -64,7 +64,6 @@
     "typescript": "2.3.2"
   },
   "dependencies": {
-    "@agm/core": "^1.0.0-beta.0",
     "node-sass": "^4.5.2"
   }
 }

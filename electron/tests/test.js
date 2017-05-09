@@ -3,7 +3,18 @@ const path = require('path');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 
-var electronPath = path.join(__dirname, '..', '..', 'dist', 'mac', 'TradeJS.app', 'Contents', 'MacOS', 'TradeJS');
+var electronPath = '';
+
+if (/^win/.test(process.platform)) {
+    electronPath = path.join(__dirname, '..', '..', 'dist', 'win-unpacked', 'TradeJS.exe');
+} else if (/^darwin/.test(process.platform)) {
+    electronPath = path.join(__dirname, '..', '..', 'dist', 'mac', 'TradeJS.app', 'Contents', 'MacOS', 'TradeJS');
+} else if (/^linux/.test(process.platform)) {
+    electronPath = path.join(__dirname, '..', '..', 'dist', 'linux-unpacked', 'TradeJS.app', 'Contents', 'MacOS', 'TradeJS');
+}
+
+var
+
 
 if (process.platform === 'win32') {
     electronPath += '.cmd';
