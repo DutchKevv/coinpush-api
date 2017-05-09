@@ -10,12 +10,12 @@ if (/^win/.test(process.platform)) {
 } else if (/^darwin/.test(process.platform)) {
     electronPath = path.join(__dirname, '..', '..', 'dist', 'mac', 'TradeJS.app', 'Contents', 'MacOS', 'TradeJS');
 } else if (/^linux/.test(process.platform)) {
-    electronPath = path.join(__dirname, '..', '..', 'dist', 'linux-unpacked', 'TradeJS.app', 'Contents', 'MacOS', 'TradeJS');
+    electronPath = path.join(__dirname, '..', '..', 'dist', 'linux-unpacked', 'tradejs');
 }
 
-if (process.platform === 'win32') {
-    electronPath += '.cmd';
-}
+// if (process.platform === 'win32') {
+//     electronPath += '.cmd';
+// }
 
 var appPath = path.join(__dirname, '..');
 
