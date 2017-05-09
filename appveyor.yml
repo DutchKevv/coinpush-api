@@ -24,8 +24,8 @@ install:
 build: off
 
 artifacts:
-  - path: dist/TradeJS Setup 0.0.1.exe
-  - name: setup
+  - path: dist/TradeJS-0.0.1.exe
+    name: setup
 
 deploy:
   provider: GitHub
