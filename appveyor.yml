@@ -27,7 +27,7 @@ deploy:
   provider: GitHub
   force_update: true
   auth_token:
-    secure: 21674136073559d30642d0db6b9e7122a7eeb290
+    secure: wG46ZMDX3zZXH6/ik+eVR8iJ6Yqww34vGKwgKdwpN2jWwiyYfkg3vjtnESa/ptSF
   artifact: dist/TradeJS-0.0.1.exe
   on:
     branch: development
