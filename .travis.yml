@@ -22,9 +22,9 @@ install:
 
 # Needed for running e2e tests
 before_script:
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
-  - sleep 3 # give xvfb some time to start
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then "export DISPLAY=:99.0"; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then "sh -e /etc/init.d/xvfb start"; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sleep 3; fi
 
 script:
   - cd electron && npm run test:e2e
