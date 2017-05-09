@@ -23,12 +23,14 @@ install:
 # Don't actually build.
 build: off
 
+artifacts:
+  - path: dist/TradeJS Setup 0.0.1.exe
+
 deploy:
   provider: GitHub
   force_update: true
   auth_token:
     secure: wG46ZMDX3zZXH6/ik+eVR8iJ6Yqww34vGKwgKdwpN2jWwiyYfkg3vjtnESa/ptSF
-  artifact: dist/TradeJS Setup 0.0.1.exe
   draft: false
   prerelease: false
   on:
