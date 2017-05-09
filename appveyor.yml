@@ -31,4 +31,3 @@ deploy:
   artifact: dist/TradeJS-0.0.1.exe
   on:
     branch: development
-#    appveyor_repo_tag: true
