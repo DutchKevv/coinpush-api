@@ -29,5 +29,7 @@ deploy:
   auth_token:
     secure: wG46ZMDX3zZXH6/ik+eVR8iJ6Yqww34vGKwgKdwpN2jWwiyYfkg3vjtnESa/ptSF
   artifact: dist/TradeJS-0.0.1.exe
+  draft: false
+  prerelease: false
   on:
     appveyor_repo_tag: true
