@@ -16,8 +16,6 @@ var app = new Application({
     args: [appPath]
 });
 
-export app;
-
 global.before(function () {
     chai.should();
     chai.use(chaiAsPromised);
@@ -158,5 +156,3 @@ describe('Editor', function () {
     //         .getText('#debugContainer .error-message').should.eventually.equal('No server connection');
     // });
 });
-
-debugContainer
