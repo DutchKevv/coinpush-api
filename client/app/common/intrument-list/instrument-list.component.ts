@@ -27,6 +27,7 @@ export class InstrumentListComponent implements OnInit, OnDestroy {
 
 		this._socketService.socket.on('system:state', (systemState: SystemState) => {
 			if (systemState.connected) {
+				alert('sdfsf');
 				this._load();
 			}
 		});

@@ -28,6 +28,7 @@ before_script:
 
 script:
   - cd electron && npm run test:e2e
+  - cd ../
 
 deploy:
   - provider: releases
