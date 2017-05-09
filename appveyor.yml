@@ -36,5 +36,5 @@ deploy:
   draft: false
   prerelease: false
   artifect: setup
-  on:
+#  on:
 #    appveyor_repo_tag: true
