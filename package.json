@@ -5,6 +5,9 @@
   "email": "kewin@frontend-freelance.com",
   "main": "electron/main.js",
   "version": "0.0.1",
+  "scripts": {
+    "test": ""
+  },
   "devDependencies": {
     "cross-env": "^4.0.0",
     "debug": "^2.6.1"

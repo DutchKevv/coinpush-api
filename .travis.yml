@@ -28,7 +28,7 @@ before_script:
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xvfb some time to start
 
-scripts:
+script:
   - cd electron && npm run test:e2e
 
 deploy:
