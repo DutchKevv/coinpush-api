@@ -3,6 +3,7 @@
   "electronVersion": "1.6.6",
   "productName": "TradeJS",
   "artifactName": "${productName}-${version}.${ext}",
+  "asar": false,
   "files": [
     "!_cache/*",
     "!client/node_modules/*",
@@ -10,14 +11,17 @@
     "!electron/assets/*"
   ],
   "mac": {
-    "category": "your.app.category.type",
-    "icon": "./electron/assets/icon"
+    "target": "dmg",
+    "icon": "./electron/assets/icon",
+    "category": "your.app.category.type"
   },
   "win": {
+    "target": "nsis",
     "icon": "./electron/assets/icon",
     "publisherName": "H.K.Brandsma"
   },
   "linux": {
+    "target": "deb",
     "icon": "electron/assets/",
     "maintainer": "kewin@frontend-freelance.com"
   },
@@ -27,6 +31,5 @@
     "allowToChangeInstallationDirectory": true,
     "license": "license.txt",
     "allowElevation": true
-  },
-  "asar": false
+  }
 }
