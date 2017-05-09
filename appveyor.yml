@@ -30,10 +30,11 @@ artifacts:
 deploy:
   provider: GitHub
   force_update: true
+  release: $(appveyor_repo_tag_name)
   auth_token:
     secure: wG46ZMDX3zZXH6/ik+eVR8iJ6Yqww34vGKwgKdwpN2jWwiyYfkg3vjtnESa/ptSF
   draft: false
-  artifect: setup
   prerelease: false
+  artifect: setup
   on:
     appveyor_repo_tag: true
