@@ -6,8 +6,6 @@ dist: trusty
 language: node_js
 node_js:
 - 7.10.0
-env:
-- NODE_ENV=production
 
 install:
 - cd client
