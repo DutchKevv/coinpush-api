@@ -2,6 +2,7 @@
   "appId": "com.example.app",
   "electronVersion": "1.6.6",
   "productName": "TradeJS",
+  "artifactName": "${productName}-${version}.${ext}",
   "files": [
     "!_cache/*",
     "!client/node_modules/*",

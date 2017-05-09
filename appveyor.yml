@@ -25,6 +25,7 @@ build: off
 
 artifacts:
   - path: dist/TradeJS Setup 0.0.1.exe
+  - name: setup
 
 deploy:
   provider: GitHub
@@ -32,6 +33,7 @@ deploy:
   auth_token:
     secure: wG46ZMDX3zZXH6/ik+eVR8iJ6Yqww34vGKwgKdwpN2jWwiyYfkg3vjtnESa/ptSF
   draft: false
+  artifect: setup
   prerelease: false
   on:
     appveyor_repo_tag: true
