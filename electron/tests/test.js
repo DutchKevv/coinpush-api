@@ -13,9 +13,6 @@ if (/^win/.test(process.platform)) {
     electronPath = path.join(__dirname, '..', '..', 'dist', 'linux-unpacked', 'TradeJS.app', 'Contents', 'MacOS', 'TradeJS');
 }
 
-var
-
-
 if (process.platform === 'win32') {
     electronPath += '.cmd';
 }
