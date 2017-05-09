@@ -16,6 +16,8 @@ var app = new Application({
     args: [appPath]
 });
 
+export app;
+
 global.before(function () {
     chai.should();
     chai.use(chaiAsPromised);
@@ -43,17 +45,17 @@ describe('Window', function () {
 
 describe('Server Connection', function () {
     beforeEach(function () {
-        return app.start().pause(2000);
+        return app.start()
     });
 
     afterEach(function () {
-        return app.stop().pause(2000);
+        return app.stop();
     });
 
-    // it('connects to server', function () {
-    //     return app.client.waitUntilWindowLoaded()
-    //         .waitForExist('#debugContainer .circle.ok', 5000);
-    // });
+    it('connects to server', function () {
+        return app.client.waitUntilWindowLoaded()
+            .waitForExist('#debugContainer .circle.ok', 5000);
+    });
 
     // it('shows server connection error link that opens login screen', function () {
     //     return app.client.waitUntilWindowLoaded()
@@ -87,3 +89,74 @@ describe('Charts', function () {
     //         .getText('#debugContainer .error-message').should.eventually.equal('No server connection');
     // });
 });
+
+describe('Backtest', function () {
+
+    beforeEach(function () {
+        return app.start();
+    });
+
+    afterEach(function () {
+        return app.stop();
+    });
+
+    it('can resize the debugger', function () {
+        return app.client.waitUntilWindowLoaded();
+    });
+
+    // it('shows server connection error link that opens login screen', function () {
+    //     return app.client.waitUntilWindowLoaded()
+    //         .setNetworkConnection(1) // airplane mode off, wifi off, data off
+    //         .waitForExist('#debugContainer status .circle.error', 5000)
+    //         .getText('#debugContainer .error-message').should.eventually.equal('No server connection');
+    // });
+});
+
+describe('Editor', function () {
+
+    beforeEach(function () {
+        return app.start();
+    });
+
+    afterEach(function () {
+        return app.stop();
+    });
+
+    it('can open a chart', function () {
+        return app.client.waitUntilWindowLoaded()
+    });
+
+    // it('shows server connection error link that opens login screen', function () {
+    //     return app.client.waitUntilWindowLoaded()
+    //         .setNetworkConnection(1) // airplane mode off, wifi off, data off
+    //         .waitForExist('#debugContainer status .circle.error', 5000)
+    //         .getText('#debugContainer .error-message').should.eventually.equal('No server connection');
+    // });
+});
+
+describe('Editor', function () {
+
+    beforeEach(function () {
+        return app.start();
+    });
+
+    afterEach(function () {
+        return app.stop();
+    });
+
+    it('Can open the editor window', function () {
+        return app.client.waitUntilWindowLoaded()
+            .waitForExist('.instrument-list-rows-wrapper tr:first-child', 5000)
+            .click('.instrument-list-rows-wrapper tr:first-child td:first-child')
+            .waitForExist('.chart-overview-container chart-box', 5000);
+    });
+
+    // it('shows server connection error link that opens login screen', function () {
+    //     return app.client.waitUntilWindowLoaded()
+    //         .setNetworkConnection(1) // airplane mode off, wifi off, data off
+    //         .waitForExist('#debugContainer status .circle.error', 5000)
+    //         .getText('#debugContainer .error-message').should.eventually.equal('No server connection');
+    // });
+});
+
+debugContainer
