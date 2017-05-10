@@ -76,6 +76,7 @@ export class JSEditorComponent implements AfterViewInit {
 		});
 	}
 
+
 	reloadCurrentFile() {
 		this.loadFile(this.currentFile);
 	}
@@ -100,10 +101,12 @@ export class JSEditorComponent implements AfterViewInit {
 		this.bannerState = state;
 		this.bannerText = text;
 
-		this._$banner.addClass('fade-in');
+		requestAnimationFrame(() => {
+			this._$banner.addClass('fade-in');
 
-		setTimeout(() => {
-			this._$banner.removeClass('fade-in');
-		}, 5000)
+			setTimeout(() => {
+				this._$banner.removeClass('fade-in');
+			}, 5000)
+		});
 	}
 }

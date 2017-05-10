@@ -3,13 +3,13 @@ import {IEA} from 'tradejs/ea';
 
 export default class MyEA extends EA implements IEA {
 
-
 	count = 0;
 	MA1: any;
 	MA2: any;
 	MA3: any;
 	MA4: any;
 
+	
 	public async onInit(): Promise<any> {
 
 		this.MA1 = this.addIndicator('MA', {

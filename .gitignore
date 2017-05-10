@@ -19,7 +19,7 @@ Thumbs.db
 /client/dist/
 
 # Server
-/server/config/tradejs.config.json
+#/server/config/tradejs.config.json
 /server/**/*.js
 !/server/gulpfile.js
 !/server/copy-sql3-binary.js

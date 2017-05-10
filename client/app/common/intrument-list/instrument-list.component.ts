@@ -26,7 +26,7 @@ export class InstrumentListComponent implements OnInit, OnDestroy {
 		this._socketService.socket.on('tick', this.onTick.bind(this));
 
 		this._socketService.socket.on('system:state', (systemState: SystemState) => {
-			if (!systemState.booting && systemState.connected && Object.keys(this.data).length === 0) {
+			if (!systemState.booting && systemState.connected) {
 				this._load();
 			}
 		});
