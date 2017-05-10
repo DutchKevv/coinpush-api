@@ -21,7 +21,7 @@ var appPath = path.join(__dirname, '..');
 
 var app = new Application({
     path: electronPath,
-    args: [appPath]
+    args: [appPath, 'NODE_ENV=development']
 });
 
 global.before(function () {

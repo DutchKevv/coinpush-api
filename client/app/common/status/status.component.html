@@ -10,7 +10,7 @@
 
     <ng-container *ngIf="systemService.systemState.booting === false">
         <!-- OK -->
-        <ng-container *ngIf="systemService.systemState.state === constantsService.constants.SYSTEM_STATE_OK">
+        <ng-container *ngIf="systemService.systemState.state === constantsService.constants.SYSTEM_STATE_OK && systemService.systemState.connected === true">
             <div class="circle ok"></div>
         </ng-container>
 

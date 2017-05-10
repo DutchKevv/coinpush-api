@@ -26,8 +26,7 @@ export class InstrumentListComponent implements OnInit, OnDestroy {
 		this._socketService.socket.on('tick', this.onTick.bind(this));
 
 		this._socketService.socket.on('system:state', (systemState: SystemState) => {
-			if (systemState.connected) {
-				alert('sdfsf');
+			if (!systemState.booting && systemState.connected && Object.keys(this.data).length === 0) {
 				this._load();
 			}
 		});
@@ -41,8 +40,10 @@ export class InstrumentListComponent implements OnInit, OnDestroy {
 
 	private _load() {
 		this._socketService.socket.emit('instrument:list', {}, (err, instrumentList) => {
-			if (instrumentList)
+			if (instrumentList.length)
 				this.instruments = instrumentList.map(instrument => instrument.instrument);
+			else
+				alert('Empty instrument list received!');
 		});
 	}
 

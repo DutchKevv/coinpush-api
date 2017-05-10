@@ -20,9 +20,7 @@ export default class BrokerController extends Base {
 	public async loadBrokerApi(apiName: string): Promise<boolean> {
 		await this.disconnect();
 
-
 		try {
-
 			// Clean up node cached version
 			let filePath = path.join(__dirname, '..', 'classes', 'broker-api', apiName, apiName);
 			delete require.cache[path.resolve(filePath)];
@@ -40,7 +38,7 @@ export default class BrokerController extends Base {
 			}
 		} catch (error) {
 			console.warn('Error creating broker API \n\n', error);
-			await this.app.controllers.system.update({connected: true});
+			await this.app.controllers.system.update({connected: false});
 			this.connected = false;
 		}
 
