@@ -23,6 +23,7 @@ export class InstrumentModel extends BaseModel {
 	}
 
 
+
 	updateBars(bars) {
 		this.data.bars = bars;
 	}

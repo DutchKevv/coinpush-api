@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy, Input} from '@angular/core';
+import {Component, OnInit, OnDestroy, Input, AfterViewInit, ElementRef} from '@angular/core';
 import {SocketService} from '../../services/socket.service';
 import {InstrumentsService} from '../../services/instruments.service';
 import {SystemService} from '../../services/system.service';
@@ -10,17 +10,18 @@ import {SystemState} from '../../../../shared/models/SystemState';
 	styleUrls: ['./instrument-list.component.scss']
 })
 
-export class InstrumentListComponent implements OnInit, OnDestroy {
+export class InstrumentListComponent implements OnDestroy, AfterViewInit {
 
 	@Input() instruments: Array<string> = [];
 
 	private data: any = {};
 
 	constructor(private _socketService: SocketService,
+				private _elementRef: ElementRef,
 				protected instrumentsService: InstrumentsService) {
 	}
 
-	ngOnInit() {
+	ngAfterViewInit() {
 		this.onTick = this.onTick.bind(this);
 
 		this._socketService.socket.on('tick', this.onTick.bind(this));
@@ -30,6 +31,8 @@ export class InstrumentListComponent implements OnInit, OnDestroy {
 				this._load();
 			}
 		});
+
+		this._bindContextMenu();
 	}
 
 	onTick(tick) {
@@ -44,6 +47,24 @@ export class InstrumentListComponent implements OnInit, OnDestroy {
 				this.instruments = instrumentList.map(instrument => instrument.instrument);
 			else
 				alert('Empty instrument list received!');
+		});
+	}
+
+	private _bindContextMenu() {
+		$(this._elementRef.nativeElement).contextMenu({
+			items: [
+				{
+					text: 'Create Chart',
+					value: 'createChart'
+				},
+				{
+					text: 'Favorite'
+				}
+			],
+			menuSelected: (selectedValue, originalEvent) => {
+				let instrument = $(originalEvent.target).parents('[data-symbol]').attr('data-symbol');
+				this.instrumentsService.create({instrument: instrument, live: true});
+			}
 		});
 	}
 

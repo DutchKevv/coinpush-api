@@ -17,11 +17,12 @@
       "prefix": "app",
       "mobile": false,
       "styles": [
-        "node_modules/normalize.css/normalize.css",
         "node_modules/font-awesome/css/font-awesome.css",
         "node_modules/bootstrap/dist/css/bootstrap.min.css",
         "node_modules/jstree/dist/themes/default/style.css",
         "node_modules/jstree/dist/themes/default-dark/style.css",
+
+        "assets/custom/css/contextMenu.css",
 
         "app/style/main.scss",
         "app/style/variables/_variables.scss",
@@ -31,15 +32,16 @@
         "app/style/bootstrap-overwrite.scss"
       ],
       "scripts": [
+        "assets/custom/js/electron.js",
+        "assets/custom/js/contextMenu.js",
         "node_modules/bootstrap/dist/js/bootstrap.min.js",
         "node_modules/jquery-resizable-dom/dist/jquery-resizable",
         "node_modules/jstree/dist/jstree.js",
-        "assets/js/ace/ace.js",
-        "assets/js/custom/electron.js",
-        "assets/js/ace/ext-language_tools.js",
-        "assets/js/ace/theme-tomorrow_night_bright.js",
-        "assets/js/ace/mode-javascript.js",
-        "assets/js/ace/mode-typescript.js"
+        "assets/vendor/js/ace/ace.js",
+        "assets/vendor/js/ace/ext-language_tools.js",
+        "assets/vendor/js/ace/theme-tomorrow_night_bright.js",
+        "assets/vendor/js/ace/mode-javascript.js",
+        "assets/vendor/js/ace/mode-typescript.js"
       ],
       "addons": [
         "node_modules/font-awesome/fonts/*.+(otf|eot|svg|ttf|woff|woff2)"

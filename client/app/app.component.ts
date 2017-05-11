@@ -39,5 +39,8 @@ export class AppComponent implements AfterViewInit {
 		window.setTimeout(() => {
 			document.body.removeChild(elLoadScreen);
 		}, 0);
+
+		// Disable right mouse click
+		document.body.addEventListener('contextmenu', e => e.preventDefault(), false);
 	}
 }

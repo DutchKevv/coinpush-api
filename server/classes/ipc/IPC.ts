@@ -227,7 +227,7 @@ export default class IPC extends Base {
 	 * @private
 	 */
 	_getEnvironment() {
-		return typeof window == 'undefined' ? 'node' : 'browser';
+		return typeof window === 'undefined' ? 'node' : 'browser';
 	}
 }
 

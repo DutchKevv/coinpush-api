@@ -7,6 +7,7 @@ import {fork, spawn}      from 'child_process';
 
 const dirTree = require('directory-tree');
 const debug = _debug('TradeJS:EditorController');
+const rmdir = require('rmdir')
 
 export default class EditorController {
 
@@ -37,6 +38,29 @@ export default class EditorController {
 		await this._writeToFile(filePath, content);
 
 		// return this._compile(inputPath, outputPath);
+	}
+
+	public rename(filePath, name) {
+
+	}
+
+	public delete(filePath) {
+		console.log('sdfsdsdf', filePath);
+		console.log('sdfsdsdf', filePath);
+
+		return new Promise((resolve, reject) => {
+			rmdir(filePath, (err, data) => {
+				if (err) {
+					reject(err);
+				} else {
+					resolve();
+				}
+			});
+			// fs.unlink(filePath, err => {
+			//
+			// });
+		});
+
 	}
 
 	public getDirectoryTree() {

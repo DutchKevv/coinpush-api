@@ -198,7 +198,8 @@ export default class App extends Base {
 				this._io.sockets.emit('instrument:created', {
 					id: instrument.id,
 					timeFrame: instrument.timeFrame,
-					instrument: instrument.instrument
+					instrument: instrument.instrument,
+					live: instrument.live
 				});
 			});
 		});

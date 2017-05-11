@@ -6,7 +6,9 @@
 	 (onAfterResize)="_chartComponent.unpinFromCorner()"
 >
 
-	<h6 class="chart-title pull-left">{{model.data.instrument}} - {{model.data.timeFrame}}</h6>
+	<h6 class="chart-title pull-left">{{model.data.instrument}} - {{model.data.timeFrame}} - {{model.data.live ? 'Live' : 'BackTest #1'}}</h6>
+
+
 	<div class="chart-options btn-group pull-right">
         <span>
                  <!-- Single button -->

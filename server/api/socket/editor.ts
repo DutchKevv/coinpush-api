@@ -33,4 +33,31 @@ module.exports = (app, socket) => {
 			cb(error);
 		}
 	});
+
+	socket.on('editor:file:delete', async (data, cb) => {
+		debug(`Saving ${data.filePath}`);
+
+		if (!data || typeof data.filePath !== 'string')
+			return cb('No path given');
+
+		try {
+			cb(null, await app.controllers.editor.delete(data.filePath));
+		} catch (error) {
+			cb(error);
+		}
+	});
+
+
+	socket.on('editor:file:rename', async (data, cb) => {
+		debug(`Saving ${data.filePath}`);
+
+		if (!data || typeof data.filePath !== 'string')
+			return cb('No filePath given');
+
+		try {
+			cb(null, await app.controllers.editor.rename(data.filePath, data.name));
+		} catch (error) {
+			cb(error);
+		}
+	});
 };

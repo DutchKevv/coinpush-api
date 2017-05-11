@@ -11,10 +11,6 @@
     overflow: auto;
 }
 
-* {
-    font-size: 10px;
-}
-
 li {
     border-bottom: 1px solid #8c8a8a;
     list-style: none;
@@ -22,7 +18,7 @@ li {
 }
 
 table {
-
+    font-size: 10px;
     width: 100%;
     tbody tr {
         border-top: 1px solid #8c8a8a;

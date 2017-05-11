@@ -24,7 +24,7 @@ export class InstrumentsService {
 	}
 
 	public init(): void {
-		this._socketService.socket.on('instrument:created', (instrumentSettings: InstrumentSettings) =>
+		this._socketService.socket.on('instrument:created', (instrumentSettings: InstrumentSettings) => !console.log('instrumentSettings', 'instrumentSettings', instrumentSettings) &&
 			this.add(new InstrumentModel(instrumentSettings))
 		);
 

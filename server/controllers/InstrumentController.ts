@@ -14,7 +14,6 @@ export default class InstrumentController extends Base {
 
 	private _unique = 0;
 	private _instruments = {};
-	private _instrumentList: Array<string> = [];
 
 	constructor(opt, protected app: App) {
 		super(opt);
@@ -56,15 +55,15 @@ export default class InstrumentController extends Base {
 			})
 		});
 
-		await worker.init();
-
 		this._instruments[id] = {
 			id: id,
 			instrument: instrument,
 			timeFrame: timeFrame,
-			up: true,
+			live: live,
 			worker: worker
 		};
+
+		await worker.init();
 
 		this.emit('created', this._instruments[id]);
 

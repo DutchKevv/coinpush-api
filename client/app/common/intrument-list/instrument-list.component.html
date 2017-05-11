@@ -15,7 +15,8 @@
     <div class="instrument-list-rows-wrapper">
         <table>
             <tbody>
-            <tr *ngFor="let instrument of instruments;">
+
+            <tr *ngFor="let instrument of instruments;" [attr.data-symbol]="instrument">
                 <td (click)="instrumentsService.create({instrument: instrument, live: true})">
                     <i class="fa fa-arrow-{{data[instrument] && data[instrument].direction}}"></i>
                     {{ instrument }}
@@ -27,3 +28,11 @@
         </table>
     </div>
 </div>
+
+<ul id="contextMenu" class="dropdown-menu" role="menu" style="display:none" >
+    <li><a tabindex="-1" href="#">Action</a></li>
+    <li><a tabindex="-1" href="#">Another action</a></li>
+    <li><a tabindex="-1" href="#">Something else here</a></li>
+    <li class="divider"></li>
+    <li><a tabindex="-1" href="#">Separated link</a></li>
+</ul>

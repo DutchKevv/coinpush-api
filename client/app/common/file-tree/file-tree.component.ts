@@ -2,13 +2,14 @@ declare let socket: any;
 declare let ace: any;
 declare let $: any;
 
-import {Component, AfterViewInit, OnDestroy} from '@angular/core';
+import {Component, AfterViewInit, OnDestroy, ElementRef, ViewEncapsulation} from '@angular/core';
 import {SocketService}  from '../../services/socket.service';
 
 @Component({
 	selector: 'file-tree',
 	templateUrl: './file-tree.component.html',
-	styleUrls: ['./file-tree.component.css']
+	styleUrls: ['./file-tree.component.scss'],
+	encapsulation: ViewEncapsulation.None,
 })
 
 export class FileTreeComponent implements AfterViewInit, OnDestroy {
@@ -19,28 +20,18 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 	jstree: any;
 	loaded: boolean;
 
-	constructor(socketService: SocketService) {
-		this.socket = socketService.socket;
+	constructor(private _socketService: SocketService) {
+		this.socket = _socketService.socket;
 
 		this.jstree = null;
 		this.loaded = false;
 	}
 
 	ngAfterViewInit(): void {
-		this.init();
-	}
-
-	ngOnDestroy(): void {
-
-	}
-
-	init() {
-
 		this.$el = $('#fileListContainer');
-
 		this.$el.off('changed.jstree').on('changed.jstree', this.onChange.bind(this));
 
-		this.socket.on('file:list', (err: any, result: Object) => {
+		this._socketService.socket.on('file:list', (err: any, result: Object) => {
 
 			if (err)
 				return this._showError(err);
@@ -72,7 +63,13 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 			this.jstree = this.$el.jstree(true);
 		});
 
-		this.socket.emit('file:list');
+		this._loadFileTree();
+
+		this._bindContextMenu();
+	}
+
+	private _loadFileTree() {
+		this._socketService.socket.emit('file:list');
 	}
 
 	update(data: Object) {
@@ -105,7 +102,119 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 		return obj;
 	}
 
-	_showError(err: string) {
+	private _bindContextMenu() {
+		let selected = null;
+
+		this.$el.contextMenu({
+			menuSelected: (selectedValue, originalEvent) => {
+				let filePath = originalEvent.target.id.split('file_tree_')[1].split('_anchor')[0];
+
+				switch (selectedValue) {
+					case 'open':
+						this._open(filePath);
+						break;
+					case 'rename':
+						this._rename(filePath);
+						break;
+					case 'delete':
+						this._delete(filePath);
+						break;
+					case 'createFile':
+						this._createFile();
+						break;
+					case 'createDirectory':
+						this._createDirectory();
+						break;
+
+				}
+			},
+			beforeCreate: (settings, originalEvent) => {
+				if (!originalEvent.target.classList.contains('jstree-anchor'))
+					return false;
+
+				if (selected) {
+					selected.classList.remove('contextFocus');
+				}
+
+				selected = originalEvent.target;
+				selected.classList.add('contextFocus');
+
+				let isFile = selected.getElementsByClassName('glyphicon-file').length > 0;
+
+				settings.items = [
+					{
+						text: 'Open',
+						value: 'open'
+					},
+					{
+						text: 'Rename',
+						value: 'rename'
+					}
+				];
+
+				// Directory
+				if (!isFile) {
+					settings.items.push(...[
+						{
+							text: 'Create file',
+							value: 'createFile'
+						},
+						{
+							text: 'Create directory',
+							value: 'createDirectory'
+						}
+					]);
+				}
+
+				settings.items.push({
+					text: 'Delete',
+					value: 'delete'
+				});
+			},
+			afterDestroy: () => {
+				if (selected) {
+					selected.classList.remove('contextFocus');
+					selected = null;
+				}
+			}
+		});
+	}
+
+	private _open(filePath) {
+
+	}
+
+	private _rename(filePath) {
+		// TODO: Show new name popup
+		let name = 'test';
+
+		this.socket.emit('editor:file:rename', {filePath: filePath, name: name}, (err) => {
+			if (err)
+				return console.error(err);
+		});
+	}
+
+	private _delete(filePath) {
+		// TODO: Show confirmation popup
+		this.socket.emit('editor:file:delete', {filePath: filePath}, (err) => {
+			if (err)
+				return console.error(err);
+
+			this.jstree('remove', 'file_tree_' + filePath + '_anchor');
+		});
+	}
+
+	private _createFile() {
+
+	}
+
+	private _createDirectory() {
+
+	}
+
+	private _showError(err) {}
+
+	ngOnDestroy(): void {
 
 	}
 }

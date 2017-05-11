@@ -44,7 +44,8 @@ module.exports = (app: App, socket) => {
 			list.push({
 				id: instrument.id,
 				timeFrame: instrument.timeFrame,
-				instrument: instrument.instrument
+				instrument: instrument.instrument,
+				live: instrument.live
 			});
 		}
 

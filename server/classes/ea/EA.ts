@@ -29,7 +29,7 @@ export default class EA extends Instrument implements IEA {
 		});
 
 		this.orderManager = new OrderManager(this.accountManager, {
-			live: this.live
+			live: this.options.live
 		});
 	}
 
@@ -57,7 +57,7 @@ export default class EA extends Instrument implements IEA {
 	async tick(timestamp, bid, ask): Promise<void> {
 		await super.tick(timestamp, bid, ask);
 
-		if (this.live === false) {
+		if (this.options.live === false) {
 			this.orderManager.tick()
 		}
 
