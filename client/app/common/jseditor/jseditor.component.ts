@@ -67,9 +67,10 @@ export class JSEditorComponent implements AfterViewInit {
 
 	loadFile(path: any) {
 		this.currentFile = path;
+
 		this.socket.emit('file:load', {path: path}, (err: any, result: any) => {
 			try {
-				this.editor.session.setValue(result);
+				this.editor.session.setValue(result || '');
 			} catch (err) {
 				console.log(err);
 			}

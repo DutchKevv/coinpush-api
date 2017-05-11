@@ -4,16 +4,18 @@ import * as _debug  from 'debug';
 // import * as watch 	from 'node-watch';
 import * as watch 	from 'watch';
 import {fork, spawn}      from 'child_process';
+import Base from '../classes/Base';
 
 const dirTree = require('directory-tree');
 const debug = _debug('TradeJS:EditorController');
 const rmdir = require('rmdir')
 
-export default class EditorController {
+export default class EditorController extends Base {
 
 	private pathCustom = path.join(__dirname, '../../custom/');
 
 	constructor(protected opt, protected app) {
+		super(opt);
 	}
 
 	public async init() {
@@ -41,12 +43,11 @@ export default class EditorController {
 	}
 
 	public rename(filePath, name) {
-
+		debug('rename: ' + filePath + ' to: ' + name);
 	}
 
 	public delete(filePath) {
-		console.log('sdfsdsdf', filePath);
-		console.log('sdfsdsdf', filePath);
+		debug('delete: ' + filePath);
 
 		return new Promise((resolve, reject) => {
 			rmdir(filePath, (err, data) => {
@@ -56,11 +57,18 @@ export default class EditorController {
 					resolve();
 				}
 			});
-			// fs.unlink(filePath, err => {
-			//
-			// });
 		});
+	}
 
+	public createFile(filePath) {
+		debug('Create file: ' + filePath);
+
+		this.emit('change');
+	}
+
+	public createDirectory(directoryPath) {
+		debug('Create directory: ' + directoryPath);
+		this.emit('change');
 	}
 
 	public getDirectoryTree() {
@@ -121,19 +129,20 @@ export default class EditorController {
 
 				// Finished walking the tre
 				// console.log('asdasdasd', fileNames);
+				this.emit('change');
 			} else if (prev === null) {
 				debug('file:new', fileNames);
-				this.app._io.sockets.emit('editor:changed', {});
+				this.emit('change')
 				await this._compile(this._getCustomAbsoluteRootFolder(fileNames), this._getBuildAbsoluteRootFolder(fileNames));
 				// f is a new file
 			} else if (curr.nlink === 0) {
 				debug('file:removed', fileNames);
-				this.app._io.sockets.emit('editor:changed', {});
+				this.emit('change')
 				await this._compile(this._getCustomAbsoluteRootFolder(fileNames), this._getBuildAbsoluteRootFolder(fileNames));
 				// f was removed
 			} else {
 				debug('file:changed', fileNames);
-				this.app._io.sockets.emit('editor:changed', {});
+				this.emit('change')
 				await this._compile(this._getCustomAbsoluteRootFolder(fileNames), this._getBuildAbsoluteRootFolder(fileNames));
 				// f was changed
 			}

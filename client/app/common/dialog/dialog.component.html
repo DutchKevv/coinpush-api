@@ -8,22 +8,24 @@
         <div role="form" class="form-horizontal">
             <div class="container-fluid">
                 <div class="form-group" >
-                    <div class="col-sm-6" *ngFor="let input of model.inputs">
-                        <label>{{input.name}}</label>
+                    <ng-container *ngIf="model">
+                        <div class="col-sm-6" *ngFor="let input of model.inputs">
+                            <label>{{input.name}}</label>
 
-                        <input *ngIf="['number', 'text', 'color'].indexOf(input.type) > -1"
-                               [(ngModel)]="input.value"
-                               type="{{input.type}}"
-                               class="form-control"
-                               placeholder="{{input.name}}"
-                               value="{{input.value}}" />
+                            <input *ngIf="['number', 'text', 'color'].indexOf(input.type) > -1"
+                                   [(ngModel)]="input.value"
+                                   type="{{input.type}}"
+                                   class="form-control"
+                                   placeholder="{{input.name}}"
+                                   value="{{input.value}}" />
 
-                        <select *ngIf="input.type === 'select'" class="form-control">
-                            <option value="default">DEFAULT</option>
-                            <option value="default">DEFAULT</option>
-                            <option value="default">DEFAULT</option>
-                        </select>
-                    </div>
+                            <select *ngIf="input.type === 'select'" class="form-control">
+                                <option value="default">DEFAULT</option>
+                                <option value="default">DEFAULT</option>
+                                <option value="default">DEFAULT</option>
+                            </select>
+                        </div>
+                    </ng-container>
                 </div>
             </div>
         </div>

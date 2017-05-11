@@ -1,18 +1,24 @@
+import {DialogAnchorDirective} from '../../directives/dialoganchor.directive';
 declare let socket: any;
 declare let ace: any;
 declare let $: any;
 
-import {Component, AfterViewInit, OnDestroy, ElementRef, ViewEncapsulation} from '@angular/core';
+import {Component, AfterViewInit, OnDestroy, ElementRef, ViewEncapsulation, ViewChild} from '@angular/core';
 import {SocketService}  from '../../services/socket.service';
+import {DialogComponent} from '../dialog/dialog.component';
 
 @Component({
 	selector: 'file-tree',
 	templateUrl: './file-tree.component.html',
 	styleUrls: ['./file-tree.component.scss'],
 	encapsulation: ViewEncapsulation.None,
+	entryComponents: [DialogComponent]
 })
 
 export class FileTreeComponent implements AfterViewInit, OnDestroy {
+
+	@ViewChild(DialogAnchorDirective) private _dialogAnchor: DialogAnchorDirective;
+
 
 	socket: any;
 
@@ -28,8 +34,12 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 	}
 
 	ngAfterViewInit(): void {
+		this.load();
+
 		this.$el = $('#fileListContainer');
 		this.$el.off('changed.jstree').on('changed.jstree', this.onChange.bind(this));
+
+		this._bindContextMenu();
 
 		this._socketService.socket.on('file:list', (err: any, result: Object) => {
 
@@ -62,13 +72,9 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 
 			this.jstree = this.$el.jstree(true);
 		});
-
-		this._loadFileTree();
-
-		this._bindContextMenu();
 	}
 
-	private _loadFileTree() {
+	public load() {
 		this._socketService.socket.emit('file:list');
 	}
 
@@ -195,12 +201,15 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 	}
 
 	private _delete(filePath) {
+		let id = 'file_tree_' + filePath;
+
+		this.jstree.delete_node(id);
+
 		// TODO: Show confirmation popup
 		this.socket.emit('editor:file:delete', {filePath: filePath}, (err) => {
-			if (err)
+			if (err) {
 				return console.error(err);
-
-			this.jstree('remove', 'file_tree_' + filePath + '_anchor');
+			}
 		});
 	}
 
@@ -209,7 +218,39 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 	}
 
 	private _createDirectory() {
+		return new Promise((resolve, reject) => {
 
+			let self = this;
+
+			this._dialogAnchor.createDialog(DialogComponent, {
+				title: 'New directory',
+				model: {
+					inputs: [
+						{
+							value: '',
+							type: 'text'
+						}
+					]
+				},
+				buttons: [
+					{value: 'add', text: 'Add', type: 'primary'},
+					{text: 'Cancel', type: 'default'}
+				],
+				onClickButton(value) {
+					if (value === 'add') {
+						console.log(this);
+
+						self._socketService.socket.emit('editor:directory:create', (err) => {
+							if (err)
+								return reject(err);
+
+							resolve(true);
+						});
+					} else
+						resolve(false);
+				}
+			});
+		});
 	}
 
 	private _showError(err) {}

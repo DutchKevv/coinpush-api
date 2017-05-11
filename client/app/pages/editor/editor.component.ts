@@ -26,8 +26,8 @@ export class EditorComponent implements AfterViewInit {
 
 	ngAfterViewInit(): void {
 
-
-		this._socketService.socket.on('editor:changed', () => {
+		this._socketService.socket.on('editor:change', () => {
+			this.fileTree.load();
 			this.jsEditor.reloadCurrentFile();
 		});
 

@@ -55,6 +55,8 @@ export default class InstrumentController extends Base {
 			})
 		});
 
+		await worker.init();
+
 		this._instruments[id] = {
 			id: id,
 			instrument: instrument,
@@ -62,8 +64,6 @@ export default class InstrumentController extends Base {
 			live: live,
 			worker: worker
 		};
-
-		await worker.init();
 
 		this.emit('created', this._instruments[id]);
 

@@ -60,4 +60,23 @@ module.exports = (app, socket) => {
 			cb(error);
 		}
 	});
+
+	socket.on('editor:file:create', async (data, cb) => {
+		debug(`Saving ${data.filePath}`);
+
+
+	});
+
+	socket.on('editor:directory:create', async (data, cb) => {
+		debug(`Saving ${data.filePath}`);
+
+		if (!data || typeof data.filePath !== 'string')
+			return cb('No filePath given');
+
+		try {
+			cb(null, await app.controllers.editor.rename(data.filePath, data.name));
+		} catch (error) {
+			cb(error);
+		}
+	});
 };

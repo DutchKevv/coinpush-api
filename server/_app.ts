@@ -190,9 +190,9 @@ export default class App extends Base {
 				this._io.sockets.emit('system:state', state);
 			});
 
-			// this.controllers.broker.on('connected', (state: boolean) => {
-			// 	this._io.sockets.emit('system:state', state);
-			// });
+			this.controllers.editor.on('change', () => {
+				this._io.sockets.emit('editor:change', {});
+			});
 
 			this.controllers.instrument.on('created', instrument => {
 				this._io.sockets.emit('instrument:created', {
