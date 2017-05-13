@@ -32,13 +32,13 @@ export class EditorComponent implements AfterViewInit {
 			// this.jsEditor.reloadCurrentFile();
 		});
 
-		// this.fileTree.$el.off('select_node.jstree').on('select_node.jstree', (e: any, data: any) => {
-		// 	console.log('data', 'data', data);
-		// 	if (data.node && data.node.original.isFile) {
-		// 		let path = this.fileTree.$el.jstree(true).get_path(data.node, '/');
-		//
-		// 	}
-		// });
+		this.fileTree.$el.off('select_node.jstree').on('select_node.jstree', (e: any, data: any) => {
+			console.log('data', 'data', data);
+			if (data.node && data.node.original.isFile) {
+				let path = this.fileTree.$el.jstree(true).get_path(data.node, '/');
+
+			}
+		});
 	}
 
 	fileTreeUpdate(event) {

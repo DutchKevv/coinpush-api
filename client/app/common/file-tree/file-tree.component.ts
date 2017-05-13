@@ -24,8 +24,6 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 	$el: any;
 	jstree: any;
 
-	_firstLoad = true;
-
 	private _data = [];
 
 	constructor(
@@ -74,6 +72,13 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 						icons: true
 					}
 				}
+			});
+
+			this.$el.on('select_node.jstree', (e: any, data: any) => {
+				this.updateEvent.emit({
+					type: 'select',
+					value: data.node.id
+				});
 			});
 
 			this.jstree = this.$el.jstree(true);
@@ -192,12 +197,6 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 		this.jstree.deselect_all(true);
 		this.jstree.open_node(id);
 		this.jstree.select_node(id);
-
-
-		this.updateEvent.emit({
-			type: 'select',
-			value: id
-		});
 	}
 
 	private _rename(filePath) {

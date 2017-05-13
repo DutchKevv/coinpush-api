@@ -6,7 +6,12 @@
   "asar": false,
   "files": [
     "!_cache/*",
+    "!dist/*",
+    "!custom/ea/*",
+    "!custom/indicator/*",
     "!client/node_modules/*",
+    "!client/assets/*",
+    "!client/app/*",
     "!electron/node_modules/*",
     "!electron/assets/*"
   ],

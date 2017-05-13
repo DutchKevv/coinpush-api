@@ -44,6 +44,7 @@ import {ChartComponent} from './common/chart/chart.component';
 import {ChartReportDirective} from './common/chart/chart-report.directive';
 import {BacktestSettingsComponent} from './common/backtest-settings/backtest-settings.component';
 import {BacktestReportsComponent} from './common/backtest-report/backtest-reports.component';
+import {NewsListComponent} from './common/news-feed/news-list';
 
 @NgModule({
 	declarations: [
@@ -57,6 +58,7 @@ import {BacktestReportsComponent} from './common/backtest-report/backtest-report
 		BacktestReportsComponent,
 		JSEditorComponent,
 		FileTreeComponent,
+		NewsListComponent,
 		InstrumentListComponent,
 		ChartOverviewComponent,
 		ChartBoxComponent,

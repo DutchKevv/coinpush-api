@@ -23,7 +23,10 @@ export default class EditorController extends Base {
 	}
 
 	public async init() {
-		this._directoryTree = await this._loadDirectoryTree();
+		await this._loadDirectoryTree();
+
+		// TODO - Do not load list with every change!
+		this.on('change', () => this._loadDirectoryTree());
 
 		return await this._startWatcher();
 	}
@@ -91,6 +94,9 @@ export default class EditorController extends Base {
 			rmdir(filePath, (err, data) => {
 				if (err)
 					return reject(err);
+
+				// Delete from stored tree
+
 
 				resolve();
 			});
@@ -160,7 +166,7 @@ export default class EditorController extends Base {
 
 		let tree = dirTree(this.app.controllers.config.config.path.custom).children;
 
-		return this._normalizeDirectoryTree(tree);
+		this._directoryTree = this._normalizeDirectoryTree(tree);
 	}
 
 	private _normalizeDirectoryTree(arr: any): Array<any> {
