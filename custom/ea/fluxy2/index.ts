@@ -57,4 +57,3 @@ export default class MyEA extends EA implements IEA {
 		}
 	}
 }
-

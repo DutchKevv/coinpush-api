@@ -3,7 +3,7 @@ declare let socket: any;
 declare let ace: any;
 declare let $: any;
 
-import {Component, AfterViewInit, OnDestroy, ElementRef, ViewEncapsulation, ViewChild} from '@angular/core';
+import {Component, AfterViewInit, OnDestroy, ElementRef, ViewEncapsulation, ViewChild, Output, EventEmitter} from '@angular/core';
 import {SocketService}  from '../../services/socket.service';
 import {DialogComponent} from '../dialog/dialog.component';
 
@@ -18,30 +18,33 @@ import {DialogComponent} from '../dialog/dialog.component';
 export class FileTreeComponent implements AfterViewInit, OnDestroy {
 
 	@ViewChild(DialogAnchorDirective) private _dialogAnchor: DialogAnchorDirective;
-
+	@Output() updateEvent = new EventEmitter<any>();
 
 	socket: any;
-
 	$el: any;
 	jstree: any;
-	loaded: boolean;
 
-	constructor(private _socketService: SocketService) {
+	_firstLoad = true;
+
+	private _data = [];
+
+	constructor(
+		private _socketService: SocketService,
+		private _elementRef: ElementRef) {
 		this.socket = _socketService.socket;
 
 		this.jstree = null;
-		this.loaded = false;
 	}
 
 	ngAfterViewInit(): void {
 		this.load();
 
 		this.$el = $('#fileListContainer');
-		this.$el.off('changed.jstree').on('changed.jstree', this.onChange.bind(this));
 
 		this._bindContextMenu();
 
-		this._socketService.socket.on('file:list', (err: any, result: Object) => {
+		this._socketService.socket.on('file:list', (err: any, result: any) => {
+			this._toggleBusyIcon(false);
 
 			if (err)
 				return this._showError(err);
@@ -49,19 +52,22 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 			if (!result)
 				return;
 
+			this._data = this._convertData(result);
+
 			if (this.jstree)
-				return this.update(result);
+				return this.update(this._data);
 
 			this.$el.jstree({
 				plugins: [
 					'state',
-					'cookies',
 					'ui',
 					'html_data'
 				],
 				core: {
+					check_callback: true,
+					get_selected: true,
 					multiple: false,
-					data: this.convertData(result),
+					data: this._data,
 					themes: {
 						name: 'default-dark',
 						dots: true,
@@ -75,37 +81,33 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 	}
 
 	public load() {
+		this._toggleBusyIcon(true);
 		this._socketService.socket.emit('file:list');
 	}
 
-	update(data: Object) {
+	update(data = this._data) {
 		let state = this.jstree.get_state();
-		this.$el.jstree(true).settings.core.data = this.convertData(data);
-		this.$el.jstree('refresh');
+		this.jstree.settings.core.data = data;
 		this.jstree.set_state(state);
+		this.jstree.refresh();
 	}
 
-	onChange(e: any, data: any) {
+	private _convertData(arr: any): Array<any> {
+		for (let i = 0, len = arr.length, node; i < len; i++) {
+			node = arr[i];
+			node.text = node.name;
 
-	}
-
-	convertData(obj: any) {
-		obj.text = obj.text || obj.name;
-		obj.id = 'file_tree_' + obj.path;
-		obj.data = {path: obj.path, isFile: typeof obj.extension !== 'undefined'};
-
-		delete obj.name;
-
-		if (obj.extension) {
-			obj.icon = 'glyphicon glyphicon-file';
-		}
-		if (obj.children) {
-			for (let i = 0, len = obj.children.length; i < len; i++) {
-				this.convertData.call(this, obj.children[i]);
+			// Directory
+			if (!node.isFile) {
+				this._convertData.call(this, node.children);
+			// File
+			// TODO: Set icon for each file type (.js, .ts, .json etc)
+			} else {
+				node.icon = 'glyphicon glyphicon-file';
 			}
 		}
 
-		return obj;
+		return arr;
 	}
 
 	private _bindContextMenu() {
@@ -113,7 +115,7 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 
 		this.$el.contextMenu({
 			menuSelected: (selectedValue, originalEvent) => {
-				let filePath = originalEvent.target.id.split('file_tree_')[1].split('_anchor')[0];
+				let filePath = originalEvent.target.id.split('_anchor')[0];
 
 				switch (selectedValue) {
 					case 'open':
@@ -126,10 +128,10 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 						this._delete(filePath);
 						break;
 					case 'createFile':
-						this._createFile();
+						this._createFile(filePath);
 						break;
 					case 'createDirectory':
-						this._createDirectory();
+						this._createDirectory(filePath);
 						break;
 
 				}
@@ -186,71 +188,172 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 		});
 	}
 
-	private _open(filePath) {
+	private _open(id) {
+		this.jstree.deselect_all(true);
+		this.jstree.open_node(id);
+		this.jstree.select_node(id);
 
-	}
 
-	private _rename(filePath) {
-		// TODO: Show new name popup
-		let name = 'test';
-
-		this.socket.emit('editor:file:rename', {filePath: filePath, name: name}, (err) => {
-			if (err)
-				return console.error(err);
+		this.updateEvent.emit({
+			type: 'select',
+			value: id
 		});
 	}
 
-	private _delete(filePath) {
-		let id = 'file_tree_' + filePath;
+	private _rename(filePath) {
+		let oName = this.jstree.get_node(filePath).text,
+			model =  {
+			inputs: [
+				{
+					value: oName,
+					type: 'text'
+				}
+			]
+		};
 
-		this.jstree.delete_node(id);
+		this._dialogAnchor.createDialog(DialogComponent, {
+			title: 'New file',
+			model: model,
+			buttons: [
+				{value: 'add', text: 'Add', type: 'primary'},
+				{text: 'Cancel', type: 'default'}
+			],
+			onClickButton: (value) => {
+				if (value === 'add') {
+					this._toggleBusyIcon(true);
 
-		// TODO: Show confirmation popup
-		this.socket.emit('editor:file:delete', {filePath: filePath}, (err) => {
-			if (err) {
-				return console.error(err);
+					let newName = model.inputs[0].value;
+
+					// Same as old name
+					if (oName === newName)
+						return;
+
+					this._socketService.socket.emit('editor:rename', {id: filePath, name: newName}, (err, result) => {
+						this._toggleBusyIcon(false);
+
+						if (err)
+							return alert(err);
+
+						this.jstree.rename_node(filePath, newName);
+
+						this.updateEvent.emit({
+							type: 'rename',
+							value: newName
+						});
+					});
+				}
 			}
 		});
 	}
 
-	private _createFile() {
+	private _delete(filePath) {
+		this.jstree.delete_node(filePath);
 
-	}
+		// TODO: Show confirmation popup
+		this._toggleBusyIcon(true);
 
-	private _createDirectory() {
-		return new Promise((resolve, reject) => {
+		this.socket.emit('editor:file:delete', {filePath: filePath}, (err) => {
+			this._toggleBusyIcon(false);
 
-			let self = this;
+			if (err) {
+				return console.error(err);
+			}
 
-			this._dialogAnchor.createDialog(DialogComponent, {
-				title: 'New directory',
-				model: {
-					inputs: [
-						{
-							value: '',
-							type: 'text'
-						}
-					]
-				},
-				buttons: [
-					{value: 'add', text: 'Add', type: 'primary'},
-					{text: 'Cancel', type: 'default'}
-				],
-				onClickButton(value) {
-					if (value === 'add') {
-						console.log(this);
+			this.jstree.delete_node(filePath);
 
-						self._socketService.socket.emit('editor:directory:create', (err) => {
-							if (err)
-								return reject(err);
-
-							resolve(true);
-						});
-					} else
-						resolve(false);
-				}
+			this.updateEvent.emit({
+				type: 'delete',
+				value: filePath
 			});
 		});
+	}
+
+	private _createFile(filePath) {
+		let model =  {
+			inputs: [
+				{
+					value: '',
+					type: 'text'
+				}
+			]
+		};
+
+		this._dialogAnchor.createDialog(DialogComponent, {
+			title: 'New file',
+			model: model,
+			buttons: [
+				{value: 'add', text: 'Add', type: 'primary'},
+				{text: 'Cancel', type: 'default'}
+			],
+			onClickButton: (value) => {
+				if (value === 'add') {
+					this._toggleBusyIcon(true);
+
+					this._socketService.socket.emit('editor:file:create', {parent: filePath, name: model.inputs[0].value}, (err, result) => {
+						this._toggleBusyIcon(false);
+
+						if (err)
+							return alert(err);
+
+						this.jstree.create_node(filePath, {
+							id: result.id,
+							text: model.inputs[0].value
+						}, 'inside');
+
+						this.updateEvent.emit({
+							type: 'createFile',
+							value: model.inputs[0].value
+						});
+					});
+				}
+			}
+		});
+	}
+
+	private _createDirectory(filePath) {
+		let model =  {
+				inputs: [
+					{
+						value: '',
+						type: 'text'
+					}
+				]
+			};
+
+		this._dialogAnchor.createDialog(DialogComponent, {
+			title: 'New directory',
+			model: model,
+			buttons: [
+				{value: 'add', text: 'Add', type: 'primary'},
+				{text: 'Cancel', type: 'default'}
+			],
+			onClickButton: (value) => {
+				if (value === 'add') {
+					this._toggleBusyIcon(true);
+
+					this._socketService.socket.emit('editor:directory:create', {parent: filePath, name: model.inputs[0].value}, (err, result) => {
+						this._toggleBusyIcon(false);
+
+						if (err)
+							return alert(err);
+
+						this.jstree.create_node(filePath, {
+							id: result.id,
+							text: model.inputs[0].value
+						}, 'inside');
+
+						this.updateEvent.emit({
+							type: 'createDirectory',
+							value: model.inputs[0].value
+						});
+					});
+				}
+			}
+		});
+	}
+
+	private _toggleBusyIcon(state) {
+		$(this._elementRef.nativeElement).find('.spinner').toggle(!!state);
 	}
 
 	private _showError(err) {}

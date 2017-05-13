@@ -47,6 +47,9 @@ export class JSEditorComponent implements AfterViewInit {
 		ace.require('ace/config').set('workerPath', '/assets/js/ace/');
 
 		this.editor = ace.edit(this._editorEl);
+		this.editor.setAutoScrollEditorIntoView(true);
+		// this.editor.setOption('minLines', 100);
+		this.editor.setOption('maxLines', 200);
 		this.editor.setTheme('ace/theme/tomorrow_night_bright');
 		this.editor.getSession().setMode('ace/mode/typescript');
 
@@ -65,12 +68,19 @@ export class JSEditorComponent implements AfterViewInit {
 		this.editor.on('blur', this.onBlur.bind(this));
 	}
 
-	loadFile(path: any) {
-		this.currentFile = path;
+	loadFile(id: any, focus = true) {
+		this.currentFile = id;
 
-		this.socket.emit('file:load', {path: path}, (err: any, result: any) => {
+		this.socket.emit('file:load', {id: id}, (err: any, result: any) => {
 			try {
 				this.editor.session.setValue(result || '');
+
+				if (focus) {
+					this.editor.focus();
+
+					// TODO: Store last used line number
+					// this.editor.gotoLine(n); //Go to end of document
+				}
 			} catch (err) {
 				console.log(err);
 			}

@@ -191,6 +191,7 @@ export default class App extends Base {
 			});
 
 			this.controllers.editor.on('change', () => {
+				console.log('CHANGE CHANGE CHANGE!!');
 				this._io.sockets.emit('editor:change', {});
 			});
 

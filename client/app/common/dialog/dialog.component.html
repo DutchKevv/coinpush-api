@@ -9,8 +9,9 @@
             <div class="container-fluid">
                 <div class="form-group" >
                     <ng-container *ngIf="model">
-                        <div class="col-sm-6" *ngFor="let input of model.inputs">
+                        <div class="col-sm-12" *ngFor="let input of model.inputs">
                             <label>{{input.name}}</label>
+
 
                             <input *ngIf="['number', 'text', 'color'].indexOf(input.type) > -1"
                                    [(ngModel)]="input.value"

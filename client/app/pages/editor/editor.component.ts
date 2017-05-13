@@ -27,23 +27,38 @@ export class EditorComponent implements AfterViewInit {
 	ngAfterViewInit(): void {
 
 		this._socketService.socket.on('editor:change', () => {
-			this.fileTree.load();
-			this.jsEditor.reloadCurrentFile();
+			console.log('CHANGE CHANGE');
+			// this.fileTree.load();
+			// this.jsEditor.reloadCurrentFile();
 		});
 
-		this.fileTree.$el.off('select_node.jstree').on('select_node.jstree', (e: any, data: any) => {
-			if (data.node && data.node.data && data.node.data.isFile) {
-				let path = this.fileTree.$el.jstree(true).get_path(data.node, '/');
-				this.jsEditor.loadFile(path);
-			}
-		});
+		// this.fileTree.$el.off('select_node.jstree').on('select_node.jstree', (e: any, data: any) => {
+		// 	console.log('data', 'data', data);
+		// 	if (data.node && data.node.original.isFile) {
+		// 		let path = this.fileTree.$el.jstree(true).get_path(data.node, '/');
+		//
+		// 	}
+		// });
 	}
 
-	async onClickRun() {
-		try {
-			await this.jsEditor.saveFile();
-			this._router.navigate(['backtest', {run: true}]);
-		} catch (err) {
+	fileTreeUpdate(event) {
+		switch (event.type) {
+			case 'select':
+				this.jsEditor.loadFile(event.value);
+				break;
+			case 'delete':
+				break;
+			case 'createFile':
+				this.jsEditor.loadFile(event.value);
+				break;
+			case 'createDirectory':
+				break;
+			case 'rename':
+				break;
+			default:
+				throw new Error('Unknown fileTree update event');
 		}
+
+		console.log('fileTree update', JSON.stringify(event));
 	}
 }

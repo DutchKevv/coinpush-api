@@ -1,8 +1,17 @@
+.spinner.absolute {
+    top: 0;
+    right: 5px;
+    left: auto;
+    width: 20px;
+    height: 20px;
+    display: none;
 
+}
 .contextFocus {
     background: rgba(100, 200, 40, 0.6);
 }
 
 #fileListContainer {
     height: 100%;
+    background: none;
 }

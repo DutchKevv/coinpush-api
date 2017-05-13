@@ -46,7 +46,7 @@ gulp.task('server:dev', callback => runSequence(
 gulp.task('server:run', startChildProcess);
 gulp.task('server:kill', killChildProcess);
 gulp.task('server:watch', () => {
-    gulp.watch(['./**/*.ts', '!node_modules'], () => runSequence('server:kill', 'server:build', 'custom:build', 'server:run'));
+    gulp.watch(['./**/*.ts', '!node_modules/**/*'], () => runSequence('server:kill', 'server:build', 'custom:build', 'server:run'));
 });
 
 gulp.task('server:build', ['shared:copy-assets'], () => {
@@ -124,8 +124,14 @@ function killChildProcess() {
     return new Promise(resolve => {
         if (child && child.pid && !child.isClosing) {
             child.isClosing = true;
+            let t = setTimeout(() => {
+				console.warn('APP KEEPS HANGING! TRYING ONE MORE TIME');
+				child.kill();
+            }, 5000);
+
             child.on('exit', () => {
                 child = null;
+                clearTimeout(t);
                 resolve();
             });
             child.kill();

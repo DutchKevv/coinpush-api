@@ -59,7 +59,7 @@ export default class WorkerChild extends Base {
 				id = settings.workerOptions.id,
 
 				exitHandler = (code = 0) => {
-					debug(`${id} exit: ${code}`);
+					debug(`${id} exiting: ${code || 'ok'}`);
 					process.exit(code);
 				};
 

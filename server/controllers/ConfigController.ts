@@ -43,6 +43,10 @@ export default class ConfigController {
 		return this._config;
 	}
 
+	get config() {
+		return this._config;;
+	}
+
 	set(settings: IAppConfig): Promise<IAppConfig> {
 		return new Promise(async (resolve, reject) => {
 
