@@ -1,21 +1,21 @@
 <div class="chart-overview-container">
     <chart-box #chartBox
                *ngFor="let model of instrumentsService.instruments$ | async"
-               [ngClass]="{focused: chartBox.focus}"
+               [ngClass]="{focused: model.data.focus}"
                [model]="model"
                class="chart-absolute"
-               (click)="toggleFocused(chartBox)">
+               (click)="instrumentsService.setFocus(model)">
     </chart-box>
 
     <div *ngIf="instrumentsService.instruments.length === 0" class="chart-no-charts">
         <p>No charts, click on any instrument in the left panel to open up a new chart.</p>
     </div>
 </div>
-<div class="chart-overview-tabs">
+<div class="chart-overview-tabs visible-md visible-lg">
     <ul>
         <li *ngFor="let chartBox of charts"
-            [ngClass]="{active: chartBox.focus}"
-            (click)="toggleFocused(chartBox)"
+            [ngClass]="{active: chartBox.model.data.focus}"
+            (click)="instrumentsService.setFocus(chartBox.model)"
         >
             <a>{{chartBox.model.data.instrument}}</a>
         </li>
@@ -27,4 +27,5 @@
         </li>
     </ul>
 </div>
+
 

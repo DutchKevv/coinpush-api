@@ -13,8 +13,13 @@ export class InstrumentModel extends BaseModel {
 		focus: false,
 		indicators: [],
 		bars: [],
-		live: true
+		live: true,
+		zoom: 4,
+		graphType: 'candlestick'
 	};
+
+	private _zoomMax = 10;
+	private _zoomMin = 1;
 
 	constructor(data?: any) {
 		super();
@@ -22,7 +27,13 @@ export class InstrumentModel extends BaseModel {
 		this.set(data);
 	}
 
+	public setZoom(step) {
+		if (this.data.zoom + step > this._zoomMax || this.data.zoom + step < this._zoomMin)
+			return;
 
+		this.set({zoom: this.data.zoom + step});
+
+	}
 
 	updateBars(bars) {
 		this.data.bars = bars;

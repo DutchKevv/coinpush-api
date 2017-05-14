@@ -1,5 +1,10 @@
 @import '../../style/variables/variables';
 
+:host {
+    height: 100%;
+}
+
+
 .chart-overview-column {
     right: 0;
 }

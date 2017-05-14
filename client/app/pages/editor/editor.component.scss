@@ -1,12 +1,5 @@
-#fileListContainer {
-    /*width: 200px;*/
-    /*border: 1px solid #c3c3c3;*/
-    /*position: absolute;*/
-    /*top: 0;*/
-    /*left: 0;*/
-    /*right: 200px;*/
-    /*bottom: 0;*/
-    /*overflow: auto;*/
+:host {
+    height: 100%;
 }
 
 #editor {
@@ -26,4 +19,18 @@
     width: 200px;
     border: 1px solid #c3c3c3;
     text-align: center;
+}
+
+// Mobile
+@media screen and (max-width: 768px) {
+    .three-column:first-child {
+        left: -100%;
+    }
+    .three-column:nth-child(2) {
+        left: 0;
+        right: 0;
+    }
+    .three-column:nth-child(3) {
+       display: none;
+    }
 }

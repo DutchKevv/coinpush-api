@@ -8,8 +8,7 @@
 
 	<h6 class="chart-title pull-left">{{model.data.instrument}} - {{model.data.timeFrame}} - {{model.data.live ? 'Live' : 'BackTest #1'}}</h6>
 
-
-	<div class="chart-options btn-group pull-right">
+	<div class="chart-options btn-group pull-right visible-md visible-lg">
         <span>
                  <!-- Single button -->
             <button type="button" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
@@ -24,8 +23,8 @@
 
                         <li role="separator" class="divider"></li>
                         <li class="dropdown-header">Default</li>
-
                         <li><a (click)="addIndicator('MA')">MA</a></li>
+                        <li><a (click)="addIndicator('Arrow')">Arrow</a></li>
 
                         <li class="dropdown-submenu pull-left">
                             <a href="#">Even More..</a>
@@ -58,51 +57,52 @@
 			<li><a (click)="_chartComponent.toggleTimeFrame('W')">W</a></li>
 		</ul>
 
-		<button (click)="_chartComponent.toggleGraphType('ohlc')"
-				type="button" class="dropdown-toggle text-dark"
+		<button (click)="model.set({graphType: 'ohlc'})"
+
+				type="button"
+				class="dropdown-toggle text-dark button-ohlc"
 				aria-expanded="false">
 			<i class="fa fa-line-chart"></i>
 		</button>
-		<button (click)="_chartComponent.toggleGraphType('candlestick')"
+		<button (click)="model.set({graphType: 'candlestick'})"
 				type="button"
-				class="dropdown-toggle text-dark"
+				class="dropdown-toggle text-dark button-candlestick"
 				aria-expanded="false">
 			<i class="fa fa-bar-chart"></i>
 		</button>
-
-		<button (click)="_chartComponent.zoom(-1)"
+		<button (click)="model.setZoom(-1)"
 				type="button"
-				class="dropdown-toggle text-dark"
+				class="dropdown-toggle text-dark button-zoom-out"
 				aria-expanded="false">
 			<i class="fa fa-search-minus">
 			</i>
 		</button>
-		<button (click)="_chartComponent.zoom(1)"
+		<button (click)="model.setZoom(1)"
 				type="button"
-				class="dropdown-toggle text-dark"
+				class="dropdown-toggle text-dark button-zoom-in"
 				aria-expanded="false">
 			<i class="fa fa-search-plus"></i>
 		</button>
 
 		<button (click)="!$event.stopPropagation() && toggleViewState(false)"
-				type="button" class="dropdown-toggle text-dark"
+				type="button" class="dropdown-toggle text-dark button-minimize"
 				aria-expanded="false">
 			<i class="fa fa-window-minimize"></i>
 		</button>
 		<button *ngIf="viewState === 'windowed'"
 				(click)="toggleViewState('stretched')"
-				type="button" class="dropdown-toggle text-dark"
+				type="button" class="dropdown-toggle text-dark button-expand"
 				aria-expanded="false">
 			<i class="fa fa-expand"></i>
 		</button>
 		<button *ngIf="viewState === 'stretched'"
 				(click)="toggleViewState('windowed')"
 				type="button"
-				class="dropdown-toggle text-dark"
+				class="dropdown-toggle text-dark button-compress"
 				aria-expanded="false">
 			<i class="fa fa-compress"></i>
 		</button>
-		<button (click)="destroy()" type="button" class="dropdown-toggle text-dark"
+		<button (click)="destroy()" type="button" class="dropdown-toggle text-dark button-destroy"
 				data-toggle="dropdown" aria-haspopup="true"
 				aria-expanded="false">
 			<i class="fa fa-close"></i>

@@ -73,8 +73,7 @@ export class FooterComponent implements OnInit, OnDestroy {
 				e.preventDefault();
 
 				let maxHeight = this._maxResizeHeight,
-					minHeight = 21
-				;
+					minHeight = 21;
 
 				if (newHeight > maxHeight)
 					newHeight = maxHeight;

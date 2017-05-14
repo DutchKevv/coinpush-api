@@ -9,7 +9,7 @@ import {SocketService}  from './services/socket.service';
 import {SystemService}  from './services/system.service';
 
 @Component({
-	selector: 'app-root',
+	selector: 'body',
 	templateUrl: './app.component.html',
 	styleUrls: ['./app.component.scss']
 })
@@ -28,18 +28,6 @@ export class AppComponent implements AfterViewInit {
 	}
 
 	ngAfterViewInit() {
-		let minDiff = 1500,
-			elLoadScreen = <any>document.getElementById('loadScreen');
-
-		// document.body.className = 'animate';
-
-		elLoadScreen.style.opacity = 1;
-		this.element.nativeElement.style.opacity = 1;
-
-		window.setTimeout(() => {
-			document.body.removeChild(elLoadScreen);
-		}, 0);
-
 		// Disable right mouse click
 		document.body.addEventListener('contextmenu', e => e.preventDefault(), false);
 	}

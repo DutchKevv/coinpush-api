@@ -7,6 +7,7 @@ import {Component, AfterViewInit, OnDestroy, ElementRef, ViewEncapsulation, View
 import {SocketService}  from '../../services/socket.service';
 import {DialogComponent} from '../dialog/dialog.component';
 
+
 @Component({
 	selector: 'file-tree',
 	templateUrl: './file-tree.component.html',

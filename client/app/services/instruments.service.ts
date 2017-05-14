@@ -23,10 +23,15 @@ export class InstrumentsService {
 		this.init();
 	}
 
+
 	public init(): void {
-		this._socketService.socket.on('instrument:created', (instrumentSettings: InstrumentSettings) => !console.log('instrumentSettings', 'instrumentSettings', instrumentSettings) &&
-			this.add(new InstrumentModel(instrumentSettings))
-		);
+		this._socketService.socket.on('instrument:created', (instrumentSettings: InstrumentSettings) => {
+			this.add(new InstrumentModel(instrumentSettings));
+		});
+
+		this._socketService.socket.on('instrument:destroyed', (instrumentSettings: InstrumentSettings) => {
+			console.log('dsdfsdafsdf', 'Destroy11');
+		});
 
 		this._loadRunningInstruments();
 	}
@@ -51,11 +56,17 @@ export class InstrumentsService {
 			this._instruments.push(instrumentModel);
 			this.instruments$.next(this._instruments);
 		}
+
+		this.setFocus(instrumentModel);
 	}
 
 	public remove(model: InstrumentModel) {
 		this._instruments.splice(this._instruments.indexOf(model), 1);
 		this.instruments$.next(this._instruments);
+
+		if (this.instruments.length) {
+			this.setFocus(this.instruments[this.instruments.length - 1]);
+		}
 
 		return this._destroyOnServer(model);
 	}
@@ -78,8 +89,6 @@ export class InstrumentsService {
 				if (err)
 					alert(err);
 
-				console.info(`Loading ${model.data.instrument} took: ${(Date.now() - startTime) / 1000} Seconds`);
-
 				model.updateBars(data.candles);
 				model.updateIndicators(data.indicators);
 
@@ -90,8 +99,6 @@ export class InstrumentsService {
 
 	public toggleTimeFrame(model: InstrumentModel, timeFrame) {
 		return new Promise((resolve, reject) => {
-
-			model.set({timeFrame});
 
 			this._socketService.socket.emit('instrument:toggleTimeFrame', {
 				id: model.data.id,
@@ -105,12 +112,31 @@ export class InstrumentsService {
 		});
 	}
 
+	public setFocus(model: InstrumentModel) {
+		this.instruments.forEach(instrument => {
+			instrument.set({focus: false});
+		});
+
+		model.set({focus: true});
+
+	}
+
+	public getFocused(): InstrumentModel {
+		for (let i = 0, len = this.instruments.length; i < len; i++) {
+			if (this.instruments[i].data.focus)
+				return this.instruments[i];
+		}
+
+		return null;
+	}
+
 	private _destroyOnServer(model: InstrumentModel) {
 		return new Promise((resolve, reject) => {
 
 			this._socketService.socket.emit('instrument:destroy', {id: model.data.id}, err => {
 				if (err)
 					return reject(err);
+
 
 				resolve();
 			});

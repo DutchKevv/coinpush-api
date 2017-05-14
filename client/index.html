@@ -10,15 +10,15 @@
         body {
             background: #2d2d2d;
             background: url(assets/custom/img/charts-overview-background.jpg) repeat;
+            overflow: hidden;
         }
 
-        #loadScreen {
-            margin: 0 auto;
-            atransition: opacity .5s ease;
+        body > .spinner {
+            margin: 0 calc(50% - 20px);
             position: absolute;
-            top: 40%;
-            left: calc(50% - 60px);
+            top: calc(40% - 20px);
         }
+
 
         .spinner {
             width: 40px;
@@ -69,20 +69,14 @@
     </style>
 
     <script>
-       window.tradeJsStartTime = Date.now();
 	   window.isElectron = (window.process && window.process.type);
     </script>
 </head>
 <body>
-<div id="loadScreen">
-    <div class="spinner" style="margin: 0 auto;">
+    <div class="spinner">
         <div class="dot1"></div>
         <div class="dot2"></div>
     </div>
-    <!--<p style="text-align:center; margin-top: 30px;">Getting shit ready...</p>-->
-</div>
-
-<app-root class="r_flex_container"></app-root>
 
 <!-- Insert this line above script imports  -->
 <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>

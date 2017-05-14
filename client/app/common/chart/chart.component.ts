@@ -26,12 +26,6 @@ export class ChartComponent implements OnInit, OnDestroy {
 	@Input() offset = 0;
 	@Input() chunkLength = 1500;
 
-	private _chartType = 'candleStick';
-
-	private _zoom = 5;
-	private _zoomMax = 10;
-	private _zoomMin = 1;
-
 	private _scrollOffset = -1;
 	private _scrollSpeedStep = 8;
 	private _scrollSpeedMin = 1;
@@ -50,7 +44,26 @@ export class ChartComponent implements OnInit, OnDestroy {
 		this._onScrollBounced = _.throttle(this._onScroll.bind(this), 33);
 
 		this._createChart();
+
+		this.model.changed.subscribe(changes => {
+			for (let key in changes) {
+				switch (key) {
+					case 'zoom':
+						this._updateViewPort();
+						break;
+					case 'graphType':
+						this._chart.series[0].update({
+							type: changes[key]
+						});
+						break;
+					case 'timeFrame':
+						this.toggleTimeFrame(changes[key]);
+						break;
+				}
+			}
+		})
 	}
+
 
 	public addIndicator(indicatorModel: IndicatorModel) {
 		return new Promise((resolve, reject) => {
@@ -97,14 +110,6 @@ export class ChartComponent implements OnInit, OnDestroy {
 		requestAnimationFrame(() => this._chart.reflow());
 	}
 
-	public zoom(step) {
-		if (this._zoom + step > this._zoomMax || this._zoom + step < this._zoomMin)
-			return;
-
-		this._zoom += step;
-		requestAnimationFrame(() => this._updateViewPort());
-	}
-
 	public async toggleTimeFrame(timeFrame) {
 		this._toggleLoading(true);
 
@@ -115,18 +120,10 @@ export class ChartComponent implements OnInit, OnDestroy {
 		this._createChart();
 	}
 
-	public toggleGraphType(type) {
-		this._chartType = type;
-
-		this._chart.series[0].update({
-			type: type
-		});
-	}
-
 	private _createChart() {
 		let settings =_.cloneDeep(HighchartsDefaultTheme);
 
-		settings.series[0]['type'] = this._chartType;
+		settings.series[0]['type'] = this.model.data.graphType;
 
 		// HighStock instance
 		this._chart = HighStock.stockChart(this._elementRef.nativeElement.firstElementChild, _.cloneDeep(HighchartsDefaultTheme));
@@ -241,18 +238,25 @@ export class ChartComponent implements OnInit, OnDestroy {
 
 						// Create
 						else {
-							this._chart.addSeries({
-								type: 'line',
-								name: id,
-								// id: unique,
-								data: drawBuffer.data,
-								color: drawBuffer.style.color,
-								yAxis: 0,
-								ordinal: true,
-								dataGrouping: {
-									enabled: false
-								}
-							});
+							switch (drawBuffer.type) {
+								case 'line':
+									this._chart.addSeries({
+										type: drawBuffer.type,
+										name: id,
+										// id: unique,
+										data: drawBuffer.data,
+										color: drawBuffer.style.color,
+										yAxis: 0,
+										ordinal: true,
+										dataGrouping: {
+											enabled: false
+										}
+									});
+									break;
+								case 'arrow':
+									alert('cannot yet draw arrow');
+									break;
+							}
 						}
 					}
 				}
@@ -290,7 +294,7 @@ export class ChartComponent implements OnInit, OnDestroy {
 
 	private _calculateViewableBars(checkParent = true) {
 		let el = this._elementRef.nativeElement,
-			barW = 3 * this._zoom;
+			barW = 3 * this.model.data.zoom;
 
 		if (checkParent)
 			el = el.parentNode;
@@ -338,6 +342,7 @@ export class ChartComponent implements OnInit, OnDestroy {
 	}
 
 	private _destroyChart() {
+
 		// Unbind scroll
 		this._chart.container.removeEventListener('mousewheel', <any>this._onScrollBounced);
 

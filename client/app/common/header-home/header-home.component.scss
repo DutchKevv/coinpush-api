@@ -1,0 +1,41 @@
+:host {
+	background: #000;
+}
+
+.header-buttons {
+	list-style: none;
+
+
+	> li {
+		float: left;
+		position: relative;
+
+	}
+
+	.button-editor {
+		margin-right: 225px;
+
+		@media screen and (max-width: 768px) {
+			margin-right: 0;
+		}
+	}
+
+	button {
+		padding: 0 5px;
+		margin: 4px;
+		font-size: 14px;
+
+		i.fa {
+			line-height: 20px;
+			display: block;
+		}
+
+		@media screen and (max-width: 768px) {
+			font-size: 16px;
+
+			i.fa {
+				line-height: 25px;
+			}
+		}
+	}
+}

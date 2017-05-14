@@ -52,10 +52,6 @@ export class ChartOverviewComponent implements OnInit {
 		});
 	}
 
-	toggleFocused(chartComponent) {
-		this.charts.forEach(chart => chart.toggleFocus(chart === chartComponent));
-	}
-
 	setFocusToHighestIndex(): void {
 		if (!this.charts)
 			return;
@@ -68,10 +64,6 @@ export class ChartOverviewComponent implements OnInit {
 				ref = chart;
 		});
 
-		this.toggleFocused(ref);
-	}
-
-	getByHighestIndex(): InstrumentModel {
-		return null;
+		// this.toggleFocused(ref);
 	}
 }

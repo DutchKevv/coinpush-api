@@ -8,7 +8,8 @@ import {HomeComponent}    from './pages/home/home.component';
 import {EditorComponent}  from './pages/editor/editor.component';
 
 // Components
-import {HeaderComponent}  from './common/header/header.component';
+import {HeaderHomeComponent}  from './common/header-home/header-home.component';
+import {HeaderEditorComponent}  from './common/header-editor/header-editor.component';
 import {FooterComponent}  from './common/footer/footer.component';
 import {FileTreeComponent}  from './common/file-tree/file-tree.component';
 import {JSEditorComponent}  from './common/jseditor/jseditor.component';
@@ -50,7 +51,8 @@ import {NewsListComponent} from './common/news-feed/news-list';
 	declarations: [
 		AppComponent,
 		LoginComponent,
-		HeaderComponent,
+		HeaderHomeComponent,
+		HeaderEditorComponent,
 		FooterComponent,
 		HomeComponent,
 		EditorComponent,

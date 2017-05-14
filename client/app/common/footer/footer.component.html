@@ -1,6 +1,21 @@
 <!-- Tab content -->
-<div class="tab-content">
+<div class="footer-bar-wrapper clearfix">
+    <!-- Tab nav -->
     <i class="splitter fa fa-bars text-white" aria-hidden="true">&nbsp;</i>
+
+    <ul class="nav-tabs" role="tablist" style="float:left;">
+        <li role="presentation" class="active">
+            <a data-target="#backtest" aria-controls="profile" role="tab" data-toggle="tab">Backtest</a>
+        </li>
+        <li role="presentation"><a data-target="#home" aria-controls="home" role="tab" data-toggle="tab">Debugger</a></li>
+        <li role="presentation"><a data-target="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>
+        <li role="presentation"></li>
+    </ul>
+
+    <status style="float: right;"></status>
+</div>
+
+<div class="tab-content">
 
     <!-- Backtest -->
     <div role="tabpanel" class="tab-pane active" id="backtest">
@@ -35,22 +50,4 @@
 
     <div role="tabpanel" class="tab-pane" id="messages">...</div>
     <div role="tabpanel" class="tab-pane" id="settings">...</div>
-
-</div>
-
-<div class="footer-bar-wrapper clearfix">
-    <!-- Tab nav -->
-
-    <ul class="nav-tabs" role="tablist" style="float:left;">
-        <li role="presentation" class="active">
-            <a data-target="#backtest" aria-controls="profile" role="tab" data-toggle="tab">Backtest</a>
-        </li>
-        <li role="presentation"><a data-target="#home" aria-controls="home" role="tab" data-toggle="tab">Debugger</a></li>
-        <li role="presentation"><a data-target="#messages" aria-controls="messages" role="tab" data-toggle="tab">Result</a></li>
-        <li role="presentation"><a data-target="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>
-        <li role="presentation"></li>
-    </ul>
-
-    <status style="float: right;"></status>
-
 </div>

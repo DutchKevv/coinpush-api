@@ -21,8 +21,9 @@ declare let $: any;
 	selector: 'chart-box',
 	templateUrl: './chart-box.component.html',
 	styleUrls: ['./chart-box.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	// changeDetection: ChangeDetectionStrategy.OnPush,
 	entryComponents: [DialogComponent]
+
 })
 
 export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
@@ -40,7 +41,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 	socket: any;
 	$el: any;
 
-	constructor(private _instrumentsService: InstrumentsService,
+	constructor(public _instrumentsService: InstrumentsService,
 				private _socketService: SocketService,
 				private _cookieService: CookieService,
 				private _elementRef: ElementRef) {
@@ -61,6 +62,12 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 		this._draggableDirective.changed.subscribe(() => this.storePosition());
 
 		this.putOnTop();
+
+		this.model.changed.subscribe((changes) => {
+			if (typeof changes.focus !== 'undefined' && changes.focus === true) {
+				this.putOnTop();
+			}
+		});
 	}
 
 	public showIndicatorOptionsMenu(indicatorModel: IndicatorModel): Promise<boolean> {
@@ -90,21 +97,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 		this.setPosition(pos[0], pos[1]);
 	}
 
-	public setAsHighestPosition() {
-		let pos = this._getRandomPosition();
-
-		this.setPosition(pos[0], pos[1]);
-	}
-
-	public toggleFocus(state: boolean): void {
-		this.focus = state;
-
-		if (state) {
-			this.putOnTop();
-			this.toggleViewState(true);
-		}
-	}
-
 	public putOnTop() {
 		let selfIndex = parseInt(this.$el.css('z-index'), 10) || 1,
 			highestIndex = selfIndex;
@@ -132,8 +124,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 			w: this._elementRef.nativeElement.clientWidth,
 			h: this._elementRef.nativeElement.clientHeight
 		};
-
-		console.log('position', position);
 
 		return position;
 	}
@@ -165,6 +155,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 		let indicatorModel = await this.getIndicatorOptions(name),
 			options = {};
 
+		
 		if (await this.showIndicatorOptionsMenu(indicatorModel) === false)
 			return;
 

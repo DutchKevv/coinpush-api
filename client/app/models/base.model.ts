@@ -13,7 +13,7 @@ export class BaseModel {
 		Object.assign(this.data, obj);
 
 		if (triggerChange)
-			this.changed.next();
+			this.changed.next(obj);
 	}
 
 	public toJson() {
