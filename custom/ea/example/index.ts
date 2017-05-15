@@ -10,7 +10,7 @@ export default class MyEA extends EA implements IEA {
 	MA4: any;
 
 
-	
+
 	public async onInit(): Promise<any> {
 
 		this.MA1 = this.addIndicator('MA', {
@@ -32,12 +32,12 @@ export default class MyEA extends EA implements IEA {
 			color: 'orange',
 			period: 50
 		});
-		
+
 	}
 
 	public async onTick(time: number, bid: number, ask: number): Promise<void> {
-		
-		if (this.MA1.value > bid * 1.002 && !this.orderManager.orders.length) {
+
+		if (this.MA1.value > bid * 1.001 && !this.orderManager.orders.length) {
 
 			// Place order
 			this.addOrder({
@@ -47,11 +47,11 @@ export default class MyEA extends EA implements IEA {
 				bid: bid,
 				ask: ask
 			});
-			
+
 		} else {
-			
-			if (this.MA1.value < bid * 0.997 && this.orderManager.orders.length) {
-				
+
+			if (this.MA1.value < bid * 0.999 && this.orderManager.orders.length) {
+
 				// Close order
 				await this.closeOrder(this.orderManager.orders[0].id, bid, ask);
 			}

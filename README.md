@@ -2,7 +2,15 @@
 
 ![Alt text](doc/logo/TradeJS-medium.png?raw=true "Title")
 
+#Under heavy development! (14 05 2017))
+
 ## A full featured stock trading client + server that includes a full IDE and backtest environment. But can be you used with your preferred IDE also! (unlike MetaTrader/cloud9 etc) 
+
+Features
+- Create or own EA / Indicators!
+- MultiWindow
+- Runs on Windows, Mac, Linux, Web (Android, IOS coming up)
+- Backtesting
 
 Can be run as
 - Desktop client (electron)
@@ -10,17 +18,20 @@ Can be run as
 - Standalone client connected to the cloud (with a custom server)
 - Standalone server running elastic in the cloud (with a custom client)
 
- #Under heavy development! (12 02  2017))
- Probably best to come back in another 2 months ;)
- 
-
- ![Alt text](doc/screenshot/dashboard.png?raw=true "Title")
+ ## Dashboard
+ ![Alt text](doc/screenshot/charts.png?raw=true "Title")
  
  ## Build in Editor
  ![Alt text](doc/screenshot/editor.png?raw=true "Title")
  
- ## Mobile (in development)
- ![Alt text](doc/screenshot/mobile.png?raw=true "Title")
+ ## Mobile Dashboard
+ ![Alt text](doc/screenshot/mobile-chart.png?raw=true "Title")
+ 
+ ## Mobile Editor
+ ![Alt text](doc/screenshot/mobile-editor.png?raw=true "Title")
+ 
+ ## Mobile Editor 2
+ ![Alt text](doc/screenshot/mobile-editor2.png?raw=true "Title")
  
   #### How to start (temp, this will be normalized in the future)
   
@@ -30,18 +41,19 @@ Can be run as
      
      # terminal 1
      cd [PATH_TO_TRADEJS]/client
-     npm i
+     npm i (required once)
      npm start
      
      # terminal 2
      cd [PATH_TO_TRADEJS]/server
-     npm i
+     npm i (required once)
      npm start
      
-     ### For native desktop app (electron), replace terminal 2 with ->
-     # terminal 2
-     cd node_modules/tradejs
-     npm run electron:dev
+     ### For desktop app electron ->
+     # terminal 3
+     cd [PATH_TO_TRADEJS]/electron
+     npm i (required once)
+     npm run start
     
  ```
  

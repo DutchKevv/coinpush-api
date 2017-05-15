@@ -14,8 +14,10 @@ Thumbs.db
 #### App ####
 /_cache
 /_builds
-/custom/*
+/custom/ea/*
+/custom/indicator/*
 !/custom/tsconfig.json
+!/custom/ea/example/*
 
 # Client
 /client/dist/

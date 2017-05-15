@@ -1,7 +1,7 @@
 import {SocketService} from '../../services/socket.service';
 declare let $: any;
 
-import {Component, ViewChild, AfterViewInit} from '@angular/core';
+import {Component, ViewChild, AfterViewInit, ElementRef} from '@angular/core';
 import {Router} from '@angular/router';
 import {FileTreeComponent}  from '../../common/file-tree/file-tree.component';
 import {JSEditorComponent}  from '../../common/jseditor/jseditor.component';
@@ -20,11 +20,21 @@ export class EditorComponent implements AfterViewInit {
 	@ViewChild(FileTreeComponent) fileTree: FileTreeComponent;
 	@ViewChild(JSEditorComponent) jsEditor: JSEditorComponent;
 
-	constructor(private _router: Router,
+	$el: any;
+
+	constructor(private _elementRef: ElementRef,
+				private _router: Router,
 				private _socketService: SocketService) {
 	}
 
+
+	
+	swipe() {
+		
+	}
+
 	ngAfterViewInit(): void {
+
 
 		this._socketService.socket.on('editor:change', () => {
 			console.log('CHANGE CHANGE');

@@ -7,6 +7,9 @@ import {Component, AfterViewInit, OnDestroy, ElementRef, ViewEncapsulation, View
 import {SocketService}  from '../../services/socket.service';
 import {DialogComponent} from '../dialog/dialog.component';
 
+let NAV_WITH = 300;
+let speed = 200;
+
 
 @Component({
 	selector: 'file-tree',
@@ -24,6 +27,8 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 	socket: any;
 	$el: any;
 	jstree: any;
+	open = false;
+	translate = -300;
 
 	private _data = [];
 
@@ -35,10 +40,21 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 		this.jstree = null;
 	}
 
+
 	ngAfterViewInit(): void {
 		this.load();
 
 		this.$el = $('#fileListContainer');
+
+		let swipeOptions = {
+			triggerOnTouchEnd: true,
+			swipeStatus: this.onSwipe.bind(this),
+			allowPageScroll: 'vertical',
+			threshold: 100
+		};
+
+		$('body').swipe(swipeOptions);
+
 
 		this._bindContextMenu();
 
@@ -357,6 +373,35 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 	}
 
 	private _showError(err) {}
+
+	onSwipe(event, phase, direction, distance) {
+		console.log(distance);
+		console.log(distance);
+
+
+		if (phase === 'move') {
+			if (direction === 'left') {
+				this.scrollNav(-distance, 0);
+			} else if (direction === 'right') {
+				this.scrollNav(distance - 300, 0);
+			}
+		} else if (phase === 'cancel') {
+			this.scrollNav(this.open ? -NAV_WITH : 0, speed);
+		} else if (phase === 'end') {
+			this.scrollNav(this.open ? -NAV_WITH : 0, speed);
+			this.open = !this.open;
+		}
+	}
+
+	scrollNav(distance, duration) {
+		$(this._elementRef.nativeElement).css('transition-duration', (duration / 1000).toFixed(1) + 's');
+		// inverse the number we set in the css
+
+		let value = /*(distance < 0 ? '' : '-') + Math.abs(distance).toString();*/
+
+
+		$(this._elementRef.nativeElement).css('transform', 'translate(' + distance + 'px,0)');
+	}
 
 	ngOnDestroy(): void {
 
