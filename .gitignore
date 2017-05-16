@@ -12,12 +12,15 @@ testem.log
 Thumbs.db
 
 #### App ####
-/_cache
 /_builds
-/custom/ea/*
-/custom/indicator/*
+!/_builds/ea/example/*
+!/_builds/indicator/example/*
+/_cache
+/_config
+/custom/*
 !/custom/tsconfig.json
 !/custom/ea/example/*
+!/custom/indicator/example/*
 
 # Client
 /client/dist/
@@ -33,9 +36,4 @@ Thumbs.db
 /shared/dist
 /shared/**/*.js
 /shared/**/*.map
-
-# Electron
-/electron/builds
-/electron/tmp
-/electron/dist
 

@@ -46,12 +46,11 @@ export default class Cache extends WorkerChild {
 		await this._fetcher.init();
 
 		await this._setChannelEvents();
-		await this._setBrokerApi();
+		// await this._setBrokerApi();
 		await this._ipc.startServer();
 	}
 
-	public async read(instrument: string, timeFrame: string, from?: number, until?: number, count?: number,
-						bufferOnly = true): Promise<any> {
+	public async read(instrument: string, timeFrame: string, from?: number, until?: number, count?: number, bufferOnly = true): Promise<any> {
 
 		if (count && from && until)
 			return Promise.reject('Cache->Read : Only from OR until can be given when using count, not both');
@@ -138,27 +137,33 @@ export default class Cache extends WorkerChild {
 
 		this._ipc.on('broker:settings', async (accountSettings: AccountSettings, cb) => {
 			this.settings.account = accountSettings;
-			await this._setBrokerApi();
+			cb(null, await this._setBrokerApi())
 		});
 	}
 
-	private async _setBrokerApi(): Promise<void> {
-		if (this._brokerApi)
-			await this._brokerApi.destroy();
+	private async _setBrokerApi(): Promise<boolean> {
+		this._ready = false;
 
-		this._brokerApi = new BrokerApi(this.settings.account);
-		await this._brokerApi.init();
+		try {
+			if (this._brokerApi)
+				await this._brokerApi.destroy();
 
-		this._brokerApi.on('error', error => {
-		});
-		this._brokerApi.on('tick', tick => this._broadCastTick(tick));
+			this._brokerApi = new BrokerApi(this.settings.account);
+			await this._brokerApi.init();
 
-		if (
-			await this._loadAvailableInstruments() === true &&
-			await this._openTickStream() === true
-		) {
-			this._ready = true;
+			this._brokerApi.on('error', error => {
+			});
+
+			this._brokerApi.on('tick', tick => this._broadCastTick(tick));
+
+			if (await this._loadAvailableInstruments() === true && await this._openTickStream() === true) {
+				this._ready = true;
+			}
+		} catch (error) {
+			console.error(error);
 		}
+
+		return this._ready;
 	}
 
 	private async _loadAvailableInstruments(): Promise<boolean> {

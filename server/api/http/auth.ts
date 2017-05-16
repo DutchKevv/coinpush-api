@@ -5,8 +5,8 @@ module.exports = app => {
 	const router = express.Router();
 
 	router.post('/login', async (req, res) => {
-		console.log('feasdfsdfsdf', req.body);
-		await app.controllers.config.set(req.body);
+		await app.controllers.config.set({account: req.body});
+
 		let success = await app.controllers.broker.loadBrokerApi('oanda');
 
 		res.sendStatus(success ? 200 : 401);

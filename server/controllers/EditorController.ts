@@ -1,7 +1,7 @@
 import * as fs      from 'fs';
 import * as path    from 'path';
 import * as _debug  from 'debug';
-// import * as watch 	from 'node-watch';
+import * as mkdirp  from 'mkdirp';
 import * as watch 	from 'watch';
 import {fork, spawn}      from 'child_process';
 import Base from '../classes/Base';
@@ -23,6 +23,13 @@ export default class EditorController extends Base {
 	}
 
 	public async init() {
+		// Ensure path to custom folder exists and it has ea, indicator, templates folder inside
+		mkdirp.sync(this.app.controllers.config.config.path.custom);
+		mkdirp.sync(path.join(this.app.controllers.config.config.path.custom, 'ea'));
+		mkdirp.sync(path.join(this.app.controllers.config.config.path.custom, 'indicator'));
+		mkdirp.sync(path.join(this.app.controllers.config.config.path.custom, 'templates'));
+
+		// Load the directory tree into memory
 		await this._loadDirectoryTree();
 
 		// TODO - Do not load list with every change!
@@ -164,9 +171,12 @@ export default class EditorController extends Base {
 	private _loadDirectoryTree() {
 		debug('Load directory tree');
 
-		let tree = dirTree(this.app.controllers.config.config.path.custom).children;
+		let tree = dirTree(this.app.controllers.config.config.path.custom);
 
-		this._directoryTree = this._normalizeDirectoryTree(tree);
+		if (tree) {
+			tree = tree.children;
+			this._directoryTree = this._normalizeDirectoryTree(tree);
+		}
 	}
 
 	private _normalizeDirectoryTree(arr: any): Array<any> {

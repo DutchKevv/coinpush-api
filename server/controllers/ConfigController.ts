@@ -1,5 +1,6 @@
 import * as path    from 'path';
 import * as fs      from 'fs';
+import * as mkdirp  from 'mkdirp';
 
 const
 	debug = require('debug')('TradeJS:ConfigController'),
@@ -23,13 +24,17 @@ export default class ConfigController {
 
 	private _config: IAppConfig = {};
 
-	private _configCurrentPath: string = path.join(this.opt.path.config, 'tradejs.config.json');
-	private _configDefaultPath: string = path.join(this.opt.path.config, 'tradejs.config.default');
+	private _configCurrentPath: string = path.join(this.options.path.config, 'tradejs.config.json');
+	private _configDefaultPath: string = path.join(__dirname, '..', 'config', 'tradejs.config.default');
 
-	constructor(protected opt: IAppConfig, protected app) {
+	constructor(protected options: IAppConfig,
+				protected app) {
 	}
 
 	async init(): Promise<IAppConfig> {
+		// Ensure path to folder exists
+		mkdirp.sync(this.options.path.config);
+
 		let config = await this._load();
 
 		// Make sure new config is stored on init
@@ -38,13 +43,12 @@ export default class ConfigController {
 		return this._config;
 	}
 
-
 	get(): IAppConfig {
 		return this._config;
 	}
 
 	get config() {
-		return this._config;;
+		return this._config;
 	}
 
 	set(settings: IAppConfig): Promise<IAppConfig> {
@@ -66,30 +70,15 @@ export default class ConfigController {
 	_load(): Promise<IAppConfig> {
 		return new Promise((resolve) => {
 
-			let defaultConfig = require(this._configDefaultPath),
-				fileConfig = {}, config;
+			let fileConfig = {}, config;
 
-			fs.exists(this._configCurrentPath, (exists: boolean) => {
-				if (exists) {
-					fs.readFile(this._configCurrentPath, 'utf8', (err, data) => {
-						if (err) throw err;
-
-						try {
-							fileConfig = JSON.parse(data);
-							debug('loaded config from: ', this._configCurrentPath)
-						} catch (error) {
-							console.warn('config corrupted!', error);
-						}
-					});
-
-				} else {
-					debug('no existing config file found');
-				}
-			});
+			delete require.cache[this._configCurrentPath];
+			try {
+				fileConfig = require(this._configCurrentPath);
+			} catch (error) {}
 
 			// Merge the new config with default config <- file config <- App instance config options
-			config = merge.all([defaultConfig, fileConfig, this.opt]);
-
+			config = merge(fileConfig, this.options || {});
 			resolve(config);
 		});
 	}

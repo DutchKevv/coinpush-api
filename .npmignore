@@ -1,4 +1,26 @@
-node_modules
-/dist
-_cache
+# IDEs
 .idea
+
+# misc
+npm-debug.*
+testem.log
+.DS_Store
+Thumbs.db
+
+# App
+node_modules
+/_cache
+/_config
+/_builds
+!/_builds/ea/example/*
+!/_builds/indicator/example/*
+custom/*
+!/custom/tsconfig.json
+!/custom/ea/example/*
+!/custom/indicator/example/*
+/dist
+
+
+client/*
+client/.*
+!client/dist/*

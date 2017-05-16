@@ -22,24 +22,26 @@ export default class BrokerController extends Base {
 
 		try {
 			// Clean up node cached version
-			let filePath = path.join(__dirname, '..', 'classes', 'broker-api', apiName, apiName);
+			let filePath = path.join(__dirname, '..', 'classes', 'broker-api', apiName, apiName),
+				accountConfig = this.app.controllers.config.get().account,
+				BrokerApi, connected;
+
 			delete require.cache[path.resolve(filePath)];
 
 			// Load the new BrokerApi
-			let BrokerApi = require(filePath).default;
-			this._brokerApi = new BrokerApi(this.app.controllers.config.get().account);
+			BrokerApi = require(filePath).default;
+			this._brokerApi = new BrokerApi(accountConfig);
 			await this._brokerApi.init();
 
-			this.connected = await this._brokerApi.testConnection();
-
-			if (this.connected) {
+			if (await this._brokerApi.testConnection()) {
+				await this.app.controllers.cache.updateSettings(accountConfig);
 				await this.app.controllers.system.update({connected: true});
+
+				this.connected = true;
 				this.emit('connected');
 			}
 		} catch (error) {
 			console.warn('Error creating broker API \n\n', error);
-			await this.app.controllers.system.update({connected: false});
-			this.connected = false;
 		}
 
 		return this.connected;
@@ -51,11 +53,12 @@ export default class BrokerController extends Base {
 	}
 
 	async disconnect(): Promise<void> {
-		await this.app.controllers.system.update({connected: false});
+		this.connected = false;
+
+		this.app.controllers.system.update({connected: false});
 
 		if (this._brokerApi) {
 			try {
-				await Promise.all([this._brokerApi.destroy(), this.app.controllers.cache.updateSettings({})]);
 				await this._brokerApi.destroy();
 				this._brokerApi = null;
 			} catch (error) {

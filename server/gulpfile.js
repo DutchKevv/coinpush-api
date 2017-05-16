@@ -116,17 +116,20 @@ function startChildProcess(callback) {
         stdio: ['pipe', process.stdout, process.stderr, 'ipc']
     });
 
+	child.on('exit', () => {
+		child = null;
+	});
+
     callback();
 }
 
 
 function killChildProcess() {
     return new Promise(resolve => {
-        if (child && child.pid && !child.isClosing) {
-            child.isClosing = true;
+        if (child && child.pid) {
             let t = setTimeout(() => {
 				console.warn('APP KEEPS HANGING! TRYING ONE MORE TIME');
-				child.kill();
+				child.kill('SIGTERM');
             }, 5000);
 
             child.on('exit', () => {

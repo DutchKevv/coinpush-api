@@ -8,7 +8,16 @@ import {Component, AfterViewInit, ElementRef} from '@angular/core';
 
 export class LoginComponent implements AfterViewInit {
 	public isLoading = true;
-	public options: any = {buttons: {}};
+
+	public options: any = {
+		buttons: {
+
+		},
+		model: {
+			broker: 'oanda'
+		}
+	};
+
 
 	constructor(public elementRef: ElementRef) {
 

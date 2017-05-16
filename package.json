@@ -3,15 +3,10 @@
   "author": "Kewin Brandsma",
   "description": "TradeJS desktop wrapper",
   "email": "kewin@frontend-freelance.com",
-  "main": "electron/main.js",
-  "version": "0.0.1",
+  "main": "electron/index.js",
+  "version": "0.0.1-alpha-0",
   "scripts": {
-    "test": ""
-  },
-  "devDependencies": {
-    "cross-env": "4.0.0",
-    "debug": "2.6.1"
+    "postinstall": "cd server && npm i"
   },
   "private": false
-  
 }

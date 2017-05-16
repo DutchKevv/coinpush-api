@@ -9,7 +9,7 @@ export default class Base extends EventEmitter {
 		super();
 
 		// TODO: until opt is fully renamed to 'options' in all classes
-		this.options = opt;
+		this.options = opt || {};
 	}
 
 	protected updateOptions(options) {

@@ -1,3 +1,4 @@
+import IPC from "../ipc/IPC";
 declare var clearInterval: any;
 
 import {fork}    from 'child_process';
@@ -9,7 +10,7 @@ const debug = _debug('TradeJS:WorkerHost');
 export default class WorkerHost extends Base {
 
 	public id: string | number;
-	public _ipc: any;
+	public _ipc: IPC;
 	private _child: any = null;
 
 	/**
@@ -27,8 +28,8 @@ export default class WorkerHost extends Base {
 		return this._fork();
 	}
 
-	send(...params) {
-		return this._ipc.send(this.id, ...params);
+	send(eventName, data?, waitForCallback?) {
+		return this._ipc.send(this.id, eventName, data, waitForCallback);
 	}
 
 	async _fork() {
@@ -66,29 +67,6 @@ export default class WorkerHost extends Base {
 					reject(message);
 				}
 			});
-		});
-	}
-
-	_getSocket() {
-		return new Promise((resolve, reject) => {
-			let now = Date.now(),
-				timeout = now + 2000,
-				interval = 100;
-
-			let t = setInterval(() => {
-				let socket = this._ipc._getSocket(this.id);
-
-				if (socket) {
-					clearInterval(t);
-					return resolve(socket);
-				}
-
-				if (Date.now() > timeout) {
-					clearInterval(t);
-					reject('IPC Socket to master did not respond in time');
-				}
-
-			}, interval);
 		});
 	}
 

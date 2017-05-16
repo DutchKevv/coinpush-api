@@ -15,7 +15,7 @@ export default class CacheController {
 			ipc: this.app.ipc,
 			path: path.join(__dirname, '../classes/cache/Cache.js'),
 			classArguments: {
-				settings: this.app.controllers.config.get()
+				settings: this.app.controllers.config.config
 			}
 		});
 
@@ -61,7 +61,7 @@ export default class CacheController {
 	}
 
 	public async updateSettings(settings) {
-		this._worker.send('broker:settings', settings);
+		return this._worker.send('broker:settings', settings, true);
 	}
 
 	public async destroy() {

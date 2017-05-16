@@ -5,11 +5,11 @@ import './util/more-info-console';
 import Socket = SocketIO.Socket;
 
 import * as io              from 'socket.io';
-import * as cors            from 'cors';
 import * as http            from 'http';
 import {json, urlencoded}   from 'body-parser';
 import * as path            from 'path';
 import * as freePort        from 'freeport';
+import * as merge       	from 'deepmerge';
 
 import Base                 from './classes/Base';
 import IPC                  from './classes/ipc/IPC';
@@ -30,6 +30,18 @@ const
 	PATH_PUBLIC_DEV = path.join(__dirname, '../client/dist'),
 	PATH_PUBLIC_PROD = path.join(__dirname, '../client/dist');
 
+export interface IApp {
+	system: {
+		port: number;
+		timezone: string;
+	}
+	path: {
+		cache: string;
+		custom: string;
+		config: string;
+	}
+}
+
 /**
  * @class App
  */
@@ -47,11 +59,6 @@ export default class App extends Base {
 		instrument: InstrumentController
 	} = <any>{};
 
-	private _ipc: IPC = new IPC({id: 'main'});
-	private _http: any = null;
-	private _io: any = null;
-	private _httpApi: any = null;
-
 	public get ipc() {
 		return this._ipc;
 	}
@@ -60,13 +67,41 @@ export default class App extends Base {
 		return this._io;
 	}
 
-	public async init(): Promise<any> {
+	private _ipc: IPC = new IPC({id: 'main'});
+	private _http: any = null;
+	private _io: any = null;
+	private _httpApi: any = null;
 
+	private _defaults = <IApp>{
+		account: {
+			'broker': 'oanda',
+			'id': null,
+			'environment': '',
+			'username': null,
+			// 'token': null,
+			// 'accountId': null
+		},
+		system: {
+			port: 3000,
+			timezone: 'America/New_York',
+		},
+		path: {
+			custom: path.join(__dirname, '..', 'custom'),
+			cache: path.join(__dirname, '..', '_cache'),
+			config: path.join(__dirname, '..', '_config')
+		}
+	};
+
+	public async init(): Promise<any> {
 		// Make sure the app can be cleaned up on termination
 		this._setProcessListeners();
 
+		// Merge options
+		this.options = merge(this._defaults, this.options);
+
 		// Initialize ConfigController first so other controllers can use config
-		this.controllers.config = new ConfigController(this.opt, this);
+		this.controllers.config = new ConfigController(this.options, this);
+
 		let config = await this.controllers.config.init();
 
 		// Set timezone
@@ -173,9 +208,9 @@ export default class App extends Base {
 			});
 
 			this._http.listen(port, () => {
+				// Angular DEV-Server : localhost:4200 \n\n
 				console.log(`\n
 	R.E.S.T. API       : localhost:${port} \n
-	Angular DEV-Server : localhost:4200 \n\n
 				`);
 
 				this.debug('info', 'Public API started');
@@ -186,12 +221,19 @@ export default class App extends Base {
 			/**
 			 * Server events
 			 */
+			this.controllers.broker.on('connected', () => {
+
+			});
+
+			this.controllers.broker.on('disconnected', () => {
+
+			});
+
 			this.controllers.system.on('change', state => {
 				this._io.sockets.emit('system:state', state);
 			});
 
 			this.controllers.editor.on('change', () => {
-				console.log('CHANGE CHANGE CHANGE!!');
 				this._io.sockets.emit('editor:change', {});
 			});
 
@@ -226,14 +268,19 @@ export default class App extends Base {
 	private _setProcessListeners() {
 
 		const processExitHandler = error => {
-			this.destroy().then(() => process.exit(0)).catch(console.error);
+			this.destroy()
+				.then(() => process.exit(0))
+				.catch(err => {
+					process.exit(1);
+				});
 		};
 
 		process.on('SIGTERM', processExitHandler);
 		process.on('SIGINT', processExitHandler);
 		process.on('unhandledRejection', error => {
-			console.log('!unhandledRejection');
-			console.error(error);
+			// console.warn('unhandledRejection');
+			console.error('unhandledRejection', error);
+			processExitHandler(error);
 		});
 	}
 

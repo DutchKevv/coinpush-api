@@ -10,7 +10,7 @@ export default class IPC extends Base {
 	id: string | number;
 	env: string;
 
-	private _unique: number = 0;
+	private _unique = 0;
 	private _ipc: any = null;
 	private _acks: any = {};
 
@@ -63,7 +63,7 @@ export default class IPC extends Base {
 		}
 	}
 
-	send(workerId: string, eventName: string, data: any = {}, waitForCallback: boolean = true): Promise<any> {
+	send(workerId: string | number, eventName: string, data: any = {}, waitForCallback = true): Promise<any> {
 
 		return new Promise((resolve, reject) => {
 			let cbTimeout = 60000,
