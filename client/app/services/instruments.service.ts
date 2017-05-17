@@ -4,6 +4,7 @@ import {InstrumentModel} from '../models/instrument.model';
 import {InstrumentSettings} from '../../../shared/interfaces/InstrumentSettings';
 import {SocketService} from './socket.service';
 import {BehaviorSubject} from 'rxjs';
+import {SystemState} from '../../../shared/models/SystemState';
 
 @Injectable()
 export class InstrumentsService {
@@ -13,7 +14,7 @@ export class InstrumentsService {
 	public instruments$: BehaviorSubject<InstrumentModel[]> = new BehaviorSubject([]);
 
 	private _instruments: InstrumentModel[] = [];
-	private _defaults = [{instrument: 'EUR_USD'}, {instrument: 'AUD_CAD'}];
+	public instrumentList: Array<any> = [];
 
 	get instruments() {
 		return this._instruments;
@@ -33,7 +34,12 @@ export class InstrumentsService {
 			console.log('dsdfsdafsdf', 'Destroy11');
 		});
 
-		this._loadRunningInstruments();
+		this._socketService.socket.on('system:state', (systemState: SystemState) => {
+			if (!systemState.booting && systemState.connected) {
+				this._loadInstrumentList();
+				this._loadRunningInstruments();
+			}
+		});
 	}
 
 	public create(options: InstrumentSettings): void {
@@ -43,7 +49,6 @@ export class InstrumentsService {
 			instrument: model.data.instrument,
 			timeFrame: model.data.timeFrame,
 			live: model.data.live
-			// start: start
 		});
 	}
 
@@ -73,8 +78,6 @@ export class InstrumentsService {
 
 	public fetch(model: InstrumentModel, count = 300, offset = 0, from?: number, until?: number): Promise<any> {
 
-		let startTime = Date.now();
-
 		return new Promise((resolve) => {
 
 			this._socketService.socket.emit('instrument:read', {
@@ -85,9 +88,8 @@ export class InstrumentsService {
 				until,
 				from
 			}, (err, data) => {
-
 				if (err)
-					alert(err);
+					return console.error(err);
 
 				model.updateBars(data.candles);
 				model.updateIndicators(data.indicators);
@@ -143,6 +145,15 @@ export class InstrumentsService {
 		});
 	}
 
+	private _loadInstrumentList() {
+		this._socketService.socket.emit('instrument:list', {}, (err, instrumentList) => {
+			if (err)
+				return console.error(err);
+
+			this.instrumentList = instrumentList.map(instrument => instrument.instrument);
+		});
+	}
+
 	private _loadRunningInstruments() {
 		this._socketService.socket.emit('instrument:chart-list', {}, (err, list: InstrumentSettings[]) => {
 
@@ -152,11 +163,6 @@ export class InstrumentsService {
 			// Show server running instruments
 			if (list && list.length)
 				list.forEach((instrumentSettings: InstrumentSettings) => this.add(new InstrumentModel(instrumentSettings)));
-
-			// // Load some default instruments
-			// // TODO: Should be done by the server
-			// else
-			//     this._defaults.forEach(instrument => this.create(instrument));
 		});
 	}
 }

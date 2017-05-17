@@ -1,38 +1,37 @@
 <div>
-    <table>
-        <thead>
-        <tr>
-            <th>Instrument</th>
-            <th>Bid</th>
-            <th>Ask</th>
-        </tr>
-        </thead>
-    </table>
+	<table>
+		<thead>
+		<tr>
+			<th>Instrument</th>
+			<th>Bid</th>
+			<th>Ask</th>
+		</tr>
+		</thead>
+	</table>
 
-    <div>
-        <input class="search-instrument-list" type="text" placeholder="search">
-    </div>
-    <div class="instrument-list-rows-wrapper">
-        <table>
-            <tbody>
-
-            <tr *ngFor="let instrument of instruments;" [attr.data-symbol]="instrument">
-                <td (click)="instrumentsService.create({instrument: instrument, live: true})">
-                    <i class="fa fa-arrow-{{data[instrument] && data[instrument].direction}}"></i>
-                    {{ instrument }}
-                </td>
-                <td>{{data[instrument] && data[instrument].bid}}</td>
-                <td>{{data[instrument] && data[instrument].ask}}</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+	<div>
+		<input class="search-instrument-list" type="text" placeholder="search">
+	</div>
+	<div class="instrument-list-rows-wrapper">
+		<table>
+			<tbody>
+			<tr *ngFor="let instrument of instrumentService.instrumentList;" [attr.data-symbol]="instrument">
+				<td (click)="instrumentService.create({instrument: instrument, live: true})">
+					<i class="fa fa-arrow-{{data[instrument] && data[instrument].direction}}"></i>
+					{{ instrument }}
+				</td>
+				<td>{{data[instrument] && data[instrument].bid}}</td>
+				<td>{{data[instrument] && data[instrument].ask}}</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
 </div>
 
-<ul id="contextMenu" class="dropdown-menu" role="menu" style="display:none" >
-    <li><a tabindex="-1" href="#">Action</a></li>
-    <li><a tabindex="-1" href="#">Another action</a></li>
-    <li><a tabindex="-1" href="#">Something else here</a></li>
-    <li class="divider"></li>
-    <li><a tabindex="-1" href="#">Separated link</a></li>
+<ul id="contextMenu" class="dropdown-menu" role="menu" style="display:none">
+	<li><a tabindex="-1" href="#">Action</a></li>
+	<li><a tabindex="-1" href="#">Another action</a></li>
+	<li><a tabindex="-1" href="#">Something else here</a></li>
+	<li class="divider"></li>
+	<li><a tabindex="-1" href="#">Separated link</a></li>
 </ul>

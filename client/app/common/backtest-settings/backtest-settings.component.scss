@@ -42,6 +42,11 @@ label {
     background-color: #00ac74;
 }
 
+.form-control.ng-invalid {
+    border: 1px solid #ff0202;
+    box-shadow: 0 0 20px 5px red;
+}
+
 /** >>> .multiselect-native-select .btn-group {*/
     /*width: 100%;*/
 /*}*/

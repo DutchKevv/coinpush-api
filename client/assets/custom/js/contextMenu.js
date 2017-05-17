@@ -2,8 +2,6 @@
 
 	$.fn.contextMenu = function (settings) {
 
-
-
 		return this.each(function () {
 
 			// Open context menu

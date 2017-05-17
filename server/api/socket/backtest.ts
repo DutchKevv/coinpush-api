@@ -14,6 +14,7 @@ module.exports = (app, socket) => {
 		data.instruments = data.instruments.map(instr => instr.toUpperCase());
 
 		data = {
+			ea: data.ea,
 			equality: data.equality,
 			instruments: data.instruments,
 			timeFrame: data.timeFrame,

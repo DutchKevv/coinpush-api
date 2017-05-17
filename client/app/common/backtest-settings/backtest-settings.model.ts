@@ -1,26 +1,29 @@
-'use strict';
+import {BaseModel} from '../../models/base.model';
+import * as moment from 'moment';
 
-export class BacktestSettingsModel {
+export class BacktestSettingsModel extends BaseModel {
 
-	constructor(public EA?: any,
-				public instruments?: any,
-				public timeFrame?: any,
-				public from?: any,
-				public until?: any,
-				public equality?: any,
-				public currency?: any,
-				public pips?: any) {
+	public data = {
+		ea: 'example',
+		instruments: [],
+		timeFrame: 'M15',
+		from: BacktestSettingsModel.parseDate(new Date(Date.now() - 1000000000)),
+		until: BacktestSettingsModel.parseDate(new Date()),
+		equality: 10000,
+		currency: 'euro',
+		leverage: '1:10',
+		pips: 10
+	};
+
+
+	constructor(data) {
+		super();
+
+		if (data)
+			this.set(data, false);
 	}
 
-	update(opt) {
-		Object.assign(this, opt);
-	}
-
-	validator() {
-
-	}
-
-	sadf() {
-
+	static parseDate(date: String | Date): String {
+		return moment(date).format('YYYY-MM-DD');
 	}
 }

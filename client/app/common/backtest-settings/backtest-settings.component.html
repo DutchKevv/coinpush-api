@@ -1,12 +1,11 @@
 <form role="form" class="form-horizontal" id="backtest-settings-form" [formGroup]="form" (ngSubmit)="onSubmit($event)">
     <div class="form-input-block">
         <label>EA</label>
-        <select class="form-control" name="ea" required>
-            <option value="default">DEFAULT</option>
-            <option value="default">DEFAULT</option>
-            <option value="default">DEFAULT</option>
+        <select class="form-control" name="ea" formControlName="ea" required ngControl="ea" [(ngModel)]="model.data.ea">
+            <option *ngFor="let ea of EAList; let i = index" [ngValue]="ea">{{ea}}</option>
         </select>
     </div>
+
     <div class="form-input-block">
         <label>Instruments</label>
         <ss-multiselect-dropdown
@@ -14,11 +13,12 @@
                 [settings]="multiSelectSettings"
                 (change)="onChange()"
                 formControlName="instruments"
-                [(ngModel)]="selectedOptions"></ss-multiselect-dropdown>
+                [(ngModel)]="model.data.instruments"></ss-multiselect-dropdown>
     </div>
     <div class="form-input-block">
+
         <label>Time frame *</label>
-        <select class="form-control" name="timeFrame" formControlName="timeFrame" required>
+        <select class="form-control" name="timeFrame" formControlName="timeFrame" required [(ngModel)]="model.data.timeFrame">
             <option value="M1">M1</option>
             <option value="M5">M5</option>
             <option value="M15">M15</option>
@@ -37,6 +37,7 @@
                    name="from"
                    data-date-picker
                    formControlName="from"
+                   [(ngModel)]="model.data.from"
                    required
             />
             <span class="input-group-addon">
@@ -53,6 +54,7 @@
                    name="until"
                    data-date-picker
                    formControlName="until"
+                   [(ngModel)]="model.data.until"
                    required
             />
             <span class="input-group-addon">
@@ -66,25 +68,26 @@
                class="form-control"
                formControlName="equality"
                name="equality"
+               [(ngModel)]="model.data.equality"
                required
         />
     </div>
     <div class="form-input-block">
         <label>Currency</label>
-        <select class="form-control" name="currency" formControlName="currency" required>
+        <select class="form-control" name="currency" formControlName="currency" [(ngModel)]="model.data.currency" required>
             <option value="euro">EUR</option>
             <option value="dollar">DOLLAR</option>
         </select>
     </div>
     <div class="form-input-block">
         <label>pips **</label>
-        <select class="form-control" name="pips" required>
+        <select class="form-control" name="pips" [(ngModel)]="model.data.pips" formControlName="pips" required>
             <option value="1">1</option>
         </select>
     </div>
     <div class="form-input-block">
         <label>Leverage</label>
-        <select class="form-control" name="leverage" required>
+        <select class="form-control" name="leverage" [(ngModel)]="model.data.leverage" formControlName="leverage" required>
             <option value="1">1:1</option>
             <option value="10">1:10</option>
             <option value="20">1:20</option>
@@ -100,7 +103,8 @@
                 <span class="sr-only">70% Complete</span>
             </div>
         </div>
-        <button *ngIf="isRunning === false" class="btn btn-sm btn-primary pull-right">Start</button>
+
+        <button *ngIf="isRunning === false" class="btn btn-sm btn-primary pull-right" type="submit"  [disabled]='!form.valid'>Start</button>
         <button *ngIf="isRunning === true" class="btn btn-sm btn-danger pull-right">Stop</button>
     </div>
 </form>

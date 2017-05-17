@@ -13,6 +13,11 @@ const rmdir = require('rmdir');
 export default class EditorController extends Base {
 
 	private _directoryTree = [];
+	private _runnableList = {
+		ea: [],
+		indicator: [],
+		template: []
+	};
 
 	get directoryTree() {
 		return this._directoryTree;
@@ -30,10 +35,14 @@ export default class EditorController extends Base {
 		mkdirp.sync(path.join(this.app.controllers.config.config.path.custom, 'templates'));
 
 		// Load the directory tree into memory
-		await this._loadDirectoryTree();
+		this._loadDirectoryTreeSync();
+		this._loadRunnableList();
 
 		// TODO - Do not load list with every change!
-		this.on('change', () => this._loadDirectoryTree());
+		this.on('change', () => {
+			this._loadDirectoryTreeSync();
+			this._loadRunnableList();
+		});
 
 		return await this._startWatcher();
 	}
@@ -168,7 +177,7 @@ export default class EditorController extends Base {
 		});
 	}
 
-	private _loadDirectoryTree() {
+	private _loadDirectoryTreeSync() {
 		debug('Load directory tree');
 
 		let tree = dirTree(this.app.controllers.config.config.path.custom);
@@ -193,14 +202,6 @@ export default class EditorController extends Base {
 		return arr;
 	}
 
-	private _getFullPath(filePath): string {
-		if (!filePath)
-			throw new Error('No fileName given');
-
-		let pathCustom = this.app.controllers.config.config.path.custom;
-		return path.join(pathCustom, filePath);
-	}
-
 	private async _compile(inputPath, outputPath) {
 
 		return new Promise((resolve, reject) => {
@@ -209,18 +210,9 @@ export default class EditorController extends Base {
 				childOpt = {
 					stdio: ['pipe', process.stdout, process.stderr],
 					cwd: path.join(__dirname, '../')
-				},
+				}, child;
 
-
-
-				child = spawn(npm, ['run', 'build:custom', `--input-path=${inputPath}`, `--output-path=${outputPath}`], childOpt);
-
-			// child.stdout.on('data', console.log);
-
-			// child.stderr.on('data', (data) => {
-			// 	console.log(`stderr: ${data}`);
-			// 	reject();
-			// });
+			child = spawn(npm, ['run', 'build:custom', `--input-path=${inputPath}`, `--output-path=${outputPath}`], childOpt);
 
 			child.on('close', (code) => {
 				console.log(`child process exited with code ${code}`);
@@ -228,6 +220,21 @@ export default class EditorController extends Base {
 				code ? reject(code) : resolve();
 			});
 		});
+	}
+
+	private _loadRunnableList() {
+		let runnableList = {
+			ea: [],
+			indicator: [],
+			template: []
+		};
+
+		this._directoryTree.forEach(obj => {
+			if (this._runnableList.hasOwnProperty(obj.name))
+				runnableList[obj.name].push(...obj.children)
+		});
+
+		this._runnableList = runnableList;
 	}
 
 	private _startWatcher() {
@@ -258,6 +265,14 @@ export default class EditorController extends Base {
 				// f was changed
 			}
 		})
+	}
+
+	private _getFullPath(filePath): string {
+		if (!filePath)
+			throw new Error('No fileName given');
+
+		let pathCustom = this.app.controllers.config.config.path.custom;
+		return path.join(pathCustom, filePath);
 	}
 
 	private _isValidFileName(name) {

@@ -1,4 +1,4 @@
-import {Component, AfterViewInit, OnInit, ElementRef, Output} from '@angular/core';
+import {Component, OnInit, ElementRef, Output} from '@angular/core';
 import {CookieService} 				from 'ngx-cookie';
 import {FormBuilder, FormGroup}     from '@angular/forms';
 import {IMultiSelectOption, IMultiSelectSettings}   from 'angular-2-dropdown-multiselect';
@@ -12,22 +12,12 @@ import * as moment                  from 'moment';
 	styleUrls: ['./backtest-settings.component.scss']
 })
 
-export class BacktestSettingsComponent implements OnInit, AfterViewInit {
-
-	static defaults = {
-		EA: '',
-		instruments: ['EUR_USD'],
-		timeFrame: 'M15',
-		from: new Date(Date.now() - 1000000000),
-		until: new Date(),
-		equality: 10000,
-		currency: 'euro',
-		leverage: '10',
-		pips: '10'
-	};
-
+export class BacktestSettingsComponent implements OnInit {
 
 	@Output() isRunning = false;
+
+
+	public EAList = ['example', 'test2', 'doutsen'];
 
 	public multiSelectOptions: IMultiSelectOption[] = [
 		<any>{id: 'EUR_USD', name: 'EUR_USD'},
@@ -58,19 +48,17 @@ export class BacktestSettingsComponent implements OnInit, AfterViewInit {
 	ngOnInit(): void {
 		this._$el = $(this._elementRef.nativeElement);
 
-		this.model = new BacktestSettingsModel();
-		this.model.update(this.loadSavedSettings());
-		this.model.from = this._parseDate(this.model.from);
-		this.model.until = this._parseDate(this.model.until);
+		this.model = new BacktestSettingsModel(this.getCookie());
 
-		this.selectedOptions = this.model.instruments;
+		this.model.data.from = BacktestSettingsModel.parseDate(this.model.data.from);
+		this.model.data.until = BacktestSettingsModel.parseDate(this.model.data.until);
 
-		this.form = this.formBuilder.group(this.model);
+		this.selectedOptions = this.model.data.instruments;
 
-		this.form.valueChanges.subscribe(() => this.onChange());
-	}
 
-	ngAfterViewInit(): void {
+		this.form = this.formBuilder.group(this.model.data);
+
+		this.form.valueChanges.subscribe(() => this.saveSettings());
 	}
 
 	run() {
@@ -78,12 +66,7 @@ export class BacktestSettingsComponent implements OnInit, AfterViewInit {
 		this.isRunning = true;
 		this.toggleLoading(true);
 
-		let data = Object.assign({}, this.model, {
-			from: moment(this.model.from, 'YYYY-MM-DD').valueOf(),
-			until: moment(this.model.until, 'YYYY-MM-DD').valueOf()
-		});
-
-		this._socketService.socket.emit('backtest:run', data, (err, report) => {
+		this._socketService.socket.emit('backtest:run', this.model.data, (err, report) => {
 			this.report = report;
 			console.log(report);
 			this.isRunning = false;
@@ -92,17 +75,11 @@ export class BacktestSettingsComponent implements OnInit, AfterViewInit {
 	}
 
 	onChange(): void {
-		Object.assign(this.model, this.form.value, {instruments: this.selectedOptions});
-
 		this.saveSettings();
 	}
 
-	loadSavedSettings(): Object {
-		return Object.assign({}, BacktestSettingsComponent.defaults, this.getCookie() || {});
-	}
-
 	saveSettings(): void {
-		this._cookieService.put('backtest-settings', JSON.stringify(this.model));
+		this._cookieService.put('backtest-settings', this.model.toJson());
 	}
 
 	getCookie(): Object {
@@ -122,10 +99,9 @@ export class BacktestSettingsComponent implements OnInit, AfterViewInit {
 	}
 
 	onSubmit(e) {
-		e.preventDefault();
-		this.run();
+		// e.preventDefault();
+		// this.run();
 	}
-
 
 	toggleLoading(state: boolean) {
 		if (state) {

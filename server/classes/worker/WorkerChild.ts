@@ -45,7 +45,6 @@ export default class WorkerChild extends Base {
 
 	async init() {
 		await super.init();
-
 		await this._ipc.init();
 		await this._ipc.connectTo(this.workerOptions.parentId);
 	}
