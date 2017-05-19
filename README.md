@@ -18,20 +18,28 @@ Can be run as
 - Standalone client connected to the cloud (with a custom server)
 - Standalone server running elastic in the cloud (with a custom client)
 
+## Installation
+
+- `npm install TradeJS`
+
+## Running (remember, alpha)
+
+```js
+const TradeJS = require('tradejs').default;
+const app = new TradeJS();
+
+app.init().catch(console.log);
+```
  ## Dashboard
  ![Alt text](doc/screenshot/charts.png?raw=true "Title")
  
  ## Build in Editor
  ![Alt text](doc/screenshot/editor.png?raw=true "Title")
  
- ## Mobile Dashboard
+ ## Mobile
  ![Alt text](doc/screenshot/mobile-chart.png?raw=true "Title")
- 
- ## Mobile Editor
- ![Alt text](doc/screenshot/mobile-editor.png?raw=true "Title")
- 
- ## Mobile Editor 2
- ![Alt text](doc/screenshot/mobile-editor2.png?raw=true "Title")
+
+ ![Alt text](doc/screenshot/mobile-editor.png?raw=true "Title") ![Alt text](doc/screenshot/mobile-editor2.png?raw=true "Title")
  
   #### How to start (temp, this will be normalized in the future)
   
