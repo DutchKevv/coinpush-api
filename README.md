@@ -30,6 +30,8 @@ const app = new TradeJS();
 
 app.init().catch(console.log);
 ```
+Go to localhost:3000 in chrome (only newest versions of chrome are supported)
+
  ## Dashboard
  ![Alt text](doc/screenshot/charts.png?raw=true "Title")
  
