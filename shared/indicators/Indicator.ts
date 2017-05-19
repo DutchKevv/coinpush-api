@@ -59,6 +59,6 @@ export default class Indicator {
 		}
 	}
 
-	onTick(bid: number, ask: number, shift: number = 0): Promise<any> | void {
+	onTick(bid: number, ask: number, shift = 0): Promise<any> | void {
 	}
 }

@@ -1,5 +1,6 @@
 @import '../../style/variables/variables';
 
+
 :host {
 
     > * {
@@ -31,7 +32,7 @@
     width: 10px;
     height: 10px;
     box-shadow: 0 0 1px 1px rgba(100, 100, 100, 0.2);
-    margin-top: 6px;
+    margin-top: 5px;
     margin-right: 10px;
     float: right;
 }
@@ -45,23 +46,19 @@
 /* Spinning, gradient circle; CSS only! */
 .circle.ok {
     background: green;
-    background-image: -moz-radial-gradient(45px 45px 45deg, circle cover, lightgreen 0%, green 100%, darkgreen 95%);
-    background-image: -webkit-radial-gradient(45px 45px, circle cover, lightgreen, green);
     background-image: radial-gradient(45px 45px 45deg, circle cover, lightgreen 0%, green 100%, darkgreen 95%);
 }
 
 .circle.warning {
     background: orange;
-    background-image: -moz-radial-gradient(45px 45px 45deg, circle cover, yellow 0%, orange 100%, red 95%);
-    background-image: -webkit-radial-gradient(45px 45px, circle cover, yellow, orange);
     background-image: radial-gradient(45px 45px 45deg, circle cover, yellow 0%, orange 100%, red 95%);
 }
 
 .circle.error {
     background: red;
-    background-image: -moz-radial-gradient(45px 45px 45deg, circle cover, orange 0%, red 100%, darkred 95%);
-    background-image: -webkit-radial-gradient(45px 45px, circle cover, red, darkred);
     background-image: radial-gradient(45px 45px 45deg, circle cover, orange 0%, red 100%, darkred 95%);
+    box-shadow: 0 0 5px 2px red;
+    animation: flickerAnimation 2s infinite;
 }
 
 .circle.animate {
@@ -69,4 +66,10 @@
     animation-duration: 3s; /* 3 seconds */
     animation-iteration-count: infinite;
     animation-timing-function: linear;
+}
+
+@keyframes flickerAnimation {
+    0%   { opacity:1; }
+    50%  { opacity:0; }
+    100% { opacity:1; }
 }

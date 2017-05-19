@@ -77,19 +77,19 @@ export default class OrderManager extends Base {
 		} else {
 			order.closeTime = time || Date.now();
 
-			// TODO: Check for correctness
-			if (order.type === 'sell') {
-				order.closeValue = bid * order.count;
-				order.profit = (bid - order.ask) * order.count;
-			} else {
-				order.closeValue = ask * order.count;
-				order.profit = (ask * order.bid) * order.count;
-			}
+			let {value, profit} = this.getValue(order, bid, ask);
+
+			order.closeValue = value;
+			order.profit = profit;
 
 			this._accountManager.addEquality(order.closeValue);
 			order.equality = this._accountManager.equality;
 			this._closedOrders.push(order);
 		}
+	}
+
+	public closeAll(time, bid, ask) {
+		this.orders.forEach(order => this.close(time, order.id, bid, ask));
 	}
 
 	public update() {
@@ -98,6 +98,31 @@ export default class OrderManager extends Base {
 
 	public tick() {
 
+	}
+
+	public getValue(order, bid, ask) {
+		let value, profit;
+
+		if (order.type === 'sell') {
+			value = bid * order.count;
+			profit = (bid - order.ask) * order.count;
+		} else {
+			value = ask * order.count;
+			profit = (ask * order.bid) * order.count;
+		}
+
+		return {value, profit};
+	}
+
+	public getOpenOrdersValue(bid, ask) {
+		let total = 0;
+
+		this._orders.forEach(order => {
+			total += this.getValue(order, bid, ask).value;
+		});
+
+		console.log('TOTAL OPEN ORDES!', total);
+		return total
 	}
 
 	public checkOrderEquality(order: IOrder): boolean {

@@ -33,17 +33,17 @@ export default class BackTest extends EventEmitter {
 
 	EAs = [];
 
-	constructor(protected app, protected opt) {
+	constructor(protected app, protected options) {
 		super();
 
-		this.instruments = this.opt.instruments;
-		this.timeFrame = this.opt.timeFrame;
-		this.from = this.opt.from;
-		this.until = this.opt.until;
+		this.instruments = this.options.instruments;
+		this.timeFrame = this.options.timeFrame;
+		this.from = this.options.from;
+		this.until = this.options.until;
 	}
 
 	async run() {
-		let EAPath = path.join(__dirname, '../../../_builds/ea/example');
+		let EAPath = path.join(__dirname, '..', '..', '..', '_builds', 'ea', this.options.ea, 'index');
 
 		this.startTime = Date.now();
 
@@ -52,13 +52,22 @@ export default class BackTest extends EventEmitter {
 		}));
 
 		// Create instrument instances
-		this.EAs = await Promise.all(this.instruments.map(instrument => {
+		this.EAs = await Promise.all(this.instruments.map(async instrument => {
+
 			return this.app.controllers.instrument.create(instrument, this.timeFrame, false, EAPath, {
-				leverage: this.opt.leverage,
-				equality: this.opt.equality,
+				leverage: this.options.leverage,
+				equality: this.options.equality,
 				from: this.from,
 				until: this.until
 			});
+
+			// _instrument.worker.on('exit', (code) => {
+			// 	if (code !== 0) {
+			// 		throw new Error('Instrument exit with code ' + code );
+			// 	}
+			// });
+
+			// return instrument;
 		}));
 
 		// Wait until all have finished
@@ -100,13 +109,13 @@ export default class BackTest extends EventEmitter {
 		ticksPerSecond = Math.round(totalTicks / (totalTestTime / 1000));
 
 		return {
-			startEquality: this.opt.equality,
+			startEquality: this.options.equality,
 			diff: 0,
 			timeFrame: this.timeFrame,
 			from: this.from,
-			fromPretty: moment.unix(this.from).format('MMM Do hh:mm:ss'),
+			fromPretty: moment(this.from).format('MMM Do YYYY hh:mm:ss'),
 			until: this.until || 0,
-			untilPretty: moment.unix(this.until).format('MMM Do hh:mm:ss'),
+			untilPretty: moment(this.until).format('MMM Do YYYY hh:mm:ss'),
 			ticks: totalTicks,
 			ticksPretty: totalTicks.toLocaleString(),
 			ticksPerSecond: ticksPerSecond,
@@ -135,8 +144,8 @@ export default class BackTest extends EventEmitter {
 
 			return {
 				id: EA.id,
-				equality: report.equality.toFixed(4),
-				diff: (report.equality - this.opt.equality).toFixed(4),
+				equality: report.equality.toFixed(2),
+				diff: (report.equality - this.options.equality).toFixed(2),
 				orders: report.orders,
 				nrOfTrades: report.orders.length,
 				instrument: EA.instrument,

@@ -1,10 +1,11 @@
-import {Component, OnInit, ElementRef, Output} from '@angular/core';
+import {Component, OnInit, AfterViewInit, ElementRef, Output} from '@angular/core';
 import {CookieService} 				from 'ngx-cookie';
 import {FormBuilder, FormGroup}     from '@angular/forms';
 import {IMultiSelectOption, IMultiSelectSettings}   from 'angular-2-dropdown-multiselect';
 import {BacktestSettingsModel}      from './backtest-settings.model';
 import {SocketService}              from '../../services/socket.service';
 import * as moment                  from 'moment';
+import {InstrumentsService} 		from '../../services/instruments.service';
 
 @Component({
 	selector: 'backtest-settings',
@@ -12,26 +13,26 @@ import * as moment                  from 'moment';
 	styleUrls: ['./backtest-settings.component.scss']
 })
 
-export class BacktestSettingsComponent implements OnInit {
+export class BacktestSettingsComponent implements OnInit, AfterViewInit {
 
 	@Output() isRunning = false;
 
-
-	public EAList = ['example', 'test2', 'doutsen'];
+	public EAList = [];
 
 	public multiSelectOptions: IMultiSelectOption[] = [
 		<any>{id: 'EUR_USD', name: 'EUR_USD'},
 		<any>{id: 'USD_CAD', name: 'USD_CAD'}
-
 	];
 
 	public multiSelectSettings: IMultiSelectSettings = {
 		buttonClasses: 'btn btn-multi-select',
-		maxHeight: '200px',
-		showUncheckAll: true
+		maxHeight: '300px',
+		checkedStyle: 'fontawesome',
+		dynamicTitleMaxItems: 2,
+		selectionLimit: 10,
+		showUncheckAll: true,
+		enableSearch: true
 	};
-
-	public selectedOptions: number[];
 
 	public form: FormGroup;
 	public model: BacktestSettingsModel;
@@ -40,6 +41,7 @@ export class BacktestSettingsComponent implements OnInit {
 	private _$el: any;
 
 	constructor(private _cookieService: CookieService,
+				private _instrumentService: InstrumentsService,
 				private formBuilder: FormBuilder,
 				private _socketService: SocketService,
 				private _elementRef: ElementRef) {
@@ -47,73 +49,70 @@ export class BacktestSettingsComponent implements OnInit {
 
 	ngOnInit(): void {
 		this._$el = $(this._elementRef.nativeElement);
+		console.log('CCOKIE!', this._getCookie());
 
-		this.model = new BacktestSettingsModel(this.getCookie());
+		this.model = new BacktestSettingsModel(this._getCookie());
+		let temp = this.model.data.instruments;
+		this.model.data.instruments = [];
 
 		this.model.data.from = BacktestSettingsModel.parseDate(this.model.data.from);
 		this.model.data.until = BacktestSettingsModel.parseDate(this.model.data.until);
 
-		this.selectedOptions = this.model.data.instruments;
-
-
 		this.form = this.formBuilder.group(this.model.data);
 
-		this.form.valueChanges.subscribe(() => this.saveSettings());
-	}
+		this._socketService.socket.on('editor:runnable-list', (runnableList) => this._onReceiveRunnableList(runnableList));
+		this._socketService.socket.emit('editor:runnable-list', undefined, (err, runnableList) => this._onReceiveRunnableList(runnableList));
 
-	run() {
-		this.report = null;
-		this.isRunning = true;
-		this.toggleLoading(true);
+		this._instrumentService.instrumentList$.subscribe(instrumentList => {
+			if (instrumentList.length) {
+				this.multiSelectOptions = instrumentList.map(instrument => ({id: instrument, name: instrument}));
 
-		this._socketService.socket.emit('backtest:run', this.model.data, (err, report) => {
-			this.report = report;
-			console.log(report);
-			this.isRunning = false;
-			this.toggleLoading(false);
+				this.model.data.instruments = temp;
+			}
 		});
 	}
 
-	onChange(): void {
-		this.saveSettings();
+	ngAfterViewInit() {
+		this.form.valueChanges.subscribe(() => this.saveSettings());
 	}
 
-	saveSettings(): void {
+	public run() {
+		this.report = null;
+		this.isRunning = true;
+		this._toggleLoading(true);
+
+		let data = Object.assign({}, this.model.data, {
+			from: moment(this.model.data.from, 'YYYY-MM-DD').valueOf(),
+			until: moment(this.model.data.until, 'YYYY-MM-DD').valueOf()
+		});
+
+		this._socketService.socket.emit('backtest:run', data, (err, report) => {
+			this.report = report;
+			this.isRunning = false;
+			this._toggleLoading(false);
+		});
+	}
+
+	public saveSettings(): void {
 		this._cookieService.put('backtest-settings', this.model.toJson());
 	}
 
-	getCookie(): Object {
-		let data: any = null;
+	private _getCookie(): Object {
+		let data = {};
 
 		try {
-			let cookie = this._cookieService.get('backtest-settings');
-
-			if (cookie)
-				data = JSON.parse(cookie);
-
-		} catch (err) {
-			// TODO
-		}
+			data = JSON.parse(this._cookieService.get('backtest-settings'));
+		} catch (err) {}
 
 		return data;
 	}
 
-	onSubmit(e) {
-		// e.preventDefault();
-		// this.run();
+	private _toggleLoading(state: boolean) {
+		$(this._elementRef.nativeElement).find('input, select, button').prop('disabled', !!state);
 	}
 
-	toggleLoading(state: boolean) {
-		if (state) {
-			this._$el.find('input, select, button').prop('disabled', true);
-			// $reportsContainer.html('<div class='loader-wrapper'><img src='/img/loader.gif' class='loader' /></div>');
-		} else {
-			this._$el.find('input, select, button').prop('disabled', false);
-			// $reportsContainer.empty();
-		}
-	}
 
-	private _parseDate(date: String | Date): String {
-		return moment(date).format('YYYY-MM-DD');
+	private _onReceiveRunnableList(runnableList) {
+		this.EAList = runnableList.ea;
 	}
 }

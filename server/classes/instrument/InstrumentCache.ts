@@ -1,8 +1,6 @@
-import WorkerChild from '../worker/WorkerChild';
-import CacheMapper from '../cache/CacheMap';
-import * as utilDate from '../../util/date';
-
-const debug = require('debug')('Instrument');
+import WorkerChild 	from '../worker/WorkerChild';
+import CacheMapper 	from '../cache/CacheMap';
+import * as winston	from 'winston-color';
 
 export default class InstrumentCache extends WorkerChild {
 

@@ -75,7 +75,11 @@ module.exports = (app: App, socket) => {
 	});
 
 	socket.on('instrument:indicator:add', async (options, cb) => {
-		cb(null, await app.controllers.instrument.addIndicator(options));
+		try {
+			cb(null, await app.controllers.instrument.addIndicator(options));
+		} catch (error) {
+			cb(error);
+		}
 	});
 
 	socket.on('instrument:indicator:remove', async (options, cb) => {

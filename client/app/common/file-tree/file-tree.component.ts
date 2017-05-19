@@ -6,6 +6,7 @@ declare let $: any;
 import {Component, AfterViewInit, OnDestroy, ElementRef, ViewEncapsulation, ViewChild, Output, EventEmitter} from '@angular/core';
 import {SocketService}  from '../../services/socket.service';
 import {DialogComponent} from '../dialog/dialog.component';
+import {ModalService} from "app/services/modal.service";
 
 let NAV_WITH = 300;
 let speed = 200;
@@ -33,13 +34,13 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 	private _data = [];
 
 	constructor(
+		private _modalService: ModalService,
 		private _socketService: SocketService,
 		private _elementRef: ElementRef) {
 		this.socket = _socketService.socket;
 
 		this.jstree = null;
 	}
-
 
 	ngAfterViewInit(): void {
 		this.load();
@@ -227,38 +228,46 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 			]
 		};
 
-		this._dialogAnchor.createDialog(DialogComponent, {
-			title: 'New file',
-			model: model,
-			buttons: [
-				{value: 'add', text: 'Add', type: 'primary'},
-				{text: 'Cancel', type: 'default'}
-			],
-			onClickButton: (value) => {
-				if (value === 'add') {
-					this._toggleBusyIcon(true);
+		return new Promise((resolve) => {
 
-					let newName = model.inputs[0].value;
+			let self = this;
 
-					// Same as old name
-					if (oName === newName)
-						return;
+			let dialogComponentRef = this._modalService.create(DialogComponent, {
+				type: 'dialog',
+				title: 'Rename',
+				showBackdrop: false,
+				showCloseButton: false,
+				model: model,
+				buttons: [
+					{value: 'add', text: 'add', type: 'primary'},
+					{text: 'cancel', type: 'candel'}
+				],
+				onClickButton: (value) => {
+					if (value === 'add') {
+						this._toggleBusyIcon(true);
 
-					this._socketService.socket.emit('editor:rename', {id: filePath, name: newName}, (err, result) => {
-						this._toggleBusyIcon(false);
+						let newName = model.inputs[0].value;
 
-						if (err)
-							return alert(err);
+						// Same as old name
+						if (oName === newName)
+							return;
 
-						this.jstree.rename_node(filePath, newName);
+						this._socketService.socket.emit('editor:rename', {id: filePath, name: newName}, (err, result) => {
+							this._toggleBusyIcon(false);
 
-						this.updateEvent.emit({
-							type: 'rename',
-							value: newName
+							if (err)
+								return alert(err);
+
+							this.jstree.rename_node(filePath, newName);
+
+							this.updateEvent.emit({
+								type: 'rename',
+								value: newName
+							});
 						});
-					});
+					}
 				}
-			}
+			});
 		});
 	}
 
@@ -294,35 +303,43 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 			]
 		};
 
-		this._dialogAnchor.createDialog(DialogComponent, {
-			title: 'New file',
-			model: model,
-			buttons: [
-				{value: 'add', text: 'Add', type: 'primary'},
-				{text: 'Cancel', type: 'default'}
-			],
-			onClickButton: (value) => {
-				if (value === 'add') {
-					this._toggleBusyIcon(true);
+		return new Promise((resolve) => {
 
-					this._socketService.socket.emit('editor:file:create', {parent: filePath, name: model.inputs[0].value}, (err, result) => {
-						this._toggleBusyIcon(false);
+			let self = this;
 
-						if (err)
-							return alert(err);
+			let dialogComponentRef = this._modalService.create(DialogComponent, {
+				type: 'dialog',
+				title: 'New file',
+				showBackdrop: false,
+				showCloseButton: false,
+				model: model,
+				buttons: [
+					{value: 'add', text: 'add', type: 'primary'},
+					{text: 'cancel', type: 'candel'}
+				],
+				onClickButton: (value) => {
+					if (value === 'add') {
+						this._toggleBusyIcon(true);
 
-						this.jstree.create_node(filePath, {
-							id: result.id,
-							text: model.inputs[0].value
-						}, 'inside');
+						this._socketService.socket.emit('editor:file:create', {parent: filePath, name: model.inputs[0].value}, (err, result) => {
+							this._toggleBusyIcon(false);
 
-						this.updateEvent.emit({
-							type: 'createFile',
-							value: model.inputs[0].value
+							if (err)
+								return alert(err);
+
+							this.jstree.create_node(filePath, {
+								id: result.id,
+								text: model.inputs[0].value
+							}, 'inside');
+
+							this.updateEvent.emit({
+								type: 'createFile',
+								value: model.inputs[0].value
+							});
 						});
-					});
+					}
 				}
-			}
+			});
 		});
 	}
 
@@ -336,12 +353,15 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 				]
 			};
 
-		this._dialogAnchor.createDialog(DialogComponent, {
+		let dialogComponentRef = this._modalService.create(DialogComponent, {
+			type: 'dialog',
 			title: 'New directory',
+			showBackdrop: false,
+			showCloseButton: false,
 			model: model,
 			buttons: [
-				{value: 'add', text: 'Add', type: 'primary'},
-				{text: 'Cancel', type: 'default'}
+				{value: 'add', text: 'add', type: 'primary'},
+				{text: 'cancel', type: 'candel'}
 			],
 			onClickButton: (value) => {
 				if (value === 'add') {
@@ -402,6 +422,7 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 
 		$(this._elementRef.nativeElement).css('transform', 'translate(' + distance + 'px,0)');
 	}
+
 
 	ngOnDestroy(): void {
 

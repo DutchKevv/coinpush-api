@@ -1,6 +1,5 @@
 import Base from '../Base';
-
-const debug = require('debug')('TradeJS:IPC');
+import * as winston from 'winston-color';
 
 declare var clearTimeout: any;
 declare var window: any;
@@ -39,7 +38,7 @@ export default class IPC extends Base {
 	 * @returns {Promise}
 	 */
 	startServer() {
-		debug(`${this.id} is starting IPC server`);
+		winston.info(`${this.id} is starting IPC server`);
 
 		if (this.env === 'node') {
 			return this._startServerNode();
@@ -54,7 +53,8 @@ export default class IPC extends Base {
 	 * @returns {Promise}
 	 */
 	connectTo(workerId) {
-		debug(`${this.id} connecting to ${workerId}`);
+		winston.info(`${this.id} connecting to ${workerId}`);
+		// debug(`${this.id} connecting to ${workerId}`);
 
 		if (this.env === 'node') {
 			return this._connectToNode(workerId);
@@ -168,20 +168,24 @@ export default class IPC extends Base {
 				let socket = this._ipc.of[workerId];
 
 				socket.on('connect', () => {
-					debug(`${this.id} connected to ${workerId}`);
+					winston.info(`${this.id} connected to ${workerId}`);
+					// debug(`${this.id} connected to ${workerId}`);
 					resolve();
 				});
 
 				socket.on('disconnect', () => {
-					debug(`${this.id} disconnected from ${workerId}`);
+					winston.info(`${this.id} disconnected from ${workerId}`);
+					// debug(`${this.id} disconnected from ${workerId}`);
 				});
 
 				socket.on('error', err => {
-					debug(`${this.id} error`, err);
+					winston.info(`${this.id} error`, err);
+
+					// debug(`${this.id} error`, err);
 					reject(err);
 				});
 
-				socket.on('message', (data, socket) => {
+				socket.on('message', (data) => {
 					this._onMessage(data)
 				});
 			});

@@ -2,10 +2,16 @@
 	background: #000;
 }
 
+
 .header-buttons {
 	list-style: none;
 
-	li {
+	&:first-child {
+		width: 280px;
+		float: left;
+	}
+
+	> li {
 		float: left;
 	}
 

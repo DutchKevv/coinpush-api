@@ -27,15 +27,7 @@ export class EditorComponent implements AfterViewInit {
 				private _socketService: SocketService) {
 	}
 
-
-	
-	swipe() {
-		
-	}
-
 	ngAfterViewInit(): void {
-
-
 		this._socketService.socket.on('editor:change', () => {
 			console.log('CHANGE CHANGE');
 			// this.fileTree.load();

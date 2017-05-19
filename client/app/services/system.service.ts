@@ -33,8 +33,6 @@ export class SystemService {
 					this._userService.login();
 				}
 			}
-
-			console.log('system state update', systemState);
 		});
 	}
 

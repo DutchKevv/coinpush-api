@@ -48,7 +48,7 @@ export default class EA extends Instrument implements IEA {
 	public report() {
 		return {
 			tickCount: this.tickCount,
-			equality: this.accountManager.equality,
+			equality: this.accountManager.equality + this.orderManager.getOpenOrdersValue(this.bid, this.ask),
 			orders: this.orderManager.closedOrders,
 			data: this._backtestData
 		};
@@ -76,6 +76,10 @@ export default class EA extends Instrument implements IEA {
 	}
 
 	protected closeOrder(id, bid, ask) {
+		this.orderManager.close(this.time, id, bid, ask)
+	}
+
+	protected closeAllOrders(id, bid, ask) {
 		this.orderManager.close(this.time, id, bid, ask)
 	}
 
@@ -131,6 +135,8 @@ export default class EA extends Instrument implements IEA {
 
 			from = lastTime + 1;
 		}
+
+		this.orderManager.closeAll(lastTime, this.bid, this.ask);
 
 		this._backtestData.endTime = Date.now();
 

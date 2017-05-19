@@ -1,5 +1,6 @@
 import * as path        from 'path';
 import * as mkdirp      from 'mkdirp';
+import * as winston     from 'winston-color';
 
 import Mapper           from './CacheMap';
 import Fetcher          from './CacheFetch';
@@ -7,9 +8,6 @@ import WorkerChild      from '../worker/WorkerChild';
 import BrokerApi        from '../broker-api/oanda/oanda';
 import BarCalculator    from './util/bar-calculator';
 import CacheDataLayer   from './CacheDataLayer';
-
-
-const debug = require('debug')('TradeJS:Cache');
 
 // const sqlLite     = require('sqlite3').verbose();
 
@@ -167,7 +165,7 @@ export default class Cache extends WorkerChild {
 	}
 
 	private async _loadAvailableInstruments(): Promise<boolean> {
-		debug('loading instruments list');
+		winston.info('loading instruments list');
 
 		try {
 			let instrumentList = await this._brokerApi.getInstruments();
@@ -184,7 +182,7 @@ export default class Cache extends WorkerChild {
 	}
 
 	private async _openTickStream(): Promise<any> {
-		debug('opening tick stream');
+		winston.info('opening tick stream');
 
 		try {
 			await Promise.all(this._instrumentList.map(instrument => this._brokerApi.subscribePriceStream(instrument.instrument)));

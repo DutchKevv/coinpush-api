@@ -14,9 +14,11 @@
 <div class="chart-overview-tabs visible-md visible-lg">
     <ul>
         <li *ngFor="let chartBox of charts"
+            [attr.data-instrument-id]="chartBox.model.data.id"
             [ngClass]="{active: chartBox.model.data.focus}"
             (click)="instrumentsService.setFocus(chartBox.model)"
         >
+
             <a>{{chartBox.model.data.instrument}}</a>
         </li>
     </ul>

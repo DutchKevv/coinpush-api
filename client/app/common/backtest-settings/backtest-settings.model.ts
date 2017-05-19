@@ -5,17 +5,17 @@ export class BacktestSettingsModel extends BaseModel {
 
 	public data = {
 		ea: 'example',
-		instruments: [],
+		instruments: ['EUR_USD'],
 		timeFrame: 'M15',
 		from: BacktestSettingsModel.parseDate(new Date(Date.now() - 1000000000)),
 		until: BacktestSettingsModel.parseDate(new Date()),
 		equality: 10000,
 		currency: 'euro',
-		leverage: '1:10',
-		pips: 10
+		leverage: '1',
+		pips: '1'
 	};
 
-
+	// TODO: Find a way so BaseModel constructor can do this
 	constructor(data) {
 		super();
 

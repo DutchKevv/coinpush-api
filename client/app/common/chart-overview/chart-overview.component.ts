@@ -27,6 +27,8 @@ export class ChartOverviewComponent implements OnInit {
 		this.instrumentsService.instruments$.subscribe(instruments => {
 			this.setFocusToHighestIndex();
 		});
+
+		this._setContextMenu();
 	}
 
 	tileWindows() {
@@ -43,7 +45,11 @@ export class ChartOverviewComponent implements OnInit {
 				chart.$el.removeClass('animate');
 			}, 400);
 
-			if (len < 4) {
+
+			if (len === 1) {
+				chart.toggleViewState('stretched');
+			}
+			else if (len < 4) {
 				let chartW = Math.floor(containerW / len);
 				chart.setSize(chartW, containerH);
 				chart.setPosition(0, (i * chartW) + (i * 1));
@@ -65,5 +71,37 @@ export class ChartOverviewComponent implements OnInit {
 		});
 
 		// this.toggleFocused(ref);
+	}
+
+	private _setContextMenu() {
+		(<any>$(this._elementRef.nativeElement)).contextMenu({
+			items: [
+				{
+					text: 'Focus',
+					value: 'focus'
+				},
+				{
+					text: 'Close all',
+					value: 'closeAll'
+				}
+			],
+			menuSelected: (selectedValue, originalEvent) => {
+				let $button = $(originalEvent.target).parents('[data-instrument-id]'),
+					id = $button.attr('data-instrument-id');
+
+				console.log(originalEvent);
+
+				if (id) {
+					switch (selectedValue) {
+						case 'focus':
+							this.instrumentsService.setFocus(this.instrumentsService.findById(id));
+							break;
+						case 'closeAll':
+							this.instrumentsService.removeAll();
+							break;
+					}
+				}
+			}
+		});
 	}
 }

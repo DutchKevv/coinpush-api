@@ -30,7 +30,7 @@ export class InstrumentListComponent implements OnDestroy, OnInit {
 	}
 
 	private _bindContextMenu() {
-		$(this._elementRef.nativeElement).contextMenu({
+		(<any>$(this._elementRef.nativeElement)).contextMenu({
 			items: [
 				{
 					text: 'Create Chart',

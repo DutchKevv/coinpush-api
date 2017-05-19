@@ -51,7 +51,7 @@ export class NewsListComponent implements OnDestroy, AfterViewInit {
 	}
 
 	private _bindContextMenu() {
-		$(this._elementRef.nativeElement).contextMenu({
+		(<any>$(this._elementRef.nativeElement)).contextMenu({
 			items: [
 				{
 					text: 'Create Chart',

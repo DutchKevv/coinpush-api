@@ -3,6 +3,7 @@ export interface InstrumentSettings {
 	live: boolean;
 	id?: string;
 	timeFrame?: string;
+	indicators?: Array<any>;
 	from?: number;
 	until?: number;
 	bars?: Array<any>;

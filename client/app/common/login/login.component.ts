@@ -29,9 +29,6 @@ export class LoginComponent implements AfterViewInit {
 	onClickButton(value) {
 		if (typeof this.options.onClickButton === 'function' && this.options.onClickButton(value) === false)
 			return;
-
-		// this.button.emit(value);
-		// this.close.emit(value);
 	}
 
 	async onSubmit(event: Event) {

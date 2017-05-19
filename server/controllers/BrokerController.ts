@@ -1,7 +1,6 @@
 import * as path    from 'path';
+import * as winston	from 'winston-color';
 import Base         from '../classes/Base';
-
-const debug = require('debug')('TradeJS:BrokerController');
 
 export default class BrokerController extends Base {
 
@@ -66,13 +65,13 @@ export default class BrokerController extends Base {
 			}
 		}
 
-		debug('Disconnected');
+		winston.info('Disconnected');
 
 		this.emit('disconnected');
 	}
 
 	async getInstrumentList(): Promise<any> | null {
-		debug('Loading instrument list');
+		winston.info('Loading instrument list');
 
 		try {
 			return await this._brokerApi.getInstruments();

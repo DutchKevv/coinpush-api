@@ -41,8 +41,10 @@ header {
     display: block;
 }
 
+
 .three-column:first-child {
     background: $background-light;
+    overflow: hidden;
 }
 
 instrument-list {

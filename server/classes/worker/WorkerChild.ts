@@ -1,3 +1,5 @@
+import * as winston	from 'winston-color';
+
 declare var process: any;
 
 require('source-map-support').install({
@@ -7,13 +9,6 @@ require('source-map-support').install({
 import * as minimist    from 'minimist';
 import Base             from '../Base';
 import IPC              from '../ipc/IPC';
-
-const debug = require('debug')('TradeJS:WorkerChild');
-
-interface WorkerArguments {
-	id: string;
-	parentId: string;
-}
 
 interface WorkerOptions {
 	id: string;
@@ -58,18 +53,18 @@ export default class WorkerChild extends Base {
 				id = settings.workerOptions.id,
 
 				exitHandler = (code = 0) => {
-					debug(`${id} exiting: ${code || 'ok'}`);
+					winston.info(`${id} exiting: ${code || 'ok'}`);
 					process.exit(code);
 				};
 
 			process.once('uncaughtException', err => {
 				console.log('uncaughtException!', err);
-				exitHandler();
+				exitHandler(1);
 			});
 
 			process.once('unhandledRejection', err => {
-				console.log('unhandledRejection!', err);
-				exitHandler()
+				console.error('unhandledRejection!', err);
+				exitHandler(1)
 			});
 
 			process.once('SIGINT', exitHandler);

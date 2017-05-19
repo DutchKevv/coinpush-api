@@ -46,42 +46,33 @@ export class ChartComponent implements OnInit, OnDestroy {
 		this._createChart();
 
 		this.model.changed.subscribe(changes => {
+
 			for (let key in changes) {
-				switch (key) {
-					case 'zoom':
-						this._updateViewPort();
-						break;
-					case 'graphType':
-						this._chart.series[0].update({
-							type: changes[key]
-						});
-						break;
-					case 'timeFrame':
-						this.toggleTimeFrame(changes[key]);
-						break;
+				if (changes.hasOwnProperty(key)) {
+					switch (key) {
+						case 'zoom':
+							this._updateViewPort();
+							break;
+						case 'graphType':
+							this._chart.series[0].update({
+								type: changes[key]
+							});
+							break;
+						case 'timeFrame':
+							this.toggleTimeFrame(changes[key]);
+							break;
+						case 'indicator':
+							let change = changes[key];
+							if (change.type === 'add') {
+								let indicator = this.model.data.indicators.find(i => i.id === change.id);
+
+								this._updateIndicators([indicator]);
+							}
+							break;
+					}
 				}
 			}
 		})
-	}
-
-
-	public addIndicator(indicatorModel: IndicatorModel) {
-		return new Promise((resolve, reject) => {
-			this._socketService.socket.emit('instrument:indicator:add', {
-				id: this.model.data.id,
-				name: indicatorModel.name,
-				options: indicatorModel.inputs,
-				readCount: this._chart.series[0].xData.length,
-				shift: 0
-			}, (err, data) => {
-				if (err)
-					return reject(err);
-
-				this._updateIndicators(data.data);
-
-				resolve();
-			});
-		});
 	}
 
 	public pinToCorner(edges): void {
@@ -220,48 +211,47 @@ export class ChartComponent implements OnInit, OnDestroy {
 	}
 
 	private _updateIndicators(indicators) {
-		for (let id in indicators) {
-			if (indicators.hasOwnProperty(id)) {
-				for (let drawBufferName in indicators[id]) {
-					if (indicators[id].hasOwnProperty(drawBufferName)) {
-						let drawBuffer = indicators[id][drawBufferName];
+		indicators.forEach(indicator => {
+			for (let drawBufferName in indicator.data) {
+				if (indicator.data.hasOwnProperty(drawBufferName)) {
+					let drawBuffer = indicator.data[drawBufferName];
 
-						let unique = id + '_' + drawBuffer.id;
+					let unique = indicator.id + '_' + drawBuffer.id;
 
-						// New series
-						let series = this._chart.get(unique);
 
-						// Update
-						if (series) {
-							console.log('SERIES!!!!', series);
-						}
+					// New series
+					let series = this._chart.get(unique);
 
-						// Create
-						else {
-							switch (drawBuffer.type) {
-								case 'line':
-									this._chart.addSeries({
-										type: drawBuffer.type,
-										name: id,
-										// id: unique,
-										data: drawBuffer.data,
-										color: drawBuffer.style.color,
-										yAxis: 0,
-										ordinal: true,
-										dataGrouping: {
-											enabled: false
-										}
-									});
-									break;
-								case 'arrow':
-									alert('cannot yet draw arrow');
-									break;
-							}
+					// Update
+					if (series) {
+						console.log('SERIES!!!!', series);
+					}
+
+					// Create
+					else {
+						switch (drawBuffer.type) {
+							case 'line':
+								this._chart.addSeries({
+									type: drawBuffer.type,
+									name: indicator.id,
+									// id: unique,
+									data: drawBuffer.data,
+									color: drawBuffer.style.color,
+									yAxis: 0,
+									ordinal: true,
+									dataGrouping: {
+										enabled: false
+									}
+								});
+								break;
+							case 'arrow':
+								alert('cannot yet draw arrow');
+								break;
 						}
 					}
 				}
 			}
-		}
+		});
 	}
 
 	/*

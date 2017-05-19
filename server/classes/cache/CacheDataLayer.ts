@@ -1,7 +1,7 @@
 import * as fs          from 'fs';
 import * as sqLite      from 'sqlite3';
+import * as winston     from 'winston-color';
 
-const debug = require('debug')('TradeJS:DataLayer');
 const TransactionDatabase = require('sqlite3-transactions').TransactionDatabase;
 
 export default class CacheDataLayer {
@@ -29,7 +29,7 @@ export default class CacheDataLayer {
 						columns = ['time', 'openBid', 'highBid', 'lowBid', 'closeBid', 'volume'],
 						queryString;
 
-					debug(`DataLayer: Read ${tableName} from ${new Date(from)} until ${new Date(until)} count ${count}`);
+					winston.info(`DataLayer: Read ${tableName} from ${new Date(from)} until ${new Date(until)} count ${count}`);
 
 					queryString = `SELECT ${columns.join(',')}  FROM ${tableName} `;
 
@@ -87,7 +87,7 @@ export default class CacheDataLayer {
 			this._createInstrumentTableIfNotExists(instrument, timeFrame)
 				.then(tableName => {
 
-					debug('DataLayer: Write ' + candles.length + ' candles to ' + tableName);
+					winston.info('DataLayer: Write ' + candles.length + ' candles to ' + tableName);
 
 					if (!candles.length)
 						return resolve();

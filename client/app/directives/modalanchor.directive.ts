@@ -25,8 +25,9 @@ export class ModalAnchorDirective {
 
 		let modalComponentFactory = this.componentFactoryResolver.resolveComponentFactory(modalComponent);
 		this.modalComponentRef = <any>this.viewContainer.createComponent(modalComponentFactory);
-
+		this.modalComponentRef.instance.model = options.model;
 		this.modalComponentRef.instance.options = options;
+
 
 		this.modalComponentRef.changeDetectorRef.detectChanges();
 

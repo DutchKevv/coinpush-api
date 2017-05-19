@@ -35,8 +35,9 @@ export class FooterComponent implements OnInit, OnDestroy {
 		this._setWindowResizeHandle();
 		this._setDragger();
 
+
 		this.socketService.socket.on('debug', message => {
-			message.timePretty = moment.unix(message.time).format('DD MMM YY hh:mm:ss');
+			message.timePretty = moment(message.time).format('DD MMM YY hh:mm:ss');
 			this.messages.push(message);
 		});
 	}
@@ -85,6 +86,15 @@ export class FooterComponent implements OnInit, OnDestroy {
 				return false;
 			},
 			onDragEnd: () => this._storeHeightInCookie()
+		});
+	}
+
+	clearCache() {
+		this.socketService.socket.emit('system:clear-cache', {}, (err: any) => {
+			if (err)
+				alert(err);
+
+			alert('Cleaned cache');
 		});
 	}
 

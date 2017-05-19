@@ -21,10 +21,12 @@ export class InstrumentModel extends BaseModel {
 	private _zoomMax = 10;
 	private _zoomMin = 1;
 
-	constructor(data?: any) {
+	constructor(data?: InstrumentSettings) {
 		super();
 
-		this.set(data);
+		if (data) {
+			this.set(data);
+		}
 	}
 
 	public setZoom(step) {
@@ -32,14 +34,31 @@ export class InstrumentModel extends BaseModel {
 			return;
 
 		this.set({zoom: this.data.zoom + step});
-
 	}
 
 	updateBars(bars) {
 		this.data.bars = bars;
 	}
 
-	updateIndicators(data) {
+	public addIndicator(indicator) {
+		this.data.indicators.push(indicator);
+	}
 
+	public removeIndicator() {
+		// this.data.indicators.push()
+	}
+
+	public updateIndicators(indicators) {
+		indicators.forEach(indicator => {
+			let existing = this.data.indicators.find(i => i === indicator.id);
+
+			if (existing) {
+				existing.data = indicator.data;
+			}
+
+			else {
+				this.data.indicators.push(indicator);
+			}
+		});
 	}
 }

@@ -2,9 +2,7 @@ import * as path    from 'path';
 import * as fs      from 'fs';
 import * as mkdirp  from 'mkdirp';
 
-const
-	debug = require('debug')('TradeJS:ConfigController'),
-	merge = require('deepmerge');
+const merge = require('deepmerge');
 
 interface IAppConfig {
 	system?: {

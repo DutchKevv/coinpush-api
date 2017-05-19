@@ -1,11 +1,8 @@
-import IPC from "../ipc/IPC";
-declare var clearInterval: any;
+import IPC from '../ipc/IPC';
 
-import {fork}    from 'child_process';
-import * as _debug      from 'debug';
+import {fork}    		from 'child_process';
+import * as winston     from 'winston-color';
 import Base             from '../Base';
-
-const debug = _debug('TradeJS:WorkerHost');
 
 export default class WorkerHost extends Base {
 
@@ -33,38 +30,53 @@ export default class WorkerHost extends Base {
 	}
 
 	async _fork() {
+		return new Promise((resolve, reject) => {
+			winston.info(`Creating | id=${this.id}`);
 
-		debug(`Creating | id=${this.id}`);
+			// Merge given options
+			let resolved = false,
+				childArgv = JSON.stringify({
+					classArguments: this.opt.classArguments || {},
+					workerOptions: {
+						id: this.id,
+						parentId: this._ipc.id
+					}
+				}),
 
-		// Merge given options
-		let childArgv = JSON.stringify({
-				classArguments: this.opt.classArguments || {},
-				workerOptions: {
-					id: this.id,
-					parentId: this._ipc.id
+				childOpt = {
+					stdio: ['pipe', process.stdout, null, 'ipc']
+				};
+
+			// TODO - FUCKING ELECTRON!
+			this._child = fork(this.opt.path, ['--no-deprecation', `--settings=${childArgv}`], childOpt);
+
+			this._child.on('close', code => {
+				winston.info(`${this.id} exited with code ${code}`);
+
+				if (!resolved) {
+					reject('Child closed before ready');
 				}
-			}),
 
-			childOpt = {
-				stdio: ['pipe', process.stdout, process.stderr, 'ipc']
-			};
+				this.emit('close', code);
+			});
 
-		// TODO - FUCKING ELECTRON!
-		this._child = fork(this.opt.path, [`--settings=${childArgv}`], childOpt);
+			this._child.stderr.on('data', (data) => {
+				this.emit('stderr', data.toString());
 
-		this._child.on('close', code => {
-			debug(`${this.id} exited with code ${code}`);
-			this.emit('close', code);
-		});
+				if (data.toString().indexOf('DeprecationWarning:') === -1) {
 
-		await new Promise((resolve, reject) => {
+				}
+				//
+				console.log(`stderr22: ${data}`);
+			});
 
 			this._child.once('message', message => {
+				resolved = true;
 				if (message === '__ready') {
-					debug(`Created | id=${this.id} | pid=${this._child.pid}`);
+					winston.info(`Created | id=${this.id} | pid=${this._child.pid}`);
 					resolve();
 				} else {
-					reject(message);
+					reject('First child message must always be the __ready, received: ' + message);
 				}
 			});
 		});

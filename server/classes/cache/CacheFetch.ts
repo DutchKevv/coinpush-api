@@ -1,11 +1,7 @@
-import * as _           from 'lodash';
-import * as util        from './util/util';
+import * as winston		from 'winston-color';
 import Mapper           from './CacheMap';
 import BrokerApi        from '../broker-api/oanda/oanda';
-import {splitTimeToChunks, mergeRanges} from '../../util/date';
 import CacheDataLayer from './CacheDataLayer';
-
-const debug = require('debug')('TradeJS:Fetcher');
 
 export default class Fetcher {
 
@@ -13,9 +9,6 @@ export default class Fetcher {
 	private _dataLayer: CacheDataLayer;
 
 	private _pendingRanges: any = {};
-
-	// TODO: Add queue per instrument;
-	private _queue: any;
 
 	constructor(opt) {
 		this._mapper = opt.mapper;
@@ -39,7 +32,7 @@ export default class Fetcher {
 			let i = 0, len = candles.length,
 				lastT, parseTime = Date.now();
 
-			debug(`Fetching ${instrument} on ${timeFrame} took ${(parseTime - startTime) / 1000} seconds`);
+			winston.info(`Fetching ${instrument} on ${timeFrame} took ${(parseTime - startTime) / 1000} seconds`);
 
 			for (; i < len; i++) {
 				if (lastT && lastT >= candles[i].time) {
@@ -69,7 +62,7 @@ export default class Fetcher {
 				}
 			}
 
-			debug(`Parsing ${instrument} on ${timeFrame} took ${(Date.now() - parseTime) / 1000} seconds`);
+			winston.info(`Parsing ${instrument} on ${timeFrame} took ${(Date.now() - parseTime) / 1000} seconds`);
 
 			// Remove from pending requests
 			// this._clearPendingRequest(instrument, timeFrame, from, until);

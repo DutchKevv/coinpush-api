@@ -41,13 +41,16 @@
                     <i *ngIf="message.type === 'error'" class="fa fa-close">&nbsp;</i>
                     <i *ngIf="message.type === 'warning'" class="fa fa-warning">&nbsp;</i>
                 </td>
-                <td>{{message.text}}</td>
                 <td>{{message.timePretty}}</td>
+                <td class="type-{{message.type}}" [innerHTML]="message.text"></td>
             </tr>
             </tbody>
         </table>
     </div>
 
     <div role="tabpanel" class="tab-pane" id="messages">...</div>
-    <div role="tabpanel" class="tab-pane" id="settings">...</div>
+    <div role="tabpanel" class="tab-pane" id="settings">
+        <hr />
+        <button class="btn btn-danger" (click)="clearCache()">Clear cache</button>
+    </div>
 </div>

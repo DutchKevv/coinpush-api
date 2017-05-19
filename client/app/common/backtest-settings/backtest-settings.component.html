@@ -1,22 +1,21 @@
-<form role="form" class="form-horizontal" id="backtest-settings-form" [formGroup]="form" (ngSubmit)="onSubmit($event)">
+<form role="form" class="form-horizontal" id="backtest-settings-form" [formGroup]="form" (ngSubmit)="run()">
     <div class="form-input-block">
         <label>EA</label>
         <select class="form-control" name="ea" formControlName="ea" required ngControl="ea" [(ngModel)]="model.data.ea">
             <option *ngFor="let ea of EAList; let i = index" [ngValue]="ea">{{ea}}</option>
         </select>
     </div>
-
     <div class="form-input-block">
         <label>Instruments</label>
         <ss-multiselect-dropdown
+                name="instruments"
                 [options]="multiSelectOptions"
                 [settings]="multiSelectSettings"
-                (change)="onChange()"
                 formControlName="instruments"
-                [(ngModel)]="model.data.instruments"></ss-multiselect-dropdown>
+                [(ngModel)]="model.data.instruments">
+        </ss-multiselect-dropdown>
     </div>
     <div class="form-input-block">
-
         <label>Time frame *</label>
         <select class="form-control" name="timeFrame" formControlName="timeFrame" required [(ngModel)]="model.data.timeFrame">
             <option value="M1">M1</option>

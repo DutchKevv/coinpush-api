@@ -4,6 +4,7 @@ import './util/more-info-console';
 
 import Socket = SocketIO.Socket;
 
+import * as winston         from 'winston-color';
 import * as io              from 'socket.io';
 import * as http            from 'http';
 import {json, urlencoded}   from 'body-parser';
@@ -24,8 +25,6 @@ import BrokerController     from './controllers/BrokerController';
 const express: any = require('express');
 
 const
-	debug = require('debug')('TradeJS:App'),
-
 	DEFAULT_TIMEZONE = 'America/New_York',
 	PATH_PUBLIC_DEV = path.join(__dirname, '../client/dist'),
 	PATH_PUBLIC_PROD = path.join(__dirname, '../client/dist');
@@ -165,7 +164,7 @@ export default class App extends Base {
 	private _initAPI(): Promise<any> {
 
 		return new Promise((resolve, reject) => {
-			debug('Starting API');
+			winston.info('Starting API');
 
 			let port = this.controllers.config.get().system.port;
 
@@ -195,7 +194,7 @@ export default class App extends Base {
 
 			// Application routes (WebSockets)
 			this._io.on('connection', socket => {
-				debug('a websocket connected');
+				winston.info('a websocket connected');
 
 				require('./api/socket/system')(this, socket);
 				require('./api/socket/editor')(this, socket);
@@ -221,6 +220,10 @@ export default class App extends Base {
 			/**
 			 * Server events
 			 */
+			this.controllers.editor.on('runnable-list:change', (runnableList) => {
+				this._io.sockets.emit('editor:runnable-list', runnableList);
+			});
+
 			this.controllers.broker.on('connected', () => {
 
 			});
@@ -290,7 +293,7 @@ export default class App extends Base {
 	}
 
 	async destroy(): Promise<any> {
-		debug('Shutting down and cleaning up child processes');
+		winston.info('Shutting down and cleaning up child processes');
 		this.debug('warning', 'Shutting down server');
 
 		await this._killAllChildProcesses();

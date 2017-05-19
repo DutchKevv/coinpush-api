@@ -105,6 +105,16 @@
         }
     }
 
+    .btn-multi-select {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+
+    .dropdown-menu>li>a:hover>span {
+        color: $font-color-dark;
+    }
+
     .input-group {
 
         &.date {

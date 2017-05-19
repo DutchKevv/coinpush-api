@@ -44,15 +44,27 @@ table {
         color: $font-color-light;
     }
 
+
     td {
-        color: $font-color-light-gray
+        color: $font-color-light-gray;
+
+        &.type-error {
+            color: $general-error;
+        }
     }
 
     td:first-child {
         text-align: center;
     }
-}
 
+    td:nth-child(2) {
+        width: 100px;
+    }
+
+    td:nth-child(3) {
+        white-space: pre-line;
+    }
+}
 
 .spinner {
     margin: 0;
@@ -89,8 +101,9 @@ table {
     }
 }
 
+
 .tab-content {
-    height: 100%;
+    height: calc(100% - 21px);
     background: $background-light;
     overflow: auto;
 }

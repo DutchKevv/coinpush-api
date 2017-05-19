@@ -1,7 +1,3 @@
-import * as _debug  from 'debug';
-
-const debug = _debug('TradeJS:Editor');
-
 module.exports = (app, socket) => {
 
 	socket.on('file:list', async () => {
@@ -46,7 +42,7 @@ module.exports = (app, socket) => {
 		try {
 			cb(null, await app.controllers.editor.rename(data.id, data.name));
 		} catch (error) {
-			console.error('error');
+			console.error(error);
 			cb(error);
 		}
 	});
@@ -64,10 +60,17 @@ module.exports = (app, socket) => {
 		try {
 			cb(null, await app.controllers.editor.createDirectory(data.parent, data.name));
 		} catch (error) {
-			console.error('error');
+			console.error(error);
 			cb(error);
 		}
 	});
 
-
+	socket.on('editor:runnable-list', async (data, cb) => {
+		try {
+			cb(null, await app.controllers.editor.runnableList);
+		} catch (error) {
+			console.error(error);
+			cb(error);
+		}
+	});
 };

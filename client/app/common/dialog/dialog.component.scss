@@ -1,24 +1,31 @@
 @import '../../style/variables/variables';
 
+
 .dialog {
-    width: 250px;
-    position: absolute;
     border: 1px solid black;
     border-radius: 5px;
     overflow: hidden;
-    left: calc(50% - 125px);
-    top: 40px;
-    z-index: 100;
+    z-index: 1041;
     background: rgba(0,0,0,0.7);
     min-height: 150px;
-}
 
-.dialog-header {
-    //background: $panel-heading;
-    background: rgba(86, 15, 15, 0.72);
-    padding: 5px;
-    text-align: center;
-    color: $font-color-light;
+    .modal-header {
+        //background: $panel-heading;
+        background: rgba(86, 15, 15, 0.72);
+        padding: 5px;
+        text-align: center;
+        color: $font-color-light;
+    }
+
+    .modal-content {
+        background: $background-dark;
+    }
+
+    .modal-footer {
+        button {
+            margin: 0 5px;
+        }
+    }
 }
 
 
@@ -27,11 +34,7 @@
     padding: 5px;
 }
 
-.dialog-footer {
-    button {
-        margin: 0 5px;
-    }
-}
+
 
 .fa-close {
     cursor: pointer;

@@ -1,13 +1,12 @@
 import * as fs      from 'fs';
 import * as path    from 'path';
-import * as _debug  from 'debug';
+import * as winston	from 'winston-color';
 import * as mkdirp  from 'mkdirp';
 import * as watch 	from 'watch';
 import {fork, spawn}      from 'child_process';
 import Base from '../classes/Base';
 
 const dirTree = require('directory-tree');
-const debug = _debug('TradeJS:EditorController');
 const rmdir = require('rmdir');
 
 export default class EditorController extends Base {
@@ -21,6 +20,10 @@ export default class EditorController extends Base {
 
 	get directoryTree() {
 		return this._directoryTree;
+	}
+
+	get runnableList() {
+		return this._runnableList;
 	}
 
 	constructor(protected opt, protected app) {
@@ -49,7 +52,7 @@ export default class EditorController extends Base {
 
 	public loadFile(filePath) {
 		return new Promise((resolve, reject) => {
-			debug(`Loading ${filePath}`);
+			winston.info(`Loading ${filePath}`);
 
 			if (typeof filePath !== 'string')
 				return reject('No filePath given');
@@ -66,7 +69,7 @@ export default class EditorController extends Base {
 
 	public async save(filePath, content) {
 		return new Promise((resolve, reject) => {
-			debug('save: ' + filePath);
+			winston.info('save: ' + filePath);
 
 			filePath = this._getFullPath(filePath);
 
@@ -80,7 +83,7 @@ export default class EditorController extends Base {
 
 	public rename(filePath, name) {
 		return new Promise((resolve, reject) => {
-			debug('rename: ' + filePath + ' to: ' + name);
+			winston.info('rename: ' + filePath + ' to: ' + name);
 
 			if (!this._isValidFileName(name))
 				return reject('Invalid file name');
@@ -103,7 +106,7 @@ export default class EditorController extends Base {
 
 	public delete(filePath) {
 		return new Promise((resolve, reject) => {
-			debug('delete: ' + filePath);
+			winston.info('delete: ' + filePath);
 
 			filePath = this._getFullPath(filePath);
 
@@ -121,7 +124,7 @@ export default class EditorController extends Base {
 
 	public createFile(parent: string, name: string, content = '') {
 		return new Promise(async (resolve, reject) => {
-			debug('Create file: ' + name);
+			winston.info('Create file: ' + name);
 
 			if (typeof parent !== 'string')
 				return reject('No parent directory given');
@@ -150,7 +153,7 @@ export default class EditorController extends Base {
 	public createDirectory(parent: string, name: string) {
 
 		return new Promise(async (resolve, reject) => {
-			debug('Create directory: ' + name);
+			winston.info('Create directory: ' + name);
 
 			if (typeof parent !== 'string')
 				return reject('No parent directory given');
@@ -178,7 +181,7 @@ export default class EditorController extends Base {
 	}
 
 	private _loadDirectoryTreeSync() {
-		debug('Load directory tree');
+		winston.info('Load directory tree');
 
 		let tree = dirTree(this.app.controllers.config.config.path.custom);
 
@@ -230,11 +233,13 @@ export default class EditorController extends Base {
 		};
 
 		this._directoryTree.forEach(obj => {
-			if (this._runnableList.hasOwnProperty(obj.name))
-				runnableList[obj.name].push(...obj.children)
+			if (runnableList.hasOwnProperty(obj.name))
+				runnableList[obj.name].push(...obj.children.map(child => child.name));
 		});
 
 		this._runnableList = runnableList;
+
+		this.emit('runnable-list:change', runnableList)
 	}
 
 	private _startWatcher() {
@@ -249,17 +254,17 @@ export default class EditorController extends Base {
 				// console.log('asdasdasd', fileNames);
 				this.emit('change');
 			} else if (prev === null) {
-				debug('file:new', fileNames);
+				winston.info('file:new', fileNames);
 				this.emit('change')
 				await this._compile(this._getCustomAbsoluteRootFolder(fileNames), this._getBuildAbsoluteRootFolder(fileNames));
 				// f is a new file
 			} else if (curr.nlink === 0) {
-				debug('file:removed', fileNames);
+				winston.info('file:removed', fileNames);
 				this.emit('change')
 				await this._compile(this._getCustomAbsoluteRootFolder(fileNames), this._getBuildAbsoluteRootFolder(fileNames));
 				// f was removed
 			} else {
-				debug('file:changed', fileNames);
+				winston.info('file:changed', fileNames);
 				this.emit('change')
 				await this._compile(this._getCustomAbsoluteRootFolder(fileNames), this._getBuildAbsoluteRootFolder(fileNames));
 				// f was changed

@@ -95,7 +95,9 @@ import {NewsListComponent} from './common/news-feed/news-list';
 	],
 	bootstrap: [
 		AppComponent
-	]
+	],
+
+	entryComponents: [DialogComponent]
 })
 
 export class AppModule {

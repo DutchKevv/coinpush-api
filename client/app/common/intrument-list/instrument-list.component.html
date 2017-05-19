@@ -1,32 +1,27 @@
-<div>
-	<table>
-		<thead>
-		<tr>
-			<th>Instrument</th>
-			<th>Bid</th>
-			<th>Ask</th>
-		</tr>
-		</thead>
-	</table>
-
-	<div>
-		<input class="search-instrument-list" type="text" placeholder="search">
-	</div>
-	<div class="instrument-list-rows-wrapper">
-		<table>
-			<tbody>
-			<tr *ngFor="let instrument of instrumentService.instrumentList;" [attr.data-symbol]="instrument">
-				<td (click)="instrumentService.create({instrument: instrument, live: true})">
-					<i class="fa fa-arrow-{{data[instrument] && data[instrument].direction}}"></i>
-					{{ instrument }}
-				</td>
-				<td>{{data[instrument] && data[instrument].bid}}</td>
-				<td>{{data[instrument] && data[instrument].ask}}</td>
-			</tr>
-			</tbody>
-		</table>
-	</div>
-</div>
+<table>
+	<thead>
+	<tr>
+		<th>Instrument</th>
+		<th>Bid</th>
+		<th>Ask</th>
+	</tr>
+	<tr>
+		<th colspan="3">
+			<input class="search-instrument-list" type="text" placeholder="search">
+		</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr *ngFor="let instrument of instrumentService.instrumentList$ | async;" [attr.data-symbol]="instrument">
+		<td (click)="instrumentService.create({instrument: instrument, live: true})">
+			<i class="fa fa-arrow-{{data[instrument] && data[instrument].direction}}"></i>
+			{{ instrument }}
+		</td>
+		<td>{{data[instrument] && data[instrument].bid}}</td>
+		<td>{{data[instrument] && data[instrument].ask}}</td>
+	</tr>
+	</tbody>
+</table>
 
 <ul id="contextMenu" class="dropdown-menu" role="menu" style="display:none">
 	<li><a tabindex="-1" href="#">Action</a></li>

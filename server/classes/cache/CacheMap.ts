@@ -6,7 +6,6 @@ import * as mkdirp from 'mkdirp';
 const rmdir = require('rmdir');
 
 import {mergeRanges} from '../../util/date';
-import {getMissingRangeByCount, getMissingRangeByDate} from './util/util';
 
 export default class Mapper {
 

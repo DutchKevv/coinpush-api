@@ -175,7 +175,8 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 
 		indicatorModel.inputs = options;
 
-		this._chartComponent.addIndicator(indicatorModel);
+
+		// this._chartComponent.addIndicator(indicatorModel);
 	}
 
 	public getIndicatorOptions(name: string): Promise<IndicatorModel> {
@@ -214,7 +215,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 			chartH = el.clientHeight,
 			chartW = el.clientWidth;
 
-		return [_.random(0, containerH - chartH), _.random(0, containerW - chartW)];
+		return [Math.max(_.random(0, containerH - chartH), 0), _.random(0, containerW - chartW)];
 	}
 
 	destroy() {

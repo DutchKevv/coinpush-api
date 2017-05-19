@@ -5,6 +5,9 @@ import {InstrumentSettings} from '../../../shared/interfaces/InstrumentSettings'
 import {SocketService} from './socket.service';
 import {BehaviorSubject} from 'rxjs';
 import {SystemState} from '../../../shared/models/SystemState';
+import {IndicatorModel} from "../models/indicator";
+import {DialogComponent} from "../common/dialog/dialog.component";
+import {ModalService} from "./modal.service";
 
 @Injectable()
 export class InstrumentsService {
@@ -12,18 +15,18 @@ export class InstrumentsService {
 	@Output() changed = new EventEmitter();
 
 	public instruments$: BehaviorSubject<InstrumentModel[]> = new BehaviorSubject([]);
+	public instrumentList$: BehaviorSubject<any> = new BehaviorSubject([]);
 
 	private _instruments: InstrumentModel[] = [];
-	public instrumentList: Array<any> = [];
 
 	get instruments() {
 		return this._instruments;
 	}
 
-	constructor(private _socketService: SocketService) {
+	constructor(private _modalService: ModalService,
+				private _socketService: SocketService) {
 		this.init();
 	}
-
 
 	public init(): void {
 		this._socketService.socket.on('instrument:created', (instrumentSettings: InstrumentSettings) => {
@@ -76,6 +79,10 @@ export class InstrumentsService {
 		return this._destroyOnServer(model);
 	}
 
+	public removeAll() {
+		this.instruments.forEach(instrument => this.remove(instrument));
+	}
+
 	public fetch(model: InstrumentModel, count = 300, offset = 0, from?: number, until?: number): Promise<any> {
 
 		return new Promise((resolve) => {
@@ -115,12 +122,14 @@ export class InstrumentsService {
 	}
 
 	public setFocus(model: InstrumentModel) {
+		if (model.data.focus === true)
+			return;
+
 		this.instruments.forEach(instrument => {
 			instrument.set({focus: false});
 		});
 
 		model.set({focus: true});
-
 	}
 
 	public getFocused(): InstrumentModel {
@@ -132,6 +141,90 @@ export class InstrumentsService {
 		return null;
 	}
 
+	public async addIndicator(instrumentModel: InstrumentModel, name: string) {
+		return new Promise(async (resolve, reject) => {
+
+			if (!name)
+				reject('No indicator name given');
+
+			let indicatorModel = await this._getIndicatorOptions(name),
+				options = {};
+
+			if (await this._showIndicatorOptionsMenu(indicatorModel) === false)
+				resolve(false);
+
+			// Normalize model values
+			_.forEach(indicatorModel.inputs, input => {
+
+				switch (input.type) {
+					case 'number':
+						input.value = parseInt(input.value, 10);
+						break;
+					case 'text':
+						input.value = String.prototype.toString.call(input.value);
+						break;
+				}
+
+				options[input.name] = input.value
+			});
+
+			this._socketService.socket.emit('instrument:indicator:add', {
+				id: instrumentModel.data.id,
+				name: indicatorModel.name,
+				options: options,
+				readCount: 500,
+				shift: 0
+			}, (err, result) => {
+				if (err)
+					return reject(err);
+
+				instrumentModel.addIndicator(result);
+				instrumentModel.changed.next({indicator: {type: 'add', id: result.id}});
+
+				resolve(true);
+			});
+		});
+	}
+
+	public findById(id) {
+		return this.instruments.find(instrument => instrument.data.id === id);
+	}
+
+	private _showIndicatorOptionsMenu(indicatorModel: IndicatorModel): Promise<boolean> {
+
+		return new Promise((resolve) => {
+
+			let self = this;
+
+			let dialogComponentRef = this._modalService.create(DialogComponent, {
+				type: 'dialog',
+				title: indicatorModel.name,
+				showBackdrop: false,
+				showCloseButton: false,
+				model: indicatorModel,
+				buttons: [
+					{value: 'add', text: 'add', type: 'primary'},
+					{text: 'cancel', type: 'candel'}
+				],
+				onClickButton(value) {
+					if (value === 'add') {
+						self._modalService.destroy(dialogComponentRef);
+						resolve(true);
+					} else
+						self._modalService.destroy(dialogComponentRef);
+				}
+			});
+		});
+	}
+
+	private _getIndicatorOptions(name: string): Promise<IndicatorModel> {
+		return new Promise((resolve, reject) => {
+			this._socketService.socket.emit('instrument:indicator:options', {name: name}, (err, data) => {
+				err ? reject(err) : resolve(new IndicatorModel(data));
+			});
+		});
+	}
+
 	private _destroyOnServer(model: InstrumentModel) {
 		return new Promise((resolve, reject) => {
 
@@ -139,18 +232,19 @@ export class InstrumentsService {
 				if (err)
 					return reject(err);
 
-
 				resolve();
 			});
 		});
 	}
+
 
 	private _loadInstrumentList() {
 		this._socketService.socket.emit('instrument:list', {}, (err, instrumentList) => {
 			if (err)
 				return console.error(err);
 
-			this.instrumentList = instrumentList.map(instrument => instrument.instrument);
+
+			this.instrumentList$.next(instrumentList.map(instrument => instrument.instrument));
 		});
 	}
 

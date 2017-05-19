@@ -5,7 +5,15 @@
 				<i class="fa fa-plus" aria-hidden="true"></i>
 			</button>
 		</li>
-
+		<li>
+			<button type="button"
+					class="dropdown-toggle text-dark button-candlestick btn-menu"
+					aria-expanded="false">
+				<i class="fa fa-bar-chart"></i>
+			</button>
+		</li>
+	</ul>
+	<ul class="header-buttons">
 		<li>
 			<button (click)="_chartComponent.zoom(-1)"
 					type="button"
@@ -15,7 +23,6 @@
 				</i>
 			</button>
 		</li>
-
 		<li>
 			<button (click)="_chartComponent.zoom(1)"
 					type="button"
@@ -24,13 +31,13 @@
 				<i class="fa fa-search-plus"></i>
 			</button>
 		</li>
-
 		<li>
 			<button href="#add-chart" class="btn-menu button-new">
-				<i class="fa fa-play" aria-hidden="true"></i>
+				<i class="fa fa-play" aria-hidden="true">&nbsp;&nbsp;Compile</i>
 			</button>
 		</li>
 	</ul>
+
 	<!--<ul class="nav navbar-nav navbar-right">-->
 		<!--<li id="nav-dropdown" class="dropdown">-->
 			<!--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"-->

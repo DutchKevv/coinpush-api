@@ -1,12 +1,11 @@
 import * as path    from 'path';
 import * as _       from 'lodash';
+import * as winston	from 'winston-color';
 import WorkerHost   from '../classes/worker/WorkerHost';
 import Base         from '../classes/Base';
 import App from '../_app';
 
 const PATH_INSTRUMENT = path.join(__dirname, '../classes/instrument/Instrument');
-
-const debug = require('debug')('TradeJS:InstrumentController');
 
 export default class InstrumentController extends Base {
 
@@ -27,7 +26,7 @@ export default class InstrumentController extends Base {
 	}
 
 	public async create(instrument: string, timeFrame: string, live = true, filePath: string = PATH_INSTRUMENT, options = {}) {
-		debug(`Creating instrument ${instrument}`);
+		winston.info(`Creating instrument ${instrument}`);
 
 		if (!instrument) {
 			this.app.debug('error', 'InstrumentController:create - illegal instrument given');
@@ -55,6 +54,10 @@ export default class InstrumentController extends Base {
 			})
 		});
 
+		worker.on('stderr', error => {
+			this.app.debug('error', error);
+		});
+
 		await worker.init();
 
 		this._instruments[id] = {
@@ -71,7 +74,7 @@ export default class InstrumentController extends Base {
 	}
 
 	public read(id: string, from: number, until: number, count: number, bufferOnly?: boolean, indicators: any = false) {
-		debug(`Reading instrument ${id}`);
+		winston.info(`Reading instrument ${id}`);
 
 		if (!this._instruments[id])
 			return Promise.reject(`Reject: Instrument '${id}' does not exist`);
@@ -98,6 +101,7 @@ export default class InstrumentController extends Base {
 		if (params.readCount) {
 			data = await this.getIndicatorData({
 				id: params.id,
+				indicatorId: id,
 				name: params.name,
 				count: params.readCount
 			});
@@ -110,12 +114,17 @@ export default class InstrumentController extends Base {
 		if (!this._instruments[params.id])
 			return Promise.reject(`Reject: Instrument '${params.id}' does not exist`);
 
-		return this.instruments[params.id].worker.send('get-data', {
+		let returnData = this.instruments[params.id].worker.send('get-data', {
+			indicatorId: params.indicatorId,
 			name: params.name,
 			from: params.from,
 			until: params.until,
 			count: params.count
 		});
+
+		// console.log(returnData);
+
+		return returnData
 	}
 
 	public async getIndicatorOptions(params) {
@@ -126,16 +135,12 @@ export default class InstrumentController extends Base {
 
 			let configPath = `${PATH_INDICATORS}/${params.name}/config.json`;
 
-			try {
-				resolve(require(configPath));
-			} catch (err) {
-				reject(err);
-			}
+			resolve(require(configPath));
 		});
 	}
 
 	public destroy(id: string): void {
-		debug('destroying - ' + id)
+		winston.info('destroying - ' + id)
 		if (this._instruments[id]) {
 			this._instruments[id].worker.kill();
 			this._instruments[id] = null;

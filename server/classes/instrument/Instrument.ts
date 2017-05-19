@@ -1,17 +1,14 @@
 import * as path        from 'path';
 import InstrumentCache  from './InstrumentCache';
+import * as winston		from 'winston-color';
 
-
-const
-	debug = require('debug')('TradeJS:Instrument'),
-
-	PATH_INDICATORS = path.join(__dirname, '../../../shared/indicators');
+const PATH_INDICATORS = path.join(__dirname, '../../../shared/indicators');
 
 export default class Instrument extends InstrumentCache {
 
 	private _unique = 0;
 
-	indicators = {};
+	indicators = [];
 
 	async init() {
 		await super.init();
@@ -21,10 +18,7 @@ export default class Instrument extends InstrumentCache {
 	}
 
 	async tick(timestamp, bid, ask): Promise<void> {
-		// Tick indicators
-		for (let name in this.indicators) {
-			this.indicators[name].onTick(bid, ask);
-		}
+		this.indicators.forEach(i => i.onTick(bid, ask));
 	}
 
 	toggleTimeFrame(timeFrame: string) {
@@ -38,16 +32,19 @@ export default class Instrument extends InstrumentCache {
 	}
 
 	addIndicator(name, options): any {
-		debug('add indicator: ' + name);
+		winston.info('add indicator: ' + name);
 
-		let indicator = null;
+		let indicator = null,
+			id = null;
+
 		options.name = name;
 
 		try {
-			let id = name + '_' + ++this._unique;
+			id = name + '_' + ++this._unique;
 			let indicatorPath = path.join(PATH_INDICATORS, name, 'index.js');
 			indicator = new (require(indicatorPath).default)(this.ticks, options);
-			this.indicators[id] = indicator;
+			indicator.id = id;
+			this.indicators.push(indicator);
 
 			indicator._doCatchUp();
 		} catch (err) {
@@ -58,28 +55,32 @@ export default class Instrument extends InstrumentCache {
 	}
 
 	removeIndicator(id) {
-		debug('remove indicator: ' + id);
-		delete this.indicators[id];
+		winston.info('remove indicator: ' + id);
+		this.indicators.splice(this.indicators.findIndex(indicator => indicator.id === id), 1);
 	}
 
 	removeAllIndicators() {
-		for (let id in this.indicators) {
-			this.removeIndicator(id);
-		}
+		winston.info('remove all indicator: ');
+		this.indicators = [];
 	}
 
 	getIndicatorData(id: string, count?: number, shift?: number) {
-		return this.indicators[id].getDrawBuffersData(count, shift);
+		let _indicator = this.indicators.find(indicator => indicator.id === id);
+
+		if (!_indicator) {
+			throw new Error(`Indicator [${id}] does not exists`);
+		}
+
+		return _indicator.getDrawBuffersData(count, shift);
 	}
 
 	getIndicatorsData(count: number, shift?: number) {
-		let data = {};
-
-		for (let id in this.indicators) {
-			data[id] = this.getIndicatorData(id, count, shift);
-		}
-
-		return data;
+		return this.indicators.map(indicator => {
+			return {
+				id: indicator.id,
+				data: this.getIndicatorData(indicator.id, count, shift)
+			}
+		});
 	}
 
 	async _setIPCEvents() {
@@ -103,7 +104,12 @@ export default class Instrument extends InstrumentCache {
 
 		this._ipc.on('get-data', async (data: any, cb: Function) => {
 			try {
-				cb(null, await this.getIndicatorsData(data.count, data.shift));
+				if (typeof data.indicatorId !== 'undefined') {
+					cb(null, await this.getIndicatorData(data.indicatorId, data.count, data.shift));
+				} else {
+					cb(null, await this.getIndicatorsData(data.count, data.shift));
+				}
+
 			} catch (error) {
 				console.log('Error:', error);
 				cb(error);
@@ -112,8 +118,7 @@ export default class Instrument extends InstrumentCache {
 
 		this._ipc.on('indicator:add', async (data: any, cb: Function) => {
 			try {
-				this.addIndicator(data.name, data.options);
-				cb(null, await this.getIndicatorsData(data.count, data.shift));
+				cb(null, (await this.addIndicator(data.name, data.options)).id);
 			} catch (error) {
 				console.log('Error:', error);
 				cb(error);

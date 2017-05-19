@@ -2,7 +2,7 @@
 
 :host {
     height: 50%;
-    position: absolute;
+    // position: absolute;
     top: 0;
     bottom: 0;
     right: 0;
@@ -11,25 +11,42 @@
     overflow: auto;
 }
 
-
 li {
     border-bottom: 1px solid #8c8a8a;
     list-style: none;
     padding: 5px;
 }
 
+
 table {
+    height: 50%;
+    overflow: auto;
     font-size: 10px;
     width: 100%;
-    tbody tr {
-        border-top: 1px solid #8c8a8a;
-        border-bottom: 1px solid #8c8a8a;
+
+    thead tr:last-child th {
+        padding: 0;
+    }
+
+
+    thead,
+    tbody {
+        display: block;
+    }
+
+    tbody {
+        height: calc(100% - 50px);
+        overflow: auto;
+        tr {
+            border-top: 1px solid #8c8a8a;
+            border-bottom: 1px solid #8c8a8a;
+        }
     }
 
     td,
     th {
         padding-left: 5px;
-        width: 70px;
+        width: 80px;
 
         &:nth-child(1),
         &:nth-child(1) {
@@ -52,18 +69,9 @@ table {
     }
 }
 
-.instrument-list-rows-wrapper {
-    position: absolute;
-    top: 42px;
-    bottom: 0;
-    overflow: auto;
-    left: 0;
-    right: 0;
-    overflow-x: hidden;
-}
 
 .search-instrument-list {
-    width: 100%;
+    width: calc(100% + 20px);
     padding-left: 5px;
 }
 
