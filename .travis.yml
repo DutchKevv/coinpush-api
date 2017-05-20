@@ -16,8 +16,7 @@ install:
 - npm run build
 - cd ../electron
 - npm install --silent
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then npm run build:mac; fi
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then npm run build:linux; fi
+- npm run build
 - cd ../
 
 # Needed for running e2e tests on Linux
@@ -27,7 +26,8 @@ install:
 #  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sleep 3; fi
 
 script:
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; cd electron && npm run test:e2e; fi
+  - cd electron
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; npm run test:e2e; fi
   - cd ../
 
 deploy:
