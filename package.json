@@ -1,10 +1,25 @@
 {
   "name": "tradejs",
-  "author": "Kewin Brandsma",
-  "description": "TradeJS desktop wrapper",
+  "version": "0.0.11",
+  "description": "Javascript Trading Client and Server",
   "email": "kewin@frontend-freelance.com",
-  "main": "electron/index.js",
-  "version": "0.0.1-alpha-0",
+  "author": "Kewin Brandsma",
+  "private": false,
+  "license": "Apache License 2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DutchKevv/TradeJS.git"
+  },
+  "keywords": [
+    "TradeJS",
+    "Stock",
+    "Forex",
+    "Trade",
+    "Trading",
+    "Node",
+    "Trading",
+    "NodeJS"
+  ],
   "scripts": {
     "postinstall": "cd server && npm i"
   },

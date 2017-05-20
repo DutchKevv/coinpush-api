@@ -72,3 +72,31 @@ Before you submit your pull request consider the following guidelines:
 ### Code styling
 
 TODO. For now please take a look around in the code, its pretty default.
+
+### Starting Dev mode
+
+ Make sure you have a **practise** account on Oanda (https://www.oanda.com/).
+  
+  ```
+     
+     # terminal 1
+     cd [PATH_TO_TRADEJS]/client
+     npm i (required once)
+     npm start
+     
+     # terminal 2
+     cd [PATH_TO_TRADEJS]/server
+     npm i (required once)
+     npm start
+     
+     ### For desktop app electron ->
+     # terminal 3
+     cd [PATH_TO_TRADEJS]/electron
+     npm i (required once)
+     npm run start
+    
+ ```
+ 
+ * Optional - Not needed when using electron. Go to http://localhost:4200 in Chrome
+ * Click on login and fill in Oanda credentials
+ * Probably a few refreshes/reboots is still required (will be smoothed out in the future)

@@ -19,13 +19,15 @@ Can be run as
 - Standalone server running elastic in the cloud (with a custom client)
 
 ## Installation
-
-- `npm install TradeJS`
-
+```
+npm install TradeJS
+```
 ## Running (remember, alpha)
+Make sure you have a **practise** account on Oanda (https://www.oanda.com/).
 
+###### index.js
 ```js
-const TradeJS = require('tradejs').default;
+const TradeJS = require('TradeJS').default;
 const app = new TradeJS();
 
 app.init().catch(console.log);
@@ -42,30 +44,4 @@ Go to localhost:3000 in chrome (only newest versions of chrome are supported)
  ![Alt text](doc/screenshot/mobile-chart.png?raw=true "Title") &nbsp; ![Alt text](doc/screenshot/mobile-editor.png?raw=true "Title") &nbsp; ![Alt text](doc/screenshot/mobile-editor2.png?raw=true "Title")
  
   #### How to start (temp, this will be normalized in the future)
-  
-  Make sure you have a **practise** account on Oanda (https://www.oanda.com/).
-  
-  ```
-     
-     # terminal 1
-     cd [PATH_TO_TRADEJS]/client
-     npm i (required once)
-     npm start
-     
-     # terminal 2
-     cd [PATH_TO_TRADEJS]/server
-     npm i (required once)
-     npm start
-     
-     ### For desktop app electron ->
-     # terminal 3
-     cd [PATH_TO_TRADEJS]/electron
-     npm i (required once)
-     npm run start
-    
- ```
- 
- * Optional - Not needed when using electron. Go to http://localhost:4200 in Chrome
- * Click on login and fill in Oanda credentials
- * Probably a few refreshes/reboots is still required (will be smoothed out in the future)
  
