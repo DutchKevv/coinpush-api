@@ -20,14 +20,14 @@ Can be run as
 
 ## Installation
 ```
-npm install TradeJS
+npm install tradejs
 ```
 ## Running (remember, alpha)
 Make sure you have a **practise** account on Oanda (https://www.oanda.com/).
 
 ###### index.js
 ```js
-const TradeJS = require('TradeJS').default;
+const TradeJS = require('tradejs').default;
 const app = new TradeJS();
 
 app.init().catch(console.log);
