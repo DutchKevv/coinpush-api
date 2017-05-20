@@ -3,7 +3,7 @@ import * as path    from 'path';
 import * as winston	from 'winston-color';
 import * as mkdirp  from 'mkdirp';
 import * as watch 	from 'watch';
-import {fork, spawn}      from 'child_process';
+import {fork}      	from 'child_process';
 import Base from '../classes/Base';
 
 const dirTree = require('directory-tree');
@@ -209,13 +209,13 @@ export default class EditorController extends Base {
 
 		return new Promise((resolve, reject) => {
 
-			let npm = this.app.isWin ? 'npm.cmd' : 'npm',
+			let gulpPath = path.join(__dirname, '..', 'node_modules', 'gulp', 'bin', 'gulp.js'),
 				childOpt = {
-					stdio: ['pipe', process.stdout, process.stderr],
+					stdio: ['pipe', process.stdout, process.stderr, 'ipc'],
 					cwd: path.join(__dirname, '../')
 				}, child;
 
-			child = spawn(npm, ['run', 'build:custom', `--input-path=${inputPath}`, `--output-path=${outputPath}`], childOpt);
+			child = fork(gulpPath, ['custom:build', `--input-path=${inputPath}`, `--output-path=${outputPath}`], childOpt);
 
 			child.on('close', (code) => {
 				console.log(`child process exited with code ${code}`);
