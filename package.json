@@ -1,9 +1,10 @@
 {
   "name": "tradejs",
-  "version": "0.0.1-alpha-0",
+  "version": "0.0.1-alpha-2",
   "description": "Javascript Trading Client and Server",
   "email": "kewin@frontend-freelance.com",
   "author": "Kewin Brandsma",
+  "main": "index.js",
   "private": false,
   "license": "Apache License 2.0",
   "repository": {

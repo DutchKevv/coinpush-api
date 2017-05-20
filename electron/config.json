@@ -7,7 +7,6 @@
   "files": [
     "!_cache/*",
     "!dist/*",
-    "!custom/ea/*",
     "!custom/indicator/*",
     "!client/node_modules/*",
     "!client/assets/*",
