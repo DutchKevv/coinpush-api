@@ -1,9 +1,11 @@
 const Application = require('spectron').Application;
 const path = require('path');
 const chai = require('chai');
+const fs = require('fs');
 const chaiAsPromised = require('chai-as-promised');
 
-var electronPath = '';
+var electronPath = '',
+    configPath = '';
 
 if (/^win/.test(process.platform)) {
     electronPath = path.join(__dirname, '..', '..', 'dist', 'win-unpacked', 'TradeJS.exe');
@@ -13,15 +15,11 @@ if (/^win/.test(process.platform)) {
     electronPath = path.join(__dirname, '..', '..', 'dist', 'linux-unpacked', 'tradejs');
 }
 
-// if (process.platform === 'win32') {
-//     electronPath += '.cmd';
-// }
-
-var appPath = path.join(__dirname, '..');
+var appPath = path.join(__dirname, '..', '..');
 
 var app = new Application({
     path: electronPath,
-    args: [appPath, 'NODE_ENV=development']
+    args: [appPath, 'NODE_ENV=production']
 });
 
 global.before(function () {
@@ -35,6 +33,7 @@ describe('Window', function () {
     });
 
     afterEach(function () {
+        fs.unlinkSync(path.join(electronPath, '..', 'resources', 'app', '_config', 'tradejs.config.json'));
         return app.stop();
     });
 
@@ -62,13 +61,6 @@ describe('Server Connection', function () {
         return app.client.waitUntilWindowLoaded()
             .waitForExist('#debugContainer .circle.ok', 5000);
     });
-
-    // it('shows server connection error link that opens login screen', function () {
-    //     return app.client.waitUntilWindowLoaded()
-    //         .setNetworkConnection(1) // airplane mode off, wifi off, data off
-    //         .waitForExist('#debugContainer status .circle.error', 5000)
-    //         .getText('#debugContainer .error-message').should.eventually.equal('No server connection');
-    // });
 });
 
 describe('Charts', function () {
@@ -83,17 +75,11 @@ describe('Charts', function () {
 
     it('can open a chart', function () {
         return app.client.waitUntilWindowLoaded()
-            .waitForExist('.instrument-list-rows-wrapper tr:first-child', 5000)
-            .click('.instrument-list-rows-wrapper tr:first-child td:first-child')
+            .pause(10000)
+            .waitForExist('.three-column:first-child tr:first-child', 5000)
+            .click('.three-column:first-child tr:first-child td:first-child')
             .waitForExist('.chart-overview-container chart-box', 5000);
     });
-
-    // it('shows server connection error link that opens login screen', function () {
-    //     return app.client.waitUntilWindowLoaded()
-    //         .setNetworkConnection(1) // airplane mode off, wifi off, data off
-    //         .waitForExist('#debugContainer status .circle.error', 5000)
-    //         .getText('#debugContainer .error-message').should.eventually.equal('No server connection');
-    // });
 });
 
 describe('Backtest', function () {
@@ -109,13 +95,6 @@ describe('Backtest', function () {
     it('can resize the debugger', function () {
         return app.client.waitUntilWindowLoaded();
     });
-
-    // it('shows server connection error link that opens login screen', function () {
-    //     return app.client.waitUntilWindowLoaded()
-    //         .setNetworkConnection(1) // airplane mode off, wifi off, data off
-    //         .waitForExist('#debugContainer status .circle.error', 5000)
-    //         .getText('#debugContainer .error-message').should.eventually.equal('No server connection');
-    // });
 });
 
 describe('Editor', function () {
@@ -131,36 +110,4 @@ describe('Editor', function () {
     it('can open a chart', function () {
         return app.client.waitUntilWindowLoaded()
     });
-
-    // it('shows server connection error link that opens login screen', function () {
-    //     return app.client.waitUntilWindowLoaded()
-    //         .setNetworkConnection(1) // airplane mode off, wifi off, data off
-    //         .waitForExist('#debugContainer status .circle.error', 5000)
-    //         .getText('#debugContainer .error-message').should.eventually.equal('No server connection');
-    // });
-});
-
-describe('Editor', function () {
-
-    beforeEach(function () {
-        return app.start();
-    });
-
-    afterEach(function () {
-        return app.stop();
-    });
-
-    it('Can open the editor window', function () {
-        return app.client.waitUntilWindowLoaded()
-            .waitForExist('.instrument-list-rows-wrapper tr:first-child', 5000)
-            .click('.instrument-list-rows-wrapper tr:first-child td:first-child')
-            .waitForExist('.chart-overview-container chart-box', 5000);
-    });
-
-    // it('shows server connection error link that opens login screen', function () {
-    //     return app.client.waitUntilWindowLoaded()
-    //         .setNetworkConnection(1) // airplane mode off, wifi off, data off
-    //         .waitForExist('#debugContainer status .circle.error', 5000)
-    //         .getText('#debugContainer .error-message').should.eventually.equal('No server connection');
-    // });
 });

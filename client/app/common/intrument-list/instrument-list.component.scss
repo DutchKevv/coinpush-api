@@ -2,11 +2,6 @@
 
 :host {
     height: 50%;
-    // position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 0;
     border-bottom: 1px solid;
     overflow: auto;
 }
@@ -35,7 +30,7 @@ table {
     }
 
     tbody {
-        height: calc(100% - 50px);
+        height: calc(100% - 44px);
         overflow: auto;
         tr {
             border-top: 1px solid #8c8a8a;

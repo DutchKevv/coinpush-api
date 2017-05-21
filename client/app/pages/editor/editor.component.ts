@@ -20,7 +20,7 @@ export class EditorComponent implements AfterViewInit {
 	@ViewChild(FileTreeComponent) fileTree: FileTreeComponent;
 	@ViewChild(JSEditorComponent) jsEditor: JSEditorComponent;
 
-	$el: any;
+	public zoom = 1;
 
 	constructor(private _elementRef: ElementRef,
 				private _router: Router,
@@ -29,13 +29,11 @@ export class EditorComponent implements AfterViewInit {
 
 	ngAfterViewInit(): void {
 		this._socketService.socket.on('editor:change', () => {
-			console.log('CHANGE CHANGE');
 			// this.fileTree.load();
 			// this.jsEditor.reloadCurrentFile();
 		});
 
 		this.fileTree.$el.off('select_node.jstree').on('select_node.jstree', (e: any, data: any) => {
-			console.log('data', 'data', data);
 			if (data.node && data.node.original.isFile) {
 				let path = this.fileTree.$el.jstree(true).get_path(data.node, '/');
 
@@ -60,7 +58,5 @@ export class EditorComponent implements AfterViewInit {
 			default:
 				throw new Error('Unknown fileTree update event');
 		}
-
-		console.log('fileTree update', JSON.stringify(event));
 	}
 }

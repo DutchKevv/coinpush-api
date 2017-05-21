@@ -94,17 +94,21 @@ export class JSEditorComponent implements AfterViewInit {
 
 	saveFile() {
 		return new Promise((resolve, reject) => {
-			let content = this.editor.getValue();
+			if (!this.editor.session.getUndoManager().isClean()) {
+				this.editor.session.getUndoManager().markClean();
 
-			this.socket.emit('file:save', {path: this.currentFile, content: content}, (err) => {
-				if (err) {
-					this.showBanner('error', 'File not saved: ' + err);
-					return reject();
-				}
+				let content = this.editor.getValue();
 
-				this.showBanner('success', 'File saved');
-				resolve();
-			});
+				this.socket.emit('file:save', {path: this.currentFile, content: content}, (err) => {
+					if (err) {
+						this.showBanner('error', 'File not saved: ' + err);
+						return reject();
+					}
+
+					this.showBanner('success', 'File saved');
+					resolve();
+				});
+			}
 		});
 	}
 

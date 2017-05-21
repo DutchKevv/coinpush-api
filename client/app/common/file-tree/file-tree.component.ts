@@ -329,7 +329,9 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 
 							this.jstree.create_node(filePath, {
 								id: result.id,
-								text: model.inputs[0].value
+								text: model.inputs[0].value,
+								isFile: true,
+								icon: 'glyphicon glyphicon-file'
 							}, 'inside');
 
 							this.updateEvent.emit({
@@ -373,15 +375,16 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 						if (err)
 							return alert(err);
 
-						this.jstree.create_node(filePath, {
-							id: result.id,
-							text: model.inputs[0].value
-						}, 'inside');
-
 						this.updateEvent.emit({
 							type: 'createDirectory',
 							value: model.inputs[0].value
 						});
+
+						this.jstree.create_node(filePath, {
+							id: result.id,
+							text: model.inputs[0].value,
+							isFile: false
+						}, 'inside');
 					});
 				}
 			}

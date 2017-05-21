@@ -121,7 +121,6 @@ export default class OrderManager extends Base {
 			total += this.getValue(order, bid, ask).value;
 		});
 
-		console.log('TOTAL OPEN ORDES!', total);
 		return total
 	}
 

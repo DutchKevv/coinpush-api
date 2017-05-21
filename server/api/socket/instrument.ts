@@ -13,6 +13,11 @@ module.exports = (app: App, socket) => {
 		cb(null);
 	});
 
+	// Destroy All
+	socket.on('instrument:destroy-all', async (options, cb) => {
+		cb(null, await app.controllers.instrument.destroyAll());
+	});
+
 	// TODO: Move to cache API
 	// Read bars
 	socket.on('instrument:read', (options, cb) => {
@@ -80,9 +85,5 @@ module.exports = (app: App, socket) => {
 		} catch (error) {
 			cb(error);
 		}
-	});
-
-	socket.on('instrument:indicator:remove', async (options, cb) => {
-
 	});
 };

@@ -6,6 +6,7 @@
   "asar": false,
   "files": [
     "!_cache/*",
+    "!_config/*",
     "!dist/*",
     "!custom/indicator/*",
     "!client/node_modules/*",

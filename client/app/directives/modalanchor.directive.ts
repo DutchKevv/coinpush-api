@@ -28,7 +28,7 @@ export class ModalAnchorDirective {
 		this.modalComponentRef.instance.model = options.model;
 		this.modalComponentRef.instance.options = options;
 
-
+		this.modalComponentRef.instance.close.subscribe(() => this.destroy(this.modalComponentRef));
 		this.modalComponentRef.changeDetectorRef.detectChanges();
 
 		this.show();
@@ -47,9 +47,8 @@ export class ModalAnchorDirective {
 	destroy(modalComponentRef) {
 		let $el = $(this.modalComponentRef.instance.elementRef.nativeElement.firstElementChild);
 
-
-		$el.on('hidden.bs.modal', function () {
-			modalComponentRef.destroy();
+		$el.on('hidden.bs.modal', () => {
+			this.modalComponentRef.instance.destroy();
 		}).modal('hide');
 	}
 }

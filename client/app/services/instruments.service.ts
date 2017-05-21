@@ -9,6 +9,8 @@ import {IndicatorModel} from "../models/indicator";
 import {DialogComponent} from "../common/dialog/dialog.component";
 import {ModalService} from "./modal.service";
 
+var counter = 0;
+
 @Injectable()
 export class InstrumentsService {
 
@@ -69,6 +71,8 @@ export class InstrumentsService {
 	}
 
 	public remove(model: InstrumentModel) {
+		console.log(counter++);
+
 		this._instruments.splice(this._instruments.indexOf(model), 1);
 		this.instruments$.next(this._instruments);
 
@@ -80,7 +84,10 @@ export class InstrumentsService {
 	}
 
 	public removeAll() {
-		this.instruments.forEach(instrument => this.remove(instrument));
+		this._destroyAllOnServer();
+
+		this._instruments = [];
+		this.instruments$.next(this._instruments);
 	}
 
 	public fetch(model: InstrumentModel, count = 300, offset = 0, from?: number, until?: number): Promise<any> {
@@ -237,6 +244,17 @@ export class InstrumentsService {
 		});
 	}
 
+	private _destroyAllOnServer() {
+		return new Promise((resolve, reject) => {
+
+			this._socketService.socket.emit('instrument:destroy-all', {}, err => {
+				if (err)
+					return reject(err);
+
+				resolve();
+			});
+		});
+	}
 
 	private _loadInstrumentList() {
 		this._socketService.socket.emit('instrument:list', {}, (err, instrumentList) => {
