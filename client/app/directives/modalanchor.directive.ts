@@ -28,7 +28,11 @@ export class ModalAnchorDirective {
 		this.modalComponentRef.instance.model = options.model;
 		this.modalComponentRef.instance.options = options;
 
-		this.modalComponentRef.instance.close.subscribe(() => this.destroy(this.modalComponentRef));
+		if (this.modalComponentRef.instance.close) {
+			this.modalComponentRef.instance.close.subscribe(() => this.destroy(this.modalComponentRef));
+		}
+
+
 		this.modalComponentRef.changeDetectorRef.detectChanges();
 
 		this.show();
