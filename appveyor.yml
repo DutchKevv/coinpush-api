@@ -23,7 +23,7 @@ test_script:
 build: off
 
 artifacts:
-  - path: dist/TradeJS-0.0.1.exe
+  - path: dist/TradeJS.exe
     name: setup
 
 deploy:

@@ -27,7 +27,7 @@ install:
 
 script:
   - cd electron
-#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then npm run test:e2e; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then npm run test:e2e; fi
   - cd ../
 
 deploy:
@@ -36,7 +36,7 @@ deploy:
     overwrite: true
     api_key:
       secure: a5m10uoTD9bUej44Q3XVE91wZII44DFmOmU45K4gxAaoInLiAClhykfvRh23DO+CQ0krGAA8V7OC4OQICBT7C00Y4ajH0i1WucZGnT7n7wSeRKFXay8IWMrnV3dkYzqqnuFf2wPqOERB9BFmIcPjp6cbjb1G7nGGudNboLAYB7SpJrOr8M/NcFI4+x/8uRqoEZaeJYFZEmJtWi2cVweYzx++gtnnesZNCb+HwEZALp6iah5MGwWwYWrvEuAW9fYyKsUHSdv8vbtazWVAKF0AZ/EwkYCo6xVjyUKDx/q5pNANiYPv/1TVI5lf21iVbVqvUVQnQKcGdXpqFvFtCBdVVFzWLRk/Lq4afKgYbz0osJdf6WFngheM47ZmCTM4A1fYGgjfiNVMo7zBYn5KmERJ1u1pzyf4au7zqiUHmlSR7GlmVlCsD03ogvEXv9fjDwiZh2z0KrDE9ghZ1QPI39m0o0Y3I5bC80TIelcKzkyX8hIk6/DQREjN8Y3LGTIfXNuT14Q57LFJJ/Wn1y0oBu9UYF1iHbuLsrj/HaVuarSV3r8z2dTcCRqVt53QIAtZMamuPcqvkn96xTjvgkJ2Yg2/vUfROQY3gD1WgifMs+A0c22G8x2JTFn7qN2g2xjWtnMBptIgTamJPWw9CRB+RcF23tLwRyaAe5ilSWMiOuu+RXg=
-    file: dist/TradeJS-0.0.1.dmg
+    file: dist/TradeJS.dmg
     on:
       condition: $TRAVIS_OS_NAME == "osx"
       tags: true
@@ -49,7 +49,7 @@ deploy:
     overwrite: true
     api_key:
       secure: a5m10uoTD9bUej44Q3XVE91wZII44DFmOmU45K4gxAaoInLiAClhykfvRh23DO+CQ0krGAA8V7OC4OQICBT7C00Y4ajH0i1WucZGnT7n7wSeRKFXay8IWMrnV3dkYzqqnuFf2wPqOERB9BFmIcPjp6cbjb1G7nGGudNboLAYB7SpJrOr8M/NcFI4+x/8uRqoEZaeJYFZEmJtWi2cVweYzx++gtnnesZNCb+HwEZALp6iah5MGwWwYWrvEuAW9fYyKsUHSdv8vbtazWVAKF0AZ/EwkYCo6xVjyUKDx/q5pNANiYPv/1TVI5lf21iVbVqvUVQnQKcGdXpqFvFtCBdVVFzWLRk/Lq4afKgYbz0osJdf6WFngheM47ZmCTM4A1fYGgjfiNVMo7zBYn5KmERJ1u1pzyf4au7zqiUHmlSR7GlmVlCsD03ogvEXv9fjDwiZh2z0KrDE9ghZ1QPI39m0o0Y3I5bC80TIelcKzkyX8hIk6/DQREjN8Y3LGTIfXNuT14Q57LFJJ/Wn1y0oBu9UYF1iHbuLsrj/HaVuarSV3r8z2dTcCRqVt53QIAtZMamuPcqvkn96xTjvgkJ2Yg2/vUfROQY3gD1WgifMs+A0c22G8x2JTFn7qN2g2xjWtnMBptIgTamJPWw9CRB+RcF23tLwRyaAe5ilSWMiOuu+RXg=
-    file: dist/tradejs_0.0.1_amd64.deb
+    file: dist/tradejs_amd64.deb
     on:
       condition: $TRAVIS_OS_NAME == "linux"
       tags: true

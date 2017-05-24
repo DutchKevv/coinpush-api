@@ -3,7 +3,6 @@
   "author": "Kewin Brandsma",
   "email": "kewin@frontend-freelance.com",
   "description": "TradeJS desktop wrapper",
-  "version": "0.0.1",
   "main": "index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=development electron ../",

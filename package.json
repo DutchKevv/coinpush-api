@@ -23,6 +23,5 @@
   ],
   "scripts": {
     "postinstall": "cd server && npm i"
-  },
-  "private": false
+  }
 }
