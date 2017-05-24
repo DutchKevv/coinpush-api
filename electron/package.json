@@ -12,7 +12,7 @@
     "build:windows": "build --win --config=./electron/config.json --projectDir=../ --publish=never",
     "build:mac": "build --mac --config=./electron/config.json --projectDir=../ --publish=never",
     "build:linux": "build --linux --config=./electron/config.json --projectDir=../ --publish=never",
-    "test:e2e": "mocha tests/test.js --timeout 15000"
+    "test": "mocha tests/test.js --timeout 15000"
   },
   "devDependencies": {
     "cross-env": "4.0.0",
@@ -24,6 +24,7 @@
     "electron-rebuild": "1.5.7",
     "mkdirp": "0.5.1",
     "mocha": "^3.3.0",
+    "rimraf": "^2.6.1",
     "spectron": "^3.6.2"
   },
   "private": false,
