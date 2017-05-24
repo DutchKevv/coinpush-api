@@ -27,7 +27,7 @@ install:
 
 script:
   - cd electron
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then npm run test:e2e; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then npm run test; fi
   - cd ../
 
 deploy:
