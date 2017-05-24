@@ -18,7 +18,7 @@ install:
   - cd ../
 
 test_script:
-#  - cd electron && npm run test:e2e
+  - cd electron && npm run test:e2e
 
 build: off
 
