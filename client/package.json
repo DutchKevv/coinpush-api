@@ -1,9 +1,8 @@
 {
   "name": "tradejs",
-  "version": "0.0.4",
   "description": "Javascript Trading Client",
   "email": "kewin@frontend-freelance.com",
-  "license": "Apache License 2.0",
+  "license": "CC-BY-NC-ND-4.0",
   "keywords": [
     "TradeJS",
     "Stock",
