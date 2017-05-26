@@ -5,6 +5,7 @@
   "author": "Kewin Brandsma",
   "private": false,
   "license": "CC-BY-NC-ND-4.0",
+  "main": "_app.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/DutchKevv/TradeJS.git"

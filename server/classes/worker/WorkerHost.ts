@@ -47,7 +47,6 @@ export default class WorkerHost extends Base {
 					stdio: ['pipe', process.stdout, null, 'ipc']
 				};
 
-			// TODO - FUCKING ELECTRON!
 			this._child = fork(this.opt.path, ['--no-deprecation', `--settings=${childArgv}`], childOpt);
 
 			this._child.on('close', code => {

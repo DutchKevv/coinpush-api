@@ -38,10 +38,14 @@ export default class WorkerChild extends Base {
 		this._ipc = new IPC({id: this.workerOptions.id});
 	}
 
-	async init() {
+	public async init() {
 		await super.init();
 		await this._ipc.init();
 		await this._ipc.connectTo(this.workerOptions.parentId);
+	}
+
+	public debug(type: string, text: string, data?: Object): void {
+		this._ipc.send('main', 'debug', {type, text, data}, false);
 	}
 
 	static initAsWorker() {

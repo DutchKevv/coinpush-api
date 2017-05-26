@@ -137,7 +137,7 @@ export default class IPC extends Base {
 				});
 
 				this._ipc.server.on('message', (data, socket) => {
-					this._onMessage(data);
+					this._onMessage(data, socket);
 				});
 
 				this._ipc.server.on('socket.disconnected', (socket, destroyedSocketID) => {
@@ -186,7 +186,7 @@ export default class IPC extends Base {
 				});
 
 				socket.on('message', (data) => {
-					this._onMessage(data)
+					this._onMessage(data, socket)
 				});
 			});
 		});
@@ -198,7 +198,7 @@ export default class IPC extends Base {
 	 * @param data
 	 * @private
 	 */
-	_onMessage(data) {
+	_onMessage(data, socket) {
 		if (this._acks[data.ack]) {
 			this._acks[data.ack](data.data);
 			delete this._acks[data.ack];
@@ -213,16 +213,11 @@ export default class IPC extends Base {
 				if (err)
 					return console.error(err);
 
-				// // Convert typed Array to normal array
-				// if (returnData && returnData.buffer && returnData.buffer instanceof ArrayBuffer) {
-				//     returnData = Array.from(returnData);
-				// }
-
 				this.send(data.id, data.type, returnData, data.ack).catch(console.error);
 			}
 		}
 
-		this.emit(data.type, data.data, cb)
+		this.emit(data.type, data.data, cb, socket.id)
 	}
 
 	/**

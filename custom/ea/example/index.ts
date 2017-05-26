@@ -1,5 +1,6 @@
 import EA from '../../../server/classes/ea/EA';
 import {IEA} from 'tradejs/ea';
+import OrderManager from "../../../server/modules/order/OrderManager";
 
 export default class MyEA extends EA implements IEA {
 
@@ -38,14 +39,18 @@ export default class MyEA extends EA implements IEA {
 
 		if (this.MA1.value > bid * 1.001 && !this.orderManager.orders.length) {
 
-			// Place order
-			this.addOrder({
-				instrument: this.instrument,
-				count: 20,
-				type: 'sell',
-				bid: bid,
-				ask: ask
-			});
+			try {
+				// Place order
+				let id = await this.addOrder({
+					instrument: this.instrument,
+					count: 2000,
+					type: 'sell',
+					bid: bid,
+					ask: ask
+				});
+			} catch (error) {
+			}
+
 
 		} else {
 

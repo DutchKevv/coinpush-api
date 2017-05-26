@@ -14,7 +14,7 @@ install:
   - npm run build
   - cd ../electron
   - npm install --silent
-  - npm run build
+  - npm run build:packed
   - cd ../
 
 test_script:

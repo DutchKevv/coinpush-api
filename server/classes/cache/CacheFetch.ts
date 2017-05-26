@@ -18,8 +18,6 @@ export default class Fetcher {
 	async init() {}
 
 	public async fetch(brokerApi: BrokerApi, instrument: string, timeFrame: string, from: number, until: number, count: number) {
-		
-
 
 		let startTime = Date.now();
 		// Store chunk date as pending

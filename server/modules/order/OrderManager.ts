@@ -17,6 +17,8 @@ export interface IOrder {
 
 export default class OrderManager extends Base {
 
+	static ERROR_NOT_ENOUGH_FUNDS = 1;
+
 	private _orders = [];
 	private _closedOrders = [];
 	private _unique = 0;
@@ -37,13 +39,19 @@ export default class OrderManager extends Base {
 	public async init() {
 	}
 
-	public add(order: IOrder) {
+	public async add(order: IOrder) {
 		// TODO: Debug warning 'Not enough funds'
 		let orderPrice = this._calculateOrderPrice(order);
 
 		if (this._accountManager.equality < orderPrice) {
-			console.log('NOT ENOUGH FUNDS');
-			return false;
+
+			this.options.ipc.send('main', 'debug', {
+				type: 'error',
+				code: OrderManager.ERROR_NOT_ENOUGH_FUNDS,
+				text: 'Not enough founds'
+			}, false);
+
+			throw ({code: OrderManager.ERROR_NOT_ENOUGH_FUNDS});
 		}
 
 		order.id = this._unique++;
@@ -56,7 +64,6 @@ export default class OrderManager extends Base {
 		}
 
 		return order.id;
-
 	}
 
 	public findById(id) {

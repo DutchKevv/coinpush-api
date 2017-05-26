@@ -47,12 +47,13 @@ export default class BackTest extends EventEmitter {
 
 		this.startTime = Date.now();
 
+		// Ensue cache has all the data
 		await Promise.all(this.instruments.map(instrument => {
 			return this.app.controllers.cache.fetch(instrument, this.timeFrame, this.from, this.until);
 		}));
 
 		// Create instrument instances
-		this.EAs = await Promise.all(this.instruments.map(async instrument => {
+		this.EAs = await Promise.all(this.instruments.map(instrument => {
 
 			return this.app.controllers.instrument.create(instrument, this.timeFrame, false, EAPath, {
 				leverage: this.options.leverage,
@@ -60,14 +61,6 @@ export default class BackTest extends EventEmitter {
 				from: this.from,
 				until: this.until
 			});
-
-			// _instrument.worker.on('exit', (code) => {
-			// 	if (code !== 0) {
-			// 		throw new Error('Instrument exit with code ' + code );
-			// 	}
-			// });
-
-			// return instrument;
 		}));
 
 		// Wait until all have finished

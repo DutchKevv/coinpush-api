@@ -107,8 +107,9 @@ export default class Cache extends WorkerChild {
 
 		this._ipc.on('fetch', (opt, cb) => {
 			this
-				.fetch(opt.instrument, opt.timeFrame, opt.from, opt.until, opt.count)
-				.then(data => cb(null, data))
+				._fetcher
+				.fetch(this._brokerApi, opt.instrument, opt.timeFrame, opt.from, opt.until, opt.count)
+				.then(() => cb(null))
 				.catch(cb);
 		});
 

@@ -40,7 +40,7 @@ function createWindow() {
 		win.webContents.openDevTools();
     } else {
 		win.loadURL(`file://${path.join(__dirname, '..', 'client', 'dist').replace(/\\/g,"/")}/index.html`);
-		server = require('../server/app').default;
+		// server = require('../server/app').default;
     }
 
     // Emitted when the window is closed.

@@ -26,7 +26,7 @@ export class FooterComponent implements OnInit, OnDestroy {
 
 	constructor(private socketService: SocketService,
 				private _cookieService: CookieService,
-				private elementRef: ElementRef) {
+				private _elementRef: ElementRef) {
 	}
 
 	ngOnInit() {
@@ -34,11 +34,14 @@ export class FooterComponent implements OnInit, OnDestroy {
 		this._restoreHeightFromCookie();
 		this._setWindowResizeHandle();
 		this._setDragger();
+		this._bindContextMenu();
 
-
-		this.socketService.socket.on('debug', message => {
-			message.timePretty = moment(message.time).format('DD MMM YY hh:mm:ss');
-			this.messages.push(message);
+		this.socketService.socket.on('debug', messages => {
+			messages.forEach(message => {
+				message.timePretty = moment(message.time).format('DD MMM YY hh:mm:ss');
+			});
+			
+			this.messages.push(...messages);
 		});
 	}
 
@@ -46,12 +49,12 @@ export class FooterComponent implements OnInit, OnDestroy {
 		let storedHeight = this._cookieService.get('footer-resize-height');
 
 		if (storedHeight) {
-			this.elementRef.nativeElement.style.height = storedHeight;
+			this._elementRef.nativeElement.style.height = storedHeight;
 		}
 	}
 
 	private _storeHeightInCookie() {
-		this._cookieService.put('footer-resize-height', this.elementRef.nativeElement.style.height);
+		this._cookieService.put('footer-resize-height', this._elementRef.nativeElement.style.height);
 	}
 
 	private _setWindowResizeHandle() {
@@ -61,12 +64,12 @@ export class FooterComponent implements OnInit, OnDestroy {
 	private _onResizeEvent() {
 		this._maxResizeHeight = window.document.body.clientHeight - 100;
 
-		if (this.elementRef.nativeElement.clientHeight > this._maxResizeHeight)
-			this.elementRef.nativeElement.style.height = this._maxResizeHeight + 'px';
+		if (this._elementRef.nativeElement.clientHeight > this._maxResizeHeight)
+			this._elementRef.nativeElement.style.height = this._maxResizeHeight + 'px';
 	}
 
 	private _setDragger() {
-		$(this.elementRef.nativeElement).resizable({
+		$(this._elementRef.nativeElement).resizable({
 			handleSelector: '.splitter',
 			resizeWidth: false,
 			resizeHeightFrom: 'top',
@@ -86,6 +89,22 @@ export class FooterComponent implements OnInit, OnDestroy {
 				return false;
 			},
 			onDragEnd: () => this._storeHeightInCookie()
+		});
+	}
+
+	private _bindContextMenu() {
+		(<any>$(this._elementRef.nativeElement.querySelector('#backtest').parentNode)).contextMenu({
+			items: [
+				{
+					text: 'Clear',
+					value: 'clear'
+				}
+			],
+			menuSelected: (selectedValue, originalEvent) => {
+				if (selectedValue === 'clear') {
+					this.messages = [];
+				}
+			}
 		});
 	}
 

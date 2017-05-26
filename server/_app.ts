@@ -71,6 +71,11 @@ export default class App extends Base {
 	private _io: any = null;
 	private _httpApi: any = null;
 
+	private _debugInterval = null;
+	private _debugBuffer = [];
+	private _debugLastMessage = null;
+	private _debugMessageRepeat = 0;
+
 	private _defaults = <IApp>{
 		account: {
 			'broker': 'oanda',
@@ -131,30 +136,40 @@ export default class App extends Base {
 
 		this.controllers.system.update({booting: false});
 
+		this._setDebugBufferFlushInterval();
+
 		this.emit('app:ready');
 	}
 
 	public debug(type: string, text: string, data?: Object, socket?: Socket): void {
-		if (type === 'error')
-			console.warn('ERROR', text);
+		// if (type === 'error')
+		// 	console.warn('ERROR', text);
 
-		if (!this._io || !this._io.sockets) {
-			return;
-		}
+		this._debugBuffer.push({type, text, data});
 
-		socket = socket || this._io.sockets;
 
-		socket.emit('debug', {
-			time: Date.now(),
-			type: type,
-			text: text,
-			data: data
-		});
+	}
+
+	private _setDebugBufferFlushInterval() {
+		// Set debug interval
+		this._debugInterval = setInterval(() => {
+
+			if (!this._debugBuffer.length || !this._io || !this._io.sockets) {
+				return;
+			}
+
+			this._io.sockets.emit('debug', this._debugBuffer);
+			this._debugBuffer = [];
+		}, 200);
 	}
 
 	private async _initIPC(): Promise<void> {
 		await this._ipc.init();
 		await this._ipc.startServer();
+
+		this._ipc.on('debug', (data, cb, socketId) => {
+			this.debug(data.type, `<a href="#${socketId}">${socketId}:</a> ${data.text}`, data.data);
+		});
 	}
 
 	/**

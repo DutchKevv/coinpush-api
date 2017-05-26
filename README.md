@@ -19,6 +19,7 @@ Can be run as
 - Standalone server running elastic in the cloud (with a custom client)
 
 ## Installation
+Switch to NodeJS 7.10.0
 ```
 npm install tradejs
 ```

@@ -23,18 +23,19 @@ export default class EA extends Instrument implements IEA {
 
 	constructor(...args) {
 		super(args[0], args[1]);
+	}
+
+	public async init() {
+		await super.init();
 
 		this.accountManager = new AccountManager({
 			equality: this.options.equality
 		});
 
 		this.orderManager = new OrderManager(this.accountManager, {
-			live: this.options.live
+			live: this.options.live,
+			ipc: this._ipc
 		});
-	}
-
-	public async init() {
-		await super.init();
 
 		await this.accountManager.init();
 		await this.orderManager.init();
@@ -71,8 +72,10 @@ export default class EA extends Instrument implements IEA {
 	public async onInit() {
 	}
 
-	protected addOrder(orderOptions) {
-		this.orderManager.add(Object.assign(orderOptions, {openTime: this.time}));
+	protected async addOrder(orderOptions) {
+		let result = this.orderManager.add(Object.assign(orderOptions, {openTime: this.time}));
+
+		return result;
 	}
 
 	protected closeOrder(id, bid, ask) {

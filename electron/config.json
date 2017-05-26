@@ -3,17 +3,23 @@
   "electronVersion": "1.6.6",
   "productName": "TradeJS",
   "artifactName": "${productName}.${ext}",
-  "asar": false,
+  "asar": true,
+  "directories": {
+    "app": "."
+  },
   "files": [
-    "!_cache/*",
-    "!_config/*",
+    "*",
+    "*/**",
+    "package.json",
+    "!../_cache/*",
+    "!../_config/*",
     "!dist/*",
-    "!custom/indicator/*",
+    "!../custom/indicator/*",
     "!client/node_modules/*",
     "!client/assets/*",
     "!client/app/*",
-    "!electron/node_modules/*",
-    "!electron/assets/*"
+    "!./node_modules/*",
+    "!./assets/*"
   ],
   "mac": {
     "target": "dmg",
