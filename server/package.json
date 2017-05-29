@@ -27,12 +27,12 @@
     "dist": "build",
     "build": "gulp server:build",
     "build:custom": "gulp custom:build",
-    "prod": "cross-env NODE_ENV=production node dist/server/bin/www.js",
     "__temp-node-ipc": "git://github.com/RIAEvangelist/node-ipc.git#v9.x"
   },
   "dependencies": {
     "@types/core-js": "^0.9.41",
     "@types/node": "7.0.22",
+    "@types/lodash": "4.14.64",
     "backbone-events-standalone": "0.2.7",
     "body-parser": "1.17.2",
     "cli-table": "0.3.1",
@@ -67,7 +67,6 @@
     "@types/debug": "0.0.29",
     "@types/express": "4.0.35",
     "@types/freeport": "1.0.21",
-    "@types/lodash": "4.14.64",
     "@types/minimist": "1.2.0",
     "@types/mkdirp": "0.3.29",
     "@types/moment": "2.13.0",

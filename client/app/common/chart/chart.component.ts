@@ -5,7 +5,6 @@ import {InstrumentModel} from '../../models/instrument.model';
 import {HighchartsDefaultTheme} from './themes/theme.default';
 import './themes/theme.dark';
 import {InstrumentsService} from '../../services/instruments.service';
-import {IOrder} from "../../../../server/modules/order/OrderManager";
 
 const HighStock = require('highcharts/highstock');
 
@@ -107,7 +106,7 @@ export class ChartComponent implements OnInit, OnDestroy {
 	}
 
 	private _createChart() {
-		let settings =_.cloneDeep(HighchartsDefaultTheme);
+		let settings = _.cloneDeep(HighchartsDefaultTheme);
 
 		settings.series[0]['type'] = this.model.data.graphType;
 
@@ -189,7 +188,7 @@ export class ChartComponent implements OnInit, OnDestroy {
 		this._toggleLoading(false);
 	}
 
-	private _updateOrders(orders: Array<IOrder>) {
+	private _updateOrders(orders: Array<any>) {
 		this._chart.get('orders').setData(orders.map(order => [order.openTime, order.bid, null]));
 	}
 
