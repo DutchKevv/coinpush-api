@@ -10,7 +10,7 @@ node_js:
 install:
 - cd client
 - npm install --silent
-- ./node_modules/.bin/ng build --prod --aot
+- npm run build
 - cd ../server
 - npm install --silent
 - npm run build

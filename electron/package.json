@@ -8,8 +8,8 @@
   "private": false,
   "scripts": {
     "start": "cross-env NODE_ENV=development electron ../ --projectDir=../",
-    "build": "node build --projectDir=../",
-    "build:packed": "build --config=./electron/config.json --projectDir=../ --publish=never",
+    "build": "node build",
+    "build:packed": "node build --packed",
     "build:all": "build -mwl --config=./electron/config.json --projectDir=../ --publish=never",
     "build:windows": "build --win --config=./electron/config.json --projectDir=../ --publish=never",
     "build:mac": "build --mac --config=./electron/config.json --projectDir=../ --publish=never",

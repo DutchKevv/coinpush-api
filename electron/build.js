@@ -41,7 +41,7 @@ builder.build({
 				"category": "your.app.category.type"
 			},
 			"win": {
-				"target": [],
+				"target": "nsis",
 				"icon": "./electron/assets/icon",
 				"publisherName": "H.K.Brandsma"
 			},
