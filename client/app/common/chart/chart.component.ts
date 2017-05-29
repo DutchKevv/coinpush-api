@@ -5,8 +5,7 @@ import {InstrumentModel} from '../../models/instrument.model';
 import {HighchartsDefaultTheme} from './themes/theme.default';
 import './themes/theme.dark';
 import {InstrumentsService} from '../../services/instruments.service';
-import {IndicatorModel} from '../../models/indicator';
-import {SocketService} from '../../services/socket.service';
+import {IOrder} from "../../../../server/modules/order/OrderManager";
 
 const HighStock = require('highcharts/highstock');
 
@@ -35,7 +34,6 @@ export class ChartComponent implements OnInit, OnDestroy {
 	private _onScrollBounced: Function = null;
 
 	constructor(private _elementRef: ElementRef,
-				private _socketService: SocketService,
 				private _instrumentsService: InstrumentsService) {
 	}
 
@@ -94,10 +92,7 @@ export class ChartComponent implements OnInit, OnDestroy {
 	}
 
 	public reflow() {
-		// Sync
 		this._updateViewPort(false);
-
-		// Async
 		requestAnimationFrame(() => this._chart.reflow());
 	}
 
@@ -118,6 +113,26 @@ export class ChartComponent implements OnInit, OnDestroy {
 
 		// HighStock instance
 		this._chart = HighStock.stockChart(this._elementRef.nativeElement.firstElementChild, _.cloneDeep(HighchartsDefaultTheme));
+
+		this._chart.addSeries({
+			type: 'line',
+			name: 'orders',
+			id: 'orders',
+			data: [],
+			color: '#00e933',
+			yAxis: 0,
+			ordinal: true,
+			dataGrouping: {
+				enabled: false
+			},
+			dashStyle: 'Dash',
+			marker: {
+				enabled: true,
+				symbol: 'circle',
+				radius: 7
+			},
+			allowPointSelect: true
+		});
 
 		// Scroll listener
 		this._chart.container.addEventListener('mousewheel', <any>this._onScrollBounced);
@@ -165,12 +180,17 @@ export class ChartComponent implements OnInit, OnDestroy {
 	private async _fetch(count: number, offset: number) {
 		this._toggleLoading(true);
 
-		let {candles, indicators} = await this._instrumentsService.fetch(this.model, count, offset);
+		let {candles, indicators, orders} = await this._instrumentsService.fetch(this.model, count, offset);
 
 		this._updateBars(candles);
 		this._updateIndicators(indicators);
+		this._updateOrders(orders);
 
 		this._toggleLoading(false);
+	}
+
+	private _updateOrders(orders: Array<IOrder>) {
+		this._chart.get('orders').setData(orders.map(order => [order.openTime, order.bid, null]));
 	}
 
 	private _updateBars(data: any[] = []) {

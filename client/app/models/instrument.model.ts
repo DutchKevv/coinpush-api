@@ -15,7 +15,8 @@ export class InstrumentModel extends BaseModel {
 		bars: [],
 		live: true,
 		zoom: 4,
-		graphType: 'candlestick'
+		graphType: 'candlestick',
+		orders: []
 	};
 
 	private _zoomMax = 10;
@@ -46,6 +47,10 @@ export class InstrumentModel extends BaseModel {
 
 	public removeIndicator() {
 		// this.data.indicators.push()
+	}
+
+	public updateOrders() {
+
 	}
 
 	public updateIndicators(indicators) {

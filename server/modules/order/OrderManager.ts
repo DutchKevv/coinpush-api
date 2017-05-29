@@ -66,6 +66,10 @@ export default class OrderManager extends Base {
 		return order.id;
 	}
 
+	public findByDateRange(from: number, until: number) {
+		return this._closedOrders.filter((order: IOrder) => order.openTime >= from && order.openTime <= until);
+	}
+
 	public findById(id) {
 		return _.find(this._orders, {id})
 	}

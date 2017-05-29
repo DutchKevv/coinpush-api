@@ -23,7 +23,7 @@ import {AppComponent} from './app.component';
 import {routing} from './app.routing';
 
 import {MultiselectDropdownModule} from 'angular-2-dropdown-multiselect';
-import {InstrumentListComponent} from './common/intrument-list/instrument-list.component';
+import {InstrumentListComponent, SearchFilter} from './common/intrument-list/instrument-list.component';
 import {ChartOverviewComponent} from './common/chart-overview/chart-overview.component';
 import {ReportComponent} from './common/report/report.component';
 import {LoggedInGuard} from './guards/loggedin.guard';
@@ -73,7 +73,8 @@ import {NewsListComponent} from './common/news-feed/news-list';
 		ModalAnchorDirective,
 		DraggableDirective,
 		ResizableDirective,
-		ChartReportDirective
+		ChartReportDirective,
+		SearchFilter
 	],
 	imports: [
 		BrowserModule,

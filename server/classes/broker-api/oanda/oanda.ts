@@ -71,7 +71,7 @@ export default class BrokerApi extends Base {
 		});
 	}
 
-	public getCandles(instrument, timeFrame, from, until, count): Promise<any> {
+	public getCandles(instrument, timeFrame, from, until, count): Promise<Array<any>> {
 
 		return new Promise((resolve, reject) => {
 
@@ -84,6 +84,17 @@ export default class BrokerApi extends Base {
 				this._normalize(candles);
 
 				resolve(candles);
+			});
+		});
+	}
+
+	public getCurrentPrices(instruments: Array<any>): Promise<Array<any>> {
+		return new Promise((resolve, reject) => {
+			this._client.getPrice(instruments, (err, prices) => {
+				if (err)
+					return reject(err);
+
+				resolve(prices);
 			});
 		});
 	}

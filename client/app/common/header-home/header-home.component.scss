@@ -5,9 +5,11 @@
 .header-buttons {
 	list-style: none;
 
-	&:first-child {
-		width: 280px;
-		float: left;
+	@media screen and (min-width: 768px) {
+		&:first-child {
+			width: 280px;
+			float: left;
+		}
 	}
 
 	> li {

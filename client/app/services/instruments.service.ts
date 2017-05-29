@@ -31,6 +31,19 @@ export class InstrumentsService {
 	}
 
 	public init(): void {
+		this._socketService.socket.on('ticks', (ticks) => {
+			ticks.forEach(tick => {
+				let instrument = this.instrumentList$.getValue().find(instr => instr.instrument === tick.instrument);
+
+				if (!instrument)
+					return;
+
+				instrument.direction = instrument.bid > tick.bid ? 'down' : 'up';
+				instrument.bid = tick.bid;
+				instrument.ask = tick.ask;
+			});
+		});
+
 		this._socketService.socket.on('instrument:created', (instrumentSettings: InstrumentSettings) => {
 			this.add(new InstrumentModel(instrumentSettings));
 		});
@@ -197,6 +210,12 @@ export class InstrumentsService {
 		return this.instruments.find(instrument => instrument.data.id === id);
 	}
 
+	public searchList(value) {
+		value = value.toLowerCase();
+
+		return this.instrumentList$.getValue().filter(instrument => instrument.instrument.toLowerCase().contains(value))
+	}
+
 	private _showIndicatorOptionsMenu(indicatorModel: IndicatorModel): Promise<boolean> {
 
 		return new Promise((resolve) => {
@@ -261,8 +280,7 @@ export class InstrumentsService {
 			if (err)
 				return console.error(err);
 
-
-			this.instrumentList$.next(instrumentList.map(instrument => instrument.instrument));
+			this.instrumentList$.next(instrumentList);
 		});
 	}
 

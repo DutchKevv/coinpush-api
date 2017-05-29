@@ -30,6 +30,8 @@ export default class ConfigController {
 	}
 
 	async init(): Promise<IAppConfig> {
+		console.log('CONFIG CONFI CONFIG', this.options.path.config);
+
 		// Ensure path to folder exists
 		mkdirp.sync(this.options.path.config);
 

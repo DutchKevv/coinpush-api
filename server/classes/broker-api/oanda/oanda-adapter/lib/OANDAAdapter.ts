@@ -174,7 +174,7 @@ OandaAdapter.prototype.getPrice = function (symbol, callback) {
 	this._sendRESTRequest({
 		method: 'GET',
 		path: '/v1/prices?instruments=' + symbol
-	}, function (body) {
+	}, function (err, body) {
 		if (body && body.prices[0]) {
 			callback(null, multiple ? body.prices : body.prices[0]);
 		}

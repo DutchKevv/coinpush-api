@@ -49,9 +49,11 @@ export class BacktestSettingsComponent implements OnInit, AfterViewInit {
 
 	ngOnInit(): void {
 		this._$el = $(this._elementRef.nativeElement);
-		console.log('CCOKIE!', this._getCookie());
 
 		this.model = new BacktestSettingsModel(this._getCookie());
+
+		// For same reason the MultiSelect plugin brakes when restoring from cookies
+		// Solution is to leave it empty until instrumentList$ emits and then restore it
 		let temp = this.model.data.instruments;
 		this.model.data.instruments = [];
 
@@ -63,10 +65,12 @@ export class BacktestSettingsComponent implements OnInit, AfterViewInit {
 		this._socketService.socket.on('editor:runnable-list', (runnableList) => this._onReceiveRunnableList(runnableList));
 		this._socketService.socket.emit('editor:runnable-list', undefined, (err, runnableList) => this._onReceiveRunnableList(runnableList));
 
+
 		this._instrumentService.instrumentList$.subscribe(instrumentList => {
 			if (instrumentList.length) {
-				this.multiSelectOptions = instrumentList.map(instrument => ({id: instrument, name: instrument}));
+				this.multiSelectOptions = instrumentList.map(instrument => ({id: instrument.instrument, name: instrument.instrument}));
 
+				// Restore instrument list here
 				this.model.data.instruments = temp;
 			}
 		});

@@ -1,32 +1,39 @@
-import {Component, OnInit, OnDestroy, ElementRef} from '@angular/core';
-import {SocketService} from '../../services/socket.service';
+import {Component, OnInit, OnDestroy, ElementRef, Pipe, PipeTransform} from '@angular/core';
 import {InstrumentsService} from '../../services/instruments.service';
+
+@Pipe({
+	name: 'searchFilter'
+})
+export class SearchFilter implements PipeTransform {
+	transform(items: any[], criteria: any): any {
+		criteria = criteria.toLowerCase();
+
+		return items.filter(item => {
+			for (let key in item ) {
+				if (('' + item[key]).toLowerCase().includes(criteria)) {
+					return true;
+				}
+			}
+			return false;
+		});
+	}
+}
+
 
 @Component({
 	selector: 'instrument-list',
 	templateUrl: './instrument-list.component.html',
 	styleUrls: ['./instrument-list.component.scss']
 })
-
 export class InstrumentListComponent implements OnDestroy, OnInit {
 
-	public data: any = {};
-
 	constructor(public instrumentService: InstrumentsService,
-				private _socketService: SocketService,
 				private _elementRef: ElementRef) {
 	}
 
+
 	ngOnInit() {
-		this._socketService.socket.on('tick', this.onTick.bind(this));
-
 		this._bindContextMenu();
-	}
-
-	onTick(tick) {
-		tick.direction = this.data[tick.instrument] && this.data[tick.instrument].bid > tick.bid ? 'down' : 'up';
-
-		this.data[tick.instrument] = tick;
 	}
 
 	private _bindContextMenu() {
@@ -47,7 +54,5 @@ export class InstrumentListComponent implements OnDestroy, OnInit {
 		});
 	}
 
-	ngOnDestroy() {
-		this._socketService.socket.off('tick', this.onTick);
-	}
+	ngOnDestroy() {}
 }

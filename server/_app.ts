@@ -46,7 +46,8 @@ export interface IApp {
  */
 export default class App extends Base {
 
-	public isWin = /^win/.test(process.platform);
+	public readonly isWin = /^win/.test(process.platform);
+	public readonly isElectron = process && process.versions['electron'];
 
 	public controllers: {
 		config: ConfigController,
@@ -97,6 +98,7 @@ export default class App extends Base {
 	};
 
 	public async init(): Promise<any> {
+
 		// Make sure the app can be cleaned up on termination
 		this._setProcessListeners();
 
@@ -224,6 +226,7 @@ export default class App extends Base {
 			this._http.listen(port, () => {
 				// Angular DEV-Server : localhost:4200 \n\n
 				console.log(`\n
+	${process.env.NODE_ENV === 'production' ? '' : 'Angular DEV-Server : localhost:4200 \n\n'}
 	R.E.S.T. API       : localhost:${port} \n
 				`);
 
@@ -235,16 +238,20 @@ export default class App extends Base {
 			/**
 			 * Server events
 			 */
+			let tickBuffer = [];
+			let tickInterval = setInterval(() => {
+				if (!tickBuffer.length) return;
+
+				this._io.sockets.emit('ticks', tickBuffer);
+				tickBuffer = [];
+			}, 100);
+
+			this.controllers.cache.on('tick', (tick) => {
+				tickBuffer.push(tick);
+			});
+
 			this.controllers.editor.on('runnable-list:change', (runnableList) => {
 				this._io.sockets.emit('editor:runnable-list', runnableList);
-			});
-
-			this.controllers.broker.on('connected', () => {
-
-			});
-
-			this.controllers.broker.on('disconnected', () => {
-
 			});
 
 			this.controllers.system.on('change', state => {

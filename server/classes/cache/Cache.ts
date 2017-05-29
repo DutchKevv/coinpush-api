@@ -170,6 +170,14 @@ export default class Cache extends WorkerChild {
 
 		try {
 			let instrumentList = await this._brokerApi.getInstruments();
+			let currentPrices = await this._brokerApi.getCurrentPrices(instrumentList.map(instrument => instrument.instrument));
+
+			instrumentList.forEach(instrument => {
+				let price = currentPrices.find(priceObj => priceObj.instrument === instrument.instrument);
+
+				instrument.bid = price.bid;
+				instrument.ask = price.ask;
+			});
 
 			// Do not trust result
 			if (typeof instrumentList.length !== 'undefined')

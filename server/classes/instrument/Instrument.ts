@@ -1,10 +1,13 @@
 import * as path        from 'path';
 import InstrumentCache  from './InstrumentCache';
-import * as winston		from 'winston-color';
+import * as winston        from 'winston-color';
+import OrderManager    from '../../modules/order/OrderManager';
 
 const PATH_INDICATORS = path.join(__dirname, '../../../shared/indicators');
 
 export default class Instrument extends InstrumentCache {
+
+	public orderManager: OrderManager;
 
 	private _unique = 0;
 
@@ -93,6 +96,16 @@ export default class Instrument extends InstrumentCache {
 
 				if (data.indicators) {
 					returnObj.indicators = await this.getIndicatorsData(data.count, data.offset)
+				}
+
+				if (this.orderManager && returnObj.candles.length) {
+					console.log(returnObj.candles[0]);
+					returnObj.orders = await this.orderManager.findByDateRange(
+						returnObj.candles[0][0],
+						returnObj.candles[returnObj.candles.length - 1][0]
+					);
+				} else {
+					returnObj.orders = [];
 				}
 
 				cb(null, returnObj);

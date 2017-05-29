@@ -42,8 +42,6 @@ export default class IPC extends Base {
 
 		if (this.env === 'node') {
 			return this._startServerNode();
-		} else {
-
 		}
 	}
 
@@ -229,4 +227,3 @@ export default class IPC extends Base {
 		return typeof window === 'undefined' ? 'node' : 'browser';
 	}
 }
-

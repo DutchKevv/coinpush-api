@@ -77,8 +77,8 @@ export class ChartOverviewComponent implements OnInit {
 		(<any>$(this._elementRef.nativeElement)).contextMenu({
 			items: [
 				{
-					text: 'Focus',
-					value: 'focus'
+					text: 'Close',
+					value: 'close'
 				},
 				{
 					text: 'Close all',
@@ -89,12 +89,10 @@ export class ChartOverviewComponent implements OnInit {
 				let $button = $(originalEvent.target).parents('[data-instrument-id]'),
 					id = $button.attr('data-instrument-id');
 
-				console.log(originalEvent);
-
 				if (id) {
 					switch (selectedValue) {
-						case 'focus':
-							this.instrumentsService.setFocus(this.instrumentsService.findById(id));
+						case 'close':
+							this.instrumentsService.remove(this.instrumentsService.findById(id));
 							break;
 						case 'closeAll':
 							this.instrumentsService.removeAll();

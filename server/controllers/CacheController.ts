@@ -1,15 +1,18 @@
 import * as path from 'path';
 import WorkerHost from '../classes/worker/WorkerHost';
 import App from '../_app';
+import Base from '../classes/Base';
 
-export default class CacheController {
+export default class CacheController extends Base {
 
 	private _worker: WorkerHost = null;
 
 	constructor(protected opt, protected app: App) {
+		super(opt);
 	}
 
 	public init() {
+
 		this._worker = new WorkerHost({
 			id: 'cache',
 			ipc: this.app.ipc,
@@ -20,7 +23,7 @@ export default class CacheController {
 		});
 
 		this._worker._ipc.on('tick', tick => {
-			this.app.io.sockets.emit('tick', tick);
+			this.emit('tick', tick);
 		});
 
 		return this._worker.init();

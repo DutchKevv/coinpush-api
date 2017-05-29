@@ -1,4 +1,4 @@
-import App              from './_app';
+import App from './_app';
 
 const app = new App();
 

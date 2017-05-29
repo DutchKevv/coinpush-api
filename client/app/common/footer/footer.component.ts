@@ -40,7 +40,7 @@ export class FooterComponent implements OnInit, OnDestroy {
 			messages.forEach(message => {
 				message.timePretty = moment(message.time).format('DD MMM YY hh:mm:ss');
 			});
-			
+
 			this.messages.push(...messages);
 		});
 	}

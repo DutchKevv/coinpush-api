@@ -23,6 +23,8 @@ $header-height: 18px;
 }
 
 table {
+    // Faster rendering (read it on google)
+    table-layout: fixed;
     margin-bottom: 0;
 
     thead {

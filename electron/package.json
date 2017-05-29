@@ -7,8 +7,8 @@
   "main": "index.js",
   "private": false,
   "scripts": {
-    "start": "cross-env NODE_ENV=development electron ../",
-    "build": "build --config=./electron/config.json --publish=never --dir  --projectDir=../",
+    "start": "cross-env NODE_ENV=development electron ../ --projectDir=../",
+    "build": "node build --projectDir=../",
     "build:packed": "build --config=./electron/config.json --projectDir=../ --publish=never",
     "build:all": "build -mwl --config=./electron/config.json --projectDir=../ --publish=never",
     "build:windows": "build --win --config=./electron/config.json --projectDir=../ --publish=never",

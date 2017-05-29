@@ -7,21 +7,22 @@
 	</tr>
 	<tr>
 		<th colspan="3">
-			<input class="search-instrument-list" type="text" placeholder="search">
+			<input class="search-instrument-list" type="text" placeholder="Search..." #search style="color: black;">
 		</th>
 	</tr>
 	</thead>
 	<tbody>
-	<tr *ngFor="let instrument of instrumentService.instrumentList$ | async;" [attr.data-symbol]="instrument">
-		<td (click)="instrumentService.create({instrument: instrument, live: true})">
-			<i class="fa fa-arrow-{{data[instrument] && data[instrument].direction}}"></i>
-			{{ instrument }}
+	<tr *ngFor="let instrument of instrumentService.instrumentList$ | async | searchFilter: search.value" [attr.data-symbol]="instrument.instrument" [attr.title]="instrument.displayName">
+		<td (click)="instrumentService.create({instrument: instrument.instrument, live: true})">
+			<i class="fa fa-arrow-{{instrument.direction}}"></i>
+			{{ instrument.instrument }}
 		</td>
-		<td>{{data[instrument] && data[instrument].bid}}</td>
-		<td>{{data[instrument] && data[instrument].ask}}</td>
+		<td>{{instrument.bid}}</td>
+		<td>{{instrument.ask}}</td>
 	</tr>
 	</tbody>
 </table>
+
 
 <ul id="contextMenu" class="dropdown-menu" role="menu" style="display:none">
 	<li><a tabindex="-1" href="#">Action</a></li>

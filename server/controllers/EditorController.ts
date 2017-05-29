@@ -5,6 +5,7 @@ import * as mkdirp  from 'mkdirp';
 import * as watch 	from 'watch';
 import {fork}      	from 'child_process';
 import Base from '../classes/Base';
+import {compile}	from '../compile/Compiler';
 
 const dirTree = require('directory-tree');
 const rmdir = require('rmdir');
@@ -208,20 +209,43 @@ export default class EditorController extends Base {
 	private async _compile(inputPath, outputPath) {
 
 		return new Promise((resolve, reject) => {
-
-			let gulpPath = path.join(__dirname, '..', 'node_modules', 'gulp', 'bin', 'gulp.js'),
-				childOpt = {
-					stdio: ['pipe', process.stdout, process.stderr, 'ipc'],
-					cwd: path.join(__dirname, '../')
-				}, child;
-
-			child = fork(gulpPath, ['custom:build', `--input-path=${inputPath}`, `--output-path=${outputPath}`], childOpt);
-
-			child.on('close', (code) => {
-				console.log(`child process exited with code ${code}`);
-
-				code ? reject(code) : resolve();
+			console.log('COMPILE!!', path.join(inputPath, 'ea', 'example', 'index.ts'));
+			let result = compile([path.join(inputPath, 'ea', 'example', 'index.ts')], {
+				'experimentalDecorators': true,
+				'emitDecoratorMetadata': true,
+				'target': 4, // 'es2017',
+				'sourceMap': true,
+				'module': 1, // CommonJS,
+				'moduleResolution': 2, // 'Node',
+				'baseUrl': '.',
+				'allowJs': true,
+				'paths': {
+					'tradejs/ea': [path.join(__dirname, '../classes/ea/EA')],
+					'tradejs/indicator/*': [path.join(__dirname, '../../shared/indicators/*')],
+					'tradejs/indicator': [path.join(__dirname, '../../shared/indicators/Indicator')]
+				},
+				'types' : [
+					'core-js',
+					'node'
+				],
+				'typeRoots': [
+					path.join(__dirname, '../node_modules/@types')
+				]
 			});
+
+			// let gulpPath = path.join(__dirname, '..', 'node_modules', 'gulp', 'bin', 'gulp.js'),
+			// 	childOpt = {
+			// 		stdio: ['pipe', process.stdout, process.stderr, 'ipc'],
+			// 		cwd: path.join(__dirname, '../')
+			// 	}, child;
+			//
+			// child = fork(gulpPath, ['custom:build', `--input-path=${inputPath}`, `--output-path=${outputPath}`], childOpt);
+			//
+			// child.on('close', (code) => {
+			// 	console.log(`child process exited with code ${code}`);
+			//
+			// 	code ? reject(code) : resolve();
+			// });
 		});
 	}
 
@@ -255,17 +279,17 @@ export default class EditorController extends Base {
 				this.emit('change');
 			} else if (prev === null) {
 				winston.info('file:new', fileNames);
-				this.emit('change')
+				this.emit('change');
 				await this._compile(this._getCustomAbsoluteRootFolder(fileNames), this._getBuildAbsoluteRootFolder(fileNames));
 				// f is a new file
 			} else if (curr.nlink === 0) {
 				winston.info('file:removed', fileNames);
-				this.emit('change')
+				this.emit('change');
 				await this._compile(this._getCustomAbsoluteRootFolder(fileNames), this._getBuildAbsoluteRootFolder(fileNames));
 				// f was removed
 			} else {
 				winston.info('file:changed', fileNames);
-				this.emit('change')
+				this.emit('change');
 				await this._compile(this._getCustomAbsoluteRootFolder(fileNames), this._getBuildAbsoluteRootFolder(fileNames));
 				// f was changed
 			}
