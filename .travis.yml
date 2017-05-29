@@ -12,12 +12,12 @@ install:
 - npm install --silent
 - npm run build
 - cd ../server
-#- npm install --silent
-#- npm run build
-#- cd ../electron
-#- npm install --silent
-#- npm run build:packed
-#- cd ../
+- npm install --silent
+- npm run build
+- cd ../electron
+- npm install --silent
+- npm run build:packed
+- cd ../
 
 # Needed for running e2e tests on Linux
 before_script:
