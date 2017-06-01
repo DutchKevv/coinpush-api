@@ -10,7 +10,7 @@ const
 	serverTsProject = ts.createProject("tsconfig.json"),
 	sharedTsProject = ts.createProject("../shared/tsconfig.json"),
 
-    PATH_APP_INIT_FILE = path.resolve(__dirname, 'app');
+    PATH_APP_INIT_FILE = path.resolve(__dirname, 'bootstrapper.js');
 
 let child = null;
 

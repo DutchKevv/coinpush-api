@@ -6,6 +6,7 @@ npm-debug.*
 node_modules
 testem.log
 /dist
+package-lock.json
 
 #System Files
 .DS_Store

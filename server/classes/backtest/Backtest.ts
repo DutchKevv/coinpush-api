@@ -43,7 +43,7 @@ export default class BackTest extends EventEmitter {
 	}
 
 	async run() {
-		let EAPath = path.join(__dirname, '..', '..', '..', '_builds', 'ea', this.options.ea, 'index');
+		let EAPath = path.join(this.app.controllers.config.config.path.custom, 'ea', this.options.ea, 'index');
 
 		this.startTime = Date.now();
 

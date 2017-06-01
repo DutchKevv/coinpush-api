@@ -1,7 +1,7 @@
 module.exports = (app, socket) => {
 
-	socket.on('file:list', async () => {
-		socket.emit('file:list', null, await app.controllers.editor.directoryTree);
+	socket.on('editor:directory-list', async () => {
+		socket.emit('editor:directory-list', null, await app.controllers.editor.directoryTree);
 	});
 
 	socket.on('file:load', async (data, cb) => {

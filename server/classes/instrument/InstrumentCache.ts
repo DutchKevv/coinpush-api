@@ -54,6 +54,9 @@ export default class InstrumentCache extends WorkerChild {
 				bufferOnly: true
 			});
 
+		console.log('ticks', ticks);
+
+
 		await this._doTickLoop(ticks, false);
 	}
 

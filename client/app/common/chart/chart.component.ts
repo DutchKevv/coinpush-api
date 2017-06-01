@@ -180,6 +180,7 @@ export class ChartComponent implements OnInit, OnDestroy {
 		this._toggleLoading(true);
 
 		let {candles, indicators, orders} = await this._instrumentsService.fetch(this.model, count, offset);
+		console.log(candles);
 
 		this._updateBars(candles);
 		this._updateIndicators(indicators);

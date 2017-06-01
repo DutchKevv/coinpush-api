@@ -5,7 +5,7 @@
   "description": "Javascript Trading Client and Server",
   "email": "kewin@frontend-freelance.com",
   "author": "Kewin Brandsma",
-  "main": "./index.js",
+  "main": "index.js",
   "private": false,
   "license": "CC-BY-NC-ND-4.0",
   "repository": {

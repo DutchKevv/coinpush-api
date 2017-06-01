@@ -5,22 +5,15 @@ const fs = require('fs');
 const chaiAsPromised = require('chai-as-promised');
 const rimraf = require('rimraf');
 
-var electronPath = '',
-	configPath = '',
-	cachePath = '';
+var electronPath = path.join(__dirname, '..', '..', 'dist');
+var tempUserData = path.join(__dirname, '..', 'tempData');
 
 if (/^win/.test(process.platform)) {
-	electronPath = path.join(__dirname, '..', '..', 'dist', 'win-unpacked', 'TradeJS.exe');
-	configPath = path.join(__dirname, '..', '..', 'dist', 'win-unpacked', 'resources', 'app', '_config');
-	cachePath = path.join(__dirname, '..', '..', 'dist', 'win-unpacked', 'resources', 'app', '_cache');
+	electronPath = path.join(electronPath, 'win-unpacked', 'TradeJS.exe');
 } else if (/^darwin/.test(process.platform)) {
-	electronPath = path.join(__dirname, '..', '..', 'dist', 'mac', 'TradeJS.app', 'Contents', 'MacOS', 'TradeJS');
-	configPath = path.join(__dirname, '..', '..', 'dist', 'mac', 'TradeJS.app', 'Contents', 'MacOS', 'resources', 'app', '_config');
-	cachePath = path.join(__dirname, '..', '..', 'dist', 'mac', 'TradeJS.app', 'Contents', 'MacOS', 'resources', 'app', '_cache');
+	electronPath = path.join(electronPath, 'mac', 'TradeJS.app', 'Contents', 'MacOS', 'TradeJS');
 } else if (/^linux/.test(process.platform)) {
-	electronPath = path.join(__dirname, '..', '..', 'dist', 'linux-unpacked', 'tradejs');
-	configPath = path.join(__dirname, '..', '..', 'dist', 'linux-unpacked', 'resources', 'app', '_config');
-	cachePath = path.join(__dirname, '..', '..', 'dist', 'linux-unpacked', 'resources', 'app', '_cache');
+	electronPath = path.join(electronPath, 'linux-unpacked', 'tradejs');
 }
 
 var loginDetails = {
@@ -32,7 +25,7 @@ var appPath = path.join(__dirname, '..', '..');
 
 var app = new Application({
 	path: electronPath,
-	args: [appPath, 'NODE_ENV=production']
+	args: [appPath, 'NODE_ENV=production', '--env=test' + tempUserData]
 });
 
 global.before(function () {
@@ -41,13 +34,24 @@ global.before(function () {
 });
 
 global.beforeEach(function () {
-	return app.start();
+	return app.start().then(() => {
+		app.client.getMainProcessLogs().then(function (logs) {
+			logs.forEach(function (log) {
+				console.log(log)
+			})
+		})
+		// app.electron.remote.app.setPath('userData', tempUserData);
+	});
 });
 
-global.afterEach(function () {
+global.afterEach(async function () {
+	let dataPath = await app.electron.remote.app.getPath('temp');
+	console.log('dataPath', dataPath);
+
 	return app.stop().then(() => {
-		rimraf.sync(configPath);
-		rimraf.sync(cachePath);
+		rimraf.sync(path.join(dataPath, '_config'));
+		rimraf.sync(path.join(dataPath, '_cache'));
+		rimraf.sync(path.join(dataPath, 'custom'));
 	});
 });
 

@@ -106,8 +106,9 @@ export class HeaderEditorComponent {
 		}
 	}
 
-	openEditor() {
-		let url = `${location.href.split('#')[0]}#/editor`,
+
+	openCharts() {
+		let url = `${location.href.split('#')[0]}#/home`,
 			win;
 
 		// Electron
@@ -115,7 +116,7 @@ export class HeaderEditorComponent {
 			win = window.electron.openWindow(url, {parent: Window});
 		}
 		else {
-			win = window.open(url, 'editor');
+			win = window.open(url, 'home');
 		}
 	}
 

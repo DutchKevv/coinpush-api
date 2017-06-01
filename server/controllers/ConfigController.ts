@@ -21,17 +21,13 @@ interface IAppConfig {
 export default class ConfigController {
 
 	private _config: IAppConfig = {};
-
-	private _configCurrentPath: string = path.join(this.options.path.config, 'tradejs.config.json');
-	private _configDefaultPath: string = path.join(__dirname, '..', 'config', 'tradejs.config.default');
+	private _configFullpath: string = path.join(this.options.path.config, 'tradejs.config.json');
 
 	constructor(protected options: IAppConfig,
 				protected app) {
 	}
 
 	async init(): Promise<IAppConfig> {
-		console.log('CONFIG CONFI CONFIG', this.options.path.config);
-
 		// Ensure path to folder exists
 		mkdirp.sync(this.options.path.config);
 
@@ -58,7 +54,7 @@ export default class ConfigController {
 			this._config = merge(this._config, settings);
 
 			// Write to file
-			fs.writeFile(this._configCurrentPath, JSON.stringify(this._config, null, 2), err => {
+			fs.writeFile(this._configFullpath, JSON.stringify(this._config, null, 2), err => {
 				if (err)
 					return reject(err);
 
@@ -72,9 +68,10 @@ export default class ConfigController {
 
 			let fileConfig = {}, config;
 
-			delete require.cache[this._configCurrentPath];
+			delete require.cache[this._configFullpath];
+
 			try {
-				fileConfig = require(this._configCurrentPath);
+				fileConfig = require(this._configFullpath);
 			} catch (error) {}
 
 			// Merge the new config with default config <- file config <- App instance config options

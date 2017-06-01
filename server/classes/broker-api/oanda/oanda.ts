@@ -1,5 +1,7 @@
 import Base from '../../Base';
 import * as constants from '../../../../shared/constants/broker';
+import {splitToChunks} from '../../../util/date';
+import {flatten} from 'lodash';
 
 const OANDAAdapter = require('./oanda-adapter/index');
 
@@ -72,20 +74,19 @@ export default class BrokerApi extends Base {
 	}
 
 	public getCandles(instrument, timeFrame, from, until, count): Promise<Array<any>> {
+		let chunks = splitToChunks(timeFrame, from, until, count, 5000);
 
-		return new Promise((resolve, reject) => {
+		return Promise.all(chunks.map(chunk => {
 
-			this._client.getCandles(instrument, from, until, timeFrame, count, (err, candles) => {
-				if (err) {
-					console.log(err);
-					return reject(err);
-				}
+			return new Promise((resolve, reject) => {
+				this._client.getCandles(instrument, chunk.from, chunk.until, timeFrame, chunk.count, (err, result) => {
+					if (err)
+						return reject(err);
 
-				this._normalize(candles);
-
-				resolve(candles);
+					resolve(this.normalizeJSON2Array(result));
+				});
 			});
-		});
+		})).then(flatten);
 	}
 
 	public getCurrentPrices(instruments: Array<any>): Promise<Array<any>> {
@@ -108,12 +109,35 @@ export default class BrokerApi extends Base {
 		this._client = null;
 	}
 
-	private _normalize(candles) {
+	private _normalizeJSON(candles) {
 		let i = 0, len = candles.length;
 
 		for (; i < len; i++)
 			candles[i].time /= 1000;
 
 		return candles;
+	}
+
+	private normalizeJSON2Array(candles) {
+		let i = 0, len = candles.length, rowLength = 6, candle,
+			view = new Float64Array(candles.length * rowLength);
+
+		console.log(candles);
+
+		for (; i < len; i++) {
+			candle = candles[i];
+			view[i * rowLength] = candle.time / 1000;
+			view[(i * rowLength) + 1] = candle.openBid;
+			view[(i * rowLength) + 2] = candle.highBid;
+			view[(i * rowLength) + 3] = candle.lowBid;
+			view[(i * rowLength) + 4] = candle.closeBid;
+			view[(i * rowLength) + 5] = candle.volume;
+		}
+
+		return candles;
+	}
+
+	private normalizeTypedArrayToBuffer(array) {
+		return
 	}
 }

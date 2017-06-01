@@ -215,6 +215,11 @@ export default class IPC extends Base {
 			}
 		}
 
+		if (Buffer.isBuffer(data)) {
+			console.log(data);
+		}
+
+
 		this.emit(data.type, data.data, cb, socket.id)
 	}
 

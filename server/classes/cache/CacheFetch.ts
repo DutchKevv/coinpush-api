@@ -19,59 +19,33 @@ export default class Fetcher {
 
 	public async fetch(brokerApi: BrokerApi, instrument: string, timeFrame: string, from: number, until: number, count: number) {
 
-		let startTime = Date.now();
 		// Store chunk date as pending
 		// this._setPendingRequest(instrument, timeFrame, from, until);
 
-		return brokerApi.getCandles(instrument, timeFrame, from, until, count).then(async candles => {
+		let candles = await brokerApi.getCandles(instrument, timeFrame, from, until, count);
 
-			// Quality check, make sure every tick has a timestamp AFTER the previous tick
-			// (Just to be sure)
-			let i = 0, len = candles.length,
-				lastT, parseTime = Date.now();
+		// Write to database
+		await this._dataLayer.write(instrument, timeFrame, candles);
 
-			winston.info(`Fetching ${instrument} on ${timeFrame} took ${(parseTime - startTime) / 1000} seconds`);
+		if (from && until) {
+			await this._mapper.update(instrument, timeFrame, from, until, candles.length);
+		} else {
+			if (candles.length) {
+				if (!from)
+					from = candles[0].time;
 
-			for (; i < len; i++) {
-				if (lastT && lastT >= candles[i].time) {
-					throw new Error('Candle timestamp is not after previous timestamp')
-				}
-				lastT = candles[i].time;
+				if (!until)
+					until = candles[candles.length - 1].time;
+
+				if (from && until)
+					await this._mapper.update(instrument, timeFrame, from, until, candles.length);
 			}
+		}
 
-			// Write to database
-			await this._dataLayer.write(instrument, timeFrame, candles);
+		// Remove from pending requests
+		// this._clearPendingRequest(instrument, timeFrame, from, until);
 
-			if (from && until) {
-				await this._mapper.update(instrument, timeFrame, from, until, candles.length);
-			} else {
-				if (candles.length) {
-					if (!from) {
-						from = candles[0].time;
-					}
-
-					if (!until) {
-						until = candles[candles.length - 1].time;
-					}
-
-					if (from && until) {
-						await this._mapper.update(instrument, timeFrame, from, until, candles.length);
-					}
-				}
-			}
-
-			winston.info(`Parsing ${instrument} on ${timeFrame} took ${(Date.now() - parseTime) / 1000} seconds`);
-
-			// Remove from pending requests
-			// this._clearPendingRequest(instrument, timeFrame, from, until);
-
-			return candles;
-
-		}).catch(error => {
-			// Remove from pending requests
-			// this._clearPendingRequest(instrument, timeFrame, from, until);
-			throw error;
-		});
+		// return candles;
 	}
 
 	private _getPendingRequest(instrument, timeFrame) {

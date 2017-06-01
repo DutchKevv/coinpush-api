@@ -1,18 +1,19 @@
 "use strict"
 
-const builder = require("electron-builder")
+const builder = require("electron-builder");
 const Platform = builder.Platform;
+const argv = require('minimist')(process.argv.slice(2));
 
 // Promise is returned
 builder.build({
 		projectDir: '../',
-		dir: true,
+		dir: !argv.packed,
 		config: {
 			afterPack: (result) => {
 
 			},
 			"appId": "com.example.app",
-			"electronVersion": "1.6.6",
+			"electronVersion": "1.6.10",
 			"productName": "TradeJS",
 			"artifactName": "${productName}.${ext}",
 			"asar": true,
@@ -24,12 +25,13 @@ builder.build({
 				"!_config",
 				"!dist",
 				"!custom/indicator/*",
-				"!client/node_modules",
-				"!client/assets",
-				"!client/app",
-				"!electron/node_modules",
-				"!electron/assets",
-				"!electron/tests",
+
+				"!client/*",
+				"client/dist/*",
+
+				"!electron/*",
+				"electron/index.js",
+
 				"!server/node_modules/**/*.map",
 				"!server/node_modules/**/Makefile",
 				"!server/node_modules/**/.npmignore",
@@ -54,7 +56,7 @@ builder.build({
 				"oneClick": false,
 				"perMachine": false,
 				"allowToChangeInstallationDirectory": true,
-				"license": "license.txt",
+				"license": "LICENSE.txt",
 				"allowElevation": true
 			}
 		}

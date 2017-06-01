@@ -7,7 +7,7 @@
   "main": "index.js",
   "private": false,
   "scripts": {
-    "start": "cross-env NODE_ENV=development electron ../ --projectDir=../",
+    "start": "cross-env NODE_ENV=development electron .",
     "build": "node build",
     "build:packed": "node build --packed",
     "build:all": "build -mwl --config=./electron/config.json --projectDir=../ --publish=never",
@@ -19,10 +19,9 @@
   "devDependencies": {
     "cross-env": "5.0.0",
     "debug": "2.6.8",
-    "electron": "1.6.8",
-    "electron-builder": "18.0.1",
+    "electron": "1.6.10",
+    "electron-builder": "18.2.0",
     "electron-prebuilt": "1.4.13",
-    "electron-prebuilt-compile": "1.6.8",
     "electron-rebuild": "1.5.11",
     "mkdirp": "0.5.1",
     "mocha": "^3.3.0",
@@ -30,8 +29,10 @@
     "spectron": "^3.6.2"
   },
   "dependencies": {
-    "chai": "^3.5.0",
+    "chai": "^4.0.0",
     "chai-as-promised": "^6.0.0",
+    "electron": "^1.6.10",
+    "minimist": "^1.2.0",
     "mocha": "^3.3.0",
     "node-gyp": "3.6.1"
   }

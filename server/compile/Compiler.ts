@@ -2,6 +2,8 @@ import * as ts from 'typescript';
 
 export function compile(fileNames: string[], options: ts.CompilerOptions) {
 	let program = ts.createProgram(fileNames, options);
+	// console.log(program.getRootFileNames());
+	// console.log(program.getSourceFiles());
 	let emitResult = program.emit();
 
 	let allDiagnostics = ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics);

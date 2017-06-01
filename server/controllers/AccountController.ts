@@ -1,5 +1,5 @@
 import Base from '../classes/Base';
-import App from '../_app';
+import App from '../app';
 
 export default class AccountController extends Base {
 

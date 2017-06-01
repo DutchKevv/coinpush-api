@@ -1,6 +1,6 @@
 import * as path from 'path';
 import WorkerHost from '../classes/worker/WorkerHost';
-import App from '../_app';
+import App from '../app';
 import Base from '../classes/Base';
 
 export default class CacheController extends Base {

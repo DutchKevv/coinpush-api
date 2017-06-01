@@ -6,33 +6,40 @@ if (process.env.NODE_ENV !== 'development') {
 
 const
 	path = require('path'),
+	{fork} = require('child_process'),
 	{app, BrowserWindow, Menu} = require('electron');
-
-// // Avoid minimist to not have to include node_modules into electron package
-// argv = (() => {
-// 	let argv = {};
-// 	process.argv.slice(2).forEach(arg => argv[arg.split('=')[0].split('-').slice(-1)[0]] = arg.split('=')[1]);
-// 	return argv;
-// })();
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win, server;
 
 function startServer() {
-	let Server = require('../server/_app').default;
+	const TARGET = process.env.npm_lifecycle_event;
+	const appDataPath = app.getPath(TARGET === 'test' ? 'temp' : 'appData');
 
-	console.log('User data path: ', app.getPath('userData'));
-
-	server = new Server({
+	let serverConfig = {
 		path: {
-			config: path.join(app.getPath('userData'), '_config'),
-			cache: path.join(app.getPath('userData'), '_cache'),
-			custom: path.join(app.getPath('userData'), 'custom')
+			config: path.join(appDataPath, '_config'),
+			cache: path.join(appDataPath, '_cache'),
+			custom: path.join(appDataPath, 'custom')
 		}
+	};
+
+	server = fork(path.join(__dirname, '../server/bootstrapper.js'), [`--config=${JSON.stringify(serverConfig)}`], {
+		env: {
+			ELECTRON: true
+		},
+		stdio: [0, null, null, 'ipc']
 	});
 
-	return server.init();
+	// TODO: What to do with eror
+	server.stderr.on('data', (data) => {
+		console.error(data.toString());
+	});
+
+	server.stdout.on('data', (data) => {
+		console.log(data.toString());
+	});
 }
 
 function createWindow() {
@@ -56,8 +63,8 @@ function createWindow() {
 		win.webContents.openDevTools();
 	} else {
 		win.loadURL(`file://${path.join(__dirname, '..', 'client', 'dist').replace(/\\/g, "/")}/index.html`);
-
-		startServer().catch(console.error);
+		win.webContents.openDevTools();
+		startServer();
 	}
 
 	// Emitted when the window is closed.

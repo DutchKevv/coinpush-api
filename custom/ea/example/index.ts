@@ -2,9 +2,7 @@ import EA from '../../../server/classes/ea/EA';
 import {IEA} from 'tradejs/ea';
 import OrderManager from "../../../server/modules/order/OrderManager";
 
-
 export default class MyEA extends EA implements IEA {
-
 
 	count = 0;
 	MA1: any;
@@ -51,6 +49,7 @@ export default class MyEA extends EA implements IEA {
 				});
 			} catch (error) {
 			}
+
 
 
 		} else {

@@ -101,7 +101,7 @@ export default class Cache extends WorkerChild {
 
 			this
 				.read(opt.instrument, opt.timeFrame, opt.from, opt.until, opt.count, opt.bufferOnly)
-				.then(data => cb(null, data))
+				.then(data => cb(null, new Buffer(data.buffer)))
 				.catch(cb);
 		});
 

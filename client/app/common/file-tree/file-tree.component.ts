@@ -59,7 +59,7 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 
 		this._bindContextMenu();
 
-		this._socketService.socket.on('file:list', (err: any, result: any) => {
+		this._socketService.socket.on('editor:directory-list', (err: any, result: any) => {
 			this._toggleBusyIcon(false);
 
 			if (err)
@@ -105,7 +105,7 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 
 	public load() {
 		this._toggleBusyIcon(true);
-		this._socketService.socket.emit('file:list');
+		this._socketService.socket.emit('editor:directory-list');
 	}
 
 	update(data = this._data) {

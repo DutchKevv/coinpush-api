@@ -61,10 +61,6 @@ export default class WorkerHost extends Base {
 
 			this._child.stderr.on('data', (data) => {
 				this.emit('stderr', data.toString());
-
-				if (data.toString().indexOf('DeprecationWarning:') === -1) {
-
-				}
 				//
 				console.log(`stderr22: ${data}`);
 			});
@@ -77,6 +73,10 @@ export default class WorkerHost extends Base {
 				} else {
 					reject('First child message must always be the __ready, received: ' + message);
 				}
+			});
+
+			this._child.on('exit', (code) => {
+				this.emit('exit', code);
 			});
 		});
 	}

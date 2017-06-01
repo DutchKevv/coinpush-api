@@ -3,7 +3,7 @@ import * as _       from 'lodash';
 import * as winston	from 'winston-color';
 import WorkerHost   from '../classes/worker/WorkerHost';
 import Base         from '../classes/Base';
-import App from '../_app';
+import App 			from '../app';
 
 const PATH_INSTRUMENT = path.join(__dirname, '../classes/instrument/Instrument');
 

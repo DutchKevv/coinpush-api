@@ -17,7 +17,7 @@ export default class CacheDataLayer {
 		return this._setTableList();
 	}
 
-	public read(instrument: string, timeFrame: string, from: number, until: number, count = 500, bufferOnly?: boolean): Promise<Array<any>> {
+	public read(instrument: string, timeFrame: string, from: number, until: number, count = 500, bufferOnly?: boolean): Promise<Float64Array> {
 
 		return this
 			._createInstrumentTableIfNotExists(instrument, timeFrame)
@@ -60,20 +60,19 @@ export default class CacheDataLayer {
 						}
 
 						let i = 0, len = rows.length,
-							row, returnArr = new Float64Array(rows.length * columns.length);
+							returnArr = new Float64Array(rows.length * columns.length);
 
-						for (; i < len; i++) {
-							row = rows[i];
-							returnArr.set(columns.map(v => row[v]), 6 * i);
-							// returnArr.set(Object.values(rows[i]), 6 * i); // Not yet supported
-						}
+						for (; i < len; i++)
+							returnArr.set(columns.map(v => rows[i][v]), 6 * i);
 
-						if (bufferOnly) {
-							// resolve(returnArr.buffer);
-							resolve(Array.from(returnArr));
-						} else {
-							resolve(Array.from(returnArr));
-						}
+						resolve(returnArr);
+
+						// if (bufferOnly) {
+						// 	// resolve(returnArr.buffer);
+						// 	resolve(Array.from(returnArr));
+						// } else {
+						// 	resolve(Array.from(returnArr));
+						// }
 					});
 
 				});
