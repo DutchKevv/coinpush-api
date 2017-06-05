@@ -267,6 +267,8 @@ export default class App extends Base {
 			});
 
 			this.controllers.instrument.on('created', instrument => {
+				winston.info('Created Instrument ' + instrument.id);
+
 				this._io.sockets.emit('instrument:created', {
 					id: instrument.id,
 					timeFrame: instrument.timeFrame,
@@ -314,8 +316,11 @@ export default class App extends Base {
 	}
 
 	private async _killAllChildProcesses() {
-		await this.controllers.instrument.destroyAll();
-		await this.controllers.cache.destroy();
+		if (this.controllers.instrument)
+			await this.controllers.instrument.destroyAll();
+
+		if (this.controllers.cache)
+			await this.controllers.cache.destroy();
 	}
 
 	async destroy(): Promise<any> {

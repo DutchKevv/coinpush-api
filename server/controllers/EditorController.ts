@@ -96,12 +96,12 @@ export default class EditorController extends Base {
 
 		this._worker._ipc.on('directory-list', (list) => {
 			this._directoryTree = list;
-			this.emit('directory-list', list);
+			// this.emit('directory-list', list);
 		});
 
 		this._worker._ipc.on('runnable-list', (list) => {
 			this._runnableList = list;
-			this.emit('runnable-list', list);
+			// this.emit('runnable-list', list);
 		});
 
 		return this._worker.init();

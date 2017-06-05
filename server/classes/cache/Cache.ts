@@ -59,15 +59,14 @@ export default class Cache extends WorkerChild {
 
 		count = count || 500;
 
-		let data = await this._dataLayer.read(instrument, timeFrame, from, until, count, bufferOnly);
+		let data; // = await this._dataLayer.read(instrument, timeFrame, from, until, count);
 
-		if (!data.length || data.length < count ||
-			!this._mapper.isComplete(instrument, timeFrame, data[0], data[data.length - 1])) {
+		// if (!data.length || data.length < count || !this._mapper.isComplete(instrument, timeFrame, data[0], data[data.length - 1])) {
 
 			await this._fetcher.fetch(this._brokerApi, instrument, timeFrame, from, until, count);
 
 			data = await this._dataLayer.read(instrument, timeFrame, from, until, count, bufferOnly);
-		}
+		// }
 
 		return data;
 	}
@@ -101,7 +100,7 @@ export default class Cache extends WorkerChild {
 
 			this
 				.read(opt.instrument, opt.timeFrame, opt.from, opt.until, opt.count, opt.bufferOnly)
-				.then(data => cb(null, new Buffer(data.buffer)))
+				.then(data => cb(null, data))
 				.catch(cb);
 		});
 

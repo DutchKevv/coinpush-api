@@ -43,6 +43,3 @@ Go to localhost:3000 in chrome (only newest versions of chrome are supported)
  
  ## Mobile
  ![Alt text](doc/screenshot/mobile-chart.png?raw=true "Title") &nbsp; ![Alt text](doc/screenshot/mobile-editor.png?raw=true "Title") &nbsp; ![Alt text](doc/screenshot/mobile-editor2.png?raw=true "Title")
- 
-  #### How to start (temp, this will be normalized in the future)
- 

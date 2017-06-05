@@ -24,7 +24,7 @@ module.exports = (app: App, socket) => {
 
 		app.controllers.instrument
 			.read(options.id, options.from, options.until, options.count, undefined, options.indicators)
-			.then(data => {console.log(data); return data})
+			.then(data => {console.log('asfdasdfasddf', ArrayBuffer.isView(data.candles)); return data})
 			.then(data => cb(null, data))
 			.catch(console.error);
 	});

@@ -39,23 +39,31 @@ export default class InstrumentCache extends WorkerChild {
 		return this._readyHandler.then(async () => {
 
 			let candles = this.ticks.slice(this.ticks.length - count - offset, this.ticks.length - offset);
-
 			return candles;
 		});
 	}
 
 	private async _doPreFetch() {
 
-		let ticks = await this._ipc.send('cache', 'read', {
+		function toArrayBuffer(buffer) {
+			var ab = new ArrayBuffer(buffer.length);
+			var view = new Uint8Array(ab);
+			for (var i = 0; i < buffer.length; ++i) {
+				view[i] = buffer[i];
+			}
+			return ab;
+		}
+
+		let buf = await this._ipc.send('cache', 'read', {
 				instrument: this.instrument,
 				timeFrame: this.timeFrame,
 				until: this.options.live ? this.options.until :  this.options.from,
-				count: 1000,
+				count: 200,
 				bufferOnly: true
 			});
 
-		console.log('ticks', ticks);
-
+		let _buf = new Buffer(buf);
+		let ticks = new Float64Array(_buf.buffer);
 
 		await this._doTickLoop(ticks, false);
 	}
@@ -67,13 +75,15 @@ export default class InstrumentCache extends WorkerChild {
 				return resolve();
 			}
 
-			this._map.update(this.instrument, this.timeFrame, candles[0], candles[candles.length - 6], candles.length);
+			this._map.update(this.instrument, this.timeFrame, candles[0], candles[candles.length - 10], candles.length);
 
 			let loop = (i) => {
 
 				process.nextTick(async () => {
 
-					let candle = candles.slice(i, i = i + 6);
+					let candle = candles.slice(i, i = i + 10);
+
+					// console.log(candle);
 
 					// Quality check, make sure every tick has a timestamp AFTER the previous tick
 					// (Just to be sure)
@@ -84,9 +94,8 @@ export default class InstrumentCache extends WorkerChild {
 
 					// uncompleted candles (last one)
 					// TODO: What to do in this situation?
-					if (candle.length !== 6) {
-						resolve();
-						return;
+					if (candle.length !== 10) {
+						reject(`Illegal candle length: ${candle.length} Should be 10`);
 					}
 
 					this.ticks.push(candle);
@@ -104,8 +113,8 @@ export default class InstrumentCache extends WorkerChild {
 					if (candles[i + 1]) {
 						loop(i);
 					} else {
-						resolve();
-						return;
+						return resolve();
+
 					}
 				});
 			};

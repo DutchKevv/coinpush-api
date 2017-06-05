@@ -35,7 +35,7 @@ export default class WorkerChild extends Base {
 		 * @type {IPC}
 		 * @private
 		 */
-		this._ipc = new IPC({id: this.workerOptions.id});
+		this._ipc = new IPC({id: this.workerOptions.id, rawBuffer: true});
 	}
 
 	public async init() {

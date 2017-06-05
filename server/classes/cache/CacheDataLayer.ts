@@ -20,18 +20,17 @@ export default class CacheDataLayer {
 	public read(instrument: string, timeFrame: string, from: number, until: number, count = 500, bufferOnly?: boolean): Promise<Float64Array> {
 
 		return this
-			._createInstrumentTableIfNotExists(instrument, timeFrame)
+			._createInstrumentTable(instrument, timeFrame)
 			.then(() => {
 
 				return new Promise((resolve, reject) => {
 
 					let tableName = this._getTableName(instrument, timeFrame),
-						columns = ['time', 'openBid', 'highBid', 'lowBid', 'closeBid', 'volume'],
 						queryString;
 
 					winston.info(`DataLayer: Read ${tableName} from ${new Date(from)} until ${new Date(until)} count ${count}`);
 
-					queryString = `SELECT ${columns.join(',')}  FROM ${tableName} `;
+					queryString = `SELECT data FROM ${tableName} `;
 
 					if (count) {
 						if (until) {
@@ -55,67 +54,59 @@ export default class CacheDataLayer {
 
 					this._db.all(queryString, (err, rows) => {
 
-						if (err) {
+						if (err)
 							return reject(err);
-						}
 
-						let i = 0, len = rows.length,
-							returnArr = new Float64Array(rows.length * columns.length);
+						let mergedBuffer = Buffer.concat(rows.map(row => row.data));
 
-						for (; i < len; i++)
-							returnArr.set(columns.map(v => rows[i][v]), 6 * i);
-
-						resolve(returnArr);
-
-						// if (bufferOnly) {
-						// 	// resolve(returnArr.buffer);
-						// 	resolve(Array.from(returnArr));
-						// } else {
-						// 	resolve(Array.from(returnArr));
-						// }
+						resolve(mergedBuffer);
 					});
 
 				});
 			});
 	}
 
-	public async write(instrument, timeFrame, candles) {
+	public async write(instrument, timeFrame, buffer: NodeBuffer) {
+
+		function toBuffer(ab) {
+			var buf = new Buffer(ab.byteLength);
+			var view = new Uint8Array(ab);
+			for (let i = 0; i < buf.length; ++i) {
+				buf[i] = view[i];
+			}
+			return buf;
+		}
+
+		function toArrayBuffer(buf) {
+			var ab = new ArrayBuffer(buf.length);
+			var view = new Uint8Array(ab);
+			for (var i = 0; i < buf.length; ++i) {
+				view[i] = buf[i];
+			}
+			return ab;
+		}
 
 		return new Promise((resolve, reject) => {
 
-			this._createInstrumentTableIfNotExists(instrument, timeFrame)
+			this._createInstrumentTable(instrument, timeFrame)
 				.then(tableName => {
 
-					winston.info('DataLayer: Write ' + candles.length + ' candles to ' + tableName);
+					winston.info('DataLayer: Write ' + buffer.length + ' candles to ' + tableName);
 
-					if (!candles.length)
+					if (!buffer.length)
 						return resolve();
+
+					// if (Buffer.isBuffer(buffer))
+					let candles = new Float64Array(toArrayBuffer(buffer));
 
 					this._db.beginTransaction((err, transaction) => {
 
-						let stmt = transaction.prepare(`INSERT OR REPLACE INTO ${tableName} VALUES (?,?,?,?,?,?,?,?,?,?,?)`),
-							i = 0, len = candles.length, candle;
+						let stmt = transaction.prepare(`INSERT OR REPLACE INTO ${tableName} VALUES (?,?)`),
+							rowLength = 10,
+							i = 0, len = candles.length;
 
-						for (; i < len; i++) {
-							candle = candles[i];
-
-							stmt.run([
-								candle.time,
-								candle.openBid,
-								candle.openAsk,
-								candle.highBid,
-								candle.highAsk,
-								candle.lowBid,
-								candle.lowAsk,
-								candle.closeBid,
-								candle.closeAsk,
-								candle.volume,
-								candle.complete
-							]);
-
-							if (!candle.complete) {
-								// console.log(candle.time)
-							}
+						for (; i < len; i += rowLength) {
+							stmt.run([candles[i], toBuffer(candles.slice(i, i + rowLength).buffer)]);
 						}
 
 						stmt.finalize();
@@ -155,6 +146,23 @@ export default class CacheDataLayer {
 						'closeAsk double',
 						'volume int',
 						'complete bool'
+					];
+
+				this._db.run(`CREATE TABLE IF NOT EXISTS ${tableName} (${fields.join(',')})`, function () {
+					resolve(tableName);
+				});
+			});
+		})
+	}
+
+	private _createInstrumentTable(instrument, timeFrame) {
+		return new Promise((resolve, reject) => {
+
+			this._db.serialize(() => {
+				let tableName = this._getTableName(instrument, timeFrame),
+					fields = [
+						'time int PRIMARY KEY',
+						'data blob'
 					];
 
 				this._db.run(`CREATE TABLE IF NOT EXISTS ${tableName} (${fields.join(',')})`, function () {

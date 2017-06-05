@@ -22,25 +22,57 @@ export default class Fetcher {
 		// Store chunk date as pending
 		// this._setPendingRequest(instrument, timeFrame, from, until);
 
-		let candles = await brokerApi.getCandles(instrument, timeFrame, from, until, count);
+		return new Promise((resolve, reject) => {
+			brokerApi.getCandles(instrument, timeFrame, from, until, count)
+				.on('data', async candles => {
+					// console.log('CCXVCXVXCVXVXC', candles);
 
-		// Write to database
-		await this._dataLayer.write(instrument, timeFrame, candles);
+					await this._dataLayer.write(instrument, timeFrame, candles);
 
-		if (from && until) {
-			await this._mapper.update(instrument, timeFrame, from, until, candles.length);
-		} else {
-			if (candles.length) {
-				if (!from)
-					from = candles[0].time;
+					if (from && until) {
+						await this._mapper.update(instrument, timeFrame, from, until, candles.length);
+					} else {
+						if (candles.length) {
+							if (!from)
+								from = candles[0].time;
 
-				if (!until)
-					until = candles[candles.length - 1].time;
+							if (!until)
+								until = candles[candles.length - 1].time;
 
-				if (from && until)
-					await this._mapper.update(instrument, timeFrame, from, until, candles.length);
-			}
-		}
+							if (from && until)
+								await this._mapper.update(instrument, timeFrame, from, until, candles.length);
+						}
+					}
+
+				})
+				.on('finish', () => {
+					resolve();
+				})
+				.on('error', error => {
+					reject(error)
+				})
+		});
+
+
+		// let candles = await brokerApi.getCandles(instrument, timeFrame, from, until, count);
+		//
+		// // Write to database
+		//
+		//
+		// if (from && until) {
+		// 	await this._mapper.update(instrument, timeFrame, from, until, candles.length);
+		// } else {
+		// 	if (candles.length) {
+		// 		if (!from)
+		// 			from = candles[0].time;
+		//
+		// 		if (!until)
+		// 			until = candles[candles.length - 1].time;
+		//
+		// 		if (from && until)
+		// 			await this._mapper.update(instrument, timeFrame, from, until, candles.length);
+		// 	}
+		// }
 
 		// Remove from pending requests
 		// this._clearPendingRequest(instrument, timeFrame, from, until);

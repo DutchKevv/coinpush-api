@@ -17,7 +17,8 @@ export default class BrokerController extends Base {
 	public async init(): Promise<void> {}
 
 	public async loadBrokerApi(apiName: string): Promise<boolean> {
-		await this.disconnect();
+		if (this.connected)
+			await this.disconnect();
 
 		try {
 			// Clean up node cached version
@@ -65,7 +66,7 @@ export default class BrokerController extends Base {
 			}
 		}
 
-		winston.info('Disconnected');
+		winston.info('Broker Disconnected');
 
 		this.emit('disconnected');
 	}
