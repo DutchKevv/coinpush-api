@@ -45,20 +45,11 @@ export default class InstrumentCache extends WorkerChild {
 
 	private async _doPreFetch() {
 
-		function toArrayBuffer(buffer) {
-			var ab = new ArrayBuffer(buffer.length);
-			var view = new Uint8Array(ab);
-			for (var i = 0; i < buffer.length; ++i) {
-				view[i] = buffer[i];
-			}
-			return ab;
-		}
-
 		let buf = await this._ipc.send('cache', 'read', {
 				instrument: this.instrument,
 				timeFrame: this.timeFrame,
 				until: this.options.live ? this.options.until :  this.options.from,
-				count: 200,
+				count: 1000,
 				bufferOnly: true
 			});
 

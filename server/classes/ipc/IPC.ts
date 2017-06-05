@@ -103,7 +103,14 @@ export default class IPC extends Base {
 			}
 
 
-			data = type === 'buffer' ? data : JSON.stringify(data || {});
+			if (type === 'json') {
+				data = JSON.stringify(data || {}, (k, v) => {
+					if (v && v.buffer && v.buffer instanceof  ArrayBuffer) {
+						return Array.apply([], v);
+					}
+					return v;
+				});
+			}
 
 			let contentLength = Buffer.byteLength(data, 'ascii');
 			meta.contentLength = contentLength;
@@ -134,8 +141,6 @@ export default class IPC extends Base {
 			} else {
 				this._ipc.of[workerId].emit(__data);
 			}
-
-			console.log('SEND LENGTH', parseInt(__data.toString('ascii', 0, 10), 10), parseInt(__data.toString('ascii', 10, 20), 10));
 
 			if (!waitForCallback)
 				resolve();
@@ -261,178 +266,72 @@ export default class IPC extends Base {
 	}
 
 	_onMessage(buffer: NodeBuffer, socket) {
-		console.log('CONTENT', buffer.toString('binary'));
+		// console.log('ALL', buffer.length, buffer.toString('binary'));
 
-		// if (this._buffer.length) {
-		// 	console.log('CONCAT!!!!!!');
-		// 	buffer = Buffer.concat([buffer, this._buffer[0]]);
-		// 	this._buffer = [];
-		// }
+		let i = 0;
 
-		let pieces = [];
-		let prev = 0;
-		for (let x = 0, len = buffer.byteLength; x < len; x++) {
-			if (buffer[x] === 12) {
-				console.log('xxxxxxxxxxxxxxxx', x);
-				pieces.push([prev + 2, x]);
-				prev = x + 1;
+		while (i < buffer.byteLength) {
+			let size = parseInt(buffer.toString('ascii', i, i + 10), 10);
+			let metaSize = parseInt(buffer.toString('ascii', i + 10, i + 20), 10);
+
+			let _buffer = buffer.slice(i, i + size);
+
+			i += size;
+
+			let metaStart = 20;
+			let metaEnd = metaStart + metaSize;
+			let metaData = <any>{};
+
+			try {
+				metaData = JSON.parse(_buffer.slice(metaStart, metaEnd).toString('binary'));
+			} catch (error) {
+				console.log('META ERROR');
+				throw error;
 			}
-		}
 
-		
-		if (!pieces.length)
-			pieces.push([0, buffer.length]);
+			let content: any = _buffer.slice(metaEnd, metaEnd + metaData.contentLength);
 
-			console.log('PIECES BENGTH: ', pieces);
+			if (metaData.eventName === '__IPC_REGISTER__') {
+				if (!this._acks[metaData.ack]) {
+					this._registerNode(metaData.id, socket);
+					this.send(metaData.id, metaData.eventName, '', metaData.ack).catch(console.error);
+				} else {
+					this._acks[metaData.ack](null, socket);
+					delete this._acks[metaData.ack];
+				}
+				continue;
+			}
 
-			pieces.forEach(piece => {
-				let _buffer = buffer.slice(piece[0], piece[1]);
-
-				let size = parseInt(_buffer.toString('ascii', 0, 10), 10);
-				let metaSize = parseInt(_buffer.toString('ascii', 10, 20), 10);
-
-				let metaStart = 20;
-				let metaEnd = metaStart + metaSize;
-				let metaData = <any>{};
-
+			if (metaData.type === 'json') {
 				try {
-					metaData = JSON.parse(_buffer.slice(metaStart, metaEnd).toString('binary'));
+					content = JSON.parse(_buffer.slice(metaEnd, metaEnd + metaData.contentLength).toString())
+
 				} catch (error) {
-					console.log('META ERROR');
-					console.log('size size size size', size, _buffer.byteLength, metaSize, size, size, size);
-					console.log('META', _buffer.slice(metaStart, metaEnd).toString('ascii'));
-					console.log(piece);
+					console.log('CONTENT ERROR: ', error);
 					throw error;
 				}
+			}
 
-				let content: any = _buffer.slice(metaEnd, metaEnd + metaData.contentLength);
+			if (metaData.ack && this._acks[metaData.ack]) {
+				this._acks[metaData.ack](content, socket);
+				delete this._acks[metaData.ack];
+				continue;
+			}
 
-				console.log('META BENGTH BENGTH : ', _buffer.slice(metaStart, metaEnd).byteLength);
-				console.log('CONTENT BENGTH BENGTH : ', content.byteLength);
+			let cb;
 
-				if (metaData.eventName === '__IPC_REGISTER__') {
-					if (!this._acks[metaData.ack]) {
-						this._registerNode(metaData.id, socket);
-						this.send(metaData.id, metaData.eventName, '', metaData.ack).catch(console.error);
-					} else {
-						this._acks[metaData.ack](null, socket);
-						delete this._acks[metaData.ack];
-					}
-					return;
+			if (metaData.ack) {
+				cb = (err, returnData) => {
+
+					if (err)
+						return console.error(err);
+
+					this.send(metaData.id, metaData.eventName, returnData, metaData.ack).catch(console.error);
 				}
+			}
 
-				if (metaData.type === 'json') {
-					try {
-						content = JSON.parse(content.toString('binary'));
-
-					} catch (error) {
-						console.log('size size size size', size, _buffer.byteLength, metaSize, content.byteLength, size, size);
-						console.log('CONTENT ERROR: ', error);
-						console.log(content.toString('ascii').length);
-						console.log('\n\ncontent :', content.toString('binary'));
-						return
-					}
-				} else {
-					// content = content.buffer.slice(0)
-					console.log('TOTAL MESSAGE BENGTH: ', _buffer.byteLength);
-				}
-
-				console.log(content);
-
-				if (metaData.ack && this._acks[metaData.ack]) {
-					this._acks[metaData.ack](content, socket);
-					delete this._acks[metaData.ack];
-					return;
-				}
-
-				let cb;
-
-				if (metaData.ack) {
-					cb = (err, returnData) => {
-
-						if (err)
-							return console.error(err);
-
-						this.send(metaData.id, metaData.eventName, returnData, metaData.ack).catch(console.error);
-					}
-				}
-
-				this.emit(metaData.eventName, content, cb, socket)
-				// }
-			});
-
-		// let slices = [],
-		// 	prevEnd = 0,
-		// 	i = 0,
-		// 	len = buffer.length;
-		//
-		// for (; i < len; ++i) {
-		// 	if (buffer[i] === 11) {
-		// 		slices.push([prevEnd, i]);
-		// 		prevEnd = i + 1;
-		// 	}
-		// }
-		//
-		// slices.forEach(slice => {
-		// 	let buff = buffer.slice(slice[0], slice[1]);
-		//
-		// 	let metaLength = buff.readUInt8(0);
-		// 	let metaData;
-		//
-		// 	try {
-		// 		metaData = JSON.parse(buff.slice(Int32Array.BYTES_PER_EBEMENT, metaLength + Int32Array.BYTES_PER_EBEMENT).toString());
-		// 	} catch (error) {
-		// 		console.log(slices);
-		// 		console.log(error);
-		// 		console.log(buff.slice(Int32Array.BYTES_PER_EBEMENT, metaLength + Int32Array.BYTES_PER_EBEMENT).toString());
-		// 		console.log(metaLength);
-		// 		throw error;
-		// 	}
-		//
-		//
-		// 	if (metaData.eventName === '__IPC_REGISTER__') {
-		// 		if (!this._acks[metaData.ack]) {
-		// 			this._registerNode(metaData.id, socket);
-		// 			this.send(metaData.id, metaData.eventName, '', metaData.ack).catch(console.error);
-		// 		} else {
-		// 			this._acks[metaData.ack](null, socket);
-		// 			delete this._acks[metaData.ack];
-		// 		}
-		// 		return;
-		// 	}
-		//
-		// 	let data = buff.slice(Int32Array.BYTES_PER_EBEMENT + metaLength, buff.length).toString();
-		//
-		// 	if (metaData.type === 'json') {
-		// 		try {
-		// 			data = JSON.parse(data);
-		// 		} catch (error) {
-		// 			console.log('data data data', data);
-		// 			console.error(error);
-		// 			throw error;
-		// 		}
-		// 	}
-		//
-		// 	if (metaData.ack && this._acks[metaData.ack]) {
-		// 		this._acks[metaData.ack](data, socket);
-		// 		delete this._acks[metaData.ack];
-		// 		return;
-		// 	}
-		//
-		// 	let cb;
-		//
-		// 	if (metaData.ack) {
-		// 		cb = (err, returnData) => {
-		//
-		// 			if (err)
-		// 				return console.error(err);
-		//
-		// 			this.send(metaData.id, metaData.eventName, returnData, metaData.ack).catch(console.error);
-		// 		}
-		// 	}
-		//
-		// 	this.emit(metaData.eventName, data, cb, socket)
-		// });
+			this.emit(metaData.eventName, content, cb, socket)
+		}
 	}
 
 	/**

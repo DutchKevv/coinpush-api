@@ -91,18 +91,18 @@ export default class CacheDataLayer {
 			this._createInstrumentTable(instrument, timeFrame)
 				.then(tableName => {
 
-					winston.info('DataLayer: Write ' + buffer.length + ' candles to ' + tableName);
-
 					if (!buffer.length)
 						return resolve();
 
 					// if (Buffer.isBuffer(buffer))
-					let candles = new Float64Array(toArrayBuffer(buffer));
+					let candles = new Float64Array(toArrayBuffer(buffer)),
+						rowLength = 10;
+
+					winston.info('DataLayer: Write ' + candles.length / rowLength + ' candles to ' + tableName);
 
 					this._db.beginTransaction((err, transaction) => {
 
 						let stmt = transaction.prepare(`INSERT OR REPLACE INTO ${tableName} VALUES (?,?)`),
-							rowLength = 10,
 							i = 0, len = candles.length;
 
 						for (; i < len; i += rowLength) {
