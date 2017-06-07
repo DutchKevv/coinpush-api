@@ -9,7 +9,6 @@ export default class IPC extends Base {
 	id: string | number;
 	env: string;
 
-	private _buffer = [];
 	private _server = null;
 	private _client = null;
 	private _unique = 0;
@@ -55,7 +54,6 @@ export default class IPC extends Base {
 	 */
 	connectTo(workerId) {
 		winston.info(`${this.id} connecting to ${workerId}`);
-		// debug(`${this.id} connecting to ${workerId}`);
 
 		if (this.env === 'node') {
 			return this._connectToNode(workerId);
@@ -71,8 +69,7 @@ export default class IPC extends Base {
 				cbTimeout = 60000,
 				meta = <any>{
 					type: type,
-					eventName: eventName,
-					id: this.id
+					eventName: eventName
 				},
 				__data: NodeBuffer,
 				metaString;
@@ -102,41 +99,39 @@ export default class IPC extends Base {
 				}
 			}
 
+			// Stringify MetaData
+			metaString = JSON.stringify(meta);
 
+			// Stringify content (if JSON)
 			if (type === 'json') {
 				data = JSON.stringify(data || {}, (k, v) => {
-					if (v && v.buffer && v.buffer instanceof  ArrayBuffer) {
+					if (v && ArrayBuffer.isView(v)) {
 						return Array.apply([], v);
 					}
 					return v;
 				});
 			}
 
-			let contentLength = Buffer.byteLength(data, 'ascii');
-			meta.contentLength = contentLength;
-
-			metaString = JSON.stringify(meta);
-
-			let mapLength = 20; // Uint32Array.BYTES_PER_ELEMENT * 2;
-			let metaLength =  Buffer.byteLength(metaString, 'ascii');
+			let contentLength = Buffer.byteLength(data, 'binary');
+			let mapLength = 20;
+			let metaLength =  metaString.length;
 			let totalLength = mapLength + metaLength + contentLength;
 
-			__data = Buffer.alloc(totalLength, 0);
-			__data.write(totalLength.toString(), 0, 10, 'ascii');
-			__data.write(metaLength.toString(), 10, 10, 'ascii');
-			// __data.writeUInt32BE(totalLength, 0); // Total buffer length
-			// __data.writeUInt32BE(metaLength, 4); // Metadata length
+			__data = Buffer.alloc(totalLength, 0, 'binary');
+			__data.write(totalLength.toString(), 0, 10, 'binary');
+			__data.write(metaLength.toString(), 10, 10, 'binary');
 
-			__data.write(metaString, mapLength, metaLength, 'ascii'); // Meta JSON string
+			// Meta JSON string
+			__data.write(metaString, mapLength, metaLength, 'binary');
 
-
+			// Content
 			if (type === 'buffer') {
-				data.copy(__data, mapLength + metaLength);
+				__data.set(data, mapLength + metaLength);
 			} else {
-				__data.write(data, mapLength + metaLength, contentLength, 'ascii'); // Content
+				__data.write(data, mapLength + metaLength, contentLength, 'binary');
 			}
 
-			if (!this._ipc.of[workerId] && this._server && this._server.of) {
+			if (!this._ipc.of[workerId] && this._server.server && this._server.server.of) {
 				this._server.server.emit(this._server.server.of[workerId], __data);
 			} else {
 				this._ipc.of[workerId].emit(__data);
@@ -156,16 +151,13 @@ export default class IPC extends Base {
 		this._ipc = require('node-ipc');
 
 		this._ipc.config.id = this.id;
+		// this._ipc.config.appspace = this.options.space;
 		this._ipc.config.retry = 200;
 		this._ipc.config.maxRetries = 10;
 		this._ipc.config.silent = true;
 		this._ipc.config.logInColor = true;
-		this._ipc.config.requiresHandshake = true;
 		this._ipc.config.rawBuffer = true;
-		this._ipc.config.rawSocket = true;
 		this._ipc.config.encoding = 'binary';
-		this._ipc.config.delimiter = '\f';
-		// this._ipc.config.sync = true;
 	}
 
 	/**
@@ -181,15 +173,14 @@ export default class IPC extends Base {
 			this._server = new ipc.IPC();
 
 			this._server.config.id = this.id;
+			// this._ipc.config.appspace = this.options.space;
 			this._server.config.retry = 200;
 			this._server.config.maxRetries = 10;
 			this._server.config.silent = true;
 			this._server.config.logInColor = true;
-			// this._server.config.requiresHandshake = true;
 			this._server.config.encoding = 'binary';
 			this._server.config.rawBuffer = true;
-			this._server.config.rawSocket = true;
-			this._server.config.delimiter = '\f';
+
 			this._server.serve(() => {
 
 				this._server.server.on('connect', (socket) => {
@@ -200,21 +191,12 @@ export default class IPC extends Base {
 					this._onMessage(data, socket);
 				});
 
-				// this._server.server.on('message', (data, socket) => {
-				// 	this._onMessage(data, socket);
-				// });
-
 				this._server.server.on('socket.disconnected', (socket, destroyedSocketID) => {
 					this._server.log('client ' + destroyedSocketID + ' has disconnected!');
 				});
 
 				this._server.server.on('disconnected', (socket, destroyedSocketID) => {
 					this._server.log(`${this._server.config.id} disconnected`);
-				});
-
-				this.on('__IPC_REGISTER__', (data, cb, socket) => {
-					this._server.server.of[data.id] = socket;
-					cb(null, {});
 				});
 			});
 
@@ -249,9 +231,8 @@ export default class IPC extends Base {
 				});
 
 				socket.on('error', err => {
-					winston.info(`${this.id} error`, err);
-
-					reject(err);
+					console.error(`Error between ${this.id} and ${workerId}: `, err);
+					// console.log(socket);
 				});
 
 				socket.on('data', (data) => {
@@ -262,6 +243,7 @@ export default class IPC extends Base {
 	}
 
 	_registerNode(id, socket) {
+		socket.id = id;
 		this._server.server.of[id] = socket;
 	}
 
@@ -271,8 +253,8 @@ export default class IPC extends Base {
 		let i = 0;
 
 		while (i < buffer.byteLength) {
-			let size = parseInt(buffer.toString('ascii', i, i + 10), 10);
-			let metaSize = parseInt(buffer.toString('ascii', i + 10, i + 20), 10);
+			let size = parseInt(buffer.toString('binary', i, i + 10), 10);
+			let metaSize =  parseInt(buffer.toString('binary', i + 10, i + 20), 10);
 
 			let _buffer = buffer.slice(i, i + size);
 
@@ -283,33 +265,32 @@ export default class IPC extends Base {
 			let metaData = <any>{};
 
 			try {
-				metaData = JSON.parse(_buffer.slice(metaStart, metaEnd).toString('binary'));
+				metaData = JSON.parse(_buffer.slice(metaStart, metaEnd).toString('ascii'));
 			} catch (error) {
-				console.log('META ERROR');
+				console.log('META ERROR', size, metaSize, error, _buffer.slice(metaStart, metaEnd).toString('ascii'));
 				throw error;
 			}
 
-			let content: any = _buffer.slice(metaEnd, metaEnd + metaData.contentLength);
+			let content: any = _buffer.slice(metaEnd, size);
+
+			if (metaData.type === 'json') {
+				try {
+					content = JSON.parse(content.toString('ascii'))
+				} catch (error) {
+					console.log('CONTENT ERROR: ', size, metaSize, error, _buffer.slice(metaStart, metaEnd).toString('ascii'));
+					throw error;
+				}
+			}
 
 			if (metaData.eventName === '__IPC_REGISTER__') {
 				if (!this._acks[metaData.ack]) {
-					this._registerNode(metaData.id, socket);
-					this.send(metaData.id, metaData.eventName, '', metaData.ack).catch(console.error);
+					this._registerNode(content.id, socket);
+					this.send(socket.id, metaData.eventName, '', metaData.ack).catch(console.error);
 				} else {
 					this._acks[metaData.ack](null, socket);
 					delete this._acks[metaData.ack];
 				}
 				continue;
-			}
-
-			if (metaData.type === 'json') {
-				try {
-					content = JSON.parse(_buffer.slice(metaEnd, metaEnd + metaData.contentLength).toString())
-
-				} catch (error) {
-					console.log('CONTENT ERROR: ', error);
-					throw error;
-				}
 			}
 
 			if (metaData.ack && this._acks[metaData.ack]) {
@@ -326,7 +307,7 @@ export default class IPC extends Base {
 					if (err)
 						return console.error(err);
 
-					this.send(metaData.id, metaData.eventName, returnData, metaData.ack).catch(console.error);
+					this.send(socket.id, metaData.eventName, returnData, metaData.ack).catch(console.error);
 				}
 			}
 

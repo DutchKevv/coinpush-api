@@ -332,20 +332,24 @@ export class ChartComponent implements OnInit, OnDestroy {
 	}
 
 	static _prepareData(data: any) {
-		// data = data.reverse();
-
-		let length = data.length,
+		let i = 0,
+			length = data.length,
 			volume = new Array(length),
-			i = 0;
+			candles = new Array(length),
+			candle;
 
-		for (; i < length; i += 1)
+		for (; i < length; i += 1) {
+			candle = data[i];
 			volume[i] = [
-				data[i][0], // Date
-				data[i].pop() // Volume
+				candle[0], // Date
+				candle.pop() // Volume
 			];
+			// TODO - Now only Bid prices - Make Ask / Bid switch in UI
+			candles[i] = [candle[0], candle[1], candle[3], candle[5], candle[7]];
+		}
 
 		return {
-			candles: data,
+			candles: candles,
 			volume: volume
 		};
 	}

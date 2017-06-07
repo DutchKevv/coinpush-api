@@ -19,65 +19,31 @@ export default class Fetcher {
 
 	public async fetch(brokerApi: BrokerApi, instrument: string, timeFrame: string, from: number, until: number, count: number) {
 
-		// Store chunk date as pending
-		// this._setPendingRequest(instrument, timeFrame, from, until);
-
 		return new Promise((resolve, reject) => {
 			brokerApi.getCandles(instrument, timeFrame, from, until, count)
-				.on('data', async candles => {
-					// console.log('CCXVCXVXCVXVXC', candles);
+				.on('data', async (buf: NodeBuffer) => {
 
-					await this._dataLayer.write(instrument, timeFrame, candles);
+					await this._dataLayer.write(instrument, timeFrame, buf);
 
 					if (from && until) {
-						await this._mapper.update(instrument, timeFrame, from, until, candles.length);
+						await this._mapper.update(instrument, timeFrame, from, until, buf.length / (10 * Float64Array.BYTES_PER_ELEMENT));
 					} else {
-						if (candles.length) {
+						if (buf.length) {
 							if (!from)
-								from = candles[0].time;
+								from = buf.readDoubleLE(0);
 
 							if (!until)
-								until = candles[candles.length - 1].time;
+								until = buf.readDoubleLE(-(10 * Float64Array.BYTES_PER_ELEMENT));
 
 							if (from && until)
-								await this._mapper.update(instrument, timeFrame, from, until, candles.length);
+								await this._mapper.update(instrument, timeFrame, from, until, buf.length / (10 * Float64Array.BYTES_PER_ELEMENT));
 						}
 					}
 
 				})
-				.on('finish', () => {
-					resolve();
-				})
-				.on('error', error => {
-					reject(error)
-				})
+				.on('end', resolve)
+				.on('error', reject)
 		});
-
-
-		// let candles = await brokerApi.getCandles(instrument, timeFrame, from, until, count);
-		//
-		// // Write to database
-		//
-		//
-		// if (from && until) {
-		// 	await this._mapper.update(instrument, timeFrame, from, until, candles.length);
-		// } else {
-		// 	if (candles.length) {
-		// 		if (!from)
-		// 			from = candles[0].time;
-		//
-		// 		if (!until)
-		// 			until = candles[candles.length - 1].time;
-		//
-		// 		if (from && until)
-		// 			await this._mapper.update(instrument, timeFrame, from, until, candles.length);
-		// 	}
-		// }
-
-		// Remove from pending requests
-		// this._clearPendingRequest(instrument, timeFrame, from, until);
-
-		// return candles;
 	}
 
 	private _getPendingRequest(instrument, timeFrame) {

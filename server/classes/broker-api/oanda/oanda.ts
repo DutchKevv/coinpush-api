@@ -55,9 +55,7 @@ export default class BrokerApi extends Base {
 	}
 
 	public subscribePriceStream(instrument) {
-		this._client.subscribePrice(this._accountSettings.accountId, instrument.toUpperCase(), tick => {
-			// this.emit('tick', tick);
-		}, this);
+		this._client.subscribePrice(this._accountSettings.accountId, instrument, tick => this.emit('tick', tick), this);
 	}
 
 	public unsubscribePriceStream(instrument) {
@@ -76,43 +74,65 @@ export default class BrokerApi extends Base {
 	}
 
 	public getCandles(instrument, timeFrame, from, until, count): NodeJS.ReadableStream {
-		let chunks = splitToChunks(timeFrame, from, until, count, 5000),
-			done = 0;
+		let countChunks = splitToChunks(timeFrame, from, until, count, 5000);
+		let finished = 0;
 
-		let readable = new Stream.PassThrough();
+		let readStream = new Stream.PassThrough();
 
-		chunks.forEach(chunk => {
-			this._client.getCandles(instrument, chunk.from, chunk.until, timeFrame, chunk.count, (err, result) => {
-				if (err)
-					return; // TODO
+		countChunks.forEach(chunk => {
+			let arr = [];
+			let leftOver = '';
+			let startFound = false;
 
-				readable.push(new Buffer(this.normalizeJsonToArray(result).buffer));
+			this._client
+				.getCandles(instrument, chunk.from, chunk.until, timeFrame, chunk.count)
+				.on('data', data => {
+					if (!startFound) {
+						let start = data.indexOf(91);
 
-				if (++done === chunks.length) {
-					readable.emit('finish');
-				}
-			});
+						if (start > -1) {
+							startFound = true;
+							data = data.slice(start, data.length);
+						} else {
+							return;
+						}
+					}
+
+					let valArr = (leftOver + data.toString('ascii')).split(':');
+					leftOver = valArr.pop();
+
+					if (!valArr.length)
+						return;
+
+					valArr.forEach(val => {
+						let value = val.replace(/[^\d\.]/g, '');
+
+						if (value !== '')
+							arr.push(+value);
+					});
+
+					let maxIndex = Math.floor(arr.length / 10) * 10;
+					let buf = Buffer.alloc(maxIndex * Float64Array.BYTES_PER_ELEMENT, 0, 'binary');
+
+					arr.forEach((value, index) => {
+						if (index < maxIndex)
+							buf.writeDoubleLE(index % 10 ? value : value / 1000, index * Float64Array.BYTES_PER_ELEMENT, true);
+					});
+
+					if (buf.byteLength)
+						readStream.push(buf);
+
+					arr = arr.slice(maxIndex, arr.length);
+
+				})
+				.on('error', error => !console.log('ERROR', error) && readStream.emit('error', error))
+				.on('end', () => {
+					if (++finished === countChunks.length)
+						readStream.destroy();
+				});
 		});
 
-		return readable;
-
-		//
-		// return Promise.all(chunks.map(chunk => {
-		//
-		// 	return new Promise((resolve, reject) => {
-		// 		this._client.getCandles(instrument, chunk.from, chunk.until, timeFrame, chunk.count, (err, result) => {
-		// 			if (err)
-		// 				return reject(err);
-		//
-		// 			resolve(this.normalizeJsonToArray(result));
-		// 		});
-		// 	});
-		// })).then(resultArr => {
-		// 	console.log('console.log(resultArr.length);', resultArr.length);
-		// 	let result = flatten(resultArr);
-		// 	console.log('con22222222222th);', result.length);
-		// 	return result;
-		// });
+		return readStream;
 	}
 
 	public getCurrentPrices(instruments: Array<any>): Promise<Array<any>> {

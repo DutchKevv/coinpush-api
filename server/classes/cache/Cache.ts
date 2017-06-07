@@ -44,7 +44,6 @@ export default class Cache extends WorkerChild {
 		await this._fetcher.init();
 
 		await this._setChannelEvents();
-		// await this._setBrokerApi();
 		await this._ipc.startServer();
 	}
 
@@ -59,23 +58,27 @@ export default class Cache extends WorkerChild {
 
 		count = count || 500;
 
-		let data; // = await this._dataLayer.read(instrument, timeFrame, from, until, count);
+		let data = await this._dataLayer.read(instrument, timeFrame, from, until, count);
 
-		// if (!data.length || data.length < count || !this._mapper.isComplete(instrument, timeFrame, data[0], data[data.length - 1])) {
+		if (!data.length || data.length / 10 < count /*|| !this._mapper.isComplete(instrument, timeFrame, data[0], data[data.length - 10])*/) {
 
 			await this._fetcher.fetch(this._brokerApi, instrument, timeFrame, from, until, count);
 
-			data = await this._dataLayer.read(instrument, timeFrame, from, until, count, bufferOnly);
-		// }
+			data = await this._dataLayer.read(instrument, timeFrame, from, until, count);
+		}
 
 		return data;
 	}
 
 	public async reset(instrument?: string, timeFrame?: string, from?: number, until?: number) {
-		return Promise.all([
+		winston.info('Reset cache');
+
+		await Promise.all([
 			this._mapper.reset(instrument, timeFrame),
 			this._dataLayer.reset()
 		]);
+
+		return this._dataLayer.createInstrumentTables(this._instrumentList.map(instr => instr.instrument));
 	}
 
 	public async fetch(instrument, timeFrame, from, until, count) {
@@ -83,21 +86,11 @@ export default class Cache extends WorkerChild {
 	}
 
 	private _broadCastTick(tick) {
-		let /* connections = this._ipc.sockets,
-			 tickInstrument = tick.instrument,*/
-			bars = this._barCalculator.onTick(tick);
-
 		this._ipc.send('main', 'tick', tick, false);
-
-		// for (let id in connections)
-		//     if (this._listeners[id] === tickInstrument)
-		//         this._ipc.send(id, 'tick', tick, false);
-
 	}
 
 	private _setChannelEvents() {
 		this._ipc.on('read', (opt, cb) => {
-
 			this
 				.read(opt.instrument, opt.timeFrame, opt.from, opt.until, opt.count, opt.bufferOnly)
 				.then(data => cb(null, data))
@@ -149,9 +142,7 @@ export default class Cache extends WorkerChild {
 			this._brokerApi = new BrokerApi(this.settings.account);
 			await this._brokerApi.init();
 
-			this._brokerApi.on('error', error => {
-			});
-
+			this._brokerApi.on('error', error => {});
 			this._brokerApi.on('tick', tick => this._broadCastTick(tick));
 
 			if (await this._loadAvailableInstruments() === true && await this._openTickStream() === true) {
@@ -178,9 +169,10 @@ export default class Cache extends WorkerChild {
 				instrument.ask = price.ask;
 			});
 
+			await this._dataLayer.createInstrumentTables(instrumentList.map(instr => instr.instrument));
+
 			// Do not trust result
-			if (typeof instrumentList.length !== 'undefined')
-				this._instrumentList = instrumentList;
+			this._instrumentList = instrumentList;
 
 			return true;
 		} catch (error) {

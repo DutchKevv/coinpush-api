@@ -1,17 +1,3 @@
-/*
- * Backbone events have the key advantage that context can be passes in as third argument, so all handlers added by a particular instance can be remove on its teardown
- * Also removes need for function binding (reduces code, plus function binding creates new function wrappers which are slower to garbage collect)
- *
- * Usage:
- *
- *    var myEventEmitter = Events.mixin({});
- *
- * Or for a function constructor:
- *
- *     function MyConstructor(){}
- *     MyConstructor.prototype.foo = function(){}
- *     Events.mixin(MyConstructor.prototype);
- */
 var _ = require("underscore"), Events = require("backbone-events-standalone");
 // Waits for wait ms for event to fire or calls listener with error, removing listener
 function waitFor(event, listener, context, wait) {
@@ -73,12 +59,3 @@ module.exports = {
 		return proto;
 	}
 };
-//# sourceMappingURL=Events.js.map
-//# sourceMappingURL=Events.js.map
-//# sourceMappingURL=Events.js.map
-//# sourceMappingURL=Events.js.map
-//# sourceMappingURL=Events.js.map
-//# sourceMappingURL=Events.js.map
-//# sourceMappingURL=Events.js.map
-
-//# sourceMappingURL=Events.js.map

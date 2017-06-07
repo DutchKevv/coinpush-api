@@ -3,6 +3,7 @@ import IPC from '../ipc/IPC';
 import {fork}    		from 'child_process';
 import * as winston     from 'winston-color';
 import Base             from '../Base';
+import {WorkerOptions} from "./WorkerChild";
 
 export default class WorkerHost extends Base {
 
@@ -16,8 +17,8 @@ export default class WorkerHost extends Base {
 	 */
 	constructor(protected opt) {
 		super(opt);
-		this.id = this.opt.id;
-		this._ipc = this.opt.ipc;
+		this.id = this.options.id;
+		this._ipc = this.options.ipc;
 	}
 
 	async init() {
@@ -36,10 +37,11 @@ export default class WorkerHost extends Base {
 			// Merge given options
 			let resolved = false,
 				childArgv = JSON.stringify({
-					classArguments: this.opt.classArguments || {},
-					workerOptions: {
+					classArguments: this.options.classArguments || {},
+					workerOptions: <WorkerOptions> {
 						id: this.id,
-						parentId: this._ipc.id
+						parentId: this._ipc.id,
+						space: this._ipc.options.space
 					}
 				}),
 

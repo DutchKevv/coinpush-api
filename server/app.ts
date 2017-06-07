@@ -46,6 +46,7 @@ export interface IApp {
  */
 export default class App extends Base {
 
+	public readonly space = undefined; // 'app-' + Date.now();
 	public readonly isWin = /^win/.test(process.platform);
 	public readonly isElectron = process && (process.env.ELECTRON || process.versions['electron']);
 
@@ -67,7 +68,7 @@ export default class App extends Base {
 		return this._io;
 	}
 
-	private _ipc: IPC = new IPC({id: 'main'});
+	private _ipc: IPC = null;
 	private _http: any = null;
 	private _io: any = null;
 	private _httpApi: any = null;
@@ -114,7 +115,10 @@ export default class App extends Base {
 		await this._setTimezone(config.system.timezone);
 
 		// Create IPC hub
-		await this._initIPC();
+		this._ipc = new IPC({id: 'main', space: this.space});
+		await this._ipc.init();
+		await this._ipc.startServer();
+		this._setIpcListeners();
 
 		// Create app controllers
 		this.controllers.system = new SystemController({}, this);
@@ -148,8 +152,6 @@ export default class App extends Base {
 		// 	console.warn('ERROR', text);
 
 		this._debugBuffer.push({type, text, data});
-
-
 	}
 
 	private _setDebugBufferFlushInterval() {
@@ -165,10 +167,7 @@ export default class App extends Base {
 		}, 200);
 	}
 
-	private async _initIPC(): Promise<void> {
-		await this._ipc.init();
-		await this._ipc.startServer();
-
+	private _setIpcListeners(): void {
 		this._ipc.on('debug', (data, cb, socketId) => {
 			this.debug(data.type, `<a href="#${socketId}">${socketId}:</a> ${data.text}`, data.data);
 		});

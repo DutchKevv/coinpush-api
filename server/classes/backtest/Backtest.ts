@@ -48,9 +48,9 @@ export default class BackTest extends EventEmitter {
 		this.startTime = Date.now();
 
 		// Ensue cache has all the data
-		await Promise.all(this.instruments.map(instrument => {
-			return this.app.controllers.cache.fetch(instrument, this.timeFrame, this.from, this.until);
-		}));
+		// await Promise.all(this.instruments.map(instrument => {
+		// 	return this.app.controllers.cache.fetch(instrument, this.timeFrame, this.from, this.until);
+		// }));
 
 		// Create instrument instances
 		this.EAs = await Promise.all(this.instruments.map(instrument => {

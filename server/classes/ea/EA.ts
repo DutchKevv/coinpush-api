@@ -1,6 +1,7 @@
 import Instrument from '../instrument/Instrument';
 import OrderManager from '../../modules/order/OrderManager';
 import AccountManager from '../../modules/account/AccountManager';
+import * as Stream from 'stream';
 
 export interface IEA {
 	orderManager: OrderManager;
@@ -43,7 +44,7 @@ export default class EA extends Instrument implements IEA {
 		this._ipc.on('@run', opt => this.runBackTest());
 		this._ipc.on('@report', (data, cb) => cb(null, this.report()));
 
-		this.onInit();
+		await this.onInit();
 	}
 
 	public report() {
@@ -87,61 +88,61 @@ export default class EA extends Instrument implements IEA {
 	}
 
 	async runBackTest(): Promise<any> {
-
-		let count = 2000,
+		let count = 1000,
 			candles, lastTime, lastBatch = false,
 			from = this.options.from,
-			until = this.options.until,
-			startFetchTime;
+			until = this.options.until;
 
-		this._backtestData.startTime = Date.now();
+		let p = this._ipc.send('cache', 'read', {
+			instrument: this.instrument,
+			timeFrame: this.timeFrame,
+			from: from,
+			count: count
+		}).then(_candles => {this._backtestData.startTime = Date.now(); return _candles; });
 
 		while (true) {
-
-			startFetchTime = Date.now();
-
-			candles = await this._ipc.send('cache', 'read', {
-				instrument: this.instrument,
-				timeFrame: this.timeFrame,
-				from: from,
-				count: count,
-				bufferOnly: true
-			});
-
-			this._backtestData.totalFetchTime = Date.now() - startFetchTime;
+			candles = await p;
 
 			// There is no more data, so stop
 			if (!candles.length)
 				break;
 
-			lastTime = candles[candles.length - 6];
+			from = candles.readDoubleLE(candles.length - (10 * Float64Array.BYTES_PER_ELEMENT)) + 1;
+
+			if (from < until) {
+				p = this._ipc.send('cache', 'read', {
+					instrument: this.instrument,
+					timeFrame: this.timeFrame,
+					from: from,
+					count: count
+				});
+			}
+
+			let ticks = new Float64Array(Buffer.from(candles).buffer);
 
 			// See if until is reached in this batch
-			if (lastTime > until) {
+			if (from > until) {
 
 				// Loop to find index of last candle
-				for (let i = 0, len = candles.length; i < len; i = i + 6) {
-					if (candles[i] >= until) {
-						candles = candles.splice(0, i - 1);
+				for (let i = 0, len = ticks.length; i < len; i += 10) {
+					if (ticks[i] >= until) {
+						ticks = ticks.slice(0, i);
 						lastBatch = true;
-
 						break;
 					}
 				}
 			}
 
-			await this.inject(candles);
+			await this.inject(ticks);
 
 			// There are no more candles to end
-			if (lastBatch || candles.length * 6 < count)
+			if (lastBatch || ticks.length < count)
 				break;
-
-			from = lastTime + 1;
 		}
 
-		this.orderManager.closeAll(lastTime, this.bid, this.ask);
-
 		this._backtestData.endTime = Date.now();
+
+		this.orderManager.closeAll(lastTime, this.bid, this.ask);
 
 		this._ipc.send('main', '@run:end', undefined, false);
 	}

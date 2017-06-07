@@ -1,3 +1,5 @@
+import {Stream} from "stream";
+
 const constants = require('../../../../../../shared/constants/broker');
 var _ = require('underscore'), Events = require('./Events'), querystring = require('querystring'),
 	httpClient = require('./httpClient'), utils = require('./utils');
@@ -241,7 +243,7 @@ OandaAdapter.prototype._onPricesData = function (data) {
 	// Single data chunks sometimes contain more than one tick.
 	// Each always end with /r/n. Whole chunk therefore not JSON parsable, so must split.
 	// A tick may also be split accross data chunks, so must buffer
-	data.split(/\r\n/).forEach(function (line) {
+	data.toString('ascii').split(/\r\n/).forEach(function (line) {
 		var update;
 		if (line) {
 			this._pricesBuffer.push(line);
@@ -281,7 +283,14 @@ OandaAdapter.prototype._pricesHeartbeatTimeout = function () {
 	this._streamPrices();
 };
 
-OandaAdapter.prototype.getCandles = function (symbol, start, end, granularity, count, callback) {
+OandaAdapter.prototype._candlesJsonStringToArray = function(chunk) {
+
+};
+
+OandaAdapter.prototype.getCandles = function (symbol, start, end, granularity, count, readable, callback) {
+
+	readable = new Stream.PassThrough();
+
 	this._sendRESTRequest({
 		method: 'GET',
 		path: '/v1/candles?' + querystring.stringify(JSON.parse(JSON.stringify({
@@ -296,18 +305,20 @@ OandaAdapter.prototype.getCandles = function (symbol, start, end, granularity, c
 		}))),
 		headers: {
 			Authorization: 'Bearer ' + this.accessToken,
-			'X-Accept-Datetime-Format': 'UNIX'
-		}
-	}, function (err, body) {
-		if (err)
-			return callback(err);
-		if (body && body.candles) {
-			return callback(null, body.candles);
-		}
+			'X-Accept-Datetime-Format': 'UNIX',
+			Connection: 'Keep-Alive'
 
-		// Body is an empty string if there are no candles to return
-		callback(null, []);
+		}
+	}, function (err) {
+		if (err)
+			return readable.emit('error', err);
+
+		readable.emit('end');
+	}, data => {
+		readable.push(data);
 	});
+
+	return readable
 };
 OandaAdapter.prototype.getOpenPositions = function (accountId, callback) {
 	this._sendRESTRequest({
@@ -400,7 +411,7 @@ OandaAdapter.prototype.closeTrade = function (accountId, tradeId, callback) {
 		}
 	});
 };
-OandaAdapter.prototype._sendRESTRequest = function (request, callback) {
+OandaAdapter.prototype._sendRESTRequest = function (request, callback, onData) {
 	request.hostname = this.restHost;
 	request.headers = request.headers || {
 			Authorization: 'Bearer ' + this.accessToken
@@ -434,7 +445,7 @@ OandaAdapter.prototype._sendRESTRequest = function (request, callback) {
 		}
 		this.trigger('error', errorObject);
 		callback(errorObject);
-	});
+	}, onData);
 };
 OandaAdapter.prototype.kill = function () {
 	if (this.pricesRequest) {

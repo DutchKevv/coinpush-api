@@ -3,7 +3,7 @@ import * as merge       from 'deepmerge';
 
 export default class Base extends EventEmitter {
 
-	protected options: any = <any>{};
+	public options: any = <any>{};
 
 	constructor(protected opt?: any) {
 		super();

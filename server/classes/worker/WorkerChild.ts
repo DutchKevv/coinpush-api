@@ -10,9 +10,10 @@ import * as minimist    from 'minimist';
 import Base             from '../Base';
 import IPC              from '../ipc/IPC';
 
-interface WorkerOptions {
+export interface WorkerOptions {
 	id: string;
 	parentId: string;
+	space: string;
 }
 
 export default class WorkerChild extends Base {
@@ -35,7 +36,7 @@ export default class WorkerChild extends Base {
 		 * @type {IPC}
 		 * @private
 		 */
-		this._ipc = new IPC({id: this.workerOptions.id, rawBuffer: true});
+		this._ipc = new IPC({id: this.workerOptions.id, space: this.workerOptions.space});
 	}
 
 	public async init() {

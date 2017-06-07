@@ -49,8 +49,7 @@ export default class InstrumentCache extends WorkerChild {
 				instrument: this.instrument,
 				timeFrame: this.timeFrame,
 				until: this.options.live ? this.options.until :  this.options.from,
-				count: 1000,
-				bufferOnly: true
+				count: 500
 			});
 
 		let _buf = new Buffer(buf);
@@ -59,62 +58,40 @@ export default class InstrumentCache extends WorkerChild {
 		await this._doTickLoop(ticks, false);
 	}
 
-	private _doTickLoop(candles, tick = true) {
+	private async _doTickLoop(candles, tick = true) {
 
-		return new Promise((resolve, reject) => {
-			if (!candles.length) {
-				return resolve();
+		if (!candles.length)
+			return;
+
+		this._map.update(this.instrument, this.timeFrame, candles[0], candles[candles.length - 10], candles.length);
+
+		let i = 0;
+		while (i < candles.length) {
+			let candle = candles.slice(i, i = i + 10);
+
+			// Quality check, make sure every tick has a timestamp AFTER the previous tick
+			// (Just to be sure)
+			if (this.ticks.length && this.ticks[this.ticks.length - 1][0] >= candle[0]) {
+				console.log('TIME STAMP DIFF', this.ticks[this.ticks.length - 1][0], candle[0], 'TICK COUNT', this.ticks.length);
+				throw new Error('Candle timestamp is not after previous timestamp');
 			}
 
-			this._map.update(this.instrument, this.timeFrame, candles[0], candles[candles.length - 10], candles.length);
+			if (candle.length !== 10) {
+				throw new Error(`Illegal candle length: ${candle.length} Should be 10`);
+			}
 
-			let loop = (i) => {
+			this.ticks.push(candle);
 
-				process.nextTick(async () => {
+			if (tick) {
+				++this.tickCount;
 
-					let candle = candles.slice(i, i = i + 10);
+				this.time = candle[0];
+				this.bid = candle[1];
+				this.ask = candle[2];
 
-					// console.log(candle);
-
-					// Quality check, make sure every tick has a timestamp AFTER the previous tick
-					// (Just to be sure)
-					if (this.ticks.length && this.ticks[this.ticks.length - 1][0] >= candle[0]) {
-						console.log('TIME STAMP DIFF', this.ticks[this.ticks.length - 1][0], candle[0], 'TICK COUNT', this.ticks.length);
-						throw new Error('Candle timestamp is not after previous timestamp');
-					}
-
-					// uncompleted candles (last one)
-					// TODO: What to do in this situation?
-					if (candle.length !== 10) {
-						reject(`Illegal candle length: ${candle.length} Should be 10`);
-					}
-
-					this.ticks.push(candle);
-
-					if (tick) {
-						++this.tickCount;
-
-						this.time = candle[0];
-						this.bid = candle[1];
-						this.ask = candle[2];
-
-						await this.tick(candle[0], candle[1], candle[2]);
-					}
-
-					if (candles[i + 1]) {
-						loop(i);
-					} else {
-						return resolve();
-
-					}
-				});
-			};
-
-			if (candles.length)
-				loop(0);
-			else
-				resolve();
-		});
+				await this.tick(candle[0], candle[1], candle[2]);
+			}
+		}
 	}
 
 	protected inject(candles) {
