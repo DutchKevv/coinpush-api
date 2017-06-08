@@ -1,13 +1,18 @@
-var http = require('http'), https = require('https'), querystring = require('querystring');
-var httpAgent, httpsAgent, maxSockets = 2;
+const
+	http = require('http'),
+	https = require('https'),
+	querystring = require('querystring');
+
+let httpAgent, httpsAgent, maxSockets = 2;
+
 module.exports = {
 	setMaxSockets: function (max) {
 		maxSockets = max;
 	},
 	sendRequest: function (options, callback, onData) {
-		var request, keepAlive, timeout = 5000;
-		var data = options.data;
-		timeout = options.timeout || timeout;
+		let request, keepAlive, timeout = options.timeout || 5000,
+			data = options.data;
+
 		keepAlive = options.headers && options.headers.Connection === 'Keep-Alive';
 		// For non streaming connections, use HTTP Agent to pool persistent TCP sockets for HTTP requests
 		if (!keepAlive) {
@@ -46,10 +51,10 @@ module.exports = {
 				request.write(JSON.stringify(data));
 			}
 		}
+
 		request.end();
 		request.once('response', options.onResponse || function (response) {
 				var body = '', statusCode = response.statusCode;
-				// response.setEncoding('ascii');
 				response.on('data', function (chunk) {
 					if (keepAlive && onData)
 						onData(chunk);

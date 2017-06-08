@@ -22,7 +22,7 @@ export default class CacheDataLayer {
 		return this._setTableList();
 	}
 
-	public read(instrument: string, timeFrame: string, from: number, until: number, count = 500, bufferOnly = true): Promise<Float64Array> {
+	public read(instrument: string, timeFrame: string, from: number, until: number, count: number, bufferOnly = true): Promise<Float64Array> {
 
 		return new Promise((resolve, reject) => {
 
@@ -40,7 +40,7 @@ export default class CacheDataLayer {
 					queryString += `WHERE time >= ${from} ORDER BY time LIMIT ${count} `;
 				}
 			} else {
-				count = 300;
+				count = 500;
 
 				if (from && until) {
 					queryString += `WHERE time >= ${from} AND time <= ${until} ORDER BY time DESC LIMIT ${count}`;
@@ -72,28 +72,34 @@ export default class CacheDataLayer {
 	public async write(instrument, timeFrame, buffer: NodeBuffer) {
 
 		return new Promise((resolve, reject) => {
-
 			if (!buffer.length)
 				return resolve();
 
 			let tableName = this._getTableName(instrument, timeFrame),
 				rowLength = 10 * Float64Array.BYTES_PER_ELEMENT;
 
-			winston.info('DataLayer: Write ' + buffer.length / rowLength + ' candles to ' + tableName);
+			this._db.serialize(() => {
+				let now;
 
-			this._db.beginTransaction((err, transaction) => {
+				this._db.run('BEGIN TRANSACTION', () => {
+					now = Date.now();
+				});
 
-				let stmt = transaction.prepare(`INSERT OR REPLACE INTO ${tableName} VALUES (?,?)`),
+				let stmt = this._db.prepare(`INSERT OR REPLACE INTO ${tableName} VALUES (?,?)`),
 					i = 0;
 
-				while (i < buffer.byteLength)
+				if (buffer.length < 8000) {
+					console.log(new Float64Array(buffer.buffer, buffer.byteOffset, buffer.length / Float64Array.BYTES_PER_ELEMENT), buffer.length);
+				}
+
+				while (i < buffer.byteLength) {
 					stmt.run([buffer.readDoubleLE(i, true), buffer.slice(i, i += rowLength)]);
+				}
 
 				stmt.finalize();
 
-				transaction.commit(function (tErr: any) {
-					if (tErr) return reject(tErr);
-
+				this._db.run('END TRANSACTION', () => {
+					winston.info(`DataLayer: Wrote ${buffer.length / rowLength} candles to ${tableName} took ${Date.now() - now}  ms`);
 					resolve();
 				});
 			});
@@ -111,7 +117,7 @@ export default class CacheDataLayer {
 
 					instruments.forEach(instrument => {
 						timeFrames.forEach(timeFrame => {
-							this._db.run(`CREATE TABLE IF NOT EXISTS ${this._getTableName(instrument, timeFrame)} (time int PRIMARY KEY, data blob);`, err => {
+							this._db.run(`CREATE TABLE IF NOT EXISTS ${this._getTableName(instrument, timeFrame)} (time INTEGER PRIMARY KEY, data blob);`, err => {
 								reject(err);
 							});
 						});

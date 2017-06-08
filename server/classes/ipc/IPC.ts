@@ -244,6 +244,10 @@ export default class IPC extends Base {
 
 	_registerNode(id, socket) {
 		socket.id = id;
+
+		// node-ipc module hack
+		socket.indexOf = () => {return -1};
+
 		this._server.server.of[id] = socket;
 	}
 

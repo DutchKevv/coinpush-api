@@ -1,8 +1,6 @@
 import Base from '../../Base';
-import * as constants from '../../../../shared/constants/broker';
 import {splitToChunks} from '../../../util/date';
-import {flatten} from 'lodash';
-import * as fs from 'fs';
+import * as winston from 'winston-color';
 import * as Stream from 'stream';
 
 const OANDAAdapter = require('./oanda-adapter/index');
@@ -77,62 +75,73 @@ export default class BrokerApi extends Base {
 		let countChunks = splitToChunks(timeFrame, from, until, count, 5000);
 		let finished = 0;
 
-		let readStream = new Stream.PassThrough();
+		let passStream = new Stream.PassThrough();
 
 		countChunks.forEach(chunk => {
 			let arr = [];
 			let leftOver = '';
 			let startFound = false;
+			let lastPiece = false;
+			let firstByte = false;
+			let now = Date.now();
 
-			this._client
-				.getCandles(instrument, chunk.from, chunk.until, timeFrame, chunk.count)
-				.on('data', data => {
-					if (!startFound) {
-						let start = data.indexOf(91);
-
-						if (start > -1) {
-							startFound = true;
-							data = data.slice(start, data.length);
-						} else {
-							return;
-						}
-					}
-
-					let valArr = (leftOver + data.toString('ascii')).split(':');
-					leftOver = valArr.pop();
-
-					if (!valArr.length)
-						return;
-
-					valArr.forEach(val => {
-						let value = val.replace(/[^\d\.]/g, '');
-
-						if (value !== '')
-							arr.push(+value);
-					});
-
-					let maxIndex = Math.floor(arr.length / 10) * 10;
-					let buf = Buffer.alloc(maxIndex * Float64Array.BYTES_PER_ELEMENT, 0, 'binary');
-
-					arr.forEach((value, index) => {
-						if (index < maxIndex)
-							buf.writeDoubleLE(index % 10 ? value : value / 1000, index * Float64Array.BYTES_PER_ELEMENT, true);
-					});
-
-					if (buf.length)
-						readStream.push(buf);
-
-					arr = arr.slice(maxIndex, arr.length);
-
-				})
-				.on('error', error => !console.log('ERROR', error) && readStream.emit('error', error))
+			let transformStream = this
+				._client.getCandles(instrument, chunk.from, chunk.until, timeFrame, chunk.count)
+				.pipe(passStream)
+				.on('error', err => console.error(err) || passStream.emit('error', err))
 				.on('end', () => {
 					if (++finished === countChunks.length)
-						readStream.destroy();
+						passStream.end();
 				});
+
+			transformStream._transform = function(data, type, done) {
+				if (!firstByte) {
+					firstByte = true;
+
+					winston.info(`OANDA: FirstByte of ${instrument} took: ${Date.now() - now} ms`);
+				}
+
+				if (!startFound) {
+					let start = data.indexOf(91);
+					if (start > -1) {
+						startFound = true;
+						data = data.slice(start, data.length);
+					} else {
+						return done();
+					}
+				}
+
+				let valArr = (leftOver + data.toString('ascii')).split(':');
+				leftOver = valArr.pop();
+
+				if (!valArr.length)
+					return done();
+
+				valArr.forEach(val => {
+					let value = val.replace(/[^\d\.]/g, '');
+
+					if (value !== '')
+						arr.push(+value);
+				});
+
+				let maxIndex = lastPiece ? arr.length : Math.floor(arr.length / 1000) * 1000;
+				let buf = Buffer.alloc(maxIndex * Float64Array.BYTES_PER_ELEMENT, 0, 'binary');
+
+				arr.forEach((value, index) => {
+					if (index < maxIndex)
+						buf.writeDoubleLE(index % 10 ? value : value / 1000, index * Float64Array.BYTES_PER_ELEMENT, true);
+				});
+
+				if (maxIndex)
+					this.push(buf);
+
+				arr = arr.slice(maxIndex, arr.length);
+
+				done();
+			};
 		});
 
-		return readStream;
+		return passStream;
 	}
 
 	public getCurrentPrices(instruments: Array<any>): Promise<Array<any>> {

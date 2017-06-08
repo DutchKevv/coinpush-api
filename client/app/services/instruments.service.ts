@@ -61,16 +61,24 @@ export class InstrumentsService {
 	}
 
 	public create(options: InstrumentSettings): void {
-		let model = new InstrumentModel(options);
+		let model = this.add(new InstrumentModel(options)),
+			now = Date.now();
 
 		this._socketService.socket.emit('instrument:create', {
 			instrument: model.data.instrument,
 			timeFrame: model.data.timeFrame,
 			live: model.data.live
+		}, (err, instrument) => {
+			if (err)
+				throw new Error(err);
+
+			console.info(`Loading ${model.data.instrument} took: ${Date.now() - now} ms`);
+
+			model.set(instrument);
 		});
 	}
 
-	public add(instrumentModel: InstrumentModel): void {
+	public add(instrumentModel: InstrumentModel): InstrumentModel {
 		let existingModel = _.find(this._instruments, (instrument) => instrument.data.id === instrumentModel.data.id);
 
 		if (existingModel) {
@@ -81,11 +89,11 @@ export class InstrumentsService {
 		}
 
 		this.setFocus(instrumentModel);
+
+		return instrumentModel
 	}
 
 	public remove(model: InstrumentModel) {
-		console.log(counter++);
-
 		this._instruments.splice(this._instruments.indexOf(model), 1);
 		this.instruments$.next(this._instruments);
 

@@ -37,6 +37,8 @@ export class ChartComponent implements OnInit, OnDestroy {
 	}
 
 	public ngOnInit() {
+		this._toggleLoading(true);
+
 		// Bouncer func to limit onScroll calls
 		this._onScrollBounced = _.throttle(this._onScroll.bind(this), 33);
 
@@ -69,7 +71,7 @@ export class ChartComponent implements OnInit, OnDestroy {
 					}
 				}
 			}
-		})
+		});
 	}
 
 	public pinToCorner(edges): void {

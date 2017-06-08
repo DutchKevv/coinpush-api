@@ -287,9 +287,9 @@ OandaAdapter.prototype._candlesJsonStringToArray = function(chunk) {
 
 };
 
-OandaAdapter.prototype.getCandles = function (symbol, start, end, granularity, count, readable, callback) {
+OandaAdapter.prototype.getCandles = function (symbol, start, end, granularity, count, callback) {
 
-	readable = new Stream.PassThrough();
+	let transformStream = new Stream.Transform();
 
 	this._sendRESTRequest({
 		method: 'GET',
@@ -311,14 +311,12 @@ OandaAdapter.prototype.getCandles = function (symbol, start, end, granularity, c
 		}
 	}, function (err) {
 		if (err)
-			return readable.emit('error', err);
+			return transformStream.emit('error', err);
 
-		readable.emit('end');
-	}, data => {
-		readable.push(data);
-	});
+		transformStream.end();
+	}, data => transformStream.push(data));
 
-	return readable
+	return transformStream
 };
 OandaAdapter.prototype.getOpenPositions = function (accountId, callback) {
 	this._sendRESTRequest({
@@ -417,9 +415,11 @@ OandaAdapter.prototype._sendRESTRequest = function (request, callback, onData) {
 			Authorization: 'Bearer ' + this.accessToken
 		};
 	request.secure = this.secure;
+
 	httpClient.sendRequest(request, (error, body, httpCode) => {
 		if (!error)
 			return callback(null, body);
+
 		let errorObject = {
 			originalRequest: request.path,
 			code: constants.BROKER_ERROR_UNKNOWN,

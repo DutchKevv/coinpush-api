@@ -20,10 +20,12 @@ export default class Fetcher {
 	public async fetch(brokerApi: BrokerApi, instrument: string, timeFrame: string, from: number, until: number, count: number) {
 
 		return new Promise((resolve, reject) => {
+			let now  = Date.now();
+
 			brokerApi.getCandles(instrument, timeFrame, from, until, count)
 				.on('data', async (buf: NodeBuffer) => {
 
-					await this._dataLayer.write(instrument, timeFrame, buf);
+					this._dataLayer.write(instrument, timeFrame, buf);
 
 					if (from && until) {
 						await this._mapper.update(instrument, timeFrame, from, until, buf.length / (10 * Float64Array.BYTES_PER_ELEMENT));
@@ -31,9 +33,11 @@ export default class Fetcher {
 						if (buf.length) {
 							if (!from)
 								from = buf.readDoubleLE(0);
-							console.log(buf.length);
-							if (!until)
+
+							if (!until) {
 								until = buf.readDoubleLE(buf.length - (9 * Float64Array.BYTES_PER_ELEMENT));
+								console.log('UNTIL TUNIL', until);
+							}
 
 							if (from && until)
 								await this._mapper.update(instrument, timeFrame, from, until, buf.length / (10 * Float64Array.BYTES_PER_ELEMENT));
@@ -41,7 +45,10 @@ export default class Fetcher {
 					}
 
 				})
-				.on('end', resolve)
+				.on('end', () => {
+					winston.info(`Cache: Fetching ${instrument} took ${Date.now() - now} ms`);
+					resolve()
+				})
 				.on('error', reject)
 		});
 	}

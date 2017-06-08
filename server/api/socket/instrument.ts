@@ -1,10 +1,39 @@
 import App from '../../app';
+import {InstrumentSettings} from '../../../shared/interfaces/InstrumentSettings';
 
 module.exports = (app: App, socket) => {
 
 	// Create
-	socket.on('instrument:create', options => {
-		app.controllers.instrument.create(options.instrument, options.timeFrame, options.live, options.start).catch(console.error);
+	socket.on('instrument:create', async (options: InstrumentSettings, cb: Function) => {
+		try {
+			let instrument = await app.controllers.instrument.create(options.instrument, options.timeFrame, options.live);
+
+			cb(null, {
+				id: instrument.id,
+				timeFrame: instrument.timeFrame,
+				instrument: instrument.instrument,
+				live: instrument.live
+			});
+
+			socket.broadcast.emit('instrument-created', {
+				id: instrument.id,
+				timeFrame: instrument.timeFrame,
+				instrument: instrument.instrument,
+				live: instrument.live
+			});
+		} catch (error) {
+			cb(error);
+		}
+	});
+
+	// TODO: Move to cache API
+	// Read bars
+	socket.on('instrument:read', async (options, cb) => {
+		try {
+			cb(null, await app.controllers.instrument.read(options.id, options.from, options.until, options.count, undefined, options.indicators))
+		} catch (error) {
+			cb(error);
+		}
 	});
 
 	// Destroy
@@ -16,16 +45,6 @@ module.exports = (app: App, socket) => {
 	// Destroy All
 	socket.on('instrument:destroy-all', async (options, cb) => {
 		cb(null, await app.controllers.instrument.destroyAll());
-	});
-
-	// TODO: Move to cache API
-	// Read bars
-	socket.on('instrument:read', (options, cb) => {
-
-		app.controllers.instrument
-			.read(options.id, options.from, options.until, options.count, undefined, options.indicators)
-			.then(data => cb(null, data))
-			.catch(console.error);
 	});
 
 	// Read options (indicators etc)

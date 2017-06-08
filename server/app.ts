@@ -264,17 +264,6 @@ export default class App extends Base {
 			this.controllers.editor.on('change', () => {
 				this._io.sockets.emit('editor:change', {});
 			});
-
-			this.controllers.instrument.on('created', instrument => {
-				winston.info('Created Instrument ' + instrument.id);
-
-				this._io.sockets.emit('instrument:created', {
-					id: instrument.id,
-					timeFrame: instrument.timeFrame,
-					instrument: instrument.instrument,
-					live: instrument.live
-				});
-			});
 		});
 	}
 
