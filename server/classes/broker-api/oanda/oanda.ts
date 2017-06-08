@@ -119,7 +119,7 @@ export default class BrokerApi extends Base {
 							buf.writeDoubleLE(index % 10 ? value : value / 1000, index * Float64Array.BYTES_PER_ELEMENT, true);
 					});
 
-					if (buf.byteLength)
+					if (buf.length)
 						readStream.push(buf);
 
 					arr = arr.slice(maxIndex, arr.length);

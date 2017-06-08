@@ -31,9 +31,9 @@ export default class Fetcher {
 						if (buf.length) {
 							if (!from)
 								from = buf.readDoubleLE(0);
-
+							console.log(buf.length);
 							if (!until)
-								until = buf.readDoubleLE(-(10 * Float64Array.BYTES_PER_ELEMENT));
+								until = buf.readDoubleLE(buf.length - (9 * Float64Array.BYTES_PER_ELEMENT));
 
 							if (from && until)
 								await this._mapper.update(instrument, timeFrame, from, until, buf.length / (10 * Float64Array.BYTES_PER_ELEMENT));

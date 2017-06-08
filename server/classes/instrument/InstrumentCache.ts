@@ -49,7 +49,7 @@ export default class InstrumentCache extends WorkerChild {
 				instrument: this.instrument,
 				timeFrame: this.timeFrame,
 				until: this.options.live ? this.options.until :  this.options.from,
-				count: 500
+				count: 1000
 			});
 
 		let _buf = new Buffer(buf);
