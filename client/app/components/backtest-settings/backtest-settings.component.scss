@@ -1,0 +1,93 @@
+@import '../../style/variables/variables';
+
+#fileListContainer {
+    width: 200px;
+    border: 1px solid #c3c3c3;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 200px;
+    bottom: 0;
+    overflow: auto;
+}
+
+#editor {
+    position: absolute;
+    top: 0;
+    right: 200px;
+    bottom: 0;
+    left: 200px;
+    border: 1px solid #c3c3c3;
+}
+
+#editorSettings {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 200px;
+    border: 1px solid #c3c3c3;
+    text-align: center;
+}
+
+:host /deep/ ss-multiselect-dropdown .btn {
+    padding: 1px !important;
+}
+
+label {
+    width: 100%;
+}
+
+.progress {
+    background-color: #535353;
+    position: relative;
+    text-align: center;
+    width: calc(100% - 80px);
+    height: 24px;
+    display: inline-block;
+    margin-bottom: 0;
+
+    span {
+        position: absolute;
+        display: block;
+        width: 100%;
+        line-height: 22px;
+        font-weight: bold;
+    }
+}
+
+.progress-bar {
+    transition: all .2s ease;
+}
+
+.progress-bar.no-animate {
+    transition: none !important;
+}
+
+
+.progress-bar-info {
+    background-color: #1f6073;
+}
+
+.progress-bar-success {
+    background-color: #167304;
+}
+
+.progress-bar-error {
+    background-color: #9d0012;
+}
+
+.form-control.ng-invalid {
+    border: 1px solid #ff0202;
+    box-shadow: 0 0 20px 5px red;
+}
+
+/** >>> .multiselect-native-select .btn-group {*/
+    /*width: 100%;*/
+/*}*/
+
+/** >>> .multiselect-native-select button {*/
+    /*border: 1px solid #c3bebe;*/
+    /*width: 100%;*/
+/*}*/
+

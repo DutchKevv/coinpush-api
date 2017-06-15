@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {ChangeDetectorRef, Injectable, NgZone} from '@angular/core';
 import * as io from 'socket.io-client';
 
 @Injectable()
@@ -10,14 +10,13 @@ export class SocketService {
 
 	private _timeout = 60000;
 
-	constructor() {
-	}
+	constructor(private _zone: NgZone) {}
 
 	init() {
-		this.socket = io(this._getUrl());
+		// this._zone.runOutsideAngular(() => {
+			this.socket = io(this._getUrl());
+		// });
 	}
-
-
 
 	private _getUrl(): string {
 		// Electron
@@ -30,25 +29,19 @@ export class SocketService {
 		}
 	}
 
-	public emit(event, data, cb) {
-		if (typeof cb === 'function') {
-			let i = setTimeout(() => cb(SocketService.ERROR_TIMEOUT), this._timeout);
+	public send(event, data, cb) {
+		this._zone.runOutsideAngular(() => {
+			if (typeof cb === 'function') {
+				let i = setTimeout(() => cb(SocketService.ERROR_TIMEOUT), this._timeout);
 
-			this.socket.emit(event, data, (result) => {
-				clearInterval(i);
-				cb(null, result);
-			});
-		} else {
-			this.socket.emit(event, data);
-		}
-	}
-
-	public bla() {
-		this.emit('asdfs', {}, function(err, result) {
-			if (err === SocketService.ERROR_TIMEOUT) {
-
+				this.socket.emit(event, data, (result) => {
+					clearInterval(i);
+					cb(result);
+				});
+			} else {
+				this.socket.emit(event, data);
 			}
-		})
+
+		});
 	}
 }
-

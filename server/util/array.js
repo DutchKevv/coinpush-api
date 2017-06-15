@@ -14,12 +14,5 @@ module.exports.arrayToFloat64Buffer = candles => {
     }
     throw new Error('Unknown data type');
 };
-//# sourceMappingURL=array.js.map
-//# sourceMappingURL=array.js.map
-//# sourceMappingURL=array.js.map
-//# sourceMappingURL=array.js.map
-//# sourceMappingURL=array.js.map
-//# sourceMappingURL=array.js.map
-//# sourceMappingURL=array.js.map
 
 //# sourceMappingURL=array.js.map

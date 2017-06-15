@@ -1,6 +1,4 @@
-import * as moment from 'moment';
-
-const REQUEST_LIMIT = 5000; // Oanda
+import * as moment from '../../shared/node_modules/moment';
 
 export const timeFrameSteps = {
 	'S5': 5000,
@@ -14,6 +12,10 @@ export const timeFrameSteps = {
 	'H1': 3600000,
 	'H4': 14400000
 };
+
+export function getEstimatedTimeFromCount(timeFrame, count) {
+	return timeFrameSteps[timeFrame] * count;
+}
 
 module.exports.getFullMonthsBetweenDates = (from, until) => {
 	let returnArr = [];
@@ -87,9 +89,7 @@ export function mergeRanges(ranges) {
 		} else if (top[1] < range[1]) {
 
 			// Add bars counter
-			if (typeof range[1][2] === 'number') {
-				range[1][2] += top[1][2];
-			}
+			top[2] += range[2];
 
 			// Update previous range
 			top[1] = range[1];

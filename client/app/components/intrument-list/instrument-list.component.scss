@@ -1,0 +1,94 @@
+@import '../../style/variables/variables';
+
+:host {
+    height: 50%;
+    border-bottom: 1px solid;
+    overflow: auto;
+}
+
+li {
+    border-bottom: 1px solid #8c8a8a;
+    list-style: none;
+    padding: 5px;
+}
+
+
+table {
+    // Faster rendering (read it on google)
+    table-layout: fixed;
+
+    height: 50%;
+    overflow: auto;
+    font-size: 10px;
+    width: 100%;
+
+    thead tr:last-child th {
+        padding: 0;
+    }
+
+    thead,
+    tbody {
+        display: block;
+    }
+
+    tbody {
+        height: calc(100% - 44px);
+        overflow: auto;
+        tr {
+            border-top: 1px solid #8c8a8a;
+            border-bottom: 1px solid #8c8a8a;
+        }
+    }
+
+    th,
+    td {
+        padding-left: 5px;
+        width: 80px;
+
+        &:nth-child(1),
+        &:nth-child(1) {
+            width: 100px;
+            padding-top: 4px;
+            padding-bottom: 4px;
+            padding-left: 2px;
+        }
+
+        &:nth-child(2),
+        &:nth-child(2) {
+            border-left: 1px solid #8c8a8a;
+            border-right: 1px solid #8c8a8a;
+        }
+    }
+
+
+    td.up {
+        color: #38cc38;
+    }
+
+    td.down {
+        color: #f92929;
+    }
+
+    td:first-child:hover {
+        background: #6f748e;
+        cursor: pointer;
+    }
+}
+
+.search-instrument-list {
+    width: calc(100% + 20px);
+    padding-left: 5px;
+}
+
+.fa {
+    width: 10px;
+    height: 10px;
+}
+
+.fa-arrow-up {
+    color: #12ee12;
+}
+
+.fa-arrow-down {
+    color: red;
+}

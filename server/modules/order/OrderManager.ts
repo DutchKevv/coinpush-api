@@ -1,9 +1,9 @@
-import * as _   from 'lodash';
-import Base     from '../../classes/Base';
+import * as _ 	from '../../../shared/node_modules/lodash/index';
 import AccountManager from '../account/AccountManager';
+import {Base} from '../../../shared/classes/Base';
 
 export interface IOrder {
-	instrument: string;
+	symbol: string;
 	count: number;
 	type: string;
 	id?: number | string;
@@ -32,8 +32,8 @@ export default class OrderManager extends Base {
 	}
 
 	constructor(private _accountManager: AccountManager,
-				protected opt?) {
-		super(opt)
+				protected __options?) {
+		super(__options)
 	}
 
 	public async init() {

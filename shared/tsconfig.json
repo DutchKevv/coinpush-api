@@ -2,6 +2,7 @@
   "compilerOptions": {
     "declaration": false,
     "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "lib": ["es6", "dom"],
     "module": "commonjs",
     "moduleResolution": "node",
@@ -9,6 +10,7 @@
     "rootDir": "./",
     "target": "es6",
     "typeRoots": [
+      "./node_modules/@types",
       "../server/node_modules/@types",
       "../client/node_modules/@types"
     ]

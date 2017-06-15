@@ -87,7 +87,7 @@ export default class Instrument extends InstrumentCache {
 	}
 
 	async _setIPCEvents() {
-		this._ipc.on('read', async (data, cb: Function) => {
+		this.ipc.on('read', async (data, cb: Function) => {
 
 			try {
 				let returnObj = <any>{
@@ -99,7 +99,6 @@ export default class Instrument extends InstrumentCache {
 				}
 
 				if (this.orderManager && returnObj.candles.length) {
-					console.log(returnObj.candles[0]);
 					returnObj.orders = await this.orderManager.findByDateRange(
 						returnObj.candles[0][0],
 						returnObj.candles[returnObj.candles.length - 1][0]
@@ -115,7 +114,7 @@ export default class Instrument extends InstrumentCache {
 			}
 		});
 
-		this._ipc.on('get-data', async (data: any, cb: Function) => {
+		this.ipc.on('get-data', async (data: any, cb: Function) => {
 			try {
 				if (typeof data.indicatorId !== 'undefined') {
 					cb(null, await this.getIndicatorData(data.indicatorId, data.count, data.shift));
@@ -129,7 +128,7 @@ export default class Instrument extends InstrumentCache {
 			}
 		});
 
-		this._ipc.on('indicator:add', async (data: any, cb: Function) => {
+		this.ipc.on('indicator:add', async (data: any, cb: Function) => {
 			try {
 				cb(null, (await this.addIndicator(data.name, data.options)).id);
 			} catch (error) {
@@ -138,7 +137,7 @@ export default class Instrument extends InstrumentCache {
 			}
 		});
 
-		this._ipc.on('toggleTimeFrame', async (data: any, cb: Function) => {
+		this.ipc.on('toggleTimeFrame', async (data: any, cb: Function) => {
 			try {
 				cb(null, await this.toggleTimeFrame(data.timeFrame));
 			} catch (error) {

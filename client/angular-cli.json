@@ -54,6 +54,12 @@
       }
     }
   ],
+  "lint": [
+    {
+      "project": "./tsconfig.app.json",
+      "exclude": ["**/node_modules/**/*", "./assets/**/*"]
+    }
+  ],
   "addons": [],
   "defaults": {
     "styleExt": "scss",

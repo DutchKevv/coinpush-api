@@ -56,7 +56,7 @@ module.exports = {
 		request.once('response', options.onResponse || function (response) {
 				var body = '', statusCode = response.statusCode;
 				response.on('data', function (chunk) {
-					if (keepAlive && onData)
+					if (onData)
 						onData(chunk);
 					else {
 						body += chunk;
@@ -90,7 +90,7 @@ module.exports = {
 				request.removeAllListeners();
 			});
 		request.on('error', options.onError || function (error) {
-				// console.error('[ERROR] HTTPS IN ', options.hostname, options.port, options.method, options.path, error);
+				console.error('[ERROR] HTTPS IN ', options.hostname, options.port, options.method, options.path, error);
 				callback(error, null, 500);
 			});
 		if (!keepAlive) {

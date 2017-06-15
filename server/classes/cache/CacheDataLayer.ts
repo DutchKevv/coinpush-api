@@ -1,9 +1,9 @@
 import * as fs          from 'fs';
-import * as sqLite      from 'sqlite3';
 import * as winston     from 'winston-color';
-import {timeFrameSteps} from "../../util/date";
+import * as moment 		from '../../../shared/node_modules/moment';
+import {timeFrameSteps} from '../../util/date';
 
-const TransactionDatabase = require('sqlite3-transactions').TransactionDatabase;
+const sqLite = require('sqlite3');
 
 export default class CacheDataLayer {
 
@@ -22,22 +22,24 @@ export default class CacheDataLayer {
 		return this._setTableList();
 	}
 
-	public read(instrument: string, timeFrame: string, from: number, until: number, count: number, bufferOnly = true): Promise<Float64Array> {
+	public read(symbol: string, timeFrame: string, from: number, until: number, count: number, bufferOnly = true): Promise<Float64Array> {
 
 		return new Promise((resolve, reject) => {
 
-			let tableName = this._getTableName(instrument, timeFrame),
+			let tableName = this._getTableName(symbol, timeFrame),
+				fromPretty = from ? moment(from).format('MMM Do YYYY hh:mm:ss') : 'unknown',
+				untilPretty = until ? moment(until).format('MMM Do YYYY hh:mm:ss') : 'unknown',
 				queryString;
 
-			winston.info(`DataLayer: Read ${tableName} from ${new Date(from)} until ${new Date(until)} count ${count}`);
+			winston.info(`DataLayer: Read ${tableName} from ${fromPretty} until ${untilPretty} count ${count}`);
 
 			queryString = `SELECT data FROM ${tableName} `;
 
 			if (count) {
 				if (until) {
-					queryString += `WHERE time <= ${until} ORDER BY time LIMIT ${count} `;
+					queryString += `WHERE time < ${until} ORDER BY time LIMIT ${count} `;
 				} else {
-					queryString += `WHERE time >= ${from} ORDER BY time LIMIT ${count} `;
+					queryString += `WHERE time > ${from} ORDER BY time LIMIT ${count} `;
 				}
 			} else {
 				count = 500;
@@ -69,13 +71,16 @@ export default class CacheDataLayer {
 		});
 	}
 
-	public async write(instrument, timeFrame, buffer: NodeBuffer) {
+	public async write(symbol, timeFrame, buffer: NodeBuffer) {
 
 		return new Promise((resolve, reject) => {
 			if (!buffer.length)
 				return resolve();
 
-			let tableName = this._getTableName(instrument, timeFrame),
+			if (buffer.length % Float64Array.BYTES_PER_ELEMENT !== 0)
+				return reject(`DataLayer: Illegal buffer length, should be multiple of 8 (is ${buffer.length})`);
+
+			let tableName = this._getTableName(symbol, timeFrame),
 				rowLength = 10 * Float64Array.BYTES_PER_ELEMENT;
 
 			this._db.serialize(() => {
@@ -88,9 +93,9 @@ export default class CacheDataLayer {
 				let stmt = this._db.prepare(`INSERT OR REPLACE INTO ${tableName} VALUES (?,?)`),
 					i = 0;
 
-				if (buffer.length < 8000) {
-					console.log(new Float64Array(buffer.buffer, buffer.byteOffset, buffer.length / Float64Array.BYTES_PER_ELEMENT), buffer.length);
-				}
+				// if (buffer.length < 8000) {
+					// console.log(new Float64Array(buffer.buffer, buffer.byteOffset, buffer.length / Float64Array.BYTES_PER_ELEMENT), buffer.length);
+				// }
 
 				while (i < buffer.byteLength) {
 					stmt.run([buffer.readDoubleLE(i, true), buffer.slice(i, i += rowLength)]);
@@ -98,7 +103,10 @@ export default class CacheDataLayer {
 
 				stmt.finalize();
 
-				this._db.run('END TRANSACTION', () => {
+				this._db.run('END TRANSACTION', (err) => {
+					if (err)
+						return reject(err);
+
 					winston.info(`DataLayer: Wrote ${buffer.length / rowLength} candles to ${tableName} took ${Date.now() - now}  ms`);
 					resolve();
 				});
@@ -106,18 +114,18 @@ export default class CacheDataLayer {
 		});
 	}
 
-	public createInstrumentTables(instruments: Array<string>) {
+	public createInstrumentTables(symbols: Array<string>): Promise<any> {
 		return new Promise((resolve, reject) => {
 			let timeFrames = Object.keys(timeFrameSteps);
 
-			winston.info('DataLayer: Creating ' + instruments.length * timeFrames.length + ' tables');
+			winston.info('DataLayer: Creating ' + symbols.length * timeFrames.length + ' tables');
 
-			if (instruments.length) {
+			if (symbols.length) {
 				this._db.serialize(() => {
 
-					instruments.forEach(instrument => {
+					symbols.forEach(symbol => {
 						timeFrames.forEach(timeFrame => {
-							this._db.run(`CREATE TABLE IF NOT EXISTS ${this._getTableName(instrument, timeFrame)} (time INTEGER PRIMARY KEY, data blob);`, err => {
+							this._db.run(`CREATE TABLE IF NOT EXISTS ${this._getTableName(symbol, timeFrame)} (time INTEGER PRIMARY KEY, data blob);`, err => {
 								reject(err);
 							});
 						});
@@ -129,7 +137,7 @@ export default class CacheDataLayer {
 		});
 	}
 
-	public async reset(instrument?: string, timeFrame?: string, from?: number, until?: number): Promise<void> {
+	public async reset(symbol?: string, timeFrame?: string, from?: number, until?: number): Promise<void> {
 		await this._closeDb();
 
 		if (fs.existsSync(this.options.path))
@@ -147,17 +155,33 @@ export default class CacheDataLayer {
 		});
 	}
 
-	private _getTableName(instrument, timeFrame): string {
-		return instrument.toLowerCase() + '_' + timeFrame.toLowerCase();
+	private _getTableName(symbol, timeFrame): string {
+		return symbol.toLowerCase() + '_' + timeFrame.toLowerCase();
 	}
 
 	private async _openDb() {
-		return this._db = new TransactionDatabase(
-			new sqLite.Database(this.options.path)
-		);
+		return new Promise((resolve, reject) => {
+			this._db = new sqLite.Database(this.options.path);
+			this._db.configure('busyTimeout', 2000);
+			this._db.run('PRAGMA busy_timeout = 60000', (err) => {
+				if (err)
+					return reject(err);
+
+				resolve();
+			});
+		});
+
 	}
 
 	private _closeDb() {
-		this._db.close();
+		return new Promise((resolve, reject) => {
+			this._db.close((err) => {
+				if (err)
+					return reject(err);
+
+				resolve();
+			});
+		});
+
 	}
 }

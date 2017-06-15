@@ -1,23 +1,20 @@
-import * as _           from 'lodash';
-import {Injectable, Output, EventEmitter} from '@angular/core';
-import {InstrumentModel} from '../models/instrument.model';
+import {forEach} from 'lodash';
+import {Injectable, Output, EventEmitter, NgZone} from '@angular/core';
 import {InstrumentSettings} from '../../../shared/interfaces/InstrumentSettings';
 import {SocketService} from './socket.service';
 import {BehaviorSubject} from 'rxjs';
 import {SystemState} from '../../../shared/models/SystemState';
-import {IndicatorModel} from "../models/indicator";
-import {DialogComponent} from "../common/dialog/dialog.component";
-import {ModalService} from "./modal.service";
-
-var counter = 0;
+import {IndicatorModel} from '../models/indicator';
+import {DialogComponent} from '../components/dialog/dialog.component';
+import {ModalService} from './modal.service';
+import {InstrumentModel} from '../../../shared/models/InstrumentModel';
 
 @Injectable()
 export class InstrumentsService {
 
-	@Output() changed = new EventEmitter();
-
-	public instruments$: BehaviorSubject<InstrumentModel[]> = new BehaviorSubject([]);
-	public instrumentList$: BehaviorSubject<any> = new BehaviorSubject([]);
+	@Output() public changed = new EventEmitter();
+	@Output() public instruments$: BehaviorSubject<InstrumentModel[]> = new BehaviorSubject([]);
+	@Output() public instrumentList$: BehaviorSubject<any> = new BehaviorSubject([]);
 
 	private _instruments: InstrumentModel[] = [];
 
@@ -25,27 +22,15 @@ export class InstrumentsService {
 		return this._instruments;
 	}
 
-	constructor(private _modalService: ModalService,
+	constructor(private _zone: NgZone,
+				private _modalService: ModalService,
 				private _socketService: SocketService) {
 		this.init();
 	}
 
 	public init(): void {
-		this._socketService.socket.on('ticks', (ticks) => {
-			ticks.forEach(tick => {
-				let instrument = this.instrumentList$.getValue().find(instr => instr.instrument === tick.instrument);
-
-				if (!instrument)
-					return;
-
-				instrument.direction = instrument.bid > tick.bid ? 'down' : 'up';
-				instrument.bid = tick.bid;
-				instrument.ask = tick.ask;
-			});
-		});
-
 		this._socketService.socket.on('instrument:created', (instrumentSettings: InstrumentSettings) => {
-			this.add(new InstrumentModel(instrumentSettings));
+			// this.add(new InstrumentModel(instrumentSettings));
 		});
 
 		this._socketService.socket.on('instrument:destroyed', (instrumentSettings: InstrumentSettings) => {
@@ -54,43 +39,73 @@ export class InstrumentsService {
 
 		this._socketService.socket.on('system:state', (systemState: SystemState) => {
 			if (!systemState.booting && systemState.connected) {
-				this._loadInstrumentList();
 				this._loadRunningInstruments();
 			}
 		});
 	}
 
-	public create(options: InstrumentSettings): void {
-		let model = this.add(new InstrumentModel(options)),
-			now = Date.now();
 
-		this._socketService.socket.emit('instrument:create', {
-			instrument: model.data.instrument,
-			timeFrame: model.data.timeFrame,
-			live: model.data.live
-		}, (err, instrument) => {
+	public async create(instruments: Array<InstrumentSettings>): Promise<Array<InstrumentModel>> {
+		// console.info(`Creating ${options.symbol}`);
+		console.log('instruments', instruments);
+		let now = Date.now(),
+			models = instruments.map(options => {
+				return this.add(new InstrumentModel(options));
+			});
+
+
+		this._socketService.socket.emit('instrument:create', models.map(model => model.options), (err, instruments) => {
 			if (err)
-				throw new Error(err);
+				throw new Error(typeof err === 'string' ? err : JSON.stringify(err));
 
-			console.info(`Loading ${model.data.instrument} took: ${Date.now() - now} ms`);
+			console.log(instruments);
 
-			model.set(instrument);
+			instruments.forEach((instrument, i) => models[i].set(instrument));
+
+			// console.info(`Creating ${model.options.symbol} took: ${Date.now() - now} ms`);
 		});
+
+		return models;
 	}
 
 	public add(instrumentModel: InstrumentModel): InstrumentModel {
-		let existingModel = _.find(this._instruments, (instrument) => instrument.data.id === instrumentModel.data.id);
-
-		if (existingModel) {
-
-		} else {
-			this._instruments.push(instrumentModel);
-			this.instruments$.next(this._instruments);
+		if (instrumentModel.options.id) {
+			let existingModel = this._instruments.find(instrument => instrument.options.id === instrumentModel.options.id);
+			if (existingModel) {
+				console.warn('Instrument already known! : ' + instrumentModel.options.id);
+				return;
+			}
 		}
+
+		this._instruments.push(instrumentModel);
+		this.instruments$.next(this._instruments);
 
 		this.setFocus(instrumentModel);
 
 		return instrumentModel
+	}
+
+	public fetch(model: InstrumentModel, count, offset = 0, from?: number, until?: number): Promise<any> {
+
+		return new Promise((resolve) => {
+
+			this._socketService.socket.emit('instrument:read', {
+				id: model.options.id,
+				indicators: true,
+				offset,
+				count,
+				until,
+				from
+			}, (err, data) => {
+				if (err)
+					return console.error(err);
+
+				model.updateBars(data.candles);
+				model.updateIndicators(data.indicators);
+
+				resolve(data);
+			});
+		});
 	}
 
 	public remove(model: InstrumentModel) {
@@ -111,34 +126,11 @@ export class InstrumentsService {
 		this.instruments$.next(this._instruments);
 	}
 
-	public fetch(model: InstrumentModel, count = 300, offset = 0, from?: number, until?: number): Promise<any> {
-
-		return new Promise((resolve) => {
-
-			this._socketService.socket.emit('instrument:read', {
-				id: model.data.id,
-				indicators: true,
-				offset,
-				count,
-				until,
-				from
-			}, (err, data) => {
-				if (err)
-					return console.error(err);
-
-				model.updateBars(data.candles);
-				model.updateIndicators(data.indicators);
-
-				resolve(data);
-			});
-		});
-	}
-
 	public toggleTimeFrame(model: InstrumentModel, timeFrame) {
 		return new Promise((resolve, reject) => {
 
 			this._socketService.socket.emit('instrument:toggleTimeFrame', {
-				id: model.data.id,
+				id: model.options.id,
 				timeFrame: timeFrame
 			}, (err, data) => {
 				if (err)
@@ -150,11 +142,12 @@ export class InstrumentsService {
 	}
 
 	public setFocus(model: InstrumentModel) {
-		if (model.data.focus === true)
+		if (model.options.focus === true)
 			return;
 
 		this.instruments.forEach(instrument => {
-			instrument.set({focus: false});
+			if (model !== instrument)
+				instrument.set({focus: false});
 		});
 
 		model.set({focus: true});
@@ -162,7 +155,7 @@ export class InstrumentsService {
 
 	public getFocused(): InstrumentModel {
 		for (let i = 0, len = this.instruments.length; i < len; i++) {
-			if (this.instruments[i].data.focus)
+			if (this.instruments[i].options.focus)
 				return this.instruments[i];
 		}
 
@@ -182,7 +175,7 @@ export class InstrumentsService {
 				resolve(false);
 
 			// Normalize model values
-			_.forEach(indicatorModel.inputs, input => {
+			forEach(indicatorModel.inputs, input => {
 
 				switch (input.type) {
 					case 'number':
@@ -197,7 +190,7 @@ export class InstrumentsService {
 			});
 
 			this._socketService.socket.emit('instrument:indicator:add', {
-				id: instrumentModel.data.id,
+				id: instrumentModel.options.id,
 				name: indicatorModel.name,
 				options: options,
 				readCount: 500,
@@ -207,7 +200,7 @@ export class InstrumentsService {
 					return reject(err);
 
 				instrumentModel.addIndicator(result);
-				instrumentModel.changed.next({indicator: {type: 'add', id: result.id}});
+				instrumentModel.changed$.next({indicator: {type: 'add', id: result.id}});
 
 				resolve(true);
 			});
@@ -215,13 +208,7 @@ export class InstrumentsService {
 	}
 
 	public findById(id) {
-		return this.instruments.find(instrument => instrument.data.id === id);
-	}
-
-	public searchList(value) {
-		value = value.toLowerCase();
-
-		return this.instrumentList$.getValue().filter(instrument => instrument.instrument.toLowerCase().contains(value))
+		return this.instruments.find(instrument => instrument.options.id === id);
 	}
 
 	private _showIndicatorOptionsMenu(indicatorModel: IndicatorModel): Promise<boolean> {
@@ -262,7 +249,7 @@ export class InstrumentsService {
 	private _destroyOnServer(model: InstrumentModel) {
 		return new Promise((resolve, reject) => {
 
-			this._socketService.socket.emit('instrument:destroy', {id: model.data.id}, err => {
+			this._socketService.socket.emit('instrument:destroy', {id: model.options.id}, err => {
 				if (err)
 					return reject(err);
 
@@ -280,15 +267,6 @@ export class InstrumentsService {
 
 				resolve();
 			});
-		});
-	}
-
-	private _loadInstrumentList() {
-		this._socketService.socket.emit('instrument:list', {}, (err, instrumentList) => {
-			if (err)
-				return console.error(err);
-
-			this.instrumentList$.next(instrumentList);
 		});
 	}
 

@@ -1,5 +1,5 @@
-import Base from '../Base';
-import * as winston from 'winston-color';
+import {winston} from '../../logger';
+import {Base} from '../../../shared/classes/Base';
 
 declare var clearTimeout: any;
 declare var window: any;
@@ -15,24 +15,14 @@ export default class IPC extends Base {
 	private _ipc: any = null;
 	private _acks: any = {};
 
-	constructor(protected opt) {
-		super(opt);
+	public async init() {
+		await super.init();
 
-		this.id = this.opt.id;
+		this.id = this.options.id;
 		this.env = this._getEnvironment();
-	}
 
-	/**
-	 *
-	 * @returns {Promise.<TResult>|*}
-	 */
-	init() {
-		return super
-			.init()
-			.then(() => {
-				if (this.env === 'node')
-					return this._setConfigNode();
-			});
+		if (this.env === 'node')
+			return this._setConfigNode();
 	}
 
 	/**
@@ -165,7 +155,7 @@ export default class IPC extends Base {
 	 * @returns {Promise}
 	 * @private
 	 */
-	_startServerNode() {
+	_startServerNode(): Promise<any> {
 		return new Promise((resolve) => {
 
 			let ipc = require('node-ipc');
@@ -189,6 +179,10 @@ export default class IPC extends Base {
 
 				this._server.server.on('data', (data, socket) => {
 					this._onMessage(data, socket);
+				});
+
+				this._server.server.on('error', (error, socket) => {
+					console.error('IPC Server error: ' + error);
 				});
 
 				this._server.server.on('socket.disconnected', (socket, destroyedSocketID) => {

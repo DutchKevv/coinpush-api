@@ -1,85 +1,91 @@
 import * as path    from 'path';
-import * as _       from 'lodash';
-import * as winston	from 'winston-color';
+import {winston}	from '../logger';
 import WorkerHost   from '../classes/worker/WorkerHost';
-import Base         from '../classes/Base';
 import App 			from '../app';
+import {Base} 		from '../../shared/classes/Base';
+import {InstrumentModel} from '../../shared/models/InstrumentModel';
 
-const PATH_INSTRUMENT = path.join(__dirname, '../classes/instrument/Instrument');
+const PATH_INSTRUMENT = path.join(__dirname, '..', 'classes', 'instrument', 'Instrument');
 
 export default class InstrumentController extends Base {
-
-	public ready = false;
-
-	private _unique = 0;
-	private _instruments = {};
-
-	constructor(opt, protected app: App) {
-		super(opt);
-	}
-
-	async init() {
-	}
 
 	public get instruments() {
 		return this._instruments;
 	}
 
-	public async create(instrument: string, timeFrame: string, live = true, filePath: string = PATH_INSTRUMENT, options = {}) {
-		winston.info(`Creating instrument ${instrument}`);
+	private _unique: number = 0;
+	private _instruments: Array<any> = [];
+	private _workers: Array<WorkerHost> = [];
 
-		if (!instrument) {
-			this.app.debug('error', 'InstrumentController:create - illegal instrument given');
-			return Promise.reject('InstrumentController:create - illegal instrument given');
-		}
+	constructor(protected __options, protected app: App) {
+		super(__options);
+	}
 
-		if (!timeFrame) {
-			this.app.debug('error', 'InstrumentController:create - illegal timeFrame given');
-			return Promise.reject('InstrumentController:create - illegal timeFrame given');
-		}
+	public async init() {
+		this.app.ipc.on('status:update', data => this._updateInstrumentStatus(data.id, data));
+	}
 
-		instrument = instrument.toUpperCase();
-		timeFrame = timeFrame.toUpperCase();
+	public async create(instruments: Array<any>): Promise<Array<any>> {
+		let groupId = ++this._unique;
 
-		let id = `${instrument}_${++this._unique}`;
+		return Promise.all(instruments.map(async options => {
+			winston.info(`Creating instrument ${options.symbol}`);
 
-		let worker = new WorkerHost({
-			ipc: this.app.ipc,
-			id: id,
-			path: filePath,
-			classArguments: Object.assign(options, {
-				instrument,
-				timeFrame,
-				live
-			})
-		});
+			if (!options.symbol) {
+				this.app.debug('error', 'InstrumentController:create - illegal or no symbol name given');
+				return Promise.reject('InstrumentController:create - illegal or no symbol name given');
+			}
 
-		worker.on('stderr', error => {
-			this.app.debug('error', error);
-		});
+			options.id = `${options.symbol}_${++this._unique}`;
+			options.groupId = options.groupId || groupId;
 
-		await worker.init();
+			let workerPath = PATH_INSTRUMENT,
+				model, worker;
 
-		this._instruments[id] = {
-			id: id,
-			instrument: instrument,
-			timeFrame: timeFrame,
-			live: live,
-			worker: worker
-		};
+			console.log('OPTIONS', options);
+			if (options.ea)
+				workerPath = path.join(this.app.controllers.config.config.path.custom, 'ea', options.ea, 'index');
 
-		this.emit('created', this._instruments[id]);
+			model = new InstrumentModel(options);
 
-		return this._instruments[id];
+			worker = new WorkerHost({
+				ipc: this.app.ipc,
+				id: options.id,
+				path: workerPath,
+				classArguments: options
+			});
+
+			worker.on('error', error => {
+				this.app.debug('error', error);
+			});
+
+			worker.once('exit', code => {
+				this.destroy(options.id);
+			});
+
+			await worker.init();
+
+			this._instruments.push({
+				id: options.id,
+				model: model,
+				worker: worker
+			});
+
+			this.emit('created', model);
+
+			return model
+		}));
 	}
 
 	public read(id: string, from: number, until: number, count: number, bufferOnly?: boolean, indicators: any = false) {
 		winston.info(`Reading instrument ${id}`);
 
-		if (!this._instruments[id])
-			return Promise.reject(`Reject: Instrument '${id}' does not exist`);
+		let instrument = this.getById(id);
 
-		return this.instruments[id].worker.send('read', {from, until, count, indicators, bufferOnly});
+		if (!instrument)
+			return Promise.reject(`Instrument '${id}' does not exist`);
+
+		return instrument.worker.send('read', {from, until, count, indicators, bufferOnly});
 	}
 
 	public toggleTimeFrame(id, timeFrame) {
@@ -91,9 +97,13 @@ export default class InstrumentController extends Base {
 	}
 
 	public async addIndicator(params) {
-		let id, data;
+		let instrument = this.getById(params.id),
+			id, data;
 
-		id = await this.instruments[params.id].worker.send('indicator:add', {
+		if (!instrument)
+			return Promise.reject(`Reject: Instrument '${params.id}' does not exist`);
+
+		id = await instrument.worker.send('indicator:add', {
 			name: params.name,
 			options: params.options
 		});
@@ -111,10 +121,12 @@ export default class InstrumentController extends Base {
 	}
 
 	public getIndicatorData(params) {
-		if (!this._instruments[params.id])
+		let instrument = this.getById(params.id);
+
+		if (!instrument)
 			return Promise.reject(`Reject: Instrument '${params.id}' does not exist`);
 
-		let returnData = this.instruments[params.id].worker.send('get-data', {
+		let returnData = instrument.worker.send('get-data', {
 			indicatorId: params.indicatorId,
 			name: params.name,
 			from: params.from,
@@ -139,22 +151,38 @@ export default class InstrumentController extends Base {
 		});
 	}
 
-	public destroy(id: string): void {
-		winston.info('destroying - ' + id)
-		if (this._instruments[id]) {
-			this._instruments[id].worker.kill();
-			this._instruments[id] = null;
-			delete this._instruments[id];
-
-			this.app.debug('info', 'Destroyed ' + id);
-		} else {
-			this.app.debug('error', 'Destroy - Could not find instrument ' + id);
-		}
-
+	public getById(id: string) {
+		return this._instruments.find(instrument => instrument.id === id);
 	}
 
-	public async destroyAll(): Promise<any> {
-		return Promise.all(_.map(this._instruments, (instrument, id) => this.destroy(id)));
+	public findIndexById(id: string): number {
+		return this._instruments.findIndex(instrument => instrument.id === id);
+	}
+
+	public destroy(id: string): void {
+		winston.info('destroying - ' + id);
+
+		let instrument = this.getById(id);
+
+		if (!instrument)
+			return console.warn(`Destroy: No such instrument ${id}`);
+
+		this._instruments.splice(this.findIndexById(id), 1);
+
+		instrument.worker.kill();
+
+		this.app.debug('info', 'Destroyed ' + id);
+	}
+
+	public destroyAll(): void {
+		this._instruments.forEach(instrument => this.destroy(instrument.id));
+	}
+
+	private _updateInstrumentStatus(id, data): void {
+		let instrument = this.getById(id);
+
+		if (instrument)
+			instrument.model.set(data);
 	}
 
 	// public isReady() {

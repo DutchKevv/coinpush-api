@@ -2,25 +2,26 @@ import AccountController from './controllers/AccountController';
 require('source-map-support').install({handleUncaughtExceptions: true});
 import './util/more-info-console';
 
-import Socket = SocketIO.Socket;
+// import Socket = SocketIO.Socket;
 
-import * as winston         from 'winston-color';
-import * as io              from 'socket.io';
+import * as io              from '../shared/node_modules/socket.io';
 import * as http            from 'http';
 import {json, urlencoded}   from 'body-parser';
 import * as path            from 'path';
 import * as freePort        from 'freeport';
 import * as merge       	from 'deepmerge';
 
-import Base                 from './classes/Base';
 import IPC                  from './classes/ipc/IPC';
-
 import CacheController      from './controllers/CacheController';
 import SystemController     from './controllers/SystemController';
 import InstrumentController from './controllers/InstrumentController';
 import EditorController     from './controllers/EditorController';
 import ConfigController     from './controllers/ConfigController';
 import BrokerController     from './controllers/BrokerController';
+import BacktestController 	from './controllers/BacktestController';
+import {winston} 			from './logger';
+import {Base} 				from '../shared/classes/Base';
+import {InstrumentSettings} from '../shared/interfaces/InstrumentSettings';
 
 const express: any = require('express');
 
@@ -46,18 +47,39 @@ export interface IApp {
  */
 export default class App extends Base {
 
+	public static readonly DEFAULTS = <IApp>{
+		account: {
+			'broker': 'oanda',
+			'id': null,
+			'environment': '',
+			'username': null,
+			// 'token': null,
+			// 'accountId': null
+		},
+		system: {
+			port: 3000,
+			timezone: 'America/New_York',
+		},
+		path: {
+			custom: path.join(__dirname, '..', 'custom'),
+			cache: path.join(__dirname, '..', '_cache'),
+			config: path.join(__dirname, '..', '_config')
+		}
+	};
+
 	public readonly space = undefined; // 'app-' + Date.now();
 	public readonly isWin = /^win/.test(process.platform);
 	public readonly isElectron = process && (process.env.ELECTRON || process.versions['electron']);
 
 	public controllers: {
-		config: ConfigController,
 		account: AccountController,
-		system: SystemController,
+		backtest: BacktestController,
 		broker: BrokerController,
 		cache: CacheController,
+		config: ConfigController,
 		editor: EditorController,
-		instrument: InstrumentController
+		instrument: InstrumentController,
+		system: SystemController
 	} = <any>{};
 
 	public get ipc() {
@@ -78,33 +100,10 @@ export default class App extends Base {
 	private _debugLastMessage = null;
 	private _debugMessageRepeat = 0;
 
-	private _defaults = <IApp>{
-		account: {
-			'broker': 'oanda',
-			'id': null,
-			'environment': '',
-			'username': null,
-			// 'token': null,
-			// 'accountId': null
-		},
-		system: {
-			port: 3000,
-			timezone: 'America/New_York',
-		},
-		path: {
-			custom: path.join(__dirname, '..', 'custom'),
-			cache: path.join(__dirname, '..', '_cache'),
-			config: path.join(__dirname, '..', '_config')
-		}
-	};
-
 	public async init(): Promise<any> {
 
 		// Make sure the app can be cleaned up on termination
 		this._setProcessListeners();
-
-		// Merge options
-		this.options = merge(this._defaults, this.options);
 
 		// Initialize ConfigController first so other controllers can use config
 		this.controllers.config = new ConfigController(this.options, this);
@@ -127,6 +126,7 @@ export default class App extends Base {
 		this.controllers.cache = new CacheController({path: config.path.cache}, this);
 		this.controllers.editor = new EditorController({path: config.path.custom}, this);
 		this.controllers.instrument = new InstrumentController({}, this);
+		this.controllers.backtest = new BacktestController({}, this);
 
 		// Start public API so client can follow booting process
 		await this._initAPI();
@@ -137,6 +137,7 @@ export default class App extends Base {
 		await this.controllers.cache.init();
 		await this.controllers.instrument.init();
 		await this.controllers.editor.init();
+		await this.controllers.backtest.init();
 
 		await this.controllers.broker.loadBrokerApi('oanda');
 
@@ -147,7 +148,7 @@ export default class App extends Base {
 		this.emit('app:ready');
 	}
 
-	public debug(type: string, text: string, data?: Object, socket?: Socket): void {
+	public debug(type: string, text: string, data?: Object, socket?): void {
 		// if (type === 'error')
 		// 	console.warn('ERROR', text);
 
@@ -168,7 +169,7 @@ export default class App extends Base {
 	}
 
 	private _setIpcListeners(): void {
-		this._ipc.on('debug', (data, cb, socketId) => {
+		this.ipc.on('debug', (data, cb, socketId) => {
 			this.debug(data.type, `<a href="#${socketId}">${socketId}:</a> ${data.text}`, data.data);
 		});
 	}
@@ -213,6 +214,7 @@ export default class App extends Base {
 				winston.info('a websocket connected');
 
 				require('./api/socket/system')(this, socket);
+				require('./api/socket/cache')(this, socket);
 				require('./api/socket/editor')(this, socket);
 				require('./api/socket/backtest')(this, socket);
 				require('./api/socket/instrument')(this, socket);
@@ -249,11 +251,25 @@ export default class App extends Base {
 				tickBuffer.push(tick);
 			});
 
+			this.controllers.instrument.on('created', (instrument: InstrumentSettings) => {
+				this._io.sockets.emit('instrument:created', {
+					id: instrument.id,
+					symbol: instrument.symbol,
+					timeFrame: instrument.timeFrame,
+					live: instrument.live
+				});
+			});
+
+			// this.ipc.on('cache:fetch:status', (data) => {
+			// 	this._io.sockets.emit('cache:fetch:status', data);
+			// });
+
 			this.controllers.editor.on('directory-list', (directoryList) => {
 				this._io.sockets.emit('editor:directory-list', directoryList);
 			});
 
 			this.controllers.editor.on('runnable-list', (runnableList) => {
+				console.log('runafsdf', runnableList)
 				this._io.sockets.emit('editor:runnable-list', runnableList);
 			});
 
@@ -287,41 +303,30 @@ export default class App extends Base {
 	private _setProcessListeners() {
 
 		const processExitHandler = error => {
-			this.destroy()
-				.then(() => process.exit(0))
-				.catch(err => {
-					process.exit(1);
-				});
+			console.error('Main exiting: ', error);
+			this.destroy();
+			process.exit(1);
 		};
 
 		process.on('SIGTERM', processExitHandler);
 		process.on('SIGINT', processExitHandler);
-		process.on('unhandledRejection', error => {
-			// console.warn('unhandledRejection');
-			console.error('unhandledRejection', error);
-			processExitHandler(error);
-		});
+		process.on('unhandledRejection', processExitHandler);
 	}
 
-	private async _killAllChildProcesses() {
-		if (this.controllers.instrument)
-			await this.controllers.instrument.destroyAll();
-
-		if (this.controllers.cache)
-			await this.controllers.cache.destroy();
+	private _killAllChildProcesses() {
+		this.controllers.instrument.destroyAll();
+		this.controllers.cache.destroy();
 	}
 
-	async destroy(): Promise<any> {
+	destroy(): void {
 		winston.info('Shutting down and cleaning up child processes');
 		this.debug('warning', 'Shutting down server');
 
-		await this._killAllChildProcesses();
+		this._killAllChildProcesses();
 
 		// this._httpApi.close();
 		this._httpApi = null;
 		this._http = null;
 		this._io = null;
-
-		return;
 	}
 }

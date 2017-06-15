@@ -1,0 +1,125 @@
+<nav>
+	<ul class="header-buttons">
+		<li>
+			<button href="#add-chart" class="btn-menu button-new">
+				<i class="fa fa-plus" aria-hidden="true"></i>
+			</button>
+		</li>
+
+		<li>
+			<button (click)="openEditor()" class="btn-menu button-editor">
+				<i class="fa fa-code" aria-hidden="true"></i>
+			</button>
+		</li>
+	</ul>
+	<ul class="header-buttons">
+		<li>
+			<button (click)="zoom(-1)"
+					type="button"
+					class="dropdown-toggle text-dark button-zoom-out btn-menu"
+					aria-expanded="false">
+				<i class="fa fa-search-minus">
+				</i>
+			</button>
+		</li>
+
+		<li>
+			<button (click)="zoom(1)"
+					type="button"
+					class="dropdown-toggle text-dark btn-menu button-zoom-in"
+					aria-expanded="false">
+				<i class="fa fa-search-plus"></i>
+			</button>
+		</li>
+		<li>
+			<button (click)="instrumentsService.instruments.length && instrumentsService.getFocused().set({graphType: 'ohlc'})"
+
+					type="button"
+					class="dropdown-toggle text-dark button-ohlc btn-menu"
+					aria-expanded="false">
+				<i class="fa fa-line-chart"></i>
+			</button>
+		</li>
+		<li>
+			<button (click)="instrumentsService.instruments.length && instrumentsService.getFocused().set({graphType: 'candlestick'})"
+					type="button"
+					class="dropdown-toggle text-dark button-candlestick btn-menu"
+					aria-expanded="false">
+				<i class="fa fa-bar-chart"></i>
+			</button>
+		</li>
+		<li>
+			<button type="button" class="dropdown-toggle btn-menu" data-toggle="dropdown" aria-haspopup="true"
+					aria-expanded="false">
+				<ng-container *ngIf="instrumentsService.getFocused() !== null">
+					{{instrumentsService.getFocused().options.timeFrame}}
+				</ng-container>
+				<ng-container *ngIf="instrumentsService.getFocused() === null">M15</ng-container>
+				<span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu">
+				<li><a (click)="instrumentsService.getFocused().set({timeFrame: 'M1'})">M1</a></li>
+				<li><a (click)="instrumentsService.getFocused().set({timeFrame: 'M5'})">M5</a></li>
+				<li><a (click)="instrumentsService.getFocused().set({timeFrame: 'M15'})">M15</a></li>
+				<li><a (click)="instrumentsService.getFocused().set({timeFrame: 'M30'})">M30</a></li>
+				<li><a (click)="instrumentsService.getFocused().set({timeFrame: 'H1'})">H1</a></li>
+				<li><a (click)="instrumentsService.getFocused().set({timeFrame: 'H4'})">H4</a></li>
+				<li><a (click)="instrumentsService.getFocused().set({timeFrame: 'D'})">D</a></li>
+				<li><a (click)="instrumentsService.getFocused().set({timeFrame: 'W'})">W</a></li>
+			</ul>
+		</li>
+		<li>
+			<button type="button" class="dropdown-toggle btn-menu" data-toggle="dropdown" aria-haspopup="true"
+					aria-expanded="false">
+				Indicator <span class="caret"></span>
+			</button>
+
+			<ul class="dropdown-menu">
+				<li class="dropdown-submenu">
+					<a tabindex="-1" href="#">Indicators</a>
+					<ul class="dropdown-menu">
+						<li class="dropdown-header">Custom</li>
+
+						<li role="separator" class="divider"></li>
+						<li class="dropdown-header">Default</li>
+
+						<li><a (click)="addIndicator('MA')">MA</a></li>
+
+						<li class="dropdown-submenu pull-left">
+							<a href="#">Even More..</a>
+							<ul class="dropdown-menu">
+								<li><a href="#">3rd level</a></li>
+								<li><a href="#">3rd level</a></li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+				<li><a href="#">Another action</a></li>
+				<li><a href="#">Something else here</a></li>
+				<li role="separator" class="divider"></li>
+				<li><a href="#">Separated link</a></li>
+			</ul>
+		</li>
+	</ul>
+	<!--<ul class="nav navbar-nav navbar-right">-->
+		<!--<li id="nav-dropdown" class="dropdown">-->
+			<!--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"-->
+			   <!--aria-expanded="true">-->
+				<!--Config <span class="caret"></span>-->
+			<!--</a>-->
+			<!--<ul class="dropdown-menu">-->
+				<!--<li><a>Preferences</a></li>-->
+				<!--<li role="separator" class="divider"></li>-->
+				<!--<li class="dropdown-header">User</li>-->
+				<!--<li *ngIf="systemService.systemState.connected === true"><a (click)="userService.logout()">Logout-->
+					<!--broker</a></li>-->
+				<!--<li *ngIf="systemService.systemState.connected === false"><a (click)="userService.login()">Login-->
+					<!--broker</a></li>-->
+				<!--<li role="separator" class="divider"></li>-->
+				<!--<li class="dropdown-header">System</li>-->
+				<!--<li (click)="clearCache()" data-action="clearCache"><a>Clear cache</a></li>-->
+			<!--</ul>-->
+		<!--</li>-->
+		<!--&lt;!&ndash;<li class="active"><a href="./">{{username}} <span class="sr-only">(current)</span></a></li>&ndash;&gt;-->
+	<!--</ul>-->
+</nav>

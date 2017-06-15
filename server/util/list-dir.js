@@ -11,12 +11,5 @@ module.exports.recursive = function getFileList(dir, ext) {
         });
     });
 };
-//# sourceMappingURL=list-dir.js.map
-//# sourceMappingURL=list-dir.js.map
-//# sourceMappingURL=list-dir.js.map
-//# sourceMappingURL=list-dir.js.map
-//# sourceMappingURL=list-dir.js.map
-//# sourceMappingURL=list-dir.js.map
-//# sourceMappingURL=list-dir.js.map
 
 //# sourceMappingURL=list-dir.js.map

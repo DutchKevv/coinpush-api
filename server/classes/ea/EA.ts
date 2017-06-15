@@ -1,7 +1,6 @@
 import Instrument from '../instrument/Instrument';
 import OrderManager from '../../modules/order/OrderManager';
 import AccountManager from '../../modules/account/AccountManager';
-import * as Stream from 'stream';
 
 export interface IEA {
 	orderManager: OrderManager;
@@ -35,24 +34,29 @@ export default class EA extends Instrument implements IEA {
 
 		this.orderManager = new OrderManager(this.accountManager, {
 			live: this.options.live,
-			ipc: this._ipc
+			ipc: this.ipc
 		});
 
 		await this.accountManager.init();
 		await this.orderManager.init();
 
-		this._ipc.on('@run', opt => this.runBackTest());
-		this._ipc.on('@report', (data, cb) => cb(null, this.report()));
+		this.ipc.on('@run', opt => this.runBackTest());
+		this.ipc.on('@report', (data, cb) => cb(null, this.report()));
 
 		await this.onInit();
+
+		if (this.options.autoRun)
+			this.runBackTest();
 	}
 
 	public report() {
 		return {
+			id: this.id,
 			tickCount: this.tickCount,
 			equality: this.accountManager.equality + this.orderManager.getOpenOrdersValue(this.bid, this.ask),
 			orders: this.orderManager.closedOrders,
-			data: this._backtestData
+			data: this._backtestData,
+			lastTime: this.time
 		};
 	}
 
@@ -93,12 +97,20 @@ export default class EA extends Instrument implements IEA {
 			from = this.options.from,
 			until = this.options.until;
 
-		let p = this._ipc.send('cache', 'read', {
-			instrument: this.instrument,
+		console.log('this.options!', this.options);
+		let p = this.ipc.send('cache', 'read', {
+			symbol: this.symbol,
 			timeFrame: this.timeFrame,
 			from: from,
 			count: count
 		}).then(_candles => {this._backtestData.startTime = Date.now(); return _candles; });
+
+		// Report status every X seconds
+		// TODO - Optimize
+		let interval = setInterval(() => {
+			this._emitProgressReport();
+		}, 500);
+		this._emitProgressReport();
 
 		while (true) {
 			candles = await p;
@@ -110,8 +122,8 @@ export default class EA extends Instrument implements IEA {
 			from = candles.readDoubleLE(candles.length - (10 * Float64Array.BYTES_PER_ELEMENT)) + 1;
 
 			if (from < until) {
-				p = this._ipc.send('cache', 'read', {
-					instrument: this.instrument,
+				p = this.ipc.send('cache', 'read', {
+					symbol: this.symbol,
 					timeFrame: this.timeFrame,
 					from: from,
 					count: count
@@ -140,10 +152,25 @@ export default class EA extends Instrument implements IEA {
 				break;
 		}
 
+		clearInterval(interval);
+
 		this._backtestData.endTime = Date.now();
 
 		this.orderManager.closeAll(lastTime, this.bid, this.ask);
 
-		this._ipc.send('main', '@run:end', undefined, false);
+		this.ipc.send('main', '@run:end', undefined, false);
+	}
+
+	private _emitProgressReport() {
+		let totalTime = (this.options.endTime || Date.now()) - this.get('startTime');
+
+		this.ipc.send('main', 'status:update', {
+			id: this.id,
+			tickCount: this.tickCount,
+			equality: this.accountManager.equality + this.orderManager.getOpenOrdersValue(this.bid, this.ask),
+			orders: this.orderManager.closedOrders,
+			data: this._backtestData,
+			lastTime: this.time
+		}, false)
 	}
 }

@@ -12,8 +12,8 @@ const PATH_DATA = path.join(__dirname, '/../../../../cache/bars');
  * @param month
  * @returns {string}
  */
-module.exports.getDataFilePath = (instrument, timeFrame, year, month) => {
-	return `${PATH_DATA}/${instrument}/${year}/${month}_${timeFrame}.bars`;
+module.exports.getDataFilePath = (symbol, timeFrame, year, month) => {
+	return `${PATH_DATA}/${symbol}/${year}/${month}_${timeFrame}.bars`;
 };
 
 /**

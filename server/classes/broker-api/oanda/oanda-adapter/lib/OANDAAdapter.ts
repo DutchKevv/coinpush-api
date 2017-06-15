@@ -289,7 +289,7 @@ OandaAdapter.prototype._candlesJsonStringToArray = function(chunk) {
 
 OandaAdapter.prototype.getCandles = function (symbol, start, end, granularity, count, callback) {
 
-	let transformStream = new Stream.Transform();
+	let readableStream = new Stream.PassThrough();
 
 	this._sendRESTRequest({
 		method: 'GET',
@@ -306,17 +306,19 @@ OandaAdapter.prototype.getCandles = function (symbol, start, end, granularity, c
 		headers: {
 			Authorization: 'Bearer ' + this.accessToken,
 			'X-Accept-Datetime-Format': 'UNIX',
-			Connection: 'Keep-Alive'
+			// Connection: 'Keep-Alive'
 
 		}
 	}, function (err) {
-		if (err)
-			return transformStream.emit('error', err);
+		if (err) {
+			console.error(err);
+			return readableStream.emit('error', err);
+		}
 
-		transformStream.end();
-	}, data => transformStream.push(data));
+		readableStream.end();
+	}, data => readableStream.push(data));
 
-	return transformStream
+	return readableStream
 };
 OandaAdapter.prototype.getOpenPositions = function (accountId, callback) {
 	this._sendRESTRequest({

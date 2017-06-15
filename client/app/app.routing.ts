@@ -2,7 +2,7 @@ import {RouterModule, Route}    from '@angular/router';
 import {ModuleWithProviders}    from '@angular/core';
 import {HomeComponent}          from './pages/home/home.component';
 import {EditorComponent}        from './pages/editor/editor.component';
-import {LoginComponent}         from './common/login/login.component';
+import {LoginComponent}         from './components/login/login.component';
 
 const routes: Route[] = [
 	{path: '', redirectTo: '/home', pathMatch: 'full'},

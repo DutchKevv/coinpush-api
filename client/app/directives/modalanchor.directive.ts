@@ -1,7 +1,6 @@
-import {Directive, ComponentFactoryResolver, ComponentRef} from '@angular/core';
+import {Directive, ComponentFactoryResolver, ComponentRef, ViewContainerRef} from '@angular/core';
 
-import {ViewContainerRef} from '@angular/core';
-import {ModalComponent} from '../common/modal/modal.component';
+import {ModalComponent} from '../components/modal/modal.component';
 import {ModalService} from '../services/modal.service';
 
 declare let $: any;

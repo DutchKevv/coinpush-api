@@ -1,7 +1,9 @@
 export interface InstrumentSettings {
-	instrument: string;
+	symbol: string;
 	live: boolean;
 	id?: string;
+	groupId?: number;
+	ea?: string;
 	timeFrame?: string;
 	indicators?: Array<any>;
 	from?: number;
@@ -9,8 +11,13 @@ export interface InstrumentSettings {
 	bars?: Array<any>;
 	focus?: boolean;
 	zoom?: number;
-
+	startEquality?: number;
+	currency?: string;
+	leverage?: number;
+	pips?: number;
 	graphType?: string;
+	autoRun?: boolean;
+	orders?: Array<any>;
 
 }
 

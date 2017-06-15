@@ -1,14 +1,11 @@
-import * as winston	from 'winston-color';
-
-declare var process: any;
-
 require('source-map-support').install({
 	handleUncaughtExceptions: true
 });
 
 import * as minimist    from 'minimist';
-import Base             from '../Base';
 import IPC              from '../ipc/IPC';
+import {Base} 			from '../../../shared/classes/Base';
+import {winston}		from '../../logger';
 
 export interface WorkerOptions {
 	id: string;
@@ -18,35 +15,30 @@ export interface WorkerOptions {
 
 export default class WorkerChild extends Base {
 
-	public id: string;
+	get id() {
+		return this._workerOptions.id;
+	}
 
-	protected _ipc: IPC;
-	protected opt: any;
+	get ipc() {
+		return this._ipc;
+	}
 
-	constructor(options, private workerOptions: WorkerOptions) {
-		super(options);
+	private _ipc: IPC;
 
-		/**
-		 *
-		 */
-		this.id = workerOptions.id;
-
-		/**
-		 *
-		 * @type {IPC}
-		 * @private
-		 */
-		this._ipc = new IPC({id: this.workerOptions.id, space: this.workerOptions.space});
+	constructor(protected __options, private _workerOptions: WorkerOptions) {
+		super(__options);
 	}
 
 	public async init() {
 		await super.init();
-		await this._ipc.init();
-		await this._ipc.connectTo(this.workerOptions.parentId);
+
+		this._ipc = new IPC({id: this._workerOptions.id, space: this._workerOptions.space});
+		await this.ipc.init();
+		await this.ipc.connectTo(this._workerOptions.parentId);
 	}
 
 	public debug(type: string, text: string, data?: Object): void {
-		this._ipc.send('main', 'debug', {type, text, data}, false);
+		this.ipc.send('main', 'debug', {type, text, data}, false);
 	}
 
 	static initAsWorker() {

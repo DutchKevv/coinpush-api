@@ -1,12 +1,9 @@
-declare var $: any;
-
 import {Component, OnInit} from '@angular/core';
-import 'jquery-resizable-dom';
 
 @Component({
 	selector: 'page-home',
 	templateUrl: './home.component.html',
-	styleUrls: ['../../common/css/three-column.css', './home.component.scss']
+	styleUrls: ['../../style/helpers/three-column.scss', './home.component.scss']
 })
 
 export class HomeComponent implements OnInit {

@@ -4,8 +4,8 @@ import * as winston	from 'winston-color';
 
 export default class InstrumentCache extends WorkerChild {
 
-	public instrument: string = this.opt.instrument;
-	public timeFrame: string = this.opt.timeFrame;
+	public symbol: string;
+	public timeFrame: string;
 
 	protected tickCount = 0;
 	protected ticks: any = [];
@@ -23,7 +23,11 @@ export default class InstrumentCache extends WorkerChild {
 	public async init() {
 		await super.init();
 
-		await this._ipc.connectTo('cache');
+		this.symbol = this.options.symbol;
+		this.timeFrame = this.options.timeFrame;
+
+		console.log(this.options);
+		await this.ipc.connectTo('cache');
 		await this._doPreFetch();
 
 		if (this.options.live) {
@@ -44,11 +48,10 @@ export default class InstrumentCache extends WorkerChild {
 	}
 
 	private async _doPreFetch() {
-
-		let buf = await this._ipc.send('cache', 'read', {
-				instrument: this.instrument,
+		let buf = await this.ipc.send('cache', 'read', {
+				symbol: this.symbol,
 				timeFrame: this.timeFrame,
-				until: this.options.live ? this.options.until :  this.options.from,
+				until: this.options.type === 'backtest' ? this.options.from :  this.options.until,
 				count: 1000
 			});
 
@@ -63,7 +66,7 @@ export default class InstrumentCache extends WorkerChild {
 		if (!candles.length)
 			return;
 
-		this._map.update(this.instrument, this.timeFrame, candles[0], candles[candles.length - 10], candles.length);
+		this._map.update(this.symbol, this.timeFrame, candles[0], candles[candles.length - 10], candles.length);
 
 		let i = 0;
 		while (i < candles.length) {
@@ -100,9 +103,9 @@ export default class InstrumentCache extends WorkerChild {
 
 	private async _toggleNewTickListener(state: boolean) {
 		if (state) {
-			await this._ipc.send('cache', 'register', {id: this.id, instrument: this.instrument}, true);
+			await this.ipc.send('cache', 'register', {id: this.id, symbol: this.symbol}, true);
 		} else {
-			await this._ipc.send('cache', 'unregister', {id: this.id, instrument: this.instrument}, true);
+			await this.ipc.send('cache', 'unregister', {id: this.id, symbol: this.symbol}, true);
 			// this.listenForNewTick = false;
 		}
 	}

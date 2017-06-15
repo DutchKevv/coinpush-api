@@ -1,11 +1,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import * as _ from 'lodash';
-import * as mkdirp from 'mkdirp';
+import * as _ from '../../../shared/node_modules/lodash/index';
 
-const rmdir = require('rmdir');
-
-import {mergeRanges} from '../../util/date';
+import {getEstimatedTimeFromCount, mergeRanges, timeFrameSteps} from '../../util/date';
 
 export default class Mapper {
 
@@ -37,93 +34,133 @@ export default class Mapper {
 		}
 	}
 
-	public isComplete(instrument, timeFrame, from, until): boolean {
-		let ranges = this.findByParams(instrument, timeFrame),
+	public update(symbol, timeFrame, from, until, count) {
+		let map = this.map,
+			ranges = this.findByParams(symbol, timeFrame, true);
+
+		// Find first index of from date that is higher or equal then new chunk from date
+		// Place it before that, so all dates are aligned in a forward manner
+		let index = _.findIndex(ranges, date => date[0] > from);
+
+		// If one is higher, prepend
+		if (index > -1)
+			ranges.splice(index, 0, [from, until, count]);
+
+		// Put at end of array, making sure lower from dates stay at the start of array
+		else
+			ranges.push([from, until, count]);
+
+		// Glue the cached dates together
+		map[symbol][timeFrame] = mergeRanges(ranges);
+
+		// Persistent mode
+		if (this.mode === Mapper.MODE_PERSISTENT) {
+			fs.writeFileSync(this._pathFile, JSON.stringify(map, null, 2));
+		}
+	}
+
+	public isComplete(symbol, timeFrame, from, until, count): boolean {
+		let ranges = this.findByParams(symbol, timeFrame),
 			i = 0, len = ranges.length, _range;
 
 		for (; i < len; ++i) {
 			_range = ranges[i];
-			if (_range[0] < from && _range[1] > until)
+			if (_range[0] <= from && _range[1] >= until)
 				return true;
 		}
 
 		return false;
 	}
 
-	public update(instrument, timeFrame, from, until, nrOfBars) {
-		return new Promise((resolve, reject) => {
+	public getPercentageComplete(symbol, timeFrame, from, until, count): number {
+		let ranges = this.findByParams(symbol, timeFrame, true),
+			totalRequiredTime = from && until ? until - from :  getEstimatedTimeFromCount(timeFrame, count),
+			totalStoredTime = 0,
+			totalCount = 0,
+			result = 0;
 
-			let map = this.map,
-				ranges = this.findByParams(instrument, timeFrame, true);
+		ranges.forEach(range => {
+			let _from = range[0],
+				_until = range[1],
+				_count = range[2];
 
-			// Find first index of from date that is higher or equal then new chunk from date
-			// Place it before that, so all dates are aligned in a forward manner
-			let index = _.findIndex(ranges, date => date[0] > from);
+			// Find all ranges that 'touch' the desired range
+			if (_from > until || _until < from)
+				return;
 
-			// If one is higher, prepend
-			if (index > -1)
-				ranges.splice(index, 0, [from, until, nrOfBars]);
+			// Exact date range (easy)
+			if (from && until) {
+				// Correct overflowing ranges
+				if (_from < from)
+					_from = from;
+				if (_until > until)
+					_until = until;
 
-			// Put at end of array, making sure lower from dates stay at the start of array
-			else
-				ranges.push([from, until, nrOfBars]);
+				totalStoredTime += _until - _from;
+			}
 
-			// Glue the cached dates together
-			map[instrument][timeFrame] = mergeRanges(ranges);
+			// Count (hard)
+			else {
 
-			// Persistent mode
-			if (this.mode === Mapper.MODE_PERSISTENT) {
+			}
+		});
 
-				fs.writeFile(this._pathFile, JSON.stringify(map, null, 2), err => {
-					if (err)
-						reject(err);
+		// if (from && until) {
+			result = (totalStoredTime / totalRequiredTime) * 100;
+		// }
+		// else {
+		//
+		// }
+		// console.log('totalCount', totalRequiredTime, totalStoredTime, totalCount);
 
-					resolve();
-				});
+		return +result.toFixed(2);
+	}
+
+	public getMissingChunks(symbol, timeFrame, from, until, count) {
+		let ranges = this.findByParams(symbol, timeFrame, true),
+			result = [{from, until, count}];
+
+		ranges.forEach(range => {
+			if (from && until) {
+				result = [{from, until, count}];
 			}
 			else {
-				resolve();
+				if ((!from || range[0] <= from) && (!until || range[1] >= until) && range[2] >= count) {
+					result = [];
+				}
 			}
 		});
+
+		return result
 	}
 
-	public async reset(instrument?: string, timeFrame?: string) {
+	public reset(symbol?: string, timeFrame?: string) {
 
-		return new Promise((resolve, reject) => {
+		this._map = {};
 
-			this._map = {};
+		if (this.mode === Mapper.MODE_PERSISTENT) {
 
-			if (this.mode === Mapper.MODE_PERSISTENT) {
+			if (fs.existsSync(this._pathFile))
+				fs.unlinkSync(this._pathFile);
 
-				// Remove cache dir recursive
-				rmdir(this.options.path, () => {
-
-					// Recreate cache dir
-					mkdirp(this.options.path, () => {
-						resolve();
-					})
-				});
-			} else {
-				resolve();
-			}
-		});
+		}
 	}
 
-	public findByParams(instrument: string, timeFrame: string, create = true): Array<any> {
+	public findByParams(symbol: string, timeFrame: string, create = true): Array<any> {
 		let map = this.map;
 
-		if (map[instrument])
-			if (map[instrument][timeFrame])
-				return map[instrument][timeFrame];
+		if (map[symbol])
+			if (map[symbol][timeFrame])
+				return map[symbol][timeFrame];
 
 		if (create) {
-			if (!map[instrument])
-				map[instrument] = {};
+			if (!map[symbol])
+				map[symbol] = {};
 
-			if (!map[instrument][timeFrame])
-				map[instrument][timeFrame] = [];
+			if (!map[symbol][timeFrame])
+				map[symbol][timeFrame] = [];
 
-			return map[instrument][timeFrame];
+			return map[symbol][timeFrame];
 		}
 
 		return null;

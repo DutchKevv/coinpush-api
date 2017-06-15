@@ -1,7 +1,7 @@
 import * as os      from 'os';
 import * as SYSTEM from '../../shared/constants/system';
-import Base from '../classes/Base';
 import {SystemState} from '../../shared/models/SystemState';
+import {Base} from '../../shared/classes/Base';
 
 export default class SystemController extends Base {
 
@@ -14,8 +14,8 @@ export default class SystemController extends Base {
 		workers: 1 // There is always 1 (this process)
 	});
 
-	constructor(protected opt, protected app) {
-		super(opt);
+	constructor(protected __options, protected app) {
+		super(__options);
 	}
 
 	async init() {

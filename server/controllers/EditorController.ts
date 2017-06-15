@@ -2,9 +2,9 @@ import * as fs      from 'fs';
 import * as path    from 'path';
 import * as winston	from 'winston-color';
 import {fork}      	from 'child_process';
-import Base from '../classes/Base';
 import {compile}	from '../compile/Compiler';
 import WorkerHost from '../classes/worker/WorkerHost';
+import {Base} from '../../shared/classes/Base';
 
 const rmdir = require('rmdir');
 
@@ -26,12 +26,12 @@ export default class EditorController extends Base {
 		return this._runnableList;
 	}
 
-	constructor(protected opt, protected app) {
-		super(opt);
+	constructor(protected __options, protected app) {
+		super(__options);
 	}
 
 	public async init() {
-		super.init();
+		await super.init();
 
 		return this._initWorker();
 	}
@@ -73,15 +73,17 @@ export default class EditorController extends Base {
 
 		});
 
-		this._worker._ipc.on('exit', (code) => {
+		await this._worker.init();
+
+		this._worker.ipc.on('exit', (code) => {
 			console.log('exit ' + code);
 		});
 
-		this._worker._ipc.on('error', (error) => {
+		this._worker.ipc.on('error', (error) => {
 			console.log(error);
 		});
 
-		this._worker._ipc.on('compile-result', (result) => {
+		this._worker.ipc.on('compile-result', (result) => {
 
 			if (result.errors.length) {
 				result.errors.forEach(error => {
@@ -94,16 +96,14 @@ export default class EditorController extends Base {
 			console.log('compile-result', result);
 		});
 
-		this._worker._ipc.on('directory-list', (list) => {
+		this._worker.ipc.on('directory-list', (list) => {
 			this._directoryTree = list;
 			// this.emit('directory-list', list);
 		});
 
-		this._worker._ipc.on('runnable-list', (list) => {
+		this._worker.ipc.on('runnable-list', (list) => {
 			this._runnableList = list;
 			// this.emit('runnable-list', list);
 		});
-
-		return this._worker.init();
 	}
 }

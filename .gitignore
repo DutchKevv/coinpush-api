@@ -13,6 +13,7 @@ package-lock.json
 Thumbs.db
 
 #### App ####
+/_logs
 /_builds
 !/_builds/ea/example/*
 !/_builds/indicator/example/*

@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Http} from '@angular/http';
-import {LoginComponent} from '../common/login/login.component';
+import {LoginComponent} from '../components/login/login.component';
 import {CookieService} from 'ngx-cookie';
 import {SocketService} from './socket.service';
 import {ModalService} from './modal.service';
@@ -13,8 +12,7 @@ export class UserService {
 
 	public model: UserModel = new UserModel();
 
-	constructor(private http: Http,
-				private _cookieService: CookieService,
+	constructor(private _cookieService: CookieService,
 				private _modalService: ModalService,
 				private _socketService: SocketService) {
 	}

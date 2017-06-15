@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "allowJs": true,
     "declaration": false,
     "experimentalDecorators": true,
     "lib": ["es6"],
@@ -13,6 +14,7 @@
       "node"
     ],
     "typeRoots": [
+      "../shared/node_modules/@types",
       "node_modules/@types"
     ],
     "pretty": true

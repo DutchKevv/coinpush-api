@@ -1,18 +1,17 @@
 // Lib
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
-import {HttpModule} from '@angular/http';
 
 // Pages
 import {HomeComponent}    from './pages/home/home.component';
 import {EditorComponent}  from './pages/editor/editor.component';
 
 // Components
-import {HeaderHomeComponent}  from './common/header-home/header-home.component';
-import {HeaderEditorComponent}  from './common/header-editor/header-editor.component';
-import {FooterComponent}  from './common/footer/footer.component';
-import {FileTreeComponent}  from './common/file-tree/file-tree.component';
-import {JSEditorComponent}  from './common/jseditor/jseditor.component';
+import {HeaderHomeComponent}  from './components/header-home/header-home.component';
+import {HeaderEditorComponent}  from './components/header-editor/header-editor.component';
+import {FooterComponent}  from './components/footer/footer.component';
+import {FileTreeComponent}  from './components/file-tree/file-tree.component';
+import {JSEditorComponent}  from './components/jseditor/jseditor.component';
 
 // Providers
 import {SocketService} from './services/socket.service';
@@ -23,29 +22,29 @@ import {AppComponent} from './app.component';
 import {routing} from './app.routing';
 
 import {MultiselectDropdownModule} from 'angular-2-dropdown-multiselect';
-import {InstrumentListComponent, SearchFilter} from './common/intrument-list/instrument-list.component';
-import {ChartOverviewComponent} from './common/chart-overview/chart-overview.component';
-import {ReportComponent} from './common/report/report.component';
+import {InstrumentListComponent, SearchFilter} from './components/intrument-list/instrument-list.component';
+import {ChartOverviewComponent} from './components/chart-overview/chart-overview.component';
 import {LoggedInGuard} from './guards/loggedin.guard';
 import {UserService} from './services/user.service';
-import {LoginComponent} from './common/login/login.component';
-import {StatusComponent} from './common/status/status.component';
+import {LoginComponent} from './components/login/login.component';
+import {StatusComponent} from './components/status/status.component';
 import {SystemService} from './services/system.service';
 import {ConstantsService} from './services/constants.service';
-import {DialogComponent} from './common/dialog/dialog.component';
-import {ModalComponent} from './common/modal/modal.component';
+import {DialogComponent} from './components/dialog/dialog.component';
+import {ModalComponent} from './components/modal/modal.component';
 import {DialogAnchorDirective} from './directives/dialoganchor.directive';
 import {ModalAnchorDirective} from './directives/modalanchor.directive';
 import {ModalService} from './services/modal.service';
 import {InstrumentsService} from './services/instruments.service';
 import {DraggableDirective} from './directives/draggable.directive';
 import {ResizableDirective} from './directives/resizable.directive';
-import {ChartBoxComponent} from './common/chart-box/chart-box.component';
-import {ChartComponent} from './common/chart/chart.component';
-import {ChartReportDirective} from './common/chart/chart-report.directive';
-import {BacktestSettingsComponent} from './common/backtest-settings/backtest-settings.component';
-import {BacktestReportsComponent} from './common/backtest-report/backtest-reports.component';
-import {NewsListComponent} from './common/news-feed/news-list';
+import {ChartBoxComponent} from './components/chart-box/chart-box.component';
+import {ChartComponent} from './components/chart/chart.component';
+import {ChartReportDirective} from './components/chart/chart-report.directive';
+import {BacktestSettingsComponent, GroupByPipe} from './components/backtest-settings/backtest-settings.component';
+import {BacktestReportComponent} from './components/backtest-report/backtest-report.component';
+import {NewsListComponent} from './components/news-feed/news-list';
+import {CacheService} from './services/cache.service';
 
 @NgModule({
 	declarations: [
@@ -57,7 +56,7 @@ import {NewsListComponent} from './common/news-feed/news-list';
 		HomeComponent,
 		EditorComponent,
 		BacktestSettingsComponent,
-		BacktestReportsComponent,
+		BacktestReportComponent,
 		JSEditorComponent,
 		FileTreeComponent,
 		NewsListComponent,
@@ -65,7 +64,6 @@ import {NewsListComponent} from './common/news-feed/news-list';
 		ChartOverviewComponent,
 		ChartBoxComponent,
 		ChartComponent,
-		ReportComponent,
 		StatusComponent,
 		DialogComponent,
 		DialogAnchorDirective,
@@ -74,7 +72,8 @@ import {NewsListComponent} from './common/news-feed/news-list';
 		DraggableDirective,
 		ResizableDirective,
 		ChartReportDirective,
-		SearchFilter
+		SearchFilter,
+		GroupByPipe
 	],
 	imports: [
 		BrowserModule,
@@ -82,7 +81,6 @@ import {NewsListComponent} from './common/news-feed/news-list';
 		routing,
 		FormsModule,
 		ReactiveFormsModule,
-		HttpModule,
 		MultiselectDropdownModule
 	],
 	providers: [
@@ -92,7 +90,8 @@ import {NewsListComponent} from './common/news-feed/news-list';
 		{provide: ConstantsService, useClass: ConstantsService},
 		{provide: SocketService, useClass: SocketService},
 		{provide: ModalService, useClass: ModalService},
-		{provide: InstrumentsService, useClass: InstrumentsService}
+		{provide: InstrumentsService, useClass: InstrumentsService},
+		{provide: CacheService, useClass: CacheService}
 	],
 	bootstrap: [
 		AppComponent

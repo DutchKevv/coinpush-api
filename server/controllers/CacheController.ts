@@ -1,17 +1,18 @@
 import * as path from 'path';
 import WorkerHost from '../classes/worker/WorkerHost';
 import App from '../app';
-import Base from '../classes/Base';
+import {Base} from '../../shared/classes/Base';
 
 export default class CacheController extends Base {
 
 	private _worker: WorkerHost = null;
+	private _symbolList: Array<any> = [];
 
-	constructor(protected opt, protected app: App) {
-		super(opt);
+	constructor(protected __options, protected app: App) {
+		super(__options);
 	}
 
-	public init() {
+	public async init() {
 
 		this._worker = new WorkerHost({
 			id: 'cache',
@@ -22,19 +23,19 @@ export default class CacheController extends Base {
 			}
 		});
 
-		this._worker._ipc.on('tick', tick => {
+		await this._worker.init();
+
+		this._worker.ipc.on('tick', tick => {
 			this.emit('tick', tick);
 		});
-
-		return this._worker.init();
 	}
 
-	public read(instrument, timeFrame, from, until, bufferOnly) {
+	public read(symbol, timeFrame, from, until, bufferOnly) {
 
 		return this
 			._worker
 			.send('read', {
-				instrument: instrument,
+				symbol: symbol,
 				timeFrame: timeFrame,
 				from: from,
 				until: until,
@@ -42,11 +43,11 @@ export default class CacheController extends Base {
 			});
 	}
 
-	public fetch(instrument, timeFrame, from, until) {
+	public fetch(symbol: string, timeFrame: string, from: number, until: number) {
 		return this
 			._worker
 			.send('fetch', {
-				instrument: instrument,
+				symbol: symbol,
 				timeFrame: timeFrame,
 				from: from,
 				until: until
@@ -59,15 +60,15 @@ export default class CacheController extends Base {
 			.send('@reset');
 	}
 
-	public getInstrumentList() {
-		return this._worker.send('instruments-list');
+	public getSymbolList() {
+		return this._worker.send('symbol:list');
 	}
 
 	public async updateSettings(settings) {
 		return this._worker.send('broker:settings', settings, true);
 	}
 
-	public async destroy() {
+	public destroy() {
 		if (this._worker)
 			return this._worker.kill();
 	}

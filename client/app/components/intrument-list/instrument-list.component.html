@@ -1,0 +1,36 @@
+<table>
+	<thead>
+	<tr>
+		<th>Instrument</th>
+		<th>Bid</th>
+		<th>Ask</th>
+	</tr>
+	<tr>
+		<th colspan="3">
+			<input class="search-instrument-list" type="text" placeholder="Search..." #search style="color: black;">
+		</th>
+	</tr>
+	</thead>
+	<tbody>
+		<tr *ngFor="let symbol of cacheService.symbolList$ | async" [attr.data-symbol]="symbol.options.name" [attr.title]="symbol.options.displayName">
+			<ng-container *ngIf="symbol.price$ | async; let price;">
+				<td (click)="instrumentService.create([{symbol: symbol.options.name}])">
+					<i class="fa fa-arrow-{{price.direction}}"></i>
+					{{ symbol.options.name }}
+				</td>
+
+				<td class="{{price.bidDirection}}">{{price.bid}}</td>
+				<td class="{{price.askDirection}}">{{price.ask}}</td>
+			</ng-container>
+		</tr>
+	</tbody>
+</table>
+
+
+<ul id="contextMenu" class="dropdown-menu" role="menu" style="display:none">
+	<li><a tabindex="-1" href="#">Action</a></li>
+	<li><a tabindex="-1" href="#">Another action</a></li>
+	<li><a tabindex="-1" href="#">Something else here</a></li>
+	<li class="divider"></li>
+	<li><a tabindex="-1" href="#">Separated link</a></li>
+</ul>

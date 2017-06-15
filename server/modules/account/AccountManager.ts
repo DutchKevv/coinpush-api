@@ -1,4 +1,4 @@
-import Base from '../../classes/Base';
+import {Base} from '../../../shared/classes/Base';
 
 export default class AccountManager extends Base {
 
@@ -12,8 +12,8 @@ export default class AccountManager extends Base {
 		this._equality = amount;
 	}
 
-	constructor(options) {
-		super(options);
+	constructor(__options) {
+		super(__options);
 	}
 
 	async init() {

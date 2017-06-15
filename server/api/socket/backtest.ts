@@ -1,37 +1,40 @@
-import BackTest     from '../../classes/backtest/Backtest';
+import {IBacktestSettings} from '../../../shared/interfaces/BacktestSettings';
 
 module.exports = (app, socket) => {
 
-	let backTest = null;
-
-	socket.on('backtest:run', async (data, cb) => {
-
+	socket.on('backtest:create', async (data: IBacktestSettings, cb: Function) => {
 		try {
-			// Ensure instruments is array
-			if (typeof data.instruments === 'string') {
-				data.instruments = data.instruments.split(',');
-			}
+			let backtest = await app.controllers.backtest.create(data);
 
-			// Ensure instruments are uppercase
-			data.instruments = data.instruments.map(instr => instr.toUpperCase());
+			cb(null, backtest.model.options);
 
-			data = {
-				ea: data.ea,
-				equality: data.equality,
-				instruments: data.instruments,
-				timeFrame: data.timeFrame,
-				from: parseInt(data.from, 10),
-				until: parseInt(data.until, 10),
-				pip: parseFloat(data.pips)
-			};
+			backtest.on('status', status => {
+				socket.emit('backtest:status', {
+					id: backtest.model.options.id,
+					status: status
+				});
+			});
 
-			backTest = new BackTest(app, data);
+			// backtest.on('finish', (report) => {
+			// 	socket.emit('backtest:finish');
+			// });
 
-			cb(null, await backTest.run());
-		} catch (error) {
-			console.log('asdfasfasfdsfssdf');
-			console.error(error);
-			cb(error);
+			socket.broadcast.emit('backtest-created', backtest.options);
+		} catch (err) {
+			console.log(err);
+			cb(err);
 		}
+	});
+
+	socket.on('backtest:run', async (data) => {
+		app.controllers.backtest.run(data);
+	});
+
+	socket.on('backtest:pause', async (data, cb) => {
+
+	});
+
+	socket.on('backtest:destroy', async (data, cb) => {
+
 	});
 };

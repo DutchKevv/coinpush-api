@@ -4,24 +4,15 @@ import {InstrumentSettings} from '../../../shared/interfaces/InstrumentSettings'
 module.exports = (app: App, socket) => {
 
 	// Create
-	socket.on('instrument:create', async (options: InstrumentSettings, cb: Function) => {
+	socket.on('instrument:create', async (options: Array<InstrumentSettings>, cb: Function) => {
+
 		try {
-			let instrument = await app.controllers.instrument.create(options.instrument, options.timeFrame, options.live);
+			let instruments = await app.controllers.instrument.create(options);
 
-			cb(null, {
-				id: instrument.id,
-				timeFrame: instrument.timeFrame,
-				instrument: instrument.instrument,
-				live: instrument.live
-			});
+			cb(null, instruments.map(instrument => ({id: instrument.options.id})));
 
-			socket.broadcast.emit('instrument-created', {
-				id: instrument.id,
-				timeFrame: instrument.timeFrame,
-				instrument: instrument.instrument,
-				live: instrument.live
-			});
 		} catch (error) {
+			console.error(error);
 			cb(error);
 		}
 	});
@@ -29,9 +20,11 @@ module.exports = (app: App, socket) => {
 	// TODO: Move to cache API
 	// Read bars
 	socket.on('instrument:read', async (options, cb) => {
+		console.log('options options', options);
 		try {
 			cb(null, await app.controllers.instrument.read(options.id, options.from, options.until, options.count, undefined, options.indicators))
 		} catch (error) {
+			console.error(error);
 			cb(error);
 		}
 	});
@@ -68,21 +61,12 @@ module.exports = (app: App, socket) => {
 			list.push({
 				id: instrument.id,
 				timeFrame: instrument.timeFrame,
-				instrument: instrument.instrument,
+				symbol: instrument.symbol,
 				live: instrument.live
 			});
 		}
 
 		cb(null, list);
-	});
-
-	socket.on('instrument:list', async (options, cb) => {
-		try {
-			cb(null, await app.controllers.cache.getInstrumentList());
-		} catch (error) {
-			console.log(error);
-			cb(error);
-		}
 	});
 
 	socket.on('instrument:toggleTimeFrame', async (options, cb) => {
@@ -102,6 +86,7 @@ module.exports = (app: App, socket) => {
 		try {
 			cb(null, await app.controllers.instrument.addIndicator(options));
 		} catch (error) {
+			console.error(error);
 			cb(error);
 		}
 	});

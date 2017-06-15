@@ -6,28 +6,26 @@ import Mapper           from './CacheMap';
 import Fetcher          from './CacheFetch';
 import WorkerChild      from '../worker/WorkerChild';
 import BrokerApi        from '../broker-api/oanda/oanda';
-import BarCalculator    from './util/bar-calculator';
 import CacheDataLayer   from './CacheDataLayer';
-
-// const sqlLite     = require('sqlite3').verbose();
 
 export default class Cache extends WorkerChild {
 
-	public settings: { account: AccountSettings, path: any } = this.opt.settings;
+	static COUNT_DEFAULT = 500;
+
+	public settings: { account: AccountSettings, path: any };
 
 	private _ready = false;
 	private _brokerApi: BrokerApi = null;
-
 	private _dataLayer: CacheDataLayer;
 	private _mapper: Mapper;
 	private _fetcher: Fetcher;
-	private _barCalculator: BarCalculator = new BarCalculator();
-	private _instrumentList: Array<any> = [];
-
+	private _symbolList: Array<any> = [];
 	private _listeners = {};
 
 	public async init() {
 		await super.init();
+
+		this.settings = this.options.settings;
 
 		// Ensure cache dir exists
 		mkdirp.sync(this.settings.path.cache);
@@ -43,90 +41,149 @@ export default class Cache extends WorkerChild {
 		await this._mapper.init();
 		await this._fetcher.init();
 
-		await this._setChannelEvents();
-		await this._ipc.startServer();
+		this._setChannelEvents();
+		await this.ipc.startServer();
 	}
 
-	public async read(instrument: string, timeFrame: string, from?: number, until?: number, count?: number, bufferOnly = true): Promise<any> {
+	public async read(params: {symbol: string, timeFrame: string, from: number, until: number, count: number}): Promise<any> {
+		if (!params.symbol || typeof params.symbol !== 'string')
+			throw new Error('Cache-Read : No symbol given');
+
+		if (!params.timeFrame || typeof params.timeFrame !== 'string')
+			throw new Error('Cache-Read : No timeFrame given');
+
+		if (params.count && params.from && params.until)
+			throw new Error('Cache->Read : Only from OR until can be given when using count, not both');
+
+		if (!params.from && !params.until)
+			params.until = Date.now();
+
+		params.count = params.count || Cache.COUNT_DEFAULT;
+
+		// Ensure data is complete
+		await this.fetch(params.symbol, params.timeFrame, params.from, params.until, params.count);
+
+		// Read data after complete
+		return await this._dataLayer.read(params.symbol, params.timeFrame, params.from, params.until, params.count);
+	}
+
+	public async fetch(symbol: string, timeFrame: string, from: number, until: number, count: number, emitStatus = false): Promise<void> {
+		winston.info(`Cache: Fetching ${symbol}`);
 
 		if (count && from && until)
-			return Promise.reject('Cache->Read : Only from OR until can be given when using count, not both');
+			throw new Error('Cache->fetch : Only from OR until can be given when using count, not both');
 
-		if (!from && !until) {
-			until = Date.now();
+		if (this._mapper.isComplete(symbol, timeFrame, from, until, count)) {
+			return;
 		}
 
-		count = count || 500;
+		// Get missing chunks
+		let chunks = this._mapper.getMissingChunks(symbol, timeFrame, from, until, count),
+			done = 0;
 
-		let data = await this._dataLayer.read(instrument, timeFrame, from, until, count);
+		if (!chunks.length)
+			return;
 
-		if (!data.length || data.length / 10 < count /*|| !this._mapper.isComplete(instrument, timeFrame, data[0], data[data.length - 10])*/) {
+		// Fire all missing chunk request
+		await Promise.all(chunks.map(chunk => {
 
-			await this._fetcher.fetch(this._brokerApi, instrument, timeFrame, from, until, count);
+			return new Promise((resolve, reject) => {
+				let now = Date.now(),
+					total = 0;
 
-			data = await this._dataLayer.read(instrument, timeFrame, from, until, count);
-		}
+				this._brokerApi.getCandles(symbol, timeFrame, chunk.from, chunk.until, chunk.count, async (buf: NodeBuffer) => {
 
-		return data;
+					// Make sure there is a from to store in mapper
+					from = from || buf.readDoubleLE(0);
+
+					// Store candles in DB
+					await this._dataLayer.write(symbol, timeFrame, buf);
+
+					let c_until = buf.readDoubleLE(buf.length - (10 * Float64Array.BYTES_PER_ELEMENT)),
+						c_count = buf.length / (10 * Float64Array.BYTES_PER_ELEMENT);
+
+					total += c_count;
+
+					// Update map every time a chunk is successfully added
+					// Use the original from date (if given) as data comes in forwards, this simplifies the mapper updating
+					this._mapper.update(symbol, timeFrame, from, c_until, c_count);
+
+					// Send trigger for clients
+					if (emitStatus) {
+						this.ipc.send('main', 'cache:fetch:status', {
+							symbol: symbol,
+							timeFrame: timeFrame,
+							value: this._mapper.getPercentageComplete(symbol, timeFrame, from, until, count)
+						}, false);
+					}
+				}, err => {
+
+					if (err)
+						return reject(err);
+
+					// Update the total request
+					this._mapper.update(symbol, timeFrame, from, until, total);
+
+					winston.info(`Cache: Fetching ${symbol} took ${Date.now() - now} ms`);
+
+					if (++done === chunks.length)
+						resolve();
+				});
+			});
+		}));
 	}
 
-	public async reset(instrument?: string, timeFrame?: string, from?: number, until?: number) {
+	public async reset(symbol?: string, timeFrame?: string, from?: number, until?: number): Promise<any> {
 		winston.info('Reset cache');
 
 		await Promise.all([
-			this._mapper.reset(instrument, timeFrame),
+			this._mapper.reset(symbol, timeFrame),
 			this._dataLayer.reset()
 		]);
 
-		return this._dataLayer.createInstrumentTables(this._instrumentList.map(instr => instr.instrument));
+		return this._dataLayer.createInstrumentTables(this._symbolList.map(symbol => symbol.name));
 	}
 
-	public async fetch(instrument, timeFrame, from, until, count) {
-
+	private _broadCastTick(tick): void {
+		this.ipc.send('main', 'tick', tick, false);
 	}
 
-	private _broadCastTick(tick) {
-		this._ipc.send('main', 'tick', tick, false);
-	}
-
-	private _setChannelEvents() {
-		this._ipc.on('read', (opt, cb) => {
+	private _setChannelEvents(): void {
+		this.ipc.on('read', (params, cb) => {
 			this
-				.read(opt.instrument, opt.timeFrame, opt.from, opt.until, opt.count, opt.bufferOnly)
+				.read(params)
 				.then(data => cb(null, data))
 				.catch(cb);
 		});
 
-		this._ipc.on('fetch', (opt, cb) => {
-			this
-				._fetcher
-				.fetch(this._brokerApi, opt.instrument, opt.timeFrame, opt.from, opt.until, opt.count)
+		this.ipc.on('fetch', (opt, cb) => {
+			this.fetch(opt.symbol, opt.timeFrame, opt.from, opt.until, opt.count, true)
 				.then(() => cb(null))
 				.catch(cb);
 		});
 
-		this._ipc.on('@reset', (opt, cb) => {
+		this.ipc.on('@reset', (opt, cb) => {
 			this
 				.reset()
 				.then(data => cb(null, data))
 				.catch(cb);
 		});
 
-		this._ipc.on('register', (opt, cb) => {
-			this._listeners[opt.id] = opt.instrument;
+		this.ipc.on('register', (opt, cb) => {
+			this._listeners[opt.id] = opt.symbol;
 			cb(null);
 		});
 
-		this._ipc.on('unregister', (opt, cb) => {
+		this.ipc.on('unregister', (opt, cb) => {
 			delete this._listeners[opt.id];
 			cb(null);
 		});
 
-		this._ipc.on('instruments-list', (opt, cb) => {
-			cb(null, this._instrumentList);
+		this.ipc.on('symbol:list', (opt, cb) => {
+			cb(null, this._symbolList);
 		});
 
-		this._ipc.on('broker:settings', async (accountSettings: AccountSettings, cb) => {
+		this.ipc.on('broker:settings', async (accountSettings: AccountSettings, cb) => {
 			this.settings.account = accountSettings;
 			cb(null, await this._setBrokerApi())
 		});
@@ -145,7 +202,7 @@ export default class Cache extends WorkerChild {
 			this._brokerApi.on('error', error => {});
 			this._brokerApi.on('tick', tick => this._broadCastTick(tick));
 
-			if (await this._loadAvailableInstruments() === true && await this._openTickStream() === true) {
+			if (await this._loadAvailableSymbols() === true && await this._openTickStream() === true) {
 				this._ready = true;
 			}
 		} catch (error) {
@@ -155,24 +212,23 @@ export default class Cache extends WorkerChild {
 		return this._ready;
 	}
 
-	private async _loadAvailableInstruments(): Promise<boolean> {
+	private async _loadAvailableSymbols(): Promise<boolean> {
 		winston.info('loading instruments list');
 
 		try {
-			let instrumentList = await this._brokerApi.getInstruments();
-			let currentPrices = await this._brokerApi.getCurrentPrices(instrumentList.map(instrument => instrument.instrument));
+			let symbolList = await this._brokerApi.getSymbols();
+			let currentPrices = await this._brokerApi.getCurrentPrices(symbolList.map(symbol => symbol.name));
 
-			instrumentList.forEach(instrument => {
-				let price = currentPrices.find(priceObj => priceObj.instrument === instrument.instrument);
+			symbolList.forEach(symbol => {
+				let price = currentPrices.find(priceObj => priceObj.instrument === symbol.name);
 
-				instrument.bid = price.bid;
-				instrument.ask = price.ask;
+				symbol.bid = price.bid;
+				symbol.ask = price.ask;
 			});
 
-			await this._dataLayer.createInstrumentTables(instrumentList.map(instr => instr.instrument));
+			await this._dataLayer.createInstrumentTables(symbolList.map(symbol => symbol.name));
 
-			// Do not trust result
-			this._instrumentList = instrumentList;
+			this._symbolList = symbolList;
 
 			return true;
 		} catch (error) {
@@ -185,7 +241,7 @@ export default class Cache extends WorkerChild {
 		winston.info('opening tick stream');
 
 		try {
-			await Promise.all(this._instrumentList.map(instrument => this._brokerApi.subscribePriceStream(instrument.instrument)));
+			await Promise.all(this._symbolList.map(symbol => this._brokerApi.subscribePriceStream(symbol.name)));
 			return true;
 		} catch (error) {
 			return false;

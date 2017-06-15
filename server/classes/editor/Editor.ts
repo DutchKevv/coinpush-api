@@ -2,7 +2,7 @@ import WorkerChild from '../worker/WorkerChild';
 import * as fs      from 'fs';
 import * as watch 	from 'watch';
 import * as path 	from 'path';
-import * as winston from 'winston';
+import * as winston from 'winston-color';
 import * as ts 		from 'typescript';
 import * as mkdirp  from 'mkdirp';
 import * as dirTree  from 'directory-tree';
@@ -265,14 +265,14 @@ export default class Editor extends WorkerChild {
 			}
 
 			let success = !emitResult.emitSkipped;
-			this._ipc.send('main', 'compile-result', {errors: errors}, false)
+			this.ipc.send('main', 'compile-result', {errors: errors}, false)
 		} catch (error) {
-			this._ipc.send('main', 'compile-result', {errors: [error]}, false)
+			this.ipc.send('main', 'compile-result', {errors: [error]}, false)
 		}
 	}
 
 	private _setIPCListeners() {
-		this._ipc.on('file:load', async (data, cb) => {
+		this.ipc.on('file:load', async (data, cb) => {
 			try {
 				cb(null, await this.loadFile(data.id));
 			} catch (error) {
@@ -281,7 +281,7 @@ export default class Editor extends WorkerChild {
 			}
 		});
 
-		this._ipc.on('file:save', async (data, cb) => {
+		this.ipc.on('file:save', async (data, cb) => {
 			try {
 				cb(null, await this.save(data.id, data.content));
 			} catch (error) {
@@ -290,7 +290,7 @@ export default class Editor extends WorkerChild {
 			}
 		});
 
-		this._ipc.on('file:create', async (data, cb) => {
+		this.ipc.on('file:create', async (data, cb) => {
 			try {
 				cb(null, await this.createFile(data.parent, data.name));
 			} catch (error) {
@@ -299,7 +299,7 @@ export default class Editor extends WorkerChild {
 			}
 		});
 
-		this._ipc.on('file:delete', async (data, cb) => {
+		this.ipc.on('file:delete', async (data, cb) => {
 			try {
 				cb(null, await this.delete(data.id));
 			} catch (error) {
@@ -308,7 +308,7 @@ export default class Editor extends WorkerChild {
 			}
 		});
 
-		this._ipc.on('file:rename', async (data, cb) => {
+		this.ipc.on('file:rename', async (data, cb) => {
 			try {
 				cb(null, await this.rename(data.id, data.name));
 			} catch (error) {
@@ -317,15 +317,15 @@ export default class Editor extends WorkerChild {
 			}
 		});
 
-		this._ipc.on('file:copy', async (data, cb) => {
+		this.ipc.on('file:copy', async (data, cb) => {
 
 		});
 
-		this._ipc.on('file:move', async (data, cb) => {
+		this.ipc.on('file:move', async (data, cb) => {
 
 		});
 
-		this._ipc.on('directory:create', async (data, cb) => {
+		this.ipc.on('directory:create', async (data, cb) => {
 			try {
 				cb(null, await this.createDirectory(data.id, data.name));
 			} catch (error) {
@@ -345,7 +345,7 @@ export default class Editor extends WorkerChild {
 			this._directoryTree = this._normalizeDirectoryTree(tree);
 		}
 
-		this._ipc.send('main', 'directory-list', this._directoryTree, false);
+		this.ipc.send('main', 'directory-list', this._directoryTree, false);
 	}
 
 	private _normalizeDirectoryTree(arr: any): Array<any> {
@@ -376,7 +376,7 @@ export default class Editor extends WorkerChild {
 
 		this._runnableList = runnableList;
 
-		this._ipc.send('main', 'runnable-list', runnableList, false);
+		this.ipc.send('main', 'runnable-list', runnableList, false);
 	}
 
 	// TODO - Hacky

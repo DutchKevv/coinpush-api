@@ -1,11 +1,13 @@
 {
-  "name": "tradejs",
-  "description": "Javascript Trading Client",
+  "releaseName": "tradejs-server",
+  "name": "tradejs-server",
+  "version": "0.0.1-alpha-4",
+  "description": "Javascript Trading Client and Server",
   "email": "kewin@frontend-freelance.com",
   "author": "Kewin Brandsma",
+  "main": "index.js",
   "private": false,
   "license": "CC-BY-NC-ND-4.0",
-  "main": "_app.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/DutchKevv/TradeJS.git"
@@ -30,9 +32,6 @@
     "__temp-node-ipc": "git://github.com/RIAEvangelist/node-ipc.git#v9.x"
   },
   "dependencies": {
-    "@types/core-js": "0.9.41",
-    "@types/lodash": "4.14.64",
-    "@types/node": "7.0.29",
     "backbone-events-standalone": "0.2.7",
     "body-parser": "1.17.2",
     "cli-table": "0.3.1",
@@ -44,19 +43,16 @@
     "event-pubsub": "4.2.4",
     "express": "4.15.3",
     "freeport": "1.0.5",
-    "lodash": "4.17.4",
+    "gulp-typescript": "^3.1.7",
     "minimist": "1.2.0",
     "mkdirp": "0.5.1",
-    "moment": "*",
     "node-ipc": "git://github.com/RIAEvangelist/node-ipc.git#v9.x",
-    "readable-timespan": "1.2.0",
     "request": "2.81.0",
     "rmdir": "1.2.0",
-    "socket.io": "1.7.3",
     "source-map-support": "0.4.15",
     "sqlite3": "3.1.8",
     "sqlite3-transactions": "0.0.5",
-    "typescript": "2.3.4",
+    "typescript": "^2.3.4",
     "watch": "1.0.2",
     "winston": "2.3.1",
     "winston-color": "1.0.0"
@@ -70,13 +66,9 @@
     "@types/freeport": "1.0.21",
     "@types/minimist": "1.2.0",
     "@types/mkdirp": "0.3.29",
-    "@types/moment": "2.13.0",
-    "@types/socket.io": "1.4.29",
-    "@types/socket.io-client": "1.4.29",
     "@types/sqlite3": "3.1.0",
     "gulp": "3.9.1",
     "gulp-sourcemaps": "2.6.0",
-    "gulp-typescript": "3.1.7",
     "run-sequence": "1.2.2"
   }
 }

@@ -1,0 +1,72 @@
+<h4>General</h4>
+<div class="row">
+	<!--<div class="col-sm-3">-->
+		<!--<ul class="key-value-list">-->
+			<!--<li><span>Started</span>{{model.options.startTime | date | date: 'dd/MM/yyyy'}}</li>-->
+			<!--<li><span>From</span>{{model.options.from | date | date: 'dd/MM/yyyy'}}</li>-->
+			<!--<li><span>Until</span>{{model.options.until | date | date: 'dd/MM/yyyy'}}</li>-->
+		<!--</ul>-->
+	<!--</div>-->
+	<!--<div class="col-sm-3">-->
+		<!--<ul class="key-value-list">-->
+			<!--&lt;!&ndash;<li><span>Diff</span>{{model.options.diff}}</li>&ndash;&gt;-->
+			<!--&lt;!&ndash;<li><span>Nr of trades</span>{{model.options.nrOfTrades}}</li>&ndash;&gt;-->
+		<!--</ul>-->
+	<!--</div>-->
+	<!--<div class="col-sm-3">-->
+		<!--<ul class="key-value-list">-->
+			<!--<li><span>Completed in</span>{{model.options.totalTime}}</li>-->
+			<!--&lt;!&ndash;<li><span>Fetching</span>{{model.options.fetchingPretty}}</li>&ndash;&gt;-->
+			<!--&lt;!&ndash;<li><span>Testing</span>{{model.options.testingPretty}}</li>&ndash;&gt;-->
+		<!--</ul>-->
+	<!--</div>-->
+
+	<!--<div class="col-sm-3">-->
+		<!--<ul class="key-value-list">-->
+			<!--<li><span>Ticks</span>{{model.options.ticks}}</li>-->
+			<!--<li><span>Ticks p / s</span>{{model.options.ticksPerSecond}}</li>-->
+		<!--</ul>-->
+	<!--</div>-->
+</div>
+
+<hr/>
+
+
+<div *ngFor="let model of models">
+
+	<div class="tpl-model">
+		<div class="row">
+			<h5>{{model.options.symbol}}</h5>
+			<div class="col-sm-12">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-fixed-220 pull-left">
+							<ul class="key-value-list">
+								<li><span>Diff</span><span
+										[class.text-negative]="model.options.diff < 0"
+										[class.text-positive]="model.options.diff > 0"
+								>€ {{model.options.diff}}</span></li>
+								<li><span>Equality</span>€ {{model.options.equality}}</li>
+								<li><span>Nr of trades</span>{{model.options.orders.length}}</li>
+							</ul>
+							\
+							<ul class="key-value-list">
+								<li><span>Completed in</span>{{model.options.totalPretty}}</li>
+								<li><span>Fetching</span>{{model.options.fetchingPretty}}</li>
+								<li><span>Testing</span>{{model.options.testingPretty}}</li>
+							</ul>
+							<ul class="key-value-list">
+								<li><span>Time frame</span>{{model.options.timeFrame}}</li>
+								<li><span>Ticks</span>{{model.options.ticks}}</li>
+								<li><span>Ticks p / s</span>{{model.options.ticksPerSecond}}</li>
+							</ul>
+						</div>
+						<div class="" style="margin-left: 220px;">
+							<div chart-report class="chart" [height]="200" [data]="model.options.orders"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

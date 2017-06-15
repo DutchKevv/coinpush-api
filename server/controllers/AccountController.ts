@@ -1,5 +1,5 @@
-import Base from '../classes/Base';
 import App from '../app';
+import {Base} from '../../shared/classes/Base';
 
 export default class AccountController extends Base {
 
@@ -13,8 +13,8 @@ export default class AccountController extends Base {
 			return this._details.equality;
 	}
 
-	constructor(options, protected app: App) {
-		super(options);
+	constructor(protected __options, protected app: App) {
+		super(__options);
 	}
 
 	public async init() {

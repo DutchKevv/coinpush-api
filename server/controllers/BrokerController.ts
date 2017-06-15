@@ -1,6 +1,6 @@
 import * as path    from 'path';
 import * as winston	from 'winston-color';
-import Base         from '../classes/Base';
+import {Base} from '../../shared/classes/Base';
 
 export default class BrokerController extends Base {
 
@@ -10,8 +10,8 @@ export default class BrokerController extends Base {
 	private _ready = false;
 	private _brokerApi: any;
 
-	constructor(protected opt, protected app) {
-		super(opt);
+	constructor(protected __options, protected app) {
+		super(__options);
 	}
 
 	public async init(): Promise<void> {}
@@ -69,15 +69,5 @@ export default class BrokerController extends Base {
 		winston.info('Broker Disconnected');
 
 		this.emit('disconnected');
-	}
-
-	async getInstrumentList(): Promise<any> | null {
-		winston.info('Loading instrument list');
-
-		try {
-			return await this._brokerApi.getInstruments();
-		} catch (error) {
-			return null;
-		}
 	}
 }

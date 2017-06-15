@@ -3,8 +3,8 @@ declare let $: any;
 
 import {Component, ViewChild, AfterViewInit, ElementRef} from '@angular/core';
 import {Router} from '@angular/router';
-import {FileTreeComponent}  from '../../common/file-tree/file-tree.component';
-import {JSEditorComponent}  from '../../common/jseditor/jseditor.component';
+import {FileTreeComponent}  from '../../components/file-tree/file-tree.component';
+import {JSEditorComponent}  from '../../components/jseditor/jseditor.component';
 
 @Component({
 	selector: 'page-editor',
