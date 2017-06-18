@@ -30,7 +30,7 @@ export default class InstrumentCache extends WorkerChild {
 		await this.ipc.connectTo('cache');
 		await this._doPreFetch();
 
-		if (this.options.live) {
+		if (this.options.type === 'live') {
 			await this._toggleNewTickListener(true);
 		}
 	}
@@ -62,7 +62,7 @@ export default class InstrumentCache extends WorkerChild {
 	}
 
 	private async _doTickLoop(candles, tick = true) {
-
+		console.log('TICK LOOP!', candles.length);
 		if (!candles.length)
 			return;
 

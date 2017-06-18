@@ -1,6 +1,7 @@
 import {EventEmitter}   from 'events';
 import * as merge       from 'deepmerge';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {Subject} 		from 'rxjs/Subject';
 
 export class Base extends EventEmitter {
 
@@ -9,7 +10,8 @@ export class Base extends EventEmitter {
 	public static readonly isNode = !!process;
 
 	public initialized = false;
-	public changed$ = new BehaviorSubject({});
+	public readonly changed$ = new Subject();
+	public readonly options$ = new BehaviorSubject({});
 
 	public get options() {
 		return this._options;
@@ -36,18 +38,24 @@ export class Base extends EventEmitter {
 
 		if (triggerChange)
 			this.changed$.next(<any>obj);
+
+		this.options$.next(this._options);
+	}
+
+	private _updateRecursive(obj) {
+
+
 	}
 
 	private __setInitialOptions(target, options) {
-		let defaults = {};
-
 		do {
 			if (target.DEFAULTS)
-				Object.assign(defaults, target.DEFAULTS);
+				Object.assign(this._options, JSON.parse(JSON.stringify(target.DEFAULTS)));
 
 			target = target.__proto__;
 		} while(target.__proto__);
 
-		this._options = Object.assign(defaults, options);
+		Object.assign(this._options, options);
+		this.options$.next(this._options);
 	}
 }

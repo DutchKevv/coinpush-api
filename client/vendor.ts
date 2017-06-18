@@ -12,33 +12,63 @@ import './polyfills';
 // import {RouterModule, Route, CanActivate}  	from '@angular/router';
 // import {CookieService} from 'ngx-cookie';
 
+/**
+ * Angular
+ */
 import '@angular/core';
 import '@angular/forms';
 import '@angular/router';
 import '@angular/platform-browser-dynamic';
 import 'angular-2-dropdown-multiselect';
-import 'rxjs';
 import 'ngx-cookie';
 
+/**
+ * Helper tools
+ */
+import 'rxjs';
 import 'moment';
 import {forEach, throttle, debounce, random} from 'lodash';
-import 'jquery/dist/jquery.min.js';
-import 'jquery-resizable-dom';
 
-import './assets/custom/js/electron.js';
-import './assets/custom/js/contextMenu.js';
-import './node_modules/bootstrap/dist/js/bootstrap.min.js';
-import './node_modules/jquery-resizable-dom/dist/jquery-resizable';
-import './node_modules/jstree/dist/jstree.js';
+/**
+ * jQuery (plugins)
+ */
+import 'jquery/dist/jquery.min.js';
 import './node_modules/jquery-touchswipe/jquery.touchSwipe.js';
+
+/**
+ * Bootstrap
+ */
+import 'tether';
+import './node_modules/bootstrap/dist/js/bootstrap.min.js';
+// import './node_modules/bootstrap/js/dist/util.js'
+// import './node_modules/bootstrap/js/dist/modal.js'
+// import './node_modules/bootstrap/js/dist/button.js'
+// import './node_modules/bootstrap/js/dist/dropdown.js'
+
+/**
+ * File tree
+ */
+import './node_modules/jstree/dist/jstree.js';
+
+/**
+ * Ace editor
+ */
 import './assets/vendor/js/ace/ace.js';
 import './assets/vendor/js/ace/theme-tomorrow_night_bright.js';
 import './assets/vendor/js/ace/mode-javascript.js';
 import './assets/vendor/js/ace/mode-typescript.js';
 
-import './node_modules/font-awesome/css/font-awesome.css';
-import './node_modules/bootstrap/dist/css/bootstrap.min.css';
-import './node_modules/jstree/dist/themes/default/style.css';
-import './node_modules/jstree/dist/themes/default-dark/style.css';
+/**
+ * Highstock
+ */
+import 'highcharts/highstock';
+import './assets/custom/highcharts/theme/theme.default';
+import './assets/custom/highcharts/theme/theme.dark';
+import 'interactjs';
 
+/**
+ * Custom
+ */
+import './assets/custom/js/electron.js';
+import './assets/custom/js/contextMenu.js';
 import './assets/custom/css/contextMenu.css';

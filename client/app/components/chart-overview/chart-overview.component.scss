@@ -1,18 +1,7 @@
 @import '../../style/variables/variables';
 
 :host {
-    height: 100%;
-}
-
-.chart-overview-container {
-    position: absolute;
-    top: 0;
-    bottom: 22px;
-    left: 0;
-    right: 0;
-    overflow: hidden;
-    // background: url('../../../assets/img/charts-overview-background.jpg') repeat;
-
+    position: relative;
 }
 
 .chart-no-charts {
@@ -27,33 +16,34 @@
 
 .chart-overview-tabs {
 
-    ul > li {
-        float: left;
+    ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
 
-        > a {
-            padding: 3px 7px;
-            font-size: 10px;
-            display: block;
-            border-right: 1px solid $border-color-grey;
-
-            &:hover {
-                background: $general-secondary;
-                color: $font-color-dark;
+        > li {
+            > a {
+                padding: 3px 7px;
+                font-size: 10px;
+                display: block;
+                border-right: 1px solid $border-color-grey;
+                color: white;
+                &:hover {
+                    background: $general-secondary;
+                    color: $font-color-dark;
+                }
             }
-        }
 
-        &.active > a {
-            background: $general-primary !important;
-            color: $font-color-light !important;
+            &.active > a {
+                background: $general-active !important;
+                color: $font-color-light !important;
+            }
         }
     }
 
     border-top: 1px solid $border-color-grey;
     background: $background-dark;
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
 }
 
 .chart-overview-buttons {

@@ -1,0 +1,13 @@
+<backtest-settings></backtest-settings>
+
+<ul>
+	<li *ngFor="let groupId of instrumentService.groupIds$ | async;"
+		[attr.data-group-id]="groupId"
+		(click)="active$.next(groupId)"
+		[class.active]="(active$ | async) === groupId"
+	>
+		<a>{{groupId}}</a>
+	</li>
+</ul>
+
+<backtest-report *ngIf="(active$ | async) as active" [models]="instrumentService.getByGroupId(active)"></backtest-report>

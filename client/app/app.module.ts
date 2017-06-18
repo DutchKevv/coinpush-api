@@ -36,44 +36,43 @@ import {DialogAnchorDirective} from './directives/dialoganchor.directive';
 import {ModalAnchorDirective} from './directives/modalanchor.directive';
 import {ModalService} from './services/modal.service';
 import {InstrumentsService} from './services/instruments.service';
-import {DraggableDirective} from './directives/draggable.directive';
 import {ResizableDirective} from './directives/resizable.directive';
 import {ChartBoxComponent} from './components/chart-box/chart-box.component';
 import {ChartComponent} from './components/chart/chart.component';
-import {ChartReportDirective} from './components/chart/chart-report.directive';
+import {ChartReportComponent} from './components/chart-report/chart-report.component';
 import {BacktestSettingsComponent, GroupByPipe} from './components/backtest-settings/backtest-settings.component';
 import {BacktestReportComponent} from './components/backtest-report/backtest-report.component';
-import {NewsListComponent} from './components/news-feed/news-list';
 import {CacheService} from './services/cache.service';
+import {BacktestComponent, GroupIdsPipe} from './components/backtest/backtest.component';
 
 @NgModule({
 	declarations: [
 		AppComponent,
-		LoginComponent,
-		HeaderHomeComponent,
-		HeaderEditorComponent,
-		FooterComponent,
-		HomeComponent,
-		EditorComponent,
-		BacktestSettingsComponent,
+		BacktestComponent,
 		BacktestReportComponent,
-		JSEditorComponent,
-		FileTreeComponent,
-		NewsListComponent,
-		InstrumentListComponent,
-		ChartOverviewComponent,
+		BacktestSettingsComponent,
 		ChartBoxComponent,
 		ChartComponent,
-		StatusComponent,
-		DialogComponent,
+		ChartOverviewComponent,
+		ChartReportComponent,
 		DialogAnchorDirective,
+		DialogComponent,
+		EditorComponent,
+		FileTreeComponent,
+		FooterComponent,
+		GroupByPipe,
+		GroupIdsPipe,
+		HeaderHomeComponent,
+		HeaderEditorComponent,
+		HomeComponent,
+		InstrumentListComponent,
+		JSEditorComponent,
+		LoginComponent,
 		ModalComponent,
 		ModalAnchorDirective,
-		DraggableDirective,
 		ResizableDirective,
-		ChartReportDirective,
 		SearchFilter,
-		GroupByPipe
+		StatusComponent
 	],
 	imports: [
 		BrowserModule,

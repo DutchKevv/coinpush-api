@@ -1,27 +1,36 @@
 import {throttle, cloneDeep} from 'lodash';
-import {ElementRef, OnInit, Input, Component, ChangeDetectionStrategy, OnDestroy, NgZone} from '@angular/core';
+import {
+	ElementRef, OnInit, Input, Component, ChangeDetectionStrategy, OnDestroy, NgZone,
+	ViewEncapsulation, AfterViewInit, ViewChild, Output, ChangeDetectorRef
+} from '@angular/core';
 
-import {HighchartsDefaultTheme} from './themes/theme.default';
-import './themes/theme.dark';
+import {HighchartsDefaultTheme} from '../../../assets/custom/highcharts/theme/theme.default';
+// import './themes/theme.dark';
 import {InstrumentsService} from '../../services/instruments.service';
 import {InstrumentModel} from '../../../../shared/models/InstrumentModel';
 
-const HighStock = require('highcharts/highstock');
+import * as HighStock from 'highcharts/highstock';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
 @Component({
 	selector: 'chart',
 	exportAs: 'chart',
-	styleUrls: ['./chart.component.scss'],
+	// styleUrls: ['./chart.component.scss'],
 	templateUrl: './chart.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	encapsulation: ViewEncapsulation.Native
 })
 
-export class ChartComponent implements OnInit, OnDestroy {
+export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 	@Input() type = 'stock';
 	@Input() model: InstrumentModel;
 	@Input() height: number;
 	@Input() offset = 0;
 	@Input() chunkLength = 1500;
+
+	@Output() loading$ = new BehaviorSubject(true);
+
+	@ViewChild('chart') chartRef: ElementRef;
 
 	private _scrollOffset = -1;
 	private _scrollSpeedStep = 8;
@@ -33,29 +42,29 @@ export class ChartComponent implements OnInit, OnDestroy {
 
 	constructor(private _zone: NgZone,
 				private _elementRef: ElementRef,
-				private _instrumentsService: InstrumentsService) {
+				private _instrumentsService: InstrumentsService,
+				private _ref: ChangeDetectorRef) {
 	}
 
-	public ngOnInit() {
-		this._toggleLoading(true);
+	public async ngOnInit() {
+		// this._ref.detach();
 
 		// Bouncer func to limit onScroll calls
 		this._onScrollBounced = throttle(this._onScroll.bind(this), 33);
 
-		this._createChart();
-
 		this.model.changed$.subscribe(changes => {
-
 			for (let key in changes) {
 				if (changes.hasOwnProperty(key)) {
 					switch (key) {
 						case 'zoom':
-							this._updateViewPort();
+							if (this._chart)
+								this._updateViewPort();
 							break;
 						case 'graphType':
-							this._chart.series[0].update({
-								type: changes[key]
-							});
+							if (this._chart)
+								this._chart.series[0].update({
+									type: changes[key]
+								});
 							break;
 						case 'timeFrame':
 							this.toggleTimeFrame(changes[key]);
@@ -72,6 +81,10 @@ export class ChartComponent implements OnInit, OnDestroy {
 				}
 			}
 		});
+	}
+
+	ngAfterViewInit(): void {
+		this._createChart();
 	}
 
 	public pinToCorner(edges): void {
@@ -97,24 +110,23 @@ export class ChartComponent implements OnInit, OnDestroy {
 		requestAnimationFrame(() => this._zone.runOutsideAngular(() => {this._chart.reflow()}));
 	}
 
-	public async toggleTimeFrame(timeFrame) {
-		this._toggleLoading(true);
-
-		this._destroyChart();
-
-		await this._instrumentsService.toggleTimeFrame(this.model, timeFrame);
-
-		this._createChart();
+	public toggleTimeFrame(timeFrame) {
+		// this._toggleLoading(true);
+		// this._createChart();
+		// this._toggleLoading(false);
 	}
 
 	private _createChart() {
 		this._zone.runOutsideAngular(() => {
+			if (this._chart)
+				this._destroyChart();
+
 			let settings = cloneDeep(HighchartsDefaultTheme);
 
 			settings.series[0]['type'] = this.model.options.graphType;
 
 			// HighStock instance
-			this._chart = HighStock.stockChart(this._elementRef.nativeElement.firstElementChild, settings);
+			this._chart = (<any>HighStock).stockChart(this.chartRef.nativeElement, settings);
 
 			this._chart.addSeries({
 				type: 'line',
@@ -139,21 +151,16 @@ export class ChartComponent implements OnInit, OnDestroy {
 			// Scroll listener
 			this._chart.container.addEventListener('mousewheel', <any>this._onScrollBounced);
 
-			// Just an empty chart
-			if (!this.model)
-				return;
-
 			// Create new server instrument
-			if (!this.model.options.id) {
+			if (this.model.options.id) {
+				this._fetch(this.chunkLength, this.offset);
+			} else {
 				let subscription = this.model.changed$.subscribe(() => {
 					if (this.model.options.id) {
 						subscription.unsubscribe();
-
 						this._fetch(this.chunkLength, this.offset);
 					}
 				});
-			} else {
-				this._fetch(this.chunkLength, this.offset);
 			}
 		});
 	}
@@ -185,7 +192,7 @@ export class ChartComponent implements OnInit, OnDestroy {
 	}
 
 	private async _fetch(count: number, offset: number) {
-		this._toggleLoading(true);
+		this.loading$.next(true);
 
 		let {candles, indicators, orders} = await this._instrumentsService.fetch(this.model, count, offset);
 
@@ -193,11 +200,13 @@ export class ChartComponent implements OnInit, OnDestroy {
 		this._updateIndicators(indicators);
 		this._updateOrders(orders);
 
-		this._toggleLoading(false);
+		this.loading$.next(false);
 	}
 
 	private _updateOrders(orders: Array<any>) {
-		this._chart.get('orders').setData(orders.map(order => [order.openTime, order.bid, null]));
+		this._zone.runOutsideAngular(() => {
+			this._chart.get('orders').setData(orders.map(order => [order.openTime, order.bid, null]));
+		});
 	}
 
 	private _updateBars(data: any[] = []) {
@@ -221,24 +230,26 @@ export class ChartComponent implements OnInit, OnDestroy {
 		if (!bar)
 			return;
 
-		this._chart.yAxis[0].removePlotLine('current-price');
+		this._zone.runOutsideAngular(() => {
+			this._chart.yAxis[0].removePlotLine('current-price');
 
-		this._chart.yAxis[0].addPlotLine({
-			value: bar[4],
-			color: '#646467',
-			width: 1,
-			id: 'current-price',
-			label: {
-				text: `<div class='chart-current-price-label' style='background:white;'>${bar[4]}</div>`,
-				align: 'right',
-				x: 5,
-				y: 2,
-				style: {
-					color: '#000'
-				},
-				useHTML: true,
-				textAlign: 'left'
-			}
+			this._chart.yAxis[0].addPlotLine({
+				value: bar[4],
+				color: '#646467',
+				width: 1,
+				id: 'current-price',
+				label: {
+					text: `<div class='chart-current-price-label' style='background:white;'>${bar[4]}</div>`,
+					align: 'right',
+					x: 5,
+					y: 2,
+					style: {
+						color: '#000'
+					},
+					useHTML: true,
+					textAlign: 'left'
+				}
+			});
 		});
 	}
 
@@ -246,46 +257,48 @@ export class ChartComponent implements OnInit, OnDestroy {
 		if (!indicators.length)
 			return;
 
-		indicators.forEach(indicator => {
-			for (let drawBufferName in indicator.data) {
-				if (indicator.data.hasOwnProperty(drawBufferName)) {
-					let drawBuffer = indicator.data[drawBufferName];
+		this._zone.runOutsideAngular(() => {
+			indicators.forEach(indicator => {
+				for (let drawBufferName in indicator.data) {
+					if (indicator.data.hasOwnProperty(drawBufferName)) {
+						let drawBuffer = indicator.data[drawBufferName];
 
-					let unique = indicator.id + '_' + drawBuffer.id;
+						let unique = indicator.id + '_' + drawBuffer.id;
 
 
-					// New series
-					let series = this._chart.get(unique);
+						// New series
+						let series = this._chart.get(unique);
 
-					// Update
-					if (series) {
-						console.log('SERIES!!!!', series);
-					}
+						// Update
+						if (series) {
+							console.log('SERIES!!!!', series);
+						}
 
-					// Create
-					else {
-						switch (drawBuffer.type) {
-							case 'line':
-								this._chart.addSeries({
-									type: drawBuffer.type,
-									name: indicator.id,
-									// id: unique,
-									data: drawBuffer.data,
-									color: drawBuffer.style.color,
-									yAxis: 0,
-									ordinal: true,
-									dataGrouping: {
-										enabled: false
-									}
-								});
-								break;
-							case 'arrow':
-								alert('cannot yet draw arrow');
-								break;
+						// Create
+						else {
+							switch (drawBuffer.type) {
+								case 'line':
+									this._chart.addSeries({
+										type: drawBuffer.type,
+										name: indicator.id,
+										// id: unique,
+										data: drawBuffer.data,
+										color: drawBuffer.style.color,
+										yAxis: 0,
+										ordinal: true,
+										dataGrouping: {
+											enabled: false
+										}
+									});
+									break;
+								case 'arrow':
+									alert('cannot yet draw arrow');
+									break;
+							}
 						}
 					}
 				}
-			}
+			});
 		});
 	}
 
@@ -343,10 +356,6 @@ export class ChartComponent implements OnInit, OnDestroy {
 		return false;
 	}
 
-	private _toggleLoading(state) {
-		requestAnimationFrame(() => this._elementRef.nativeElement.classList.toggle('loading', !!state));
-	}
-
 	static _prepareData(data: any) {
 		let i = 0,
 			length = data.length,
@@ -381,6 +390,8 @@ export class ChartComponent implements OnInit, OnDestroy {
 	}
 
 	public ngOnDestroy() {
+		console.log('_destroyChart _destroyChart _destroyChart _destroyChart');
+
 		this._destroyChart();
 	}
 }

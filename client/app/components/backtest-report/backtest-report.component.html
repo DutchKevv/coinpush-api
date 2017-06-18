@@ -21,48 +21,60 @@
 		<!--</ul>-->
 	<!--</div>-->
 
-	<!--<div class="col-sm-3">-->
-		<!--<ul class="key-value-list">-->
-			<!--<li><span>Ticks</span>{{model.options.ticks}}</li>-->
-			<!--<li><span>Ticks p / s</span>{{model.options.ticksPerSecond}}</li>-->
-		<!--</ul>-->
-	<!--</div>-->
+	<div class="col-sm-3">
+		<ul class="key-value-list">
+			<li><span>Ticks</span></li>
+			<li><span>Ticks p / s</span></li>
+		</ul>
+	</div>
+</div>
+
+<div class="progress">
+	<span></span>
+	<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="70"
+		 aria-valuemin="0" aria-valuemax="100" style="width:0%">
+	</div>
 </div>
 
 <hr/>
 
-
 <div *ngFor="let model of models">
 
-	<div class="tpl-model">
+	<div *ngIf="model.options$ | async as options" class="tpl-model" [attr.data-id]="options.id">
 		<div class="row">
-			<h5>{{model.options.symbol}}</h5>
+			<h5>{{options.symbol}}</h5>
 			<div class="col-sm-12">
 				<div class="container-fluid">
 					<div class="row">
 						<div class="col-fixed-220 pull-left">
 							<ul class="key-value-list">
 								<li><span>Diff</span><span
-										[class.text-negative]="model.options.diff < 0"
-										[class.text-positive]="model.options.diff > 0"
-								>€ {{model.options.diff}}</span></li>
-								<li><span>Equality</span>€ {{model.options.equality}}</li>
-								<li><span>Nr of trades</span>{{model.options.orders.length}}</li>
+										[class.text-negative]="options.equality - options.startEquality < 0"
+										[class.text-positive]="options.equality - options.startEquality > 0"
+								>€ {{(options.equality - options.startEquality).toFixed(2)}}</span></li>
+								<li><span>Equality</span>€ {{options.equality}}</li>
+								<li><span>Nr of trades</span>{{options.orders.length}}</li>
 							</ul>
 							\
 							<ul class="key-value-list">
-								<li><span>Completed in</span>{{model.options.totalPretty}}</li>
-								<li><span>Fetching</span>{{model.options.fetchingPretty}}</li>
-								<li><span>Testing</span>{{model.options.testingPretty}}</li>
+								<li><span>Completed in</span>{{options.totalPretty}}</li>
+								<li><span>Fetching</span>{{options.fetchingPretty}}</li>
+								<li><span>Testing</span>{{options.testingPretty}}</li>
 							</ul>
 							<ul class="key-value-list">
-								<li><span>Time frame</span>{{model.options.timeFrame}}</li>
-								<li><span>Ticks</span>{{model.options.ticks}}</li>
-								<li><span>Ticks p / s</span>{{model.options.ticksPerSecond}}</li>
+								<li><span>Time frame</span>{{options.timeFrame}}</li>
+								<li><span>Ticks</span>{{options.tickCount}}</li>
+								<li><span>Ticks p / s</span>{{options.ticksPerSecond}}</li>
 							</ul>
 						</div>
 						<div class="" style="margin-left: 220px;">
-							<div chart-report class="chart" [height]="200" [data]="model.options.orders"></div>
+							<div class="progress">
+								<span></span>
+								<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="70"
+									 aria-valuemin="0" aria-valuemax="100" style="width:0%">
+								</div>
+							</div>
+							<chart-report class="chart" [height]="200" [model]="model"></chart-report>
 						</div>
 					</div>
 				</div>

@@ -1,0 +1,23 @@
+a, p, li, span, h1, h2, h3, h4, h5, h6, td, th, label {
+	color: white;
+	//-webkit-user-select: none;
+	//user-select: none;
+}
+
+button {
+	color: black;
+}
+
+ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+a {
+	cursor: pointer;
+}
+
+a:hover {
+	text-decoration: none;
+}

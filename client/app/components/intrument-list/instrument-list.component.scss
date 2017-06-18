@@ -1,4 +1,16 @@
 @import '../../style/variables/variables';
+@import '../../style/helpers/normalize';
+@import '../../../node_modules/bootstrap/scss/_variables';
+@import '../../../node_modules/bootstrap/scss/_mixins';
+@import '../../../node_modules/font-awesome/css/font-awesome.css';
+
+$fa-font-path : '../../../node_modules/font-awesome/fonts';
+
+@font-face {
+    font-family: 'FontAwesome';
+    font-weight: normal;
+    font-style: normal;
+}
 
 :host {
     height: 50%;
@@ -7,15 +19,16 @@
 }
 
 li {
-    border-bottom: 1px solid #8c8a8a;
+    border-bottom: 1px solid $border-color-grey;
     list-style: none;
     padding: 5px;
 }
 
-
 table {
     // Faster rendering (read it on google)
     table-layout: fixed;
+    border-spacing: 0;
+    border-collapse: collapse;
 
     height: 50%;
     overflow: auto;
@@ -35,9 +48,13 @@ table {
         height: calc(100% - 44px);
         overflow: auto;
         tr {
-            border-top: 1px solid #8c8a8a;
-            border-bottom: 1px solid #8c8a8a;
+            border-top: 1px solid $border-color-grey;
+            border-bottom: 1px solid $border-color-grey;
         }
+    }
+
+    tr {
+        border-bottom: 1px solid $border-color-grey;
     }
 
     th,
@@ -55,8 +72,8 @@ table {
 
         &:nth-child(2),
         &:nth-child(2) {
-            border-left: 1px solid #8c8a8a;
-            border-right: 1px solid #8c8a8a;
+            border-left: 1px solid $border-color-grey;
+            border-right: 1px solid $border-color-grey;
         }
     }
 
@@ -76,8 +93,7 @@ table {
 }
 
 .search-instrument-list {
-    width: calc(100% + 20px);
-    padding-left: 5px;
+    width: 100%;
 }
 
 .fa {

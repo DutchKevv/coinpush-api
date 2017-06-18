@@ -1,13 +1,14 @@
 declare var ace: any;
 declare var $: any;
 
-import {Component, AfterViewInit, ElementRef} from '@angular/core';
+import {Component, AfterViewInit, ElementRef, ViewEncapsulation} from '@angular/core';
 import {SocketService} from '../../services/socket.service';
 
 @Component({
 	selector: 'js-editor',
 	templateUrl: './jseditor.component.html',
-	styleUrls: ['./jseditor.component.scss']
+	styleUrls: ['./jseditor.component.scss'],
+	encapsulation: ViewEncapsulation.Native
 })
 
 export class JSEditorComponent implements AfterViewInit {

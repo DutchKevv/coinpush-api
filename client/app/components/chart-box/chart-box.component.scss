@@ -1,4 +1,5 @@
 @import '../../style/variables/variables';
+@import '../../style/helpers/spinner';
 
 :host {
     height: 400px;
@@ -18,7 +19,7 @@
     transition: transform .3s ease;
 }
 
-:host.stretched {
+:host(.stretched) {
     transfrom: translate(0, 0) !important;
     -webkit-transform: translate(0, 0) !important;
     height: 100% !important;
@@ -51,6 +52,11 @@
 
 .chart-header {
     background: $chart-header-background-blur;
+    display: flex;
+
+    h5 {
+        margin-right: auto;
+    }
 }
 
 .chart-title {
@@ -88,82 +94,4 @@
 .chart-content {
     position: relative;
     height: calc(100% - 25px);
-}
-
-.chart-container {
-    height: calc(100% - 26px);
-}
-
-.chart-loading-overlay {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 50;
-    background: #000;
-
-    display: flex;
-    justify-content: center; /* align horizontal */
-    align-items: center; /* align vertical */
-
-    transition: opacity .33s ease;
-
-    &.fade-out {
-        opacity: 0;
-    }
-}
-
-.highcharts-loading {
-     color: $font-color-dark;
-}
-
-
-.dropdown-submenu {
-    position: relative;
-    width: auto;
-}
-
-.dropdown-submenu>.dropdown-menu {
-    top: 0;
-    transform: translateX(-100%);
-    margin-top: -6px;
-    margin-left: -1px;
-    -webkit-border-radius: 0 6px 6px 6px;
-    -moz-border-radius: 0 6px 6px;
-    border-radius: 0 6px 6px 6px;
-}
-
-.dropdown-submenu:hover>.dropdown-menu {
-    display: block;
-}
-
-.dropdown-submenu>a:after {
-    display: block;
-    content: " ";
-    float: right;
-    width: 0;
-    height: 0;
-    border-color: transparent;
-    border-style: solid;
-    border-width: 5px 0 5px 5px;
-    border-left-color: #ccc;
-    margin-top: 5px;
-    margin-right: -10px;
-}
-
-.dropdown-submenu:hover>a:after {
-    border-left-color: #fff;
-}
-
-.dropdown-submenu.pull-left {
-    float: none;
-}
-
-.dropdown-submenu.pull-left>.dropdown-menu {
-    transform: translateX(-100%);
-    margin-left: 10px;
-    -webkit-border-radius: 6px 0 6px 6px;
-    -moz-border-radius: 6px 0 6px 6px;
-    border-radius: 6px 0 6px 6px;
 }

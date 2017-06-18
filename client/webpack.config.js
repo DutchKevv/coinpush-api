@@ -1,5 +1,6 @@
-const webpack = require("webpack"),
-	path = require('path');
+const
+	path = require('path'),
+	webpack = require("webpack");
 
 module.exports = {
 	entry: {
@@ -11,9 +12,27 @@ module.exports = {
 		filename: "./dist/[name].bundle.js"
 	},
 	resolve: {
-		extensions: ['.js', '.ts', '.css', '.scss']
+		extensions: ['.js', '.ts', '.css', '.scss', '.html']
 	},
 	devtool: 'source-map',
+	// devServer: {
+	// 	stats: {
+	// 		colors: true,
+	// 		hash: true,
+	// 		version: false,
+	// 		timings: false,
+	// 		assets: false,
+	// 		chunks: false,
+	// 		modules: true,
+	// 		reasons: false,
+	// 		children: false,
+	// 		source: false,
+	// 		errors: true,
+	// 		errorDetails: true,
+	// 		warnings: true,
+	// 		publicPath: false
+	// 	}
+	// },
 	module: {
 		noParse: [
 			path.join(__dirname, 'assets', 'vendor')
@@ -21,7 +40,7 @@ module.exports = {
 		loaders: [
 			{ //this rule will only be used for any vendors
 				test: /\.css$/,
-				loaders: ['style-loader', 'css-loader']
+				loaders: ['to-string-loader', 'css-loader']
 				// include: [/node_modules/]
 			},
 			{
@@ -29,6 +48,7 @@ module.exports = {
 				// exclude: /node_modules/,
 				loader: 'raw-loader!sass-loader'
 			},
+			// { test: /\.ts$/, loader: '@ngtools/webpack' },
 			{
 				test: /\.ts/,
 				loaders: ['awesome-typescript-loader', 'angular2-template-loader'],
@@ -78,10 +98,14 @@ module.exports = {
 		]
 	},
 	plugins: [
+		// new ngToolsWebpack.AotPlugin({
+		// 	tsConfigPath: './tsconfig.json'
+		// }),
 		new webpack.ProvidePlugin({
 			jQuery: 'jquery',
 			$: 'jquery',
-			jquery: 'jquery'
+			jquery: 'jquery',
+			Tether: 'tether'
 		}),
 		new webpack.optimize.CommonsChunkPlugin({ name: 'vendor', filename: './dist/vendor.bundle.js'}),
 		// new webpack.ContextReplacementPlugin(/ace/, /^$/)

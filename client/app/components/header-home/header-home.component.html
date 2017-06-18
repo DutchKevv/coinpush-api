@@ -11,12 +11,10 @@
 				<i class="fa fa-code" aria-hidden="true"></i>
 			</button>
 		</li>
-	</ul>
-	<ul class="header-buttons">
 		<li>
 			<button (click)="zoom(-1)"
 					type="button"
-					class="dropdown-toggle text-dark button-zoom-out btn-menu"
+					class="text-dark button-zoom-out btn-menu"
 					aria-expanded="false">
 				<i class="fa fa-search-minus">
 				</i>
@@ -26,7 +24,7 @@
 		<li>
 			<button (click)="zoom(1)"
 					type="button"
-					class="dropdown-toggle text-dark btn-menu button-zoom-in"
+					class="text-dark btn-menu button-zoom-in"
 					aria-expanded="false">
 				<i class="fa fa-search-plus"></i>
 			</button>
@@ -35,7 +33,7 @@
 			<button (click)="instrumentsService.instruments.length && instrumentsService.getFocused().set({graphType: 'ohlc'})"
 
 					type="button"
-					class="dropdown-toggle text-dark button-ohlc btn-menu"
+					class="text-dark button-ohlc btn-menu"
 					aria-expanded="false">
 				<i class="fa fa-line-chart"></i>
 			</button>
@@ -43,7 +41,7 @@
 		<li>
 			<button (click)="instrumentsService.instruments.length && instrumentsService.getFocused().set({graphType: 'candlestick'})"
 					type="button"
-					class="dropdown-toggle text-dark button-candlestick btn-menu"
+					class="text-dark button-candlestick btn-menu"
 					aria-expanded="false">
 				<i class="fa fa-bar-chart"></i>
 			</button>

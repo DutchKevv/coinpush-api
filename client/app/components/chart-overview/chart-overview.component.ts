@@ -1,5 +1,5 @@
 import {
-	Component, OnInit, ElementRef, QueryList, ViewChildren, ChangeDetectionStrategy
+	Component, OnInit, ElementRef, QueryList, ViewChildren, ChangeDetectionStrategy, ViewEncapsulation
 }  from '@angular/core';
 
 import {InstrumentsService} from '../../services/instruments.service';
@@ -9,6 +9,7 @@ import {ChartBoxComponent} from '../chart-box/chart-box.component';
 	selector: 'chart-overview',
 	templateUrl: './chart-overview.component.html',
 	styleUrls: ['./chart-overview.component.scss'],
+	encapsulation: ViewEncapsulation.Native,
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 

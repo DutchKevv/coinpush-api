@@ -1,3 +1,8 @@
+@import '../../../node_modules/bootstrap/scss/_variables';
+@import '../../../node_modules/bootstrap/scss/_mixins';
+@import '../../../node_modules/bootstrap/scss/_forms';
+@import '../../../node_modules/bootstrap/scss/_nav';
+@import '../../../node_modules/bootstrap/scss/utilities/_clearfix';
 @import '../../style/variables/variables';
 
 $header-height: 18px;
@@ -19,7 +24,7 @@ $header-height: 18px;
     text-align: center;
     font-size: 10px;
     padding-left: 1px;
-
+    color: $font-color-light;
     transition: transform .2s;
 }
 
@@ -79,7 +84,13 @@ table {
 .footer-bar-wrapper {
     background: $background-dark;
     border-bottom: 1px solid $border-color-grey;
+    display: flex;
+}
 
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
 .nav-tabs {
@@ -87,10 +98,12 @@ table {
 
     > li {
         margin-bottom: 0;
+        font-size: 10px;
+        color: $font-color-light;
 
         &.active a {
-            background: $general-secondary;
-            color: $font-color-light;
+            background: $general-active !important;
+            color: $font-color-light !important;
         }
 
         a {
@@ -131,4 +144,11 @@ table {
 
        // margin-bottom: -20px;
    }
+}
+
+
+
+status {
+    display: flex;
+    margin-left: auto;
 }

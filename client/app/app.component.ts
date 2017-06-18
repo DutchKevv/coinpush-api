@@ -6,20 +6,13 @@ import {CacheService} from './services/cache.service';
 
 @Component({
 	selector: 'body',
-	templateUrl: './app.component.html',
-	styleUrls: [
-		'./app.component.scss',
-
-		// TODO: Move to vendor folder
-		'./style/variables/_variables.scss',
-		'./style/main.scss',
-		'./style/helpers/spinner.scss',
-		'./style/helpers/spinner-button.scss',
-		'./style/helpers/three-column.scss',
-		'./style/bootstrap-overwrite.scss'
-	],
-	encapsulation: ViewEncapsulation.None,
-	changeDetection: ChangeDetectionStrategy.OnPush
+	template: `
+		<div modalAnchor></div>
+		<router-outlet></router-outlet>
+	`,
+	styleUrls: ['../node_modules/font-awesome/css/font-awesome.css'],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	encapsulation: ViewEncapsulation.None
 })
 
 export class AppComponent implements AfterViewInit {

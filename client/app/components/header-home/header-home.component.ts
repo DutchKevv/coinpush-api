@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, ViewChild, ViewEncapsulation} from '@angular/core';
 import {SocketService} from '../../services/socket.service';
 import {LoginComponent} from '..//login/login.component';
 import {UserService} from '../../services/user.service';
@@ -12,8 +12,8 @@ declare let window: any;
 	selector: 'app-header-home',
 	templateUrl: './header-home.component.html',
 	styleUrls: ['./header-home.component.scss'],
-
-	entryComponents: [DialogComponent]
+	entryComponents: [DialogComponent],
+	encapsulation: ViewEncapsulation.Native
 })
 
 export class HeaderHomeComponent {

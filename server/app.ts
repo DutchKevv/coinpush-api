@@ -22,6 +22,7 @@ import BacktestController 	from './controllers/BacktestController';
 import {winston} 			from './logger';
 import {Base} 				from '../shared/classes/Base';
 import {InstrumentSettings} from '../shared/interfaces/InstrumentSettings';
+import {InstrumentModel} from '../shared/models/InstrumentModel';
 
 const express: any = require('express');
 
@@ -251,13 +252,12 @@ export default class App extends Base {
 				tickBuffer.push(tick);
 			});
 
-			this.controllers.instrument.on('created', (instrument: InstrumentSettings) => {
-				this._io.sockets.emit('instrument:created', {
-					id: instrument.id,
-					symbol: instrument.symbol,
-					timeFrame: instrument.timeFrame,
-					live: instrument.live
-				});
+			this.controllers.instrument.on('instrument:status', status => {
+				this._io.sockets.emit('instrument:status', status);
+			});
+
+			this.controllers.instrument.on('created', (instrument: InstrumentModel) => {
+				this._io.sockets.emit('instrument:created', instrument.options);
 			});
 
 			// this.ipc.on('cache:fetch:status', (data) => {
@@ -302,7 +302,7 @@ export default class App extends Base {
 
 	private _setProcessListeners() {
 
-		const processExitHandler = error => {
+		const processExitHandler = (error?) => {
 			console.error('Main exiting: ', error);
 			this.destroy();
 			process.exit(1);

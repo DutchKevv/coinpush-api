@@ -22,7 +22,7 @@ export default class InstrumentController extends Base {
 	}
 
 	public async init() {
-		this.app.ipc.on('status:update', data => this._updateInstrumentStatus(data.id, data));
+		this.app.ipc.on('instrument:status', data => this._updateInstrumentStatus(data.id, data));
 	}
 
 	public async create(instruments: Array<any>): Promise<Array<any>> {
@@ -37,12 +37,11 @@ export default class InstrumentController extends Base {
 			}
 
 			options.id = `${options.symbol}_${++this._unique}`;
-			options.groupId = options.groupId || groupId;
+			options.groupId = groupId;
 
 			let workerPath = PATH_INSTRUMENT,
 				model, worker;
 
-			console.log('OPTIONS', options);
 			if (options.ea)
 				workerPath = path.join(this.app.controllers.config.config.path.custom, 'ea', options.ea, 'index');
 
@@ -60,16 +59,16 @@ export default class InstrumentController extends Base {
 			});
 
 			worker.once('exit', code => {
-				this.destroy(options.id);
+				if (this.getById(options.id))
+					this.destroy(options.id);
 			});
 
-			await worker.init();
-
 			this._instruments.push({
-				id: options.id,
 				model: model,
 				worker: worker
 			});
+
+			await worker.init();
 
 			this.emit('created', model);
 
@@ -86,6 +85,17 @@ export default class InstrumentController extends Base {
 			return Promise.reject(`Instrument '${id}' does not exist`);
 
 		return instrument.worker.send('read', {from, until, count, indicators, bufferOnly});
+	}
+
+	public getList() {
+		return this.instruments.map(instrument => ({
+			id: instrument.model.options.id,
+			groupId: instrument.model.options.groupId,
+			timeFrame: instrument.model.options.timeFrame,
+			symbol: instrument.model.options.symbol,
+			type: instrument.model.options.type,
+			orders: instrument.model.options.type === 'backtest' ? instrument.model.options.orders : []
+		}));
 	}
 
 	public toggleTimeFrame(id, timeFrame) {
@@ -152,11 +162,11 @@ export default class InstrumentController extends Base {
 	}
 
 	public getById(id: string) {
-		return this._instruments.find(instrument => instrument.id === id);
+		return this._instruments.find(instrument => instrument.model.options.id === id);
 	}
 
 	public findIndexById(id: string): number {
-		return this._instruments.findIndex(instrument => instrument.id === id);
+		return this._instruments.findIndex(instrument => instrument.model.options.id === id);
 	}
 
 	public destroy(id: string): void {
@@ -175,14 +185,17 @@ export default class InstrumentController extends Base {
 	}
 
 	public destroyAll(): void {
-		this._instruments.forEach(instrument => this.destroy(instrument.id));
+		this._instruments.forEach(instrument => this.destroy(instrument.model.options.id));
 	}
 
 	private _updateInstrumentStatus(id, data): void {
 		let instrument = this.getById(id);
 
-		if (instrument)
-			instrument.model.set(data);
+		if (!instrument)
+			return winston.warn(`Received instrument update from unknown worker: ${id}`);
+
+		instrument.model.set(data);
+		this.emit('instrument:status', data);
 	}
 
 	// public isReady() {

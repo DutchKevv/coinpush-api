@@ -2,11 +2,9 @@
 
 
 :host {
-
     > * {
         padding: 0 15px;
         border-right: 1px solid $border-color-grey;
-        float: right;
         line-height: 20px;
         color: $font-color-light;
         font-size: $font-size-s;
@@ -34,7 +32,6 @@
     box-shadow: 0 0 1px 1px rgba(100, 100, 100, 0.2);
     margin-top: 5px;
     margin-right: 10px;
-    float: right;
 }
 
 /* Create the animation blocks */

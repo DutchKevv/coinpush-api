@@ -1,9 +1,10 @@
-import {Component, ElementRef, EventEmitter, Input, OnInit} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnInit, ViewEncapsulation} from '@angular/core';
 
 @Component({
 	selector: 'dlg',
 	templateUrl: './dialog.component.html',
-	styleUrls: ['./dialog.component.scss']
+	styleUrls: ['./dialog.component.scss'],
+	encapsulation: ViewEncapsulation.Native
 })
 
 export class DialogComponent implements OnInit {

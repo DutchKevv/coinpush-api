@@ -13,9 +13,9 @@ export class SocketService {
 	constructor(private _zone: NgZone) {}
 
 	init() {
-		// this._zone.runOutsideAngular(() => {
+		this._zone.runOutsideAngular(() => {
 			this.socket = io(this._getUrl());
-		// });
+		});
 	}
 
 	private _getUrl(): string {
@@ -34,14 +34,15 @@ export class SocketService {
 			if (typeof cb === 'function') {
 				let i = setTimeout(() => cb(SocketService.ERROR_TIMEOUT), this._timeout);
 
-				this.socket.emit(event, data, (result) => {
+				this.socket.emit(event, data, (...result) => {
 					clearInterval(i);
-					cb(result);
+					this._zone.run(() => {
+						cb(...result);
+					});
 				});
 			} else {
 				this.socket.emit(event, data);
 			}
-
 		});
 	}
 }

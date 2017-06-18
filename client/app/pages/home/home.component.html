@@ -1,22 +1,9 @@
-<div class="r_flex_container">
-
-    <app-header-home class="r_flex_fixed_child"></app-header-home>
-
-    <div class="r_flex_expand_child">
-        <div data-drag-handle class="three-column" draggable [restrict]="false" [direction]="'x'" [onDrag]="onDrag">
-            <span  class="splitter fa fa-bars fa-rotate-45" ></span>
-            <instrument-list (instrumentClicked)="chartOverview.create({instrument: $event})"></instrument-list>
-            <div class="bottom-block">
-                <news-list></news-list>
-            </div>
-        </div>
-
-        <chart-overview class="three-column chart-overview-column" #chartOverview></chart-overview>
-
-        <div class="three-column hide">
-
-        </div>
+<app-header-home class="grid__header"></app-header-home>
+<chart-overview class="grid__main chart-overview-column" #chartOverview></chart-overview>
+<aside class="grid__left">
+    <span  class="splitter fa fa-bars fa-rotate-45" ></span>
+    <instrument-list (instrumentClicked)="chartOverview.create({instrument: $event})"></instrument-list>
+    <div class="bottom-block">
     </div>
-
-    <app-footer class="r_flex_fixed_child" id="debugContainer"></app-footer>
-</div>
+</aside>
+<app-footer class="grid__footer" id="debugContainer"></app-footer>

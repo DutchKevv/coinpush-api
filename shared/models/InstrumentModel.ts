@@ -9,19 +9,23 @@ export class InstrumentModel extends BaseModel {
 		symbol: '',
 		timeFrame: 'M15',
 		id: '',
-		groupId: 0,
 		focus: false,
 		autoRun: true,
 		indicators: [],
 		bars: [],
-		live: true,
 		zoom: 4,
 		graphType: 'candlestick',
 		orders: [],
 		startEquality: 10000,
 		currency: 'euro',
 		leverage: 1,
-		pips: 1
+		pips: 1,
+		tickCount: 0,
+		type: 'live',
+		status: {
+			type: '',
+			value: 0
+		}
 	};
 
 	public static parseUnixToString(date: number): string {
@@ -39,6 +43,21 @@ export class InstrumentModel extends BaseModel {
 
 	private _zoomMax = 10;
 	private _zoomMin = 1;
+
+	public set(obj) {
+		if (obj.orders) {
+			if (obj.orders.length) {
+				this.updateOrders(obj.orders);
+			}
+			let orders = obj.orders;
+			delete obj.orders;
+			super.set(obj);
+			this.changed$.next({orders: orders});
+			obj.orders = orders;
+		} else {
+			super.set(obj);
+		}
+	}
 
 	public setZoom(step) {
 		if (this.options.zoom + step > this._zoomMax || this.options.zoom + step < this._zoomMin)
@@ -59,8 +78,8 @@ export class InstrumentModel extends BaseModel {
 		// this.data.indicators.push()
 	}
 
-	public updateOrders() {
-
+	public updateOrders(orders) {
+		this.options.orders.push(...orders);
 	}
 
 	public updateIndicators(indicators) {

@@ -1,9 +1,10 @@
-import {Component, AfterViewInit, ElementRef} from '@angular/core';
+import {Component, AfterViewInit, ElementRef, ViewEncapsulation} from '@angular/core';
 
 @Component({
 	selector: 'login',
 	templateUrl: './login.component.html',
-	styleUrls: ['./login.component.scss']
+	styleUrls: ['./login.component.scss'],
+	encapsulation: ViewEncapsulation.Native
 })
 
 export class LoginComponent implements AfterViewInit {

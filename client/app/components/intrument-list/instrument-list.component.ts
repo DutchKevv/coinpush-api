@@ -1,6 +1,6 @@
 import {
 	Component, OnInit, OnDestroy, ElementRef, Pipe, PipeTransform, ChangeDetectionStrategy,
-	ChangeDetectorRef, NgZone
+	ChangeDetectorRef, NgZone, ViewEncapsulation
 } from '@angular/core';
 import {InstrumentsService} from '../../services/instruments.service';
 import {CacheService} from '../../services/cache.service';
@@ -28,6 +28,7 @@ export class SearchFilter implements PipeTransform {
 	selector: 'instrument-list',
 	templateUrl: './instrument-list.component.html',
 	styleUrls: ['./instrument-list.component.scss'],
+	encapsulation: ViewEncapsulation.Native,
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InstrumentListComponent implements OnDestroy, OnInit {
@@ -56,7 +57,7 @@ export class InstrumentListComponent implements OnDestroy, OnInit {
 				],
 				menuSelected: (selectedValue, originalEvent) => {
 					let symbol = $(originalEvent.target).parents('[data-symbol]').attr('data-symbol');
-					this.instrumentService.create([{symbol: symbol, live: true}]);
+					this.instrumentService.create([{symbol: symbol}]);
 				}
 			});
 		});

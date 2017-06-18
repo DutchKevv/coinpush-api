@@ -1,7 +1,7 @@
 import {forEach, random} from 'lodash';
 import {
 	Component, OnDestroy, ElementRef, Input, ViewChild,
-	OnInit, AfterViewInit, ChangeDetectionStrategy
+	OnInit, AfterViewInit, ChangeDetectionStrategy, ViewEncapsulation, ContentChild, NgZone
 } from '@angular/core';
 
 import {SocketService}      from '../../services/socket.service';
@@ -11,9 +11,9 @@ import {InstrumentsService} from '../../services/instruments.service';
 import {ChartComponent} from '..//chart/chart.component';
 import {CookieService} from 'ngx-cookie';
 import {ResizableDirective} from '../../directives/resizable.directive';
-import {DraggableDirective} from '../../directives/draggable.directive';
 import {DialogAnchorDirective} from '../../directives/dialoganchor.directive';
 import {InstrumentModel} from '../../../../shared/models/InstrumentModel';
+import * as interact from 'interactjs';
 
 declare let $: any;
 
@@ -21,9 +21,9 @@ declare let $: any;
 	selector: 'chart-box',
 	templateUrl: './chart-box.component.html',
 	styleUrls: ['./chart-box.component.scss'],
+	encapsulation: ViewEncapsulation.Native,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	entryComponents: [DialogComponent]
-
 })
 
 export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
@@ -36,19 +36,20 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 	@ViewChild(ChartComponent) public _chartComponent: ChartComponent;
 	@ViewChild(DialogAnchorDirective) private _dialogAnchor: DialogAnchorDirective;
 	@ViewChild(ResizableDirective) private _resizableDirective: ResizableDirective;
-	@ViewChild(DraggableDirective) private _draggableDirective: DraggableDirective;
+	@ViewChild('draghandle') private _dragHandle: ElementRef;
+	// @ContentChild('draggable') element;
 
 	socket: any;
 	$el: any;
 
 	constructor(public _instrumentsService: InstrumentsService,
+				private _zone: NgZone,
 				private _socketService: SocketService,
 				private _cookieService: CookieService,
 				private _elementRef: ElementRef) {
 	}
 
 	ngOnInit() {
-		this.socket = this._socketService.socket;
 		this.$el = $(this._elementRef.nativeElement);
 
 		if (this.viewState === 'windowed')
@@ -58,8 +59,10 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 
 	ngAfterViewInit() {
+		this._bindDrag();
+		// console.log(this.element);
 		this._resizableDirective.changed.subscribe(() => this.storePosition());
-		this._draggableDirective.changed.subscribe(() => this.storePosition());
+		// this._draggableDirective.changed.subscribe(() => this.storePosition());
 
 		this.putOnTop();
 
@@ -149,42 +152,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 		}
 	}
 
-	public async addIndicator(name) {
-		let indicatorModel = await this.getIndicatorOptions(name),
-			options = {};
-
-		
-		if (await this.showIndicatorOptionsMenu(indicatorModel) === false)
-			return;
-
-		// Normalize model values
-		forEach(indicatorModel.inputs, input => {
-			switch (input.type) {
-				case 'number':
-					input.value = parseInt(input.value, 10);
-					break;
-				case 'text':
-					input.value = String.prototype.toString.call(input.value);
-					break;
-			}
-
-			options[input.name] = input.value
-		});
-
-		indicatorModel.inputs = options;
-
-
-		// this._chartComponent.addIndicator(indicatorModel);
-	}
-
-	public getIndicatorOptions(name: string): Promise<IndicatorModel> {
-		return new Promise((resolve, reject) => {
-			this.socket.emit('instrument:indicator:options', {name: name}, (err, data) => {
-				err ? reject(err) : resolve(new IndicatorModel(data));
-			});
-		});
-	}
-
 	public toggleViewState(viewState: string | boolean, reflow = true) {
 		let elClassList = this._elementRef.nativeElement.classList;
 
@@ -214,6 +181,46 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 			chartW = el.clientWidth;
 
 		return [Math.max(random(0, containerH - chartH), 0), random(0, containerW - chartW)];
+	}
+
+	private _bindDrag() {
+
+		this._zone.runOutsideAngular(() => {
+			interact(this._elementRef.nativeElement)
+				.draggable({
+					allowFrom: this._dragHandle.nativeElement,
+					// enable inertial throwing
+					inertia: true,
+					// keep the element within the area of it's parent
+					restrict: {
+						restriction: 'parent',
+						endOnly: true,
+						elementRect: {top: 0, left: 0, bottom: 1, right: 1}
+					},
+
+					// call this function on every dragmove event
+					onmove: (event) => {
+						event.preventDefault();
+
+						this._zone.runOutsideAngular(() => {
+
+							let target = this._elementRef.nativeElement;
+
+							let // keep the dragged position in the data-x/data-y attributes
+								x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
+								y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+							// translate the element
+							target.style.webkitTransform = target.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
+
+							// update the posiion attributes
+							target.setAttribute('data-x', x);
+							target.setAttribute('data-y', y);
+						});
+					},
+					onend: () => this.storePosition(),
+				});
+		});
 	}
 
 	destroy() {

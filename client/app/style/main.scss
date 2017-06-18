@@ -1,92 +1,13 @@
 @import 'variables/variables';
 
-html, body {
-    height: 100%;
-}
-
-
-html {
-    /*
-    On OSX you can 'tilt' the screen up and down, so you see 'out of page' space
-    To blend in, the background has to be the same color as the header/footer
-     */
-    // background: $background-dark;
-}
-
-body {
-    position: relative;
-    // background: $background-light;
-    font-size: 12px;
-}
-
-@-webkit-keyframes animation {
-    0%     {background-color:white;}
-    100.0%  {background-color:#454443;}
-}
-
-@keyframes animation {
-    0%     {background-color:white;}
-    100.0%  {background-color:#454443;}
-}
-
-* {
-    -webkit-user-select: none;
-    user-select: none;
-}
-
 a, p, li, span, h1, h2, h3, h4, h5, h6, td, th, label {
     color: white;
 }
 
-button {
-    color: black;
-}
-
-ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
 a {
     cursor: pointer;
-}
-
-a:hover {
-    text-decoration: none;
-}
-
-ss-multiselect-dropdown > div,
-ss-multiselect-dropdown > div > button {
-    width: 100%;
-}
-
-.text-white {
-    color: #fff;
-}
-
-.text-dark {
-    color: #000
-}
-
-.key-value-list {
-    padding-left: 20px;
-    text-align: left;
-}
-
-.key-value-list li {
-    font-size: 12px;
-}
-
-.key-value-list span:first-child {
-    display: inline-block;
-    width: 100px;
-    font-weight: bold;
-
-    &:after {
-        content: ":";
-        width: 10px;
-        float: right;
+    &:hover {
+        text-decoration: none;
     }
 }
 
@@ -99,30 +20,6 @@ ss-multiselect-dropdown > div > button {
     top:10px;
 }
 
-.jstree-anchor {
-    color: white !important;
-}
-
-
-.r_flex_container {
-    display:flex;
-    flex-flow: column nowrap;
-
-    height: 100%;
-    flex-direction: column;
-    margin: 0;
-}
-
-.r_flex_fixed_child {
-    flex:none;
-}
-
-.r_flex_expand_child {
-    flex:auto;
-    overflow-y: auto;
-    position: relative;
-}
-
 .text-negative {
     color: $general-error;
 }
@@ -133,33 +30,3 @@ ss-multiselect-dropdown > div > button {
 
 input::-webkit-inner-spin-button { display: none; }
 input::-webkit-calendar-picker-indicator { margin-right: -20px; background:transparent;}
-
-.three-column {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-
-    border-top: 1px solid #c3c3c3;
-}
-
-.three-column:nth-child(1) {
-    width: 280px;
-    left: 0;
-    right: 200px;
-    overflow: auto;
-    text-align: left;
-    border-right: 1px solid #c3c3c3;
-}
-
-.three-column:nth-child(2) {
-    right: 200px;
-    left: 280px;
-}
-
-.three-column:nth-child(3) {
-    right: 0;
-    width: 200px;
-    text-align: center;
-
-    border-left: 1px solid #c3c3c3;
-}

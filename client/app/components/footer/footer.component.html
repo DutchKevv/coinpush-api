@@ -1,9 +1,9 @@
 <!-- Tab content -->
-<div class="footer-bar-wrapper clearfix">
+<div class="footer-bar-wrapper">
     <!-- Tab nav -->
-    <i class="splitter fa fa-bars text-white" aria-hidden="true">&nbsp;</i>
+    <i #resizeHandle class="splitter fa fa-bars" aria-hidden="true">&nbsp;</i>
 
-    <ul class="nav-tabs" role="tablist" style="float:left;">
+    <ul class="nav nav-tabs" role="tablist">
         <li role="presentation" class="active">
             <a data-target="#backtest" aria-controls="profile" role="tab" data-toggle="tab">Backtest</a>
         </li>
@@ -12,7 +12,7 @@
         <li role="presentation"></li>
     </ul>
 
-    <status style="float: right;"></status>
+    <status></status>
 </div>
 
 <div class="tab-content">
@@ -20,7 +20,7 @@
     <!-- Backtest -->
     <div role="tabpanel" class="tab-pane active" id="backtest">
         <div class="container-fluid">
-            <backtest-settings></backtest-settings>
+            <backtest></backtest>
         </div>
     </div>
 

@@ -1,37 +1,53 @@
-import {Directive, ElementRef, OnInit, Input, AfterViewInit, NgZone} from '@angular/core';
+import {
+	ElementRef, OnInit, Input, AfterViewInit, NgZone, Component,
+	ChangeDetectionStrategy, ViewEncapsulation, Output, ViewChild
+} from '@angular/core';
 import * as moment from 'moment';
 import {cloneDeep} from 'lodash';
 
-const Highcharts = require('highcharts');
+import * as Highcharts from 'highcharts';
 
 // Themes
-import {HighchartsDefaultTheme} from './themes/theme.default';
+import {HighchartsDefaultTheme} from '../../../assets/custom/highcharts/theme/theme.default';
+import {InstrumentModel} from '../../../../shared/models/InstrumentModel';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
-@Directive({
-	selector: '[chart-report]',
-	exportAs: 'chart-report'
+@Component({
+	selector: 'chart-report',
+	exportAs: 'chart-report',
+	// styleUrls: ['./chart.component.scss'],
+	encapsulation: ViewEncapsulation.Native,
+	templateUrl: './chart-report.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
-export class ChartReportDirective implements OnInit, AfterViewInit {
+export class ChartReportComponent implements OnInit, AfterViewInit {
 
-	@Input() data: any;
+	@Input() model: InstrumentModel;
 	@Input() height: number;
 
-	public loading: true;
-	public chart: any;
+	@Output() loading$ = new BehaviorSubject(true);
+	@ViewChild('chart') chartRef: ElementRef;
+
+	private _chart: any;
 
 	constructor(private _zone: NgZone,
 				public elementRef: ElementRef) {}
 
 	ngOnInit() {
+
 	}
 
 	ngAfterViewInit() {
 		if (this.height)
 			this.setHeight(this.height);
 
-		requestAnimationFrame(() => {
-			this._createChart();
+		this._createChart();
+
+		this.model.changed$.subscribe((changes: any) => {
+			if (changes.orders && changes.orders.length) {
+				this._updateData(changes.orders);
+			}
 		});
 	}
 
@@ -43,7 +59,7 @@ export class ChartReportDirective implements OnInit, AfterViewInit {
 
 	public reflow() {
 		requestAnimationFrame(() => {
-			this.chart.reflow();
+			this._chart.reflow();
 			this._updateZoom();
 			// requestAnimationFrame(() => this.chart.reflow())
 		});
@@ -51,18 +67,22 @@ export class ChartReportDirective implements OnInit, AfterViewInit {
 
 	private _updateZoom(redraw = true) {
 		let parentW = this.elementRef.nativeElement.parentNode.clientWidth,
-			data = this.chart.xAxis[0].series[0].data,
+			data = this._chart.xAxis[0].series[0].data,
 			barW = 12.5,
 			barsToShow = Math.ceil(parentW / barW),
 			firstBar = (data[data.length - barsToShow] || data[0]),
 			lastBar = data[data.length - 1];
 
-		this.chart.xAxis[0].setExtremes(firstBar.x, lastBar.x, redraw, false);
+		this._chart.xAxis[0].setExtremes(firstBar.x, lastBar.x, redraw, false);
 	}
 
 	private _createChart(): void {
+		requestAnimationFrame(() => {
+
+		});
+
 		this._zone.runOutsideAngular(() => {
-			let data = this._prepareData(this.data),
+			let data = this._prepareData(this.model.options.orders),
 				self = this;
 
 			// Clone a new settings object
@@ -84,7 +104,7 @@ export class ChartReportDirective implements OnInit, AfterViewInit {
 			settings.tooltip = {
 				useHTML: true,
 				formatter: function () {
-					let order = self.data[this.point.x];
+					let order = self.model.options.orders[this.point.x];
 
 					return `<ul>
 <li> ${this.x}</li>
@@ -122,13 +142,21 @@ export class ChartReportDirective implements OnInit, AfterViewInit {
 				}
 			];
 
-			this.chart = Highcharts.chart(this.elementRef.nativeElement, settings);
+			this._chart = Highcharts.chart(this.chartRef.nativeElement, settings);
 		});
 	}
 
+	private _updateData(data) {
+		this._zone.runOutsideAngular(() => {
+			for(let i = 0; i < data.length; i++)
+				this._chart.series[0].addPoint(data[i].equality, false, false);
+
+			this._chart.redraw(false);
+		});
+	}
 
 	private _prepareData(data) {
-		let chartData = new Float32Array(data.length),
+		let chartData = new Array(data.length),
 			i = 0, len = data.length;
 
 		for (; i < len; i++)

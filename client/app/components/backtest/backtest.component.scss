@@ -1,0 +1,20 @@
+ul {
+    list-style: none;
+    display: flex;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    border-bottom: 1px solid #a7a7a7;
+}
+
+li {
+    padding: 4px 20px;
+    border-radius: 4px 4px 0 0;
+    color: white;
+    border: 1px solid #9f9f9f;
+    border-bottom: none;
+    margin-right: 10px;
+
+    &.active {
+        background: #085963;
+    }
+}

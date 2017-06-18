@@ -61,17 +61,26 @@ export default class Cache extends WorkerChild {
 		params.count = params.count || Cache.COUNT_DEFAULT;
 
 		// Ensure data is complete
-		await this.fetch(params.symbol, params.timeFrame, params.from, params.until, params.count);
+		await this.fetch(params);
 
 		// Read data after complete
-		return await this._dataLayer.read(params.symbol, params.timeFrame, params.from, params.until, params.count);
+		let candles = await this._dataLayer.read(params.symbol, params.timeFrame, params.from, params.until, params.count);
+
+		return candles;
 	}
 
-	public async fetch(symbol: string, timeFrame: string, from: number, until: number, count: number, emitStatus = false): Promise<void> {
-		winston.info(`Cache: Fetching ${symbol}`);
+	public async fetch(params: {symbol: string, timeFrame: string, from: number, until: number, count: number}, emitStatus?: boolean): Promise<void> {
+		let symbol = params.symbol,
+			timeFrame = params.timeFrame,
+			from = params.from,
+			until = params.until,
+			count = params.count;
+
+		winston.info(`Cache: Fetching ${symbol} from ${new Date(from)} until ${new Date(until)} count ${count}`);
 
 		if (count && from && until)
 			throw new Error('Cache->fetch : Only from OR until can be given when using count, not both');
+
 
 		if (this._mapper.isComplete(symbol, timeFrame, from, until, count)) {
 			return;
@@ -92,7 +101,6 @@ export default class Cache extends WorkerChild {
 					total = 0;
 
 				this._brokerApi.getCandles(symbol, timeFrame, chunk.from, chunk.until, chunk.count, async (buf: NodeBuffer) => {
-
 					// Make sure there is a from to store in mapper
 					from = from || buf.readDoubleLE(0);
 
@@ -157,7 +165,7 @@ export default class Cache extends WorkerChild {
 		});
 
 		this.ipc.on('fetch', (opt, cb) => {
-			this.fetch(opt.symbol, opt.timeFrame, opt.from, opt.until, opt.count, true)
+			this.fetch(opt, true)
 				.then(() => cb(null))
 				.catch(cb);
 		});

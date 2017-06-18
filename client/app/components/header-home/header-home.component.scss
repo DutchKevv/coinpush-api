@@ -1,20 +1,34 @@
+@import '~bootstrap/scss/_variables.scss';
+@import '~bootstrap/scss/_mixins.scss';
+@import '~bootstrap/scss/_dropdown.scss';
+
 :host {
 	background: #000;
 }
 
+nav {
+	display: flex;
+}
+
 .header-buttons {
 	list-style: none;
+	margin: 0;
+	padding: 0;
+
+	display: flex;
 
 	@media screen and (min-width: 768px) {
 		&:first-child {
 			width: 280px;
-			float: left;
 		}
 	}
 
 	> li {
-		float: left;
 		position: relative;
+
+		&:nth-child(2) {
+			margin-right: 220px;
+		}
 	}
 
 	.button-editor {
@@ -43,6 +57,18 @@
 			}
 		}
 	}
+}
+
+.btn-menu {
+	background: #878787;
+	background-image: linear-gradient(180deg,#878787,#000);
+	border-radius: 3px;
+	color: #fff;
+	text-decoration: none;
+	min-width: 30px;
+	text-align: center;
+	margin-right: 5px;
+	border: none;
 }
 
 .dropdown-submenu {

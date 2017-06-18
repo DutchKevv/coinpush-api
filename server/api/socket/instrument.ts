@@ -5,12 +5,9 @@ module.exports = (app: App, socket) => {
 
 	// Create
 	socket.on('instrument:create', async (options: Array<InstrumentSettings>, cb: Function) => {
-
 		try {
 			let instruments = await app.controllers.instrument.create(options);
-
-			cb(null, instruments.map(instrument => ({id: instrument.options.id})));
-
+			cb(null, instruments.map(instrument => instrument.options));
 		} catch (error) {
 			console.error(error);
 			cb(error);
@@ -20,11 +17,10 @@ module.exports = (app: App, socket) => {
 	// TODO: Move to cache API
 	// Read bars
 	socket.on('instrument:read', async (options, cb) => {
-		console.log('options options', options);
 		try {
 			cb(null, await app.controllers.instrument.read(options.id, options.from, options.until, options.count, undefined, options.indicators))
 		} catch (error) {
-			console.error(error);
+			console.error('Error instrument:read ', error);
 			cb(error);
 		}
 	});
@@ -51,22 +47,7 @@ module.exports = (app: App, socket) => {
 	});
 
 	socket.on('instrument:chart-list', (options, cb) => {
-		let instruments = app.controllers.instrument.instruments,
-			list = [],
-			instrument, key;
-
-		for (key in instruments) {
-			instrument = instruments[key];
-
-			list.push({
-				id: instrument.id,
-				timeFrame: instrument.timeFrame,
-				symbol: instrument.symbol,
-				live: instrument.live
-			});
-		}
-
-		cb(null, list);
+		cb(null, app.controllers.instrument.getList());
 	});
 
 	socket.on('instrument:toggleTimeFrame', async (options, cb) => {

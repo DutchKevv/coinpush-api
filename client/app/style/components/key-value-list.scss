@@ -1,0 +1,20 @@
+.key-value-list {
+	padding-left: 20px;
+	text-align: left;
+}
+
+.key-value-list li {
+	font-size: 12px;
+}
+
+.key-value-list span:first-child {
+	display: inline-block;
+	width: 100px;
+	font-weight: bold;
+
+	&:after {
+		content: ":";
+		width: 10px;
+		float: right;
+	}
+}

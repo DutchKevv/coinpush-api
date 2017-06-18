@@ -1,6 +1,7 @@
 import Instrument from '../instrument/Instrument';
 import OrderManager from '../../modules/order/OrderManager';
 import AccountManager from '../../modules/account/AccountManager';
+import {winston} from '../../logger';
 
 export interface IEA {
 	orderManager: OrderManager;
@@ -10,10 +11,13 @@ export interface IEA {
 export default class EA extends Instrument implements IEA {
 
 	public tickCount = 0;
-	public live = false;
+	public status = 'booting';
+	public statusValue = 0;
 
 	public accountManager: AccountManager;
 	public orderManager: OrderManager;
+
+	private _lastReportTime = 0;
 
 	private _backtestData = {
 		totalFetchTime: 0,
@@ -29,11 +33,11 @@ export default class EA extends Instrument implements IEA {
 		await super.init();
 
 		this.accountManager = new AccountManager({
-			equality: this.options.equality
+			equality: this.options.startEquality
 		});
 
 		this.orderManager = new OrderManager(this.accountManager, {
-			live: this.options.live,
+			live: this.options.type === 'live',
 			ipc: this.ipc
 		});
 
@@ -44,6 +48,8 @@ export default class EA extends Instrument implements IEA {
 		this.ipc.on('@report', (data, cb) => cb(null, this.report()));
 
 		await this.onInit();
+
+		this.status = 'idle';
 
 		if (this.options.autoRun)
 			this.runBackTest();
@@ -63,7 +69,7 @@ export default class EA extends Instrument implements IEA {
 	async tick(timestamp, bid, ask): Promise<void> {
 		await super.tick(timestamp, bid, ask);
 
-		if (this.options.live === false) {
+		if (this.options.type === 'backtest') {
 			this.orderManager.tick()
 		}
 
@@ -97,7 +103,8 @@ export default class EA extends Instrument implements IEA {
 			from = this.options.from,
 			until = this.options.until;
 
-		console.log('this.options!', this.options);
+		this.status = 'fetching';
+
 		let p = this.ipc.send('cache', 'read', {
 			symbol: this.symbol,
 			timeFrame: this.timeFrame,
@@ -107,17 +114,25 @@ export default class EA extends Instrument implements IEA {
 
 		// Report status every X seconds
 		// TODO - Optimize
+		let now = Date.now();
 		let interval = setInterval(() => {
 			this._emitProgressReport();
+			console.log('TIME PASSED!!!  :  ', Date.now() - now);
+			now = Date.now();
 		}, 500);
+
 		this._emitProgressReport();
 
 		while (true) {
 			candles = await p;
 
+			this.status = 'running';
+
 			// There is no more data, so stop
-			if (!candles.length)
+			if (!candles.length) {
+				winston.warn('Empty buffer received from read!', from, until);
 				break;
+			}
 
 			from = candles.readDoubleLE(candles.length - (10 * Float64Array.BYTES_PER_ELEMENT)) + 1;
 
@@ -147,6 +162,8 @@ export default class EA extends Instrument implements IEA {
 
 			await this.inject(ticks);
 
+			this.status = 'fetching';
+
 			// There are no more candles to end
 			if (lastBatch || ticks.length < count)
 				break;
@@ -154,23 +171,33 @@ export default class EA extends Instrument implements IEA {
 
 		clearInterval(interval);
 
-		this._backtestData.endTime = Date.now();
-
 		this.orderManager.closeAll(lastTime, this.bid, this.ask);
+		this._backtestData.endTime = Date.now();
+		this.status = 'finished';
+
+		this._emitProgressReport();
 
 		this.ipc.send('main', '@run:end', undefined, false);
 	}
 
 	private _emitProgressReport() {
-		let totalTime = (this.options.endTime || Date.now()) - this.get('startTime');
+		let totalTime = (this.options.endTime || Date.now()) - this.get('startTime'),
+			now = Date.now();
 
-		this.ipc.send('main', 'status:update', {
+		this.ipc.send('main', 'instrument:status', {
 			id: this.id,
 			tickCount: this.tickCount,
-			equality: this.accountManager.equality + this.orderManager.getOpenOrdersValue(this.bid, this.ask),
-			orders: this.orderManager.closedOrders,
+			ticksPerSecond: Math.ceil(this.tickCount / ((this.time - this._backtestData.startTime) / 1000)),
+			equality: (this.accountManager.equality + this.orderManager.getOpenOrdersValue(this.bid, this.ask)).toFixed(2),
+			orders: this.orderManager.findByDateRange(this._lastReportTime, this.time),
 			data: this._backtestData,
-			lastTime: this.time
-		}, false)
+			lastTime: this.time,
+			status: {
+				type: this.status,
+				value: (((this.time - this.options.from) / (this.options.until - this.options.from)) * 100).toFixed(2)
+			}
+		}, false);
+
+		this._lastReportTime = this.time;
 	}
 }

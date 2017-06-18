@@ -43,7 +43,7 @@
     "event-pubsub": "4.2.4",
     "express": "4.15.3",
     "freeport": "1.0.5",
-    "gulp-typescript": "^3.1.7",
+    "gulp-typescript": "3.1.7",
     "minimist": "1.2.0",
     "mkdirp": "0.5.1",
     "node-ipc": "git://github.com/RIAEvangelist/node-ipc.git#v9.x",
@@ -52,7 +52,7 @@
     "source-map-support": "0.4.15",
     "sqlite3": "3.1.8",
     "sqlite3-transactions": "0.0.5",
-    "typescript": "^2.3.4",
+    "typescript": "2.3.4",
     "watch": "1.0.2",
     "winston": "2.3.1",
     "winston-color": "1.0.0"

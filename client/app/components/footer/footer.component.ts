@@ -1,22 +1,25 @@
 import {CookieService} from 'ngx-cookie';
-declare var $: any;
-
 import {debounce} from 'lodash';
+import * as interact from 'interactjs';
 import {SocketService} from '../../services/socket.service';
 import {
 	Component, ElementRef, OnInit, OnDestroy, ChangeDetectionStrategy, NgZone,
-	AfterViewChecked
+	AfterViewChecked, ViewEncapsulation, ViewChild, AfterViewInit, ViewContainerRef, Input
 } from '@angular/core';
 import * as moment from 'moment';
+import {InstrumentsService} from '../../services/instruments.service';
 
 @Component({
 	selector: 'app-footer',
 	templateUrl: './footer.component.html',
 	styleUrls: ['./footer.component.scss'],
+	encapsulation: ViewEncapsulation.Native,
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class FooterComponent implements OnInit, OnDestroy, AfterViewChecked {
+export class FooterComponent implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked {
+
+	@ViewChild('resizeHandle') resizeHandle: ElementRef;
 
 	private _maxResizeHeight: number = window.document.body.clientHeight - 100;
 
@@ -26,8 +29,10 @@ export class FooterComponent implements OnInit, OnDestroy, AfterViewChecked {
 		data?: any
 	}> = [];
 
-	constructor(private _zone: NgZone,
-				private socketService: SocketService,
+	constructor(public instrumentsService: InstrumentsService,
+				private vcRef: ViewContainerRef,
+				private _zone: NgZone,
+				private _socketService: SocketService,
 				private _cookieService: CookieService,
 				private _elementRef: ElementRef) {
 	}
@@ -36,10 +41,10 @@ export class FooterComponent implements OnInit, OnDestroy, AfterViewChecked {
 		// Set window.resize handle
 		this._restoreHeightFromCookie();
 		this._setWindowResizeHandle();
-		this._setDragger();
 		this._bindContextMenu();
+		this._setDraggable();
 
-		this.socketService.socket.on('debug', messages => {
+		this._socketService.socket.on('debug', messages => {
 			messages.forEach(message => {
 				message.timePretty = moment(message.time).format('DD MMM YY hh:mm:ss');
 			});
@@ -48,9 +53,19 @@ export class FooterComponent implements OnInit, OnDestroy, AfterViewChecked {
 		});
 	}
 
+	ngAfterViewInit() {
+		// var parentComponent1 =
+		// console.log('blablabla', this._elementRef.nativeElement.getRootNode().host);
+		//
+		//
+		// let current = this.parent.elementRef.nativeElement.style.gridTemplateRows;
+		// window['test'] = this.parent.elementRef.nativeElement;
+		// console.log(current);
+		// console.log(this._elementRef.nativeElement.parentNode)
+	}
 
 	ngAfterViewChecked() {
-		console.log('CHECK!!');
+		// console.log('CHECK!!');
 	}
 
 	private _restoreHeightFromCookie() {
@@ -76,56 +91,42 @@ export class FooterComponent implements OnInit, OnDestroy, AfterViewChecked {
 			this._elementRef.nativeElement.style.height = this._maxResizeHeight + 'px';
 	}
 
-	private _setDragger() {
+	private _setDraggable() {
 		this._zone.runOutsideAngular(() => {
-			$(this._elementRef.nativeElement).resizable({
-				handleSelector: '.splitter',
-				resizeWidth: false,
-				resizeHeightFrom: 'top',
-				onDrag: (e, $el, newWidth, newHeight) => {
-					e.preventDefault();
+			interact(this._elementRef.nativeElement)
+				.resizable({
+					preserveAspectRatio: true,
+					edges: { left: false, right: false, bottom: false, top: true }
+				})
+				.on('resizemove', function (event) {
+					let target = event.target,
+						y = (parseFloat(target.getAttribute('data-y')) || 0);
 
-					let maxHeight = this._maxResizeHeight,
-						minHeight = 21;
-
-					if (newHeight > maxHeight)
-						newHeight = maxHeight;
-					else if (newHeight < minHeight)
-						newHeight = minHeight;
-
-					requestAnimationFrame(() => {
-						$el[0].style.height = newHeight + 'px';
-					});
-
-					return false;
-				},
-				onDragEnd: (e) => {
-					e.preventDefault();
-					this._storeHeightInCookie();
-				}
-			});
+					target.style.height = event.rect.height + 'px';
+					target.setAttribute('data-y', y);
+				});
 		});
 
 	}
 
 	private _bindContextMenu() {
-		(<any>$(this._elementRef.nativeElement.querySelector('#backtest').parentNode)).contextMenu({
-			items: [
-				{
-					text: 'Clear',
-					value: 'clear'
-				}
-			],
-			menuSelected: (selectedValue, originalEvent) => {
-				if (selectedValue === 'clear') {
-					this.messages = [];
-				}
-			}
-		});
+		// (<any>$(this._elementRef.nativeElement.querySelector('#backtest').parentNode)).contextMenu({
+		// 	items: [
+		// 		{
+		// 			text: 'Clear',
+		// 			value: 'clear'
+		// 		}
+		// 	],
+		// 	menuSelected: (selectedValue, originalEvent) => {
+		// 		if (selectedValue === 'clear') {
+		// 			this.messages = [];
+		// 		}
+		// 	}
+		// });
 	}
 
 	clearCache() {
-		this.socketService.socket.emit('system:clear-cache', {}, (err: any) => {
+		this._socketService.send('system:clear-cache', {}, (err: any) => {
 			if (err)
 				alert(err);
 

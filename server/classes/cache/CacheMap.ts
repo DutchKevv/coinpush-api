@@ -126,7 +126,7 @@ export default class Mapper {
 			}
 			else {
 				if ((!from || range[0] <= from) && (!until || range[1] >= until) && range[2] >= count) {
-					result = [];
+					// result = [];
 				}
 			}
 		});

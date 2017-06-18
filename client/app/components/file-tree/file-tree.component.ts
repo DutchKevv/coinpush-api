@@ -15,8 +15,12 @@ let speed = 200;
 @Component({
 	selector: 'file-tree',
 	templateUrl: './file-tree.component.html',
-	styleUrls: ['./file-tree.component.scss'],
-	encapsulation: ViewEncapsulation.None,
+	styleUrls: [
+		'../../../node_modules/jstree/dist/themes/default/style.css',
+		'../../../node_modules/jstree/dist/themes/default-dark/style.css',
+		'./file-tree.component.scss'
+	],
+	encapsulation: ViewEncapsulation.Native,
 	entryComponents: [DialogComponent]
 })
 

@@ -54,7 +54,7 @@ export default class MyEA extends EA implements IEA {
 
 		} else {
 
-			if (this.MA1.value < bid * 0.999 && this.orderManager.orders.length) {
+			if (/*this.MA1.value < bid * 0.999 &&*/ this.orderManager.orders.length) {
 
 				// Close order
 				await this.closeOrder(this.orderManager.orders[0].id, bid, ask);
@@ -62,10 +62,10 @@ export default class MyEA extends EA implements IEA {
 		}
 
 		
-		// await new Promise((resolve, reject) => {
-		// 	setTimeout(() => {
-		// 		resolve();
-		// 	}, 1)
-		// });
+// 		await new Promise((resolve, reject) => {
+// 			setTimeout(() => {
+// 				resolve();
+// 			}, 10)
+// 		});
 	}
 }

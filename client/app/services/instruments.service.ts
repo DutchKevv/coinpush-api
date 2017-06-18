@@ -1,5 +1,5 @@
 import {forEach} from 'lodash';
-import {Injectable, Output, EventEmitter, NgZone} from '@angular/core';
+import {Injectable, Output, EventEmitter, NgZone, ChangeDetectorRef} from '@angular/core';
 import {InstrumentSettings} from '../../../shared/interfaces/InstrumentSettings';
 import {SocketService} from './socket.service';
 import {BehaviorSubject} from 'rxjs';
@@ -8,13 +8,16 @@ import {IndicatorModel} from '../models/indicator';
 import {DialogComponent} from '../components/dialog/dialog.component';
 import {ModalService} from './modal.service';
 import {InstrumentModel} from '../../../shared/models/InstrumentModel';
+import {Observable} from 'rxjs/Observable';
+import {Subject} from 'rxjs/Subject';
+import {GroupedObservable} from 'rxjs/operator/groupBy';
 
 @Injectable()
 export class InstrumentsService {
 
 	@Output() public changed = new EventEmitter();
-	@Output() public instruments$: BehaviorSubject<InstrumentModel[]> = new BehaviorSubject([]);
-	@Output() public instrumentList$: BehaviorSubject<any> = new BehaviorSubject([]);
+	@Output() public instruments$: BehaviorSubject<any> = new BehaviorSubject([]);
+	@Output() public groupIds$: BehaviorSubject<any> = new BehaviorSubject([]);
 
 	private _instruments: InstrumentModel[] = [];
 
@@ -29,12 +32,24 @@ export class InstrumentsService {
 	}
 
 	public init(): void {
+		// Create groups by groupId to show in backtest overview
+		this.instruments$.subscribe(instruments => {
+			this.groupIds$.next([...new Set(instruments.map(val => val.options.groupId))]);
+		});
+
 		this._socketService.socket.on('instrument:created', (instrumentSettings: InstrumentSettings) => {
 			// this.add(new InstrumentModel(instrumentSettings));
 		});
 
 		this._socketService.socket.on('instrument:destroyed', (instrumentSettings: InstrumentSettings) => {
 			console.log('dsdfsdafsdf', 'Destroy11');
+		});
+
+		this._socketService.socket.on('instrument:status', (status) => {
+			let instrument = this.findById(status.id);
+
+			if (instrument)
+				instrument.set(status);
 		});
 
 		this._socketService.socket.on('system:state', (systemState: SystemState) => {
@@ -45,23 +60,21 @@ export class InstrumentsService {
 	}
 
 
-	public async create(instruments: Array<InstrumentSettings>): Promise<Array<InstrumentModel>> {
+	public create(instruments: Array<InstrumentSettings>): Array<InstrumentModel> {
 		// console.info(`Creating ${options.symbol}`);
-		console.log('instruments', instruments);
+
 		let now = Date.now(),
-			models = instruments.map(options => {
-				return this.add(new InstrumentModel(options));
-			});
+			models = instruments.map(options => this.add(new InstrumentModel(options)));
 
-
-		this._socketService.socket.emit('instrument:create', models.map(model => model.options), (err, instruments) => {
+		this._socketService.send('instrument:create', models.map(model => model.options), (err, instruments) => {
 			if (err)
 				throw new Error(typeof err === 'string' ? err : JSON.stringify(err));
 
-			console.log(instruments);
+			console.log('instruments', instruments);
 
 			instruments.forEach((instrument, i) => models[i].set(instrument));
 
+			this.instruments$.next(this._instruments);
 			// console.info(`Creating ${model.options.symbol} took: ${Date.now() - now} ms`);
 		});
 
@@ -89,7 +102,7 @@ export class InstrumentsService {
 
 		return new Promise((resolve) => {
 
-			this._socketService.socket.emit('instrument:read', {
+			this._socketService.send('instrument:read', {
 				id: model.options.id,
 				indicators: true,
 				offset,
@@ -129,7 +142,7 @@ export class InstrumentsService {
 	public toggleTimeFrame(model: InstrumentModel, timeFrame) {
 		return new Promise((resolve, reject) => {
 
-			this._socketService.socket.emit('instrument:toggleTimeFrame', {
+			this._socketService.send('instrument:toggleTimeFrame', {
 				id: model.options.id,
 				timeFrame: timeFrame
 			}, (err, data) => {
@@ -189,7 +202,7 @@ export class InstrumentsService {
 				options[input.name] = input.value
 			});
 
-			this._socketService.socket.emit('instrument:indicator:add', {
+			this._socketService.send('instrument:indicator:add', {
 				id: instrumentModel.options.id,
 				name: indicatorModel.name,
 				options: options,
@@ -207,8 +220,12 @@ export class InstrumentsService {
 		});
 	}
 
-	public findById(id) {
+	public findById(id: string|number): InstrumentModel {
 		return this.instruments.find(instrument => instrument.options.id === id);
+	}
+
+	public getByGroupId(groupId: string|number): Array<InstrumentModel> {
+		return this._instruments.filter(instr => instr.options.groupId === groupId);
 	}
 
 	private _showIndicatorOptionsMenu(indicatorModel: IndicatorModel): Promise<boolean> {
@@ -240,7 +257,7 @@ export class InstrumentsService {
 
 	private _getIndicatorOptions(name: string): Promise<IndicatorModel> {
 		return new Promise((resolve, reject) => {
-			this._socketService.socket.emit('instrument:indicator:options', {name: name}, (err, data) => {
+			this._socketService.send('instrument:indicator:options', {name: name}, (err, data) => {
 				err ? reject(err) : resolve(new IndicatorModel(data));
 			});
 		});
@@ -249,7 +266,7 @@ export class InstrumentsService {
 	private _destroyOnServer(model: InstrumentModel) {
 		return new Promise((resolve, reject) => {
 
-			this._socketService.socket.emit('instrument:destroy', {id: model.options.id}, err => {
+			this._socketService.send('instrument:destroy', {id: model.options.id}, err => {
 				if (err)
 					return reject(err);
 
@@ -261,7 +278,7 @@ export class InstrumentsService {
 	private _destroyAllOnServer() {
 		return new Promise((resolve, reject) => {
 
-			this._socketService.socket.emit('instrument:destroy-all', {}, err => {
+			this._socketService.send('instrument:destroy-all', {}, err => {
 				if (err)
 					return reject(err);
 
@@ -271,14 +288,12 @@ export class InstrumentsService {
 	}
 
 	private _loadRunningInstruments() {
-		this._socketService.socket.emit('instrument:chart-list', {}, (err, list: InstrumentSettings[]) => {
-
+		this._socketService.send('instrument:chart-list', {}, (err, list: InstrumentSettings[]) => {
 			if (err)
 				return console.error(err);
 
-			// Show server running instruments
-			if (list && list.length)
-				list.forEach((instrumentSettings: InstrumentSettings) => this.add(new InstrumentModel(instrumentSettings)));
+			console.log(list);
+			list.forEach((instrumentSettings: InstrumentSettings) => this.add(new InstrumentModel(instrumentSettings)));
 		});
 	}
 }
