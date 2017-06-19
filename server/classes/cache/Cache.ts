@@ -46,25 +46,58 @@ export default class Cache extends WorkerChild {
 	}
 
 	public async read(params: {symbol: string, timeFrame: string, from: number, until: number, count: number}): Promise<any> {
-		if (!params.symbol || typeof params.symbol !== 'string')
+		let symbol = params.symbol,
+			timeFrame = params.timeFrame,
+			from = params.from,
+			until = params.until,
+			count = params.count,
+			candles = Buffer.alloc(0);
+		
+		if (!symbol || typeof symbol !== 'string')
 			throw new Error('Cache-Read : No symbol given');
 
-		if (!params.timeFrame || typeof params.timeFrame !== 'string')
+		if (!timeFrame || typeof timeFrame !== 'string')
 			throw new Error('Cache-Read : No timeFrame given');
 
-		if (params.count && params.from && params.until)
+		if (!count && !from && !until)
+			throw new Error('Cache->Read : At least, from, until or count must be given as argument');
+
+		if (count && from && until)
 			throw new Error('Cache->Read : Only from OR until can be given when using count, not both');
 
-		if (!params.from && !params.until)
+		if (!from && !until) {
 			params.until = Date.now();
+		}
 
-		params.count = params.count || Cache.COUNT_DEFAULT;
+		count = count || Cache.COUNT_DEFAULT;
 
-		// Ensure data is complete
-		await this.fetch(params);
+		// If full dateRange given,
+		// Its possible to check if range is complete purely on mapper
+		if (from && until) {
+			if (!this._mapper.isComplete(symbol, timeFrame, from, until, count))
+				await this.fetch(params);
 
-		// Read data after complete
-		let candles = await this._dataLayer.read(params.symbol, params.timeFrame, params.from, params.until, params.count);
+			candles = await this._dataLayer.read(params);
+		}
+		// Count given
+		// First read, then check in mapper if data is complete by first/last candles
+		// Otherwise fetch and read again
+		else {
+			candles = await this._dataLayer.read(params);
+
+			if (candles.length) {
+				let first = candles.readDoubleLE(0),
+					last = candles.readDoubleLE(candles.length - (10 * Float64Array.BYTES_PER_ELEMENT));
+
+				if (!this._mapper.isComplete(symbol, timeFrame, from || first, until || last)) {
+					await this.fetch(params);
+					candles = await this._dataLayer.read(params);
+				}
+			} else {
+				await this.fetch(params);
+				candles = await this._dataLayer.read(params);
+			}
+		}
 
 		return candles;
 	}
@@ -76,19 +109,16 @@ export default class Cache extends WorkerChild {
 			until = params.until,
 			count = params.count;
 
-		winston.info(`Cache: Fetching ${symbol} from ${new Date(from)} until ${new Date(until)} count ${count}`);
+		winston.info(`Cache: Fetching ${symbol} from ${from} until ${until} count ${count}`);
 
 		if (count && from && until)
 			throw new Error('Cache->fetch : Only from OR until can be given when using count, not both');
 
-
-		if (this._mapper.isComplete(symbol, timeFrame, from, until, count)) {
-			return;
-		}
-
 		// Get missing chunks
 		let chunks = this._mapper.getMissingChunks(symbol, timeFrame, from, until, count),
 			done = 0;
+
+		console.log('missing chunks', chunks);
 
 		if (!chunks.length)
 			return;
@@ -98,9 +128,14 @@ export default class Cache extends WorkerChild {
 
 			return new Promise((resolve, reject) => {
 				let now = Date.now(),
+					streamChunkTotal = 0,
+					streamChunkWritten = 0,
+					endTriggered = false,
 					total = 0;
 
 				this._brokerApi.getCandles(symbol, timeFrame, chunk.from, chunk.until, chunk.count, async (buf: NodeBuffer) => {
+					streamChunkTotal++;
+
 					// Make sure there is a from to store in mapper
 					from = from || buf.readDoubleLE(0);
 
@@ -114,7 +149,9 @@ export default class Cache extends WorkerChild {
 
 					// Update map every time a chunk is successfully added
 					// Use the original from date (if given) as data comes in forwards, this simplifies the mapper updating
-					this._mapper.update(symbol, timeFrame, from, c_until, c_count);
+					this._mapper.update(symbol, timeFrame, from, c_until || until, c_count);
+
+					streamChunkWritten++;
 
 					// Send trigger for clients
 					if (emitStatus) {
@@ -124,6 +161,10 @@ export default class Cache extends WorkerChild {
 							value: this._mapper.getPercentageComplete(symbol, timeFrame, from, until, count)
 						}, false);
 					}
+
+					if (done === chunks.length && streamChunkWritten === streamChunkTotal)
+						resolve();
+
 				}, err => {
 
 					if (err)
@@ -134,7 +175,9 @@ export default class Cache extends WorkerChild {
 
 					winston.info(`Cache: Fetching ${symbol} took ${Date.now() - now} ms`);
 
-					if (++done === chunks.length)
+					endTriggered = true;
+
+					if (++done === chunks.length && streamChunkWritten === streamChunkTotal)
 						resolve();
 				});
 			});

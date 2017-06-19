@@ -1,16 +1,17 @@
 import WorkerChild 	from '../worker/WorkerChild';
 import CacheMapper 	from '../cache/CacheMap';
 import * as winston	from 'winston-color';
+import {InstrumentModel} from '../../../shared/models/InstrumentModel';
 
 export default class InstrumentCache extends WorkerChild {
 
 	public symbol: string;
 	public timeFrame: string;
+	public model: InstrumentModel;
 
-	protected tickCount = 0;
 	protected ticks: any = [];
 
-	protected time: number;
+	protected time: number = null;
 	protected bid: number;
 	protected ask: number;
 
@@ -19,14 +20,17 @@ export default class InstrumentCache extends WorkerChild {
 
 	private _map: CacheMapper = new CacheMapper();
 	private _readyHandler = Promise.resolve();
+	private _tpsInterval: number = 1000;
+	private _tpsIntervalTimer: any = null;
 
 	public async init() {
 		await super.init();
 
+		this.model = new InstrumentModel(this.options);
+
 		this.symbol = this.options.symbol;
 		this.timeFrame = this.options.timeFrame;
 
-		console.log(this.options);
 		await this.ipc.connectTo('cache');
 		await this._doPreFetch();
 
@@ -47,10 +51,18 @@ export default class InstrumentCache extends WorkerChild {
 		});
 	}
 
+	protected updateTicksPerSecond() {
+		let tickCount = this.model.options.status.tickCount,
+			totalSeconds = (Date.now() - this.model.options.status.startTime) / 1000,
+			perSecond = Math.floor(tickCount / totalSeconds);
+
+		this.model.options.status.ticksPerSecond = perSecond;
+	}
+
 	private async _doPreFetch() {
 		let buf = await this.ipc.send('cache', 'read', {
-				symbol: this.symbol,
-				timeFrame: this.timeFrame,
+				symbol: this.model.options.symbol,
+				timeFrame: this.model.options.timeFrame,
 				until: this.options.type === 'backtest' ? this.options.from :  this.options.until,
 				count: 1000
 			});
@@ -62,7 +74,6 @@ export default class InstrumentCache extends WorkerChild {
 	}
 
 	private async _doTickLoop(candles, tick = true) {
-		console.log('TICK LOOP!', candles.length);
 		if (!candles.length)
 			return;
 
@@ -86,7 +97,7 @@ export default class InstrumentCache extends WorkerChild {
 			this.ticks.push(candle);
 
 			if (tick) {
-				++this.tickCount;
+				++this.model.options.status.tickCount;
 
 				this.time = candle[0];
 				this.bid = candle[1];
@@ -113,12 +124,18 @@ export default class InstrumentCache extends WorkerChild {
 	protected async reset() {
 		this._toggleNewTickListener(false);
 
-		await this._map.reset();
+		this._map.reset();
 
-		this.ticks = null;
 		this.ticks = [];
 
-		this.tickCount = 0;
+		this.model.set({status: {
+			type: 'running',
+			progress: 0,
+			tickCount: 0,
+			totalFetchTime: 0,
+			startTime: Date.now(),
+			endTime: null
+		}});
 
 		return this._doPreFetch();
 	}

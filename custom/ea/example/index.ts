@@ -36,12 +36,12 @@ export default class MyEA extends EA implements IEA {
 
 	public async onTick(time: number, bid: number, ask: number): Promise<void> {
 
-		if (this.MA2.value > bid * 1.002 && !this.orderManager.orders.length) {
+		if (this.MA2.value > bid * 1.01 && !this.orderManager.orders.length) {
 
 			try {
 				// Place order
 				let id = await this.addOrder({
-					instrument: this.instrument,
+					instrument: this.symbol,
 					count: 2000,
 					type: 'sell',
 					bid: bid,
@@ -54,18 +54,17 @@ export default class MyEA extends EA implements IEA {
 
 		} else {
 
-			if (/*this.MA1.value < bid * 0.999 &&*/ this.orderManager.orders.length) {
+			if (this.MA1.value < bid * 0.99 && this.orderManager.orders.length) {
 
 				// Close order
 				await this.closeOrder(this.orderManager.orders[0].id, bid, ask);
 			}
 		}
 
-		
-// 		await new Promise((resolve, reject) => {
-// 			setTimeout(() => {
-// 				resolve();
-// 			}, 10)
-// 		});
+		// await new Promise((resolve, reject) => {
+		// 	setTimeout(() => {
+		// 		resolve();
+		// 	}, 10)
+		// });
 	}
 }

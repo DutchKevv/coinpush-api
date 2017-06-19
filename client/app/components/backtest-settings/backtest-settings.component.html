@@ -1,13 +1,13 @@
 <form role="form" class="form-inline" id="backtest-settings-form" [formGroup]="form" (ngSubmit)="create()">
 
-	<div class="input-group">
+	<div class="">
 		<label>EA</label>
 		<select class="custom-select" name="ea" formControlName="ea" required ngControl="ea"
 				[(ngModel)]="model.options.ea">
 			<option *ngFor="let ea of EAList; let i = index" [ngValue]="ea">{{ea}}</option>
 		</select>
 	</div>
-	<div class="input-group">
+	<div class="">
 		<label>Symbols</label>
 		<ss-multiselect-dropdown
 				name="symbols"
@@ -18,7 +18,7 @@
 
 		</ss-multiselect-dropdown>
 	</div>
-	<div class="input-group">
+	<div class="">
 		<label>Time frame</label>
 		<select class="custom-select" name="timeFrame" formControlName="timeFrame" required
 				[(ngModel)]="model.options.timeFrame">
@@ -31,7 +31,7 @@
 			<option value="D1">D1</option>
 		</select>
 	</div>
-	<div class="input-group">
+	<div class="">
 		<label for="backtest-settings-from">From</label>
 		<input id="backtest-settings-from"
 			   type='date'
@@ -43,12 +43,12 @@
 			   required
 		/>
 
-		<span class="input-group-addon">
+		<span class="-addon">
 			<span class="glyphicon glyphicon-calendar"></span>
 		</span>
 	</div> <!--[(ngModel)]="model.options.until | date: 'dd/MM/yyyy'"-->
 
-	<div class="input-group">
+	<div class="">
 		<label for="backtest-settings-until">Until</label>
 		<input id="backtest-settings-until"
 			   type='date'
@@ -59,14 +59,15 @@
 			   [(ngModel)]="model.options.until"
 			   required
 		/>
-		<span class="input-group-addon">
+		<span class="-addon">
 			<span class="glyphicon glyphicon-calendar"></span>
 		</span>
 	</div>
 
-	<div class="input-group">
+	<div class="">
 		<label>Starting Equality</label>
 		<input type="number"
+			   style="width: 150px;"
 			   class="form-control"
 			   formControlName="startEquality"
 			   name="startEquality"
@@ -74,7 +75,7 @@
 			   required
 		/>
 	</div>
-	<div class="input-group">
+	<div class="">
 		<label>Currency</label>
 		<select class="custom-select" name="currency" formControlName="currency" [(ngModel)]="model.options.currency"
 				required>
@@ -82,13 +83,13 @@
 			<option value="dollar">DOLLAR</option>
 		</select>
 	</div>
-	<div class="input-group">
+	<div class="">
 		<label>pips **</label>
 		<select class="custom-selectl" name="pips" [(ngModel)]="model.options.pips" formControlName="pips" required>
 			<option value="1">1</option>
 		</select>
 	</div>
-	<div class="input-group">
+	<div class="">
 		<label>Leverage</label>
 		<select class="custom-select" name="leverage" [(ngModel)]="model.options.leverage" formControlName="leverage"
 				required>
@@ -100,7 +101,7 @@
 		</select>
 	</div>
 
-	<div class="input-group">
+	<div class="">
 		<label>&nbsp;</label>
 		<button *ngIf="isRunning === false" class="btn btn-sm btn-primary" type="submit"
 				[disabled]='!form.valid'>Start

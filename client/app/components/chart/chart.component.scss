@@ -1,9 +1,11 @@
-.chart {
-    height: 100%;
+@import '../../style/components/spinner';
+
+:host {
+    contain: layout;
 }
 
-:host.loading .chart-loading-overlay {
-    display: block;
+.chart {
+    height: 100%;
 }
 
 .chart-loading-overlay {

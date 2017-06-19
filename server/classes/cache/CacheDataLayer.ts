@@ -2,8 +2,7 @@ import * as fs          from 'fs';
 import * as winston     from 'winston-color';
 import * as moment 		from '../../../shared/node_modules/moment';
 import {timeFrameSteps} from '../../util/date';
-
-const sqLite = require('sqlite3');
+import * as sqLite		from 'sqlite3';
 
 export default class CacheDataLayer {
 
@@ -22,16 +21,19 @@ export default class CacheDataLayer {
 		return this._setTableList();
 	}
 
-	public read(symbol: string, timeFrame: string, from: number, until: number, count: number, bufferOnly = true): Promise<Float64Array> {
+	public read(params: {symbol: string, timeFrame: string, from: number, until: number, count: number}): Promise<NodeBuffer> {
 
 		return new Promise((resolve, reject) => {
+			let symbol = params.symbol,
+				timeFrame = params.timeFrame,
+				from = params.from,
+				until = params.until,
+				count = params.count;
 
 			let tableName = this._getTableName(symbol, timeFrame),
-				fromPretty = from ? moment(from).format('MMM Do YYYY hh:mm:ss') : 'unknown',
-				untilPretty = until ? moment(until).format('MMM Do YYYY hh:mm:ss') : 'unknown',
 				queryString;
 
-			winston.info(`DataLayer: Read ${tableName} from ${fromPretty} until ${untilPretty} count ${count}`);
+			winston.info(`DataLayer: Read ${tableName} from ${from} until ${until} count ${count}`);
 
 			queryString = `SELECT data FROM ${tableName} `;
 
@@ -51,7 +53,7 @@ export default class CacheDataLayer {
 					queryString += `WHERE time >= ${from} ORDER BY time DESC LIMIT ${count}`;
 				}
 				else {
-
+					queryString += `WHERE time < ${until} ORDER BY time DESC LIMIT ${count}`;
 				}
 			}
 
@@ -62,11 +64,7 @@ export default class CacheDataLayer {
 
 				let mergedBuffer = Buffer.concat(rows.map(row => row.data), rows.length * (10 * Float64Array.BYTES_PER_ELEMENT));
 
-				if (bufferOnly) {
-					return resolve(mergedBuffer);
-				} else {
-					resolve(new Float64Array(mergedBuffer.buffer));
-				}
+				resolve(mergedBuffer);
 			});
 		});
 	}
@@ -107,7 +105,11 @@ export default class CacheDataLayer {
 					if (err)
 						return reject(err);
 
-					winston.info(`DataLayer: Wrote ${buffer.length / rowLength} candles to ${tableName} took ${Date.now() - now}  ms`);
+				}, () => {
+					let _from = buffer.readDoubleLE(0),
+						_until = buffer.readDoubleLE(buffer.length - (10 * Float64Array.BYTES_PER_ELEMENT));
+
+					winston.info(`DataLayer: Wrote ${buffer.length / rowLength} candles from ${_from} until ${_until} to ${tableName} took ${Date.now() - now}  ms`);
 					resolve();
 				});
 			});

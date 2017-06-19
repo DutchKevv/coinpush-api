@@ -105,7 +105,9 @@ module.exports = {
 			jQuery: 'jquery',
 			$: 'jquery',
 			jquery: 'jquery',
-			Tether: 'tether'
+			Tether: 'tether',
+			CanvasJS: 'CanvasJS/dist/canvasjs.min',
+
 		}),
 		new webpack.optimize.CommonsChunkPlugin({ name: 'vendor', filename: './dist/vendor.bundle.js'}),
 		// new webpack.ContextReplacementPlugin(/ace/, /^$/)

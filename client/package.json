@@ -42,6 +42,7 @@
     "awesome-typescript-loader": "^3.1.3",
     "bootstrap": "^4.0.0-alpha.6",
     "brace": "^0.10.0",
+    "canvasjs": "^1.8.1",
     "core-js": "^2.4.1",
     "css-loader": "^0.28.4",
     "file-loader": "^0.11.2",

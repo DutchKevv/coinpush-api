@@ -1,9 +1,11 @@
 import {DialogAnchorDirective} from '../../directives/dialoganchor.directive';
 declare let socket: any;
-declare let ace: any;
 declare let $: any;
 
-import {Component, AfterViewInit, OnDestroy, ElementRef, ViewEncapsulation, ViewChild, Output, EventEmitter} from '@angular/core';
+import {
+	Component, AfterViewInit, OnDestroy, ElementRef, ViewEncapsulation, ViewChild, Output, EventEmitter,
+	NgZone
+} from '@angular/core';
 import {SocketService}  from '../../services/socket.service';
 import {ModalService} from '../../services/modal.service';
 import {DialogComponent} from '../dialog/dialog.component';
@@ -33,15 +35,14 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 	$el: any;
 	jstree: any;
 	open = false;
-	translate = -300;
 
 	private _data = [];
 
 	constructor(
-		private _modalService: ModalService,
+		private _zone: NgZone,
 		private _socketService: SocketService,
+		private _modalService: ModalService,
 		private _elementRef: ElementRef) {
-		this.socket = _socketService.socket;
 
 		this.jstree = null;
 	}
@@ -49,7 +50,7 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 	ngAfterViewInit(): void {
 		this.load();
 
-		this.$el = $('#fileListContainer');
+		this.$el = $(this._elementRef.nativeElement.shadowRoot.getElementById('fileListContainer'));
 
 		let swipeOptions = {
 			triggerOnTouchEnd: true,
@@ -60,10 +61,10 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 
 		$('body').swipe(swipeOptions);
 
-
 		this._bindContextMenu();
 
 		this._socketService.socket.on('editor:directory-list', (err: any, result: any) => {
+
 			this._toggleBusyIcon(false);
 
 			if (err)
@@ -77,39 +78,41 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 			if (this.jstree)
 				return this.update(this._data);
 
-			this.$el.jstree({
-				plugins: [
-					'state',
-					'ui',
-					'html_data'
-				],
-				core: {
-					check_callback: true,
-					get_selected: true,
-					multiple: false,
-					data: this._data,
-					themes: {
-						name: 'default-dark',
-						dots: true,
-						icons: true
+			this._zone.runOutsideAngular(() => {
+				this.$el.jstree({
+					plugins: [
+						'state',
+						'ui',
+						'html_data'
+					],
+					core: {
+						check_callback: true,
+						get_selected: true,
+						multiple: false,
+						data: this._data,
+						themes: {
+							name: 'default-dark',
+							dots: true,
+							icons: true
+						}
 					}
-				}
-			});
-
-			this.$el.on('select_node.jstree', (e: any, data: any) => {
-				this.updateEvent.emit({
-					type: 'select',
-					value: data.node.id
 				});
-			});
 
-			this.jstree = this.$el.jstree(true);
+				this.$el.on('select_node.jstree', (e: any, data: any) => {
+					this.updateEvent.emit({
+						type: 'select',
+						value: data.node.id
+					});
+				});
+
+				this.jstree = this.$el.jstree(true);
+			});
 		});
 	}
 
 	public load() {
 		this._toggleBusyIcon(true);
-		this._socketService.socket.emit('editor:directory-list');
+		this._socketService.send('editor:directory-list');
 	}
 
 	update(data = this._data) {
@@ -256,7 +259,7 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 						if (oName === newName)
 							return;
 
-						this._socketService.socket.emit('editor:rename', {id: filePath, name: newName}, (err, result) => {
+						this._socketService.send('editor:rename', {id: filePath, name: newName}, (err, result) => {
 							this._toggleBusyIcon(false);
 
 							if (err)
@@ -281,7 +284,7 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 		// TODO: Show confirmation popup
 		this._toggleBusyIcon(true);
 
-		this.socket.emit('editor:file:delete', {filePath: filePath}, (err) => {
+		this._socketService.send('editor:file:delete', {filePath: filePath}, (err) => {
 			this._toggleBusyIcon(false);
 
 			if (err) {
@@ -325,7 +328,7 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 					if (value === 'add') {
 						this._toggleBusyIcon(true);
 
-						this._socketService.socket.emit('editor:file:create', {parent: filePath, name: model.inputs[0].value}, (err, result) => {
+						this._socketService.send('editor:file:create', {parent: filePath, name: model.inputs[0].value}, (err, result) => {
 							this._toggleBusyIcon(false);
 
 							if (err)
@@ -373,7 +376,7 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 				if (value === 'add') {
 					this._toggleBusyIcon(true);
 
-					this._socketService.socket.emit('editor:directory:create', {parent: filePath, name: model.inputs[0].value}, (err, result) => {
+					this._socketService.send('editor:directory:create', {parent: filePath, name: model.inputs[0].value}, (err, result) => {
 						this._toggleBusyIcon(false);
 
 						if (err)

@@ -1,8 +1,7 @@
 <div #draghandle
 	 class="chart-header clearfix"
-	 resizable
-	 (onBeforeResize)="_chartComponent.pinToCorner($event)"
-	 (onAfterResize)="_chartComponent.unpinFromCorner()"
+	 (onBeforeResize)="chartComponent.pinToCorner($event)"
+	 (onAfterResize)="chartComponent.unpinFromCorner()"
 >
 	<ng-container *ngIf="model.options$ | async as options">
 		<h5 class="chart-title">{{options.symbol}} - {{options.timeFrame}} - {{options.type}} #{{options.groupId}}</h5>
@@ -36,5 +35,5 @@
 
 <div style="position: relative;" class="chart-content">
 	<div dialogAnchor></div>
-	<chart [model]="model"></chart>
+	<chart #chart [model]="model"></chart>
 </div>

@@ -38,6 +38,10 @@ export default class Mapper {
 		let map = this.map,
 			ranges = this.findByParams(symbol, timeFrame, true);
 
+		if (until === null) {
+			console.log(symbol, timeFrame, from, until, count);
+		}
+
 		// Find first index of from date that is higher or equal then new chunk from date
 		// Place it before that, so all dates are aligned in a forward manner
 		let index = _.findIndex(ranges, date => date[0] > from);
@@ -59,7 +63,7 @@ export default class Mapper {
 		}
 	}
 
-	public isComplete(symbol, timeFrame, from, until, count): boolean {
+	public isComplete(symbol, timeFrame, from, until, count?): boolean {
 		let ranges = this.findByParams(symbol, timeFrame),
 			i = 0, len = ranges.length, _range;
 
@@ -125,8 +129,9 @@ export default class Mapper {
 				result = [{from, until, count}];
 			}
 			else {
-				if ((!from || range[0] <= from) && (!until || range[1] >= until) && range[2] >= count) {
-					// result = [];
+				// if ((!from || range[0] <= from) && (!until || range[1] >= until) && range[2] >= count) {
+				if ((range[0] <= from) && (range[1] >= until) && range[2] >= count) {
+					result = [];
 				}
 			}
 		});
@@ -142,7 +147,6 @@ export default class Mapper {
 
 			if (fs.existsSync(this._pathFile))
 				fs.unlinkSync(this._pathFile);
-
 		}
 	}
 

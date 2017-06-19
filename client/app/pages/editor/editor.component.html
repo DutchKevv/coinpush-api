@@ -1,18 +1,20 @@
-<div class="r_flex_container">
+<app-header-editor></app-header-editor>
+<file-tree (updateEvent)="fileTreeUpdate($event)"></file-tree>
+<js-editor></js-editor>
+<app-footer id="debugContainer"></app-footer>
 
-    <app-header-editor class="r_flex_fixed_child"></app-header-editor>
+<!--<div class="r_flex_container">-->
+
+  <!---->
 
 
-    <div class="r_flex_expand_child">
-        <file-tree class="three-column" (updateEvent)="fileTreeUpdate($event)"></file-tree>
-        <js-editor class="three-column"></js-editor>
+    <!--<div class="r_flex_expand_child">-->
+        <!---->
 
-        <div class="three-column">
+        <!--<div class="three-column">-->
 
-            <p style="color: white;">DOCUMENTATION (TODO)</p>
-        </div>
-    </div>
-
-    <app-footer class="r_flex_fixed_child" id="debugContainer"></app-footer>
-</div>
+            <!--<p style="color: white;">DOCUMENTATION (TODO)</p>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
 

@@ -71,26 +71,21 @@
     }
 }
 
-.dropdown-menu {
-    background-color: black;
-}
-
-
-.dropdown-menu > li > a {
-    color: white;
-}
-
 /*** FORM FORM FORM ***/
-.input-group {
+form > * {
 
     width: 150px;
     margin: 10px 10px 10px 0;
-    float: left;
     height: 50px;
 
+    .form-control,
+    .custom-select,
+    ss-multiselect-dropdown,
     select,
     input {
         width: 100%;
+        height: 26px;
+        box-sizing: border-box;
     }
 
     .form-control,
@@ -99,7 +94,7 @@
         border-radius: 0;
     }
 
-    input, select, .custom-select {
+    input, select, .custom-select, .form-control {
         border: 1px solid $input-color-border;
         background-color: $input-color-background;
         color: $font-color-light-gray;
@@ -136,45 +131,6 @@
             background-color: $input-color-glyphicon-background;
         }
     }
-}
-
-/** PROGRESS BAR **/
-.progress {
-    background-color: #535353;
-    position: relative;
-    text-align: center;
-    width: 100%;
-    height: 20px;
-    display: inline-block;
-    margin-bottom: 0;
-
-    span {
-        position: absolute;
-        display: block;
-        width: 100%;
-        line-height: 20px;
-        font-weight: bold;
-    }
-}
-
-.progress-bar {
-    transition: all .2s ease;
-}
-
-.progress-bar.no-animate {
-    transition: none !important;
-}
-
-.progress-bar-info {
-    background-color: #1f6073;
-}
-
-.progress-bar-success {
-    background-color: #167304;
-}
-
-.progress-bar-error {
-    background-color: #9d0012;
 }
 
 /*** BUTTON BUTTON **/

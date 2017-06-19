@@ -1,6 +1,6 @@
 import {
 	Component, OnInit, AfterViewInit, ElementRef, Output, ChangeDetectionStrategy, NgZone,
-	ChangeDetectorRef, Pipe, PipeTransform, ViewEncapsulation
+	Pipe, PipeTransform, ViewEncapsulation
 } from '@angular/core';
 import {CookieService}                from 'ngx-cookie';
 import {FormBuilder, FormGroup}        from '@angular/forms';
@@ -11,6 +11,8 @@ import {IBacktestSettings}            from '../../../../shared/interfaces/Backte
 import {InstrumentsService} from '../../services/instruments.service';
 import {InstrumentModel} from '../../../../shared/models/InstrumentModel';
 import {BaseModel} from '../../../../shared/models/BaseModel';
+
+declare let $: any;
 
 @Pipe({name: 'groupBy'})
 export class GroupByPipe implements PipeTransform {
@@ -79,8 +81,7 @@ export class BacktestSettingsComponent implements OnInit, AfterViewInit {
 
 	public form: FormGroup;
 
-	constructor(private _changeDetectorRef: ChangeDetectorRef,
-				public instrumentsService: InstrumentsService,
+	constructor(public instrumentsService: InstrumentsService,
 				private _zone: NgZone,
 				private _cookieService: CookieService,
 				private _cacheService: CacheService,
@@ -109,7 +110,7 @@ export class BacktestSettingsComponent implements OnInit, AfterViewInit {
 		});
 
 		this._socketService.socket.on('editor:runnable-list', (err, runnableList) => alert(err) || this._onReceiveRunnableList(runnableList));
-		this._socketService.socket.emit('editor:runnable-list', undefined, (err, runnableList) => {
+		this._socketService.send('editor:runnable-list', undefined, (err, runnableList) => {
 			if (err)
 				return alert(err);
 
@@ -123,7 +124,7 @@ export class BacktestSettingsComponent implements OnInit, AfterViewInit {
 	}
 
 	ngAfterViewInit() {
-
+		$(this._elementRef.nativeElement.shadowRoot.querySelectorAll('.dropdown-toggle')).dropdown();
 	}
 
 

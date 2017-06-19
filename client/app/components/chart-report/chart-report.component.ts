@@ -1,35 +1,30 @@
 import {
 	ElementRef, OnInit, Input, AfterViewInit, NgZone, Component,
-	ChangeDetectionStrategy, ViewEncapsulation, Output, ViewChild
+	ChangeDetectionStrategy, ViewEncapsulation, Output, ViewChild, OnDestroy
 } from '@angular/core';
-import * as moment from 'moment';
 import {cloneDeep} from 'lodash';
-
-import * as Highcharts from 'highcharts';
-
-// Themes
-import {HighchartsDefaultTheme} from '../../../assets/custom/highcharts/theme/theme.default';
 import {InstrumentModel} from '../../../../shared/models/InstrumentModel';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+
+const CanvasJS = require('../../../assets/vendor/js/canvasjs/canvasjs.min');
 
 @Component({
 	selector: 'chart-report',
 	exportAs: 'chart-report',
-	// styleUrls: ['./chart.component.scss'],
+	styleUrls: ['./chart-report.component.scss'],
 	encapsulation: ViewEncapsulation.Native,
 	templateUrl: './chart-report.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
-export class ChartReportComponent implements OnInit, AfterViewInit {
+export class ChartReportComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	@Input() model: InstrumentModel;
 	@Input() height: number;
-
-	@Output() loading$ = new BehaviorSubject(true);
 	@ViewChild('chart') chartRef: ElementRef;
 
 	private _chart: any;
+	private _data: Array<{y: number}> = [];
 
 	constructor(private _zone: NgZone,
 				public elementRef: ElementRef) {}
@@ -77,91 +72,50 @@ export class ChartReportComponent implements OnInit, AfterViewInit {
 	}
 
 	private _createChart(): void {
-		requestAnimationFrame(() => {
-
-		});
-
 		this._zone.runOutsideAngular(() => {
-			let data = this._prepareData(this.model.options.orders),
-				self = this;
-
-			// Clone a new settings object
-			let settings = cloneDeep(HighchartsDefaultTheme);
-			delete settings.chart;
-
-			settings.series = [{
-				name: 'base',
-				data: data
-			}];
-
-
-			settings.plotOptions.line = {
-				marker: {
-					enabled: false
-				}
-			};
-
-			settings.tooltip = {
-				useHTML: true,
-				formatter: function () {
-					let order = self.model.options.orders[this.point.x];
-
-					return `<ul>
-<li> ${this.x}</li>
-<li><span>Equality</span>: &euro; ${this.y.toFixed(2)}</li>
-<li><span>open</span>: ${moment.unix(order.openTime / 1000).format('DD MMM YY hh:mm:ss')}</li>
-<li><span>close</span>: ${moment.unix(order.closeTime / 1000).format('DD MMM YY hh:mm:ss')}</li>
-<li><span>CloseValue</span>: &euro; ${order.closeValue}</li>
-<li><span>Profit</span>: &euro; ${order.profit.toFixed(2)}</li>
-</ul>`;
-				}
-			};
-
-			settings.xAxis[0].tickInterval = 1;
-			settings.xAxis[0].gridLineWidth = 0;
-			settings.xAxis[0].labels = {
-				formatter: function () {
-					return this.value;
-				}
-			};
-			// settings.xAxis[0].dataGrouping.enabled = false;
-
-			settings.yAxis = <any>[
+			this._chart = new window['CanvasJS'].Chart(this.chartRef.nativeElement,
 				{
-					title: {
-						enabled: false
+					backgroundColor: "#000",
+					axisX: {
+						labelFontColor: "#fff",
+						gridDashType: "dash",
+						gridColor: '#787D73',
+						gridThickness: 1
 					},
-					labels: {
-						enabled: true,
-						// step: 1
+					axisY: {
+						labelFontColor: "#fff",
+						gridDashType: "dash",
+						gridColor: '#787D73',
+						gridThickness: 1,
+						interval: 2000
 					},
-					tickInterval: 1,
-					height: '73%',
-					borderWidth: 3,
-					borderColor: '#FF0000'
-				}
-			];
+					data: [
+						{
+							type: "line",
+							dataPoints: this._prepareData()
+						}
+					]
+				});
 
-			this._chart = Highcharts.chart(this.chartRef.nativeElement, settings);
+			this._chart.render();
 		});
 	}
 
 	private _updateData(data) {
 		this._zone.runOutsideAngular(() => {
-			for(let i = 0; i < data.length; i++)
-				this._chart.series[0].addPoint(data[i].equality, false, false);
 
-			this._chart.redraw(false);
+			this._chart.options.data[0].dataPoints = this._prepareData();
+			this._chart.render();
 		});
 	}
 
-	private _prepareData(data) {
-		let chartData = new Array(data.length),
-			i = 0, len = data.length;
+	private _prepareData() {
+		return this.model.options.orders.map((order, i) => ({y: order.equality}));
+	}
 
-		for (; i < len; i++)
-			chartData[i] = data[i].equality;
-
-		return chartData;
+	ngOnDestroy() {
+		this._zone.runOutsideAngular(() => {
+			this._chart.destroy();
+		});
 	}
 }

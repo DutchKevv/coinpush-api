@@ -72,7 +72,7 @@ function startChildProcess(callback) {
 }
 function killChildProcess() {
     return new Promise(resolve => {
-        if (child && child.pid) {
+        if (child && child.kill) {
             let t = setTimeout(() => {
                 console.warn('APP KEEPS HANGING! TRYING ONE MORE TIME');
                 child.kill('SIGTERM');
@@ -82,7 +82,7 @@ function killChildProcess() {
                 clearTimeout(t);
                 resolve();
             });
-            child.kill();
+            child.kill('SIGTERM');
         }
         else
             resolve();

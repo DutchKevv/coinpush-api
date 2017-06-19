@@ -260,10 +260,10 @@ export default class IPC extends Base {
 
 			let metaStart = 20;
 			let metaEnd = metaStart + metaSize;
-			let metaData = <any>{};
+			let meta = <any>{};
 
 			try {
-				metaData = JSON.parse(_buffer.slice(metaStart, metaEnd).toString('ascii'));
+				meta = JSON.parse(_buffer.slice(metaStart, metaEnd).toString('ascii'));
 			} catch (error) {
 				console.log('META ERROR', size, metaSize, error, _buffer.slice(metaStart, metaEnd).toString('ascii'));
 				throw error;
@@ -271,45 +271,47 @@ export default class IPC extends Base {
 
 			let content: any = _buffer.slice(metaEnd, size);
 
-			if (metaData.type === 'json') {
+			if (meta.type === 'json') {
 				try {
 					content = JSON.parse(content.toString('ascii'))
 				} catch (error) {
 					console.log('CONTENT ERROR: ', size, metaSize, error, _buffer.slice(metaStart, metaEnd).toString('ascii'));
 					throw error;
 				}
+			} else {
+				content = Buffer.from(content);
 			}
 
-			if (metaData.eventName === '__IPC_REGISTER__') {
-				if (!this._acks[metaData.ack]) {
+			if (meta.eventName === '__IPC_REGISTER__') {
+				if (!this._acks[meta.ack]) {
 					this._registerNode(content.id, socket);
-					this.send(socket.id, metaData.eventName, '', metaData.ack).catch(console.error);
+					this.send(socket.id, meta.eventName, '', meta.ack).catch(console.error);
 				} else {
-					this._acks[metaData.ack](null, socket);
-					delete this._acks[metaData.ack];
+					this._acks[meta.ack](null, socket);
+					delete this._acks[meta.ack];
 				}
 				continue;
 			}
 
-			if (metaData.ack && this._acks[metaData.ack]) {
-				this._acks[metaData.ack](content, socket);
-				delete this._acks[metaData.ack];
+			if (meta.ack && this._acks[meta.ack]) {
+				this._acks[meta.ack](content, socket);
+				delete this._acks[meta.ack];
 				continue;
 			}
 
 			let cb;
 
-			if (metaData.ack) {
+			if (meta.ack) {
 				cb = (err, returnData) => {
 
 					if (err)
 						return console.error(err);
 
-					this.send(socket.id, metaData.eventName, returnData, metaData.ack).catch(console.error);
+					this.send(socket.id, meta.eventName, returnData, meta.ack).catch(console.error);
 				}
 			}
 
-			this.emit(metaData.eventName, content, cb, socket)
+			this.emit(meta.eventName, content, cb, socket)
 		}
 	}
 

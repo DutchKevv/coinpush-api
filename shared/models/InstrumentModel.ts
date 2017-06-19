@@ -20,11 +20,15 @@ export class InstrumentModel extends BaseModel {
 		currency: 'euro',
 		leverage: 1,
 		pips: 1,
-		tickCount: 0,
 		type: 'live',
 		status: {
-			type: '',
-			value: 0
+			type: 'booting',
+			progress: 0,
+			tickCount: 0,
+			ticksPerSecond: 0,
+			totalFetchTime: 0,
+			startTime: null,
+			endTime: null
 		}
 	};
 

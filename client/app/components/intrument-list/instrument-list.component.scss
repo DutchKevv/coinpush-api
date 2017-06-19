@@ -1,110 +1,111 @@
 @import '../../style/variables/variables';
-@import '../../style/helpers/normalize';
-@import '../../../node_modules/bootstrap/scss/_variables';
-@import '../../../node_modules/bootstrap/scss/_mixins';
-@import '../../../node_modules/font-awesome/css/font-awesome.css';
-
-$fa-font-path : '../../../node_modules/font-awesome/fonts';
-
-@font-face {
-    font-family: 'FontAwesome';
-    font-weight: normal;
-    font-style: normal;
-}
 
 :host {
-    height: 50%;
-    border-bottom: 1px solid;
-    overflow: auto;
+	overflow: auto;
+	contain: layout;
 }
 
-li {
-    border-bottom: 1px solid $border-color-grey;
-    list-style: none;
-    padding: 5px;
-}
+//li {
+//    border-bottom: 1px solid $border-color-grey;
+//    list-style: none;
+//    padding: 5px;
+//    color: $font-color-light;
+//}
 
 table {
-    // Faster rendering (read it on google)
-    table-layout: fixed;
-    border-spacing: 0;
-    border-collapse: collapse;
+	// Faster rendering (read it on google)
+	table-layout: fixed;
+	border-spacing: 0;
+	border-collapse: collapse;
 
-    height: 50%;
-    overflow: auto;
-    font-size: 10px;
-    width: 100%;
+	height: 100%;
+	overflow: hidden;
+	font-size: 10px;
+	width: 100%;
 
-    thead tr:last-child th {
-        padding: 0;
-    }
+	thead tr:last-child th {
+		padding: 0;
+	}
 
-    thead,
-    tbody {
-        display: block;
-    }
+	thead,
+	tbody {
+		display: block;
+	}
 
-    tbody {
-        height: calc(100% - 44px);
-        overflow: auto;
-        tr {
-            border-top: 1px solid $border-color-grey;
-            border-bottom: 1px solid $border-color-grey;
-        }
-    }
+	tbody {
+		height: calc(100% - 37px);
+		overflow-y: scroll;
+		overflow-x: hidden;
+		tr {
+			border-top: 1px solid $border-color-grey;
+			border-bottom: 1px solid $border-color-grey;
+		}
+	}
 
-    tr {
-        border-bottom: 1px solid $border-color-grey;
-    }
+	tr {
+		border-bottom: 1px solid $border-color-grey;
+	}
 
-    th,
-    td {
-        padding-left: 5px;
-        width: 80px;
+	th,
+	td {
+		padding-left: 5px;
+		min-width: 72px;
+		max-width: 72px;
+		color: $font-color-light;
 
-        &:nth-child(1),
-        &:nth-child(1) {
-            width: 100px;
-            padding-top: 4px;
-            padding-bottom: 4px;
-            padding-left: 2px;
-        }
+		&:nth-child(1),
+		&:nth-child(1) {
+			min-width: 90px;
+			max-width: 90px;
+			padding-top: 4px;
+			padding-bottom: 4px;
+			padding-left: 2px;
+		}
+	}
 
-        &:nth-child(2),
-        &:nth-child(2) {
-            border-left: 1px solid $border-color-grey;
-            border-right: 1px solid $border-color-grey;
-        }
-    }
+	td:nth-child(2) {
+		border-left: 1px solid $border-color-grey;
+		border-right: 1px solid $border-color-grey;
+	}
 
+	td.up {
+		color: #38cc38;
+	}
 
-    td.up {
-        color: #38cc38;
-    }
+	td.down {
+		color: #f92929;
+	}
 
-    td.down {
-        color: #f92929;
-    }
+	td:first-child:hover {
+		background: #6f748e;
+		cursor: pointer;
+	}
+}
 
-    td:first-child:hover {
-        background: #6f748e;
-        cursor: pointer;
-    }
+::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+	color:    #d2d0d0;
+}
+
+input {
+	background: #6b6b6b;
 }
 
 .search-instrument-list {
-    width: 100%;
+	width: 100%;
+	padding: 0;
+	margin: 0;
+	border: 0;
 }
 
 .fa {
-    width: 10px;
-    height: 10px;
+	width: 10px;
+	height: 10px;
 }
 
 .fa-arrow-up {
-    color: #12ee12;
+	color: #12ee12;
 }
 
 .fa-arrow-down {
-    color: red;
+	color: red;
 }

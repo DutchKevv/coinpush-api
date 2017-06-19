@@ -1,4 +1,4 @@
-import {Component, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {SocketService} from '../../services/socket.service';
 import {LoginComponent} from '..//login/login.component';
 import {UserService} from '../../services/user.service';
@@ -7,6 +7,7 @@ import {DialogComponent} from '../dialog/dialog.component';
 import {InstrumentsService} from '../../services/instruments.service';
 
 declare let window: any;
+declare let $: any;
 
 @Component({
 	selector: 'app-header-home',
@@ -16,7 +17,7 @@ declare let window: any;
 	encapsulation: ViewEncapsulation.Native
 })
 
-export class HeaderHomeComponent {
+export class HeaderHomeComponent implements OnInit {
 
 	@ViewChild(LoginComponent) login: LoginComponent;
 
@@ -27,7 +28,12 @@ export class HeaderHomeComponent {
 	constructor(public instrumentsService: InstrumentsService,
 				protected socketService: SocketService,
 				public userService: UserService,
-				public systemService: SystemService) {
+				public systemService: SystemService,
+				private _elementRef: ElementRef) {
+	}
+
+	ngOnInit() {
+		$(this._elementRef.nativeElement.shadowRoot.querySelectorAll('.dropdown-toggle')).dropdown();
 	}
 
 	public zoom(step) {
@@ -61,7 +67,7 @@ export class HeaderHomeComponent {
 	}
 
 	clearCache() {
-		this.socketService.socket.emit('system:clear-cache', {}, (err: any) => {
+		this.socketService.send('system:clear-cache', {}, (err: any) => {
 			if (err)
 				alert(err);
 

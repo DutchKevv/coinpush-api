@@ -47,29 +47,39 @@
 			</button>
 		</li>
 		<li>
+			<!--<div class="dropdown">-->
+				<!--<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+					<!--Dropdown button-->
+				<!--</button>-->
+				<!--<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">-->
+					<!--<a class="dropdown-item" href="#">Action</a>-->
+					<!--<a class="dropdown-item" href="#">Another action</a>-->
+					<!--<a class="dropdown-item" href="#">Something else here</a>-->
+				<!--</div>-->
+			<!--</div>-->
+
 			<button type="button" class="dropdown-toggle btn-menu" data-toggle="dropdown" aria-haspopup="true"
 					aria-expanded="false">
 				<ng-container *ngIf="instrumentsService.getFocused() !== null">
-					{{instrumentsService.getFocused().options.timeFrame}}
+					<span>{{instrumentsService.getFocused().options.timeFrame}}</span>
 				</ng-container>
-				<ng-container *ngIf="instrumentsService.getFocused() === null">M15</ng-container>
-				<span class="caret"></span>
+				<ng-container *ngIf="instrumentsService.getFocused() === null"><span>M15</span></ng-container>
 			</button>
 			<ul class="dropdown-menu">
-				<li><a (click)="instrumentsService.getFocused().set({timeFrame: 'M1'})">M1</a></li>
-				<li><a (click)="instrumentsService.getFocused().set({timeFrame: 'M5'})">M5</a></li>
-				<li><a (click)="instrumentsService.getFocused().set({timeFrame: 'M15'})">M15</a></li>
-				<li><a (click)="instrumentsService.getFocused().set({timeFrame: 'M30'})">M30</a></li>
-				<li><a (click)="instrumentsService.getFocused().set({timeFrame: 'H1'})">H1</a></li>
-				<li><a (click)="instrumentsService.getFocused().set({timeFrame: 'H4'})">H4</a></li>
-				<li><a (click)="instrumentsService.getFocused().set({timeFrame: 'D'})">D</a></li>
-				<li><a (click)="instrumentsService.getFocused().set({timeFrame: 'W'})">W</a></li>
+				<li class="dropdown-item"><a (click)="instrumentsService.getFocused().set({timeFrame: 'M1'})">M1</a></li>
+				<li class="dropdown-item"><a (click)="instrumentsService.getFocused().set({timeFrame: 'M5'})">M5</a></li>
+				<li class="dropdown-item"><a (click)="instrumentsService.getFocused().set({timeFrame: 'M15'})">M15</a></li>
+				<li class="dropdown-item"><a (click)="instrumentsService.getFocused().set({timeFrame: 'M30'})">M30</a></li>
+				<li class="dropdown-item"><a (click)="instrumentsService.getFocused().set({timeFrame: 'H1'})">H1</a></li>
+				<li class="dropdown-item"><a (click)="instrumentsService.getFocused().set({timeFrame: 'H4'})">H4</a></li>
+				<li class="dropdown-item"><a (click)="instrumentsService.getFocused().set({timeFrame: 'D'})">D</a></li>
+				<li class="dropdown-item"><a (click)="instrumentsService.getFocused().set({timeFrame: 'W'})">W</a></li>
 			</ul>
 		</li>
 		<li>
 			<button type="button" class="dropdown-toggle btn-menu" data-toggle="dropdown" aria-haspopup="true"
 					aria-expanded="false">
-				Indicator <span class="caret"></span>
+				<span>Indicator</span>
 			</button>
 
 			<ul class="dropdown-menu">

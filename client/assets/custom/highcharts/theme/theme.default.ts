@@ -15,6 +15,10 @@ export const HighchartsDefaultTheme = {
 		delayForDisplay: 1000
 	},
 
+	exporting: {
+		enabled: false
+	},
+
 	chart: {
 		type: 'candlestick',
 
@@ -167,7 +171,8 @@ export const HighchartsDefaultTheme = {
 			dataGrouping: {
 				enabled: false
 			},
-			crisp: false
+			crisp: false,
+			enableMouseTracking: false
 		}
 	],
 	plotOptions: {
@@ -200,10 +205,26 @@ export const HighchartsDefaultTheme = {
 					halo: !1
 				}
 			},
+			point: {
+				events: {
+					mouseOver: function (event, event2) {
+						event.preventDefault();
+						return false;
+					}
+				}
+			},
 			animation: false,
 			stickyTracking: true,
 			shadow: false,
-			dataLabels: {style: {textShadow: false}}
+			dataLabels: {style: {textShadow: false}},
+			events: {
+				mouseOver: (event) => {
+					event.preventDefault();
+				},
+				mouseOut: (event) => {
+					event.preventDefault();
+				}
+			}
 		},
 
 		area: {

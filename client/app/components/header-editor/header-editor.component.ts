@@ -18,12 +18,10 @@ declare let window: any;
 export class HeaderEditorComponent {
 
 	@ViewChild(LoginComponent) login: LoginComponent;
-	_chartComponent: any;
-	viewState = 'windowed';
+
 	model = {
 		data: {}
 	};
-
 
 	constructor(private _socketService: SocketService,
 				protected socketService: SocketService,
@@ -59,7 +57,7 @@ export class HeaderEditorComponent {
 
 	public getIndicatorOptions(name: string): Promise<IndicatorModel> {
 		return new Promise((resolve, reject) => {
-			this._socketService.socket.emit('instrument:indicator:options', {name: name}, (err, data) => {
+			this._socketService.send('instrument:indicator:options', {name: name}, (err, data) => {
 				err ? reject(err) : resolve(new IndicatorModel(data));
 			});
 		});
@@ -68,45 +66,8 @@ export class HeaderEditorComponent {
 	public showIndicatorOptionsMenu(indicatorModel: IndicatorModel): Promise<boolean> {
 
 		return new Promise((resolve) => {
-
-			// this._dialogAnchor.createDialog(DialogComponent, {
-			// 	title: indicatorModel.name,
-			// 	model: indicatorModel,
-			// 	buttons: [
-			// 		{value: 'add', text: 'Add', type: 'primary'},
-			// 		{text: 'Cancel', type: 'default'}
-			// 	],
-			// 	onClickButton(value) {
-			// 		if (value === 'add') {
-			// 			resolve(true);
-			// 		} else
-			// 			resolve(false);
-			// 	}
-			// });
 		});
 	}
-
-	public toggleViewState(viewState: string | boolean, reflow = true) {
-		// let elClassList = this._elementRef.nativeElement.classList;
-
-		if (typeof viewState === 'string') {
-
-			// if (this.viewState !== viewState) {
-			//
-			// 	elClassList.remove(this.viewState);
-			// 	elClassList.add(viewState);
-			//
-			// 	this.viewState = viewState;
-			//
-			// 	if (reflow) {
-			// 		this._chartComponent.reflow();
-			// 	}
-			// }
-		} else {
-			// elClassList.toggle('minimized', !viewState);
-		}
-	}
-
 
 	openCharts() {
 		let url = `${location.href.split('#')[0]}#/home`,
@@ -119,18 +80,5 @@ export class HeaderEditorComponent {
 		else {
 			win = window.open(url, 'home');
 		}
-	}
-
-	onClickLogin() {
-		this.userService.login();
-	}
-
-	clearCache() {
-		this.socketService.socket.emit('system:clear-cache', {}, (err: any) => {
-			if (err)
-				alert(err);
-
-			alert('Cleaned cache');
-		});
 	}
 }

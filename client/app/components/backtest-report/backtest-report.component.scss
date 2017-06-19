@@ -1,5 +1,22 @@
 @import '../../style/variables/variables';
 @import '../../style/components/key-value-list';
+@import '../../style/components/progress-bar';
+
+.text-negative {
+	color: $general-error;
+}
+
+.text-positive {
+	color: $general-success;
+}
+
+.progress {
+	margin-top: 20px;
+}
+
+.progress-main {
+	margin-left: 10px;
+}
 
 ul {
 	list-style: none;

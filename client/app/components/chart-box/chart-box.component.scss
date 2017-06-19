@@ -1,5 +1,4 @@
 @import '../../style/variables/variables';
-@import '../../style/helpers/spinner';
 
 :host {
     height: 400px;
@@ -13,6 +12,7 @@
     overflow: hidden;
     background: rgba(0,0,0,0.7);
     box-shadow: 7px 13px 7px 0 rgba(0,0,0,0.6);
+    contain: layout;
 }
 
 :host.animate {
@@ -26,7 +26,7 @@
     width: 100% !important;
 }
 
-:host.minimized {
+:host(.minimized) {
     display: none !important;
 }
 
@@ -37,7 +37,7 @@
 }
 
 
-:host.focused {
+:host(.focused) {
     border-color: #ad8f79;
 
     .chart-header {

@@ -4,18 +4,17 @@ import {
 	ViewEncapsulation, AfterViewInit, ViewChild, Output, ChangeDetectorRef
 } from '@angular/core';
 
-import {HighchartsDefaultTheme} from '../../../assets/custom/highcharts/theme/theme.default';
-// import './themes/theme.dark';
 import {InstrumentsService} from '../../services/instruments.service';
 import {InstrumentModel} from '../../../../shared/models/InstrumentModel';
 
-import * as HighStock from 'highcharts/highstock';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+
+declare let $: any;
 
 @Component({
 	selector: 'chart',
 	exportAs: 'chart',
-	// styleUrls: ['./chart.component.scss'],
+	styleUrls: ['./chart.component.scss'],
 	templateUrl: './chart.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	encapsulation: ViewEncapsulation.Native
@@ -33,7 +32,7 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 	@ViewChild('chart') chartRef: ElementRef;
 
 	private _scrollOffset = -1;
-	private _scrollSpeedStep = 8;
+	private _scrollSpeedStep = 4;
 	private _scrollSpeedMin = 1;
 	private _scrollSpeedMax = 20;
 
@@ -47,10 +46,10 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 
 	public async ngOnInit() {
-		// this._ref.detach();
 
 		// Bouncer func to limit onScroll calls
-		this._onScrollBounced = throttle(this._onScroll.bind(this), 33);
+		// this._onScrollBounced = throttle(this._onScroll.bind(this), 16);
+		this._onScrollBounced = this._onScroll.bind(this);
 
 		this.model.changed$.subscribe(changes => {
 			for (let key in changes) {
@@ -62,9 +61,9 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 							break;
 						case 'graphType':
 							if (this._chart)
-								this._chart.series[0].update({
-									type: changes[key]
-								});
+								// this._chart.series[0].update({
+								// 	type: changes[key]
+								// });
 							break;
 						case 'timeFrame':
 							this.toggleTimeFrame(changes[key]);
@@ -106,8 +105,12 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 
 	public reflow() {
+		console.log('REFLOW!!');
 		this._updateViewPort(false);
-		requestAnimationFrame(() => this._zone.runOutsideAngular(() => {this._chart.reflow()}));
+
+		this._chart.options.height = this._elementRef.nativeElement.clientHeight;
+		this._chart.options.width = this._elementRef.nativeElement.clientWidth;
+		this._chart.render();
 	}
 
 	public toggleTimeFrame(timeFrame) {
@@ -121,37 +124,46 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 			if (this._chart)
 				this._destroyChart();
 
-			let settings = cloneDeep(HighchartsDefaultTheme);
 
-			settings.series[0]['type'] = this.model.options.graphType;
-
-			// HighStock instance
-			this._chart = (<any>HighStock).stockChart(this.chartRef.nativeElement, settings);
-
-			this._chart.addSeries({
-				type: 'line',
-				name: 'orders',
-				id: 'orders',
-				data: [],
-				color: '#00e933',
-				yAxis: 0,
-				ordinal: true,
-				dataGrouping: {
-					enabled: false
+			this._chart = new window['CanvasJS'].Chart(this.chartRef.nativeElement, {
+				exportEnabled: false,
+				backgroundColor: '#000',
+				axisY: {
+					includeZero: false,
+					// title: 'Prices',
+					// prefix: '$',
+					labelFontColor: '#fff',
+					labelFontSize: '12',
+					gridDashType: 'dash',
+					gridColor: '#787D73',
+					gridThickness: 1
 				},
-				dashStyle: 'Dash',
-				marker: {
-					enabled: true,
-					symbol: 'circle',
-					radius: 7
+				axisX: {
+					includeZero: false,
+					labelFontColor: '#fff',
+					labelFontSize: '12',
+					gridDashType: 'dash',
+					gridColor: '#787D73',
+					gridThickness: 1
 				},
-				allowPointSelect: true
+				/*axisX: {
+					interval: 2,
+					intervalType: 'month',
+					valueFormatString: 'MMM',
+					title: 'Month wise Stock Prices for 2012 - 2013',
+				},*/
+				data: [
+					{
+						type: 'candlestick',
+						connectNullData: true,
+						risingColor: '#17EFDA',
+						dataPoints: []
+					}
+				]
 			});
 
-			// Scroll listener
-			this._chart.container.addEventListener('mousewheel', <any>this._onScrollBounced);
+			// this._chart.axisX[0].set('interval', 1)
 
-			// Create new server instrument
 			if (this.model.options.id) {
 				this._fetch(this.chunkLength, this.offset);
 			} else {
@@ -162,15 +174,19 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 					}
 				});
 			}
+
+			this._chart.render();
+			this.chartRef.nativeElement.addEventListener('mousewheel', <any>this._onScrollBounced);
 		});
 	}
 
 	private _updateViewPort(redraw = true, shift = 0) {
 		this._zone.runOutsideAngular(() => {
-			if (!this._chart || !this._chart.series || !this._chart.series.length || !this._chart.series[0].xData.length)
+
+			if (!this._chart || !this._chart.options.data[0].dataPoints.length)
 				return;
 
-			let data = this._chart.series[0].xData,
+			let data = this._chart.options.data[0].dataPoints,
 				offset = this._scrollOffset + shift,
 				viewable = this._calculateViewableBars(),
 				minOffset = 0,
@@ -184,10 +200,16 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 
 			this._scrollOffset = offset;
 
-			max = data[data.length - offset];
 			min = data[data.length - offset - viewable];
+			max = data[data.length - offset - 1];
 
-			this._chart.xAxis[0].setExtremes(min, max, redraw, false);
+			if (min && max) {
+				this._chart.options.axisX.viewportMinimum = min.x;
+				this._chart.options.axisX.viewportMaximum = max.x
+			}
+
+			if (redraw)
+				this._chart.render();
 		});
 	}
 
@@ -198,8 +220,9 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 
 		this._updateBars(candles);
 		this._updateIndicators(indicators);
-		this._updateOrders(orders);
+		// this._updateOrders(orders);
 
+		this._chart.render();
 		this.loading$.next(false);
 	}
 
@@ -214,15 +237,19 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 			let {candles, volume} = ChartComponent._prepareData(data),
 				last = candles[candles.length - 1];
 
-			this._chart.series[0].setData(candles, false, false);
-			this._chart.series[1].setData(volume, false, false);
+			this._chart.options.data[0].dataPoints = candles;
+
+			this._updateViewPort(false);
+
+			// this._chart.series[0].setData(candles, false, false);
+			// this._chart.series[1].setData(volume, false, false);
 
 			// Re-update viewport needed for initial batch of bars
-			this._updateViewPort();
+			// this._updateViewPort();
 
 			// PlotLine cannot be delayed, so to prevent instant re-render from updateViewPort,
 			// Do this after
-			this._setCurrentPricePlot(last);
+			// this._setCurrentPricePlot(last);
 		});
 	}
 
@@ -258,6 +285,7 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 			return;
 
 		this._zone.runOutsideAngular(() => {
+			
 			indicators.forEach(indicator => {
 				for (let drawBufferName in indicator.data) {
 					if (indicator.data.hasOwnProperty(drawBufferName)) {
@@ -278,18 +306,17 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 						else {
 							switch (drawBuffer.type) {
 								case 'line':
-									this._chart.addSeries({
+									let newSeries = {
 										type: drawBuffer.type,
-										name: indicator.id,
-										// id: unique,
-										data: drawBuffer.data,
 										color: drawBuffer.style.color,
-										yAxis: 0,
-										ordinal: true,
-										dataGrouping: {
-											enabled: false
-										}
-									});
+										name: indicator.id,
+										dataPoints: drawBuffer.data.map(point => ({
+											x: point[0],
+											y: point[1]
+										}))
+									};
+
+									this._chart.options.data.push(newSeries);
 									break;
 								case 'arrow':
 									alert('cannot yet draw arrow');
@@ -303,8 +330,8 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 
 	/*
-		Stop highchart from moving the Y axis so much
-		TODO: improve
+	 Stop highchart from moving the Y axis so much
+	 TODO: improve
 	 */
 	private _getSurroundingPriceRange(padding = 200, viewable) {
 		let data = this._chart.series[0].yData,
@@ -370,7 +397,7 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 				candle.pop() // Volume
 			];
 			// TODO - Now only Bid prices - Make Ask / Bid switch in UI
-			candles[i] = [candle[0], candle[1], candle[3], candle[5], candle[7]];
+			candles[i] = {x: new Date(candle[0]), y: [candle[1], candle[3], candle[5], candle[7]]};
 		}
 
 		return {
@@ -391,7 +418,6 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	public ngOnDestroy() {
 		console.log('_destroyChart _destroyChart _destroyChart _destroyChart');
-
 		this._destroyChart();
 	}
 }

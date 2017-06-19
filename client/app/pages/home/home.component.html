@@ -1,9 +1,7 @@
-<app-header-home class="grid__header"></app-header-home>
-<chart-overview class="grid__main chart-overview-column" #chartOverview></chart-overview>
-<aside class="grid__left">
-    <span  class="splitter fa fa-bars fa-rotate-45" ></span>
-    <instrument-list (instrumentClicked)="chartOverview.create({instrument: $event})"></instrument-list>
-    <div class="bottom-block">
-    </div>
+<app-header-home></app-header-home>
+<chart-overview #chartOverview></chart-overview>
+<instrument-list></instrument-list>
+<aside class="navigation2">
+    blablabla
 </aside>
-<app-footer class="grid__footer" id="debugContainer"></app-footer>
+<app-footer id="debugContainer"></app-footer>

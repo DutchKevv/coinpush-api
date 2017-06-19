@@ -1,20 +1,53 @@
+@import '../../style/variables/variables';
+@import '../../style/components/key-value-list';
+@import '../../style/components/progress-bar';
+
+.text-negative {
+    color: $general-error;
+}
+
+.text-positive {
+    color: $general-success;
+}
+
+.progress {
+    margin-top: 20px;
+}
+
+.progress-main {
+    margin-left: 10px;
+}
+
 ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+li,
+h4,
+h5 {
+    color: $font-color-light;
+}
+
+ul.tabs-list {
     list-style: none;
     display: flex;
     margin-bottom: 10px;
     margin-top: 10px;
+    padding: 0;
     border-bottom: 1px solid #a7a7a7;
-}
 
-li {
-    padding: 4px 20px;
-    border-radius: 4px 4px 0 0;
-    color: white;
-    border: 1px solid #9f9f9f;
-    border-bottom: none;
-    margin-right: 10px;
+    li {
+        padding: 4px 20px;
+        border-radius: 4px 4px 0 0;
+        color: white;
+        border: 1px solid #9f9f9f;
+        border-bottom: none;
+        margin-right: 10px;
 
-    &.active {
-        background: #085963;
+        &.active {
+            background: #085963;
+        }
     }
 }

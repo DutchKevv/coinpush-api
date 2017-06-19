@@ -1,7 +1,15 @@
 @import '../../style/variables/variables';
 
 :host {
+    display: flex;
+    flex-flow: column;
+}
+
+.chart-overview-container {
+    flex: 1;
     position: relative;
+    overflow: hidden;
+    contain: layout;
 }
 
 .chart-no-charts {
@@ -15,6 +23,8 @@
 }
 
 .chart-overview-tabs {
+    border-top: 1px solid $border-color-grey;
+    background: $background-dark;
 
     ul {
         list-style: none;
@@ -23,37 +33,35 @@
         display: flex;
 
         > li {
+            color: white;
+
             > a {
                 padding: 3px 7px;
                 font-size: 10px;
                 display: block;
                 border-right: 1px solid $border-color-grey;
-                color: white;
                 &:hover {
                     background: $general-secondary;
                     color: $font-color-dark;
                 }
             }
 
+            i {
+                font-size: 14px;
+                line-height: 18px;
+                padding: 0 10px;
+                cursor: pointer;
+            }
+
             &.active > a {
                 background: $general-active !important;
                 color: $font-color-light !important;
             }
+
+            &:last-child {
+                margin-left: auto;
+            }
         }
-    }
-
-    border-top: 1px solid $border-color-grey;
-    background: $background-dark;
-}
-
-.chart-overview-buttons {
-    float: right;
-
-    i {
-        font-size: 14px;
-        line-height: 20px;
-        padding: 0 10px;
-        cursor: pointer;
     }
 }
 

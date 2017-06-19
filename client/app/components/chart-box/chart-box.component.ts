@@ -1,7 +1,7 @@
 import {forEach, random} from 'lodash';
 import {
 	Component, OnDestroy, ElementRef, Input, ViewChild,
-	OnInit, AfterViewInit, ChangeDetectionStrategy, ViewEncapsulation, ContentChild, NgZone
+	OnInit, AfterViewInit, ChangeDetectionStrategy, ViewEncapsulation, ContentChild, NgZone, Output, EventEmitter
 } from '@angular/core';
 
 import {SocketService}      from '../../services/socket.service';
@@ -14,6 +14,7 @@ import {ResizableDirective} from '../../directives/resizable.directive';
 import {DialogAnchorDirective} from '../../directives/dialoganchor.directive';
 import {InstrumentModel} from '../../../../shared/models/InstrumentModel';
 import * as interact from 'interactjs';
+import {Subject} from 'rxjs/Subject';
 
 declare let $: any;
 
@@ -32,10 +33,13 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 	@Input() focus = true;
 	@Input() viewState = 'windowed';
 	@Input() minimized = false;
+	@Output() onBeforeResize: Subject<string> = new Subject();
+	@Output() onAfterResize: Subject<string> = new Subject();
+	@Output() changed = new Subject();
 
-	@ViewChild(ChartComponent) public _chartComponent: ChartComponent;
+	@ViewChild(ChartComponent) public chartComponent: ChartComponent;
 	@ViewChild(DialogAnchorDirective) private _dialogAnchor: DialogAnchorDirective;
-	@ViewChild(ResizableDirective) private _resizableDirective: ResizableDirective;
+	// @ViewChild(ResizableDirective) private _resizableDirective: ResizableDirective;
 	@ViewChild('draghandle') private _dragHandle: ElementRef;
 	// @ContentChild('draggable') element;
 
@@ -59,15 +63,14 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 
 	ngAfterViewInit() {
+		this._bindResize();
 		this._bindDrag();
-		// console.log(this.element);
-		this._resizableDirective.changed.subscribe(() => this.storePosition());
-		// this._draggableDirective.changed.subscribe(() => this.storePosition());
 
 		this.putOnTop();
 
 		this.model.changed$.subscribe((changes: any) => {
 			if (typeof changes.focus !== 'undefined' && changes.focus === true) {
+				this.toggleViewState(true);
 				this.putOnTop();
 			}
 		});
@@ -117,7 +120,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 	public setSize(width: number | string, height: number | string): void {
 		this.$el.width(width).height(height);
 
-		this._chartComponent.reflow();
+		this.chartComponent.reflow();
 	}
 
 	public getPosition(): any {
@@ -165,7 +168,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 				this.viewState = viewState;
 
 				if (reflow) {
-					this._chartComponent.reflow();
+					this.chartComponent.reflow();
 				}
 			}
 		} else {
@@ -197,6 +200,9 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 						endOnly: true,
 						elementRect: {top: 0, left: 0, bottom: 1, right: 1}
 					},
+					onstart: (event) => {
+						this.onBeforeResize.next(event.interaction.prepared.edges);
+					},
 
 					// call this function on every dragmove event
 					onmove: (event) => {
@@ -221,6 +227,56 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 					onend: () => this.storePosition(),
 				});
 		});
+	}
+
+	private _bindResize() {
+		interact(this._elementRef.nativeElement)
+			.resizable({
+				preserveAspectRatio: false,
+				edges: {left: true, right: true, bottom: true, top: false},
+				min: 100,
+				restrict: {
+					restriction: 'parent'
+				},
+				onstart: (event) => {
+					this.onBeforeResize.next(event.interaction.prepared.edges);
+				},
+				onmove: (event) => {
+					event.preventDefault();
+					event.stopPropagation();
+
+					// if (event.currentTarget !== this._resizeHandle)
+					// 	return;
+
+					if (event.rect.height < 100 || event.rect.width < 300)
+						return;
+
+					let target = event.target,
+						x = (parseFloat(target.getAttribute('data-x')) || 0),
+						y = (parseFloat(target.getAttribute('data-y')) || 0);
+
+					if (event.rect.height < 100 || event.rect.width < 300)
+						return;
+
+					// update the element's style
+					target.style.width = event.rect.width + 'px';
+					target.style.height = event.rect.height + 'px';
+
+					// translate when resizing from top or left edges
+					x += event.deltaRect.left;
+					y += event.deltaRect.top;
+
+					target.style.webkitTransform = target.style.transform =
+						'translate(' + x + 'px,' + y + 'px)';
+
+					target.setAttribute('data-x', x);
+					target.setAttribute('data-y', y);
+				},
+				onend: () => {
+					this.onAfterResize.next();
+					this.changed.next();
+				}
+			});
 	}
 
 	destroy() {

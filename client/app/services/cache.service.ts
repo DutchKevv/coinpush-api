@@ -25,7 +25,7 @@ export class CacheSymbol extends Base {
 @Injectable()
 export class CacheService {
 
-	@Output() public symbolList$: BehaviorSubject<any> = new BehaviorSubject([]);
+	@Output() public symbolList$: BehaviorSubject<Array<CacheSymbol>> = new BehaviorSubject([]);
 	private _mapper: CacheMap;
 
 	constructor(private _zone: NgZone,
@@ -56,18 +56,19 @@ export class CacheService {
 	}
 
 	private _loadSymbolList() {
-		this._socketService.socket.emit('cache:symbol:list', {}, (err, symbolList) => {
+		this._socketService.send('cache:symbol:list', {}, (err, symbolList) => {
 			if (err)
 				return console.error(err);
 
 			// Create symbol class for each symbol
 			let cacheSymbols = symbolList.map(symbol => {
 				return new CacheSymbol({
+					direction: 'up',
 					name: symbol.name,
-					bidDirection: '',
+					bidDirection: 'up',
 					bid: symbol.bid,
 					ask: symbol.ask,
-					askDirection: ''
+					askDirection: 'up'
 				});
 			});
 

@@ -1,25 +1,49 @@
 :host {
-    height: 100%;
+    display: grid;
+    grid-template-areas: "header header"
+    "navigation main"
+    "footer footer";
+    grid-template-columns: 250px 1fr;
+    grid-template-rows: auto
+    1fr
+    auto;
+    min-height: 100vh;
 }
 
-#editor {
-    position: absolute;
-    top: 0;
-    right: 200px;
-    bottom: 0;
-    left: 200px;
-    border: 1px solid #c3c3c3;
+app-header-editor {
+    grid-area: header;
 }
 
-#editorSettings {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    width: 200px;
-    border: 1px solid #c3c3c3;
-    text-align: center;
+file-tree {
+    grid-area: navigation;
 }
+
+js-editor {
+    grid-area: main;
+}
+
+app-footer {
+    grid-area: footer;
+}
+
+//#editor {
+//    position: absolute;
+//    top: 0;
+//    right: 200px;
+//    bottom: 0;
+//    left: 200px;
+//    border: 1px solid #c3c3c3;
+//}
+//
+//#editorSettings {
+//    position: absolute;
+//    top: 0;
+//    bottom: 0;
+//    right: 0;
+//    width: 200px;
+//    border: 1px solid #c3c3c3;
+//    text-align: center;
+//}
 
 // Mobile
 @media screen and (max-width: 768px) {

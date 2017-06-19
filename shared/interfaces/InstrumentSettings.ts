@@ -14,14 +14,18 @@ export interface InstrumentSettings {
 	currency?: string;
 	leverage?: number;
 	pips?: number;
-	tickCount?: number;
 	graphType?: string;
 	autoRun?: boolean;
 	orders?: Array<any>;
 	type?: string;
 	status?: {
 		type: string;
-		value: any;
+		progress: number;
+		tickCount: number;
+		ticksPerSecond: number;
+		totalFetchTime: number;
+		startTime: number;
+		endTime: number;
 	}
 }
 

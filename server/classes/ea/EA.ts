@@ -10,20 +10,10 @@ export interface IEA {
 
 export default class EA extends Instrument implements IEA {
 
-	public tickCount = 0;
-	public status = 'booting';
-	public statusValue = 0;
-
 	public accountManager: AccountManager;
 	public orderManager: OrderManager;
 
 	private _lastReportTime = 0;
-
-	private _backtestData = {
-		totalFetchTime: 0,
-		startTime: null,
-		endTime: null
-	};
 
 	constructor(...args) {
 		super(args[0], args[1]);
@@ -45,25 +35,13 @@ export default class EA extends Instrument implements IEA {
 		await this.orderManager.init();
 
 		this.ipc.on('@run', opt => this.runBackTest());
-		this.ipc.on('@report', (data, cb) => cb(null, this.report()));
 
 		await this.onInit();
 
-		this.status = 'idle';
+		this.set({status: {type: 'idle'}});
 
 		if (this.options.autoRun)
 			this.runBackTest();
-	}
-
-	public report() {
-		return {
-			id: this.id,
-			tickCount: this.tickCount,
-			equality: this.accountManager.equality + this.orderManager.getOpenOrdersValue(this.bid, this.ask),
-			orders: this.orderManager.closedOrders,
-			data: this._backtestData,
-			lastTime: this.time
-		};
 	}
 
 	async tick(timestamp, bid, ask): Promise<void> {
@@ -77,11 +55,10 @@ export default class EA extends Instrument implements IEA {
 	}
 
 	public onTick(timestamp, bid, ask) {
-		console.log('CUSTOM ONTICK SHOULD BE CALLED')
+		console.log('CUSTOM [onTick] SHOULD BE CALLED')
 	}
 
-	public async onInit() {
-	}
+	public async onInit() {}
 
 	protected async addOrder(orderOptions) {
 		let result = this.orderManager.add(Object.assign(orderOptions, {openTime: this.time}));
@@ -99,42 +76,44 @@ export default class EA extends Instrument implements IEA {
 
 	async runBackTest(): Promise<any> {
 		let count = 1000,
-			candles, lastTime, lastBatch = false,
+			lastTime, lastBatch = false,
 			from = this.options.from,
 			until = this.options.until;
 
-		this.status = 'fetching';
+		this.model.set({status: {
+			type: 'fetching',
+			startTime: Date.now()
+		}});
 
 		let p = this.ipc.send('cache', 'read', {
 			symbol: this.symbol,
 			timeFrame: this.timeFrame,
 			from: from,
 			count: count
-		}).then(_candles => {this._backtestData.startTime = Date.now(); return _candles; });
+		});
 
 		// Report status every X seconds
 		// TODO - Optimize
 		let now = Date.now();
 		let interval = setInterval(() => {
 			this._emitProgressReport();
-			console.log('TIME PASSED!!!  :  ', Date.now() - now);
 			now = Date.now();
-		}, 500);
+		}, 1000);
 
 		this._emitProgressReport();
 
 		while (true) {
-			candles = await p;
+			let candles = await p;
 
-			this.status = 'running';
+			this.model.set({status: {type: 'running'}});
 
 			// There is no more data, so stop
-			if (!candles.length) {
+			if (!candles || !candles.length) {
 				winston.warn('Empty buffer received from read!', from, until);
 				break;
 			}
 
-			from = candles.readDoubleLE(candles.length - (10 * Float64Array.BYTES_PER_ELEMENT)) + 1;
+			from = candles.readDoubleLE(candles.length - (10 * Float64Array.BYTES_PER_ELEMENT));
 
 			if (from < until) {
 				p = this.ipc.send('cache', 'read', {
@@ -162,7 +141,7 @@ export default class EA extends Instrument implements IEA {
 
 			await this.inject(ticks);
 
-			this.status = 'fetching';
+			this.model.set({status: {type: 'fetching'}});
 
 			// There are no more candles to end
 			if (lastBatch || ticks.length < count)
@@ -172,8 +151,12 @@ export default class EA extends Instrument implements IEA {
 		clearInterval(interval);
 
 		this.orderManager.closeAll(lastTime, this.bid, this.ask);
-		this._backtestData.endTime = Date.now();
-		this.status = 'finished';
+
+		this.model.set({status: {
+			endTime: Date.now(),
+			type: 'finished',
+			progress: 100
+		}});
 
 		this._emitProgressReport();
 
@@ -181,21 +164,15 @@ export default class EA extends Instrument implements IEA {
 	}
 
 	private _emitProgressReport() {
-		let totalTime = (this.options.endTime || Date.now()) - this.get('startTime'),
-			now = Date.now();
+		this.updateTicksPerSecond();
+		this.model.options.status.progress = (((this.time - this.options.from) / (this.options.until - this.options.from)) * 100).toFixed(2);
 
 		this.ipc.send('main', 'instrument:status', {
 			id: this.id,
-			tickCount: this.tickCount,
-			ticksPerSecond: Math.ceil(this.tickCount / ((this.time - this._backtestData.startTime) / 1000)),
 			equality: (this.accountManager.equality + this.orderManager.getOpenOrdersValue(this.bid, this.ask)).toFixed(2),
 			orders: this.orderManager.findByDateRange(this._lastReportTime, this.time),
-			data: this._backtestData,
 			lastTime: this.time,
-			status: {
-				type: this.status,
-				value: (((this.time - this.options.from) / (this.options.until - this.options.from)) * 100).toFixed(2)
-			}
+			status: this.model.options.status
 		}, false);
 
 		this._lastReportTime = this.time;

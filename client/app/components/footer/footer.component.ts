@@ -4,10 +4,12 @@ import * as interact from 'interactjs';
 import {SocketService} from '../../services/socket.service';
 import {
 	Component, ElementRef, OnInit, OnDestroy, ChangeDetectionStrategy, NgZone,
-	AfterViewChecked, ViewEncapsulation, ViewChild, AfterViewInit, ViewContainerRef, Input
+	AfterViewChecked, ViewEncapsulation, ViewChild, ViewContainerRef
 } from '@angular/core';
 import * as moment from 'moment';
 import {InstrumentsService} from '../../services/instruments.service';
+
+declare let $: any;
 
 @Component({
 	selector: 'app-footer',
@@ -17,7 +19,7 @@ import {InstrumentsService} from '../../services/instruments.service';
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class FooterComponent implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked {
+export class FooterComponent implements OnInit, OnDestroy, AfterViewChecked {
 
 	@ViewChild('resizeHandle') resizeHandle: ElementRef;
 
@@ -43,6 +45,7 @@ export class FooterComponent implements OnInit, OnDestroy, AfterViewInit, AfterV
 		this._setWindowResizeHandle();
 		this._bindContextMenu();
 		this._setDraggable();
+		this._setTabs();
 
 		this._socketService.socket.on('debug', messages => {
 			messages.forEach(message => {
@@ -53,19 +56,24 @@ export class FooterComponent implements OnInit, OnDestroy, AfterViewInit, AfterV
 		});
 	}
 
-	ngAfterViewInit() {
-		// var parentComponent1 =
-		// console.log('blablabla', this._elementRef.nativeElement.getRootNode().host);
-		//
-		//
-		// let current = this.parent.elementRef.nativeElement.style.gridTemplateRows;
-		// window['test'] = this.parent.elementRef.nativeElement;
-		// console.log(current);
-		// console.log(this._elementRef.nativeElement.parentNode)
-	}
-
 	ngAfterViewChecked() {
 		// console.log('CHECK!!');
+	}
+
+	private _setTabs() {
+		var self = this;
+
+		$(this._elementRef.nativeElement.shadowRoot.querySelectorAll('.nav-tabs a')).click(function(e) {
+			e.preventDefault();
+
+			$(this.parentNode).addClass('active').siblings().removeClass('active');
+
+			$(self._elementRef.nativeElement.shadowRoot)
+				.find('.tab-pane')
+				.removeClass('active')
+				.filter(this.getAttribute('data-target'))
+				.addClass('active');
+		})
 	}
 
 	private _restoreHeightFromCookie() {
@@ -104,25 +112,30 @@ export class FooterComponent implements OnInit, OnDestroy, AfterViewInit, AfterV
 
 					target.style.height = event.rect.height + 'px';
 					target.setAttribute('data-y', y);
-				});
+				})
+				.on('resizeend', () => {
+					this._storeHeightInCookie();
+				})
 		});
 
 	}
 
 	private _bindContextMenu() {
-		// (<any>$(this._elementRef.nativeElement.querySelector('#backtest').parentNode)).contextMenu({
-		// 	items: [
-		// 		{
-		// 			text: 'Clear',
-		// 			value: 'clear'
-		// 		}
-		// 	],
-		// 	menuSelected: (selectedValue, originalEvent) => {
-		// 		if (selectedValue === 'clear') {
-		// 			this.messages = [];
-		// 		}
-		// 	}
-		// });
+		this._zone.runOutsideAngular(() => {
+			(<any>$(this._elementRef.nativeElement.shadowRoot.getElementById('debugger').parentNode)).contextMenu({
+				items: [
+					{
+						text: 'Clear',
+						value: 'clear'
+					}
+				],
+				menuSelected: (selectedValue, originalEvent) => {
+					if (selectedValue === 'clear') {
+						this.messages = [];
+					}
+				}
+			});
+		});
 	}
 
 	clearCache() {

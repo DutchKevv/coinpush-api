@@ -4,18 +4,16 @@ import * as io from 'socket.io-client';
 @Injectable()
 export class SocketService {
 
-	static ERROR_TIMEOUT = 1;
+	static ERROR_TIMEOUT = 60000;
 
-	socket: any;
-
-	private _timeout = 60000;
+	public socket: any;
 
 	constructor(private _zone: NgZone) {}
 
 	init() {
-		this._zone.runOutsideAngular(() => {
+		// this._zone.runOutsideAngular(() => {
 			this.socket = io(this._getUrl());
-		});
+		// });
 	}
 
 	private _getUrl(): string {
@@ -29,16 +27,13 @@ export class SocketService {
 		}
 	}
 
-	public send(event, data, cb) {
+	public send(event: string, data?, cb?: Function): void {
 		this._zone.runOutsideAngular(() => {
 			if (typeof cb === 'function') {
-				let i = setTimeout(() => cb(SocketService.ERROR_TIMEOUT), this._timeout);
-
+				let i = setTimeout(() => cb(SocketService.ERROR_TIMEOUT), SocketService.ERROR_TIMEOUT);
 				this.socket.emit(event, data, (...result) => {
 					clearInterval(i);
-					this._zone.run(() => {
-						cb(...result);
-					});
+					this._zone.run(() => cb(...result));
 				});
 			} else {
 				this.socket.emit(event, data);

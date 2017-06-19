@@ -15,7 +15,7 @@ import {GroupedObservable} from 'rxjs/operator/groupBy';
 @Injectable()
 export class InstrumentsService {
 
-	@Output() public changed = new EventEmitter();
+	@Output() public changed$ = new EventEmitter();
 	@Output() public instruments$: BehaviorSubject<any> = new BehaviorSubject([]);
 	@Output() public groupIds$: BehaviorSubject<any> = new BehaviorSubject([]);
 
@@ -46,10 +46,12 @@ export class InstrumentsService {
 		});
 
 		this._socketService.socket.on('instrument:status', (status) => {
-			let instrument = this.findById(status.id);
+			let instrument = this.getById(status.id);
 
 			if (instrument)
 				instrument.set(status);
+
+			this.changed$.next()
 		});
 
 		this._socketService.socket.on('system:state', (systemState: SystemState) => {
@@ -70,12 +72,11 @@ export class InstrumentsService {
 			if (err)
 				throw new Error(typeof err === 'string' ? err : JSON.stringify(err));
 
-			console.log('instruments', instruments);
-
 			instruments.forEach((instrument, i) => models[i].set(instrument));
 
 			this.instruments$.next(this._instruments);
-			// console.info(`Creating ${model.options.symbol} took: ${Date.now() - now} ms`);
+
+			console.info(`Creating ${models.map(m => m.options.symbol).join()} took: ${Date.now() - now} ms`);
 		});
 
 		return models;
@@ -83,13 +84,14 @@ export class InstrumentsService {
 
 	public add(instrumentModel: InstrumentModel): InstrumentModel {
 		if (instrumentModel.options.id) {
-			let existingModel = this._instruments.find(instrument => instrument.options.id === instrumentModel.options.id);
+			let existingModel = this.getById(instrumentModel.options.id);
+
 			if (existingModel) {
 				console.warn('Instrument already known! : ' + instrumentModel.options.id);
-				return;
+				return instrumentModel;
 			}
 		}
-
+		//
 		this._instruments.push(instrumentModel);
 		this.instruments$.next(this._instruments);
 
@@ -159,7 +161,7 @@ export class InstrumentsService {
 			return;
 
 		this.instruments.forEach(instrument => {
-			if (model !== instrument)
+			if (model !== instrument && instrument.options.focus === true)
 				instrument.set({focus: false});
 		});
 
@@ -220,7 +222,7 @@ export class InstrumentsService {
 		});
 	}
 
-	public findById(id: string|number): InstrumentModel {
+	public getById(id: string|number): InstrumentModel {
 		return this.instruments.find(instrument => instrument.options.id === id);
 	}
 

@@ -288,7 +288,6 @@ OandaAdapter.prototype._candlesJsonStringToArray = function(chunk) {
 };
 
 OandaAdapter.prototype.getCandles = function (symbol, start, end, granularity, count, callback) {
-
 	let readableStream = new Stream.PassThrough();
 
 	this._sendRESTRequest({

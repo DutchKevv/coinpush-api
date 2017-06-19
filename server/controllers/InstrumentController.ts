@@ -88,14 +88,21 @@ export default class InstrumentController extends Base {
 	}
 
 	public getList() {
-		return this.instruments.map(instrument => ({
-			id: instrument.model.options.id,
-			groupId: instrument.model.options.groupId,
-			timeFrame: instrument.model.options.timeFrame,
-			symbol: instrument.model.options.symbol,
-			type: instrument.model.options.type,
-			orders: instrument.model.options.type === 'backtest' ? instrument.model.options.orders : []
-		}));
+		return this.instruments.map(instrument => {
+			let options = instrument.model.options;
+			
+			return {
+				id: options.id,
+				groupId: options.groupId,
+				symbol: options.symbol,
+				timeFrame: options.timeFrame,
+				type: options.type,
+				orders: options.type === 'backtest' ? options.orders : [],
+				status: options.status,
+				equality: options.equality,
+				startEquality: options.startEquality
+			}
+		});
 	}
 
 	public toggleTimeFrame(id, timeFrame) {
@@ -195,6 +202,7 @@ export default class InstrumentController extends Base {
 			return winston.warn(`Received instrument update from unknown worker: ${id}`);
 
 		instrument.model.set(data);
+
 		this.emit('instrument:status', data);
 	}
 

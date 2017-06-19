@@ -1,9 +1,41 @@
 @import '../../style/variables/variables';
-@import '../../style/helpers/three-column.scss';
-@import '../../style/helpers/flex-flayout.scss';
 
-:root {
-    --footer-height: 40px;
+:host {
+    display: grid;
+    grid-template-areas: "header header"
+    "navigation main"
+    "navigation2 main"
+    "footer footer";
+    grid-template-columns: 250px 1fr;
+    grid-template-rows: auto
+    1fr 1fr
+    auto;
+    min-height: 100vh;
+}
+
+app-header-home {
+    grid-area: header;
+}
+
+instrument-list {
+    grid-area: navigation;
+    background: $background-dark;
+}
+
+aside {
+    grid-area: navigation2;
+    background: $background-dark;
+    color: white;
+    padding-top: 40px;
+    text-align: center;
+}
+
+chart-overview {
+    grid-area: main;
+}
+
+app-footer {
+    grid-area: footer;
 }
 
 .splitter {
@@ -17,24 +49,4 @@
     width: 100%;
     text-align:center;
     vertical-align: middle;
-}
-
-:host {
-    display: grid;
-    grid-template-areas: "header header"
-    "navigation main"
-    "footer footer";
-    grid-template-columns: 250px 1fr;
-    grid-template-rows: auto
-    1fr
-    auto;
-    min-height: 100vh;
-}
-
-.grid__header { grid-area: header; }
-.grid__footer { grid-area: footer; }
-.grid__main { grid-area: main; }
-.grid__left {
-    grid-area: navigation;
-    background: $background-dark;
 }

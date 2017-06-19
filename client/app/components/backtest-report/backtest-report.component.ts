@@ -1,10 +1,9 @@
 import {
 	Component, AfterViewInit, ElementRef, Input, Output, OnInit, ChangeDetectionStrategy,
-	OnDestroy, ViewEncapsulation
+	OnDestroy, ViewEncapsulation, AfterViewChecked, ChangeDetectorRef
 } from '@angular/core';
 import {InstrumentModel} from '../../../../shared/models/InstrumentModel';
 import {SocketService} from '../../services/socket.service';
-import {InstrumentsService} from '../../services/instruments.service';
 
 @Component({
 	selector: 'backtest-report',
@@ -14,62 +13,51 @@ import {InstrumentsService} from '../../services/instruments.service';
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class BacktestReportComponent implements AfterViewInit, OnInit, OnDestroy {
+export class BacktestReportComponent implements AfterViewInit, OnInit, OnDestroy, AfterViewChecked {
 
-	@Input() public models: Array<InstrumentModel> = [];
-
-	public loading = false;
+	@Input() public model: InstrumentModel;
 
 	private _elProgressBar: HTMLElement = null;
 
-	constructor(private _elementRef: ElementRef,
-				private _socketService: SocketService) {
+	constructor(private _elementRef: ElementRef) {
 	}
 
-	ngOnInit() {
-		this.models.forEach(model => {
-			model.options$.subscribe(() => this._onStatusUpdate(model))
-		});
-
-		// this._socketService.socket.on('instrument:status', (status) => this._onStatusUpdate(status));
-	}
+	ngOnInit() {}
 
 	ngAfterViewInit(): void {
-		this._elProgressBar = this._elementRef.nativeElement.querySelector('.progress-bar');
+		this._elProgressBar = this._elementRef.nativeElement.shadowRoot.querySelector('.progress-bar');
+		this.model.options$.subscribe(() => this._onInstrumentStatusUpdate())
 	}
 
-	clear() {
-		// this.models = [];
+	ngAfterViewChecked() {
+		console.log('CHECK!!');
 	}
 
-	private _updateProgressBar(type: string, text = '', value = 0, elProgressBar = this._elProgressBar) {
+	private _updateProgressBar(type: string, text = '', progress = 0): void {
 		requestAnimationFrame(() => {
-			elProgressBar.previousElementSibling.textContent = text;
-			elProgressBar.classList.toggle('active', value && value < 100);
-			elProgressBar.classList.remove(...['info', 'success', 'error'].map(str => 'progress-bar-' + str));
-			elProgressBar.classList.add('progress-bar-' + type);
-			elProgressBar.style.width = value + '%';
+			this._elProgressBar.previousElementSibling.textContent = text;
+			this._elProgressBar.classList.remove(...['info', 'success', 'error'].map(str => 'bg-' + str));
+			this._elProgressBar.classList.add('bg-' + type);
+			this._elProgressBar.style.width = progress + '%';
 		});
 	}
 
-	private _onStatusUpdate(model: InstrumentModel) {
-		let elProgressBar = this._elementRef.nativeElement.querySelector(`[data-id=${model.options.id}] .progress-bar`);
-
-		if (!elProgressBar)
-			return;
-
-		switch (model.options.status.type) {
+	private _onInstrumentStatusUpdate() {
+		switch (this.model.options.status.type) {
 			case 'fetching':
-				this._updateProgressBar('info', model.options.status.value + '%', model.options.status.value, elProgressBar);
+				this._updateProgressBar('info', (this.model.options.status.progress || 0) + '%', this.model.options.status.progress);
 			case 'running':
-				this._updateProgressBar('success', model.options.status.value + '%', model.options.status.value, elProgressBar);
+				this._updateProgressBar('success', (this.model.options.status.progress || 0) + '%', this.model.options.status.progress);
 				break;
 			case 'finished':
 				// console.log(status.report);
-				this._updateProgressBar('success', `Finished`, 100, elProgressBar);
+				this._updateProgressBar('success', `Finished`, 100);
+				break;
+			case 'warning':
+				this._updateProgressBar('warning', `Warning ${this.model.options.status.progress}%`, 100);
 				break;
 			case 'error':
-				this._updateProgressBar('error', `Error`, 100, elProgressBar);
+				this._updateProgressBar('error', `Error`, 100);
 				break;
 			case 'default':
 				throw new Error('Unknown backtest progress status');
@@ -77,6 +65,8 @@ export class BacktestReportComponent implements AfterViewInit, OnInit, OnDestroy
 	}
 
 	ngOnDestroy() {
-
+		// this.models.forEach(model => {
+		// 	model.options$.unsubscribe();
+		// });
 	}
 }

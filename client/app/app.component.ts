@@ -10,7 +10,10 @@ import {CacheService} from './services/cache.service';
 		<div modalAnchor></div>
 		<router-outlet></router-outlet>
 	`,
-	styleUrls: ['../node_modules/font-awesome/css/font-awesome.css'],
+	styleUrls: [
+		'../node_modules/font-awesome/css/font-awesome.css',
+		'./style/components/contextmenu'
+		],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	encapsulation: ViewEncapsulation.None
 })

@@ -1,5 +1,5 @@
 <div #chart class="chart"></div>
-<div *ngIf="(loading$ | async) === false" class="chart-loading-overlay">
+<div *ngIf="(loading$ | async) === true" class="chart-loading-overlay">
 	<script>console.log("YES YES!")</script>
 	<div class="spinner absolute">
 		<div class="dot1"></div>

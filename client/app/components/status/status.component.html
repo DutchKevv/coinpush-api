@@ -1,4 +1,7 @@
-<div>
+<div class="visible-md visible-lg">
+    Workers {{systemService.systemState.workers}} / {{systemService.systemState.cpu}}
+</div>
+<div style="display: flex">
     <ng-container *ngIf="systemService.systemState.booting">
         <div class="spinner" style="margin: 0; width: 12px; height: 12px; float:left; margin-top: 4px;">
             <div class="dot1"></div>
@@ -14,8 +17,6 @@
 
         <!-- Errors -->
         <ng-container *ngIf="systemService.systemState.state !== constantsService.constants.SYSTEM_STATE_OK">
-            <div class="circle error"></div>
-
             <ng-container *ngIf="!systemService.systemState.connected">
                 <ng-container *ngIf="systemService.systemState.code === constantsService.constants.SYSTEM_STATE_CODE_NO_SERVER_CONNECTION">
                     <a class="error-message">No server connection</a>
@@ -25,11 +26,7 @@
                 </ng-container>
             </ng-container>
 
-
+            <div class="circle error"></div>
         </ng-container>
     </ng-container>
-</div>
-
-<div class="visible-md visible-lg">
-    Workers {{systemService.systemState.workers}} / {{systemService.systemState.cpu}}
 </div>

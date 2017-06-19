@@ -59,12 +59,10 @@ import './assets/vendor/js/ace/mode-javascript.js';
 import './assets/vendor/js/ace/mode-typescript.js';
 
 /**
- * Highstock
+ *  CanvasJS
  */
-import 'highcharts/highstock';
-import './assets/custom/highcharts/theme/theme.default';
-import './assets/custom/highcharts/theme/theme.dark';
-import 'interactjs';
+import './node_modules/canvasjs/dist/canvasjs.min.js';
+
 
 /**
  * Custom

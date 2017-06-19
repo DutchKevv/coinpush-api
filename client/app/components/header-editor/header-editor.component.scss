@@ -1,10 +1,17 @@
 :host {
 	background: #000;
+	contain: layout;
 }
 
+nav {
+	display: flex;
+}
 
 .header-buttons {
 	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
 
 	@media screen and (min-width: 768px) {
 		&:first-child {
@@ -14,7 +21,11 @@
 	}
 
 	> li {
-		float: left;
+		position: relative;
+
+		&:nth-child(2) {
+			margin-right: 180px;
+		}
 	}
 
 	.button-editor {
@@ -28,7 +39,7 @@
 	button {
 		padding: 0 5px;
 		margin: 4px;
-
+		font-size: 14px;
 
 		i.fa {
 			font-size: 14px;
@@ -40,6 +51,30 @@
 				line-height: 25px;
 			}
 		}
+
+		&.dropdown-toggle {
+			span {
+				padding-right: 15px;
+				line-height: 20px;
+			}
+
+			&:after {
+				float: right;
+				margin-top: -12px;
+			}
+		}
 	}
+}
+
+.btn-menu {
+	background: #878787;
+	background-image: linear-gradient(180deg,#6a6a6a,#000);
+	border-radius: 3px;
+	color: #fff;
+	text-decoration: none;
+	min-width: 30px;
+	text-align: center;
+	margin-right: 5px;
+	border: none;
 }
 

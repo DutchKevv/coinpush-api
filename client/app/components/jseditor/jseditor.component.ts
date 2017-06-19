@@ -3,12 +3,14 @@ declare var $: any;
 
 import {Component, AfterViewInit, ElementRef, ViewEncapsulation} from '@angular/core';
 import {SocketService} from '../../services/socket.service';
+// import '../../../assets/vendor/js/ace/ace.js';
+// import '../../../assets/vendor/js/ace/theme-tomorrow_night_bright.js';
 
 @Component({
 	selector: 'js-editor',
 	templateUrl: './jseditor.component.html',
-	styleUrls: ['./jseditor.component.scss'],
-	encapsulation: ViewEncapsulation.Native
+	styleUrls: ['./jseditor.component.scss']
+	// encapsulation: ViewEncapsulation.Native
 })
 
 export class JSEditorComponent implements AfterViewInit {
@@ -26,9 +28,8 @@ export class JSEditorComponent implements AfterViewInit {
 	private _$banner;
 	private _editorEl: HTMLElement;
 
-	constructor(private _elementRef: ElementRef, socket: SocketService) {
-		this.socket = socket.socket;
-	}
+	constructor(private _socketService: SocketService,
+				private _elementRef: ElementRef) {}
 
 	ngAfterViewInit() {
 		this._$el = $(this._elementRef.nativeElement);
@@ -48,9 +49,12 @@ export class JSEditorComponent implements AfterViewInit {
 		ace.require('ace/config').set('workerPath', '/assets/js/ace/');
 
 		this.editor = ace.edit(this._editorEl);
-		this.editor.setAutoScrollEditorIntoView(true);
+		// this.editor.setAutoScrollEditorIntoView(true);
 		// this.editor.setOption('minLines', 100);
-		this.editor.setOption('maxLines', 200);
+		// this.editor.setOption('maxLines', 200);
+		this.editor.setOptions({
+			maxLines: Infinity
+		});
 		this.editor.setTheme('ace/theme/tomorrow_night_bright');
 		this.editor.getSession().setMode('ace/mode/typescript');
 
@@ -72,7 +76,7 @@ export class JSEditorComponent implements AfterViewInit {
 	loadFile(id: any, focus = true) {
 		this.currentFile = id;
 
-		this.socket.emit('file:load', {id: id}, (err: any, result: any) => {
+		this._socketService.send('file:load', {id: id}, (err: any, result: any) => {
 			try {
 				this.editor.session.setValue(result || '');
 
@@ -100,7 +104,7 @@ export class JSEditorComponent implements AfterViewInit {
 
 				let content = this.editor.getValue();
 
-				this.socket.emit('file:save', {path: this.currentFile, content: content}, (err) => {
+				this._socketService.send('file:save', {path: this.currentFile, content: content}, (err) => {
 					if (err) {
 						this.showBanner('error', 'File not saved: ' + err);
 						return reject();
