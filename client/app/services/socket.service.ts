@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Injectable, NgZone} from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 import * as io from 'socket.io-client';
 
 @Injectable()

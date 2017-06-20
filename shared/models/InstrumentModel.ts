@@ -9,6 +9,7 @@ export class InstrumentModel extends BaseModel {
 		symbol: '',
 		timeFrame: 'M15',
 		id: '',
+		groupId: null,
 		focus: false,
 		autoRun: true,
 		indicators: [],

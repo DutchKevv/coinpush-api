@@ -7,6 +7,10 @@ import Fetcher          from './CacheFetch';
 import WorkerChild      from '../worker/WorkerChild';
 import BrokerApi        from '../broker-api/oanda/oanda';
 import CacheDataLayer   from './CacheDataLayer';
+import * as express		from 'express';
+import * as io          from 'socket.io';
+
+const cors = require('cors');
 
 export default class Cache extends WorkerChild {
 
@@ -21,6 +25,9 @@ export default class Cache extends WorkerChild {
 	private _fetcher: Fetcher;
 	private _symbolList: Array<any> = [];
 	private _listeners = {};
+	private _api: any = null;
+	private _http: any = null;
+	private _io: any = null;
 
 	public async init() {
 		await super.init();
@@ -43,6 +50,8 @@ export default class Cache extends WorkerChild {
 
 		this._setChannelEvents();
 		await this.ipc.startServer();
+
+		this._initApi();
 	}
 
 	public async read(params: {symbol: string, timeFrame: string, from: number, until: number, count: number}): Promise<any> {
@@ -54,13 +63,10 @@ export default class Cache extends WorkerChild {
 			candles = Buffer.alloc(0);
 		
 		if (!symbol || typeof symbol !== 'string')
-			throw new Error('Cache-Read : No symbol given');
+			throw new Error('Cache->Read : No symbol given');
 
 		if (!timeFrame || typeof timeFrame !== 'string')
-			throw new Error('Cache-Read : No timeFrame given');
-
-		if (!count && !from && !until)
-			throw new Error('Cache->Read : At least, from, until or count must be given as argument');
+			throw new Error('Cache->Read : No timeFrame given');
 
 		if (count && from && until)
 			throw new Error('Cache->Read : Only from OR until can be given when using count, not both');
@@ -69,7 +75,7 @@ export default class Cache extends WorkerChild {
 			params.until = Date.now();
 		}
 
-		count = count || Cache.COUNT_DEFAULT;
+		params.count = params.count || Cache.COUNT_DEFAULT;
 
 		// If full dateRange given,
 		// Its possible to check if range is complete purely on mapper
@@ -193,6 +199,36 @@ export default class Cache extends WorkerChild {
 		]);
 
 		return this._dataLayer.createInstrumentTables(this._symbolList.map(symbol => symbol.name));
+	}
+
+	private _initApi() {
+		this._api = express();
+		this._api .use(cors());
+		this._http = require('http').createServer(this._api);
+
+		this._io = io(this._http);
+
+		this._http.listen(3001, function () {});
+
+		this._io.on('connection', (socket) => {
+
+			socket.on('read', async (params, cb) => {
+				try {
+					let buffer = await this.read(params),
+						arr = new Float64Array(buffer.buffer, buffer.byteOffset, buffer.length / Float64Array.BYTES_PER_ELEMENT);
+
+					cb(null, buffer.buffer);
+					// cb(null, Array.from(arr));
+				} catch (error) {
+					winston.info(error);
+					cb(error);
+				}
+			})
+		});
+
+		// this._api.listen(3001, function () {
+		// 	winston.info('Cache -> Listening on port 3001');
+		// })
 	}
 
 	private _broadCastTick(tick): void {

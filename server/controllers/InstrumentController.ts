@@ -93,6 +93,8 @@ export default class InstrumentController extends Base {
 			
 			return {
 				id: options.id,
+				from: options.from,
+				until: options.until,
 				groupId: options.groupId,
 				symbol: options.symbol,
 				timeFrame: options.timeFrame,

@@ -14,8 +14,7 @@ module.exports = (app: App, socket) => {
 		}
 	});
 
-	// TODO: Move to cache API
-	// Read bars
+	// Read indicators
 	socket.on('instrument:read', async (options, cb) => {
 		try {
 			cb(null, await app.controllers.instrument.read(options.id, options.from, options.until, options.count, undefined, options.indicators))

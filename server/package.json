@@ -49,6 +49,7 @@
     "node-ipc": "git://github.com/RIAEvangelist/node-ipc.git#v9.x",
     "request": "2.81.0",
     "rmdir": "1.2.0",
+    "socket.io": "^2.0.3",
     "source-map-support": "0.4.15",
     "sqlite3": "3.1.8",
     "sqlite3-transactions": "0.0.5",

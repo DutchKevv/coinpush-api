@@ -34,7 +34,7 @@ export class InstrumentsService {
 	public init(): void {
 		// Create groups by groupId to show in backtest overview
 		this.instruments$.subscribe(instruments => {
-			this.groupIds$.next([...new Set(instruments.map(val => val.options.groupId))]);
+			this.groupIds$.next([...new Set(instruments.map(val => val.options.groupId))].filter(groupId => groupId !== null));
 		});
 
 		this._socketService.socket.on('instrument:created', (instrumentSettings: InstrumentSettings) => {
@@ -294,7 +294,6 @@ export class InstrumentsService {
 			if (err)
 				return console.error(err);
 
-			console.log(list);
 			list.forEach((instrumentSettings: InstrumentSettings) => this.add(new InstrumentModel(instrumentSettings)));
 		});
 	}

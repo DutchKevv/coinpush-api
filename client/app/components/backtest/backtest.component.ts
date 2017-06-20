@@ -32,13 +32,15 @@ export class BacktestComponent implements AfterViewInit, OnInit, OnChanges {
 				public instrumentService: InstrumentsService) {}
 
 	ngOnInit() {
-		this.instrumentService.instruments$.subscribe(() => this.updateModels());
-		this.instrumentService.changed$.subscribe(() => this._updateMainProgressBar());
-		this._updateMainProgressBar();
+
 	}
 
 	ngAfterViewInit(): void {
-
+		this.instrumentService.instruments$.subscribe(() => {
+			this.updateModels();
+			this.activateHighest();
+		});
+		this.instrumentService.changed$.subscribe(() => this._updateMainProgressBar());
 	}
 
 	ngOnChanges(){
@@ -55,6 +57,8 @@ export class BacktestComponent implements AfterViewInit, OnInit, OnChanges {
 			this.activateHighest();
 
 		this.models = this.instrumentService.instruments.filter(model => model.options.groupId === this.activeGroupId);
+
+		this._updateMainProgressBar();
 	}
 
 	activateHighest() {
@@ -82,7 +86,6 @@ export class BacktestComponent implements AfterViewInit, OnInit, OnChanges {
 	}
 
 	private _updateMainProgressBar(): void {
-
 		// Set 'global' progress bar
 		let totalProgress = 0,
 			totalFinished = 0,

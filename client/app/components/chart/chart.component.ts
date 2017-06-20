@@ -1,13 +1,14 @@
 import {throttle, cloneDeep} from 'lodash';
 import {
 	ElementRef, OnInit, Input, Component, ChangeDetectionStrategy, OnDestroy, NgZone,
-	ViewEncapsulation, AfterViewInit, ViewChild, Output, ChangeDetectorRef
+	ViewEncapsulation, AfterViewInit, ViewChild, Output, ChangeDetectorRef, EventEmitter
 } from '@angular/core';
 
 import {InstrumentsService} from '../../services/instruments.service';
 import {InstrumentModel} from '../../../../shared/models/InstrumentModel';
 
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {CacheService} from '../../services/cache.service';
 
 declare let $: any;
 
@@ -27,14 +28,14 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 	@Input() offset = 0;
 	@Input() chunkLength = 1500;
 
-	@Output() loading$ = new BehaviorSubject(true);
+	@Output() loading$ = new BehaviorSubject(false);
 
 	@ViewChild('chart') chartRef: ElementRef;
 
 	private _scrollOffset = -1;
-	private _scrollSpeedStep = 4;
+	private _scrollSpeedStep = 6;
 	private _scrollSpeedMin = 1;
-	private _scrollSpeedMax = 20;
+	private _scrollSpeedMax = 6;
 
 	private _chart: any;
 	private _onScrollBounced: Function = null;
@@ -42,11 +43,11 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 	constructor(private _zone: NgZone,
 				private _elementRef: ElementRef,
 				private _instrumentsService: InstrumentsService,
+				private _cacheService: CacheService,
 				private _ref: ChangeDetectorRef) {
 	}
 
 	public async ngOnInit() {
-
 		// Bouncer func to limit onScroll calls
 		// this._onScrollBounced = throttle(this._onScroll.bind(this), 16);
 		this._onScrollBounced = this._onScroll.bind(this);
@@ -73,7 +74,7 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 							if (change.type === 'add') {
 								let indicator = this.model.options.indicators.find(i => i.id === change.id);
 
-								this._updateIndicators([indicator]);
+								// this._updateIndicators([indicator]);
 							}
 							break;
 					}
@@ -84,6 +85,7 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	ngAfterViewInit(): void {
 		this._createChart();
+		this._fetchCandles();
 	}
 
 	public pinToCorner(edges): void {
@@ -105,7 +107,6 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 
 	public reflow() {
-		console.log('REFLOW!!');
 		this._updateViewPort(false);
 
 		this._chart.options.height = this._elementRef.nativeElement.clientHeight;
@@ -175,7 +176,6 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 				});
 			}
 
-			this._chart.render();
 			this.chartRef.nativeElement.addEventListener('mousewheel', <any>this._onScrollBounced);
 		});
 	}
@@ -214,16 +214,37 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 
 	private async _fetch(count: number, offset: number) {
-		this.loading$.next(true);
+		let data = await this._instrumentsService.fetch(this.model, count, offset);
 
-		let {candles, indicators, orders} = await this._instrumentsService.fetch(this.model, count, offset);
-
-		this._updateBars(candles);
-		this._updateIndicators(indicators);
+		this._updateIndicators(data.indicators);
 		// this._updateOrders(orders);
 
 		this._chart.render();
+	}
+
+	private async _fetchCandles(redraw = true) {
+		let loadingTimeout = setTimeout(() => {
+			// this.loading$.next(true);
+		}, 300);
+
+		try {
+			let candles:any = await this._cacheService.read({
+				symbol: this.model.options.symbol,
+				timeFrame: this.model.options.timeFrame,
+				count: this.chunkLength,
+				offset: this.offset
+			});
+
+			clearInterval(loadingTimeout);
+			this._updateBars(candles);
+		} catch (error) {
+			clearInterval(loadingTimeout);
+			console.log('error error error', error);
+		}
+
+
 		this.loading$.next(false);
+		this._chart.render();
 	}
 
 	private _updateOrders(orders: Array<any>) {
@@ -236,6 +257,8 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 		this._zone.runOutsideAngular(() => {
 			let {candles, volume} = ChartComponent._prepareData(data),
 				last = candles[candles.length - 1];
+
+			// console.log('candles', candles);
 
 			this._chart.options.data[0].dataPoints = candles;
 
@@ -293,9 +316,8 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 
 						let unique = indicator.id + '_' + drawBuffer.id;
 
-
 						// New series
-						let series = this._chart.get(unique);
+						let series = null // this._chart.get(unique);
 
 						// Update
 						if (series) {
@@ -311,7 +333,7 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 										color: drawBuffer.style.color,
 										name: indicator.id,
 										dataPoints: drawBuffer.data.map(point => ({
-											x: point[0],
+											x: new Date(point[0]),
 											y: point[1]
 										}))
 									};
@@ -385,19 +407,14 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	static _prepareData(data: any) {
 		let i = 0,
+			rowLength = 10,
 			length = data.length,
-			volume = new Array(length),
-			candles = new Array(length),
-			candle;
+			volume = new Array(length / rowLength),
+			candles = new Array(length / rowLength);
 
-		for (; i < length; i += 1) {
-			candle = data[i];
-			volume[i] = [
-				candle[0], // Date
-				candle.pop() // Volume
-			];
-			// TODO - Now only Bid prices - Make Ask / Bid switch in UI
-			candles[i] = {x: new Date(candle[0]), y: [candle[1], candle[3], candle[5], candle[7]]};
+		// TODO - Volume
+		for (; i < length; i += rowLength) {
+			candles[i / rowLength] = {x: new Date(data[i]), y: [data[i + 1], data[i + 3], data[i + 5], data[i + 7]]};
 		}
 
 		return {
@@ -417,7 +434,6 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 
 	public ngOnDestroy() {
-		console.log('_destroyChart _destroyChart _destroyChart _destroyChart');
 		this._destroyChart();
 	}
 }

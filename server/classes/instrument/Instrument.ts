@@ -90,24 +90,20 @@ export default class Instrument extends InstrumentCache {
 		this.ipc.on('read', async (data, cb: Function) => {
 
 			try {
-				let returnObj = <any>{
-					candles: await this.read(data.count, data.offset, data.from, data.until)
-				};
+				cb(null, {
+					indicators: await this.getIndicatorsData(data.count, data.offset)
+				});
 
-				if (data.indicators) {
-					returnObj.indicators = await this.getIndicatorsData(data.count, data.offset)
-				}
-
-				if (this.orderManager && returnObj.candles.length) {
-					returnObj.orders = await this.orderManager.findByDateRange(
-						returnObj.candles[0][0],
-						returnObj.candles[returnObj.candles.length - 1][0]
-					);
-				} else {
-					returnObj.orders = [];
-				}
-
-				cb(null, returnObj);
+				// TODO: Should not be necessary -  Live goes through main thread - Orders already known
+				//
+				// if (this.orderManager && returnObj.candles.length) {
+				// 	returnObj.orders = await this.orderManager.findByDateRange(
+				// 		returnObj.candles[0][0],
+				// 		returnObj.candles[returnObj.candles.length - 1][0]
+				// 	);
+				// } else {
+				// 	returnObj.orders = [];
+				// }
 			} catch (error) {
 				console.log('Error:', error);
 				cb(error);
