@@ -1,60 +1,53 @@
 import * as path        from 'path';
-import * as mkdirp      from 'mkdirp';
-import * as express    	from 'express';
+import * as express     from 'express';
 import * as io          from 'socket.io';
 
-import Mapper           from './CacheMap';
-import Fetcher          from './CacheFetch';
+import * as mkdirp      from '../../../shared/node_modules/mkdirp';
+import {log} 			from '../../../shared/logger';
+import OandaApi         from '../../../shared/brokers/oanda';
+import CacheMapper      from '../../../shared/classes/cache/CacheMap';
+import {AccountSettings} from '../../../shared/interfaces/AccountSettings';
 import WorkerChild      from '../worker/WorkerChild';
-import BrokerApi        from '../broker-api/oanda/oanda';
 import CacheDataLayer   from './CacheDataLayer';
-import {winston}     	from '../../logger';
 
 export default class Cache extends WorkerChild {
 
-	static COUNT_DEFAULT = 500;
+	public static READ_COUNT_DEFAULT = 500;
+	public static readonly DEFAULTS: {settings: {account: AccountSettings, path: any}} = <any>{};
 
-	public settings: { account: AccountSettings, path: any };
-
-	private _ready = false;
-	private _brokerApi: BrokerApi = null;
-	private _dataLayer: CacheDataLayer;
-	private _mapper: Mapper;
-	private _fetcher: Fetcher;
+	private _brokerApi: OandaApi = null;
+	private _dataLayer: CacheDataLayer = null;
+	private _mapper: CacheMapper = null;
 	private _symbolList: Array<any> = [];
 	private _listeners = {};
 	private _api: any = null;
 	private _http: any = null;
 	private _io: any = null;
 
-	private _tickStreamOpen: boolean = false;
-
 	private _tickBuffer = {};
 	private _tickIntervalTimer = null;
+	private _tickStreamOpen: boolean = false;
+
+	private _fetchQueue = Promise.resolve();
 
 	public async init() {
 		await super.init();
 
-		this.settings = this.options.settings;
-
 		// Ensure cache dir exists
-		mkdirp.sync(this.settings.path.cache);
+		mkdirp.sync(this.options.settings.path.cache);
 
-		this._dataLayer = new CacheDataLayer({
-			path: path.join(this.settings.path.cache, 'database.db')
-		});
+		this._dataLayer = new CacheDataLayer({path: path.join(this.options.settings.path.cache, 'database.db')});
+		this._mapper 	= new CacheMapper({path: this.options.settings.path.cache});
 
-		this._mapper = new Mapper({path: this.settings.path.cache});
-		this._fetcher = new Fetcher({dataLayer: this._dataLayer, mapper: this._mapper, brokerApi: this._brokerApi});
-
-		await this._dataLayer.init();
-		await this._mapper.init();
-		await this._fetcher.init();
+		await Promise.all([
+			this._dataLayer.init(),
+			this._mapper.init()
+		]);
 
 		this._setChannelEvents();
 		await this.ipc.startServer();
 
-		this._setTickInterval();
+		this._startBroadcastInterval();
 
 		await this._initApi();
 	}
@@ -65,34 +58,36 @@ export default class Cache extends WorkerChild {
 			from = params.from,
 			until = params.until,
 			count = params.count,
-			candles = Buffer.alloc(0),
+			candles = null,
 			softUntil;
 
+		log.info('Cache', `Read ${symbol}-${timeFrame} from ${from} until ${until} count ${count}`);
+
 		if (!symbol || typeof symbol !== 'string')
-			throw new Error('Cache->Read : No symbol given');
+			throw new Error('Cache -> Read : No symbol given');
 
 		if (!timeFrame || typeof timeFrame !== 'string')
-			throw new Error('Cache->Read : No timeFrame given');
+			throw new Error('Cache -> Read : No timeFrame given');
 
 		if (count && from && until)
-			throw new Error('Cache->Read : Only from OR until can be given when using count, not both');
+			throw new Error('Cache -> Read : Only from OR until can be given when using count, not both');
 
 		if ((!from && !until))
 			until = params.until = Date.now();
 
-		softUntil = until > this._mapper.streamOpenSince ? this._mapper.streamOpenSince : until;
+		// Make sure there is a count/limit
+		count = params.count = params.count || Cache.READ_COUNT_DEFAULT;
 
-		// console.log('asfsafdsf', until);
-
-		count = params.count = params.count || Cache.COUNT_DEFAULT;
+		// Create a soft until for the isComplete check
+		// This is needed to fake updated data status
+		// -- Let Mapper think all data from when the tick stream opened until now is complete --
+		softUntil = this._mapper.streamOpenSince && until > this._mapper.streamOpenSince ? this._mapper.streamOpenSince : until;
 
 		// If full dateRange given,
 		// Its possible to check if range is complete purely on mapper
 		if (from && until) {
 			if (!this._mapper.isComplete(symbol, timeFrame, from, softUntil, count))
-				await this.fetch(params);
-
-			candles = await this._dataLayer.read(params);
+				await this.fetch(Object.assign({}, params, {until: softUntil}));
 		}
 		// Count given
 		// First read, then check in mapper if data is complete by first/last candles
@@ -104,110 +99,113 @@ export default class Cache extends WorkerChild {
 				let first = candles.readDoubleLE(0),
 					last = candles.readDoubleLE(candles.length - (10 * Float64Array.BYTES_PER_ELEMENT));
 
-				if (!this._mapper.isComplete(symbol, timeFrame, from || first, softUntil || last)) {
-					await this.fetch(params);
-					candles = await this._dataLayer.read(params);
+				if (!this._mapper.isComplete(symbol, timeFrame, first, last)) {
+					candles = null;
+					await this.fetch(Object.assign({}, params, {until: softUntil}));
 				}
 			} else {
-				await this.fetch(params);
-				candles = await this._dataLayer.read(params);
+				candles = null;
+				await this.fetch(Object.assign({}, params, {until: softUntil}));
 			}
 		}
+
+		if (candles === null)
+			candles = await this._dataLayer.read(params);
 
 		return candles;
 	}
 
-	public async fetch(params: { symbol: string, timeFrame: string, from: number, until: number, count: number }, emitStatus?: boolean): Promise<void> {
-		let symbol = params.symbol,
-			timeFrame = params.timeFrame,
-			from = params.from,
-			until = params.until,
-			count = params.count;
+	public fetch(params: { symbol: string, timeFrame: string, from: number, until: number, count: number }, emitStatus?: boolean): Promise<void> {
+		return this._fetchQueue.then(() => console.log('queueue start!')).then(async () => {
+			let symbol = params.symbol,
+				timeFrame = params.timeFrame,
+				from = params.from,
+				until = params.until,
+				count = params.count;
 
-		winston.info(`Cache: Fetching ${symbol} from ${from} until ${until} count ${count}`);
+			if (count && from && until)
+				throw new Error('Cache->fetch : Only from OR until can be given when using count, not both');
 
-		if (count && from && until)
-			throw new Error('Cache->fetch : Only from OR until can be given when using count, not both');
+			// Get missing chunks
+			let chunks = this._mapper.getMissingChunks(symbol, timeFrame, from, until, count),
+				done = 0;
 
-		// Get missing chunks
-		let chunks = this._mapper.getMissingChunks(symbol, timeFrame, from, until, count),
-			done = 0;
+			if (!chunks.length)
+				return;
 
-		console.log('missing chunks', chunks);
+			// Fire all missing chunk request
+			return Promise.all(chunks.map(chunk => {
 
-		if (!chunks.length)
-			return;
+				return new Promise((resolve, reject) => {
+					let now = Date.now(),
+						streamChunkTotal = 0,
+						streamChunkWritten = 0,
+						endTriggered = false,
+						total = 0;
 
-		// Fire all missing chunk request
-		await Promise.all(chunks.map(chunk => {
+					log.info('Cache', `Fetching ${symbol} from ${chunk.from} until ${chunk.until} count ${chunk.count}`);
 
-			return new Promise((resolve, reject) => {
-				let now = Date.now(),
-					streamChunkTotal = 0,
-					streamChunkWritten = 0,
-					endTriggered = false,
-					total = 0;
+					this._brokerApi.getCandles(symbol, timeFrame, chunk.from, chunk.until, chunk.count, async (buf: NodeBuffer) => {
+						streamChunkTotal++;
 
-				this._brokerApi.getCandles(symbol, timeFrame, chunk.from, chunk.until, chunk.count, async (buf: NodeBuffer) => {
-					streamChunkTotal++;
+						// Store candles in DB
+						await this._dataLayer.write(symbol, timeFrame, buf);
 
-					// Store candles in DB
-					await this._dataLayer.write(symbol, timeFrame, buf);
+						// Make sure there is a from to store in mapper
+						from = from || buf.readDoubleLE(0);
 
-					// Make sure there is a from to store in mapper
-					from = from || buf.readDoubleLE(0);
+						let c_until = buf.readDoubleLE(buf.length - (10 * Float64Array.BYTES_PER_ELEMENT)),
+							c_count = buf.length / (10 * Float64Array.BYTES_PER_ELEMENT);
 
-					let c_until = buf.readDoubleLE(buf.length - (10 * Float64Array.BYTES_PER_ELEMENT)),
-						c_count = buf.length / (10 * Float64Array.BYTES_PER_ELEMENT);
+						total += c_count;
 
-					total += c_count;
+						// Update map every time a chunk is successfully added
+						// Use the original from date (if given) as data comes in forwards, this simplifies the mapper updating
+						this._mapper.update(symbol, timeFrame, from, c_until || until, c_count);
 
-					// Update map every time a chunk is successfully added
-					// Use the original from date (if given) as data comes in forwards, this simplifies the mapper updating
-					this._mapper.update(symbol, timeFrame, from, c_until || until, c_count);
+						streamChunkWritten++;
 
-					streamChunkWritten++;
+						// Send trigger for clients
+						if (emitStatus) {
+							this.ipc.send('main', 'cache:fetch:status', {
+								symbol: symbol,
+								timeFrame: timeFrame,
+								value: this._mapper.getPercentageComplete(symbol, timeFrame, from, until, count)
+							}, false);
+						}
 
-					// Send trigger for clients
-					if (emitStatus) {
-						this.ipc.send('main', 'cache:fetch:status', {
-							symbol: symbol,
-							timeFrame: timeFrame,
-							value: this._mapper.getPercentageComplete(symbol, timeFrame, from, until, count)
-						}, false);
-					}
+						if (done === chunks.length && streamChunkWritten === streamChunkTotal)
+							resolve();
 
-					if (done === chunks.length && streamChunkWritten === streamChunkTotal)
-						resolve();
+					}, err => {
 
-				}, err => {
+						if (err)
+							return reject(err);
 
-					if (err)
-						return reject(err);
+						// Update the total request
+						this._mapper.update(symbol, timeFrame, from, until, total);
 
-					// Update the total request
-					this._mapper.update(symbol, timeFrame, from, until, total);
+						log.info('Cache', `Fetching ${symbol} took ${Date.now() - now} ms`);
 
-					winston.info(`Cache: Fetching ${symbol} took ${Date.now() - now} ms`);
+						endTriggered = true;
 
-					endTriggered = true;
-
-					if (++done === chunks.length && streamChunkWritten === streamChunkTotal)
-						resolve();
+						if (++done === chunks.length && streamChunkWritten === streamChunkTotal)
+							resolve();
+					});
 				});
-			});
-		}));
+			}));
+		}).then(() => console.log('queueue finished'));
 	}
 
 	public async reset(symbol?: string, timeFrame?: string, from?: number, until?: number): Promise<any> {
-		winston.info('Reset cache');
-
 		await Promise.all([
 			this._mapper.reset(symbol, timeFrame),
 			this._dataLayer.reset()
 		]);
 
-		return this._dataLayer.createInstrumentTables(this._symbolList.map(symbol => symbol.name));
+		await this._dataLayer.createInstrumentTables(this._symbolList.map(symbol => symbol.name));
+
+		log.info('Cache', 'Reset complete');
 	}
 
 	private _initApi() {
@@ -218,30 +216,29 @@ export default class Cache extends WorkerChild {
 
 			this._io.on('connection', (socket) => {
 
-				socket.on('read', async (params, cb) => {
+				socket.on('read', async (params, cb: Function) => {
 					try {
-						let buffer = await this.read(params),
-							arr = new Float64Array(buffer.buffer, buffer.byteOffset, buffer.length / Float64Array.BYTES_PER_ELEMENT);
-
-						cb(null, buffer.buffer);
-						// cb(null, Array.from(arr));
+						cb(null, await this.read(params));
 					} catch (error) {
-						winston.info(error);
+						log.error('Cache', error);
 						cb(error);
 					}
-				})
+				});
+
+				socket.on('symbol:list', async (params, cb: Function) => {
+					cb(null, this._symbolList);
+				});
 			});
 
 			this._http.listen(3001, (err) => {
 				if (err)
 					return reject(err);
 
-				winston.info('Cache -> Listening on port 3001');
+				log.info('Cache',  'Listening on port 3001');
 
 				resolve();
 			});
 		});
-
 	}
 
 	private _onTickReceive(tick): void {
@@ -251,14 +248,22 @@ export default class Cache extends WorkerChild {
 		this._tickBuffer[tick.instrument].push([tick.time, tick.bid, tick.ask]);
 	}
 
-	private _setTickInterval() {
+	private _startBroadcastInterval() {
 		this._tickIntervalTimer = setInterval(() => {
 			if (!Object.getOwnPropertyNames(this._tickBuffer).length) return;
 
-			this.ipc.send('main', 'ticks', this._tickBuffer, false);
+			if (this.ipc)
+				this.ipc.send('main', 'ticks', this._tickBuffer, false);
+
+			if (this._io)
+				this._io.sockets.emit('ticks', this._tickBuffer);
 
 			this._tickBuffer = {};
 		}, 200);
+	}
+
+	private _stopBroadcastInterval() {
+		clearInterval(this._tickIntervalTimer);
 	}
 
 	private _setChannelEvents(): void {
@@ -292,91 +297,91 @@ export default class Cache extends WorkerChild {
 			cb(null);
 		});
 
-		this.ipc.on('symbol:list', (opt, cb) => {
-			cb(null, this._symbolList);
-		});
+		// this.ipc.on('symbol:list', (opt, cb) => {
+		// 	cb(null, this._symbolList);
+		// });
 
 		this.ipc.on('broker:settings', async (accountSettings: AccountSettings, cb) => {
-			this.settings.account = accountSettings;
-			cb(null, await this._setBrokerApi())
+			this.options.settings.account = accountSettings;
+
+			try {
+				cb(null, await this._setBrokerApi())
+			} catch (error) {
+				log.error('Cache', error);
+				this._debug('error', error);
+				cb(error);
+
+				await this._unsetBrokerApi();
+			}
 		});
 	}
 
-	private async _setBrokerApi(): Promise<boolean> {
-		this._ready = false;
+	private async _setBrokerApi(): Promise<void> {
+		await this._unsetBrokerApi();
 
-		try {
-			await this._unsetBrokerApi();
 
-			this._brokerApi = new BrokerApi(this.settings.account);
-			await this._brokerApi.init();
+		this._brokerApi = new OandaApi(this.options.settings.account);
+		this._brokerApi.on('error', error => this._debug('error', error));
+		await this._brokerApi.init();
 
-			this._brokerApi.on('error', error => {
-				console.log('Cache -> Broker Error : ', error);
-			});
+		await this._loadAvailableSymbols();
 
-			if (await this._loadAvailableSymbols() === true && await this._openTickStream() === true) {
-				this._ready = true;
-			}
-		} catch (error) {
-			console.error(error);
-		}
+		await this._openTickStream();
 
-		return this._ready;
+		log.info('Cache', 'Broker connected');
 	}
 
 	private async _unsetBrokerApi(): Promise<void> {
 		this._tickStreamOpen = false;
 		this._mapper.streamOpenSince = null;
 
-		if (!this._brokerApi)
+		if (this._brokerApi === null)
 			return;
 
-		await this._brokerApi.destroy();
+		try {
+			await this._brokerApi.destroy();
+		} catch (error) {
+			console.error(error);
+		}
+
 		this._brokerApi = null;
+
+		log.info('Cache', 'Broker disconnected');
 	}
 
-	private async _loadAvailableSymbols(): Promise<boolean> {
-		winston.info('loading instruments list');
+	private async _loadAvailableSymbols(): Promise<void> {
+		let symbolList = await this._brokerApi.getSymbols();
 
-		try {
-			let symbolList = await this._brokerApi.getSymbols();
-			let currentPrices = await this._brokerApi.getCurrentPrices(symbolList.map(symbol => symbol.name));
+		let currentPrices = await this._brokerApi.getCurrentPrices(symbolList.map(symbol => symbol.name));
 
-			symbolList.forEach(symbol => {
-				let price = currentPrices.find(priceObj => priceObj.instrument === symbol.name);
+		symbolList.forEach(symbol => {
+			let price = currentPrices.find(priceObj => priceObj.instrument === symbol.name);
 
-				symbol.bid = price.bid;
-				symbol.ask = price.ask;
-			});
+			symbol.bid = price.bid;
+			symbol.ask = price.ask;
+		});
 
-			await this._dataLayer.createInstrumentTables(symbolList.map(symbol => symbol.name));
+		await this._dataLayer.createInstrumentTables(symbolList.map(symbol => symbol.name));
 
-			this._symbolList = symbolList;
+		this._symbolList = symbolList;
 
-			return true;
-		} catch (error) {
-			console.log(error);
-			return false;
-		}
+		log.info('Cache', 'Symbol list loaded');
 	}
 
 	private async _openTickStream(): Promise<any> {
-		winston.info('opening tick stream');
-
 		this._brokerApi.removeAllListeners('tick');
 
-		try {
+		await this._brokerApi.subscribePriceStream(this._symbolList.map(symbol => symbol.name));
 
-			await Promise.all(this._symbolList.map(symbol => this._brokerApi.subscribePriceStream(symbol.name)));
+		this._brokerApi.on('tick', tick => this._onTickReceive(tick));
+		this._tickStreamOpen = true;
+		this._mapper.streamOpenSince = Date.now();
 
-			this._brokerApi.on('tick', tick => this._onTickReceive(tick));
-			this._tickStreamOpen = true;
-			this._mapper.streamOpenSince = Date.now();
+		log.info('Cache', 'Tick stream opened');
+	}
 
-			return true;
-		} catch (error) {
-			return false;
-		}
+	private _debug(type: string, text: string, data?: any, code?: number) {
+		if (this.ipc)
+			this.ipc.send('main', 'debug', {type, text, data, code}, false);
 	}
 }

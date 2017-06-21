@@ -44,19 +44,14 @@ export class CacheService {
 		this._mapper = new CacheMap();
 		this._connect();
 
-		this._loadSymbolList();
-
 		this._socketService.socket.on('system:state', (systemState: SystemState) => {
-			if (!systemState.booting && systemState.connected) {
+			if (!systemState.booting && systemState.connected)
 				this._loadSymbolList();
-			}
 		});
 
-		this._socketService.socket.on('ticks', (ticks) => {
-
+		this._socket.on('ticks', ticks => {
 			this._zone.runOutsideAngular(() => {
 				for (let _symbol in ticks) {
-
 					let symbol = this.getBySymbol(_symbol);
 
 					if (symbol)
@@ -70,52 +65,22 @@ export class CacheService {
 
 	public read(params) {
 		return new Promise((resolve, reject) => {
-			this._socket.emit('read', params, (err, buffer) => {
+			this._socket.emit('read', params, (err, buffer: Uint8Array) => {
 				if (err)
 					return reject(err);
 
 				resolve(new Float64Array(buffer));
 			});
-			// $.get('http://localhost:3001/read', params).done(candles => {
-			// 	resolve(candles);
-			// }).fail(error => {
-			// 	console.log(error);
-			// 	alert('EROROROROR' + JSON.stringify(error));
-			// 	reject(error);
-			// })
-			// let oReq = new XMLHttpRequest();
-			// oReq.open('GET', 'http://localhost:3001/read/' + $.param(params), true);
-			// // oReq.responseType = "arraybuffer";
-			// oReq.responseType = "json";
-			// // oReq.setRequestHeader('Content-Type', 'application/octet-stream');
-			// oReq.onload = function(oEvent) {
-			// 	let arrayBuffer = oReq.response;
-			// 	console.log(arrayBuffer);
-			// 	console.log('asfassdfsdf', new Float64Array(arrayBuffer));
-			// 	// // if you want to access the bytes:
-			// 	// var byteArray = new Uint8Array(arrayBuffer);
-			// 	// ...
-			//
-			// 	// // If you want to use the image in your DOM:
-			// 	// var blob = new Blob(arrayBuffer, {type: "image/png"});
-			//
-			// 	// whatever...
-			// };
-			//
-			// oReq.send();
-
-			// $.get('http://localhost:3001/read', params).done(function(data) {
-			// 	console.log('asfsdafdsf', arguments);
-			// 	resolve(data)
-			// }).fail(reject);
 		})
 	}
 
 	private _connect() {
-		this._socket = io(this._getUrl(), {
-			"reconnectionAttempts": 10, //avoid having user reconnect manually in order to prevent dead clients after a server restart
-			"timeout" : 10000, //before connect_error and connect_timeout are emitted.
-			"transports" : ["websocket"]
+		this._zone.runOutsideAngular(() => {
+			this._socket = io(this._getUrl(), {
+				"reconnectionAttempts": 10, //avoid having user reconnect manually in order to prevent dead clients after a server restart
+				"timeout" : 10000, //before connect_error and connect_timeout are emitted.
+				"transports" : ["websocket"]
+			});
 		});
 	}
 
@@ -131,7 +96,7 @@ export class CacheService {
 	}
 
 	private _loadSymbolList() {
-		this._socketService.send('cache:symbol:list', {}, (err, symbolList) => {
+		this._socket.emit('symbol:list', {}, (err, symbolList) => {
 			if (err)
 				return console.error(err);
 

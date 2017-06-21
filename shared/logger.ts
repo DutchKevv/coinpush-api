@@ -3,13 +3,22 @@ import * as path	from 'path';
 import * as fs		from 'fs';
 import * as mkdirp	from 'mkdirp';
 
-const PATH_SERVER_LOG = path.join(__dirname, '..', '_logs/', 'server.log');
+const
+	PATH_SERVER_LOG = path.join(__dirname, '..', '_logs/', 'server.log'),
+	OWNER_MIN_LENGTH = 20;
 
 if (!fs.existsSync(PATH_SERVER_LOG)) {
 	mkdirp.sync(PATH_SERVER_LOG);
 }
 
-export const winston = new win.Logger({
+function ensureStringLength(str) {
+	while(str.length < OWNER_MIN_LENGTH) {
+		str += ' ';
+	}
+	return str;
+}
+
+const logger = new win.Logger({
 	transports: [
 		new win.transports.File({
 			level: 'info',
@@ -29,3 +38,17 @@ export const winston = new win.Logger({
 	],
 	exitOnError: false
 });
+
+export const log = {
+	info(owner, text) {
+		logger.info(ensureStringLength(owner) + ' : ' + text || '');
+	},
+
+	warn(owner, text) {
+		logger.warn(ensureStringLength(owner) + ' : ' + text || '');
+	},
+
+	error(owner, text) {
+		logger.error(ensureStringLength(owner) + ' : ' + text || '');
+	}
+};

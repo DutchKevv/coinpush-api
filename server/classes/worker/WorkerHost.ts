@@ -1,7 +1,7 @@
 import IPC 				from '../ipc/IPC';
 import {fork}    		from 'child_process';
 import {WorkerOptions} 	from './WorkerChild';
-import {winston} 		from '../../logger';
+import {log} 			from '../../../shared/logger';
 import {Base} 			from '../../../shared/classes/Base';
 
 export default class WorkerHost extends Base {
@@ -37,7 +37,7 @@ export default class WorkerHost extends Base {
 					classArguments: this.options.classArguments || {},
 					workerOptions: <WorkerOptions> {
 						id: this.id,
-						parentId: this.ipc.id,
+						parentId: this.ipc.options.id,
 						space: this.ipc.options.space
 					}
 				}),
@@ -49,7 +49,7 @@ export default class WorkerHost extends Base {
 			this._child = fork(this.options.path, ['--no-deprecation', `--settings=${childArgv}`], childOpt);
 
 			this._child.on('close', code => {
-				winston.info(`${this.id} exited with code ${code}`);
+				log.info('WorkerHost', `${this.id} : exited with code ${code}`);
 
 				this.emit('close', code);
 
@@ -64,7 +64,7 @@ export default class WorkerHost extends Base {
 			});
 
 			this._child.once('message', message => {
-				winston.info(`WorkerHost: Creating ${this.id} took: ${Date.now() - now} ms`);
+				log.info('WorkerHost', `Creating ${this.id} took: ${Date.now() - now} ms`);
 
 				resolved = true;
 				if (message === '__ready') {

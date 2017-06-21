@@ -42,13 +42,16 @@ export class ChartOverviewComponent implements OnInit {
 			rowCount = 0;
 
 		this.charts.forEach((chart) => {
-			chart.setSize(size, size);
 			chart.setPosition(columnCounter * size, rowCount * size);
 			if (++columnCounter * size >= containerW) {
 				columnCounter = 0;
 				rowCount++;
 			}
 		});
+
+		requestAnimationFrame(() => {
+			this.charts.forEach((chart) => chart.setSize(size, size));
+		})
 	}
 
 	setFocusToHighestIndex(): void {

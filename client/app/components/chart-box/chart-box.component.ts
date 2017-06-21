@@ -119,6 +119,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 	public setSize(width: number | string, height: number | string): void {
 		this.$el.width(width).height(height);
 		this.chartComponent.reflow();
+		this.chartComponent.render();
 	}
 
 	public getPosition(): any {
@@ -183,8 +184,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 			containerW = el.parentElement.clientWidth,
 			chartH = el.clientHeight,
 			chartW = el.clientWidth;
-
-		console.log('asdfsdaf', containerH, containerW, chartH, chartW);
 
 		return [random(0, containerW - chartW), Math.max(random(0, containerH - chartH), 0)];
 	}

@@ -1,15 +1,14 @@
 import * as fs from 'fs';
 import * as path from 'path';
-// import * as mkdirp from 'mkdirp';
-
-// const rmdir = require('rmdir');
 
 import {getEstimatedTimeFromCount, mergeRanges} from '../../util/util.date';
 
-export default class CacheMap {
+export default class Mapper {
 
 	public static readonly MODE_PERSISTENT = 0;
 	public static readonly MODE_MEMORY = 1;
+
+	public streamOpenSince: number = null;
 
 	private _map: any = {};
 	private _mode: number;
@@ -28,17 +27,21 @@ export default class CacheMap {
 
 	public async init() {
 		if (this.options.path) {
-			this._mode = CacheMap.MODE_PERSISTENT;
+			this._mode = Mapper.MODE_PERSISTENT;
 			this._pathFile = path.join(this.options.path, 'database-mapper.json');
 			await this._loadFromFile();
 		} else {
-			this._mode = CacheMap.MODE_MEMORY;
+			this._mode = Mapper.MODE_MEMORY;
 		}
 	}
 
-	public update(instrument, timeFrame, from, until, nrOfBars) {
+	public update(symbol, timeFrame, from, until, count) {
 		let map = this.map,
-			ranges = this.findByParams(instrument, timeFrame, true);
+			ranges = this.findByParams(symbol, timeFrame, true);
+
+		if (until === null) {
+			console.log(symbol, timeFrame, from, until, count);
+		}
 
 		// Find first index of from date that is higher or equal then new chunk from date
 		// Place it before that, so all dates are aligned in a forward manner
@@ -46,36 +49,40 @@ export default class CacheMap {
 
 		// If one is higher, prepend
 		if (index > -1)
-			ranges.splice(index, 0, [from, until, nrOfBars]);
+			ranges.splice(index, 0, [from, until, count]);
 
 		// Put at end of array, making sure lower from dates stay at the start of array
 		else
-			ranges.push([from, until, nrOfBars]);
+			ranges.push([from, until, count]);
 
 		// Glue the cached dates together
-		map[instrument][timeFrame] = mergeRanges(ranges);
+		map[symbol][timeFrame] = mergeRanges(ranges);
 
 		// Persistent mode
-		if (this.mode === CacheMap.MODE_PERSISTENT) {
+		if (this.mode === Mapper.MODE_PERSISTENT) {
 			fs.writeFileSync(this._pathFile, JSON.stringify(map, null, 2));
 		}
 	}
 
-	public isComplete(instrument, timeFrame, from, until, count): boolean {
-		let ranges = this.findByParams(instrument, timeFrame),
+	public isComplete(symbol, timeFrame, from, until, count?): boolean {
+		let ranges = this.findByParams(symbol, timeFrame),
 			i = 0, len = ranges.length, _range;
 
-		for (; i < len; ++i) {
-			_range = ranges[i];
-			if (_range[0] <= from && _range[1] >= until)
-				return true;
+		if (from && until) {
+			for (; i < len; ++i) {
+				_range = ranges[i];
+				if (_range[0] <= from && _range[1] >= until)
+					return true;
+			}
+		} else {
+
 		}
 
 		return false;
 	}
 
-	public getPercentageMissing(instrument, timeFrame, from, until, count): number {
-		let ranges = this.findByParams(instrument, timeFrame, true),
+	public getPercentageComplete(symbol, timeFrame, from, until, count): number {
+		let ranges = this.findByParams(symbol, timeFrame, true),
 			totalRequiredTime = from && until ? until - from :  getEstimatedTimeFromCount(timeFrame, count),
 			totalStoredTime = 0,
 			totalCount = 0,
@@ -91,7 +98,7 @@ export default class CacheMap {
 				return;
 
 			// Exact date range (easy)
-			// if (from && until) {
+			if (from && until) {
 				// Correct overflowing ranges
 				if (_from < from)
 					_from = from;
@@ -99,71 +106,73 @@ export default class CacheMap {
 					_until = until;
 
 				totalStoredTime += _until - _from;
-			// }
+			}
 
 			// Count (hard)
-			// else {
-			//
-			// }
+			else {
+
+			}
 		});
 
 		// if (from && until) {
-			result = (totalStoredTime / totalRequiredTime) * 100;
+		result = (totalStoredTime / totalRequiredTime) * 100;
 		// }
 		// else {
 		//
 		// }
-		console.log('totalCount', totalRequiredTime, totalStoredTime, totalCount);
+		// console.log('totalCount', totalRequiredTime, totalStoredTime, totalCount);
 
-		return result;
+		return +result.toFixed(2);
 	}
 
-	public async reset(instrument?: string, timeFrame?: string) {
+	public getMissingChunks(symbol, timeFrame, from, until, count) {
+		let ranges = this.findByParams(symbol, timeFrame, true),
+			result = [{from, until, count}];
 
-		return new Promise((resolve, reject) => {
-
-			this._map = {};
-
-			if (this.mode === CacheMap.MODE_PERSISTENT) {
-
-				// // Remove cache dir recursive
-				// rmdir(this.options.path, () => {
-				//
-				// 	// Recreate cache dir
-				// 	mkdirp(this.options.path, () => {
-				// 		resolve();
-				// 	})
-				// });
-			} else {
-				resolve();
+		ranges.forEach(range => {
+			if (from && until) {
+				result = [{from, until, count}];
+			}
+			else {
+				// if ((!from || range[0] <= from) && (!until || range[1] >= until) && range[2] >= count) {
+				if ((range[0] <= from) && (range[1] >= until) && range[2] >= count) {
+					result = [];
+				}
 			}
 		});
+
+		return result
 	}
 
-	public findByParams(instrument: string, timeFrame: string, create = true): Array<any> {
+	public reset(symbol?: string, timeFrame?: string) {
+
+		this._map = {};
+
+		if (this.mode === Mapper.MODE_PERSISTENT) {
+
+			if (fs.existsSync(this._pathFile))
+				fs.unlinkSync(this._pathFile);
+		}
+	}
+
+	public findByParams(symbol: string, timeFrame: string, create = true): Array<any> {
 		let map = this.map;
 
-		if (map[instrument])
-			if (map[instrument][timeFrame])
-				return map[instrument][timeFrame];
+		if (map[symbol])
+			if (map[symbol][timeFrame])
+				return map[symbol][timeFrame];
 
 		if (create) {
-			if (!map[instrument])
-				map[instrument] = {};
+			if (!map[symbol])
+				map[symbol] = {};
 
-			if (!map[instrument][timeFrame])
-				map[instrument][timeFrame] = [];
+			if (!map[symbol][timeFrame])
+				map[symbol][timeFrame] = [];
 
-			return map[instrument][timeFrame];
+			return map[symbol][timeFrame];
 		}
 
 		return null;
-	}
-
-	getMapInstrumentList(instrument, timeFrame) {
-		let map = this.map;
-
-		return map[instrument] && map[instrument][timeFrame] ? map[instrument][timeFrame] : [];
 	}
 
 	private _loadFromFile() {

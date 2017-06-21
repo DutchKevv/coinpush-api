@@ -15,7 +15,11 @@
       "../shared/node_modules/@types",
       "node_modules/@types"
     ],
-     "include": ["app/**/*.ts"],
-     "exclude": ["node_modules"]
+    "include": ["app/**/*.ts"],
+    "exclude": [
+      "server",
+      "shared",
+      "node_modules"
+    ]
   }
 }

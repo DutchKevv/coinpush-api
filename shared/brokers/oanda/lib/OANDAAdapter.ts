@@ -1,9 +1,12 @@
-import {Stream} from "stream";
+import {Stream} 		from "stream";
+import * as querystring from 'querystring';
+import * as constants 	from '../../../constants/broker';
+import * as Events 		from './Events';
+import * as httpClient	from './httpClient';
+import * as utils 		from './utils';
+import {throttle}		from 'lodash';
 
-const constants = require('../../../../../../shared/constants/broker');
-var _ = require('underscore'), Events = require('./Events'), querystring = require('querystring'),
-	httpClient = require('./httpClient'), utils = require('./utils');
-var environments = {
+let environments = {
 	sandbox: {
 		restHost: 'api-sandbox.oanda.com',
 		streamHost: 'stream-sandbox.oanda.com',
@@ -20,7 +23,7 @@ var environments = {
 		secure: true
 	}
 };
-var maxSockets = 2, maxRequestsPerSecond = 15, maxRequestsWarningThreshold = 1000;
+let maxSockets = 2, maxRequestsPerSecond = 15, maxRequestsWarningThreshold = 1000;
 /*
  * config.environment
  * config.accessToken
@@ -47,7 +50,7 @@ Events.mixin(OandaAdapter.prototype);
  * Subscribes to events for all accounts authorized by the token
  */
 OandaAdapter.prototype.subscribeEvents = function (listener, context) {
-	var existingSubscriptions = this.getHandlers('event');
+	let existingSubscriptions = this.getHandlers('event');
 	this.off('event', listener, context);
 	this.on('event', listener, context);
 	if (existingSubscriptions.length === 0) {
@@ -59,7 +62,7 @@ OandaAdapter.prototype.unsubscribeEvents = function (listener, context) {
 	this._streamEvents();
 };
 OandaAdapter.prototype._streamEvents = function () {
-	var subscriptionCount = this.getHandlers('event').length;
+	let subscriptionCount = this.getHandlers('event').length;
 	if (this.eventsRequest) {
 		this.eventsRequest.abort();
 	}
@@ -106,7 +109,7 @@ OandaAdapter.prototype._onEventsData = function (data) {
 	// Single chunks sometimes contain more than one event. Each always end with /r/n. Whole chunk therefore not JSON parsable, so must split.
 	// Also, an event may be split accross data chunks, so must buffer.
 	data.split(/\r\n/).forEach(line => {
-		var update;
+		let update;
 		if (line) {
 			this._eventsBuffer.push(line);
 			try {
@@ -168,11 +171,14 @@ OandaAdapter.prototype.getInstruments = function (accountId, callback) {
 		callback(null, body.instruments);
 	});
 };
-OandaAdapter.prototype.getPrice = function (symbol, callback) {
-	var multiple = _.isArray(symbol);
+
+OandaAdapter.prototype.getPrices = function (symbol, callback) {
+	let multiple = Array.isArray(symbol);
+
 	if (multiple) {
 		symbol = symbol.join('%2C');
 	}
+
 	this._sendRESTRequest({
 		method: 'GET',
 		path: '/v1/prices?instruments=' + symbol
@@ -181,31 +187,36 @@ OandaAdapter.prototype.getPrice = function (symbol, callback) {
 			callback(null, multiple ? body.prices : body.prices[0]);
 		}
 		else {
+
 			callback('Unexpected price response for ' + symbol);
 		}
 	});
 };
-OandaAdapter.prototype.subscribePrice = function (accountId, symbol, listener, context) {
-	var existingSubscriptions = this.getHandlers('price/' + symbol);
-	// Price stream needs an accountId to be passed for streaming prices, though prices for a connection are same anyway
-	if (!this.streamPrices) {
-		this.streamPrices = _.throttle(this._streamPrices.bind(this, accountId));
-	}
-	this.off('price/' + symbol, listener, context);
-	this.on('price/' + symbol, listener, context);
-	if (existingSubscriptions.length === 0) {
-		this.streamPrices();
-	}
+
+OandaAdapter.prototype.subscribePrices = function (accountId, symbols, listener) {
+	symbols.forEach(symbol => {
+		let existingSubscriptions = this.getHandlers('price/' + symbol);
+		// Price stream needs an accountId to be passed for streaming prices, though prices for a connection are same anyway
+		if (!this.streamPrices) {
+			this.streamPrices = throttle(this._streamPrices.bind(this, accountId));
+		}
+		this.off('price/' + symbol, listener);
+		this.on('price/' + symbol, listener);
+
+		if (!existingSubscriptions.length)
+			this.streamPrices();
+	});
+
 };
-OandaAdapter.prototype.unsubscribePrice = function (symbol, listener, context) {
+OandaAdapter.prototype.unsubscribePrices = function (symbol, listener, context) {
 	this.off('price/' + symbol, listener, context);
 	this.streamPrices();
 };
 // Kills rates streaming keep alive request for account and creates a new one whenever subsciption list changes. Should always be throttled.
 OandaAdapter.prototype._streamPrices = function (accountId) {
-	var changed;
+	let changed;
 	this.priceSubscriptions = Object.keys(this.getHandlers()).reduce(function (memo, event) {
-		var match = event.match('^price/(.+)$');
+		let match = event.match('^price/(.+)$');
 		if (match) {
 			memo.push(match[1]);
 		}
@@ -244,7 +255,7 @@ OandaAdapter.prototype._onPricesData = function (data) {
 	// Each always end with /r/n. Whole chunk therefore not JSON parsable, so must split.
 	// A tick may also be split accross data chunks, so must buffer
 	data.toString('ascii').split(/\r\n/).forEach(function (line) {
-		var update;
+		let update;
 		if (line) {
 			this._pricesBuffer.push(line);
 			try {
@@ -457,4 +468,5 @@ OandaAdapter.prototype.kill = function () {
 	}
 	this.off();
 };
-module.exports = OandaAdapter;
+
+export const Adapter = OandaAdapter;

@@ -1,7 +1,8 @@
-import {throttle, cloneDeep} from 'lodash';
+import {throttle} from 'lodash';
+
 import {
 	ElementRef, OnInit, Input, Component, ChangeDetectionStrategy, OnDestroy, NgZone,
-	ViewEncapsulation, AfterViewInit, ViewChild, Output, ChangeDetectorRef, EventEmitter
+	ViewEncapsulation, AfterViewInit, ViewChild, Output, ChangeDetectorRef
 } from '@angular/core';
 
 import {InstrumentsService} from '../../services/instruments.service';
@@ -9,8 +10,6 @@ import {InstrumentModel} from '../../../../shared/models/InstrumentModel';
 
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {CacheService} from '../../services/cache.service';
-
-declare let $: any;
 
 @Component({
 	selector: 'chart',
@@ -22,70 +21,85 @@ declare let $: any;
 })
 
 export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
-	@Input() type = 'stock';
-	@Input() model: InstrumentModel;
-	@Input() height: number;
-	@Input() offset = 0;
-	@Input() chunkLength = 1000;
+	public static readonly DEFAULT_CHUNK_LENGTH = 1000;
 
+	@Input() model: InstrumentModel;
 	@Output() loading$ = new BehaviorSubject(true);
 
-	@ViewChild('chart') chartRef: ElementRef;
-
+	private _offset = 0;
 	private _scrollOffset = -1;
 	private _scrollSpeedStep = 6;
 	private _scrollSpeedMin = 1;
 	private _scrollSpeedMax = 20;
 
 	private _chart: any;
+	private _chartEl: HTMLElement = null;
 	private _onScrollBounced: Function = null;
 
 	constructor(private _zone: NgZone,
 				private _elementRef: ElementRef,
 				private _instrumentsService: InstrumentsService,
-				private _cacheService: CacheService,
-				private _ref: ChangeDetectorRef) {
+				private _cacheService: CacheService) {
 	}
 
 	public async ngOnInit() {
-		// Bouncer func to limit onScroll calls
 		this._onScrollBounced = throttle(this._onScroll.bind(this), 33);
-		// this._onScrollBounced = this._onScroll.bind(this);
+
+		this._chartEl = this._elementRef.nativeElement.shadowRoot.lastElementChild;
+		this._chartEl.addEventListener('mousewheel', <any>this._onScrollBounced);
+
+		this._fetchCandles();
+
+		if (this.model.options.id) {
+			this._fetchIndicators(ChartComponent.DEFAULT_CHUNK_LENGTH, this._offset);
+		} else {
+			let subscription = this.model.changed$.subscribe(() => {
+				if (this.model.options.id) {
+					subscription.unsubscribe();
+					this._fetchIndicators(ChartComponent.DEFAULT_CHUNK_LENGTH, this._offset);
+				}
+			});
+		}
+
+		this._createChart();
 
 		this.model.changed$.subscribe(changes => {
 			for (let key in changes) {
 				if (changes.hasOwnProperty(key)) {
-					switch (key) {
-						case 'zoom':
-							if (this._chart)
-								this._updateViewPort();
-							break;
-						case 'graphType':
-							if (this._chart)
-								// this._chart.series[0].update({
-								// 	type: changes[key]
-								// });
-							break;
-						case 'timeFrame':
-							this.toggleTimeFrame(changes[key]);
-							break;
-						case 'indicator':
-							let change = changes[key];
-							if (change.type === 'add') {
-								let indicator = this.model.options.indicators.find(i => i.id === change.id);
-
-								// this._updateIndicators([indicator]);
-							}
-							break;
-					}
+					// switch (key) {
+					// 	case 'zoom':
+					// 		if (this._chart)
+					// 			this._updateViewPort();
+					// 		break;
+					// 	case 'graphType':
+					// 		if (this._chart)
+					// 			// this._chart.series[0].update({
+					// 			// 	type: changes[key]
+					// 			// });
+					// 		break;
+					// 	case 'timeFrame':
+					// 		this.toggleTimeFrame(changes[key]);
+					// 		break;
+					// 	case 'indicator':
+					// 		let change = changes[key];
+					// 		if (change.type === 'add') {
+					// 			let indicator = this.model.options.indicators.find(i => i.id === change.id);
+					//
+					// 			// this._updateIndicators([indicator]);
+					// 		}
+					// 		break;
+					// }
 				}
 			}
 		});
+
+
 	}
 
 	ngAfterViewInit(): void {
-		this._createChart();
-		this._fetchCandles();
+
+
+
 	}
 
 	public pinToCorner(edges): void {
@@ -107,14 +121,20 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 
 	public reflow() {
-		this._updateViewPort(false);
-
 		if (!this._chart)
 			return;
 
+		this._updateViewPort();
 		this._chart.options.height = this._elementRef.nativeElement.clientHeight;
 		this._chart.options.width = this._elementRef.nativeElement.clientWidth;
+	}
+
+	public render() {
+		if (!this._chart)
+			return;
+
 		this._chart.render();
+		console.log('RENDER CALLED!');
 	}
 
 	public toggleTimeFrame(timeFrame) {
@@ -125,10 +145,10 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	private _createChart() {
 		this._zone.runOutsideAngular(() => {
-			if (this._chart)
-				this._destroyChart();
+			
+			this._destroyChart();
 
-			this._chart = new window['CanvasJS'].Chart(this.chartRef.nativeElement, {
+			this._chart = new window['CanvasJS'].Chart(this._chartEl, {
 				interactivityEnabled: true,
 				exportEnabled: false,
 				animationEnabled: false,
@@ -172,27 +192,11 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 					}
 				]
 			});
-
-			// this._chart.axisX[0].set('interval', 1)
-
-			if (this.model.options.id) {
-				this._fetch(this.chunkLength, this.offset);
-			} else {
-				let subscription = this.model.changed$.subscribe(() => {
-					if (this.model.options.id) {
-						subscription.unsubscribe();
-						this._fetch(this.chunkLength, this.offset);
-					}
-				});
-			}
-
-			this.chartRef.nativeElement.addEventListener('mousewheel', <any>this._onScrollBounced);
 		});
 	}
 
-	private _updateViewPort(redraw = true, shift = 0) {
+	private _updateViewPort(shift = 0) {
 		this._zone.runOutsideAngular(() => {
-
 			if (!this._chart || !this._chart.options.data[0].dataPoints.length)
 				return;
 
@@ -217,47 +221,48 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 				this._chart.options.axisX.viewportMinimum = min.x;
 				this._chart.options.axisX.viewportMaximum = max.x
 			}
-
-			if (redraw)
-				this._chart.render();
 		});
 	}
 
-	private async _fetch(count: number, offset: number) {
-		let data;
+	private _fetchIndicators(count: number, offset: number) {
+		this._zone.runOutsideAngular(async () => {
+			let data;
 
-		if (this.model.options.type === 'backtest') {
-			data = await this._instrumentsService.fetch(this.model, count, offset, undefined, this.model.options.from);
-		}
-		else
-			data = await this._instrumentsService.fetch(this.model, count, offset);
+			if (this.model.options.type === 'backtest')
+				data = await this._instrumentsService.fetch(this.model, count, offset, undefined, this.model.options.from);
+			else
+				data = await this._instrumentsService.fetch(this.model, count, offset);
 
-		if (data.indicators.length)
+			if (!data.indicators.length)
+				return;
+
 			this._updateIndicators(data.indicators);
 
-		// this._updateOrders(orders);
-
-		this._chart.render();
+			// Only render if candles are also present;
+			if (this._chart.options.data[0].dataPoints.length)
+				this.render();
+		});
 	}
 
-	private async _fetchCandles(redraw = true) {
-		try {
-			let candles:any = await this._cacheService.read({
-				symbol: this.model.options.symbol,
-				timeFrame: this.model.options.timeFrame,
-				until: this.model.options.type === 'backtest' ? this.model.options.from :  this.model.options.until,
-				count: this.chunkLength,
-				offset: this.offset
-			});
+	private _fetchCandles() {
+		this._zone.runOutsideAngular(async () => {
+			try {
+				let candles:any = await this._cacheService.read({
+					symbol: this.model.options.symbol,
+					timeFrame: this.model.options.timeFrame,
+					until: this.model.options.type === 'backtest' ? this.model.options.from :  this.model.options.until,
+					count: ChartComponent.DEFAULT_CHUNK_LENGTH,
+					offset: this._offset
+				});
 
-			this.loading$.next(false);
-			this._updateBars(candles);
-		} catch (error) {
-			this.loading$.next(false);
-			console.log('error error error', error);
-		}
-
-		this._chart.render();
+				this.loading$.next(false);
+				this._updateBars(candles);
+				this.render();
+			} catch (error) {
+				this.loading$.next(false);
+				console.log('error error error', error);
+			}
+		});
 	}
 
 	private _updateOrders(orders: Array<any>) {
@@ -266,22 +271,18 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 		});
 	}
 
-	private _updateBars(data: any[] = []) {
+	private _updateBars(rawData: any[] = []): void {
 		this._zone.runOutsideAngular(() => {
-			let {candles, volume} = ChartComponent._prepareData(data),
-				last = candles[candles.length - 1];
+			let data = ChartComponent._prepareData(rawData),
+				last = data.candles[data.candles.length - 1];
 
-			this._chart.options.data[0].dataPoints = candles;
-
-			this._updateViewPort(false);
-
-			// PlotLine cannot be delayed, so to prevent instant re-render from updateViewPort,
-			// Do this after
+			this._chart.options.data[0].dataPoints = data.candles;
 			this._setCurrentPricePlot(last);
+			this._updateViewPort();
 		});
 	}
 
-	private _setCurrentPricePlot(bar) {
+	private _setCurrentPricePlot(bar): void {
 		if (!bar)
 			return;
 
@@ -293,13 +294,10 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	private _updateIndicators(indicators) {
 		this._zone.runOutsideAngular(() => {
-
 			indicators.forEach(indicator => {
 				indicator.buffers.forEach(drawBuffer => {
-					let unique = indicator.id + '_' + drawBuffer.id;
-
 					// New series
-					let series = null // this._chart.get(unique);
+					let series = null; // this._chart.get(unique);
 
 					// Update
 					if (series) {
@@ -381,7 +379,9 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 		else if (shift > this._scrollSpeedMax)
 			shift = this._scrollSpeedMax;
 
-		this._updateViewPort(true, event.wheelDelta > 0 ? -shift : shift);
+		this._updateViewPort(event.wheelDelta > 0 ? -shift : shift);
+
+		this.render();
 
 		return false;
 	}
@@ -394,9 +394,8 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 			candles = new Array(length / rowLength);
 
 		// TODO - Volume
-		for (; i < length; i += rowLength) {
+		for (; i < length; i += rowLength)
 			candles[i / rowLength] = {x: new Date(data[i]), y: [data[i + 1], data[i + 3], data[i + 5], data[i + 7]]};
-		}
 
 		return {
 			candles: candles,
@@ -405,16 +404,12 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 
 	private _destroyChart() {
-
-		// Unbind scroll
-		this._chart.container.removeEventListener('mousewheel', <any>this._onScrollBounced);
-
-		// Destroy chart
-		this._chart.destroy();
-		this._chart = null;
+		if (this._chart)
+			this._chart.destroy();
 	}
 
 	public ngOnDestroy() {
+		this._chartEl.removeEventListener('mousewheel', <any>this._onScrollBounced);
 		this._destroyChart();
 	}
 }

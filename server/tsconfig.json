@@ -18,5 +18,12 @@
       "node_modules/@types"
     ],
     "pretty": true
-  }
+  },
+  "include": [
+    "./**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "shared"
+  ]
 }

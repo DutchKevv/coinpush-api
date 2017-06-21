@@ -1,7 +1,7 @@
 import * as path        from 'path';
 import InstrumentCache  from './InstrumentCache';
-import * as winston        from 'winston-color';
-import OrderManager    from '../../modules/order/OrderManager';
+import {log} 			from '../../../shared/logger';
+import OrderManager    	from '../../modules/order/OrderManager';
 
 const PATH_INDICATORS = path.join(__dirname, '../../../shared/indicators');
 
@@ -35,7 +35,7 @@ export default class Instrument extends InstrumentCache {
 	}
 
 	addIndicator(name, options): any {
-		winston.info('add indicator: ' + name);
+		log.info('Instrument', 'add indicator: ' + name);
 
 		let indicator = null,
 			id = null;
@@ -58,12 +58,12 @@ export default class Instrument extends InstrumentCache {
 	}
 
 	removeIndicator(id) {
-		winston.info('remove indicator: ' + id);
+		log.info('Instrument', 'remove indicator: ' + id);
 		this.indicators.splice(this.indicators.findIndex(indicator => indicator.id === id), 1);
 	}
 
 	removeAllIndicators() {
-		winston.info('remove all indicator: ');
+		log.info('Instrument', 'removing all indicator');
 		this.indicators = [];
 	}
 

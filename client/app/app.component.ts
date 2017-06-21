@@ -1,5 +1,5 @@
 import {ConstantsService} from './services/constants.service';
-import {Component, ChangeDetectionStrategy, ViewEncapsulation, OnInit} from '@angular/core';
+import {Component, ChangeDetectionStrategy, ViewEncapsulation, AfterViewInit} from '@angular/core';
 import {SocketService}  from './services/socket.service';
 import {SystemService}  from './services/system.service';
 import {CacheService} from './services/cache.service';
@@ -18,21 +18,20 @@ import {CacheService} from './services/cache.service';
 	encapsulation: ViewEncapsulation.None
 })
 
-export class AppComponent implements OnInit {
+export class AppComponent implements AfterViewInit {
 
 	constructor(private _cacheService: CacheService,
 				private _constantsService: ConstantsService,
 				private _socketService: SocketService,
 				private _systemService: SystemService) {
-
-		_constantsService.init();
-		_socketService.init();
-		_systemService.init();
-		_cacheService.init();
 	}
 
-	ngOnInit() {
-		// Disable right mouse click
+	ngAfterViewInit() {
 		document.body.addEventListener('contextmenu', e => e.preventDefault(), false);
+
+		this._constantsService.init();
+		this._socketService.init();
+		this._systemService.init();
+		this._cacheService.init();
 	}
 }

@@ -1,9 +1,9 @@
-import * as path    from 'path';
-import {winston}	from '../logger';
-import WorkerHost   from '../classes/worker/WorkerHost';
-import App 			from '../app';
-import {Base} 		from '../../shared/classes/Base';
-import {InstrumentModel} from '../../shared/models/InstrumentModel';
+import * as path    		from 'path';
+import App 					from '../app';
+import WorkerHost   		from '../classes/worker/WorkerHost';
+import {log} 				from '../../shared/logger';
+import {Base} 				from '../../shared/classes/Base';
+import {InstrumentModel} 	from '../../shared/models/InstrumentModel';
 
 const PATH_INSTRUMENT = path.join(__dirname, '..', 'classes', 'instrument', 'Instrument');
 
@@ -29,7 +29,7 @@ export default class InstrumentController extends Base {
 		let groupId = ++this._unique;
 
 		return Promise.all(instruments.map(async options => {
-			winston.info(`Creating instrument ${options.symbol}`);
+			log.info('InstrumentController', `Creating instrument ${options.symbol}`);
 
 			if (!options.symbol) {
 				this.app.debug('error', 'InstrumentController:create - illegal or no symbol name given');
@@ -77,8 +77,6 @@ export default class InstrumentController extends Base {
 	}
 
 	public read(id: string, from: number, until: number, count: number, bufferOnly?: boolean, indicators: any = false) {
-		winston.info(`Reading instrument ${id}`);
-
 		let instrument = this.getById(id);
 
 		if (!instrument)
@@ -178,7 +176,7 @@ export default class InstrumentController extends Base {
 	}
 
 	public destroy(id: string): void {
-		winston.info('destroying - ' + id);
+		log.info('InstrumentController', 'destroying ' + id);
 
 		let instrument = this.getById(id);
 
@@ -199,11 +197,14 @@ export default class InstrumentController extends Base {
 	private _updateInstrumentStatus(id, data): void {
 		let instrument = this.getById(id);
 
-		if (!instrument)
-			return winston.warn(`Received instrument update from unknown worker: ${id}`);
+		if (!instrument) {
+			log.warn('InstrumentController', `Received instrument update from unknown worker ${id}`);
+			return;
+		}
+
 
 		instrument.model.set(data);
-		console.log('ORDERS LENGTH ORDERS LENGTH', instrument.model.options.orders.length);
+
 		this.emit('instrument:status', data);
 	}
 

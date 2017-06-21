@@ -1,10 +1,8 @@
-import * as fs      from 'fs';
 import * as path    from 'path';
-import * as winston	from 'winston-color';
 import {fork}      	from 'child_process';
-import {compile}	from '../compile/Compiler';
-import WorkerHost from '../classes/worker/WorkerHost';
-import {Base} from '../../shared/classes/Base';
+import WorkerHost 	from '../classes/worker/WorkerHost';
+import {Base} 		from '../../shared/classes/Base';
+import {log} 		from '../../shared/logger';
 
 const rmdir = require('rmdir');
 
@@ -61,7 +59,7 @@ export default class EditorController extends Base {
 	}
 
 	private async _initWorker() {
-		winston.info('Loading editor worker');
+		log.info('EditorController', 'Loading editor worker');
 
 		this._worker = new WorkerHost({
 			id: 'editor',
@@ -87,7 +85,7 @@ export default class EditorController extends Base {
 
 			if (result.errors.length) {
 				result.errors.forEach(error => {
-					this.app.debug('error', error.message);
+					this.app.debug('error', 'EDITOR : ' + error.message);
 				})
 
 			} else {

@@ -1,25 +1,26 @@
-import {splitToChunks} from '../../../util/date';
-import * as winston from 'winston-color';
-import * as Stream 	from 'stream';
-import {Base} 		from "../../../../shared/classes/Base";
+import * as Stream 		from 'stream';
+import {Adapter} 		from './lib/OANDAAdapter';
+import {splitToChunks} 	from '../../util/util.date';
+import {log} 			from '../../logger';
+import {Base} 			from "../../classes/Base";
 
-const OANDAAdapter = require('./oanda-adapter/index');
+export default class OandaApi extends Base {
 
-export default class BrokerApi extends Base {
-
-	static FAVORITE_SYMBOLS = [
+	public static readonly FAVORITE_SYMBOLS = [
 		'EUR_USD',
 		'BCO_USD',
 		'NZD_AUD'
 	];
 
+	public static readonly FETCH_CHUNK_LIMIT = 5000;
+	public static readonly WRITE_CHUNK_COUNT = 5000;
 
 	private _client = null;
 
 	public async init() {
 		await super.init();
 
-		this._client = new OANDAAdapter({
+		this._client = new Adapter({
 			// 'live', 'practice' or 'sandbox'
 			environment: this.options.environment,
 			// Generate your API access in the 'Manage API Access' section of 'My Account' on OANDA's website
@@ -33,7 +34,6 @@ export default class BrokerApi extends Base {
 		// TODO: Stupid way to check, and should also check heartbeat
 		try {
 			await this.getAccounts();
-
 			return true;
 		} catch (error) {
 			return false;
@@ -57,12 +57,12 @@ export default class BrokerApi extends Base {
 		}, this);
 	}
 
-	public subscribePriceStream(instrument) {
-		this._client.subscribePrice(this.options.accountId, instrument, tick => this.emit('tick', tick), this);
+	public subscribePriceStream(instruments: Array<string>): void {
+		this._client.subscribePrices(this.options.accountId, instruments, tick => this.emit('tick', tick));
 	}
 
-	public unsubscribePriceStream(instrument) {
-
+	public unsubscribePriceStream(instruments) {
+		this._client.unsubscribePrices(this.options.accountId, instruments, tick => this.emit('tick', tick));
 	}
 
 	public getSymbols(): any {
@@ -82,7 +82,7 @@ export default class BrokerApi extends Base {
 	}
 
 	public getCandles(symbol, timeFrame, from, until, count, onData, onDone) {
-		let countChunks = splitToChunks(timeFrame, from, until, count, 5000);
+		let countChunks = splitToChunks(timeFrame, from, until, count, OandaApi.FETCH_CHUNK_LIMIT);
 		let finished = 0;
 
 		countChunks.forEach(chunk => {
@@ -96,7 +96,7 @@ export default class BrokerApi extends Base {
 			transformStream._transform = function (data, type, done) {
 				if (!this._firstByte) {
 					this._firstByte = true;
-					winston.info(`OANDA: FirstByte of ${symbol} took: ${Date.now() - now} ms`);
+					log.info('OANDA', `: FirstByte of ${symbol} took: ${Date.now() - now} ms`);
 				}
 
 				if (!startFound) {
@@ -119,13 +119,13 @@ export default class BrokerApi extends Base {
 						arr.push(+value);
 				});
 
-				let maxIndex = this._lastPiece ? arr.length : (Math.floor(arr.length / 5000) * 5000),
+				let maxIndex = this._lastPiece ? arr.length : (Math.floor(arr.length / OandaApi.FETCH_CHUNK_LIMIT) * OandaApi.FETCH_CHUNK_LIMIT),
 					buf;
 
 				if (this._lastPiece)
 
-				if (maxIndex === 0)
-					return done();
+					if (maxIndex === 0)
+						return done();
 
 				buf = Buffer.alloc(maxIndex * Float64Array.BYTES_PER_ELEMENT, 0, 'binary');
 
@@ -141,7 +141,8 @@ export default class BrokerApi extends Base {
 				done();
 			};
 
-			transformStream._flush = function(done) {
+			// Make Typescript happy (does not know _flush)
+			(<any>transformStream)._flush = function(done) {
 				this._lastPiece = true;
 				this.push();
 				done();
@@ -161,7 +162,7 @@ export default class BrokerApi extends Base {
 	public getCurrentPrices(symbols: Array<any>): Promise<Array<any>> {
 		return new Promise((resolve, reject) => {
 
-			this._client.getPrice(symbols, (err, prices) => {
+			this._client.getPrices(symbols, (err, prices) => {
 				if (err)
 					return reject(err);
 

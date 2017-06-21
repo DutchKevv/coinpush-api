@@ -1,16 +1,14 @@
-import AccountController from './controllers/AccountController';
 require('source-map-support').install({handleUncaughtExceptions: true});
-import './util/more-info-console';
 
-// import Socket = SocketIO.Socket;
-
-import * as io              from '../shared/node_modules/socket.io';
 import * as http            from 'http';
 import {json, urlencoded}   from 'body-parser';
 import * as path            from 'path';
 import * as freePort        from 'freeport';
+import * as express     	from 'express';
+import * as io              from 'socket.io';
 
 import IPC                  from './classes/ipc/IPC';
+import AccountController 	from './controllers/AccountController';
 import CacheController      from './controllers/CacheController';
 import SystemController     from './controllers/SystemController';
 import InstrumentController from './controllers/InstrumentController';
@@ -18,12 +16,9 @@ import EditorController     from './controllers/EditorController';
 import ConfigController     from './controllers/ConfigController';
 import BrokerController     from './controllers/BrokerController';
 import BacktestController 	from './controllers/BacktestController';
-import {winston} 			from './logger';
+import {log} 				from '../shared/logger';
 import {Base} 				from '../shared/classes/Base';
-import {InstrumentSettings} from '../shared/interfaces/InstrumentSettings';
-import {InstrumentModel} from '../shared/models/InstrumentModel';
-
-const express: any = require('express');
+import {InstrumentModel} 	from '../shared/models/InstrumentModel';
 
 const
 	DEFAULT_TIMEZONE = 'America/New_York',
@@ -86,10 +81,6 @@ export default class App extends Base {
 		return this._ipc;
 	}
 
-	public get io() {
-		return this._io;
-	}
-
 	private _ipc: IPC = null;
 	private _http: any = null;
 	private _io: any = null;
@@ -100,10 +91,14 @@ export default class App extends Base {
 	private _debugLastMessage = null;
 	private _debugMessageRepeat = 0;
 
-	public async init(): Promise<any> {
+	constructor(options?) {
+		super(options);
 
 		// Make sure the app can be cleaned up on termination
 		this._setProcessListeners();
+	}
+
+	public async init(): Promise<any> {
 
 		// Initialize ConfigController first so other controllers can use config
 		this.controllers.config = new ConfigController(this.options, this);
@@ -128,9 +123,6 @@ export default class App extends Base {
 		this.controllers.instrument = new InstrumentController({}, this);
 		this.controllers.backtest = new BacktestController({}, this);
 
-		// Start public API so client can follow booting process
-		await this._initAPI();
-
 		// Initialize controllers
 		await this.controllers.system.init();
 		await this.controllers.broker.init();
@@ -141,23 +133,26 @@ export default class App extends Base {
 
 		await this.controllers.broker.loadBrokerApi('oanda');
 
-		this.controllers.system.update({booting: false});
-
 		this._setDebugBufferFlushInterval();
+
+		await this._initAPI();
+
+		this.controllers.system.update({booting: false});
 
 		this.emit('app:ready');
 	}
 
 	public debug(type: string, text: string, data?: Object, socket?): void {
 		if (type === 'error')
-			winston.warn('ERROR', text);
+			log.error('App', text);
 
-		let lastMessage = this._debugBuffer[this._debugBuffer.length - 1];
+		let lastMessage = this._debugLastMessage;
 
 		if (lastMessage && lastMessage.type === type && lastMessage.text === text) {
 			lastMessage.count = (lastMessage.count || 0) + 1;
 		} else {
-			this._debugBuffer.push({type, text, data});
+			this._debugLastMessage = {type, text, data};
+			this._debugBuffer.push(this._debugLastMessage);
 		}
 	}
 
@@ -185,9 +180,8 @@ export default class App extends Base {
 	 * @private
 	 */
 	private _initAPI(): Promise<any> {
-
 		return new Promise((resolve, reject) => {
-			winston.info('Starting API');
+			log.info('App', 'API Starting');
 
 			let port = this.controllers.config.get().system.port;
 
@@ -217,24 +211,26 @@ export default class App extends Base {
 
 			// Application routes (WebSockets)
 			this._io.on('connection', socket => {
-				winston.info('a websocket connected');
+				log.info('App', `connection from ${socket.handshake.headers.origin}`);
 
 				require('./api/socket/system')(this, socket);
-				require('./api/socket/cache')(this, socket);
 				require('./api/socket/editor')(this, socket);
 				require('./api/socket/backtest')(this, socket);
 				require('./api/socket/instrument')(this, socket);
 
+				// TODO: Should not be required, client should ask for status
 				socket.emit('system:state', this.controllers.system.state);
 
 				this.debug('info', 'Connected to server');
 			});
 
 			this._http.listen(port, () => {
-				// Angular DEV-Server : localhost:4200 \n\n
+
+
 				console.log(`\n
-	${process.env.NODE_ENV === 'production' ? '' : 'Angular DEV-Server : localhost:4200 \n\n'}
-	R.E.S.T. API       : localhost:${port} \n
+	App      : 127.0.0.1:${port}
+	Cache    : 127.0.0.1:3001
+	${process.env.NODE_ENV === 'production' ? '' : 'Angular  : 127.0.0.1:4200'}
 				`);
 
 				this.debug('info', 'Public API started');
@@ -245,9 +241,9 @@ export default class App extends Base {
 			/**
 			 * Server events
 			 */
-			this.controllers.cache.on('ticks', ticks => {
-				this._io.sockets.emit('ticks', ticks);
-			});
+			// this.controllers.cache.on('ticks', ticks => {
+			// 	this._io.sockets.emit('ticks', ticks);
+			// });
 
 			this.controllers.instrument.on('instrument:status', status => {
 				this._io.sockets.emit('instrument:status', status);
@@ -298,13 +294,19 @@ export default class App extends Base {
 
 	private _setProcessListeners() {
 
-		const processExitHandler = (error?) => {
-			console.error('Main exiting: ', error);
-			this.destroy();
-			process.exit(1);
+		const processExitHandler = (code?) => {
+			console.log('Main exiting: ', code);
+			try {
+				this.destroy();
+				process.exit(0);
+			} catch (error) {
+				console.error(error);
+				process.exit(1);
+			}
 		};
 
 		process.on('SIGTERM', processExitHandler);
+		process.on('SIGKILL', processExitHandler);
 		process.on('SIGINT', processExitHandler);
 		process.on('unhandledRejection', processExitHandler);
 	}
@@ -315,7 +317,7 @@ export default class App extends Base {
 	}
 
 	destroy(): void {
-		winston.info('Shutting down and cleaning up child processes');
+		log.info('App', 'Shutting down and cleaning up child processes');
 		this.debug('warning', 'Shutting down server');
 
 		this._killAllChildProcesses();

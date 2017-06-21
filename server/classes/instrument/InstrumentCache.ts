@@ -1,7 +1,7 @@
-import WorkerChild 	from '../worker/WorkerChild';
-import CacheMapper 	from '../cache/CacheMap';
-import * as winston	from 'winston-color';
-import {InstrumentModel} from '../../../shared/models/InstrumentModel';
+import WorkerChild 			from '../worker/WorkerChild';
+import CacheMapper 			from '../../../shared/classes/cache/CacheMap';
+import {log} 				from '../../../shared/logger';
+import {InstrumentModel} 	from '../../../shared/models/InstrumentModel';
 
 export default class InstrumentCache extends WorkerChild {
 
@@ -142,7 +142,7 @@ export default class InstrumentCache extends WorkerChild {
 	}
 
 	// TODO: on destroy graceful
-	protected async onDestroy() {
+	public async onDestroy() {
 		await this._toggleNewTickListener(false);
 	}
 }

@@ -1,12 +1,11 @@
-import * as winston	from 'winston-color';
-import App from '../app';
-import {IBacktestSettings} from '../../shared/interfaces/BacktestSettings';
-import {Base} from '../../shared/classes/Base';
+import App 					from '../app';
+import {IBacktestSettings} 	from '../../shared/interfaces/BacktestSettings';
+import {Base} 				from '../../shared/classes/Base';
+import {log} 				from '../../shared/logger';
 
 export default class BacktestController extends Base {
 
 	private _backtests: Array<any> = [];
-	private _unique = 0;
 
 	constructor(__options, protected app: App) {
 		super(__options);
@@ -15,7 +14,7 @@ export default class BacktestController extends Base {
 	public async init() {}
 
 	public async create(data: IBacktestSettings): Promise<any> {
-		// winston.info(`Creating backtest`);
+		// log.info(`Creating backtest`);
 		//
 		// data = {
 		// 	id: this._unique++,
@@ -46,7 +45,7 @@ export default class BacktestController extends Base {
 	}
 
 	public run(id) {
-		winston.info(`Running backtest with id: ${id}`);
+		log.info('BacktestController', `Running backtest with id: ${id}`);
 
 		let backtest = this.getById(id);
 		backtest.run();

@@ -1,7 +1,8 @@
 export interface AccountSettings {
-	broker: string,
 	id: number,
+	accountId: number,
+	broker: string,
 	environment: string,
-	username: string | number,
-	token: string | number
+	username: string|number,
+	token: string|number
 }

@@ -1,5 +1,7 @@
-import App from '../app';
-import {Base} from '../../shared/classes/Base';
+import App 					from '../app';
+import {Base} 				from '../../shared/classes/Base';
+import {AccountSettings} 	from '../../shared/interfaces/AccountSettings';
+import {log} 				from '../../shared/logger';
 
 export default class AccountController extends Base {
 
@@ -35,9 +37,11 @@ export default class AccountController extends Base {
 
 	private async _load() {
 		try {
-			this._accounts = await this.app.controllers.broker.getAccounts();
+			this._accounts = await this.app.controllers.broker.broker.getAccounts();
 		} catch (error) {
-
+			log.error('AccountController', error);
 		}
 	}
+
+
 }

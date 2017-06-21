@@ -102,7 +102,7 @@ export class InstrumentsService {
 		this.instruments$.next(this._instruments);
 
 		if (setFocus && this._instruments.length)
-			this.setFocus(instrumentModels[instrumentModels.length - 1]);
+			this.setFocus(this._instruments[this._instruments.length - 1]);
 
 		return instrumentModels
 	}
@@ -136,9 +136,8 @@ export class InstrumentsService {
 		this._instruments.splice(this._instruments.indexOf(model), 1);
 		this.instruments$.next(this._instruments);
 
-		if (this.instruments.length) {
-			this.setFocus(this.instruments[this.instruments.length - 1]);
-		}
+		if (this._instruments.length)
+			this.setFocus(this._instruments[this._instruments.length - 1]);
 
 		return this._destroyOnServer(model);
 	}

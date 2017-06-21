@@ -24,5 +24,6 @@
   ],
   "scripts": {
     "postinstall": "cd server && npm i"
-  }
+  },
+  "dependencies": {}
 }

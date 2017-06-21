@@ -113,8 +113,9 @@ module.exports = {
 		// new webpack.ContextReplacementPlugin(/ace/, /^$/)
 	],
 	externals: {
-		'fs': '""',
-		'path': '""',
-		'electron': '""'
+		fs: '""',
+		path: '""',
+		electron: '""',
+		stream: '""'
 	}
 };

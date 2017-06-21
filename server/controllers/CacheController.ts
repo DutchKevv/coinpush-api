@@ -5,17 +5,17 @@ import {Base} from '../../shared/classes/Base';
 
 export default class CacheController extends Base {
 
-	private _worker: WorkerHost = null;
-	private _symbolList: Array<any> = [];
+	public static readonly WORKER_ID = 'cache';
 
-	constructor(protected __options, protected app: App) {
-		super(__options);
+	private _worker: WorkerHost = null;
+
+	constructor(options, protected app: App) {
+		super(options);
 	}
 
 	public async init() {
-
 		this._worker = new WorkerHost({
-			id: 'cache',
+			id: CacheController.WORKER_ID,
 			ipc: this.app.ipc,
 			path: path.join(__dirname, '../classes/cache/Cache.js'),
 			classArguments: {
@@ -24,45 +24,13 @@ export default class CacheController extends Base {
 		});
 
 		await this._worker.init();
-
-		this._worker.ipc.on('ticks', ticks => this.emit('ticks', ticks));
-	}
-
-	public read(symbol, timeFrame, from, until, bufferOnly) {
-
-		return this
-			._worker
-			.send('read', {
-				symbol: symbol,
-				timeFrame: timeFrame,
-				from: from,
-				until: until,
-				bufferOnly: bufferOnly
-			});
-	}
-
-	public fetch(symbol: string, timeFrame: string, from: number, until: number) {
-		return this
-			._worker
-			.send('fetch', {
-				symbol: symbol,
-				timeFrame: timeFrame,
-				from: from,
-				until: until
-			});
 	}
 
 	public reset() {
-		return this
-			._worker
-			.send('@reset');
+		return this._worker.send('@reset');
 	}
 
-	public getSymbolList() {
-		return this._worker.send('symbol:list');
-	}
-
-	public async updateSettings(settings) {
+	public async updateBrokerSettings(settings) {
 		return this._worker.send('broker:settings', settings, true);
 	}
 

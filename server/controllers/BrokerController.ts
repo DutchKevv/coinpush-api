@@ -1,73 +1,65 @@
 import * as path    from 'path';
-import * as winston	from 'winston-color';
-import {Base} from '../../shared/classes/Base';
+import {log} 		from '../../shared/logger';
+import {Base} 		from '../../shared/classes/Base';
+
+const
+	DEFAULT_PATH_BROKERS = path.join(__dirname, '..', '..', 'shared', 'brokers');
 
 export default class BrokerController extends Base {
 
-	public connected = false;
-	public broker = 'oanda';
+	public get broker() {
+		return this._broker;
+	}
 
-	private _ready = false;
-	private _brokerApi: any;
+	private _broker: any;
 
 	constructor(protected __options, protected app) {
 		super(__options);
 	}
 
-	public async init(): Promise<void> {}
-
 	public async loadBrokerApi(apiName: string): Promise<boolean> {
-		if (this.connected)
-			await this.disconnect();
+		await this.disconnect();
 
 		try {
-			// Clean up node cached version
-			let filePath = path.join(__dirname, '..', 'classes', 'broker-api', apiName, apiName),
+			let filePath = path.join(DEFAULT_PATH_BROKERS, apiName, 'index'),
 				accountConfig = this.app.controllers.config.get().account,
 				BrokerApi, connected;
 
+			// Clean up node cached version
 			delete require.cache[path.resolve(filePath)];
-
-			// Load the new BrokerApi
 			BrokerApi = require(filePath).default;
-			this._brokerApi = new BrokerApi(accountConfig);
-			await this._brokerApi.init();
 
-			if (await this._brokerApi.testConnection()) {
-				await this.app.controllers.cache.updateSettings(accountConfig);
-				await this.app.controllers.system.update({connected: true});
+			this._broker = new BrokerApi(accountConfig);
+			this._broker.on('error', error => log.error('BrokerController', error));
 
-				this.connected = true;
-				this.emit('connected');
-			}
+			await this._broker.init();
+
+			await this._broker.testConnection();
+			await this.app.controllers.cache.updateBrokerSettings(accountConfig);
+
+			this.app.controllers.system.update({connected: true});
+
+			return true;
 		} catch (error) {
-			console.warn('Error creating broker API \n\n', error);
+			log.error('BrokerController', error);
+			await this.disconnect();
+			return false;
 		}
-
-		return this.connected;
-	}
-
-	public getAccounts(): Promise<Array<any>> {
-		if (this._ready)
-			return this._brokerApi.getAccounts();
 	}
 
 	async disconnect(): Promise<void> {
-		this.connected = false;
-
 		this.app.controllers.system.update({connected: false});
 
-		if (this._brokerApi) {
+		if (this._broker) {
 			try {
-				await this._brokerApi.destroy();
-				this._brokerApi = null;
+				await Promise.all([this._broker.destroy(), this.app.controllers.cache.updateBrokerSettings({})]);
 			} catch (error) {
-				console.log(error);
+				log.error('BrokerController', error);
 			}
+
+			this._broker = null;
 		}
 
-		winston.info('Broker Disconnected');
-
-		this.emit('disconnected');
+		log.info('BrokerController', 'Disconnected');
 	}
 }

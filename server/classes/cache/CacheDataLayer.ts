@@ -1,7 +1,6 @@
 import * as fs          from 'fs';
-import * as winston     from 'winston-color';
-import * as moment 		from '../../../shared/node_modules/moment';
-import {timeFrameSteps} from '../../util/date';
+import {log} 			from '../../../shared/logger';
+import {timeFrameSteps} from '../../../shared/util/util.date';
 import * as sqLite		from 'sqlite3';
 
 export default class CacheDataLayer {
@@ -32,8 +31,6 @@ export default class CacheDataLayer {
 
 			let tableName = this._getTableName(symbol, timeFrame),
 				queryString;
-
-			winston.info(`DataLayer: Read ${tableName} from ${from} until ${until} count ${count}`);
 
 			queryString = `SELECT data FROM ${tableName} `;
 
@@ -109,7 +106,7 @@ export default class CacheDataLayer {
 					let _from = buffer.readDoubleLE(0),
 						_until = buffer.readDoubleLE(buffer.length - (10 * Float64Array.BYTES_PER_ELEMENT));
 
-					winston.info(`DataLayer: Wrote ${buffer.length / rowLength} candles from ${_from} until ${_until} to ${tableName} took ${Date.now() - now}  ms`);
+					log.info('DataLayer', `Wrote ${buffer.length / rowLength} candles from ${_from} until ${_until} to ${tableName} took ${Date.now() - now}  ms`);
 					resolve();
 				});
 			});
@@ -120,7 +117,7 @@ export default class CacheDataLayer {
 		return new Promise((resolve, reject) => {
 			let timeFrames = Object.keys(timeFrameSteps);
 
-			winston.info('DataLayer: Creating ' + symbols.length * timeFrames.length + ' tables');
+			log.info('DataLayer', 'Creating ' + symbols.length * timeFrames.length + ' tables');
 
 			if (symbols.length) {
 				this._db.serialize(() => {

@@ -1,7 +1,7 @@
-import Instrument from '../instrument/Instrument';
-import OrderManager from '../../modules/order/OrderManager';
-import AccountManager from '../../modules/account/AccountManager';
-import {winston} from '../../logger';
+import Instrument 		from '../instrument/Instrument';
+import OrderManager 	from '../../modules/order/OrderManager';
+import AccountManager 	from '../../modules/account/AccountManager';
+import {log} 			from '../../../shared/logger';
 
 export interface IEA {
 	orderManager: OrderManager;
@@ -82,7 +82,7 @@ export default class EA extends Instrument implements IEA {
 	}
 
 	async runBackTest(): Promise<any> {
-		winston.info(`EA -> ${this.id} : Starting Backtest`);
+		log.info('EA', `${this.id} : Starting Backtest`);
 
 		let count = 1000,
 			lastTime, lastBatch = false,
@@ -118,7 +118,7 @@ export default class EA extends Instrument implements IEA {
 
 			// There is no more data, so stop
 			if (!candles || !candles.length) {
-				winston.warn('Empty buffer received from read!', from, until);
+				log.warn('EA', `Empty buffer received from read! ${from} ${until}`);
 				break;
 			}
 
@@ -175,7 +175,7 @@ export default class EA extends Instrument implements IEA {
 	private _emitProgressReport() {
 		this.updateTicksPerSecond();
 		this.model.options.status.progress = (((this.time - this.options.from) / (this.options.until - this.options.from)) * 100).toFixed(2);
-		console.log(this.model.options.status.equality);
+		// console.log(this.model.options.status.equality);
 		this.ipc.send('main', 'instrument:status', {
 			id: this.id,
 			orders: this.orderManager.findByDateRange(this._lastReportTime, this.time),

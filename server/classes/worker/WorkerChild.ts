@@ -5,7 +5,7 @@ require('source-map-support').install({
 import * as minimist    from 'minimist';
 import IPC              from '../ipc/IPC';
 import {Base} 			from '../../../shared/classes/Base';
-import {winston}		from '../../logger';
+import {log} 			from '../../../shared/logger';
 
 export interface WorkerOptions {
 	id: string;
@@ -50,7 +50,7 @@ export default class WorkerChild extends Base {
 				id = settings.workerOptions.id,
 
 				exitHandler = (code = 0) => {
-					winston.info(`${id} exiting: ${code || 'ok'}`);
+					log.info('WorkerChild', `${id} : exiting ${code}`);
 					process.exit(code);
 				};
 

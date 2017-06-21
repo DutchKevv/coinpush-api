@@ -1,16 +1,13 @@
-import {winston} from '../../logger';
-import {Base} from '../../../shared/classes/Base';
+import * as NodeIPC from 'node-ipc';
+import {log} 		from '../../../shared/logger';
+import {Base} 		from '../../../shared/classes/Base';
 
-declare var clearTimeout: any;
-declare var window: any;
+declare let clearTimeout: any;
+declare let window: any;
 
 export default class IPC extends Base {
 
-	id: string | number;
-	env: string;
-
 	private _server = null;
-	private _client = null;
 	private _unique = 0;
 	private _ipc: any = null;
 	private _acks: any = {};
@@ -18,38 +15,7 @@ export default class IPC extends Base {
 	public async init() {
 		await super.init();
 
-		this.id = this.options.id;
-		this.env = this._getEnvironment();
-
-		if (this.env === 'node')
-			return this._setConfigNode();
-	}
-
-	/**
-	 *
-	 * @returns {Promise}
-	 */
-	startServer() {
-		winston.info(`${this.id} is starting IPC server`);
-
-		if (this.env === 'node') {
-			return this._startServerNode();
-		}
-	}
-
-	/**
-	 *
-	 * @param workerId {string}
-	 * @returns {Promise}
-	 */
-	connectTo(workerId) {
-		winston.info(`${this.id} connecting to ${workerId}`);
-
-		if (this.env === 'node') {
-			return this._connectToNode(workerId);
-		} else {
-
-		}
+		this._setConfig();
 	}
 
 	send(workerId: string | number, eventName: string, data: any, waitForCallback = true): Promise<any> {
@@ -69,7 +35,7 @@ export default class IPC extends Base {
 
 				// Set a new callback listener
 				if (waitForCallback === true) {
-					let ack = meta.ack = <number>this.id + ++this._unique;
+					let ack = meta.ack = <number>this.options.id + ++this._unique;
 
 					let t = setTimeout(() => {
 							delete this._acks[ack];
@@ -136,11 +102,9 @@ export default class IPC extends Base {
 	 *
 	 * @private
 	 */
-	_setConfigNode() {
-
-		this._ipc = require('node-ipc');
-
-		this._ipc.config.id = this.id;
+	_setConfig() {
+		this._ipc = new NodeIPC.IPC();
+		this._ipc.config.id = this.options.id;
 		// this._ipc.config.appspace = this.options.space;
 		this._ipc.config.retry = 200;
 		this._ipc.config.maxRetries = 10;
@@ -155,14 +119,13 @@ export default class IPC extends Base {
 	 * @returns {Promise}
 	 * @private
 	 */
-	_startServerNode(): Promise<any> {
+	startServer(): Promise<any> {
 		return new Promise((resolve) => {
+			log.info('IPC', `${this.options.id} Starting server`);
+			
+			this._server = new NodeIPC.IPC();
 
-			let ipc = require('node-ipc');
-
-			this._server = new ipc.IPC();
-
-			this._server.config.id = this.id;
+			this._server.config.id = this.options.id;
 			// this._ipc.config.appspace = this.options.space;
 			this._server.config.retry = 200;
 			this._server.config.maxRetries = 10;
@@ -205,7 +168,7 @@ export default class IPC extends Base {
 	 * @returns {Promise}
 	 * @private
 	 */
-	_connectToNode(workerId) {
+	connectTo(workerId) {
 
 		return new Promise((resolve, reject) => {
 
@@ -213,19 +176,19 @@ export default class IPC extends Base {
 				let socket = this._ipc.of[workerId];
 
 				socket.on('connect', async () => {
-					await this.send(workerId, '__IPC_REGISTER__', {id: this.id});
+					await this.send(workerId, '__IPC_REGISTER__', {id: this.options.id});
 
-					winston.info(`${this.id} connected to ${workerId}`);
+					log.info('IPC', `${this.options.id} connected to ${workerId}`);
 
 					resolve();
 				});
 
 				socket.on('disconnect', () => {
-					winston.info(`${this.id} disconnected from ${workerId}`);
+					log.info('IPC', `${this.options.id} disconnected from ${workerId}`);
 				});
 
 				socket.on('error', err => {
-					console.error(`Error between ${this.id} and ${workerId}: `, err);
+					console.error('IPC', `Error between ${this.options.id} and ${workerId}: `, err);
 					// console.log(socket);
 				});
 
@@ -236,7 +199,7 @@ export default class IPC extends Base {
 		});
 	}
 
-	_registerNode(id, socket) {
+	_register(id, socket) {
 		socket.id = id;
 
 		// node-ipc module hack
@@ -284,7 +247,7 @@ export default class IPC extends Base {
 
 			if (meta.eventName === '__IPC_REGISTER__') {
 				if (!this._acks[meta.ack]) {
-					this._registerNode(content.id, socket);
+					this._register(content.id, socket);
 					this.send(socket.id, meta.eventName, '', meta.ack).catch(console.error);
 				} else {
 					this._acks[meta.ack](null, socket);
@@ -313,14 +276,5 @@ export default class IPC extends Base {
 
 			this.emit(meta.eventName, content, cb, socket)
 		}
-	}
-
-	/**
-	 *
-	 * @returns {string}
-	 * @private
-	 */
-	_getEnvironment() {
-		return typeof window === 'undefined' ? 'node' : 'browser';
 	}
 }

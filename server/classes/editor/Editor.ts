@@ -1,12 +1,12 @@
-import WorkerChild from '../worker/WorkerChild';
 import * as fs      from 'fs';
 import * as watch 	from 'watch';
 import * as path 	from 'path';
-import * as winston from 'winston-color';
 import * as ts 		from 'typescript';
 import * as mkdirp  from 'mkdirp';
-import * as dirTree  from 'directory-tree';
+import * as dirTree from 'directory-tree';
 import * as rmdir  	from 'rmdir';
+import WorkerChild 	from '../worker/WorkerChild';
+import {log} 		from '../../../shared/logger';
 
 export default class Editor extends WorkerChild {
 
@@ -64,7 +64,7 @@ export default class Editor extends WorkerChild {
 
 	public loadFile(filePath) {
 		return new Promise((resolve, reject) => {
-			winston.info(`Loading ${filePath}`);
+			log.info('Editor', `Loading ${filePath}`);
 
 			if (typeof filePath !== 'string')
 				return reject('No filePath given');
@@ -81,7 +81,7 @@ export default class Editor extends WorkerChild {
 
 	public async save(filePath, content) {
 		return new Promise((resolve, reject) => {
-			winston.info('save: ' + filePath);
+			log.info('Editor', 'save ' + filePath);
 
 			filePath = this._getFullPath(filePath);
 
@@ -95,7 +95,7 @@ export default class Editor extends WorkerChild {
 
 	public rename(filePath, name) {
 		return new Promise((resolve, reject) => {
-			winston.info('rename: ' + filePath + ' to: ' + name);
+			log.info('Editor', 'rename: ' + filePath + ' to: ' + name);
 
 			if (!this._isValidFileName(name))
 				return reject('Invalid file name');
@@ -118,7 +118,7 @@ export default class Editor extends WorkerChild {
 
 	public delete(filePath) {
 		return new Promise((resolve, reject) => {
-			winston.info('delete: ' + filePath);
+			log.info('Editor', 'delete: ' + filePath);
 
 			filePath = this._getFullPath(filePath);
 
@@ -136,7 +136,7 @@ export default class Editor extends WorkerChild {
 
 	public createFile(parent: string, name: string, content = '') {
 		return new Promise(async (resolve, reject) => {
-			winston.info('Create file: ' + name);
+			log.info('Editor', 'Create file: ' + name);
 
 			if (typeof parent !== 'string')
 				return reject('No parent directory given');
@@ -165,7 +165,7 @@ export default class Editor extends WorkerChild {
 	public createDirectory(parent: string, name: string) {
 
 		return new Promise(async (resolve, reject) => {
-			winston.info('Create directory: ' + name);
+			log.info('Editor', 'Create directory: ' + name);
 
 			if (typeof parent !== 'string')
 				return reject('No parent directory given');
@@ -204,19 +204,19 @@ export default class Editor extends WorkerChild {
 				// console.log('asdasdasd', fileNames);
 				this.emit('change');
 			} else if (prev === null) {
-				winston.info('file:new', fileNames);
+				log.info('file:new', fileNames);
 				this.emit('change');
 				this.compile(fileNames);
 				// f is a new file
 			} else if (curr.nlink === 0) {
-				winston.info('file:removed', fileNames);
+				log.info('file:removed', fileNames);
 				this.emit('change');
 				this.compile(fileNames);
 
 				// await this._compile(this._getCustomAbsoluteRootFolder(fileNames), this._getBuildAbsoluteRootFolder(fileNames));
 				// f was removed
 			} else {
-				winston.info('file:changed', fileNames);
+				log.info('file:changed', fileNames);
 				this.emit('change');
 				this.compile(fileNames);
 
@@ -276,7 +276,7 @@ export default class Editor extends WorkerChild {
 			try {
 				cb(null, await this.loadFile(data.id));
 			} catch (error) {
-				console.error(error);
+				log.error('Editor', error);
 				cb(error);
 			}
 		});
@@ -285,7 +285,7 @@ export default class Editor extends WorkerChild {
 			try {
 				cb(null, await this.save(data.id, data.content));
 			} catch (error) {
-				console.error(error);
+				log.error('Editor', error);
 				cb(error);
 			}
 		});
@@ -303,7 +303,7 @@ export default class Editor extends WorkerChild {
 			try {
 				cb(null, await this.delete(data.id));
 			} catch (error) {
-				console.error(error);
+				log.error('Editor', error);
 				cb(error);
 			}
 		});
@@ -312,7 +312,7 @@ export default class Editor extends WorkerChild {
 			try {
 				cb(null, await this.rename(data.id, data.name));
 			} catch (error) {
-				console.error(error);
+				log.error('Editor', error);
 				cb(error);
 			}
 		});
@@ -329,14 +329,14 @@ export default class Editor extends WorkerChild {
 			try {
 				cb(null, await this.createDirectory(data.id, data.name));
 			} catch (error) {
-				console.error(error);
+				log.error('Editor', error);
 				cb(error);
 			}
 		});
 	}
 
 	private _loadDirectoryTreeSync() {
-		winston.info('Load directory tree');
+		log.info('Editor', 'Load directory tree');
 
 		let tree = dirTree(this.options.rootPath);
 
