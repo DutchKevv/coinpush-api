@@ -83,6 +83,10 @@ export default class WorkerChild extends Base {
 			});
 		}
 	}
+
+	public onDestroy() {
+		super.onDestroy();
+	}
 }
 
 // In case its running as worker

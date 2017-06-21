@@ -1,16 +1,15 @@
 import {
-	Component, AfterViewInit, Input, Output, OnInit, PipeTransform, Pipe,
-	ChangeDetectionStrategy, NgZone, ElementRef, ViewEncapsulation, OnChanges, EventEmitter
+	Component, AfterViewInit, Input, OnInit, PipeTransform, Pipe, ElementRef, ViewEncapsulation, OnChanges
 } from '@angular/core';
 import {InstrumentModel} from '../../../../shared/models/InstrumentModel';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {InstrumentsService} from '../../services/instruments.service';
-import {SocketService} from '../../services/socket.service';
 
 @Pipe({name: 'groupIds'})
 export class GroupIdsPipe implements PipeTransform {
 	transform(value: Array<InstrumentModel>, field: string): Array<any> {
-		return [...new Set(value.map(val => val.options.groupId))];
+		// alert(JSON.stringify([...new Set(value.filter(val => val.options.type === 'backtest').map(val => val.options.groupId))]));
+
+		return [...new Set(value.filter(val => val.options.type === 'backtest').map(val => val.options.groupId))];
 	}
 }
 
@@ -19,7 +18,7 @@ export class GroupIdsPipe implements PipeTransform {
 	templateUrl: './backtest.component.html',
 	styleUrls: ['./backtest.component.scss'],
 	encapsulation: ViewEncapsulation.Native,
-	changeDetection: ChangeDetectionStrategy.OnPush
+	// changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class BacktestComponent implements AfterViewInit, OnInit, OnChanges {
@@ -40,7 +39,10 @@ export class BacktestComponent implements AfterViewInit, OnInit, OnChanges {
 			this.updateModels();
 			this.activateHighest();
 		});
-		this.instrumentService.changed$.subscribe(() => this._updateMainProgressBar());
+
+		this.instrumentService.changed$.subscribe(() => {
+			this._updateMainProgressBar();
+		});
 	}
 
 	ngOnChanges(){

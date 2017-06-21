@@ -30,7 +30,6 @@ declare let $: any;
 export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	@Input() model: InstrumentModel;
-	@Input() focus = true;
 	@Input() viewState = 'windowed';
 	@Input() minimized = false;
 	@Output() onBeforeResize: Subject<string> = new Subject();
@@ -55,18 +54,18 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	ngOnInit() {
 		this.$el = $(this._elementRef.nativeElement);
+		this.toggleViewState(this.viewState, false);
 
 		if (this.viewState === 'windowed')
 			this.restorePosition();
-
-		this.toggleViewState(this.viewState, false);
+		else {
+			this.putOnTop();
+		}
 	}
 
 	ngAfterViewInit() {
 		this._bindResize();
 		this._bindDrag();
-
-		this.putOnTop();
 
 		this.model.changed$.subscribe((changes: any) => {
 			if (typeof changes.focus !== 'undefined' && changes.focus === true) {
@@ -119,7 +118,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	public setSize(width: number | string, height: number | string): void {
 		this.$el.width(width).height(height);
-
 		this.chartComponent.reflow();
 	}
 
@@ -132,21 +130,24 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 		};
 	}
 
-	public setPosition(y: number | string, x: number | string): void {
+	public setPosition(x: number | string, y: number | string): void {
 		this._elementRef.nativeElement.style.transform = `translate(${x}px, ${y}px)`;
 		this._elementRef.nativeElement.setAttribute('data-x', x);
 		this._elementRef.nativeElement.setAttribute('data-y', y);
+
+		this.storePosition();
 	}
 
 	public storePosition() {
-		this._cookieService.putObject(`instrument-${this.model.options.id}-p`, this.getPosition())
+		if (this.model.options.id)
+			this._cookieService.putObject(`instrument-${this.model.options.id}-p`, this.getPosition())
 	}
 
 	public restorePosition(position?: any): void {
-		position = position || <any>this._cookieService.getObject(`instrument-${this.model.options.id}`);
+		position = position || <any>this._cookieService.getObject(`instrument-${this.model.options.id}-p`);
 
 		if (position) {
-			this.setPosition(position.y, position.x);
+			this.setPosition(position.x, position.y);
 			this.setSize(position.w, position.h);
 		}
 		else {
@@ -178,12 +179,14 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	private _getRandomPosition() {
 		let el = this._elementRef.nativeElement,
-			containerH = el.parentNode.clientHeight,
-			containerW = el.parentNode.clientWidth,
+			containerH = el.parentElement.clientHeight,
+			containerW = el.parentElement.clientWidth,
 			chartH = el.clientHeight,
 			chartW = el.clientWidth;
 
-		return [Math.max(random(0, containerH - chartH), 0), random(0, containerW - chartW)];
+		console.log('asdfsdaf', containerH, containerW, chartH, chartW);
+
+		return [random(0, containerW - chartW), Math.max(random(0, containerH - chartH), 0)];
 	}
 
 	private _bindDrag() {

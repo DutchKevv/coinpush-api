@@ -9,7 +9,6 @@ import * as http            from 'http';
 import {json, urlencoded}   from 'body-parser';
 import * as path            from 'path';
 import * as freePort        from 'freeport';
-import * as merge       	from 'deepmerge';
 
 import IPC                  from './classes/ipc/IPC';
 import CacheController      from './controllers/CacheController';
@@ -150,10 +149,16 @@ export default class App extends Base {
 	}
 
 	public debug(type: string, text: string, data?: Object, socket?): void {
-		// if (type === 'error')
-		// 	console.warn('ERROR', text);
+		if (type === 'error')
+			winston.warn('ERROR', text);
 
-		this._debugBuffer.push({type, text, data});
+		let lastMessage = this._debugBuffer[this._debugBuffer.length - 1];
+
+		if (lastMessage && lastMessage.type === type && lastMessage.text === text) {
+			lastMessage.count = (lastMessage.count || 0) + 1;
+		} else {
+			this._debugBuffer.push({type, text, data});
+		}
 	}
 
 	private _setDebugBufferFlushInterval() {
@@ -240,16 +245,8 @@ export default class App extends Base {
 			/**
 			 * Server events
 			 */
-			let tickBuffer = [];
-			let tickInterval = setInterval(() => {
-				if (!tickBuffer.length) return;
-
-				this._io.sockets.emit('ticks', tickBuffer);
-				tickBuffer = [];
-			}, 100);
-
-			this.controllers.cache.on('tick', (tick) => {
-				tickBuffer.push(tick);
+			this.controllers.cache.on('ticks', ticks => {
+				this._io.sockets.emit('ticks', ticks);
 			});
 
 			this.controllers.instrument.on('instrument:status', status => {
@@ -269,7 +266,6 @@ export default class App extends Base {
 			});
 
 			this.controllers.editor.on('runnable-list', (runnableList) => {
-				console.log('runafsdf', runnableList)
 				this._io.sockets.emit('editor:runnable-list', runnableList);
 			});
 

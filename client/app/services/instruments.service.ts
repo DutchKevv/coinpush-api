@@ -34,7 +34,7 @@ export class InstrumentsService {
 	public init(): void {
 		// Create groups by groupId to show in backtest overview
 		this.instruments$.subscribe(instruments => {
-			this.groupIds$.next([...new Set(instruments.map(val => val.options.groupId))].filter(groupId => groupId !== null));
+			this.groupIds$.next([...new Set(instruments.filter(val => val.options.type === 'backtest' && val.options.groupId !== null).map(val => val.options.groupId))]);
 		});
 
 		this._socketService.socket.on('instrument:created', (instrumentSettings: InstrumentSettings) => {
@@ -61,43 +61,50 @@ export class InstrumentsService {
 		});
 	}
 
-
-	public create(instruments: Array<InstrumentSettings>): Array<InstrumentModel> {
+	public create(instruments: InstrumentSettings[]): InstrumentModel[] {
 		// console.info(`Creating ${options.symbol}`);
 
 		let now = Date.now(),
-			models = instruments.map(options => this.add(new InstrumentModel(options)));
+			models = this.add(instruments.map(options => new InstrumentModel(options)));
 
-		this._socketService.send('instrument:create', models.map(model => model.options), (err, instruments) => {
+		this._socketService.send('instrument:create', instruments, (err, instruments: Array<InstrumentSettings>) => {
 			if (err)
-				throw new Error(typeof err === 'string' ? err : JSON.stringify(err));
+				throw err;
 
-			instruments.forEach((instrument, i) => models[i].set(instrument));
+			instruments.forEach((instrument, i) => models[i].set({
+				id: instrument.id,
+				groupId: instrument.groupId,
+				status: status
+			}));
 
 			this.instruments$.next(this._instruments);
-
-			console.info(`Creating ${models.map(m => m.options.symbol).join()} took: ${Date.now() - now} ms`);
 		});
 
 		return models;
 	}
 
-	public add(instrumentModel: InstrumentModel): InstrumentModel {
-		if (instrumentModel.options.id) {
-			let existingModel = this.getById(instrumentModel.options.id);
+	public add(instrumentModels: Array<InstrumentModel>, setFocus = true): Array<InstrumentModel> {
 
-			if (existingModel) {
-				console.warn('Instrument already known! : ' + instrumentModel.options.id);
-				return instrumentModel;
+		instrumentModels.forEach(instrumentModel => {
+
+			if (instrumentModel.options.id) {
+				let existingModel = this.getById(instrumentModel.options.id);
+
+				if (existingModel) {
+					console.warn('Instrument already known! : ' + instrumentModel.options.id);
+					return instrumentModel;
+				}
 			}
-		}
-		//
-		this._instruments.push(instrumentModel);
+
+			this._instruments.push(instrumentModel);
+		});
+
 		this.instruments$.next(this._instruments);
 
-		this.setFocus(instrumentModel);
+		if (setFocus && this._instruments.length)
+			this.setFocus(instrumentModels[instrumentModels.length - 1]);
 
-		return instrumentModel
+		return instrumentModels
 	}
 
 	public fetch(model: InstrumentModel, count, offset = 0, from?: number, until?: number): Promise<any> {
@@ -109,8 +116,8 @@ export class InstrumentsService {
 				indicators: true,
 				offset,
 				count,
-				until,
-				from
+				from,
+				until
 			}, (err, data) => {
 				if (err)
 					return console.error(err);
@@ -124,6 +131,8 @@ export class InstrumentsService {
 	}
 
 	public remove(model: InstrumentModel) {
+		model.onDestroy();
+
 		this._instruments.splice(this._instruments.indexOf(model), 1);
 		this.instruments$.next(this._instruments);
 
@@ -290,11 +299,11 @@ export class InstrumentsService {
 	}
 
 	private _loadRunningInstruments() {
-		this._socketService.send('instrument:chart-list', {}, (err, list: InstrumentSettings[]) => {
+		this._socketService.send('instrument:list', {}, (err, list: InstrumentSettings[]) => {
 			if (err)
 				return console.error(err);
 
-			list.forEach((instrumentSettings: InstrumentSettings) => this.add(new InstrumentModel(instrumentSettings)));
+			this.add(list.map((instrumentSettings: InstrumentSettings) => new InstrumentModel(instrumentSettings)));
 		});
 	}
 }

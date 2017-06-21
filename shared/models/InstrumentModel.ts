@@ -101,4 +101,7 @@ export class InstrumentModel extends BaseModel {
 		});
 	}
 
+	public onDestroy() {
+		super.onDestroy();
+	}
 }

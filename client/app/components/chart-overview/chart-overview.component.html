@@ -1,4 +1,4 @@
-<div class="chart-overview-container">
+<div #overview class="chart-overview-container">
     <chart-box *ngFor="let model of instrumentsService.instruments$ | async"
                [ngClass]="{focused: model.options.focus}"
                [model]="model"

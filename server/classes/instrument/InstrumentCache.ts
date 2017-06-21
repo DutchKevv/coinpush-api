@@ -27,6 +27,7 @@ export default class InstrumentCache extends WorkerChild {
 		await super.init();
 
 		this.model = new InstrumentModel(this.options);
+		this.model.options.status.equality = this.model.options.startEquality;
 
 		this.symbol = this.options.symbol;
 		this.timeFrame = this.options.timeFrame;
@@ -63,12 +64,12 @@ export default class InstrumentCache extends WorkerChild {
 		let buf = await this.ipc.send('cache', 'read', {
 				symbol: this.model.options.symbol,
 				timeFrame: this.model.options.timeFrame,
-				until: this.options.type === 'backtest' ? this.options.from :  this.options.until,
+				until: this.model.options.type === 'backtest' ? this.model.options.from : this.model.options.until,
 				count: 1000
 			});
 
 		let _buf = new Buffer(buf);
-		let ticks = new Float64Array(_buf.buffer);
+		let ticks = new Float64Array(buf.buffer);
 
 		await this._doTickLoop(ticks, false);
 	}
@@ -96,7 +97,7 @@ export default class InstrumentCache extends WorkerChild {
 
 			this.ticks.push(candle);
 
-			if (tick) {
+			// if (tick) {
 				++this.model.options.status.tickCount;
 
 				this.time = candle[0];
@@ -104,7 +105,7 @@ export default class InstrumentCache extends WorkerChild {
 				this.ask = candle[2];
 
 				await this.tick(candle[0], candle[1], candle[2]);
-			}
+			// }
 		}
 	}
 

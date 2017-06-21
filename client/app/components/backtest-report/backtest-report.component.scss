@@ -2,6 +2,11 @@
 @import '../../style/components/key-value-list';
 @import '../../style/components/progress-bar';
 
+:host {
+	contain: layout;
+	width: 100%;
+}
+
 .text-negative {
 	color: $general-error;
 }

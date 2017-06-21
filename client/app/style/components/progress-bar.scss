@@ -3,7 +3,9 @@
 @import '~bootstrap/scss/_transitions';
 @import '~bootstrap/scss/_progress';
 
+
 .progress {
+	contain: layout;
 	background-color: #535353;
 	position: relative;
 	text-align: center;
@@ -25,6 +27,7 @@
 .progress-bar {
 	// transition: width .2s ease;
 	height: 20px;
+	width: 0;
 }
 
 .progress-bar.no-animate {

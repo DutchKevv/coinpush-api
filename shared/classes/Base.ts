@@ -42,6 +42,11 @@ export class Base extends EventEmitter {
 		this.options$.next(this._options);
 	}
 
+	public onDestroy() {
+		this.changed$.unsubscribe();
+		this.options$.unsubscribe();
+	}
+
 	private _updateRecursive(obj) {
 
 

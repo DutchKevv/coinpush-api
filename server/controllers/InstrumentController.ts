@@ -90,7 +90,7 @@ export default class InstrumentController extends Base {
 	public getList() {
 		return this.instruments.map(instrument => {
 			let options = instrument.model.options;
-			
+
 			return {
 				id: options.id,
 				from: options.from,
@@ -101,7 +101,6 @@ export default class InstrumentController extends Base {
 				type: options.type,
 				orders: options.type === 'backtest' ? options.orders : [],
 				status: options.status,
-				equality: options.equality,
 				startEquality: options.startEquality
 			}
 		});
@@ -204,7 +203,7 @@ export default class InstrumentController extends Base {
 			return winston.warn(`Received instrument update from unknown worker: ${id}`);
 
 		instrument.model.set(data);
-
+		console.log('ORDERS LENGTH ORDERS LENGTH', instrument.model.options.orders.length);
 		this.emit('instrument:status', data);
 	}
 

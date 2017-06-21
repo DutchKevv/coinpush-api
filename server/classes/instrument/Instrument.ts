@@ -67,31 +67,31 @@ export default class Instrument extends InstrumentCache {
 		this.indicators = [];
 	}
 
-	getIndicatorData(id: string, count?: number, shift?: number) {
+	getIndicatorData(id: string, count?: number, offset?: number, from?: number, until?: number) {
 		let _indicator = this.indicators.find(indicator => indicator.id === id);
 
 		if (!_indicator) {
 			throw new Error(`Indicator [${id}] does not exists`);
 		}
 
-		return _indicator.getDrawBuffersData(count, shift);
+		return _indicator.getDrawBuffersData(count, offset, from, until);
 	}
 
-	getIndicatorsData(count: number, shift?: number) {
+	getIndicatorsData(params: {count: number, offset: number, from: number, until: number}) {
 		return this.indicators.map(indicator => {
 			return {
 				id: indicator.id,
-				data: this.getIndicatorData(indicator.id, count, shift)
+				buffers: this.getIndicatorData(indicator.id, params.count, params.offset, params.from, params.until)
 			}
 		});
 	}
 
 	async _setIPCEvents() {
-		this.ipc.on('read', async (data, cb: Function) => {
+		this.ipc.on('read', async (params, cb: Function) => {
 
 			try {
 				cb(null, {
-					indicators: await this.getIndicatorsData(data.count, data.offset)
+					indicators: await this.getIndicatorsData(params)
 				});
 
 				// TODO: Should not be necessary -  Live goes through main thread - Orders already known
@@ -110,19 +110,19 @@ export default class Instrument extends InstrumentCache {
 			}
 		});
 
-		this.ipc.on('get-data', async (data: any, cb: Function) => {
-			try {
-				if (typeof data.indicatorId !== 'undefined') {
-					cb(null, await this.getIndicatorData(data.indicatorId, data.count, data.shift));
-				} else {
-					cb(null, await this.getIndicatorsData(data.count, data.shift));
-				}
-
-			} catch (error) {
-				console.log('Error:', error);
-				cb(error);
-			}
-		});
+		// this.ipc.on('get-data', async (data: any, cb: Function) => {
+		// 	try {
+		// 		if (typeof data.indicatorId !== 'undefined') {
+		// 			cb(null, await this.getIndicatorData(data.indicatorId, data.count, data.shift));
+		// 		} else {
+		// 			cb(null, await this.getIndicatorsData({count: data.count, offset: data.offset, from:});
+		// 		}
+		//
+		// 	} catch (error) {
+		// 		console.log('Error:', error);
+		// 		cb(error);
+		// 	}
+		// });
 
 		this.ipc.on('indicator:add', async (data: any, cb: Function) => {
 			try {

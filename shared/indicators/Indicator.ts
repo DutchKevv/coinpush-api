@@ -7,7 +7,7 @@ interface IDrawBufferSettings {
 
 export default class Indicator {
 
-	protected drawBuffers: Object = {};
+	protected drawBuffers: Array<any> = [];
 
 	constructor(protected ticks, protected options = <any>{}) {
 		this.init();
@@ -16,37 +16,63 @@ export default class Indicator {
 	async init(): Promise<any> {}
 
 	add(id, time, data): void {
-		this.drawBuffers[id].data.push([time, data]);
+		this.getById(id).data.push([time, data]);
 	}
 
-	addDrawBuffer(settings: IDrawBufferSettings): void {
-		if (this.drawBuffers[settings.id])
-			throw new Error(`Buffer with name [${settings.id}] already set!`);
+	public addDrawBuffer(settings: IDrawBufferSettings): void {
+		if (this.getById(settings.id))
+			throw new Error(`Buffer with name [${settings.id}] already exists`);
 
 		settings.data = settings.data || [];
-		this.drawBuffers[settings.id] = settings;
+		this.drawBuffers.push(settings);
 	}
 
-	getDrawBuffersData(count = 1, shift = 0, includeInfo = true): {} {
-		let data = {},
-			buffLength, drawBuffer;
+	public getDrawBuffersData(count = 1, offset = 0, from?: number, until?: number): {} {
+		return this.drawBuffers.map(db => (<IDrawBufferSettings>{
+			id: db.id,
+			type: db.type,
+			style: db.style,
+			data: this._getDrawBufferData(db.id, count, offset, from, until)
+		}));
+	}
 
-		for (let id in this.drawBuffers) {
-			if (this.drawBuffers.hasOwnProperty(id)) {
-				drawBuffer = this.drawBuffers[id];
-				buffLength = drawBuffer.data.length;
+	public getById(id: string|number) {
+		return this.drawBuffers.find(db => db.id === id);
+	}
 
-				data[id] = <IDrawBufferSettings>{
-					id: drawBuffer.id,
-					type: drawBuffer.type,
-					style: drawBuffer.style,
-					// data: this.drawBuffers[id].data.slice(0, buffLength - shift)
-					data: drawBuffer.data.slice(buffLength - count, buffLength)
-				};
+	private _getDrawBufferData(id: string|number, count: number, offset: number, from: number, until: number) {
+
+		let db = this.getById(id),
+			i = 0, len = db.data.length,
+			result = [], point;
+
+		// console.log(db.data[db.data.length - 1], db.data.length, from, until, count,);
+
+		for (; i < len; i++) {
+			// if (result.length === count)
+			// 	break;
+
+			point = db.data[i];
+
+			if (from && until) {
+				if (point[0] >= from && point[0] < until)
+					result.push(point);
+			} else {
+				if (from) {
+					if (point[0] >= from)
+						result.push(point);
+				}
+				else {
+					// console.log(point[0], until, point[0] < until);
+					if (point[0] < until) {
+						result.push(point);
+					}
+				}
 			}
 		}
 
-		return data;
+		// console.log(result, result.length);
+		return result;
 	}
 
 	_doCatchUp(): void {

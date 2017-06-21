@@ -35,17 +35,17 @@ module.exports = (app: App, socket) => {
 		cb(null, await app.controllers.instrument.destroyAll());
 	});
 
-	// Read options (indicators etc)
-	socket.on('instrument:get-options', async (options, cb) => {
-		try {
-			cb(null, await app.controllers.instrument.getIndicatorData(options));
-		} catch (err) {
-			console.log(err);
-			cb(err);
-		}
-	});
+	// // Read options (indicators etc)
+	// socket.on('instrument:get-options', async (options, cb) => {
+	// 	try {
+	// 		cb(null, await app.controllers.instrument.getIndicatorData(options));
+	// 	} catch (err) {
+	// 		console.log(err);
+	// 		cb(err);
+	// 	}
+	// });
 
-	socket.on('instrument:chart-list', (options, cb) => {
+	socket.on('instrument:list', (options, cb) => {
 		cb(null, app.controllers.instrument.getList());
 	});
 

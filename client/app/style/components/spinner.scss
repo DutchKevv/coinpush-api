@@ -37,20 +37,18 @@
     animation-delay: -1.0s;
 }
 
-@-webkit-keyframes sk-rotate { 100% { -webkit-transform: rotate(360deg) }}
+//@-webkit-keyframes sk-rotate { 100% { -webkit-transform: rotate(360deg) }}
 @keyframes sk-rotate { 100% { transform: rotate(360deg); -webkit-transform: rotate(360deg) }}
 
-@-webkit-keyframes sk-bounce {
-    0%, 100% { -webkit-transform: scale(0.0) }
-    50% { -webkit-transform: scale(1.0) }
-}
+//@-webkit-keyframes sk-bounce {
+//    0%, 100% { -webkit-transform: scale(0.0) }
+//    50% { -webkit-transform: scale(1.0) }
+//}
 
 @keyframes sk-bounce {
     0%, 100% {
         transform: scale(0.0);
-        -webkit-transform: scale(0.0);
     } 50% {
           transform: scale(1.0);
-          -webkit-transform: scale(1.0);
       }
 }

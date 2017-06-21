@@ -1,16 +1,14 @@
 import * as path        from 'path';
 import * as mkdirp      from 'mkdirp';
-import * as winston     from 'winston-color';
+import * as express    	from 'express';
+import * as io          from 'socket.io';
 
 import Mapper           from './CacheMap';
 import Fetcher          from './CacheFetch';
 import WorkerChild      from '../worker/WorkerChild';
 import BrokerApi        from '../broker-api/oanda/oanda';
 import CacheDataLayer   from './CacheDataLayer';
-import * as express		from 'express';
-import * as io          from 'socket.io';
-
-const cors = require('cors');
+import {winston}     	from '../../logger';
 
 export default class Cache extends WorkerChild {
 
@@ -28,6 +26,11 @@ export default class Cache extends WorkerChild {
 	private _api: any = null;
 	private _http: any = null;
 	private _io: any = null;
+
+	private _tickStreamOpen: boolean = false;
+
+	private _tickBuffer = {};
+	private _tickIntervalTimer = null;
 
 	public async init() {
 		await super.init();
@@ -51,17 +54,20 @@ export default class Cache extends WorkerChild {
 		this._setChannelEvents();
 		await this.ipc.startServer();
 
-		this._initApi();
+		this._setTickInterval();
+
+		await this._initApi();
 	}
 
-	public async read(params: {symbol: string, timeFrame: string, from: number, until: number, count: number}): Promise<any> {
+	public async read(params: { symbol: string, timeFrame: string, from: number, until: number, count: number }): Promise<any> {
 		let symbol = params.symbol,
 			timeFrame = params.timeFrame,
 			from = params.from,
 			until = params.until,
 			count = params.count,
-			candles = Buffer.alloc(0);
-		
+			candles = Buffer.alloc(0),
+			softUntil;
+
 		if (!symbol || typeof symbol !== 'string')
 			throw new Error('Cache->Read : No symbol given');
 
@@ -71,16 +77,19 @@ export default class Cache extends WorkerChild {
 		if (count && from && until)
 			throw new Error('Cache->Read : Only from OR until can be given when using count, not both');
 
-		if (!from && !until) {
-			params.until = Date.now();
-		}
+		if ((!from && !until))
+			until = params.until = Date.now();
 
-		params.count = params.count || Cache.COUNT_DEFAULT;
+		softUntil = until > this._mapper.streamOpenSince ? this._mapper.streamOpenSince : until;
+
+		// console.log('asfsafdsf', until);
+
+		count = params.count = params.count || Cache.COUNT_DEFAULT;
 
 		// If full dateRange given,
 		// Its possible to check if range is complete purely on mapper
 		if (from && until) {
-			if (!this._mapper.isComplete(symbol, timeFrame, from, until, count))
+			if (!this._mapper.isComplete(symbol, timeFrame, from, softUntil, count))
 				await this.fetch(params);
 
 			candles = await this._dataLayer.read(params);
@@ -95,7 +104,7 @@ export default class Cache extends WorkerChild {
 				let first = candles.readDoubleLE(0),
 					last = candles.readDoubleLE(candles.length - (10 * Float64Array.BYTES_PER_ELEMENT));
 
-				if (!this._mapper.isComplete(symbol, timeFrame, from || first, until || last)) {
+				if (!this._mapper.isComplete(symbol, timeFrame, from || first, softUntil || last)) {
 					await this.fetch(params);
 					candles = await this._dataLayer.read(params);
 				}
@@ -108,7 +117,7 @@ export default class Cache extends WorkerChild {
 		return candles;
 	}
 
-	public async fetch(params: {symbol: string, timeFrame: string, from: number, until: number, count: number}, emitStatus?: boolean): Promise<void> {
+	public async fetch(params: { symbol: string, timeFrame: string, from: number, until: number, count: number }, emitStatus?: boolean): Promise<void> {
 		let symbol = params.symbol,
 			timeFrame = params.timeFrame,
 			from = params.from,
@@ -142,11 +151,11 @@ export default class Cache extends WorkerChild {
 				this._brokerApi.getCandles(symbol, timeFrame, chunk.from, chunk.until, chunk.count, async (buf: NodeBuffer) => {
 					streamChunkTotal++;
 
-					// Make sure there is a from to store in mapper
-					from = from || buf.readDoubleLE(0);
-
 					// Store candles in DB
 					await this._dataLayer.write(symbol, timeFrame, buf);
+
+					// Make sure there is a from to store in mapper
+					from = from || buf.readDoubleLE(0);
 
 					let c_until = buf.readDoubleLE(buf.length - (10 * Float64Array.BYTES_PER_ELEMENT)),
 						c_count = buf.length / (10 * Float64Array.BYTES_PER_ELEMENT);
@@ -202,37 +211,54 @@ export default class Cache extends WorkerChild {
 	}
 
 	private _initApi() {
-		this._api = express();
-		this._api .use(cors());
-		this._http = require('http').createServer(this._api);
+		return new Promise((resolve, reject) => {
+			this._api = express();
+			this._http = require('http').createServer(this._api);
+			this._io = io(this._http);
 
-		this._io = io(this._http);
+			this._io.on('connection', (socket) => {
 
-		this._http.listen(3001, function () {});
+				socket.on('read', async (params, cb) => {
+					try {
+						let buffer = await this.read(params),
+							arr = new Float64Array(buffer.buffer, buffer.byteOffset, buffer.length / Float64Array.BYTES_PER_ELEMENT);
 
-		this._io.on('connection', (socket) => {
+						cb(null, buffer.buffer);
+						// cb(null, Array.from(arr));
+					} catch (error) {
+						winston.info(error);
+						cb(error);
+					}
+				})
+			});
 
-			socket.on('read', async (params, cb) => {
-				try {
-					let buffer = await this.read(params),
-						arr = new Float64Array(buffer.buffer, buffer.byteOffset, buffer.length / Float64Array.BYTES_PER_ELEMENT);
+			this._http.listen(3001, (err) => {
+				if (err)
+					return reject(err);
 
-					cb(null, buffer.buffer);
-					// cb(null, Array.from(arr));
-				} catch (error) {
-					winston.info(error);
-					cb(error);
-				}
-			})
+				winston.info('Cache -> Listening on port 3001');
+
+				resolve();
+			});
 		});
 
-		// this._api.listen(3001, function () {
-		// 	winston.info('Cache -> Listening on port 3001');
-		// })
 	}
 
-	private _broadCastTick(tick): void {
-		this.ipc.send('main', 'tick', tick, false);
+	private _onTickReceive(tick): void {
+		if (!this._tickBuffer[tick.instrument])
+			this._tickBuffer[tick.instrument] = [];
+
+		this._tickBuffer[tick.instrument].push([tick.time, tick.bid, tick.ask]);
+	}
+
+	private _setTickInterval() {
+		this._tickIntervalTimer = setInterval(() => {
+			if (!Object.getOwnPropertyNames(this._tickBuffer).length) return;
+
+			this.ipc.send('main', 'ticks', this._tickBuffer, false);
+
+			this._tickBuffer = {};
+		}, 200);
 	}
 
 	private _setChannelEvents(): void {
@@ -280,14 +306,14 @@ export default class Cache extends WorkerChild {
 		this._ready = false;
 
 		try {
-			if (this._brokerApi)
-				await this._brokerApi.destroy();
+			await this._unsetBrokerApi();
 
 			this._brokerApi = new BrokerApi(this.settings.account);
 			await this._brokerApi.init();
 
-			this._brokerApi.on('error', error => {});
-			this._brokerApi.on('tick', tick => this._broadCastTick(tick));
+			this._brokerApi.on('error', error => {
+				console.log('Cache -> Broker Error : ', error);
+			});
 
 			if (await this._loadAvailableSymbols() === true && await this._openTickStream() === true) {
 				this._ready = true;
@@ -297,6 +323,17 @@ export default class Cache extends WorkerChild {
 		}
 
 		return this._ready;
+	}
+
+	private async _unsetBrokerApi(): Promise<void> {
+		this._tickStreamOpen = false;
+		this._mapper.streamOpenSince = null;
+
+		if (!this._brokerApi)
+			return;
+
+		await this._brokerApi.destroy();
+		this._brokerApi = null;
 	}
 
 	private async _loadAvailableSymbols(): Promise<boolean> {
@@ -327,8 +364,16 @@ export default class Cache extends WorkerChild {
 	private async _openTickStream(): Promise<any> {
 		winston.info('opening tick stream');
 
+		this._brokerApi.removeAllListeners('tick');
+
 		try {
+
 			await Promise.all(this._symbolList.map(symbol => this._brokerApi.subscribePriceStream(symbol.name)));
+
+			this._brokerApi.on('tick', tick => this._onTickReceive(tick));
+			this._tickStreamOpen = true;
+			this._mapper.streamOpenSince = Date.now();
+
 			return true;
 		} catch (error) {
 			return false;

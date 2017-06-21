@@ -1,11 +1,12 @@
 import {
-	Component, OnInit, ElementRef, QueryList, ViewChildren, ChangeDetectionStrategy, ViewEncapsulation, NgZone
+	Component, OnInit, ElementRef, QueryList, ViewChildren, ChangeDetectionStrategy, ViewEncapsulation, NgZone,
+	ViewChild
 }  from '@angular/core';
 
 import {InstrumentsService} from '../../services/instruments.service';
 import {ChartBoxComponent} from '../chart-box/chart-box.component';
 
-declare let $:any;
+declare let $: any;
 
 @Component({
 	selector: 'chart-overview',
@@ -18,6 +19,7 @@ declare let $:any;
 export class ChartOverviewComponent implements OnInit {
 
 	@ViewChildren(ChartBoxComponent) charts: QueryList<ChartBoxComponent>;
+	@ViewChild('overview') overview: ElementRef;
 
 	constructor(public instrumentsService: InstrumentsService,
 				private _zone: NgZone,
@@ -33,28 +35,18 @@ export class ChartOverviewComponent implements OnInit {
 	}
 
 	tileWindows() {
-		let containerH = this._elementRef.nativeElement.shadowRoot.firstElementChild.clientHeight,
-			containerW = this._elementRef.nativeElement.shadowRoot.firstElementChild.clientWidth,
-			len = this.charts.length;
+		let containerW = this.overview.nativeElement.clientWidth,
+			containerH = this.overview.nativeElement.clientHeight,
+			size = this._getTileSize(containerW, containerH, this.charts.length),
+			columnCounter = 0,
+			rowCount = 0;
 
-		this.charts.forEach((chart, i) => {
-			chart.toggleViewState('windowed');
-
-			chart.$el.addClass('animate');
-
-			setTimeout(() => {
-				chart.$el.removeClass('animate');
-			}, 400);
-
-
-			if (len === 1) {
-				chart.toggleViewState('stretched');
-			}
-			else if (len < 4) {
-				let chartW = Math.floor(containerW / len);
-				chart.setSize(chartW, containerH);
-				chart.setPosition(0, (i * chartW) + (i * 1));
-				return;
+		this.charts.forEach((chart) => {
+			chart.setSize(size, size);
+			chart.setPosition(columnCounter * size, rowCount * size);
+			if (++columnCounter * size >= containerW) {
+				columnCounter = 0;
+				rowCount++;
 			}
 		});
 	}
@@ -72,6 +64,33 @@ export class ChartOverviewComponent implements OnInit {
 		});
 
 		// this.toggleFocused(ref);
+	}
+
+	private _getTileSize(width, height, number) {
+		let area = height * width,
+			elementArea = Math.round(area / number);
+
+		// Calculate side length if there is no "spill":
+		let sideLength = Math.round(Math.sqrt(elementArea));
+
+		// We now need to fit the squares. Let's reduce the square size
+		// so an integer number fits the width.
+		let numX = Math.ceil(width / sideLength);
+		sideLength = width / numX;
+		while (numX <= number) {
+			// With a bit of luck, we are done.
+			if (Math.floor(height / sideLength) * numX >= number) {
+				// They all fit! We are done!
+				return sideLength;
+			}
+			// They don't fit. Make room for one more square i each row.
+			numX++;
+			sideLength = width / numX;
+		}
+		// Still doesn't fit? The window must be very wide
+		// and low.
+		sideLength = height;
+		return sideLength;
 	}
 
 	private _setContextMenu() {
@@ -105,6 +124,6 @@ export class ChartOverviewComponent implements OnInit {
 						}
 					}
 				});
-		}) ;
+		});
 	}
 }

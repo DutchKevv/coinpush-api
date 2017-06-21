@@ -31,6 +31,10 @@ export default class EA extends Instrument implements IEA {
 			ipc: this.ipc
 		});
 
+		this.orderManager.on('order', order => {
+			this.model.options.status.equality = +(this.accountManager.equality + this.orderManager.getOpenOrdersValue(this.bid, this.ask)).toFixed(2);
+		});
+
 		await this.accountManager.init();
 		await this.orderManager.init();
 
@@ -38,20 +42,23 @@ export default class EA extends Instrument implements IEA {
 
 		await this.onInit();
 
-		this.set({status: {type: 'idle'}});
+		this.model.set({status: {type: 'idle'}});
 
-		if (this.options.autoRun)
+		if (this.model.options.autoRun)
 			this.runBackTest();
 	}
 
 	async tick(timestamp, bid, ask): Promise<void> {
 		await super.tick(timestamp, bid, ask);
 
-		if (this.options.type === 'backtest') {
-			this.orderManager.tick()
-		}
+		if (!this.model.options.from || this.model.options.from <= timestamp) {
 
-		await this.onTick(timestamp, bid, ask);
+			if (this.options.type === 'backtest') {
+				this.orderManager.tick()
+			}
+
+			await this.onTick(timestamp, bid, ask);
+		}
 	}
 
 	public onTick(timestamp, bid, ask) {
@@ -75,6 +82,8 @@ export default class EA extends Instrument implements IEA {
 	}
 
 	async runBackTest(): Promise<any> {
+		winston.info(`EA -> ${this.id} : Starting Backtest`);
+
 		let count = 1000,
 			lastTime, lastBatch = false,
 			from = this.options.from,
@@ -166,10 +175,9 @@ export default class EA extends Instrument implements IEA {
 	private _emitProgressReport() {
 		this.updateTicksPerSecond();
 		this.model.options.status.progress = (((this.time - this.options.from) / (this.options.until - this.options.from)) * 100).toFixed(2);
-
+		console.log(this.model.options.status.equality);
 		this.ipc.send('main', 'instrument:status', {
 			id: this.id,
-			equality: (this.accountManager.equality + this.orderManager.getOpenOrdersValue(this.bid, this.ask)).toFixed(2),
 			orders: this.orderManager.findByDateRange(this._lastReportTime, this.time),
 			lastTime: this.time,
 			status: this.model.options.status

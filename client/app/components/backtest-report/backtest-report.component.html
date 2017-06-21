@@ -1,10 +1,10 @@
-<section *ngIf="model.options$ | async as options" class="tpl-model" [attr.data-id]="options.id">
+<section class="tpl-model" [attr.data-id]="model.options.id">
 	<header style="display: flex;">
-		<h5 style="width: 200px;">{{options.symbol}}</h5>
+		<h5 style="width: 200px;">{{model.options.symbol}}</h5>
 		<div class="progress">
 			<span></span>
 			<div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="70"
-				 aria-valuemin="0" aria-valuemax="100" style="width:{{options.status.value || 0}}%">
+				 aria-valuemin="0" aria-valuemax="100">
 			</div>
 		</div>
 	</header>
@@ -12,23 +12,23 @@
 		<div style="width: 200px;">
 			<ul class="key-value-list">
 				<li><span>Diff</span><span
-						[class.text-negative]="options.equality - options.startEquality < 0"
-						[class.text-positive]="options.equality - options.startEquality > 0"
-				>€ {{(options.equality - options.startEquality).toFixed(2)}}</span></li>
-				<li><span>Equality</span>€ {{options.equality}}</li>
-				<li><span>Nr of trades</span>{{options.orders.length}}</li>
+						[class.text-negative]="model.options.status.equality - model.options.startEquality < 0"
+						[class.text-positive]="model.options.status.equality - model.options.startEquality > 0"
+				>€ {{(model.options.status.equality - model.options.startEquality).toFixed(2)}}</span></li>
+				<li><span>Equality</span>€ {{model.options.equality}}</li>
+				<li><span>Nr of trades</span>{{model.options.orders.length}}</li>
 			</ul>
 			<ul class="key-value-list">
-				<li><span>Completed in</span>{{options.totalPretty}}</li>
-				<li><span>Fetching</span>{{options.fetchingPretty}}</li>
-				<li><span>Testing</span>{{options.testingPretty}}</li>
+				<li><span>Completed in</span>{{model.options.totalPretty}}</li>
+				<li><span>Fetching</span>{{model.options.fetchingPretty}}</li>
+				<li><span>Testing</span>{{model.options.testingPretty}}</li>
 			</ul>
 			<ul class="key-value-list">
-				<li><span>Time frame</span>{{options.timeFrame}}</li>
-				<li><span>Ticks</span>{{options.status.tickCount}}</li>
-				<li><span>Ticks p / s</span>{{options.status.ticksPerSecond}}</li>
+				<li><span>Time frame</span>{{model.options.timeFrame}}</li>
+				<li><span>Ticks</span>{{model.options.status.tickCount}}</li>
+				<li><span>Ticks p / s</span>{{model.options.status.ticksPerSecond}}</li>
 			</ul>
 		</div>
-		<chart-report class="chart" [height]="200" [model]="model"></chart-report>
+		<div #chart></div>
 	</main>
 </section>

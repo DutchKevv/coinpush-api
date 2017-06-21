@@ -5,21 +5,25 @@ import CacheMap from '../../../shared/classes/cache/CacheMap';
 import {SystemState} from '../../../shared/models/SystemState';
 import {Base} from '../../../shared/classes/Base';
 import * as io from 'socket.io-client';
+import {Subject} from 'rxjs/Subject';
 
 export class CacheSymbol extends Base {
-	public price$: BehaviorSubject<any> = new BehaviorSubject(this.options);
+	public price$: Subject<any> = new Subject();
 
-	public tick(tick) {
-		let data = {
-			direction: this.options.bid > tick.bid ? 'down' : 'up',
-			bidDirection: this.options.bid > tick.bid ? 'down' : 'up',
-			bid: tick.bid,
-			askDirection: this.options.ask > tick.ask ? 'down' : 'up',
-			ask: tick.ask
-		};
+	public tick(ticks) {
+		ticks.forEach(tick => {
+			let data = {
+				direction: this.options.bid > tick[2] ? 'down' : 'up',
+				bidDirection: this.options.bid > tick[2] ? 'down' : 'up',
+				bid: tick[1],
+				askDirection: this.options.ask > tick[2] ? 'down' : 'up',
+				ask: tick[2]
+			};
 
-		this.set(data);
-		this.price$.next(data);
+			this.set(data, false);
+		});
+
+		this.price$.next(true);
 	}
 }
 
@@ -27,6 +31,7 @@ export class CacheSymbol extends Base {
 export class CacheService {
 
 	@Output() public symbolList$: BehaviorSubject<Array<CacheSymbol>> = new BehaviorSubject([]);
+	@Output() public changed$: Subject<any> = new Subject();
 
 	private _mapper: CacheMap;
 	private _socket: any;
@@ -48,13 +53,17 @@ export class CacheService {
 		});
 
 		this._socketService.socket.on('ticks', (ticks) => {
+
 			this._zone.runOutsideAngular(() => {
-				ticks.forEach(tick => {
-					let symbol = this.getBySymbol(tick.instrument);
+				for (let _symbol in ticks) {
+
+					let symbol = this.getBySymbol(_symbol);
 
 					if (symbol)
-						symbol.tick(tick);
-				});
+						symbol.tick(ticks[_symbol]);
+				}
+
+				this.changed$.next(Object.keys(ticks));
 			});
 		});
 	}

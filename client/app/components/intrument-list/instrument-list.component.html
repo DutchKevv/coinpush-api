@@ -7,23 +7,11 @@
 	</tr>
 	<tr>
 		<th colspan="3">
-			<input class="search-instrument-list" type="text" placeholder="Search..." #search style="color: black;">
+			<input class="search-instrument-list" type="text" placeholder="Search..." #search>
 		</th>
 	</tr>
 	</thead>
-	<tbody>
-		<tr *ngFor="let symbol of cacheService.symbolList$ | async" [attr.data-symbol]="symbol.options.name" [attr.title]="symbol.options.displayName">
-			<ng-container *ngIf="symbol.price$ | async; let price;">
-				<td (click)="instrumentService.create([{symbol: symbol.options.name}])">
-					<i class="fa fa-arrow-{{price.direction}}"></i>
-					{{ symbol.options.name }}
-				</td>
-
-				<td class="{{price.bidDirection}}">{{price.bid}}</td>
-				<td class="{{price.askDirection}}">{{price.ask}}</td>
-			</ng-container>
-		</tr>
-	</tbody>
+	<tbody #tbody></tbody>
 </table>
 
 

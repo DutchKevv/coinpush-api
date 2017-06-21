@@ -25,9 +25,7 @@ export default class CacheController extends Base {
 
 		await this._worker.init();
 
-		this._worker.ipc.on('tick', tick => {
-			this.emit('tick', tick);
-		});
+		this._worker.ipc.on('ticks', ticks => this.emit('ticks', ticks));
 	}
 
 	public read(symbol, timeFrame, from, until, bufferOnly) {

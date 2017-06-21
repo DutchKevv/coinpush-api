@@ -5,7 +5,7 @@ export default class MA extends Indicator {
 	count: 0;
 
 	public get value() {
-		return this.getDrawBuffersData(undefined, undefined, false)['arrow'].data[0][1];
+		return this.getDrawBuffersData(undefined, undefined)['arrow'].data[0][1];
 	}
 
 	public async init(): Promise<any> {

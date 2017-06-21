@@ -26,16 +26,16 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 	@Input() model: InstrumentModel;
 	@Input() height: number;
 	@Input() offset = 0;
-	@Input() chunkLength = 1500;
+	@Input() chunkLength = 1000;
 
-	@Output() loading$ = new BehaviorSubject(false);
+	@Output() loading$ = new BehaviorSubject(true);
 
 	@ViewChild('chart') chartRef: ElementRef;
 
 	private _scrollOffset = -1;
 	private _scrollSpeedStep = 6;
 	private _scrollSpeedMin = 1;
-	private _scrollSpeedMax = 6;
+	private _scrollSpeedMax = 20;
 
 	private _chart: any;
 	private _onScrollBounced: Function = null;
@@ -49,8 +49,8 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	public async ngOnInit() {
 		// Bouncer func to limit onScroll calls
-		// this._onScrollBounced = throttle(this._onScroll.bind(this), 16);
-		this._onScrollBounced = this._onScroll.bind(this);
+		this._onScrollBounced = throttle(this._onScroll.bind(this), 33);
+		// this._onScrollBounced = this._onScroll.bind(this);
 
 		this.model.changed$.subscribe(changes => {
 			for (let key in changes) {
@@ -109,6 +109,9 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 	public reflow() {
 		this._updateViewPort(false);
 
+		if (!this._chart)
+			return;
+
 		this._chart.options.height = this._elementRef.nativeElement.clientHeight;
 		this._chart.options.width = this._elementRef.nativeElement.clientWidth;
 		this._chart.render();
@@ -125,9 +128,10 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 			if (this._chart)
 				this._destroyChart();
 
-
 			this._chart = new window['CanvasJS'].Chart(this.chartRef.nativeElement, {
+				interactivityEnabled: true,
 				exportEnabled: false,
+				animationEnabled: false,
 				backgroundColor: '#000',
 				axisY: {
 					includeZero: false,
@@ -137,7 +141,13 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 					labelFontSize: '12',
 					gridDashType: 'dash',
 					gridColor: '#787D73',
-					gridThickness: 1
+					gridThickness: 1,
+					stripLines: [{
+						value: 0
+					}]
+				},
+				toolTip:{
+					animationEnabled: false,
 				},
 				axisX: {
 					includeZero: false,
@@ -214,36 +224,39 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 
 	private async _fetch(count: number, offset: number) {
-		let data = await this._instrumentsService.fetch(this.model, count, offset);
+		let data;
 
-		this._updateIndicators(data.indicators);
+		if (this.model.options.type === 'backtest') {
+			data = await this._instrumentsService.fetch(this.model, count, offset, undefined, this.model.options.from);
+		}
+		else
+			data = await this._instrumentsService.fetch(this.model, count, offset);
+
+		if (data.indicators.length)
+			this._updateIndicators(data.indicators);
+
 		// this._updateOrders(orders);
 
 		this._chart.render();
 	}
 
 	private async _fetchCandles(redraw = true) {
-		let loadingTimeout = setTimeout(() => {
-			// this.loading$.next(true);
-		}, 300);
-
 		try {
 			let candles:any = await this._cacheService.read({
 				symbol: this.model.options.symbol,
 				timeFrame: this.model.options.timeFrame,
+				until: this.model.options.type === 'backtest' ? this.model.options.from :  this.model.options.until,
 				count: this.chunkLength,
 				offset: this.offset
 			});
 
-			clearInterval(loadingTimeout);
+			this.loading$.next(false);
 			this._updateBars(candles);
 		} catch (error) {
-			clearInterval(loadingTimeout);
+			this.loading$.next(false);
 			console.log('error error error', error);
 		}
 
-
-		this.loading$.next(false);
 		this._chart.render();
 	}
 
@@ -258,21 +271,13 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 			let {candles, volume} = ChartComponent._prepareData(data),
 				last = candles[candles.length - 1];
 
-			// console.log('candles', candles);
-
 			this._chart.options.data[0].dataPoints = candles;
 
 			this._updateViewPort(false);
 
-			// this._chart.series[0].setData(candles, false, false);
-			// this._chart.series[1].setData(volume, false, false);
-
-			// Re-update viewport needed for initial batch of bars
-			// this._updateViewPort();
-
 			// PlotLine cannot be delayed, so to prevent instant re-render from updateViewPort,
 			// Do this after
-			// this._setCurrentPricePlot(last);
+			this._setCurrentPricePlot(last);
 		});
 	}
 
@@ -281,72 +286,48 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 			return;
 
 		this._zone.runOutsideAngular(() => {
-			this._chart.yAxis[0].removePlotLine('current-price');
-
-			this._chart.yAxis[0].addPlotLine({
-				value: bar[4],
-				color: '#646467',
-				width: 1,
-				id: 'current-price',
-				label: {
-					text: `<div class='chart-current-price-label' style='background:white;'>${bar[4]}</div>`,
-					align: 'right',
-					x: 5,
-					y: 2,
-					style: {
-						color: '#000'
-					},
-					useHTML: true,
-					textAlign: 'left'
-				}
-			});
+			this._chart.options.axisY.stripLines[0].value = bar.y[2];
+			this._chart.options.axisY.stripLines[0].label = bar.y[2];
 		});
 	}
 
 	private _updateIndicators(indicators) {
-		if (!indicators.length)
-			return;
-
 		this._zone.runOutsideAngular(() => {
-			
+
 			indicators.forEach(indicator => {
-				for (let drawBufferName in indicator.data) {
-					if (indicator.data.hasOwnProperty(drawBufferName)) {
-						let drawBuffer = indicator.data[drawBufferName];
+				indicator.buffers.forEach(drawBuffer => {
+					let unique = indicator.id + '_' + drawBuffer.id;
 
-						let unique = indicator.id + '_' + drawBuffer.id;
+					// New series
+					let series = null // this._chart.get(unique);
 
-						// New series
-						let series = null // this._chart.get(unique);
+					// Update
+					if (series) {
+						console.log('SERIES!!!!', series);
+					}
 
-						// Update
-						if (series) {
-							console.log('SERIES!!!!', series);
-						}
+					// Create
+					else {
+						switch (drawBuffer.type) {
+							case 'line':
+								let newSeries = {
+									type: drawBuffer.type,
+									color: drawBuffer.style.color,
+									name: indicator.id,
+									dataPoints: drawBuffer.data.map(point => ({
+										x: new Date(point[0]),
+										y: point[1]
+									}))
+								};
 
-						// Create
-						else {
-							switch (drawBuffer.type) {
-								case 'line':
-									let newSeries = {
-										type: drawBuffer.type,
-										color: drawBuffer.style.color,
-										name: indicator.id,
-										dataPoints: drawBuffer.data.map(point => ({
-											x: new Date(point[0]),
-											y: point[1]
-										}))
-									};
-
-									this._chart.options.data.push(newSeries);
-									break;
-								case 'arrow':
-									alert('cannot yet draw arrow');
-									break;
-							}
+								this._chart.options.data.push(newSeries);
+								break;
+							case 'arrow':
+								alert('cannot yet draw arrow');
+								break;
 						}
 					}
-				}
+				});
 			});
 		});
 	}

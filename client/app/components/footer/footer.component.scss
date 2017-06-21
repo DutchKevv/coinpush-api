@@ -101,6 +101,7 @@ ul {
         margin-bottom: 0;
         font-size: 10px;
         color: $font-color-light;
+        cursor: pointer;
 
         &.active a {
             background: $general-active !important;

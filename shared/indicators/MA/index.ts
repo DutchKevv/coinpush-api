@@ -3,7 +3,7 @@ import Indicator from '../Indicator';
 export default class MA extends Indicator {
 
 	public get value() {
-		let data = this.getDrawBuffersData(undefined, undefined, false)['MA'].data[0];
+		let data = this.getById('MA').data[0];
 
 		if (data)
 			return data[1];

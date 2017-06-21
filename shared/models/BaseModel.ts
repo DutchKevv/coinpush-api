@@ -13,4 +13,8 @@ export class BaseModel extends Base {
 	public sync() {
 
 	}
+
+	public onDestroy() {
+
+	}
 }

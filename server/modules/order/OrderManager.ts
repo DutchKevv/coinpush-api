@@ -48,7 +48,7 @@ export default class OrderManager extends Base {
 			this.options.ipc.send('main', 'debug', {
 				type: 'error',
 				code: OrderManager.ERROR_NOT_ENOUGH_FUNDS,
-				text: 'Not enough founds'
+				text: 'Not enough funds'
 			}, false);
 
 			throw ({code: OrderManager.ERROR_NOT_ENOUGH_FUNDS});
@@ -61,6 +61,7 @@ export default class OrderManager extends Base {
 		} else {
 			this._orders.push(order);
 			this._accountManager.addEquality(-orderPrice);
+			this.emit('order', order)
 		}
 
 		return order.id;

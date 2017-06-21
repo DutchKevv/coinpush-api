@@ -39,7 +39,6 @@ import {InstrumentsService} from './services/instruments.service';
 import {ResizableDirective} from './directives/resizable.directive';
 import {ChartBoxComponent} from './components/chart-box/chart-box.component';
 import {ChartComponent} from './components/chart/chart.component';
-import {ChartReportComponent} from './components/chart-report/chart-report.component';
 import {BacktestSettingsComponent, GroupByPipe} from './components/backtest-settings/backtest-settings.component';
 import {BacktestReportComponent} from './components/backtest-report/backtest-report.component';
 import {CacheService} from './services/cache.service';
@@ -54,7 +53,6 @@ import {BacktestComponent, GroupIdsPipe} from './components/backtest/backtest.co
 		ChartBoxComponent,
 		ChartComponent,
 		ChartOverviewComponent,
-		ChartReportComponent,
 		DialogAnchorDirective,
 		DialogComponent,
 		EditorComponent,

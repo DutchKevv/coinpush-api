@@ -9,6 +9,8 @@ export default class Mapper {
 	public static readonly MODE_PERSISTENT = 0;
 	public static readonly MODE_MEMORY = 1;
 
+	public streamOpenSince: number = null;
+
 	private _map: any = {};
 	private _mode: number;
 	private _pathFile: string;
@@ -67,10 +69,14 @@ export default class Mapper {
 		let ranges = this.findByParams(symbol, timeFrame),
 			i = 0, len = ranges.length, _range;
 
-		for (; i < len; ++i) {
-			_range = ranges[i];
-			if (_range[0] <= from && _range[1] >= until)
-				return true;
+		if (from && until) {
+			for (; i < len; ++i) {
+				_range = ranges[i];
+				if (_range[0] <= from && _range[1] >= until)
+					return true;
+			}
+		} else {
+
 		}
 
 		return false;
