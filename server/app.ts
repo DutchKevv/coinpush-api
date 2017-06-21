@@ -143,8 +143,8 @@ export default class App extends Base {
 	}
 
 	public debug(type: string, text: string, data?: Object, socket?): void {
-		if (type === 'error')
-			log.error('App', text);
+		// if (type === 'error')
+			// log.error('App', text);
 
 		let lastMessage = this._debugLastMessage;
 

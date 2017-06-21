@@ -116,7 +116,7 @@ export default class Cache extends WorkerChild {
 	}
 
 	public fetch(params: { symbol: string, timeFrame: string, from: number, until: number, count: number }, emitStatus?: boolean): Promise<void> {
-		return this._fetchQueue.then(() => console.log('queueue start!')).then(async () => {
+		return this._fetchQueue.then(() => console.log('queueue finished!')).then(async () => {
 			let symbol = params.symbol,
 				timeFrame = params.timeFrame,
 				from = params.from,
@@ -194,7 +194,7 @@ export default class Cache extends WorkerChild {
 					});
 				});
 			}));
-		}).then(() => console.log('queueue finished'));
+		}).then(() => console.log('queueue ready'));
 	}
 
 	public async reset(symbol?: string, timeFrame?: string, from?: number, until?: number): Promise<any> {
@@ -318,7 +318,6 @@ export default class Cache extends WorkerChild {
 
 	private async _setBrokerApi(): Promise<void> {
 		await this._unsetBrokerApi();
-
 
 		this._brokerApi = new OandaApi(this.options.settings.account);
 		this._brokerApi.on('error', error => this._debug('error', error));

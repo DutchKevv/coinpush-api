@@ -49,12 +49,15 @@ export class BacktestComponent implements AfterViewInit, OnInit, OnChanges {
 		alert('chagnes!');
 	}
 
-	selectTab(groupId) {
+	selectTab(groupId): void {
+		if (groupId === this.activeGroupId)
+			return;
+
 		this.activeGroupId = groupId;
 		this.updateModels();
 	}
 
-	updateModels() {
+	updateModels(): void {
 		if (this.activeGroupId === null)
 			this.activateHighest();
 
@@ -63,8 +66,8 @@ export class BacktestComponent implements AfterViewInit, OnInit, OnChanges {
 		this._updateMainProgressBar();
 	}
 
-	activateHighest() {
-		let highestGroupId = Math.max.apply(Math, this.instrumentService.instruments.map(model => model.options.groupId || 0));
+	activateHighest(): void {
+		let highestGroupId = Math.max.apply(Math, this.instrumentService.groupIds$.getValue());
 
 		if (highestGroupId === -Infinity) {
 			highestGroupId = null;
