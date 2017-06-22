@@ -2,6 +2,7 @@ import {EventEmitter}   from 'events';
 import * as merge       from 'deepmerge';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Subject} 		from 'rxjs/Subject';
+import {isEqual, reduce} 		from 'lodash';
 
 export class Base extends EventEmitter {
 
@@ -10,7 +11,7 @@ export class Base extends EventEmitter {
 	public static readonly isNode = !!process;
 
 	public initialized = false;
-	public readonly changed$ = new Subject();
+	public readonly changed$: Subject<Array<any>> = new Subject();
 	public readonly options$ = new BehaviorSubject({});
 
 	public get options() {
@@ -33,13 +34,19 @@ export class Base extends EventEmitter {
 		return typeof key === 'undefined' ? this._options : this._options[key];
 	}
 
-	public set(obj: any, triggerChange = true) {
+	public set(obj: any, triggerChange = true, triggerOptions = true) {
+		let diff = this._getDiff(obj, this._options);
+
 		this._options = merge(this._options, obj);
 
-		if (triggerChange)
-			this.changed$.next(<any>obj);
+		if (diff.length) {
 
-		this.options$.next(this._options);
+			if (triggerChange)
+				this.changed$.next(diff);
+
+			if (triggerOptions)
+				this.options$.next(this._options);
+		}
 	}
 
 	public onDestroy() {
@@ -47,9 +54,11 @@ export class Base extends EventEmitter {
 		this.options$.unsubscribe();
 	}
 
-	private _updateRecursive(obj) {
-
-
+	private _getDiff(a, b): any {
+		return reduce(a, function(result, value, key) {
+			return isEqual(value, b[key]) ?
+				result : result.concat(key);
+		}, []);
 	}
 
 	private __setInitialOptions(target, options) {

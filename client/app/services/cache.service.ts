@@ -12,15 +12,13 @@ export class CacheSymbol extends Base {
 
 	public tick(ticks) {
 		ticks.forEach(tick => {
-			let data = {
+			this.set({
 				direction: this.options.bid > tick[2] ? 'down' : 'up',
-				bidDirection: this.options.bid > tick[2] ? 'down' : 'up',
+				bidDirection: this.options.bid > tick[1] ? 'down' : 'up',
 				bid: tick[1],
 				askDirection: this.options.ask > tick[2] ? 'down' : 'up',
 				ask: tick[2]
-			};
-
-			this.set(data, false);
+			}, false, false);
 		});
 
 		this.price$.next(true);
@@ -50,6 +48,7 @@ export class CacheService {
 		});
 
 		this._socket.on('ticks', ticks => {
+
 			this._zone.runOutsideAngular(() => {
 				for (let _symbol in ticks) {
 					let symbol = this.getBySymbol(_symbol);

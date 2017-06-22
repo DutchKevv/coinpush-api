@@ -57,7 +57,7 @@ export class InstrumentModel extends BaseModel {
 			let orders = obj.orders;
 			delete obj.orders;
 			super.set(obj);
-			this.changed$.next({orders: orders});
+			this.changed$.next(['orders']);
 			obj.orders = orders;
 		} else {
 			super.set(obj);

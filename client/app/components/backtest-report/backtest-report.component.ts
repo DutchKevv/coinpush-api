@@ -37,7 +37,7 @@ export class BacktestReportComponent implements AfterViewInit, OnInit, OnDestroy
 		this.model.changed$.subscribe((changes:any) => {
 			this._onInstrumentStatusUpdate();
 			
-			if (changes.orders)
+			if (changes.indexOf('orders') > -1)
 				this._updateData(changes.orders);
 		});
 		this._onInstrumentStatusUpdate();
@@ -63,7 +63,7 @@ export class BacktestReportComponent implements AfterViewInit, OnInit, OnDestroy
 						gridDashType: "dash",
 						gridColor: '#787D73',
 						gridThickness: 1,
-						interval: 2000
+						// interval: 2000
 					},
 					data: [
 						{

@@ -223,7 +223,7 @@ export class InstrumentsService {
 					return reject(err);
 
 				instrumentModel.addIndicator(result);
-				instrumentModel.changed$.next({indicator: {type: 'add', id: result.id}});
+				// instrumentModel.changed$.next({indicator: {type: 'add', id: result.id}});
 
 				resolve(true);
 			});

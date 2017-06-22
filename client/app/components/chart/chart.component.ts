@@ -64,42 +64,43 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 		this._createChart();
 
 		this.model.changed$.subscribe(changes => {
-			for (let key in changes) {
-				if (changes.hasOwnProperty(key)) {
-					// switch (key) {
-					// 	case 'zoom':
-					// 		if (this._chart)
-					// 			this._updateViewPort();
-					// 		break;
-					// 	case 'graphType':
-					// 		if (this._chart)
-					// 			// this._chart.series[0].update({
-					// 			// 	type: changes[key]
-					// 			// });
-					// 		break;
-					// 	case 'timeFrame':
-					// 		this.toggleTimeFrame(changes[key]);
-					// 		break;
-					// 	case 'indicator':
-					// 		let change = changes[key];
-					// 		if (change.type === 'add') {
-					// 			let indicator = this.model.options.indicators.find(i => i.id === change.id);
+			changes.forEach(change => {
+				switch (change) {
+					// case 'zoom':
+					// 	if (this._chart)
+					// 		this._updateViewPort();
+					// 	break;
+					case 'graphType':
+						this.changeGraphType(this.model.options.graphType);
+						break;
+					// case 'timeFrame':
+					// 	this.toggleTimeFrame(changes[key]);
+					// 	break;
+					// case 'indicator':
+					// 	let change = changes[key];
+					// 	if (change.type === 'add') {
+					// 		let indicator = this.model.options.indicators.find(i => i.id === change.id);
 					//
-					// 			// this._updateIndicators([indicator]);
-					// 		}
-					// 		break;
-					// }
+					// 		// this._updateIndicators([indicator]);
+					// 	}
+					// 	break;
 				}
-			}
+			});
 		});
-
-
 	}
 
 	ngAfterViewInit(): void {
 
 
 
+	}
+
+	public changeGraphType(type) {
+		if (!this._chart)
+			return;
+
+		this._chart.options.data[0].type = type;
+		this._chart.render();
 	}
 
 	public pinToCorner(edges): void {

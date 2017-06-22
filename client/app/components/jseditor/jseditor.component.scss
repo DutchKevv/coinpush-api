@@ -1,7 +1,7 @@
 // @import '../../../assets/vendor/css/ace/'
 
 :host {
-    // height: 100%;
+    position: relative;
     overflow: auto;
 }
 
@@ -28,5 +28,9 @@
 }
 
 .ace_editor {
-    height: 100% !important;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
 }

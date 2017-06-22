@@ -58,17 +58,16 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 
 		if (this.viewState === 'windowed')
 			this.restorePosition();
-		else {
-			this.putOnTop();
-		}
+
+		this._bindResize();
+		this._bindDrag();
 	}
 
 	ngAfterViewInit() {
-		this._bindResize();
-		this._bindDrag();
+		this.putOnTop();
 
 		this.model.changed$.subscribe((changes: any) => {
-			if (typeof changes.focus !== 'undefined' && changes.focus === true) {
+			if (changes.indexOf('focus') > -1) {
 				this.toggleViewState(true);
 				this.putOnTop();
 			}
@@ -120,6 +119,8 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 		this.$el.width(width).height(height);
 		this.chartComponent.reflow();
 		this.chartComponent.render();
+
+		this.storePosition();
 	}
 
 	public getPosition(): any {
@@ -175,6 +176,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 			}
 		} else {
 			elClassList.toggle('minimized', !viewState);
+			// this._instrumentsService.setFocus(this._instrumentsService.instruments[this._instrumentsService.instruments.length - 2]);
 		}
 	}
 
