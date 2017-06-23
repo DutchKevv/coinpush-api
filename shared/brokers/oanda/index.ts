@@ -96,7 +96,7 @@ export default class OandaApi extends Base {
 			transformStream._transform = function (data, type, done) {
 				if (!this._firstByte) {
 					this._firstByte = true;
-					log.info('OANDA', `: FirstByte of ${symbol} took: ${Date.now() - now} ms`);
+					log.info('OANDA', `FirstByte of ${symbol} took: ${Date.now() - now} ms`);
 				}
 
 				if (!startFound) {

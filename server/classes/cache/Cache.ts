@@ -116,7 +116,7 @@ export default class Cache extends WorkerChild {
 	}
 
 	public async fetch(params: { symbol: string, timeFrame: string, from: number, until: number, count: number }, emitStatus?: boolean): Promise<void> {
-		await this._fetchQueue.then(async () => {
+		await this._fetchQueue.then(() => {
 			let symbol = params.symbol,
 				timeFrame = params.timeFrame,
 				from = params.from,

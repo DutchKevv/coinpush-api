@@ -32,6 +32,7 @@
     "@types/socket.io-client": "^1.4.29",
     "@types/winston": "^2.3.3",
     "backbone-events-standalone": "^0.2.7",
+    "codelyzer": "^3.1.1",
     "deepmerge": "^1.4.3",
     "lodash": "^4.17.4",
     "mkdirp": "^0.5.1",
