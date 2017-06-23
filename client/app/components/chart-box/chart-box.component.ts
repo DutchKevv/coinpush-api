@@ -66,7 +66,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 	private _onScrollBounced: Function = null;
 	private _queuedData: any = null;
 
-	constructor(public _instrumentsService: InstrumentsService,
+	constructor(public instrumentsService: InstrumentsService,
 				private _zone: NgZone,
 				private _cacheService: CacheService,
 				private _cookieService: CookieService,
@@ -86,7 +86,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 		this._onScrollBounced = throttle(this._onScroll.bind(this), 33);
 
 		this._chartEl = this._elementRef.nativeElement.shadowRoot.lastElementChild;
-		this._chartEl.addEventListener('mousewheel', <any>this._onScrollBounced);
 
 		this._fetchCandles();
 
@@ -235,7 +234,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 			};
 
 			this._chart = new window['CanvasJS'].Chart(this._chartEl, chartOptions);
-
+			this._chartEl.addEventListener('mousewheel', <any>this._onScrollBounced);
 			this._updateViewPort();
 			this._updateIndicators();
 		});
@@ -313,9 +312,9 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 			let data;
 
 			if (this.model.options.type === 'backtest')
-				data = await this._instrumentsService.fetch(this.model, count, offset, undefined, this.model.options.from);
+				data = await this.instrumentsService.fetch(this.model, count, offset, undefined, this.model.options.from);
 			else
-				data = await this._instrumentsService.fetch(this.model, count, offset);
+				data = await this.instrumentsService.fetch(this.model, count, offset);
 
 			if (!data.indicators.length)
 				return;
@@ -673,7 +672,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 				},
 				onend: () => {
 					this.unpinFromCorner();
-					// this.changed.next();
+					this.render();
 				}
 			});
 	}

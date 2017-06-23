@@ -46,7 +46,7 @@ export class ChartOverviewComponent implements OnInit {
 					w: size,
 					h: size
 				}, true);
-				if ((++columnCounter + 1) * size >= containerW) {
+				if ((++columnCounter + 1) * size > containerW) {
 					columnCounter = 0;
 					rowCount++;
 				}
