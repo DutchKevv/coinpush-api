@@ -45,10 +45,14 @@ ul.tabs-list {
         border-bottom: none;
         margin-right: 10px;
 
+        &:hover {
+            cursor: pointer;
+            background: $general-secondary;
+        }
+
         a {
             color: white;
             font-size: 12px;
-            cursor: pointer;
         }
 
         &.active {

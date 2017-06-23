@@ -68,10 +68,10 @@ export class InstrumentListComponent implements OnDestroy, OnInit, AfterViewInit
 				})
 				.on('resizemove', event => {
 					let target = this._elementRef.nativeElement,
-						y = (parseFloat(target.getAttribute('data-y')) || 0);
+						y = parseFloat(target.getAttribute('data-y') || target.clientHeight);
 
 					target.style.height = event.rect.height + 'px';
-					target.setAttribute('data-y', y);
+					target.setAttribute('data-y', event.rect.height);
 				})
 				.on('resizeend', () => this._storeHeightInCookie())
 		});
@@ -86,7 +86,7 @@ export class InstrumentListComponent implements OnDestroy, OnInit, AfterViewInit
 	}
 
 	private _storeHeightInCookie() {
-		this._cookieService.put('footer-resize-height', parseInt(this._elementRef.nativeElement.style.height, 10).toString() || '0');
+		this._cookieService.put('home-left-aside-resize-height', parseInt(this._elementRef.nativeElement.style.height, 10).toString() || '0');
 	}
 
 	private _updateRows(symbols) {

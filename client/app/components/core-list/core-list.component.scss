@@ -6,7 +6,7 @@
 	height: 100%;
 	border-left: 1px solid $border-color-grey;
 	width: 90px;
-
+	position: relative;
 	transition: width .3s ease;
 }
 
@@ -20,6 +20,7 @@ p {
 	font-size: 12px;
 	text-align: center;
 	line-height: 18px;
+	font-style: italic;
 }
 
 ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
@@ -53,6 +54,13 @@ ul {
 	margin: 0;
 	padding: 0;
 	width: 100%;
+	overflow-y: auto;
+	//  TODO: Hack for making footer slide 'over' the core-list (it will bounce otherwise)
+	position: absolute;
+	top: 44px;
+	left: 0;
+	right: 0;
+	bottom: 0;
 
 	li.active > a {
 		background: $general-active !important;

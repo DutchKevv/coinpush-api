@@ -59,6 +59,9 @@ export class BacktestComponent implements AfterViewInit, OnInit, OnChanges {
 	}
 
 	updateModels(): void {
+		if (this.instrumentService.groupIds$.getValue().length === 0)
+			return;
+
 		if (this.activeGroupId === null)
 			this.activateHighest();
 

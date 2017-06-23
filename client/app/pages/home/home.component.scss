@@ -3,12 +3,12 @@
 :host {
     display: grid;
     grid-template-areas: "header header header"
-    "symbols main core-list"
-    "navigation2 main core-list"
+    "navigation main core-list"
     "footer footer footer";
-    grid-template-columns: 250px 1fr;
-    grid-template-rows: auto
-    1fr 1fr
+    grid-template-columns: 250px 1fr 90px;
+    grid-template-rows:
+    24px
+    1fr
     auto;
     min-height: 100vh;
 }
@@ -18,16 +18,16 @@ app-header-home {
 }
 
 instrument-list {
-    grid-area: symbols;
-    background: $background-dark;
+    height: 50%;
 }
 
 aside {
-    grid-area: navigation2;
+    grid-area: navigation;
     background: $background-dark;
     color: white;
-    padding-top: 40px;
     text-align: center;
+    display: flex;
+    flex-flow: column;
 }
 
 chart-overview {

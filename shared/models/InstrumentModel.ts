@@ -5,10 +5,10 @@ import * as moment from 'moment';
 export class InstrumentModel extends BaseModel {
 
 	public static readonly DEFAULTS: InstrumentSettings = {
-		ea: '',
-		symbol: '',
+		ea: null,
+		symbol: null,
 		timeFrame: 'M15',
-		id: '',
+		id: null,
 		groupId: null,
 		focus: false,
 		autoRun: true,

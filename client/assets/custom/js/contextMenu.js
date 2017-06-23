@@ -11,7 +11,8 @@
 						return;
 					}
 
-					let $menu = $(createMenuHTML(settings)).hide();
+					let $menu = $(createMenuHTML(settings)).hide(),
+						pos = getMenuPosition(e.clientX, e.clientX);
 
 					//open menu
 					$menu
@@ -61,11 +62,27 @@
 			return HTML;
 		}
 
+		// function getMenuPosition(mouse, direction, scrollDir) {
+		// 	var winW = window.document.body.clientWidth,
+		// 		winH = window.document.body.clientHeight,
+		// 		scroll = $(window)[scrollDir](),
+		// 		menu = $(settings.menuSelector)[direction](),
+		// 		position = mouse + scroll;
+		//
+		// 	// opening menu would pass the side of the page
+		// 	if (mouse + menu > win && menu < mouse)
+		// 		position -= menu;
+		//
+		// 	return position;
+		// }
+
 		function getMenuPosition(mouse, direction, scrollDir) {
 			var win = $(window)[direction](),
 				scroll = $(window)[scrollDir](),
 				menu = $(settings.menuSelector)[direction](),
 				position = mouse + scroll;
+
+			console.log('sadf', menu, mouse, scroll, win);
 
 			// opening menu would pass the side of the page
 			if (mouse + menu > win && menu < mouse)
