@@ -1,0 +1,86 @@
+@import '../../style/variables/variables';
+@import '../../style/components/circle';
+
+:host {
+	background: $background-dark;
+	height: 100%;
+	border-left: 1px solid $border-color-grey;
+	width: 90px;
+
+	transition: width .3s ease;
+}
+
+:host(.focused) {
+	width: 120px;
+}
+
+p {
+	color: $font-color-light;
+	margin: 0;
+	font-size: 12px;
+	text-align: center;
+	line-height: 18px;
+}
+
+::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+	color: $font-color-light-gray;
+	font-size: 12px;
+	font-style: italic;
+	padding-left: 3px;
+}
+
+input {
+	background: #6b6b6b;
+	font-size: 12px;
+	width: 100%;
+	padding: 3px 5px;
+	margin: 0;
+	border: 1px solid #6b6b6b;
+	height: 18px;
+	line-height: 18px;
+	color: $font-color-light;
+	transition: box-shadow .3s ease;
+
+	&:focus {
+		border: 1px solid rgba(126, 239, 104, 0.8);
+		box-shadow: 4px 0 12px rgba(0, 0, 0, 0.6), 0 0 17px rgba(126, 239, 104, 1);
+	}
+}
+
+ul {
+
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+
+	li.active > a {
+		background: $general-active !important;
+		color: $font-color-light !important;
+	}
+
+	a {
+		padding: 0 2px;
+		font-size: 10px;
+		color: white;
+		display: block;
+		border-bottom: 1px solid $border-color-grey;
+		cursor: pointer;
+		line-height: 18px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+
+		&:hover {
+			background: $general-secondary;
+		}
+	}
+
+	&:last-child {
+		margin-left: auto;
+	}
+}
+
+.circle {
+	margin-right: 2px;
+}

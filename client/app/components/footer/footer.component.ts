@@ -117,7 +117,6 @@ export class FooterComponent implements OnInit, OnDestroy, AfterViewChecked {
 					this._storeHeightInCookie();
 				})
 		});
-
 	}
 
 	private _bindContextMenu() {

@@ -86,7 +86,7 @@ export default class InstrumentController extends Base {
 	}
 
 	public getList() {
-		return this.instruments.map(instrument => {
+		return this._instruments.map(instrument => {
 			let options = instrument.model.options;
 
 			return {

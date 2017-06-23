@@ -2,10 +2,10 @@
 
 :host {
     display: grid;
-    grid-template-areas: "header header"
-    "navigation main"
-    "navigation2 main"
-    "footer footer";
+    grid-template-areas: "header header header"
+    "symbols main core-list"
+    "navigation2 main core-list"
+    "footer footer footer";
     grid-template-columns: 250px 1fr;
     grid-template-rows: auto
     1fr 1fr
@@ -18,7 +18,7 @@ app-header-home {
 }
 
 instrument-list {
-    grid-area: navigation;
+    grid-area: symbols;
     background: $background-dark;
 }
 
@@ -36,6 +36,10 @@ chart-overview {
 
 app-footer {
     grid-area: footer;
+}
+
+core-list {
+    grid-area: core-list;
 }
 
 .splitter {

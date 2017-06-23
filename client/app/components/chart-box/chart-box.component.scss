@@ -11,12 +11,13 @@
     border: 1px solid #999999;
     overflow: hidden;
     background: black; // rgba(0,0,0,0.7);
-    box-shadow: 7px 13px 7px 0 rgba(0,0,0,0.6);
     contain: layout;
 }
 
-:host.animate {
-    transition: transform .3s ease;
+:host(.black) {
+    .chart-content {
+        visibility: hidden;
+    }
 }
 
 :host(.stretched) {

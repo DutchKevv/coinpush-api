@@ -1,28 +1,11 @@
-<div #overview class="chart-overview-container">
-    <chart-box *ngFor="let model of instrumentsService.instruments$ | async"
-               [ngClass]="{focused: model.options.focus}"
-               [model]="model"
-               class="chart-absolute"
-               (click)="instrumentsService.setFocus(model)">
-    </chart-box>
+<chart-box *ngFor="let model of instrumentsService.instruments$ | async"
+           [ngClass]="{focused: model.options.focus}"
+           [model]="model"
+           class="chart-absolute"
+           (click)="instrumentsService.setFocus(model)">
+</chart-box>
 
-    <div *ngIf="instrumentsService.instruments.length === 0" class="chart-no-charts">
-        <p>No charts, click on any instrument in the left panel to open up a new chart.</p>
-    </div>
+<div *ngIf="instrumentsService.instruments.length === 0" class="chart-no-charts">
+    <p>No charts, click on any instrument in the left panel to open up a new chart.</p>
 </div>
-
-<div class="chart-overview-tabs visible-md visible-lg">
-    <ul>
-        <li *ngFor="let model of instrumentsService.instruments$ | async"
-            [attr.data-instrument-id]="model.options.id"
-            [ngClass]="{active: model.options.focus}"
-            (click)="instrumentsService.setFocus(model)"
-        >
-
-            <a>{{model.options.symbol}}</a>
-        </li>
-        <li>
-            <i class="fa fa-table" (click)="tileWindows()"></i>
-        </li>
-    </ul>
-</div>
+<i class="fa fa-table" (click)="tileWindows()"></i>

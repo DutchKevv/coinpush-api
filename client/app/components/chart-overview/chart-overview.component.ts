@@ -19,7 +19,6 @@ declare let $: any;
 export class ChartOverviewComponent implements OnInit {
 
 	@ViewChildren(ChartBoxComponent) charts: QueryList<ChartBoxComponent>;
-	@ViewChild('overview') overview: ElementRef;
 
 	constructor(public instrumentsService: InstrumentsService,
 				private _zone: NgZone,
@@ -27,31 +26,32 @@ export class ChartOverviewComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.instrumentsService.instruments$.subscribe(instruments => {
-			this.setFocusToHighestIndex();
-		});
-
-		this._setContextMenu();
+		this.instrumentsService.instruments$.subscribe(() => this.setFocusToHighestIndex());
 	}
 
 	tileWindows() {
-		let containerW = this.overview.nativeElement.clientWidth,
-			containerH = this.overview.nativeElement.clientHeight,
-			size = this._getTileSize(containerW, containerH, this.charts.length),
-			columnCounter = 0,
-			rowCount = 0;
+		this._zone.runOutsideAngular(() => {
+			let containerW = this._elementRef.nativeElement.clientWidth,
+				containerH = this._elementRef.nativeElement.clientHeight,
+				size = Math.floor(this._getTileSize(containerW, containerH, this.charts.length)),
+				columnCounter = 0,
+				rowCount = 0;
 
-		this.charts.forEach((chart) => {
-			chart.setPosition(columnCounter * size, rowCount * size);
-			if (++columnCounter * size >= containerW) {
-				columnCounter = 0;
-				rowCount++;
-			}
+			// First set the size of the box, but wait with rendering,
+			// This is to give a 'snappy' feeling (re-rendering the charts is pretty slow)
+			this.charts.forEach((chart) => {
+				chart.setStyles({
+					x: columnCounter * size,
+					y: rowCount * size,
+					w: size,
+					h: size
+				}, true);
+				if ((++columnCounter + 1) * size >= containerW) {
+					columnCounter = 0;
+					rowCount++;
+				}
+			});
 		});
-
-		requestAnimationFrame(() => {
-			this.charts.forEach((chart) => chart.setSize(size, size));
-		})
 	}
 
 	setFocusToHighestIndex(): void {
@@ -94,39 +94,5 @@ export class ChartOverviewComponent implements OnInit {
 		// and low.
 		sideLength = height;
 		return sideLength;
-	}
-
-	private _setContextMenu() {
-		this._zone.runOutsideAngular(() => {
-			$(this._elementRef.nativeElement.shadowRoot)
-				.find('.chart-overview-tabs')
-				.contextMenu({
-					items: [
-						{
-							text: 'Close',
-							value: 'close'
-						},
-						{
-							text: 'Close all',
-							value: 'closeAll'
-						}
-					],
-					menuSelected: (selectedValue, originalEvent) => {
-						let $button = $(originalEvent.target).parents('[data-instrument-id]'),
-							id = $button.attr('data-instrument-id');
-
-						if (id) {
-							switch (selectedValue) {
-								case 'close':
-									this.instrumentsService.remove(this.instrumentsService.getById(id));
-									break;
-								case 'closeAll':
-									this.instrumentsService.removeAll();
-									break;
-							}
-						}
-					}
-				});
-		});
 	}
 }

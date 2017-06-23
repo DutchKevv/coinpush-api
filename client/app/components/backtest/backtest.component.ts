@@ -1,5 +1,6 @@
 import {
-	Component, AfterViewInit, Input, OnInit, PipeTransform, Pipe, ElementRef, ViewEncapsulation, OnChanges
+	Component, AfterViewInit, Input, OnInit, PipeTransform, Pipe, ElementRef, ViewEncapsulation, OnChanges,
+	ChangeDetectionStrategy
 } from '@angular/core';
 import {InstrumentModel} from '../../../../shared/models/InstrumentModel';
 import {InstrumentsService} from '../../services/instruments.service';
@@ -18,7 +19,7 @@ export class GroupIdsPipe implements PipeTransform {
 	templateUrl: './backtest.component.html',
 	styleUrls: ['./backtest.component.scss'],
 	encapsulation: ViewEncapsulation.Native,
-	// changeDetection: ChangeDetectionStrategy.OnPush
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class BacktestComponent implements AfterViewInit, OnInit, OnChanges {

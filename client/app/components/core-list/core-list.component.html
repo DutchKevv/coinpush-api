@@ -1,0 +1,12 @@
+<p>Cores</p>
+<input type="text" placeholder="Search..." (focus)="onToggleInputFocus(true)" (blur)="onToggleInputFocus(false)"/>
+
+<ul #list>
+	<li *ngFor="let model of instrumentsService.instruments$ | async"
+		[attr.data-instrument-id]="model.options.id"
+		[ngClass]="{active: model.options.focus}"
+		(click)="instrumentsService.setFocus(model)"
+	>
+		<a><span class="circle ok"></span>{{model.options.symbol}}</a>
+	</li>
+</ul>

@@ -115,8 +115,8 @@ export default class Cache extends WorkerChild {
 		return candles;
 	}
 
-	public fetch(params: { symbol: string, timeFrame: string, from: number, until: number, count: number }, emitStatus?: boolean): Promise<void> {
-		return this._fetchQueue.then(() => console.log('queueue finished!')).then(async () => {
+	public async fetch(params: { symbol: string, timeFrame: string, from: number, until: number, count: number }, emitStatus?: boolean): Promise<void> {
+		await this._fetchQueue.then(async () => {
 			let symbol = params.symbol,
 				timeFrame = params.timeFrame,
 				from = params.from,
@@ -194,7 +194,7 @@ export default class Cache extends WorkerChild {
 					});
 				});
 			}));
-		}).then(() => console.log('queueue ready'));
+		});
 	}
 
 	public async reset(symbol?: string, timeFrame?: string, from?: number, until?: number): Promise<any> {

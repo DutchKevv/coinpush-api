@@ -1,7 +1,10 @@
 import {
 	Component, OnInit, OnDestroy, ElementRef, Pipe, PipeTransform, ChangeDetectionStrategy,
-	ChangeDetectorRef, NgZone, ViewEncapsulation, ViewChild
+	ChangeDetectorRef, NgZone, ViewEncapsulation, ViewChild, AfterViewInit
 } from '@angular/core';
+import * as interact from 'interactjs';
+import {CookieService} from 'ngx-cookie';
+
 import {InstrumentsService} from '../../services/instruments.service';
 import {CacheService, CacheSymbol} from '../../services/cache.service';
 
@@ -31,14 +34,16 @@ export class SearchFilter implements PipeTransform {
 	encapsulation: ViewEncapsulation.Native,
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InstrumentListComponent implements OnDestroy, OnInit {
+export class InstrumentListComponent implements OnDestroy, OnInit, AfterViewInit {
 
 	@ViewChild('tbody') tbody: ElementRef;
+	@ViewChild('resizeHandle') splitter: ElementRef;
 
 	private _elements: any = {};
 
 	constructor(public cacheService: CacheService,
 				public instrumentService: InstrumentsService,
+				private _cookieService: CookieService,
 				private _elementRef: ElementRef,
 				private _zone: NgZone) {
 	}
@@ -48,6 +53,40 @@ export class InstrumentListComponent implements OnDestroy, OnInit {
 
 		this.cacheService.symbolList$.subscribe(() => this._createRows());
 		this.cacheService.changed$.subscribe(symbols => this._updateRows(symbols));
+	}
+
+	ngAfterViewInit() {
+		this._setDraggable();
+	}
+
+	private _setDraggable() {
+		this._zone.runOutsideAngular(() => {
+			interact(this.splitter.nativeElement)
+				.resizable({
+					preserveAspectRatio: true,
+					edges: {left: false, right: false, bottom: true, top: false}
+				})
+				.on('resizemove', event => {
+					let target = this._elementRef.nativeElement,
+						y = (parseFloat(target.getAttribute('data-y')) || 0);
+
+					target.style.height = event.rect.height + 'px';
+					target.setAttribute('data-y', y);
+				})
+				.on('resizeend', () => this._storeHeightInCookie())
+		});
+	}
+
+	private _restoreHeightFromCookie() {
+		let storedHeight = this._cookieService.get('footer-resize-height');
+
+		if (storedHeight) {
+			this._elementRef.nativeElement.style.height = storedHeight;
+		}
+	}
+
+	private _storeHeightInCookie() {
+		this._cookieService.put('footer-resize-height', parseInt(this._elementRef.nativeElement.style.height, 10).toString() || '0');
 	}
 
 	private _updateRows(symbols) {

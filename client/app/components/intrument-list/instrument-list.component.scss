@@ -2,6 +2,14 @@
 
 :host {
 	contain: layout;
+	position: relative;
+}
+
+::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+	color: $font-color-light-gray;
+	font-style: italic;
+	padding-left: 3px;
+	font-size: 12px;
 }
 
 table {
@@ -13,77 +21,83 @@ table {
 	overflow: hidden;
 	font-size: 10px;
 	width: 100%;
-}
 
-thead tr:last-child th {
-	padding: 0;
-}
+	thead {
+		display: block;
 
-thead,
-tbody {
-	display: block;
-}
+		input {
+			background: #6b6b6b;
+			font-size: 12px;
+			width: 100%;
+			padding: 3px 5px;
+			margin: 0;
+			border: 0;
+			height: 18px;
+			line-height: 18px;
+			color: $font-color-light;
+		}
 
-tbody {
-	height: calc(100% - 37px);
-	overflow-y: scroll;
-	overflow-x: hidden;
-}
-
-tr {
-	border-bottom: 1px solid $border-color-grey;
-	height: 18px;
-}
-
-th,
-td {
-	padding-left: 5px;
-	min-width: 72px;
-	max-width: 72px;
-	color: $font-color-light;
-	line-height: 12px;
-
-	&:nth-child(1),
-	&:nth-child(1) {
-		min-width: 90px;
-		max-width: 90px;
-		padding-top: 4px;
-		padding-bottom: 4px;
-		padding-left: 2px;
+		tr:last-child th {
+			padding: 0;
+		}
 	}
-}
 
-td:nth-child(2) {
-	border-left: 1px solid $border-color-grey;
-	border-right: 1px solid $border-color-grey;
-}
+	tr {
+		height: 18px;
+	}
 
-td.up {
-	color: #38cc38;
-}
+	th {
+		font-style: italic;
 
-td.down {
-	color: #f92929;
-}
+	}
 
-td:first-child:hover {
-	background: #6f748e;
-	cursor: pointer;
-}
+	th,
+	td {
+		padding-left: 5px;
+		min-width: 72px;
+		max-width: 72px;
+		color: $font-color-light;
+		line-height: 12px;
 
-::-webkit-input-placeholder { /* WebKit, Blink, Edge */
-	color:    #d2d0d0;
-}
+		&:nth-child(1),
+		&:nth-child(1) {
+			min-width: 90px;
+			max-width: 90px;
+			padding-top: 4px;
+			padding-bottom: 4px;
+			padding-left: 2px;
+		}
+	}
 
-input {
-	background: #6b6b6b;
-}
+	tbody {
+		display: block;
+		height: calc(100% - 37px);
+		overflow-y: scroll;
+		overflow-x: hidden;
 
-.search-instrument-list {
-	width: 100%;
-	padding: 0;
-	margin: 0;
-	border: 0;
+		tr {
+			border-bottom: 1px solid $border-color-grey;
+			height: 18px;
+		}
+
+		td.up {
+			color: #38cc38;
+		}
+
+		td.down {
+			color: #f92929;
+		}
+
+		td:first-child:hover {
+			background: #6f748e;
+			cursor: pointer;
+		}
+
+		td:nth-child(2) {
+			border-left: 1px solid $border-color-grey;
+			border-right: 1px solid $border-color-grey;
+		}
+	}
 }
 
 .fa {
@@ -96,4 +110,19 @@ input {
 
 .fa-arrow-down {
 	color: red;
+}
+
+.splitter {
+	position: absolute;
+	bottom: -4px;
+	left: 50%;
+	right: 0;
+	z-index: 100;
+	height: 10px;
+	cursor: ns-resize;
+	text-align: center;
+	font-size: 10px;
+	padding-left: 1px;
+	color: $font-color-light;
+	transition: transform .2s;
 }

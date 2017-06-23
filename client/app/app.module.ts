@@ -38,11 +38,11 @@ import {ModalService} from './services/modal.service';
 import {InstrumentsService} from './services/instruments.service';
 import {ResizableDirective} from './directives/resizable.directive';
 import {ChartBoxComponent} from './components/chart-box/chart-box.component';
-import {ChartComponent} from './components/chart/chart.component';
 import {BacktestSettingsComponent, GroupByPipe} from './components/backtest-settings/backtest-settings.component';
 import {BacktestReportComponent} from './components/backtest-report/backtest-report.component';
 import {CacheService} from './services/cache.service';
 import {BacktestComponent, GroupIdsPipe} from './components/backtest/backtest.component';
+import {CoreListComponent} from "./components/core-list/core-list.component";
 
 @NgModule({
 	declarations: [
@@ -51,7 +51,6 @@ import {BacktestComponent, GroupIdsPipe} from './components/backtest/backtest.co
 		BacktestReportComponent,
 		BacktestSettingsComponent,
 		ChartBoxComponent,
-		ChartComponent,
 		ChartOverviewComponent,
 		DialogAnchorDirective,
 		DialogComponent,
@@ -70,7 +69,8 @@ import {BacktestComponent, GroupIdsPipe} from './components/backtest/backtest.co
 		ModalAnchorDirective,
 		ResizableDirective,
 		SearchFilter,
-		StatusComponent
+		StatusComponent,
+		CoreListComponent
 	],
 	imports: [
 		BrowserModule,

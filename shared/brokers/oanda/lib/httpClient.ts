@@ -1,6 +1,7 @@
-import * as http from 'http';
-import * as https from 'https';
+import * as http 		from 'http';
+import * as https 		from 'https';
 import * as querystring from 'querystring';
+import {log} 			from '../../../logger';
 
 let httpAgent,
 	httpsAgent,
@@ -34,7 +35,7 @@ export function sendRequest(options, callback, onData) {
 			options.agent = httpsAgent;
 		}
 		Object.keys(options.agent.requests).forEach(function (connectionName) {
-			console.info('[INFO] Socket pool for', connectionName, 'has', options.agent.requests[connectionName].length, 'pending requests over', options.agent.sockets[connectionName].length, 'sockets');
+			// log.info('HTTP', `Socket pool for ${connectionName} has ${options.agent.requests[connectionName].length} pending requests over ${options.agent.sockets[connectionName].length} sockets`);
 		});
 	}
 	// console.info('[INFO]  HTTPS OUT', options.hostname, options.port, options.method, options.path);
