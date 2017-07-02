@@ -20,15 +20,14 @@ declare let $: any;
 @Component({
 	selector: 'chart-box',
 	templateUrl: './chart-box.component.html',
-	styleUrls: ['./chart-box.component.scss'],
+	styleUrls: [
+		'./chart-box.component.scss'
+	],
 	encapsulation: ViewEncapsulation.Native,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	entryComponents: [DialogComponent],
-	host: {
-		'[class.className]' : 'className',
-		'[class]' : 'classNames'
-	}
+	entryComponents: [DialogComponent]
 })
+
 
 export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 

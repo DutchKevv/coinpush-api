@@ -57,7 +57,7 @@ export class FooterComponent implements OnInit, OnDestroy, AfterViewChecked {
 	}
 
 	ngAfterViewChecked() {
-		console.log('FOOTER FOOTER CHECK!!');
+		// console.log('FOOTER FOOTER CHECK!!');
 	}
 
 	private _setTabs() {

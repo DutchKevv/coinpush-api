@@ -1,6 +1,5 @@
 import {InstrumentSettings} from '../interfaces/InstrumentSettings';
 import {BaseModel} from '../models/BaseModel';
-import * as moment from 'moment';
 
 export class InstrumentModel extends BaseModel {
 
@@ -32,19 +31,6 @@ export class InstrumentModel extends BaseModel {
 			endTime: null
 		}
 	};
-
-	public static parseUnixToString(date: number): string {
-		if (typeof date === 'number')
-			return moment(date).format('YYYY-MM-DD');
-
-		return date;
-	}
-
-	public static parseDateStringToUnix(date: string) {
-		if (typeof date === 'string')
-			return moment(date, 'YYYY-MM-DD').valueOf();
-		return date;
-	}
 
 	private _zoomMax = 10;
 	private _zoomMin = 1;
@@ -84,6 +70,7 @@ export class InstrumentModel extends BaseModel {
 	}
 
 	public updateOrders(orders) {
+		console.log(orders);
 		this.options.orders.push(...orders);
 	}
 

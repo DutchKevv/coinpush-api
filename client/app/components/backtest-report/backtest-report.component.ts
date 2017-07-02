@@ -37,14 +37,14 @@ export class BacktestReportComponent implements AfterViewInit, OnInit, OnDestroy
 		this.model.changed$.subscribe((changes:any) => {
 			this._onInstrumentStatusUpdate();
 			
-			if (changes.indexOf('orders') > -1)
+			if (changes.indexOf('orders') > -1 && this.model.options.orders.length)
 				this._updateData(changes.orders);
 		});
 		this._onInstrumentStatusUpdate();
 	}
 
 	ngAfterViewChecked() {
-		console.log('CHECK!!');
+		// console.log('CHECK!!');
 	}
 
 	private _createChart(): void {

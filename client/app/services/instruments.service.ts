@@ -8,9 +8,6 @@ import {IndicatorModel} from '../models/indicator';
 import {DialogComponent} from '../components/dialog/dialog.component';
 import {ModalService} from './modal.service';
 import {InstrumentModel} from '../../../shared/models/InstrumentModel';
-import {Observable} from 'rxjs/Observable';
-import {Subject} from 'rxjs/Subject';
-import {GroupedObservable} from 'rxjs/operator/groupBy';
 
 @Injectable()
 export class InstrumentsService {
@@ -99,10 +96,11 @@ export class InstrumentsService {
 			this._instruments.push(instrumentModel);
 		});
 
-		this.instruments$.next(this._instruments);
-
-		if (setFocus && this._instruments.length)
+		if (setFocus && this._instruments.length) {
 			this.setFocus(this._instruments[this._instruments.length - 1]);
+		}
+
+		this.instruments$.next(this._instruments);
 
 		return instrumentModels
 	}

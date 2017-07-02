@@ -28,7 +28,7 @@ export default class Cache extends WorkerChild {
 	private _tickIntervalTimer = null;
 	private _tickStreamOpen: boolean = false;
 
-	private _fetchQueue = Promise.resolve();
+	private _fetchQueue: Promise<any> = Promise.resolve();
 
 	public async init() {
 		await super.init();
@@ -116,7 +116,7 @@ export default class Cache extends WorkerChild {
 	}
 
 	public async fetch(params: { symbol: string, timeFrame: string, from: number, until: number, count: number }, emitStatus?: boolean): Promise<void> {
-		await this._fetchQueue.then(async () => {
+		this._fetchQueue = this._fetchQueue.then(async () => {
 			let symbol = params.symbol,
 				timeFrame = params.timeFrame,
 				from = params.from,
@@ -195,6 +195,8 @@ export default class Cache extends WorkerChild {
 				});
 			}));
 		});
+
+		return this._fetchQueue;
 	}
 
 	public async reset(symbol?: string, timeFrame?: string, from?: number, until?: number): Promise<any> {

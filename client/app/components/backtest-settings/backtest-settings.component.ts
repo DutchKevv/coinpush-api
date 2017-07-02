@@ -11,6 +11,7 @@ import {IBacktestSettings}            from '../../../../shared/interfaces/Backte
 import {InstrumentsService} from '../../services/instruments.service';
 import {InstrumentModel} from '../../../../shared/models/InstrumentModel';
 import {BaseModel} from '../../../../shared/models/BaseModel';
+import * as moment from 'moment';
 
 declare let $: any;
 
@@ -36,16 +37,30 @@ export class GroupByPipe implements PipeTransform {
 }
 
 export class BacktestSettingsModel extends BaseModel {
+
 	public static readonly DEFAULTS = {
-		ea: [],
-		symbols: [],
-		timeFrame: '',
+		ea: ['example'],
+		symbols: ['EUR_USD'],
+		timeFrame: 'M15',
 		from: Date.now() - (1000 * 60 * 60 * 24 * 14), // 2 weeks
 		until: Date.now(),
 		pips: 1,
 		leverage: 1,
 		startEquality: 10000,
-		currency: 'EURO'
+		currency: 'euro'
+	};
+
+	public static parseUnixToString(date: number): string {
+		if (typeof date === 'number')
+			return moment(date).format('YYYY-MM-DD');
+
+		return date;
+	}
+
+	public static parseDateStringToUnix(date: string) {
+		if (typeof date === 'string')
+			return moment(date, 'YYYY-MM-DD').valueOf();
+		return date;
 	}
 }
 
@@ -97,10 +112,11 @@ export class BacktestSettingsComponent implements OnInit, AfterViewInit {
 
 		delete storedData.symbols;
 
-		storedData.from = InstrumentModel.parseUnixToString(+storedData.from);
-		storedData.until = InstrumentModel.parseUnixToString(+storedData.until);
-
 		this.model.set(storedData);
+
+		this.model.options.from = BacktestSettingsModel.parseUnixToString(this.model.options.from);
+		this.model.options.until = BacktestSettingsModel.parseUnixToString(this.model.options.until);
+
 		this.form = this.formBuilder.group(this.model.options);
 
 		this.form.valueChanges.subscribe(() => this.saveSettings());
@@ -130,8 +146,8 @@ export class BacktestSettingsComponent implements OnInit, AfterViewInit {
 
 	public async create() {
 		let data = Object.assign({}, this.model.options, {
-			from: InstrumentModel.parseDateStringToUnix(this.model.options.from),
-			until: InstrumentModel.parseDateStringToUnix(this.model.options.until),
+			from: BacktestSettingsModel.parseDateStringToUnix(this.model.options.from),
+			until: BacktestSettingsModel.parseDateStringToUnix(this.model.options.until),
 		});
 
 		let options = data.symbols.map(symbol => {
@@ -150,8 +166,8 @@ export class BacktestSettingsComponent implements OnInit, AfterViewInit {
 			{},
 			this.model.options,
 			{
-				from: InstrumentModel.parseDateStringToUnix(this.model.options.from),
-				until: InstrumentModel.parseDateStringToUnix(this.model.options.until)
+				from: BacktestSettingsModel.parseDateStringToUnix(this.model.options.from),
+				until: BacktestSettingsModel.parseDateStringToUnix(this.model.options.until)
 			})
 		);
 
