@@ -306,7 +306,6 @@ export default class App extends Base {
 		};
 
 		process.on('SIGTERM', processExitHandler);
-		process.on('SIGKILL', processExitHandler);
 		process.on('SIGINT', processExitHandler);
 		process.on('unhandledRejection', processExitHandler);
 	}

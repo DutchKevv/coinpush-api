@@ -11,6 +11,7 @@ export default class IPC extends Base {
 	private _unique = 0;
 	private _ipc: any = null;
 	private _acks: any = {};
+	private _leftOver: any = null;
 
 	public async init() {
 		await super.init();
@@ -140,9 +141,7 @@ export default class IPC extends Base {
 
 				});
 
-				this._server.server.on('data', (data, socket) => {
-					this._onMessage(data, socket);
-				});
+				this._server.server.on('data', (data, socket) => this._onMessage(data, socket));
 
 				this._server.server.on('error', (error, socket) => {
 					console.error('IPC Server error: ' + error);
@@ -192,9 +191,7 @@ export default class IPC extends Base {
 					// console.log(socket);
 				});
 
-				socket.on('data', (data) => {
-					this._onMessage(data, socket)
-				});
+				socket.on('data', (data) => this._onMessage(data, socket));
 			});
 		});
 	}
@@ -208,18 +205,29 @@ export default class IPC extends Base {
 		this._server.server.of[id] = socket;
 	}
 
-	_onMessage(buffer: NodeBuffer, socket) {
-		// console.log('ALL', buffer.length, buffer.toString('binary'));
 
-		let i = 0;
+	_onMessage(buffer: Buffer, socket) {
+		let i = 0,
+			size, metaSize;
+
+		if (socket.leftOver) {
+			buffer = Buffer.concat([socket.leftOver, buffer]);
+			socket.leftOver = null;
+		}
 
 		while (i < buffer.byteLength) {
-			let size = parseInt(buffer.toString('binary', i, i + 10), 10);
-			let metaSize =  parseInt(buffer.toString('binary', i + 10, i + 20), 10);
+			size = parseInt(buffer.toString('ascii', i, i + 10), 10);
+			metaSize = parseInt(buffer.toString('ascii', i + 10, i + 20), 10);
 
 			let _buffer = buffer.slice(i, i + size);
 
 			i += size;
+
+			// Not complete message
+			if (i > buffer.byteLength) {
+				socket.leftOver = Buffer.from(_buffer);
+				return;
+			}
 
 			let metaStart = 20;
 			let metaEnd = metaStart + metaSize;
@@ -228,7 +236,7 @@ export default class IPC extends Base {
 			try {
 				meta = JSON.parse(_buffer.slice(metaStart, metaEnd).toString('ascii'));
 			} catch (error) {
-				console.log('META ERROR', size, metaSize, error, _buffer.slice(metaStart, metaEnd).toString('ascii'));
+				console.log('META ERROR', size, metaSize, _buffer.slice(metaStart, metaEnd).toString('ascii'), error);
 				throw error;
 			}
 
@@ -238,7 +246,7 @@ export default class IPC extends Base {
 				try {
 					content = JSON.parse(content.toString('ascii'))
 				} catch (error) {
-					console.log('CONTENT ERROR: ', size, metaSize, error, _buffer.slice(metaStart, metaEnd).toString('ascii'));
+					console.log('CONTENT ERROR: ', size, metaSize, content.toString('ascii'), error);
 					throw error;
 				}
 			} else {
