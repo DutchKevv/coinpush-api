@@ -336,8 +336,6 @@ export default class App extends Base {
 			log.info('App', 'Shutting down and cleaning up child processes');
 		}
 
-		this.debug('warning', 'Shutting down server');
-
 		this._killAllChildProcesses();
 
 		// this._httpApi.close();

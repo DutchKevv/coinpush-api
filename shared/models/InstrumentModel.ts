@@ -27,7 +27,7 @@ export class InstrumentModel extends BaseModel {
 			progress: 0,
 			tickCount: 0,
 			ticksPerSecond: 0,
-			totalFetchTime: 0,
+			fetchTime: 0,
 			startTime: null,
 			endTime: null
 		}

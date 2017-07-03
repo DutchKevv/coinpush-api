@@ -105,11 +105,13 @@ export default class InstrumentController extends Base {
 	}
 
 	public toggleTimeFrame(id, timeFrame) {
-		this.instruments[id].timeFrame = timeFrame;
+		log.info('InstrumentController', `Toggle timeframe of ${id} to ${timeFrame}`);
 
-		return this.instruments[id].worker.sendAsync('toggleTimeFrame', {
-			timeFrame: timeFrame
-		});
+		let instrument = this.getById(id);
+
+		instrument.model.set({timeFrame});
+
+		return instrument.worker.sendAsync('toggleTimeFrame', {timeFrame});
 	}
 
 	public async addIndicator(params) {

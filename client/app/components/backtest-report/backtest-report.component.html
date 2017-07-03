@@ -1,6 +1,6 @@
 <section *ngIf="model.options$ | async as options" class="tpl-model" [attr.data-id]="model.options.id">
 	<header style="display: flex;">
-		<h5 style="width: 200px;">{{options.symbol}} {{options.groupId}}</h5>
+		<h5 style="width: 220px;">{{options.symbol}}</h5>
 		<div class="progress">
 			<span></span>
 			<div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="70"
@@ -9,23 +9,23 @@
 		</div>
 	</header>
 	<main style="display: flex;">
-		<div style="width: 200px;">
+		<div style="width: 220px;">
 			<ul class="key-value-list">
 				<li><span>Diff</span><span
 						[class.text-negative]="options.status.equality - options.startEquality < 0"
 						[class.text-positive]="options.status.equality - options.startEquality > 0"
-				>€ {{(options.status.equality - options.startEquality).toFixed(2)}}</span></li>
-				<li><span>Equality</span>€ {{options.status.equality}}</li>
-				<li><span>Nr of trades</span>{{options.orders.length}}</li>
+				>{{(options.status.equality - options.startEquality) | currency:'EUR':true:'1.2-2'}}</span></li>
+				<li><span>Equality</span>{{options.status.equality | currency:'EUR':true:'1.2-2'}}</li>
+				<li><span>Trades</span>{{options.orders.length}}</li>
 			</ul>
 			<ul class="key-value-list">
-				<li><span>Completed in</span>{{options.totalPretty}}</li>
-				<li><span>Fetching</span>{{options.fetchingPretty}}</li>
+				<li><span>Time</span><ng-container *ngIf="options.status.type === 'finished'">{{(options.status.endTime - options.status.startTime) / 1000}} s</ng-container></li>
+				<li><span>Fetching</span>{{options.status.fetchTime / 1000}} s</li>
 				<li><span>Testing</span>{{options.testingPretty}}</li>
 			</ul>
 			<ul class="key-value-list">
 				<li><span>Ticks</span>{{options.status.tickCount}}</li>
-				<li><span>Ticks p / s</span>{{options.status.ticksPerSecond}}</li>
+				<li><span>Ticks p/s</span>{{options.status.ticksPerSecond}}</li>
 			</ul>
 		</div>
 		<div #chart style="width: 100%;"></div>

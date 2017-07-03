@@ -1,6 +1,6 @@
 import {
 	Component, AfterViewInit, Input, OnInit, PipeTransform, Pipe, ElementRef, ViewEncapsulation, OnChanges,
-	ChangeDetectionStrategy, Output
+	ChangeDetectionStrategy, Output, ViewChild
 } from '@angular/core';
 import {InstrumentModel} from '../../../../shared/models/InstrumentModel';
 import {InstrumentsService} from '../../services/instruments.service';
@@ -27,6 +27,7 @@ export class BacktestComponent implements AfterViewInit, OnInit, OnChanges {
 
 	public models: Array<InstrumentModel> = [];
 	@Output() public models$ = new BehaviorSubject([]);
+	@ViewChild('progressBar') _progressBar: ElementRef;
 
 	public activeGroupId = null;
 
@@ -48,7 +49,7 @@ export class BacktestComponent implements AfterViewInit, OnInit, OnChanges {
 		});
 	}
 
-	ngOnChanges(){
+	ngOnChanges() {
 		alert('chagnes!');
 	}
 
@@ -67,9 +68,9 @@ export class BacktestComponent implements AfterViewInit, OnInit, OnChanges {
 		if (this.activeGroupId === null)
 			this.activateHighest();
 
-		let models = this.instrumentService.instruments.filter(model => model.options.groupId === this.activeGroupId);
+		this.models = this.instrumentService.instruments.filter(model => model.options.groupId === this.activeGroupId);
 
-		this.models$.next(models);
+		this.models$.next(this.models);
 
 		this._updateMainProgressBar();
 	}
@@ -86,20 +87,22 @@ export class BacktestComponent implements AfterViewInit, OnInit, OnChanges {
 
 	private _updateProgressBar(type: string, text = '', progress = 0): void {
 		requestAnimationFrame(() => {
-			let elProgressBar = this._elementRef.nativeElement.shadowRoot.querySelector('.progress-bar');
-
-			if (!elProgressBar)
+			if (!this._progressBar)
 				return;
 
-			elProgressBar.previousElementSibling.textContent = text;
-			elProgressBar.classList.remove(...['info', 'success', 'error'].map(str => 'bg-' + str));
-			elProgressBar.classList.add('bg-' + type);
-			elProgressBar.style.width = progress + '%';
+			this._progressBar.nativeElement.previousElementSibling.textContent = text;
+			this._progressBar.nativeElement.classList.remove(...['info', 'success', 'error'].map(str => 'bg-' + str));
+			this._progressBar.nativeElement.classList.add('bg-' + type);
+			this._progressBar.nativeElement.style.width = progress + '%';
 		});
 	}
 
 	private _updateMainProgressBar(): void {
-		// Set 'global' progress bar
+		if (!this._progressBar)
+			return;
+
+		this._progressBar.nativeElement.classList.add('animate');
+
 		let totalProgress = 0,
 			totalFinished = 0,
 			state = 'success';
@@ -107,25 +110,26 @@ export class BacktestComponent implements AfterViewInit, OnInit, OnChanges {
 		this.models.forEach((model: InstrumentModel) => {
 			totalProgress += +model.options.status.progress || 0;
 
-			if (model.options.status.type === 'finished')
-				totalFinished++;
-
-			if (model.options.status.type === 'warning') {
-				state = 'warning';
-			}
-
-			if (model.options.status.type === 'error') {
-				state = 'error';
+			switch (model.options.status.type) {
+				case 'finished':
+					totalFinished++;
+					break;
+				case 'warning':
+					state = 'warning';
+					break;
+				case 'error':
+					state = 'error';
+					break;
 			}
 		});
 
-
-		// console.log('otaotalsa;dfsf', this.models.length, totalProgress);
 		totalProgress = <any>((totalProgress / (this.models.length * 100)) * 100).toFixed(2);
 
-		if (totalFinished === this.models.length)
-			return this._updateProgressBar(state, `Finished`, 100);
-
-		this._updateProgressBar(state, `Running ${totalProgress}%`, totalProgress);
+		if (totalFinished === this.models.length) {
+			this._updateProgressBar(state, `Finished`, 100);
+			this._progressBar.nativeElement.classList.remove('animate');
+		} else {
+			this._updateProgressBar(state, `Running ${totalProgress}%`, totalProgress);
+		}
 	}
 }

@@ -59,10 +59,10 @@ export default class MyEA extends EA implements IEA {
 		}
 
 
-		await new Promise((resolve, reject) => {
-			setTimeout(() => {
-				resolve();
-			}, 10)
-		});
+// 		await new Promise((resolve, reject) => {
+// 			setTimeout(() => {
+// 				resolve();
+// 			}, 1)
+// 		});
 	}
 }

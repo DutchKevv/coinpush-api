@@ -23,7 +23,7 @@ export interface InstrumentSettings {
 		progress: number;
 		tickCount: number;
 		ticksPerSecond: number;
-		totalFetchTime: number;
+		fetchTime: number;
 		startTime: number;
 		endTime: number;
 	}

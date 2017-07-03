@@ -86,9 +86,10 @@ export default class EA extends Instrument implements IEA {
 		log.info('EA', `${this.id} : Starting Backtest`);
 
 		let count = 1000,
-			lastTime, lastBatch = false,
+			lastBatch = false,
 			from = this.options.from,
-			until = this.options.until;
+			until = this.options.until,
+			startFetch = Date.now();
 
 		this.model.set({
 			status: {
@@ -106,18 +107,19 @@ export default class EA extends Instrument implements IEA {
 
 		// Report status every X seconds
 		// TODO - Optimize
-		let now = Date.now();
-		let interval = setInterval(() => {
-			this._emitProgressReport();
-			now = Date.now();
-		}, 1000);
+		let interval = setInterval(() => this._emitProgressReport(), 1000);
 
 		this._emitProgressReport();
 
 		while (true) {
 			let candles = await p;
 
-			this.model.set({status: {type: 'running'}});
+			this.model.set({
+				status: {
+					type: 'running',
+					fetchTime: this.model.options.status.fetchTime + (Date.now() - startFetch)
+				}
+			});
 
 			// There is no more data, so stop
 			if (!candles || !candles.length) {
@@ -153,6 +155,7 @@ export default class EA extends Instrument implements IEA {
 
 			await this.inject(ticks);
 
+			startFetch = Date.now();
 			this.model.set({status: {type: 'fetching'}});
 
 			// There are no more candles to end
@@ -164,6 +167,13 @@ export default class EA extends Instrument implements IEA {
 
 		this.orderManager.closeAll(this.time, this.bid, this.ask);
 
+		this.model.set({
+			status: {
+				type: 'finished',
+				endTime: Date.now()
+			}
+		});
+
 		this._emitProgressReport();
 	}
 
@@ -172,15 +182,6 @@ export default class EA extends Instrument implements IEA {
 
 		let progress = +(((this.time - this.options.from) / (this.options.until - this.options.from)) * 100).toFixed(2);
 		this.model.options.status.progress = progress;
-
-		if (progress === 100) {
-			this.model.set({
-				status: {
-					endTime: Date.now(),
-					type: 'finished'
-				}
-			});
-		}
 
 		this.ipc.send('main', 'instrument:status', {
 			id: this.id,

@@ -25,13 +25,13 @@
 }
 
 .progress-bar {
-	// transition: width .2s ease;
+
 	height: 20px;
 	width: 0;
 }
 
-.progress-bar.no-animate {
-	transition: none !important;
+.progress-bar.animate {
+	transition: width .2s ease;
 }
 
 .bg-info {

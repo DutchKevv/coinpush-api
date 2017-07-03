@@ -74,10 +74,10 @@ ul {
 		display: block;
 		border-bottom: 1px solid $border-color-grey;
 		cursor: pointer;
-		line-height: 18px;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
+		line-height: 20px;
 
 		&:hover {
 			background: $general-secondary;
@@ -90,5 +90,5 @@ ul {
 }
 
 .circle {
-	margin-right: 2px;
+	margin-right: 5px;
 }

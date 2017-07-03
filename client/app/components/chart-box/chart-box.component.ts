@@ -37,6 +37,23 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 	public static readonly VIEW_STATE_STRETCHED = 2;
 	public static readonly VIEW_STATE_MINIMIZED = 3;
 
+	public static _prepareData(data: any) {
+		let i = 0,
+			rowLength = 10,
+			length = data.length,
+			volume = new Array(length / rowLength),
+			candles = new Array(length / rowLength);
+
+		// TODO - Volume
+		for (; i < length; i += rowLength)
+			candles[i / rowLength] = {x: new Date(data[i]), y: [data[i + 1], data[i + 3], data[i + 5], data[i + 7]]};
+
+		return {
+			candles: candles,
+			volume: volume
+		};
+	}
+
 	@Input() model: InstrumentModel;
 	@Output() loading$ = new BehaviorSubject(true);
 	
@@ -106,9 +123,9 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 						this.changeGraphType(this.model.options.graphType);
 						dirty = true;
 						break;
-					// case 'timeFrame':
-					// 	this.toggleTimeFrame(changes[key]);
-					// 	break;
+					case 'timeFrame':
+						this.toggleTimeFrame();
+						break;
 					case 'indicator':
 						this._updateIndicators();
 						dirty = true;
@@ -185,10 +202,9 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 		this._chart.render();
 	}
 
-	public toggleTimeFrame(timeFrame) {
-		// this._toggleLoading(true);
-		// this._createChart();
-		// this._toggleLoading(false);
+	public toggleTimeFrame() {
+		this._fetchCandles();
+		this._fetchIndicators(ChartBoxComponent.DEFAULT_CHUNK_LENGTH, this._offset);
 	}
 
 	private _createChart() {
@@ -201,10 +217,11 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 				exportEnabled: false,
 				animationEnabled: false,
 				backgroundColor: '#000',
+				creditText: '',
 				toolTip: {
 					animationEnabled: false,
 				},
-				axisY: {
+				axisY2: {
 					includeZero: false,
 					// title: 'Prices',
 					// prefix: '$',
@@ -215,7 +232,10 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 					gridThickness: 1,
 					stripLines: [{
 						value: 0,
-						label: ''
+						label: '',
+						labelPlacement: 'outside',
+						labelAlign: 'far',
+						labelBackgroundColor: 'transparent',
 					}]
 				},
 				axisX: {
@@ -231,7 +251,8 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 						type: this.model.options.graphType,
 						connectNullData: true,
 						risingColor: '#17EFDA',
-						dataPoints: this._data.candles
+						dataPoints: this._data.candles,
+						axisYType: 'secondary'
 					}
 				]
 			};
@@ -305,8 +326,8 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 			if (!lastCandle)
 				return;
 
-			this._chart.options.axisY.stripLines[0].value = lastCandle.y[2];
-			this._chart.options.axisY.stripLines[0].label = lastCandle.y[2];
+			this._chart.options.axisY2.stripLines[0].value = lastCandle.y[2];
+			this._chart.options.axisY2.stripLines[0].label = lastCandle.y[2];
 		});
 	}
 
@@ -361,6 +382,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 									type: drawBuffer.type,
 									color: drawBuffer.style.color,
 									name: indicator.id,
+									axisYType: 'secondary',
 									dataPoints: drawBuffer.data.map(point => ({
 										x: new Date(point[0]),
 										y: point[1]
@@ -434,23 +456,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 		this.render();
 
 		return false;
-	}
-
-	static _prepareData(data: any) {
-		let i = 0,
-			rowLength = 10,
-			length = data.length,
-			volume = new Array(length / rowLength),
-			candles = new Array(length / rowLength);
-
-		// TODO - Volume
-		for (; i < length; i += rowLength)
-			candles[i / rowLength] = {x: new Date(data[i]), y: [data[i + 1], data[i + 3], data[i + 5], data[i + 7]]};
-
-		return {
-			candles: candles,
-			volume: volume
-		};
 	}
 
 	public putOnTop() {

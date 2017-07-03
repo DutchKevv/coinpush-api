@@ -54,17 +54,6 @@
 			</button>
 		</li>
 		<li class="dropdown">
-			<!--<div class="dropdown">-->
-				<!--<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
-					<!--Dropdown button-->
-				<!--</button>-->
-				<!--<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">-->
-					<!--<a class="dropdown-item" href="#">Action</a>-->
-					<!--<a class="dropdown-item" href="#">Another action</a>-->
-					<!--<a class="dropdown-item" href="#">Something else here</a>-->
-				<!--</div>-->
-			<!--</div>-->
-
 			<button type="button"
 					class="dropdown-toggle btn-menu"
 					data-toggle="dropdown"
@@ -78,14 +67,14 @@
 			</button>
 
 			<ul class="dropdown-menu">
-				<li class="dropdown-item"><a (click)="instrumentsService.getFocused().set({timeFrame: 'M1'})">M1</a></li>
-				<li class="dropdown-item"><a (click)="instrumentsService.getFocused().set({timeFrame: 'M5'})">M5</a></li>
-				<li class="dropdown-item"><a (click)="instrumentsService.getFocused().set({timeFrame: 'M15'})">M15</a></li>
-				<li class="dropdown-item"><a (click)="instrumentsService.getFocused().set({timeFrame: 'M30'})">M30</a></li>
-				<li class="dropdown-item"><a (click)="instrumentsService.getFocused().set({timeFrame: 'H1'})">H1</a></li>
-				<li class="dropdown-item"><a (click)="instrumentsService.getFocused().set({timeFrame: 'H4'})">H4</a></li>
-				<li class="dropdown-item"><a (click)="instrumentsService.getFocused().set({timeFrame: 'D'})">D</a></li>
-				<li class="dropdown-item"><a (click)="instrumentsService.getFocused().set({timeFrame: 'W'})">W</a></li>
+				<li><a (click)="instrumentsService.getFocused().set({timeFrame: 'M1'})">M1</a></li>
+				<li><a (click)="instrumentsService.getFocused().set({timeFrame: 'M5'})">M5</a></li>
+				<li><a (click)="instrumentsService.getFocused().set({timeFrame: 'M15'})">M15</a></li>
+				<li><a (click)="instrumentsService.getFocused().set({timeFrame: 'M30'})">M30</a></li>
+				<li><a (click)="instrumentsService.getFocused().set({timeFrame: 'H1'})">H1</a></li>
+				<li><a (click)="instrumentsService.getFocused().set({timeFrame: 'H4'})">H4</a></li>
+				<li><a (click)="instrumentsService.getFocused().set({timeFrame: 'D'})">D</a></li>
+				<li><a (click)="instrumentsService.getFocused().set({timeFrame: 'W'})">W</a></li>
 			</ul>
 		</li>
 		<li class="dropdown">

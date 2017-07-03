@@ -5,6 +5,7 @@ import {
 import {InstrumentModel} from '../../../../shared/models/InstrumentModel';
 const CanvasJS = require('../../../assets/vendor/js/canvasjs/canvasjs.min');
 import {minBy, maxBy} from 'lodash';
+import * as moment from 'moment';
 
 @Component({
 	selector: 'backtest-report',
@@ -18,6 +19,8 @@ export class BacktestReportComponent implements AfterViewInit, OnInit, OnDestroy
 
 	@Input() public model: InstrumentModel;
 	@ViewChild('chart') chartRef: ElementRef;
+
+	public Math = Math;
 
 	private _elProgressBar: HTMLElement = null;
 	private _chart: any = null;
@@ -35,8 +38,9 @@ export class BacktestReportComponent implements AfterViewInit, OnInit, OnDestroy
 
 		this._elProgressBar = this._elementRef.nativeElement.shadowRoot.querySelector('.progress-bar');
 		this.model.changed$.subscribe((changes: any) => {
-			this._onInstrumentStatusUpdate();
-			
+			if (changes.status)
+				this._onInstrumentStatusUpdate();
+
 			if (changes.orders && changes.orders.length)
 				this._updateData(changes.orders);
 		});
@@ -65,7 +69,7 @@ export class BacktestReportComponent implements AfterViewInit, OnInit, OnDestroy
 						gridDashType: 'dash',
 						gridColor: '#787D73',
 						gridThickness: 1,
-						minimum: this.model.options.startEquality
+						// minimum: this.model.options.startEquality
 					},
 					data: [
 						{
@@ -75,6 +79,7 @@ export class BacktestReportComponent implements AfterViewInit, OnInit, OnDestroy
 					]
 				});
 
+			// this._chart.options.axisY.minimum = this.model.options.startEquality;
 			this._chart.render();
 		});
 	}
@@ -85,26 +90,27 @@ export class BacktestReportComponent implements AfterViewInit, OnInit, OnDestroy
 
 			// Update orders
 			arr.push(...this._prepareData(data));
-			// console.log('minBy',  minBy(arr, order => order.equality));
-			// console.log('maxBy',  maxBy(arr, order => order.equality));
-			console.log(minBy(this._chart.options.data[0].dataPoints, 'y'));
 
-			this._chart.options.axisY.minimum = Math.ceil(minBy(this._chart.options.data[0].dataPoints, 'y').y);
-			this._chart.options.axisY.maximum = Math.ceil(maxBy(this._chart.options.data[0].dataPoints, 'y').y);
+			this._chart.options.axisY.minimum = Math.floor(minBy(arr, 'y').y * 0.99);
+			this._chart.options.axisY.maximum = Math.ceil(maxBy(arr, 'y').y * 1.01);
 
 			this._chart.render();
 		});
 	}
 
 	private _onInstrumentStatusUpdate() {
+		console.log(this.model.options.status);
+
 		switch (this.model.options.status.type) {
 			case 'fetching':
 				this._updateProgressBar('info', (this.model.options.status.progress || 0) + '%', this.model.options.status.progress);
 				break;
 			case 'running':
+				this._elProgressBar.classList.add('animate');
 				this._updateProgressBar('success', (this.model.options.status.progress || 0) + '%', this.model.options.status.progress);
 				break;
 			case 'finished':
+				this._elProgressBar.classList.remove('animate');
 				// console.log(status.report);
 				this._updateProgressBar('success', `Finished`, 100);
 				break;
@@ -112,6 +118,7 @@ export class BacktestReportComponent implements AfterViewInit, OnInit, OnDestroy
 				this._updateProgressBar('warning', `Warning ${this.model.options.status.progress}%`, 100);
 				break;
 			case 'error':
+				this._elProgressBar.classList.remove('animate');
 				this._updateProgressBar('error', `Error`, 100);
 				break;
 			case 'default':
@@ -129,7 +136,11 @@ export class BacktestReportComponent implements AfterViewInit, OnInit, OnDestroy
 	}
 
 	private _prepareData(data?) {
-		return (data || this.model.options.orders).map((order, i) => ({y: order.equality}));
+		let i = data ? this._chart.options.data[0].dataPoints.length : 0;
+
+		data = data || this.model.options.orders;
+
+		return data.map(order => ({x: ++i, y: order.equality}));
 	}
 
 	ngOnDestroy() {

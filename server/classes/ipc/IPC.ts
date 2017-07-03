@@ -223,11 +223,11 @@ export default class IPC extends Base {
 			}
 
 			let content: any = _buffer.slice(metaEnd, size);
+			//
+			// if (content.length === 0)
+			// 	return;
 
-			if (content.length === 0)
-				return;
-
-			if (meta.type === 'json') {
+			if (content.length && meta.type === 'json') {
 				try {
 					content = JSON.parse(content.toString('ascii'))
 				} catch (error) {

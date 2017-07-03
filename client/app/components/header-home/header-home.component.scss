@@ -73,12 +73,17 @@ nav {
 	}
 }
 
-.dropdown:hover > .dropdown-menu {
+.dropdown-toggle:not([disabled]):hover + .dropdown-menu {
 	display: block;
 }
 
 .dropdown-menu {
 	margin: 0;
+
+	a:hover {
+		background: white;
+		color: $font-color-dark;
+	}
 }
 
 .btn-menu {
