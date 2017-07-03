@@ -34,8 +34,10 @@ export default class BrokerController extends Base {
 
 			await this._broker.init();
 
-			await this._broker.testConnection();
-			await this.app.controllers.cache.updateBrokerSettings(accountConfig);
+			await Promise.all([
+				this._broker.testConnection(),
+				this.app.controllers.cache.updateBrokerSettings(accountConfig)
+			]);
 
 			this.app.controllers.system.update({connected: true});
 

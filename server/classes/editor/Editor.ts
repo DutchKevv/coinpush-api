@@ -29,12 +29,12 @@ export default class Editor extends WorkerChild {
 			// 'tradejs/indicator/*': [path.join(__dirname, '../../shared/indicators/*')],
 			// 'tradejs/indicator': [path.join(__dirname, '../../shared/indicators/Indicator')]
 		},
-		'types' : [
-			'core-js',
-			'node'
-		],
+		// 'types' : [
+		// 	'core-js',
+		// 	'node'
+		// ],
 		'typeRoots': [
-			path.join(__dirname, '../node_modules/@types')
+			path.join(__dirname, '../server/node_modules/@types')
 		]
 	};
 
@@ -265,9 +265,9 @@ export default class Editor extends WorkerChild {
 			}
 
 			let success = !emitResult.emitSkipped;
-			this.ipc.send('main', 'compile-result', {errors: errors}, false)
+			this.ipc.send('main', 'compile-result', {errors: errors})
 		} catch (error) {
-			this.ipc.send('main', 'compile-result', {errors: [error]}, false)
+			this.ipc.send('main', 'compile-result', {errors: [error]})
 		}
 	}
 
@@ -327,7 +327,7 @@ export default class Editor extends WorkerChild {
 
 		this.ipc.on('directory:create', async (data, cb) => {
 			try {
-				cb(null, await this.createDirectory(data.id, data.name));
+				cb(null, await this.createDirectory(data.parent, data.name));
 			} catch (error) {
 				log.error('Editor', error);
 				cb(error);
@@ -345,7 +345,7 @@ export default class Editor extends WorkerChild {
 			this._directoryTree = this._normalizeDirectoryTree(tree);
 		}
 
-		this.ipc.send('main', 'directory-list', this._directoryTree, false);
+		this.ipc.send('main', 'directory-list', this._directoryTree);
 	}
 
 	private _normalizeDirectoryTree(arr: any): Array<any> {
@@ -376,7 +376,7 @@ export default class Editor extends WorkerChild {
 
 		this._runnableList = runnableList;
 
-		this.ipc.send('main', 'runnable-list', runnableList, false);
+		this.ipc.send('main', 'runnable-list', runnableList);
 	}
 
 	// TODO - Hacky

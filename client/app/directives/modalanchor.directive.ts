@@ -40,6 +40,7 @@ export class ModalAnchorDirective {
 	}
 
 	show() {
+		console.log('asdfassdf', this.modalComponentRef.instance.elementRef.nativeElement);
 		$(this.modalComponentRef.instance.elementRef.nativeElement.firstElementChild).modal('show');
 	}
 

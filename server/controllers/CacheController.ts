@@ -23,15 +23,23 @@ export default class CacheController extends Base {
 			}
 		});
 
+		this._worker.on('error', data => {
+
+		});
+
+		this._worker.on('exit', data => {
+
+		});
+
 		await this._worker.init();
 	}
 
 	public reset() {
-		return this._worker.send('@reset');
+		return this._worker.sendAsync('@reset');
 	}
 
-	public async updateBrokerSettings(settings) {
-		return this._worker.send('broker:settings', settings, true);
+	public updateBrokerSettings(settings): Promise<any> {
+		return this._worker.sendAsync('broker:settings', settings);
 	}
 
 	public destroy() {

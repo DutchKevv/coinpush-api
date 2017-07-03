@@ -11,13 +11,13 @@
 				aria-expanded="false">
 			<i class="fa fa-window-minimize"></i>
 		</button>
-		<button *ngIf="viewState === 'windowed'"
+		<button *ngIf="(viewState$ | async) === 'windowed'"
 				(click)="toggleViewState('stretched', true)"
 				type="button" class="dropdown-toggle text-dark button-expand"
 				aria-expanded="false">
 			<i class="fa fa-expand"></i>
 		</button>
-		<button *ngIf="viewState === 'stretched'"
+		<button *ngIf="(viewState$ | async) === 'stretched'"
 				(click)="toggleViewState('windowed', true)"
 				type="button"
 				class="dropdown-toggle text-dark button-compress"

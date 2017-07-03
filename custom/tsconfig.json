@@ -9,10 +9,21 @@
     "moduleResolution": "node",
     "baseUrl": ".",
     "allowJs": true,
+    "typeRoots": [
+      "../shared/node_modules/@types",
+      "../server/node_modules/@types"
+    ],
     "paths": {
       "tradejs/ea": ["../server/classes/ea/EA"],
       "tradejs/indicator/*": ["../shared/indicators/*"],
       "tradejs/indicator": ["../shared/indicators/Indicator"]
     }
-  }
+  },
+  "include": [
+    "./**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "server/**/*"
+  ]
 }

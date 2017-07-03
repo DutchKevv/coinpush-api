@@ -38,58 +38,68 @@ export default class WorkerChild extends Base {
 	}
 
 	public debug(type: string, text: string, data?: Object): void {
-		this.ipc.send('main', 'debug', {type, text, data}, false);
+		this.ipc.send('main', 'debug', {type, text, data});
 	}
 
-	static initAsWorker() {
 
-		if (typeof process !== 'undefined') {
-
-			let mainFile = null,
-				settings = JSON.parse((<any>minimist(process.argv.slice(2))).settings),
-				id = settings.workerOptions.id,
-
-				exitHandler = (code = 0) => {
-					log.info('WorkerChild', `${id} : exiting ${code}`);
-					process.exit(code);
-				};
-
-			process.once('uncaughtException', err => {
-				console.log('uncaughtException!', err);
-				exitHandler(1);
-			});
-
-			process.once('unhandledRejection', err => {
-				console.error('unhandledRejection!', err);
-				exitHandler(1)
-			});
-
-			process.once('SIGINT', exitHandler);
-			process.once('SIGTERM', exitHandler);
-
-			process.nextTick(async () => {
-				mainFile = require(process.mainModule.filename).default;
-
-				if (typeof mainFile !== 'function')
-					return;
-
-				const instance = new mainFile(settings.classArguments, settings.workerOptions);
-
-				await instance.init();
-
-				process.send('__ready');
-
-				process.stdin.resume();
-			});
-		}
-	}
 
 	public onDestroy() {
 		super.onDestroy();
 	}
 }
 
+let initAsWorker = function() {
+
+	if (typeof process !== 'undefined') {
+
+		let mainFile = null,
+			settings = JSON.parse((<any>minimist(process.argv.slice(2))).settings),
+			id = settings.workerOptions.id,
+			instance,
+
+			exitHandler = (code = 0) => {
+				log.info('WorkerChild', `${id} exiting ${code}`);
+				if (instance)
+					try {
+						instance.ipc.destroyAllConnection();
+					} catch (error) {
+						console.error(error);
+					}
+				process.exit(code);
+			};
+
+		process.once('uncaughtException', err => {
+			console.log(err);
+			log.error('WorkerChild', 'uncaughtException', err);
+			exitHandler(1);
+		});
+
+		process.once('unhandledRejection', err => {
+			log.error('WorkerChild', 'unhandledRejection', err);
+			exitHandler(1)
+		});
+
+		process.once('SIGINT', exitHandler);
+		process.once('SIGTERM', exitHandler);
+
+		process.nextTick(async () => {
+			mainFile = require(process.mainModule.filename).default;
+
+			if (typeof mainFile !== 'function')
+				return;
+
+			instance = new mainFile(settings.classArguments, settings.workerOptions);
+
+			await instance.init();
+
+			process.send('__ready');
+
+			process.stdin.resume();
+		});
+	}
+};
+
 // In case its running as worker
-WorkerChild.initAsWorker();
+initAsWorker();
 
 

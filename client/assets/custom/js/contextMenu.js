@@ -11,8 +11,8 @@
 						return;
 					}
 
-					let $menu = $(createMenuHTML(settings)).hide(),
-						pos = getMenuPosition(e.clientX, e.clientX);
+					let $menu = $(createMenuHTML(settings)).hide();
+						// pos = getMenuPosition(e.clientX, e.clientX);
 
 					//open menu
 					$menu

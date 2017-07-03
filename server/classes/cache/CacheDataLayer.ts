@@ -23,7 +23,8 @@ export default class CacheDataLayer {
 	public read(params: {symbol: string, timeFrame: string, from: number, until: number, count: number}): Promise<NodeBuffer> {
 
 		return new Promise((resolve, reject) => {
-			let symbol = params.symbol,
+			let now = Date.now(),
+				symbol = params.symbol,
 				timeFrame = params.timeFrame,
 				from = params.from,
 				until = params.until,
@@ -55,18 +56,19 @@ export default class CacheDataLayer {
 			}
 
 			this._db.all(queryString, (err, rows) => {
-
 				if (err)
 					return reject(err);
 
 				let mergedBuffer = Buffer.concat(rows.map(row => row.data), rows.length * (10 * Float64Array.BYTES_PER_ELEMENT));
+
+				log.info('DataLayer', `Reading ${symbol}-${timeFrame} took ${Date.now() - now} ms`);
 
 				resolve(mergedBuffer);
 			});
 		});
 	}
 
-	public async write(symbol, timeFrame, buffer: NodeBuffer) {
+	public write(symbol, timeFrame, buffer: NodeBuffer): Promise<any> {
 
 		return new Promise((resolve, reject) => {
 			if (!buffer.length)
@@ -88,13 +90,8 @@ export default class CacheDataLayer {
 				let stmt = this._db.prepare(`INSERT OR REPLACE INTO ${tableName} VALUES (?,?)`),
 					i = 0;
 
-				// if (buffer.length < 8000) {
-					// console.log(new Float64Array(buffer.buffer, buffer.byteOffset, buffer.length / Float64Array.BYTES_PER_ELEMENT), buffer.length);
-				// }
-
-				while (i < buffer.byteLength) {
+				while (i < buffer.byteLength)
 					stmt.run([buffer.readDoubleLE(i, true), buffer.slice(i, i += rowLength)]);
-				}
 
 				stmt.finalize();
 

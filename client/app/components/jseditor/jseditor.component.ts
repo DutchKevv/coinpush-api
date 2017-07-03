@@ -1,7 +1,10 @@
 declare var ace: any;
 declare var $: any;
 
-import {Component, AfterViewInit, ElementRef, ViewEncapsulation, NgZone} from '@angular/core';
+import {
+	Component, AfterViewInit, ElementRef, ViewEncapsulation, NgZone, ChangeDetectorRef,
+	ViewChild
+} from '@angular/core';
 import {SocketService} from '../../services/socket.service';
 // import '../../../assets/vendor/js/ace/ace.js';
 // import '../../../assets/vendor/js/ace/theme-tomorrow_night_bright.js';
@@ -14,6 +17,8 @@ import {SocketService} from '../../services/socket.service';
 })
 
 export class JSEditorComponent implements AfterViewInit {
+	@ViewChild('editor') editorRef: ElementRef;
+
 	editor: any;
 	text = '';
 
@@ -26,16 +31,17 @@ export class JSEditorComponent implements AfterViewInit {
 
 	private _$el;
 	private _$banner;
-	private _editorEl: HTMLElement;
+	// private _editorEl: HTMLElement;
 
 	constructor(private _zone: NgZone,
+				private _ref: ChangeDetectorRef,
 				private _socketService: SocketService,
 				private _elementRef: ElementRef) {}
 
 	ngAfterViewInit() {
 		this._$el = $(this._elementRef.nativeElement);
 		this._$banner = this._$el.find('.banner');
-		this._editorEl = this._$el.find('.editor')[0];
+		// this._editorEl = this._$el.find('.editor')[0];
 
 
 		this.setEditor();
@@ -51,8 +57,9 @@ export class JSEditorComponent implements AfterViewInit {
 		this._zone.runOutsideAngular(() => {
 			ace.require('ace/config').set('workerPath', '/assets/js/ace/');
 
-			this.editor = ace.edit(this._editorEl);
+			this.editor = ace.edit(this.editorRef.nativeElement);
 			// this.editor.setAutoScrollEditorIntoView(true);
+			this.editor.$blockScrolling = Infinity;
 			// this.editor.setOption('minLines', 100);
 			// this.editor.setOption('maxLines', 200);
 			this.editor.setOptions({
@@ -115,6 +122,7 @@ export class JSEditorComponent implements AfterViewInit {
 					}
 
 					this.showBanner('success', 'File saved');
+					this._ref.markForCheck();
 					resolve();
 				});
 			}

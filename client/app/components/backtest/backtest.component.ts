@@ -1,9 +1,10 @@
 import {
 	Component, AfterViewInit, Input, OnInit, PipeTransform, Pipe, ElementRef, ViewEncapsulation, OnChanges,
-	ChangeDetectionStrategy
+	ChangeDetectionStrategy, Output
 } from '@angular/core';
 import {InstrumentModel} from '../../../../shared/models/InstrumentModel';
 import {InstrumentsService} from '../../services/instruments.service';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
 @Pipe({name: 'groupIds'})
 export class GroupIdsPipe implements PipeTransform {
@@ -24,7 +25,8 @@ export class GroupIdsPipe implements PipeTransform {
 
 export class BacktestComponent implements AfterViewInit, OnInit, OnChanges {
 
-	@Input() public models: Array<InstrumentModel> = [];
+	public models: Array<InstrumentModel> = [];
+	@Output() public models$ = new BehaviorSubject([]);
 
 	public activeGroupId = null;
 
@@ -37,8 +39,8 @@ export class BacktestComponent implements AfterViewInit, OnInit, OnChanges {
 
 	ngAfterViewInit(): void {
 		this.instrumentService.instruments$.subscribe(() => {
-			this.updateModels();
 			this.activateHighest();
+			this.updateModels();
 		});
 
 		this.instrumentService.changed$.subscribe(() => {
@@ -65,7 +67,9 @@ export class BacktestComponent implements AfterViewInit, OnInit, OnChanges {
 		if (this.activeGroupId === null)
 			this.activateHighest();
 
-		this.models = this.instrumentService.instruments.filter(model => model.options.groupId === this.activeGroupId);
+		let models = this.instrumentService.instruments.filter(model => model.options.groupId === this.activeGroupId);
+
+		this.models$.next(models);
 
 		this._updateMainProgressBar();
 	}

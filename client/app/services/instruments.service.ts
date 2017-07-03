@@ -8,6 +8,7 @@ import {IndicatorModel} from '../models/indicator';
 import {DialogComponent} from '../components/dialog/dialog.component';
 import {ModalService} from './modal.service';
 import {InstrumentModel} from '../../../shared/models/InstrumentModel';
+import {Subject} from 'rxjs/Subject';
 
 @Injectable()
 export class InstrumentsService {
@@ -15,6 +16,7 @@ export class InstrumentsService {
 	@Output() public changed$ = new EventEmitter();
 	@Output() public instruments$: BehaviorSubject<any> = new BehaviorSubject([]);
 	@Output() public groupIds$: BehaviorSubject<any> = new BehaviorSubject([]);
+	@Output() public focused$: Subject<any> = new Subject();
 
 	private _instruments: InstrumentModel[] = [];
 
@@ -31,7 +33,10 @@ export class InstrumentsService {
 	public init(): void {
 		// Create groups by groupId to show in backtest overview
 		this.instruments$.subscribe(instruments => {
-			this.groupIds$.next([...new Set(instruments.filter(val => val.options.type === 'backtest' && val.options.groupId !== null).map(val => val.options.groupId))]);
+			this.groupIds$.next([...new Set(
+					instruments.filter(val => val.options.type === 'backtest' && val.options.groupId !== null
+				)
+				.map(val => val.options.groupId))]);
 		});
 
 		this._socketService.socket.on('instrument:created', (instrumentSettings: InstrumentSettings) => {
@@ -64,11 +69,11 @@ export class InstrumentsService {
 		let now = Date.now(),
 			models = this.add(instruments.map(options => new InstrumentModel(options)));
 
-		this._socketService.send('instrument:create', instruments, (err, instruments: Array<InstrumentSettings>) => {
+		this._socketService.send('instrument:create', instruments, (err, _instruments: Array<InstrumentSettings>) => {
 			if (err)
 				throw err;
 
-			instruments.forEach((instrument, i) => models[i].set({
+			_instruments.forEach((instrument, i) => models[i].set({
 				id: instrument.id,
 				groupId: instrument.groupId,
 				status: status
@@ -107,7 +112,7 @@ export class InstrumentsService {
 
 	public fetch(model: InstrumentModel, count, offset = 0, from?: number, until?: number): Promise<any> {
 
-		return new Promise((resolve) => {
+		return new Promise((resolve, reject) => {
 
 			this._socketService.send('instrument:read', {
 				id: model.options.id,
@@ -118,9 +123,9 @@ export class InstrumentsService {
 				until
 			}, (err, data) => {
 				if (err)
-					return console.error(err);
+					return reject(err);
 
-				model.updateBars(data.candles);
+				model.updateCandles(data.candles);
 				model.updateIndicators(data.indicators);
 
 				resolve(data);
@@ -209,19 +214,20 @@ export class InstrumentsService {
 
 				options[input.name] = input.value
 			});
-
+			console.log(instrumentModel.options);
 			this._socketService.send('instrument:indicator:add', {
 				id: instrumentModel.options.id,
 				name: indicatorModel.name,
 				options: options,
-				readCount: 500,
+				readCount: instrumentModel.options.candles.length,
 				shift: 0
 			}, (err, result) => {
 				if (err)
 					return reject(err);
 
-				instrumentModel.addIndicator(result);
-				// instrumentModel.changed$.next({indicator: {type: 'add', id: result.id}});
+				instrumentModel.updateIndicators([result]);
+				// instrumentModel.changed$.next([{indicator: {type: 'add', id: result.id}}]);
+				instrumentModel.changed$.next({indicator: {type: 'add', id: result.id}});
 
 				resolve(true);
 			});
@@ -249,8 +255,8 @@ export class InstrumentsService {
 				showCloseButton: false,
 				model: indicatorModel,
 				buttons: [
-					{value: 'add', text: 'add', type: 'primary'},
-					{text: 'cancel', type: 'candel'}
+					{text: 'cancel', type: 'candel'},
+					{value: 'add', text: 'add', type: 'primary'}
 				],
 				onClickButton(value) {
 					if (value === 'add') {
@@ -301,6 +307,8 @@ export class InstrumentsService {
 				return console.error(err);
 
 			this.add(list.map((instrumentSettings: InstrumentSettings) => new InstrumentModel(instrumentSettings)));
+			// if (this._instruments.length)
+			// 	this.setFocus(this._instruments[this._instruments.length - 1]);
 		});
 	}
 }

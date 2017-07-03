@@ -101,3 +101,9 @@
     position: relative;
     height: calc(100% - 25px);
 }
+
+.spinner {
+    top: 25%;
+    position: absolute;
+    left: calc(50% - 20px);
+}

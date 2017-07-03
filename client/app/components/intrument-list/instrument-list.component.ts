@@ -14,6 +14,7 @@ import {CacheService, CacheSymbol} from '../../services/cache.service';
 export class SearchFilter implements PipeTransform {
 	transform(items: any[], criteria: any): any {
 		criteria = criteria.toLowerCase();
+		console.log('criteria criteria criteria', criteria);
 
 		return items.filter(item => {
 			for (let key in item) {
@@ -59,34 +60,19 @@ export class InstrumentListComponent implements OnDestroy, OnInit, AfterViewInit
 		this._setDraggable();
 	}
 
-	private _setDraggable() {
-		this._zone.runOutsideAngular(() => {
-			interact(this.splitter.nativeElement)
-				.resizable({
-					preserveAspectRatio: true,
-					edges: {left: false, right: false, bottom: true, top: false}
-				})
-				.on('resizemove', event => {
-					let target = this._elementRef.nativeElement,
-						y = parseFloat(target.getAttribute('data-y') || target.clientHeight);
+	public search(text) {
+		text = text.toLowerCase();
 
-					target.style.height = event.rect.height + 'px';
-					target.setAttribute('data-y', event.rect.height);
-				})
-				.on('resizeend', () => this._storeHeightInCookie())
-		});
-	}
+		let list = this.cacheService.symbolList$.getValue()
+				.filter(symbol => symbol.options.name.toLowerCase().includes(text))
+				.map(symbol => symbol.options.name),
+			key;
 
-	private _restoreHeightFromCookie() {
-		let storedHeight = this._cookieService.get('footer-resize-height');
-
-		if (storedHeight) {
-			this._elementRef.nativeElement.style.height = storedHeight;
+		for (key in this._elements) {
+			if (this._elements.hasOwnProperty(key)) {
+				this._elements[key].style.display = list.includes(key) ? 'block' : 'none';
+			}
 		}
-	}
-
-	private _storeHeightInCookie() {
-		this._cookieService.put('home-left-aside-resize-height', parseInt(this._elementRef.nativeElement.style.height, 10).toString() || '0');
 	}
 
 	private _updateRows(symbols) {
@@ -144,6 +130,37 @@ export class InstrumentListComponent implements OnDestroy, OnInit, AfterViewInit
 				}
 			});
 		});
+	}
+
+
+	private _setDraggable() {
+		this._zone.runOutsideAngular(() => {
+			interact(this.splitter.nativeElement)
+				.resizable({
+					preserveAspectRatio: true,
+					edges: {left: false, right: false, bottom: true, top: false}
+				})
+				.on('resizemove', event => {
+					let target = this._elementRef.nativeElement,
+						y = parseFloat(target.getAttribute('data-y') || target.clientHeight);
+
+					target.style.height = event.rect.height + 'px';
+					target.setAttribute('data-y', event.rect.height);
+				})
+				.on('resizeend', () => this._storeHeightInCookie())
+		});
+	}
+
+	private _restoreHeightFromCookie() {
+		let storedHeight = this._cookieService.get('footer-resize-height');
+
+		if (storedHeight) {
+			this._elementRef.nativeElement.style.height = storedHeight;
+		}
+	}
+
+	private _storeHeightInCookie() {
+		this._cookieService.put('home-left-aside-resize-height', parseInt(this._elementRef.nativeElement.style.height, 10).toString() || '0');
 	}
 
 

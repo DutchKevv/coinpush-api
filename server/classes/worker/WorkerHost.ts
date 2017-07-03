@@ -15,6 +15,10 @@ export default class WorkerHost extends Base {
 		return this._ipc;
 	}
 
+	get worker() {
+		return this._child;
+	}
+
 	async init() {
 		await super.init();
 
@@ -24,8 +28,12 @@ export default class WorkerHost extends Base {
 		return this._fork();
 	}
 
-	send(eventName, data?, waitForCallback?) {
-		return this.ipc.send(this.id, eventName, data, waitForCallback);
+	send(eventName, data?) {
+		return this.ipc.send(this.id, eventName, data);
+	}
+
+	sendAsync(eventName, data?) {
+		return this.ipc.sendAsync(this.id, eventName, data);
 	}
 
 	async _fork() {
@@ -60,7 +68,7 @@ export default class WorkerHost extends Base {
 			this._child.stderr.on('data', (data) => {
 				this.emit('error', data.toString());
 
-				console.error(data.toString('ascii'));
+				console.error('Error', data.toString('ascii'));
 			});
 
 			this._child.once('message', message => {
@@ -81,6 +89,11 @@ export default class WorkerHost extends Base {
 	}
 
 	kill(code?: number) {
-		this._child.kill(code);
+		if (this._child)
+			try {
+				this._child.kill(code);
+			} catch (error) {
+				log.error('WorkerHost', error);
+			}
 	}
 }

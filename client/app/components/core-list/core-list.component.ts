@@ -22,6 +22,7 @@ export class CoreListComponent implements AfterViewInit, OnInit {
 	@ViewChild('list') list: ElementRef;
 
 	public activeGroupId = null;
+	public searchTerm = '';
 
 	constructor(private _elementRef: ElementRef,
 				private _zone: NgZone,
@@ -37,6 +38,10 @@ export class CoreListComponent implements AfterViewInit, OnInit {
 
 	onToggleInputFocus(state) {
 		this._elementRef.nativeElement.classList.toggle('focused', !!state);
+	}
+
+	public search(text) {
+		text = text.toLowerCase();
 	}
 
 	private _setContextMenu() {

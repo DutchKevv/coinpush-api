@@ -40,15 +40,15 @@ const logger = new win.Logger({
 });
 
 export const log = {
-	info(owner, text) {
-		logger.info(ensureStringLength(owner) + ' : ' + text || '');
+	info(owner, ...params) {
+		logger.info(ensureStringLength(owner) + ' : ', ...params);
 	},
 
-	warn(owner, text) {
-		logger.warn(ensureStringLength(owner) + ' : ' + text || '');
+	warn(owner, ...params) {
+		logger.warn(ensureStringLength(owner) + ' : ', ...params);
 	},
 
-	error(owner, text) {
-		logger.error(ensureStringLength(owner) + ' : ' + text || '');
+	error(owner, ...params) {
+		logger.error(ensureStringLength(owner) + ' : ', ...params);
 	}
 };

@@ -35,27 +35,27 @@ export default class EditorController extends Base {
 	}
 
 	public loadFile(id) {
-		return this._worker.send('file:load', {id});
+		return this._worker.sendAsync('file:load', {id});
 	}
 
 	public async save(id, content) {
-		return this._worker.send('file:save', {id, content});
+		return this._worker.sendAsync('file:save', {id, content});
 	}
 
 	public rename(id, name) {
-		return this._worker.send('file:rename', {id, name});
+		return this._worker.sendAsync('file:rename', {id, name});
 	}
 
 	public delete(id) {
-		return this._worker.send('file:delete', {id});
+		return this._worker.sendAsync('file:delete', {id});
 	}
 
 	public createFile(parent: string, name: string, content = '') {
-		return this._worker.send('file:create', {parent, name, content});
+		return this._worker.sendAsync('file:create', {parent, name, content});
 	}
 
 	public createDirectory(parent: string, name: string) {
-		return this._worker.send('directory:create', {parent, name});
+		return this._worker.sendAsync('directory:create', {parent, name});
 	}
 
 	private async _initWorker() {
@@ -103,5 +103,10 @@ export default class EditorController extends Base {
 			this._runnableList = list;
 			// this.emit('runnable-list', list);
 		});
+	}
+
+	public destroy() {
+		if (this._worker)
+			return this._worker.kill();
 	}
 }

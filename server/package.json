@@ -32,7 +32,7 @@
     "__temp-node-ipc": "git://github.com/RIAEvangelist/node-ipc.git#v9.x"
   },
   "dependencies": {
-    "@types/node": "^8.0.2",
+    "@types/node": "^8.0.7",
     "body-parser": "1.17.2",
     "codelyzer": "^3.1.1",
     "cross-env": "5.0.0",

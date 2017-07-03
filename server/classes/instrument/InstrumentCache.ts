@@ -20,7 +20,7 @@ export default class InstrumentCache extends WorkerChild {
 
 	private _map: CacheMapper = new CacheMapper();
 	private _readyHandler = Promise.resolve();
-	private _tpsInterval: number = 1000;
+	private _tpsInterval = 1000;
 	private _tpsIntervalTimer: any = null;
 
 	public async init() {
@@ -61,17 +61,20 @@ export default class InstrumentCache extends WorkerChild {
 	}
 
 	private async _doPreFetch() {
-		let buf = await this.ipc.send('cache', 'read', {
+		try {
+			let buf = await this.ipc.sendAsync('cache', 'read', {
 				symbol: this.model.options.symbol,
 				timeFrame: this.model.options.timeFrame,
 				until: this.model.options.type === 'backtest' ? this.model.options.from : this.model.options.until,
 				count: 1000
 			});
 
-		let _buf = new Buffer(buf);
-		let ticks = new Float64Array(buf.buffer);
-
-		await this._doTickLoop(ticks, false);
+			let _buf = new Buffer(buf);
+			let ticks = new Float64Array(buf.buffer);
+			await this._doTickLoop(ticks, false);
+		} catch (error) {
+			console.log('Prefetch error: ', error);
+		}
 	}
 
 	private async _doTickLoop(candles, tick = true) {
@@ -113,13 +116,8 @@ export default class InstrumentCache extends WorkerChild {
 		return this._doTickLoop(candles);
 	}
 
-	private async _toggleNewTickListener(state: boolean) {
-		if (state) {
-			await this.ipc.send('cache', 'register', {id: this.id, symbol: this.symbol}, true);
-		} else {
-			await this.ipc.send('cache', 'unregister', {id: this.id, symbol: this.symbol}, true);
-			// this.listenForNewTick = false;
-		}
+	private async _toggleNewTickListener(state: boolean): Promise<any> {
+		return this.ipc.sendAsync('cache', state ? 'register' : 'unregister', {id: this.id, symbol: this.symbol});
 	}
 
 	protected async reset() {

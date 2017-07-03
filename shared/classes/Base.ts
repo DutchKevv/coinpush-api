@@ -2,9 +2,13 @@ import {EventEmitter}   from 'events';
 import * as merge       from 'deepmerge';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Subject} 		from 'rxjs/Subject';
-import {isEqual, reduce} 		from 'lodash';
+import {isEqual, reduce, omit} 		from 'lodash';
 
 export class Base extends EventEmitter {
+
+	public initialized = false;
+	public readonly changed$: Subject<any> = new Subject();
+	public readonly options$ = new BehaviorSubject({});
 
 	public static readonly isWin = /^win/.test(process.platform);
 	public static readonly isElectron = process && (process.env.ELECTRON || process.versions['electron']);
@@ -16,10 +20,6 @@ export class Base extends EventEmitter {
 				result : result.concat(key);
 		}, []);
 	}
-
-	public initialized = false;
-	public readonly changed$: Subject<Array<any>> = new Subject();
-	public readonly options$ = new BehaviorSubject({});
 
 	public get options() {
 		return this._options;
@@ -42,11 +42,11 @@ export class Base extends EventEmitter {
 	}
 
 	public set(obj: any, triggerChange = true, triggerOptions = true) {
-		let diff = Base.getObjectDiff(obj, this._options);
+		let diff = omit(obj, (v, k) => { return this.options[k] === v; });
 
 		this._options = merge(this._options, obj);
 
-		if (diff.length) {
+		if (Object.keys(diff).length) {
 
 			if (triggerChange)
 				this.changed$.next(diff);
@@ -67,7 +67,7 @@ export class Base extends EventEmitter {
 				Object.assign(this._options, JSON.parse(JSON.stringify(target.DEFAULTS)));
 
 			target = target.__proto__;
-		} while(target.__proto__);
+		} while (target.__proto__);
 
 		Object.assign(this._options, options);
 		this.options$.next(this._options);

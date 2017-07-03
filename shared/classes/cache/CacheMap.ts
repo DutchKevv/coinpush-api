@@ -65,8 +65,23 @@ export default class Mapper {
 	}
 
 	public isComplete(symbol, timeFrame, from, until, count?): boolean {
+		if (!symbol)
+			throw new Error('No symbol given');
+
+		if (!timeFrame)
+			throw new Error('No timeFrame given');
+
+		if (!from)
+			throw new Error('No from given');
+
+		if (!until)
+			throw new Error('No until given');
+
 		let ranges = this.findByParams(symbol, timeFrame),
 			i = 0, len = ranges.length, _range;
+
+		if (this.streamOpenSince && until && until > this.streamOpenSince)
+			until = this.streamOpenSince;
 
 		if (from && until) {
 			for (; i < len; ++i) {

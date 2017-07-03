@@ -1,4 +1,7 @@
 @import '../../style/variables/variables';
+@import '~bootstrap/scss/_variables';
+@import '~bootstrap/scss/_mixins';
+@import '~bootstrap/scss/_modal';
 
 .dialog {
     width: 450px;

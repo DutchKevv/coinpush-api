@@ -68,6 +68,7 @@ export default class OandaApi extends Base {
 	public getSymbols(): any {
 		return new Promise((resolve, reject) => {
 			this._client.getInstruments(this.options.accountId, (err, symbols) => {
+
 				if (err)
 					return reject(err);
 
@@ -82,8 +83,9 @@ export default class OandaApi extends Base {
 	}
 
 	public getCandles(symbol, timeFrame, from, until, count, onData, onDone) {
-		let countChunks = splitToChunks(timeFrame, from, until, count, OandaApi.FETCH_CHUNK_LIMIT);
-		let finished = 0;
+		let countChunks = splitToChunks(timeFrame, from, until, count, OandaApi.FETCH_CHUNK_LIMIT),
+			writeChunks = 0,
+			finished = 0;
 
 		countChunks.forEach(chunk => {
 			let arr = [];
@@ -122,8 +124,7 @@ export default class OandaApi extends Base {
 				let maxIndex = this._lastPiece ? arr.length : (Math.floor(arr.length / OandaApi.FETCH_CHUNK_LIMIT) * OandaApi.FETCH_CHUNK_LIMIT),
 					buf;
 
-				if (this._lastPiece)
-
+				// if (this._lastPiece)
 					if (maxIndex === 0)
 						return done();
 
@@ -134,6 +135,7 @@ export default class OandaApi extends Base {
 						buf.writeDoubleLE(index % 10 ? value : value / 1000, index * Float64Array.BYTES_PER_ELEMENT, false);
 				});
 
+				writeChunks++;
 				transformStream.push(buf);
 
 				arr = arr.slice(maxIndex, arr.length);
@@ -154,7 +156,7 @@ export default class OandaApi extends Base {
 				.on('error', onDone)
 				.on('end', () => {
 					if (++finished === countChunks.length)
-						onDone();
+						onDone(null, writeChunks);
 				});
 		});
 	}
@@ -171,11 +173,11 @@ export default class OandaApi extends Base {
 		});
 	}
 
-	public async destroy(): Promise<void> {
+	public destroy(): void {
 		this.removeAllListeners();
 
 		if (this._client)
-			await this._client.kill();
+			this._client.kill();
 
 		this._client = null;
 	}

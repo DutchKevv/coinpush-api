@@ -87,14 +87,13 @@ export default class Instrument extends InstrumentCache {
 	}
 
 	async _setIPCEvents() {
-		this.ipc.on('read', async (params, cb: Function) => {
-
+		this.ipc.on('read', async (params: any, cb: Function) => {
 			try {
 				cb(null, {
 					indicators: await this.getIndicatorsData(params)
 				});
 
-				// TODO: Should not be necessary -  Live goes through main thread - Orders already known
+				// TODO: Separate calls for orders & indicators (indicators can be read separate from orders, when you added a new one for example)
 				//
 				// if (this.orderManager && returnObj.candles.length) {
 				// 	returnObj.orders = await this.orderManager.findByDateRange(
@@ -105,26 +104,21 @@ export default class Instrument extends InstrumentCache {
 				// 	returnObj.orders = [];
 				// }
 			} catch (error) {
+				// console.log('Error:', error);
+				cb(error);
+			}
+		});
+
+		this.ipc.on('indicator:add', async (data: any, cb: Function) => {
+			try {
+				cb(null, (await this.addIndicator(data.name, data.options)).id);
+			} catch (error) {
 				console.log('Error:', error);
 				cb(error);
 			}
 		});
 
-		// this.ipc.on('get-data', async (data: any, cb: Function) => {
-		// 	try {
-		// 		if (typeof data.indicatorId !== 'undefined') {
-		// 			cb(null, await this.getIndicatorData(data.indicatorId, data.count, data.shift));
-		// 		} else {
-		// 			cb(null, await this.getIndicatorsData({count: data.count, offset: data.offset, from:});
-		// 		}
-		//
-		// 	} catch (error) {
-		// 		console.log('Error:', error);
-		// 		cb(error);
-		// 	}
-		// });
-
-		this.ipc.on('indicator:add', async (data: any, cb: Function) => {
+		this.ipc.on('indicator:remove', async (data: any, cb: Function) => {
 			try {
 				cb(null, (await this.addIndicator(data.name, data.options)).id);
 			} catch (error) {

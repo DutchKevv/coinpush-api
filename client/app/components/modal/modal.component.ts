@@ -3,8 +3,8 @@ import {Component, EventEmitter, Input, OnInit, ViewEncapsulation} from '@angula
 @Component({
 	selector: 'dlg',
 	templateUrl: './modal.component.html',
-	styleUrls: ['./modal.component.scss'],
-	encapsulation: ViewEncapsulation.Native
+	styleUrls: ['./modal.component.scss']
+	// encapsulation: ViewEncapsulation.Native
 })
 
 export class ModalComponent implements OnInit {

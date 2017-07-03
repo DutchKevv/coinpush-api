@@ -1,7 +1,8 @@
 import {forEach, random, throttle} from 'lodash';
 import {
 	Component, OnDestroy, ElementRef, Input, ViewChild,
-	OnInit, AfterViewInit, ChangeDetectionStrategy, ViewEncapsulation, ContentChild, NgZone, Output, EventEmitter
+	OnInit, AfterViewInit, ChangeDetectionStrategy, ViewEncapsulation, ContentChild, NgZone, Output, EventEmitter,
+	ChangeDetectorRef
 } from '@angular/core';
 
 import {DialogComponent} from '../dialog/dialog.component';
@@ -41,10 +42,11 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 	
 	@ViewChild(DialogAnchorDirective) private _dialogAnchor: DialogAnchorDirective;
 	@ViewChild('draghandle') private _dragHandle: ElementRef;
-	
-	$el: any;
 
-	@Input() public viewState = 'windowed';
+	@Output() public viewState$: BehaviorSubject<any> = new BehaviorSubject('windowed');
+	public viewState = 'windowed';
+
+	$el: any;
 
 	private _data = {
 		candles: [],
@@ -63,7 +65,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 	private _chart: any;
 	private _chartEl: HTMLElement = null;
 	private _onScrollBounced: Function = null;
-	private _queuedData: any = null;
 
 	constructor(public instrumentsService: InstrumentsService,
 				private _zone: NgZone,
@@ -74,18 +75,10 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	ngOnInit() {
 		this.$el = $(this._elementRef.nativeElement);
-
-		this.toggleViewState(this.viewState);
-
-		if (this.viewState === 'windowed')
-			this.restoreStyles();
-
-		this._bindResize();
-
+		this._chartEl = this._elementRef.nativeElement.shadowRoot.lastElementChild;
 		this._onScrollBounced = throttle(this._onScroll.bind(this), 33);
 
-		this._chartEl = this._elementRef.nativeElement.shadowRoot.lastElementChild;
-
+		this._restoreStyles();
 		this._fetchCandles();
 
 		if (this.model.options.id) {
@@ -100,26 +93,32 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 		}
 
 		this.model.changed$.subscribe(changes => {
-			changes.forEach(change => {
+
+			Object.keys(changes).forEach(change => {
 				switch (change) {
-					// case 'zoom':
-					// 	if (this._chart)
-					// 		this._updateViewPort();
-					// 	break;
+					case 'zoom':
+						if (this._chart)
+							this._updateViewPort();
+						this.render();
+						break;
 					case 'graphType':
 						this.changeGraphType(this.model.options.graphType);
 						break;
 					// case 'timeFrame':
 					// 	this.toggleTimeFrame(changes[key]);
 					// 	break;
-					// case 'indicator':
-					// 	let change = changes[key];
-					// 	if (change.type === 'add') {
-					// 		let indicator = this.model.options.indicators.find(i => i.id === change.id);
-					//
-					// 		// this._updateIndicators([indicator]);
-					// 	}
-					// 	break;
+					case 'indicator':
+						this._updateIndicators();
+						// let change = changes[key];
+						// if (change.type === 'add') {
+						//
+						// 	// this._updateIndicators([indicator]);
+						// }
+						break;
+					case 'focus':
+						this.toggleViewState(true);
+						this.putOnTop();
+						break;
 				}
 			});
 		});
@@ -127,14 +126,8 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	ngAfterViewInit() {
 		this.putOnTop();
+		this._bindResize();
 		this._bindDrag();
-
-		this.model.changed$.subscribe((changes: any) => {
-			if (changes.indexOf('focus') > -1) {
-				this.toggleViewState(true);
-				this.putOnTop();
-			}
-		});
 	}
 
 	public changeGraphType(type) {
@@ -145,19 +138,26 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 		this._chart.render();
 	}
 
-	public pinToCorner(edges): void {
-		let el = this._chart.container;
+	public pinToCorner(event): void {
+		if (!this._chart)
+			return;
 
-		el.style.position = 'absolute';
+		let el = this._chart.container.firstElementChild,
+			edges = event.interaction.prepared.edges;
 
-		if (edges.right || edges.left) {
-			el.style.left = 'auto';
-			el.style.right = 0;
-		}
+		// el.style.position = 'absolute';
+
+		// if (edges.right || edges.left) {
+		// 	el.style.left = 'auto';
+		// 	el.style.right = '0px';
+		// }
 	}
 
 	public unpinFromCorner(reflow = true): void {
-		this._chart.container.style.position = 'static';
+		if (!this._chart)
+			return;
+
+		// this._chart.container.firstElementChild.style.position = 'static';
 
 		if (reflow)
 			this.reflow();
@@ -167,8 +167,8 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 		if (!this._chart)
 			return;
 
-		this._chart.options.height = this._elementRef.nativeElement.clientHeight;
-		this._chart.options.width = this._elementRef.nativeElement.clientWidth;
+		this._chart.options.height = this._chartEl.clientHeight;
+		this._chart.options.width = this._chartEl.clientWidth;
 
 		this._updateViewPort();
 	}
@@ -178,7 +178,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 			return;
 
 		this._chart.render();
-		console.log('RENDER CALLED!');
 	}
 
 	public toggleTimeFrame(timeFrame) {
@@ -197,7 +196,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 				exportEnabled: false,
 				animationEnabled: false,
 				backgroundColor: '#000',
-				toolTip:{
+				toolTip: {
 					animationEnabled: false,
 				},
 				axisY: {
@@ -241,10 +240,10 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	private _updateViewPort(shift = 0) {
 		this._zone.runOutsideAngular(() => {
-			if (!this._chart || !this._chart.options.data[0].dataPoints.length)
+			if (!this._chart || !this._data.candles.length)
 				return;
 
-			let data = this._chart.options.data[0].dataPoints,
+			let data = this._data.candles,
 				offset = this._scrollOffset + shift,
 				viewable = this._calculateViewableBars(),
 				minOffset = 0,
@@ -271,7 +270,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 	private _fetchCandles() {
 		this._zone.runOutsideAngular(async () => {
 			try {
-				let data:any = ChartBoxComponent._prepareData(await this._cacheService.read({
+				let data: any = ChartBoxComponent._prepareData(await this._cacheService.read({
 					symbol: this.model.options.symbol,
 					timeFrame: this.model.options.timeFrame,
 					until: this.model.options.type === 'backtest' ? this.model.options.from :  this.model.options.until,
@@ -308,32 +307,37 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	private _fetchIndicators(count: number, offset: number) {
 		this._zone.runOutsideAngular(async () => {
-			let data;
+			try {
+				let data;
 
-			if (this.model.options.type === 'backtest')
-				data = await this.instrumentsService.fetch(this.model, count, offset, undefined, this.model.options.from);
-			else
-				data = await this.instrumentsService.fetch(this.model, count, offset);
+				if (this.model.options.type === 'backtest')
+					data = await this.instrumentsService.fetch(this.model, count, offset, undefined, this.model.options.from);
+				else
+					data = await this.instrumentsService.fetch(this.model, count, offset);
 
-			if (!data.indicators.length)
-				return;
+				if (!data.indicators.length)
+					return;
 
-			// Prepare data
-			data.indicators.forEach(indicator => {
-				indicator.buffers.forEach(drawBuffer => {
-					drawBuffer.data = drawBuffer.data.map(point => ({
-						x: new Date(point[0]),
-						y: point[1]
-					}));
+				// Prepare data
+				data.indicators.forEach(indicator => {
+					indicator.buffers.forEach(drawBuffer => {
+						drawBuffer.data = drawBuffer.data.map(point => ({
+							x: new Date(point[0]),
+							y: point[1]
+						}));
+					});
 				});
-			});
 
-			this._data.indicators = data.indicators;
+				this._data.indicators = data.indicators;
 
-			this._updateIndicators();
+				this._updateIndicators();
 
-			if (this._chart)
-				this.render();
+				if (this._chart)
+					this.render();
+
+			} catch (error) {
+				console.error(error);
+			}
 		});
 	}
 
@@ -449,27 +453,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 		};
 	}
 
-	public showIndicatorOptionsMenu(indicatorModel: IndicatorModel): Promise<boolean> {
-
-		return new Promise((resolve) => {
-
-			this._dialogAnchor.createDialog(DialogComponent, {
-				title: indicatorModel.name,
-				model: indicatorModel,
-				buttons: [
-					{value: 'add', text: 'Add', type: 'primary'},
-					{text: 'Cancel', type: 'default'}
-				],
-				onClickButton(value) {
-					if (value === 'add') {
-						resolve(true);
-					} else
-						resolve(false);
-				}
-			});
-		});
-	}
-
 	public putOnTop() {
 		let selfIndex = parseInt(this.$el.css('z-index'), 10) || 1,
 			highestIndex = selfIndex;
@@ -518,9 +501,10 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 					obj.width = parseInt(styles.w, 10) + 'px';
 					obj.height = parseInt(styles.h, 10) + 'px';
 
+					this.toggleViewState('windowed');
+
 					if (redraw) {
 						this._elementRef.nativeElement.classList.add('black');
-
 						setTimeout(() => {
 							this._updateViewPort();
 							this.render();
@@ -531,6 +515,8 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 			}
 		});
 
+		// Apply multiple styles in 1 go
+		// TODO: Check if really is faster then setting props 1 by 1
 		Object.assign(this._elementRef.nativeElement.style, obj);
 
 		this.storeStyles();
@@ -541,13 +527,15 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 			this._cookieService.putObject(`instrument-${this.model.options.id}-p`, this.getStyles())
 	}
 
-	public restoreStyles(styles?: {x?: any, y?: any, z?: any, w?: any, h?: any}): void {
+	public _restoreStyles(styles?: {x?: any, y?: any, z?: any, w?: any, h?: any}): void {
 		styles = styles || <any>this._cookieService.getObject(`instrument-${this.model.options.id}-p`);
 
 		if (styles) {
+			this.toggleViewState('windowed');
 			this.setStyles(styles);
 		}
 		else {
+			this.toggleViewState('windowed');
 			this.setRandomPosition();
 			this.storeStyles();
 		}
@@ -566,7 +554,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 		});
 	}
 
-	public toggleViewState(viewState: string | boolean, reflow = false) {
+	public toggleViewState(viewState: string | boolean, render = false) {
 		let elClassList = this._elementRef.nativeElement.classList;
 
 		if (typeof viewState === 'string') {
@@ -578,12 +566,19 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 
 				this.viewState = viewState;
 
-				if (reflow)
+				this.viewState$.next(this.viewState);
+				this.reflow();
+
+				if (render) {
 					this.render();
+				}
 			}
 		} else {
+			this.viewState = viewState ? 'stretched' : 'minimized';
 			elClassList.toggle('minimized', !viewState);
 		}
+
+		// this._ref.markForCheck();
 	}
 
 	private _bindDrag() {
@@ -672,6 +667,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 				onend: () => {
 					this.unpinFromCorner();
 					this.render();
+					this.storeStyles();
 				}
 			});
 	}

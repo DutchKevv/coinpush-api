@@ -1,11 +1,11 @@
-import Instrument 		from '../instrument/Instrument';
-import OrderManager 	from '../../modules/order/OrderManager';
-import AccountManager 	from '../../modules/account/AccountManager';
-import {log} 			from '../../../shared/logger';
+import Instrument        from '../instrument/Instrument';
+import OrderManager    from '../../modules/order/OrderManager';
+import AccountManager    from '../../modules/account/AccountManager';
+import {log}            from '../../../shared/logger';
 
 export interface IEA {
 	orderManager: OrderManager;
-	onTick(timestamp, bid, ask): Promise<any>|void;
+	onTick(timestamp, bid, ask): Promise<any> | void;
 }
 
 export default class EA extends Instrument implements IEA {
@@ -65,7 +65,8 @@ export default class EA extends Instrument implements IEA {
 		console.log('CUSTOM [onTick] SHOULD BE CALLED')
 	}
 
-	public async onInit() {}
+	public async onInit() {
+	}
 
 	protected async addOrder(orderOptions) {
 		let result = this.orderManager.add(Object.assign(orderOptions, {openTime: this.time}));
@@ -89,12 +90,14 @@ export default class EA extends Instrument implements IEA {
 			from = this.options.from,
 			until = this.options.until;
 
-		this.model.set({status: {
-			type: 'fetching',
-			startTime: Date.now()
-		}});
+		this.model.set({
+			status: {
+				type: 'fetching',
+				startTime: Date.now()
+			}
+		});
 
-		let p = this.ipc.send('cache', 'read', {
+		let p = this.ipc.sendAsync('cache', 'read', {
 			symbol: this.symbol,
 			timeFrame: this.timeFrame,
 			from: from,
@@ -125,7 +128,7 @@ export default class EA extends Instrument implements IEA {
 			from = candles.readDoubleLE(candles.length - (10 * Float64Array.BYTES_PER_ELEMENT));
 
 			if (from < until) {
-				p = this.ipc.send('cache', 'read', {
+				p = this.ipc.sendAsync('cache', 'read', {
 					symbol: this.symbol,
 					timeFrame: this.timeFrame,
 					from: from,
@@ -159,29 +162,32 @@ export default class EA extends Instrument implements IEA {
 
 		clearInterval(interval);
 
-		this.orderManager.closeAll(lastTime, this.bid, this.ask);
-
-		this.model.set({status: {
-			endTime: Date.now(),
-			type: 'finished',
-			progress: 100
-		}});
+		this.orderManager.closeAll(this.time, this.bid, this.ask);
 
 		this._emitProgressReport();
-
-		this.ipc.send('main', '@run:end', undefined, false);
 	}
 
 	private _emitProgressReport() {
 		this.updateTicksPerSecond();
-		this.model.options.status.progress = (((this.time - this.options.from) / (this.options.until - this.options.from)) * 100).toFixed(2);
-		// console.log(this.model.options.status.equality);
+
+		let progress = +(((this.time - this.options.from) / (this.options.until - this.options.from)) * 100).toFixed(2);
+		this.model.options.status.progress = progress;
+
+		if (progress === 100) {
+			this.model.set({
+				status: {
+					endTime: Date.now(),
+					type: 'finished'
+				}
+			});
+		}
+
 		this.ipc.send('main', 'instrument:status', {
 			id: this.id,
 			orders: this.orderManager.findByDateRange(this._lastReportTime, this.time),
 			lastTime: this.time,
 			status: this.model.options.status
-		}, false);
+		});
 
 		this._lastReportTime = this.time;
 	}

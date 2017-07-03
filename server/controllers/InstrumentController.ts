@@ -76,13 +76,13 @@ export default class InstrumentController extends Base {
 		}));
 	}
 
-	public read(id: string, from: number, until: number, count: number, bufferOnly?: boolean, indicators: any = false) {
-		let instrument = this.getById(id);
+	public read(params: {id: string, from: number, until: number, count: number, indicators: boolean}) {
+		let instrument = this.getById(params.id);
 
 		if (!instrument)
-			return Promise.reject(`Instrument '${id}' does not exist`);
+			return Promise.reject(`Instrument '${params.id}' does not exist`);
 
-		return instrument.worker.send('read', {from, until, count, indicators, bufferOnly});
+		return instrument.worker.sendAsync('read', params);
 	}
 
 	public getList() {
@@ -107,7 +107,7 @@ export default class InstrumentController extends Base {
 	public toggleTimeFrame(id, timeFrame) {
 		this.instruments[id].timeFrame = timeFrame;
 
-		return this.instruments[id].worker.send('toggleTimeFrame', {
+		return this.instruments[id].worker.sendAsync('toggleTimeFrame', {
 			timeFrame: timeFrame
 		});
 	}
@@ -119,7 +119,7 @@ export default class InstrumentController extends Base {
 		if (!instrument)
 			return Promise.reject(`Reject: Instrument '${params.id}' does not exist`);
 
-		id = await instrument.worker.send('indicator:add', {
+		id = await instrument.worker.sendAsync('indicator:add', {
 			name: params.name,
 			options: params.options
 		});
@@ -191,6 +191,7 @@ export default class InstrumentController extends Base {
 	}
 
 	public destroyAll(): void {
+		console.log('this._instruments.length this._instruments.length', this._instruments.length);
 		this._instruments.forEach(instrument => this.destroy(instrument.model.options.id));
 	}
 

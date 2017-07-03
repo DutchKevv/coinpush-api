@@ -6,6 +6,7 @@ import * as path            from 'path';
 import * as freePort        from 'freeport';
 import * as express     	from 'express';
 import * as io              from 'socket.io';
+import * as colors          from '../shared/node_modules/colors';
 
 import IPC                  from './classes/ipc/IPC';
 import AccountController 	from './controllers/AccountController';
@@ -19,6 +20,8 @@ import BacktestController 	from './controllers/BacktestController';
 import {log} 				from '../shared/logger';
 import {Base} 				from '../shared/classes/Base';
 import {InstrumentModel} 	from '../shared/models/InstrumentModel';
+
+process.stdin.resume();
 
 const
 	DEFAULT_TIMEZONE = 'America/New_York',
@@ -295,10 +298,10 @@ export default class App extends Base {
 	private _setProcessListeners() {
 
 		const processExitHandler = (code?) => {
-			console.log('Main exiting: ', code);
 			try {
-				this.destroy();
-				process.exit(0);
+				this.destroy(code);
+				log.info('App', 'exiting ' + code);
+				process.exit(code);
 			} catch (error) {
 				console.error(error);
 				process.exit(1);
@@ -306,17 +309,33 @@ export default class App extends Base {
 		};
 
 		process.on('SIGTERM', processExitHandler);
+		process.on('exit', processExitHandler);
+		process.on('beforeExit', processExitHandler);
 		process.on('SIGINT', processExitHandler);
 		process.on('unhandledRejection', processExitHandler);
 	}
 
 	private _killAllChildProcesses() {
-		this.controllers.instrument.destroyAll();
-		this.controllers.cache.destroy();
+		if (!this.controllers)
+			return;
+
+		if (this.controllers.instrument)
+			this.controllers.instrument.destroyAll();
+
+		if (this.controllers.cache)
+			this.controllers.cache.destroy();
+
+		if (this.controllers.editor)
+			this.controllers.editor.destroy();
 	}
 
-	destroy(): void {
-		log.info('App', 'Shutting down and cleaning up child processes');
+	destroy(code?): void {
+		if (code) {
+			log.error('App', 'Fatal error');
+		} else {
+			log.info('App', 'Shutting down and cleaning up child processes');
+		}
+
 		this.debug('warning', 'Shutting down server');
 
 		this._killAllChildProcesses();

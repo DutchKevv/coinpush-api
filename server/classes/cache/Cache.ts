@@ -26,7 +26,7 @@ export default class Cache extends WorkerChild {
 
 	private _tickBuffer = {};
 	private _tickIntervalTimer = null;
-	private _tickStreamOpen: boolean = false;
+	private _tickStreamOpen = false;
 
 	private _fetchQueue: Promise<any> = Promise.resolve();
 
@@ -171,7 +171,7 @@ export default class Cache extends WorkerChild {
 								symbol: symbol,
 								timeFrame: timeFrame,
 								value: this._mapper.getPercentageComplete(symbol, timeFrame, from, until, count)
-							}, false);
+							});
 						}
 
 						if (done === chunks.length && streamChunkWritten === streamChunkTotal)
@@ -205,7 +205,7 @@ export default class Cache extends WorkerChild {
 			this._dataLayer.reset()
 		]);
 
-		await this._dataLayer.createInstrumentTables(this._symbolList.map(symbol => symbol.name));
+		await this._dataLayer.createInstrumentTables(this._symbolList.map(_symbol => _symbol.name));
 
 		log.info('Cache', 'Reset complete');
 	}
@@ -255,7 +255,7 @@ export default class Cache extends WorkerChild {
 			if (!Object.getOwnPropertyNames(this._tickBuffer).length) return;
 
 			if (this.ipc)
-				this.ipc.send('main', 'ticks', this._tickBuffer, false);
+				this.ipc.send('main', 'ticks', this._tickBuffer);
 
 			if (this._io)
 				this._io.sockets.emit('ticks', this._tickBuffer);
@@ -383,6 +383,6 @@ export default class Cache extends WorkerChild {
 
 	private _debug(type: string, text: string, data?: any, code?: number) {
 		if (this.ipc)
-			this.ipc.send('main', 'debug', {type, text, data, code}, false);
+			this.ipc.send('main', 'debug', {type, text, data, code});
 	}
 }

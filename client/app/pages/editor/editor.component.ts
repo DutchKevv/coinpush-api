@@ -14,9 +14,6 @@ import {JSEditorComponent}  from '../../components/jseditor/jseditor.component';
 
 export class EditorComponent implements AfterViewInit {
 
-	// we pass the Component we want to get
-	// assign to a public property on our class
-	// give it the type for our component
 	@ViewChild(FileTreeComponent) fileTree: FileTreeComponent;
 	@ViewChild(JSEditorComponent) jsEditor: JSEditorComponent;
 

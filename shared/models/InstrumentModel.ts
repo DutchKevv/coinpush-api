@@ -1,5 +1,6 @@
-import {InstrumentSettings} from '../interfaces/InstrumentSettings';
-import {BaseModel} from '../models/BaseModel';
+import {InstrumentSettings} 		from '../interfaces/InstrumentSettings';
+import {BaseModel} 					from '../models/BaseModel';
+import {isEqual, reduce, omit} 		from 'lodash';
 
 export class InstrumentModel extends BaseModel {
 
@@ -12,7 +13,7 @@ export class InstrumentModel extends BaseModel {
 		focus: false,
 		autoRun: true,
 		indicators: [],
-		bars: [],
+		candles: [],
 		zoom: 4,
 		graphType: 'candlestick',
 		orders: [],
@@ -35,18 +36,18 @@ export class InstrumentModel extends BaseModel {
 	private _zoomMax = 10;
 	private _zoomMin = 1;
 
-	public set(obj) {
+	public set(obj, triggerChange = true, triggerOptions = true) {
 		if (obj.orders) {
 			if (obj.orders.length) {
 				this.updateOrders(obj.orders);
 			}
 			let orders = obj.orders;
 			delete obj.orders;
-			super.set(obj);
+			super.set(obj, triggerChange, triggerOptions);
 			this.changed$.next(['orders']);
 			obj.orders = orders;
 		} else {
-			super.set(obj);
+			super.set(obj, triggerChange, triggerOptions);
 		}
 	}
 
@@ -57,12 +58,8 @@ export class InstrumentModel extends BaseModel {
 		this.set({zoom: this.options.zoom + step});
 	}
 
-	public updateBars(bars) {
-		this.options.bars = bars;
-	}
-
-	public addIndicator(indicator) {
-		this.options.indicators.push(indicator);
+	public updateCandles(candles: Array<any>) {
+		this.options.candles = candles || [];
 	}
 
 	public removeIndicator() {

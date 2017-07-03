@@ -1,5 +1,6 @@
 import App from '../../app';
 import {InstrumentSettings} from '../../../shared/interfaces/InstrumentSettings';
+import {log}        		from '../../../shared/logger';
 
 module.exports = (app: App, socket) => {
 
@@ -9,7 +10,7 @@ module.exports = (app: App, socket) => {
 			let instruments = await app.controllers.instrument.create(options);
 			cb(null, instruments.map(instrument => instrument.options));
 		} catch (error) {
-			console.error(error);
+			log.error('InstrumentAPI', error);
 			cb(error);
 		}
 	});
@@ -17,9 +18,9 @@ module.exports = (app: App, socket) => {
 	// Read indicators
 	socket.on('instrument:read', async (options, cb) => {
 		try {
-			cb(null, await app.controllers.instrument.read(options.id, options.from, options.until, options.count, undefined, options.indicators))
+			cb(null, await app.controllers.instrument.read(options));
 		} catch (error) {
-			console.error('Error instrument:read ', error);
+			log.error('InstrumentAPI', error);
 			cb(error);
 		}
 	});
@@ -35,16 +36,6 @@ module.exports = (app: App, socket) => {
 		cb(null, await app.controllers.instrument.destroyAll());
 	});
 
-	// // Read options (indicators etc)
-	// socket.on('instrument:get-options', async (options, cb) => {
-	// 	try {
-	// 		cb(null, await app.controllers.instrument.getIndicatorData(options));
-	// 	} catch (err) {
-	// 		console.log(err);
-	// 		cb(err);
-	// 	}
-	// });
-
 	socket.on('instrument:list', (options, cb) => {
 		cb(null, app.controllers.instrument.getList());
 	});
@@ -53,7 +44,7 @@ module.exports = (app: App, socket) => {
 		try {
 			cb(null, await app.controllers.instrument.toggleTimeFrame(options.id, options.timeFrame));
 		} catch (error) {
-			console.log(error);
+			console.error('ERROR', error);
 			cb(error);
 		}
 	});
@@ -66,7 +57,7 @@ module.exports = (app: App, socket) => {
 		try {
 			cb(null, await app.controllers.instrument.addIndicator(options));
 		} catch (error) {
-			console.error(error);
+			console.error('ERROR', error);
 			cb(error);
 		}
 	});

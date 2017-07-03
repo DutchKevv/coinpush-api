@@ -15,6 +15,7 @@
 
 app-header-home {
     grid-area: header;
+    border-bottom: 1px solid $border-color-grey;
 }
 
 instrument-list {
@@ -28,6 +29,7 @@ aside {
     text-align: center;
     display: flex;
     flex-flow: column;
+    border-right: 1px solid $border-color-grey;
 }
 
 chart-overview {

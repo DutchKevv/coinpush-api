@@ -4,7 +4,7 @@ import {Component, ElementRef, EventEmitter, Input, OnInit, ViewEncapsulation} f
 	selector: 'dlg',
 	templateUrl: './dialog.component.html',
 	styleUrls: ['./dialog.component.scss'],
-	encapsulation: ViewEncapsulation.Native
+	// encapsulation: ViewEncapsulation.Native
 })
 
 export class DialogComponent implements OnInit {

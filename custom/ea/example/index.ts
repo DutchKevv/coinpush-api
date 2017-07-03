@@ -4,7 +4,6 @@ import OrderManager from "../../../server/modules/order/OrderManager";
 
 export default class MyEA extends EA implements IEA {
 
-
 	count = 0;
 	MA1: any;
 	MA2: any;
@@ -32,12 +31,11 @@ export default class MyEA extends EA implements IEA {
 			color: 'orange',
 			period: 50
 		});
-
 	}
 
 	public async onTick(time: number, bid: number, ask: number): Promise<void> {
 
-		if (this.MA2.value > bid * 1.001 && !this.orderManager.orders.length) {
+		if (this.MA2.value > bid * 1.0001 && !this.orderManager.orders.length) {
 
 			try {
 				// Place order
@@ -51,16 +49,15 @@ export default class MyEA extends EA implements IEA {
 			} catch (error) {
 			}
 
-
-
 		} else {
 
-			if (this.MA1.value < bid * 0.999 && this.orderManager.orders.length) {
+			if (/*this.MA1.value < bid * 0.9999 && */this.orderManager.orders.length) {
 
 				// Close order
 				await this.closeOrder(this.orderManager.orders[0].id, bid, ask);
 			}
 		}
+
 
 		await new Promise((resolve, reject) => {
 			setTimeout(() => {

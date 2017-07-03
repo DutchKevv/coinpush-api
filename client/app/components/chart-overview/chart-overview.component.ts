@@ -40,12 +40,16 @@ export class ChartOverviewComponent implements OnInit {
 			// First set the size of the box, but wait with rendering,
 			// This is to give a 'snappy' feeling (re-rendering the charts is pretty slow)
 			this.charts.forEach((chart) => {
+				if (chart.viewState === 'minimized')
+					return;
+
 				chart.setStyles({
 					x: columnCounter * size,
 					y: rowCount * size,
 					w: size,
 					h: size
 				}, true);
+
 				if ((++columnCounter + 1) * size > containerW) {
 					columnCounter = 0;
 					rowCount++;

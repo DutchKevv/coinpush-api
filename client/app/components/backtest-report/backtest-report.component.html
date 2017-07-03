@@ -1,6 +1,6 @@
 <section *ngIf="model.options$ | async as options" class="tpl-model" [attr.data-id]="model.options.id">
 	<header style="display: flex;">
-		<h5 style="width: 200px;">{{options.symbol}}</h5>
+		<h5 style="width: 200px;">{{options.symbol}} {{options.groupId}}</h5>
 		<div class="progress">
 			<span></span>
 			<div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="70"
@@ -15,7 +15,7 @@
 						[class.text-negative]="options.status.equality - options.startEquality < 0"
 						[class.text-positive]="options.status.equality - options.startEquality > 0"
 				>€ {{(options.status.equality - options.startEquality).toFixed(2)}}</span></li>
-				<li><span>Equality</span>€ {{options.equality}}</li>
+				<li><span>Equality</span>€ {{options.status.equality}}</li>
 				<li><span>Nr of trades</span>{{options.orders.length}}</li>
 			</ul>
 			<ul class="key-value-list">

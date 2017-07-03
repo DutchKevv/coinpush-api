@@ -34,7 +34,7 @@ export class BacktestReportComponent implements AfterViewInit, OnInit, OnDestroy
 		this._createChart();
 
 		this._elProgressBar = this._elementRef.nativeElement.shadowRoot.querySelector('.progress-bar');
-		this.model.changed$.subscribe((changes:any) => {
+		this.model.changed$.subscribe((changes: any) => {
 			this._onInstrumentStatusUpdate();
 			
 			if (changes.indexOf('orders') > -1 && this.model.options.orders.length)
@@ -89,6 +89,7 @@ export class BacktestReportComponent implements AfterViewInit, OnInit, OnDestroy
 		switch (this.model.options.status.type) {
 			case 'fetching':
 				this._updateProgressBar('info', (this.model.options.status.progress || 0) + '%', this.model.options.status.progress);
+				break;
 			case 'running':
 				this._updateProgressBar('success', (this.model.options.status.progress || 0) + '%', this.model.options.status.progress);
 				break;

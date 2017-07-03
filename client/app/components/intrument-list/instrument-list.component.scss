@@ -3,6 +3,7 @@
 :host {
 	contain: layout;
 	position: relative;
+	border-bottom: 1px solid $border-color-grey;
 }
 
 ::-webkit-input-placeholder { /* WebKit, Blink, Edge */

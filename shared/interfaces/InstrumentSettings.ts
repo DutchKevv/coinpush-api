@@ -7,7 +7,7 @@ export interface InstrumentSettings {
 	indicators?: Array<any>;
 	from?: number;
 	until?: number;
-	bars?: Array<any>;
+	candles?: Array<any>;
 	focus?: boolean;
 	zoom?: number;
 	startEquality?: number;

@@ -40,6 +40,7 @@ nav {
 		padding: 0 5px;
 		margin: 2px;
 		font-size: 14px;
+		cursor: pointer;
 
 		i.fa {
 			line-height: 20px;
@@ -77,5 +78,9 @@ nav {
 	margin-right: 5px;
 	border: none;
 	border-radius: 0;
+
+	&:hover {
+		background: #878787 linear-gradient(180deg, #000, #6a6a6a);
+	}
 }
 

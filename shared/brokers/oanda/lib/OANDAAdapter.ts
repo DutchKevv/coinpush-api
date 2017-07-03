@@ -168,6 +168,8 @@ OandaAdapter.prototype.getInstruments = function (accountId, callback) {
 	}, function (err, body) {
 		if (err)
 			return callback(err);
+
+		// callback('Error blablabla');
 		callback(null, body.instruments);
 	});
 };

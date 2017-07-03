@@ -133,7 +133,7 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 			// File
 			// TODO: Set icon for each file type (.js, .ts, .json etc)
 			} else {
-				node.icon = 'glyphicon glyphicon-file';
+				node.icon = 'fa fa-file';
 			}
 		}
 
@@ -369,8 +369,8 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 			showCloseButton: false,
 			model: model,
 			buttons: [
-				{value: 'add', text: 'add', type: 'primary'},
-				{text: 'cancel', type: 'candel'}
+				{text: 'cancel', type: 'candel'},
+				{value: 'add', text: 'add', type: 'primary'}
 			],
 			onClickButton: (value) => {
 				if (value === 'add') {
@@ -405,9 +405,8 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 	private _showError(err) {}
 
 	onSwipe(event, phase, direction, distance) {
-		console.log(distance);
-		console.log(distance);
-
+		if (window.document.body.clientWidth > 700)
+			return;
 
 		if (phase === 'move') {
 			if (direction === 'left') {

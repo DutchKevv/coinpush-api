@@ -23,7 +23,7 @@
 	<div class="row">
 		<div class="col-sm-3">
 			<ul class="key-value-list">
-				<li><span>Time frame</span>{{models[0].options.timeFrame}}</li>
+				<li><span>Time frame</span>{{(models$ | async)[0].options.timeFrame}}</li>
 				<li><span>Ticks</span></li>
 				<li><span>Ticks p / s</span></li>
 			</ul>
@@ -33,4 +33,5 @@
 	<hr/>
 </ng-container>
 
-<backtest-report *ngFor="let model of models" [model]="model"></backtest-report>
+
+<backtest-report *ngFor="let model of models$ | async" [model]="model"></backtest-report>

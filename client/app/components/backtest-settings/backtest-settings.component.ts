@@ -1,6 +1,6 @@
 import {
 	Component, OnInit, AfterViewInit, ElementRef, Output, ChangeDetectionStrategy, NgZone,
-	Pipe, PipeTransform, ViewEncapsulation
+	Pipe, PipeTransform, ViewEncapsulation, ChangeDetectorRef
 } from '@angular/core';
 import {CookieService}                from 'ngx-cookie';
 import {FormBuilder, FormGroup}        from '@angular/forms';
@@ -98,6 +98,7 @@ export class BacktestSettingsComponent implements OnInit, AfterViewInit {
 
 	constructor(public instrumentsService: InstrumentsService,
 				private _zone: NgZone,
+				private _ref: ChangeDetectorRef,
 				private _cookieService: CookieService,
 				private _cacheService: CacheService,
 				private formBuilder: FormBuilder,
@@ -131,11 +132,13 @@ export class BacktestSettingsComponent implements OnInit, AfterViewInit {
 				return alert(err);
 
 			this._onReceiveRunnableList(runnableList);
+			this._ref.markForCheck();
 		});
 
 		this._cacheService.symbolList$.subscribe(symbolList => {
 			this.multiSelectOptions = symbolList.map(symbol => ({id: symbol.options.name, name: symbol.options.name}));
 			this.model.set({symbols: selectedSymbols});
+			this._ref.markForCheck();
 		});
 	}
 

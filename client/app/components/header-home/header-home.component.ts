@@ -34,6 +34,18 @@ export class HeaderHomeComponent implements OnInit {
 
 	ngOnInit() {
 		$(this._elementRef.nativeElement.shadowRoot.querySelectorAll('.dropdown-toggle')).dropdown();
+
+		// $(this._elementRef.nativeElement).click(() => {
+		// 	$(this._elementRef.nativeElement.shadowRoot.querySelectorAll('.dropdown-toggle')).
+		// });
+		$(document.body).on('mouseenter mouseleave', '.dropdown', (e) => {
+			console.log(e.target);
+			let el = $(e.target).closest('.dropdown').addClass('show');
+
+			setTimeout(() => {
+				el[el.is(':hover') ? 'addClass' : 'removeClass']('show');
+			}, 300);
+		});
 	}
 
 	public zoom(step) {

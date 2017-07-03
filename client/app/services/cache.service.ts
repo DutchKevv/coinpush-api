@@ -13,7 +13,7 @@ export class CacheSymbol extends Base {
 	public tick(ticks) {
 		ticks.forEach(tick => {
 			this.set({
-				direction: this.options.bid > tick[2] ? 'down' : 'up',
+				direction: this.options.bid > tick[1] ? 'down' : 'up',
 				bidDirection: this.options.bid > tick[1] ? 'down' : 'up',
 				bid: tick[1],
 				askDirection: this.options.ask > tick[2] ? 'down' : 'up',

@@ -13,6 +13,8 @@
 		</li>
 		<li>
 			<button (click)="zoom(-1)"
+					[ngClass]="{'active': instrumentsService.instruments.length && instrumentsService.getFocused().options.zoom === 1}"
+					[disabled]="!instrumentsService.getFocused()"
 					type="button"
 					class="text-dark button-zoom-out btn-menu"
 					aria-expanded="false">
@@ -23,6 +25,8 @@
 
 		<li>
 			<button (click)="zoom(1)"
+					[ngClass]="{'active': instrumentsService.instruments.length && instrumentsService.getFocused().options.zoom === 10}"
+					[disabled]="!instrumentsService.getFocused()"
 					type="button"
 					class="text-dark btn-menu button-zoom-in"
 					aria-expanded="false">
@@ -31,21 +35,25 @@
 		</li>
 		<li>
 			<button (click)="instrumentsService.instruments.length && instrumentsService.getFocused().set({graphType: 'ohlc'})"
+					[disabled]="!instrumentsService.getFocused()"
 					type="button"
 					class="text-dark button-ohlc btn-menu"
+					[ngClass]="{'active': instrumentsService.instruments.length && instrumentsService.getFocused().options.graphType === 'ohlc'}"
 					aria-expanded="false">
 				<i class="fa fa-line-chart"></i>
 			</button>
 		</li>
 		<li>
 			<button (click)="instrumentsService.instruments.length && instrumentsService.getFocused().set({graphType: 'candlestick'})"
+					[ngClass]="{'active': instrumentsService.instruments.length && instrumentsService.getFocused().options.graphType === 'candlestick'}"
+					[disabled]="!instrumentsService.getFocused()"
 					type="button"
 					class="text-dark button-candlestick btn-menu"
 					aria-expanded="false">
 				<i class="fa fa-bar-chart"></i>
 			</button>
 		</li>
-		<li>
+		<li class="dropdown">
 			<!--<div class="dropdown">-->
 				<!--<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
 					<!--Dropdown button-->
@@ -57,13 +65,18 @@
 				<!--</div>-->
 			<!--</div>-->
 
-			<button type="button" class="dropdown-toggle btn-menu" data-toggle="dropdown" aria-haspopup="true"
+			<button type="button"
+					class="dropdown-toggle btn-menu"
+					data-toggle="dropdown"
+					[disabled]="!instrumentsService.getFocused()"
+					aria-haspopup="true"
 					aria-expanded="false">
 				<ng-container *ngIf="instrumentsService.getFocused() !== null">
 					<span>{{instrumentsService.getFocused().options.timeFrame}}</span>
 				</ng-container>
 				<ng-container *ngIf="instrumentsService.getFocused() === null"><span>M15</span></ng-container>
 			</button>
+
 			<ul class="dropdown-menu">
 				<li class="dropdown-item"><a (click)="instrumentsService.getFocused().set({timeFrame: 'M1'})">M1</a></li>
 				<li class="dropdown-item"><a (click)="instrumentsService.getFocused().set({timeFrame: 'M5'})">M5</a></li>
@@ -75,8 +88,12 @@
 				<li class="dropdown-item"><a (click)="instrumentsService.getFocused().set({timeFrame: 'W'})">W</a></li>
 			</ul>
 		</li>
-		<li>
-			<button type="button" class="dropdown-toggle btn-menu" data-toggle="dropdown" aria-haspopup="true"
+		<li class="dropdown">
+			<button type="button"
+
+					class="dropdown-toggle btn-menu"
+					data-toggle="dropdown"
+					aria-haspopup="true"
 					aria-expanded="false">
 				<span>Indicator</span>
 			</button>

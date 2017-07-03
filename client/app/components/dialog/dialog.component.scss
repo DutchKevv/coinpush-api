@@ -1,6 +1,9 @@
 @import '~bootstrap/scss/_variables';
 @import '~bootstrap/scss/_mixins';
 @import '~bootstrap/scss/_modal';
+@import '~bootstrap/scss/_buttons';
+@import '~bootstrap/scss/_forms';
+@import '~bootstrap/scss/_close';
 
 @import '../../style/variables/variables';
 
@@ -13,23 +16,40 @@
     background: rgba(0,0,0,0.7);
     min-height: 150px;
 
+    .close {
+        color: $font-color-light;
+    }
+
     .modal-header {
         //background: $panel-heading;
         background: rgba(86, 15, 15, 0.72);
         padding: 5px;
         text-align: center;
         color: $font-color-light;
+
+        h4 {
+            margin: 0;
+        }
     }
 
     .modal-content {
         background: $background-dark;
+
+        * {
+            box-sizing: border-box;
+        }
     }
 
     .modal-footer {
         button {
             margin: 0 5px;
+            cursor: pointer;
         }
     }
+}
+
+input[type=color] {
+    padding: 0;
 }
 
 
@@ -38,12 +58,10 @@
     padding: 5px;
 }
 
-
-
 .fa-close {
     cursor: pointer;
-    float: right;
     font-size: 16px;
+    color: $font-color-light;
 }
 
 dialog-footer {

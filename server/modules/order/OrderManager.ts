@@ -1,6 +1,6 @@
-import * as _ 	from '../../../shared/node_modules/lodash/index';
 import AccountManager from '../account/AccountManager';
 import {Base} from '../../../shared/classes/Base';
+import {remove} from 'lodash';
 
 export interface IOrder {
 	symbol: string;
@@ -72,11 +72,14 @@ export default class OrderManager extends Base {
 	}
 
 	public findById(id) {
-		return _.find(this._orders, {id})
+		return this.orders.find(order => order.id === id);
 	}
 
 	public close(time, id: number, bid: number, ask: number) {
-		let order = _.remove(this._orders, {id})[0];
+		let order = this.findById(id);
+
+		// Remove from list
+		this._orders.splice(this._orders.findIndex(_order => _order.id === id), 1);
 
 		// TODO: Debug warning 'Order not found)
 		if (!order) {
