@@ -93,22 +93,25 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 		}
 
 		this.model.changed$.subscribe(changes => {
+			let dirty = false;
 
 			Object.keys(changes).forEach(change => {
 				switch (change) {
 					case 'zoom':
 						if (this._chart)
 							this._updateViewPort();
-						this.render();
+						dirty = true;
 						break;
 					case 'graphType':
 						this.changeGraphType(this.model.options.graphType);
+						dirty = true;
 						break;
 					// case 'timeFrame':
 					// 	this.toggleTimeFrame(changes[key]);
 					// 	break;
 					case 'indicator':
 						this._updateIndicators();
+						dirty = true;
 						// let change = changes[key];
 						// if (change.type === 'add') {
 						//
@@ -121,6 +124,9 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 						break;
 				}
 			});
+
+			if (dirty)
+				this.render();
 		});
 	}
 
@@ -135,7 +141,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 			return;
 
 		this._chart.options.data[0].type = type;
-		this._chart.render();
 	}
 
 	public pinToCorner(event): void {
@@ -315,25 +320,16 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 				else
 					data = await this.instrumentsService.fetch(this.model, count, offset);
 
-				if (!data.indicators.length)
-					return;
 
-				// Prepare data
-				data.indicators.forEach(indicator => {
-					indicator.buffers.forEach(drawBuffer => {
-						drawBuffer.data = drawBuffer.data.map(point => ({
-							x: new Date(point[0]),
-							y: point[1]
-						}));
-					});
-				});
-
-				this._data.indicators = data.indicators;
-
-				this._updateIndicators();
-
-				if (this._chart)
-					this.render();
+				// if (!data.indicators.length)
+				// 	return;
+				//
+				// this._data.indicators = data.indicators;
+				//
+				// this._updateIndicators();
+				//
+				// if (this._chart)
+				// 	this.render();
 
 			} catch (error) {
 				console.error(error);
@@ -346,7 +342,8 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 			return;
 
 		this._zone.runOutsideAngular(() => {
-			this._data.indicators.forEach(indicator => {
+
+			this.model.options.indicators.forEach(indicator => {
 				indicator.buffers.forEach(drawBuffer => {
 					// New series
 					let series = null; // this._chart.get(unique);
@@ -364,7 +361,10 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 									type: drawBuffer.type,
 									color: drawBuffer.style.color,
 									name: indicator.id,
-									dataPoints: drawBuffer.data
+									dataPoints: drawBuffer.data.map(point => ({
+										x: new Date(point[0]),
+										y: point[1]
+									}))
 								});
 								break;
 							case 'arrow':

@@ -3,8 +3,8 @@ import {
 	OnDestroy, ViewEncapsulation, AfterViewChecked, NgZone, ViewChild
 } from '@angular/core';
 import {InstrumentModel} from '../../../../shared/models/InstrumentModel';
-
 const CanvasJS = require('../../../assets/vendor/js/canvasjs/canvasjs.min');
+import {minBy, maxBy} from 'lodash';
 
 @Component({
 	selector: 'backtest-report',
@@ -37,7 +37,7 @@ export class BacktestReportComponent implements AfterViewInit, OnInit, OnDestroy
 		this.model.changed$.subscribe((changes: any) => {
 			this._onInstrumentStatusUpdate();
 			
-			if (changes.indexOf('orders') > -1 && this.model.options.orders.length)
+			if (changes.orders && changes.orders.length)
 				this._updateData(changes.orders);
 		});
 		this._onInstrumentStatusUpdate();
@@ -51,23 +51,25 @@ export class BacktestReportComponent implements AfterViewInit, OnInit, OnDestroy
 		this._zone.runOutsideAngular(() => {
 			this._chart = new window['CanvasJS'].Chart(this.chartRef.nativeElement,
 				{
-					backgroundColor: "#000",
+					backgroundColor: '#000',
 					axisX: {
-						labelFontColor: "#fff",
-						gridDashType: "dash",
+						includeZero: false,
+						labelFontColor: '#fff',
+						gridDashType: 'dash',
 						gridColor: '#787D73',
 						gridThickness: 1
 					},
 					axisY: {
-						labelFontColor: "#fff",
-						gridDashType: "dash",
+						includeZero: false,
+						labelFontColor: '#fff',
+						gridDashType: 'dash',
 						gridColor: '#787D73',
 						gridThickness: 1,
-						// interval: 2000
+						minimum: this.model.options.startEquality
 					},
 					data: [
 						{
-							type: "line",
+							type: 'line',
 							dataPoints: this._prepareData()
 						}
 					]
@@ -79,8 +81,17 @@ export class BacktestReportComponent implements AfterViewInit, OnInit, OnDestroy
 
 	private _updateData(data) {
 		this._zone.runOutsideAngular(() => {
-			console.log(this.model.options.orders);
-			this._chart.options.data[0].dataPoints = this._prepareData();
+			let arr = this._chart.options.data[0].dataPoints;
+
+			// Update orders
+			arr.push(...this._prepareData(data));
+			// console.log('minBy',  minBy(arr, order => order.equality));
+			// console.log('maxBy',  maxBy(arr, order => order.equality));
+			console.log(minBy(this._chart.options.data[0].dataPoints, 'y'));
+
+			this._chart.options.axisY.minimum = Math.ceil(minBy(this._chart.options.data[0].dataPoints, 'y').y);
+			this._chart.options.axisY.maximum = Math.ceil(maxBy(this._chart.options.data[0].dataPoints, 'y').y);
+
 			this._chart.render();
 		});
 	}
@@ -117,8 +128,8 @@ export class BacktestReportComponent implements AfterViewInit, OnInit, OnDestroy
 		// });
 	}
 
-	private _prepareData() {
-		return this.model.options.orders.map((order, i) => ({y: order.equality}));
+	private _prepareData(data?) {
+		return (data || this.model.options.orders).map((order, i) => ({y: order.equality}));
 	}
 
 	ngOnDestroy() {

@@ -57,6 +57,17 @@ export default class Instrument extends InstrumentCache {
 		return indicator;
 	}
 
+	getIndicatorsData(params: {count: number, offset: number, from: number, until: number, indicators: Array<string>}) {
+		let data = this.indicators.filter(indicator => !params.indicators || !params.indicators.length || params.indicators.indexOf(indicator.id) > -1).map(indicator => {
+			return {
+				id: indicator.id,
+				buffers: indicator.getDrawBuffersData(params.count, params.offset, params.from, params.until)
+			}
+		});
+
+		return data;
+	}
+
 	removeIndicator(id) {
 		log.info('Instrument', 'remove indicator: ' + id);
 		this.indicators.splice(this.indicators.findIndex(indicator => indicator.id === id), 1);
@@ -67,28 +78,10 @@ export default class Instrument extends InstrumentCache {
 		this.indicators = [];
 	}
 
-	getIndicatorData(id: string, count?: number, offset?: number, from?: number, until?: number) {
-		let _indicator = this.indicators.find(indicator => indicator.id === id);
-
-		if (!_indicator) {
-			throw new Error(`Indicator [${id}] does not exists`);
-		}
-
-		return _indicator.getDrawBuffersData(count, offset, from, until);
-	}
-
-	getIndicatorsData(params: {count: number, offset: number, from: number, until: number}) {
-		return this.indicators.map(indicator => {
-			return {
-				id: indicator.id,
-				buffers: this.getIndicatorData(indicator.id, params.count, params.offset, params.from, params.until)
-			}
-		});
-	}
-
 	async _setIPCEvents() {
 		this.ipc.on('read', async (params: any, cb: Function) => {
 			try {
+
 				cb(null, {
 					indicators: await this.getIndicatorsData(params)
 				});

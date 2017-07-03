@@ -44,7 +44,7 @@ export class InstrumentModel extends BaseModel {
 			let orders = obj.orders;
 			delete obj.orders;
 			super.set(obj, triggerChange, triggerOptions);
-			this.changed$.next(['orders']);
+			this.changed$.next({orders});
 			obj.orders = orders;
 		} else {
 			super.set(obj, triggerChange, triggerOptions);
@@ -67,22 +67,24 @@ export class InstrumentModel extends BaseModel {
 	}
 
 	public updateOrders(orders) {
-		console.log(orders);
 		this.options.orders.push(...orders);
 	}
 
 	public updateIndicators(indicators) {
 		indicators.forEach(indicator => {
-			let existing = this.options.indicators.find(i => i === indicator.id);
+			// let existing = this.options.indicators.find(i => i === indicator.id);
+			//
+			// if (existing) {
+			// 	existing.data = indicator.data;
+			// }
 
-			if (existing) {
-				existing.data = indicator.data;
-			}
-
-			else {
+			// else {
 				this.options.indicators.push(indicator);
-			}
+			// }
 		});
+
+		if (indicators.length)
+			this.changed$.next({indicator: {type: 'add', id: indicators[0].id}});
 	}
 
 	public onDestroy() {

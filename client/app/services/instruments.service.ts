@@ -125,7 +125,6 @@ export class InstrumentsService {
 				if (err)
 					return reject(err);
 
-				model.updateCandles(data.candles);
 				model.updateIndicators(data.indicators);
 
 				resolve(data);
@@ -214,20 +213,20 @@ export class InstrumentsService {
 
 				options[input.name] = input.value
 			});
-			console.log(instrumentModel.options);
+
 			this._socketService.send('instrument:indicator:add', {
 				id: instrumentModel.options.id,
 				name: indicatorModel.name,
 				options: options,
-				readCount: instrumentModel.options.candles.length,
+				readCount: 1000,
 				shift: 0
 			}, (err, result) => {
 				if (err)
 					return reject(err);
 
 				instrumentModel.updateIndicators([result]);
+
 				// instrumentModel.changed$.next([{indicator: {type: 'add', id: result.id}}]);
-				instrumentModel.changed$.next({indicator: {type: 'add', id: result.id}});
 
 				resolve(true);
 			});

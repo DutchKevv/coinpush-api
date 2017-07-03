@@ -62,11 +62,14 @@ export default class Indicator {
 					if (point[0] >= from)
 						result.push(point);
 				}
-				else {
+				else if (until) {
 					// console.log(point[0], until, point[0] < until);
 					if (point[0] < until) {
 						result.push(point);
 					}
+				}
+				else {
+					result.push(point);
 				}
 			}
 		}

@@ -13,7 +13,7 @@ export default class InstrumentController extends Base {
 		return this._instruments;
 	}
 
-	private _unique: number = 0;
+	private _unique = 0;
 	private _instruments: Array<any> = [];
 	private _workers: Array<WorkerHost> = [];
 
@@ -76,7 +76,7 @@ export default class InstrumentController extends Base {
 		}));
 	}
 
-	public read(params: {id: string, from: number, until: number, count: number, indicators: boolean}) {
+	public read(params: {id: string, from?: number, until?: number, count?: number, indicators: any}) {
 		let instrument = this.getById(params.id);
 
 		if (!instrument)
@@ -125,34 +125,14 @@ export default class InstrumentController extends Base {
 		});
 
 		if (params.readCount) {
-			data = await this.getIndicatorData({
+			data = await this.read({
 				id: params.id,
-				indicatorId: id,
-				name: params.name,
+				indicators: [id],
 				count: params.readCount
 			});
 		}
 
-		return {id, data};
-	}
-
-	public getIndicatorData(params) {
-		let instrument = this.getById(params.id);
-
-		if (!instrument)
-			return Promise.reject(`Reject: Instrument '${params.id}' does not exist`);
-
-		let returnData = instrument.worker.send('get-data', {
-			indicatorId: params.indicatorId,
-			name: params.name,
-			from: params.from,
-			until: params.until,
-			count: params.count
-		});
-
-		// console.log(returnData);
-
-		return returnData
+		return {id, options: params.options, buffers: data.indicators[0].buffers};
 	}
 
 	public async getIndicatorOptions(params) {
@@ -183,16 +163,16 @@ export default class InstrumentController extends Base {
 		if (!instrument)
 			return console.warn(`Destroy: No such instrument ${id}`);
 
-		this._instruments.splice(this.findIndexById(id), 1);
-
 		instrument.worker.kill();
+
+		this._instruments.splice(this.findIndexById(id), 1);
 
 		this.app.debug('info', 'Destroyed ' + id);
 	}
 
 	public destroyAll(): void {
-		console.log('this._instruments.length this._instruments.length', this._instruments.length);
-		this._instruments.forEach(instrument => this.destroy(instrument.model.options.id));
+		while (this._instruments.length)
+			this.destroy(this._instruments[0].model.options.id);
 	}
 
 	private _updateInstrumentStatus(id, data): void {
