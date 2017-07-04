@@ -33,6 +33,7 @@ Thumbs.db
 !/server/gulpfile.js
 !/server/copy-sql3-binary.js
 /server/**/*.map
+/server/server.txt
 
 # Shared
 /shared/dist
