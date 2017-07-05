@@ -1,6 +1,6 @@
 import {
 	Component, AfterViewInit, Input, OnInit, PipeTransform, Pipe, ElementRef, ViewEncapsulation, OnChanges,
-	ChangeDetectionStrategy, Output, ViewChild
+	ChangeDetectionStrategy, Output, ViewChild, ChangeDetectorRef
 } from '@angular/core';
 import {InstrumentModel} from '../../../../shared/models/InstrumentModel';
 import {InstrumentsService} from '../../services/instruments.service';
@@ -27,11 +27,13 @@ export class BacktestComponent implements AfterViewInit, OnInit, OnChanges {
 
 	public models: Array<InstrumentModel> = [];
 	@Output() public models$ = new BehaviorSubject([]);
+	@Output() public progress$ = new BehaviorSubject({status: 'idle', progress: 0});
 	@ViewChild('progressBar') _progressBar: ElementRef;
 
 	public activeGroupId = null;
 
 	constructor(private _elementRef: ElementRef,
+				private _ref: ChangeDetectorRef,
 				public instrumentService: InstrumentsService) {}
 
 	ngOnInit() {
@@ -44,7 +46,7 @@ export class BacktestComponent implements AfterViewInit, OnInit, OnChanges {
 			this.updateModels();
 		});
 
-		this.instrumentService.changed$.subscribe(() => {
+		this.instrumentService.changed$.subscribe(changes => {
 			this._updateMainProgressBar();
 		});
 	}
@@ -71,7 +73,6 @@ export class BacktestComponent implements AfterViewInit, OnInit, OnChanges {
 		this.models = this.instrumentService.instruments.filter(model => model.options.groupId === this.activeGroupId);
 
 		this.models$.next(this.models);
-
 		this._updateMainProgressBar();
 	}
 
@@ -98,8 +99,8 @@ export class BacktestComponent implements AfterViewInit, OnInit, OnChanges {
 	}
 
 	private _updateMainProgressBar(): void {
-		if (!this._progressBar)
-			return;
+		// if (!this._progressBar)
+		// 	return;
 
 		this._progressBar.nativeElement.classList.add('animate');
 

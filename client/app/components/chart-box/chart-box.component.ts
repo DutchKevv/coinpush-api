@@ -15,8 +15,10 @@ import * as interact from 'interactjs';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {CacheService} from '../../services/cache.service';
 import {Base} from '../../../../shared/classes/Base';
+import {IOrder} from '../../../../server/modules/order/OrderManager';
 
 declare let $: any;
+declare let getEventListeners: any;
 
 @Component({
 	selector: 'chart-box',
@@ -56,7 +58,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	@Input() model: InstrumentModel;
 	@Output() loading$ = new BehaviorSubject(true);
-	
+
 	@ViewChild(DialogAnchorDirective) private _dialogAnchor: DialogAnchorDirective;
 	@ViewChild('draghandle') private _dragHandle: ElementRef;
 
@@ -82,6 +84,9 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 	private _chart: any;
 	private _chartEl: HTMLElement = null;
 	private _onScrollBounced: Function = null;
+	private _onScrollTooltipTimeout = null;
+	private _oCanvasMouseMoveFunc = null;
+	private _mouseActive = true;
 
 	constructor(public instrumentsService: InstrumentsService,
 				private _zone: NgZone,
@@ -120,7 +125,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 						dirty = true;
 						break;
 					case 'graphType':
-						this.changeGraphType(this.model.options.graphType);
+						this.changeGraphType();
 						dirty = true;
 						break;
 					case 'timeFrame':
@@ -139,6 +144,10 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 						this.toggleViewState(true);
 						this.putOnTop();
 						break;
+					case 'orders':
+						this._updateOrders(changes.orders);
+						dirty = true;
+						break;
 				}
 			});
 
@@ -153,11 +162,11 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 		this._bindDrag();
 	}
 
-	public changeGraphType(type) {
+	public changeGraphType() {
 		if (!this._chart)
 			return;
 
-		this._chart.options.data[0].type = type;
+		this._chart.options.data[0].type = this.model.options.graphType;
 	}
 
 	public pinToCorner(event): void {
@@ -217,9 +226,12 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 				exportEnabled: false,
 				animationEnabled: false,
 				backgroundColor: '#000',
+				dataPointWidth: 5,
 				creditText: '',
 				toolTip: {
 					animationEnabled: false,
+					borderThickness: 0,
+					cornerRadius: 0
 				},
 				axisY2: {
 					includeZero: false,
@@ -229,14 +241,18 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 					labelFontSize: '12',
 					gridDashType: 'dash',
 					gridColor: '#787D73',
-					gridThickness: 1,
+					gridThickness: 0.5,
 					stripLines: [{
 						value: 0,
 						label: '',
 						labelPlacement: 'outside',
 						labelAlign: 'far',
-						labelBackgroundColor: 'transparent',
-					}]
+						labelBackgroundColor: '#959598',
+						labelFontColor: '#000',
+						thickness: 0.5,
+						color: '#d2d2d5'
+					}],
+					tickThickness: 0
 				},
 				axisX: {
 					includeZero: false,
@@ -244,14 +260,28 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 					labelFontSize: '12',
 					gridDashType: 'dash',
 					gridColor: '#787D73',
-					gridThickness: 1
+					gridThickness: 0.5,
+					tickThickness: 0
 				},
 				data: [
 					{
 						type: this.model.options.graphType,
-						connectNullData: true,
+						connectNullData: false,
+						// fillOpacity: 0,
+						// risingColor: '#000000',
 						risingColor: '#17EFDA',
 						dataPoints: this._data.candles,
+						axisYType: 'secondary',
+						bevelEnabled: false,
+						thickness: 1
+					},
+					{
+						type: 'line',
+						connectNullData: false,
+						bevelEnabled: false,
+						markerType: "triangle",
+						markerSize: 10,
+						dataPoints: [],
 						axisYType: 'secondary'
 					}
 				]
@@ -261,6 +291,13 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 			this._chartEl.addEventListener('mousewheel', <any>this._onScrollBounced);
 			this._updateViewPort();
 			this._updateIndicators();
+			this._updateOrders();
+
+			this._oCanvasMouseMoveFunc = this._chart._mouseEventHandler;
+			this._chart._mouseEventHandler = event => {
+				if (this._mouseActive)
+					this._oCanvasMouseMoveFunc.call(this._chart, event);
+			};
 		});
 	}
 
@@ -299,7 +336,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 				let data: any = ChartBoxComponent._prepareData(await this._cacheService.read({
 					symbol: this.model.options.symbol,
 					timeFrame: this.model.options.timeFrame,
-					until: this.model.options.type === 'backtest' ? this.model.options.from :  this.model.options.until,
+					until: this.model.options.type === 'backtest' && this.model.options.status.progress < 1 ? this.model.options.from : this.model.options.until,
 					count: ChartBoxComponent.DEFAULT_CHUNK_LENGTH,
 					offset: this._offset
 				}));
@@ -336,21 +373,21 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 			try {
 				let data;
 
-				if (this.model.options.type === 'backtest')
+				if (this.model.options.type === 'backtest' && this.model.options.status.progress < 1)
 					data = await this.instrumentsService.fetch(this.model, count, offset, undefined, this.model.options.from);
 				else
 					data = await this.instrumentsService.fetch(this.model, count, offset);
 
 
-				// if (!data.indicators.length)
-				// 	return;
-				//
-				// this._data.indicators = data.indicators;
-				//
-				// this._updateIndicators();
-				//
-				// if (this._chart)
-				// 	this.render();
+				if (!data.indicators.length)
+					return;
+
+				this._data.indicators = data.indicators;
+
+				this._updateIndicators();
+
+				if (this._chart)
+					this.render();
 
 			} catch (error) {
 				console.error(error);
@@ -361,7 +398,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 	private _updateIndicators() {
 		if (!this._chart)
 			return;
-
+		//
 		this._zone.runOutsideAngular(() => {
 
 			this.model.options.indicators.forEach(indicator => {
@@ -380,9 +417,13 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 							case 'line':
 								this._chart.options.data.push({
 									type: drawBuffer.type,
+									lineThickness: 0.5,
+									bevelEnabled: false,
 									color: drawBuffer.style.color,
 									name: indicator.id,
 									axisYType: 'secondary',
+									markerType: "circle",
+									markerSize: 0,
 									dataPoints: drawBuffer.data.map(point => ({
 										x: new Date(point[0]),
 										y: point[1]
@@ -399,9 +440,61 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 		});
 	}
 
-	private _updateOrders(orders: Array<any>) {
+	private _updateOrders(orders: IOrder[] = this.model.options.orders) {
 		this._zone.runOutsideAngular(() => {
-			this._chart.get('orders').setData(orders.map(order => [order.openTime, order.bid, null]));
+
+			orders.forEach((order: IOrder) => {
+				// console.log( [{x: new Date(order.openTime), y: order.bid}, {x: new Date(order.closeTime), y: order.bid}]);
+				this._chart.options.data[1].dataPoints.push(...[
+					{
+						x: new Date(order.openTime),
+						y: order.openBid,
+						lineColor: order.type === 'sell' ? 'blue' : 'purple',
+						color: order.profit > 0 ? '#26c840' : 'red'
+					},
+					{
+						x: new Date(order.closeTime),
+						y: order.closeBid,
+						color: order.profit > 0 ? '#26c840' : 'red'
+						// lineColor: 'red'
+					},
+					{
+						x: new Date(order.closeTime),
+						y: null,
+						// lineColor: 'red'
+					}
+					]
+				);
+
+				// this._chart.options.data.push({
+				// 	type: 'line',
+				// 	lineThickness: 1,
+				// 	bevelEnabled: false,
+				// 	markerType: "square",
+				// 	// markerSize: 10,
+				// 	color: order.profit > 0 ? '#00e933' : '#9d0012',
+				// 	axisYType: 'secondary',
+				// 	dataPoints: [{x: new Date(order.openTime), y: order.openBid}, {
+				// 		x: new Date(order.closeTime),
+				// 		y: order.closeBid
+				// 	}]
+				// });
+			});
+
+			// dataPoints.push(...data);
+			// this._chart.options.data.push({
+			// 	type: drawBuffer.type,
+			// 	color: drawBuffer.style.color,
+			// 	name: indicator.id,
+			// 	axisYType: 'secondary',
+			// 	dataPoints: drawBuffer.data.map(point => ({
+			// 		x: new Date(point[0]),
+			// 		y: point[1]
+			// 	}))
+			// });
+			//
+			// this._chart.options.data[1].dataPoints.push(...orders.map(order => ({})))
+			// // this._chart.get('orders').setData(orders.map(order => [order.openTime, order.bid, null]));
 		});
 	}
 
@@ -440,24 +533,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 		return Math.floor(el.clientWidth / barW);
 	}
 
-	private _onScroll(event: MouseWheelEvent): boolean {
-		event.stopPropagation();
-		event.preventDefault();
-
-		let shift = Math.ceil(this._calculateViewableBars() / this._scrollSpeedStep);
-
-		if (shift < this._scrollSpeedMin)
-			shift = this._scrollSpeedMin;
-		else if (shift > this._scrollSpeedMax)
-			shift = this._scrollSpeedMax;
-
-		this._updateViewPort(event.wheelDelta > 0 ? -shift : shift);
-
-		this.render();
-
-		return false;
-	}
-
 	public putOnTop() {
 		let selfIndex = parseInt(this.$el.css('z-index'), 10) || 1,
 			highestIndex = selfIndex;
@@ -482,7 +557,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 		};
 	}
 
-	public setStyles(styles?: {x?: any, y?: any, z?: any, w?: any, h?: any}, redraw = false): void {
+	public setStyles(styles?: { x?: any, y?: any, z?: any, w?: any, h?: any }, redraw = false): void {
 		let diffs = Base.getObjectDiff(styles, this.getStyles()),
 			obj: any = {};
 
@@ -532,7 +607,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 			this._cookieService.putObject(`instrument-${this.model.options.id}-p`, this.getStyles())
 	}
 
-	public _restoreStyles(styles?: {x?: any, y?: any, z?: any, w?: any, h?: any}): void {
+	public _restoreStyles(styles?: { x?: any, y?: any, z?: any, w?: any, h?: any }): void {
 		styles = styles || <any>this._cookieService.getObject(`instrument-${this.model.options.id}-p`);
 
 		if (styles) {
@@ -584,6 +659,35 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 		}
 
 		// this._ref.markForCheck();
+	}
+
+	private _onScroll(event: MouseWheelEvent): boolean {
+		event.stopPropagation();
+		event.preventDefault();
+
+		let shift = Math.ceil(this._calculateViewableBars() / this._scrollSpeedStep);
+
+		if (shift < this._scrollSpeedMin)
+			shift = this._scrollSpeedMin;
+		else if (shift > this._scrollSpeedMax)
+			shift = this._scrollSpeedMax;
+
+		clearTimeout(this._onScrollTooltipTimeout);
+
+		this._mouseActive = false;
+		this._chart.options.toolTip.enabled = false;
+		this._onScrollTooltipTimeout = setTimeout(() => {
+			this._chart.options.toolTip.enabled = true;
+			this._mouseActive = true;
+			this.render();
+		}, 500);
+		this._chart.toolTip.hide();
+
+		this._updateViewPort(event.wheelDelta > 0 ? -shift : shift);
+
+		this.render();
+
+		return false;
 	}
 
 	private _bindDrag() {

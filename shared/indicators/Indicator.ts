@@ -41,41 +41,19 @@ export default class Indicator {
 	}
 
 	private _getDrawBufferData(id: string|number, count: number, offset: number, from: number, until: number) {
+		let data = this.getById(id).data,
+			start, end;
 
-		let db = this.getById(id),
-			i = 0, len = db.data.length,
-			result = [], point;
-
-		// console.log(db.data[db.data.length - 1], db.data.length, from, until, count,);
-
-		for (; i < len; i++) {
-			// if (result.length === count)
-			// 	break;
-
-			point = db.data[i];
-
-			if (from && until) {
-				if (point[0] >= from && point[0] < until)
-					result.push(point);
-			} else {
-				if (from) {
-					if (point[0] >= from)
-						result.push(point);
-				}
-				else if (until) {
-					// console.log(point[0], until, point[0] < until);
-					if (point[0] < until) {
-						result.push(point);
-					}
-				}
-				else {
-					result.push(point);
-				}
-			}
+		if ((from && until) || (count && from)) {
+			start = data.findIndex(point => point >= from);
+			end = until ? data.lastIndexOf(point => point < until) : Math.min(data.length, start + count);
+		}
+		else {
+			end = Math.max(data.lastIndexOf(point => point < until), data.length - 1);
+			start = Math.max(0, Math.max(0, end - count));
 		}
 
-		// console.log(result, result.length);
-		return result;
+		return data.slice(start, end);
 	}
 
 	_doCatchUp(): void {

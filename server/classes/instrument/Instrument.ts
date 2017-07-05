@@ -97,7 +97,7 @@ export default class Instrument extends InstrumentCache {
 				// 	returnObj.orders = [];
 				// }
 			} catch (error) {
-				// console.log('Error:', error);
+				console.log('Error:', error);
 				cb(error);
 			}
 		});

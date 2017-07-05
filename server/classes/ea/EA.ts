@@ -170,7 +170,8 @@ export default class EA extends Instrument implements IEA {
 		this.model.set({
 			status: {
 				type: 'finished',
-				endTime: Date.now()
+				endTime: Date.now(),
+				progress: 100
 			}
 		});
 
@@ -180,8 +181,10 @@ export default class EA extends Instrument implements IEA {
 	private _emitProgressReport() {
 		this.updateTicksPerSecond();
 
-		let progress = +(((this.time - this.options.from) / (this.options.until - this.options.from)) * 100).toFixed(2);
-		this.model.options.status.progress = progress;
+		if (this.model.options.status.type !== 'finished') {
+			let progress = +(((this.time - this.options.from) / (this.options.until - this.options.from)) * 100).toFixed(2);
+			this.model.options.status.progress = progress;
+		}
 
 		this.ipc.send('main', 'instrument:status', {
 			id: this.id,

@@ -68,7 +68,9 @@ export class CacheService {
 				if (err)
 					return reject(err);
 
-				resolve(new Float64Array(buffer));
+				let arr = new Float64Array(buffer);
+
+				resolve(arr);
 			});
 		})
 	}
