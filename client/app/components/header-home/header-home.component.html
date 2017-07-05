@@ -79,7 +79,7 @@
 		</li>
 		<li class="dropdown">
 			<button type="button"
-
+					[disabled]="!instrumentsService.getFocused()"
 					class="dropdown-toggle btn-menu"
 					data-toggle="dropdown"
 					aria-haspopup="true"

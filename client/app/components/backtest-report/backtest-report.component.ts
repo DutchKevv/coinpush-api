@@ -61,7 +61,8 @@ export class BacktestReportComponent implements AfterViewInit, OnInit, OnDestroy
 						labelFontColor: '#fff',
 						gridDashType: 'dash',
 						gridColor: '#787D73',
-						gridThickness: 1
+						gridThickness: 1,
+						tickThickness: 0
 					},
 					axisY: {
 						includeZero: false,
@@ -69,12 +70,14 @@ export class BacktestReportComponent implements AfterViewInit, OnInit, OnDestroy
 						gridDashType: 'dash',
 						gridColor: '#787D73',
 						gridThickness: 1,
+						tickThickness: 0
 						// minimum: this.model.options.startEquality
 					},
 					data: [
 						{
 							type: 'line',
-							dataPoints: this._prepareData()
+							dataPoints: this._prepareData(),
+							markerSize: 6,
 						}
 					]
 				});

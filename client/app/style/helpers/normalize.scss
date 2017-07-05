@@ -1,5 +1,8 @@
+@import '../variables/variables';
+
 a, p, li, span, h1, h2, h3, h4, h5, h6, td, th, label {
-	color: white;
+	color: $font-color-light;;
+	margin: 0;
 	//-webkit-user-select: none;
 	//user-select: none;
 }
@@ -16,8 +19,8 @@ ul {
 
 a {
 	cursor: pointer;
-}
 
-a:hover {
-	text-decoration: none;
+	&:hover {
+		text-decoration: none;
+	}
 }

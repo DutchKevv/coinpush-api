@@ -28,7 +28,8 @@ export default class CacheDataLayer {
 				timeFrame = params.timeFrame,
 				from = params.from,
 				until = params.until,
-				count = params.count;
+				count = params.count,
+				oCount = count;
 
 			let tableName = this._getTableName(symbol, timeFrame),
 				queryString;
@@ -37,7 +38,7 @@ export default class CacheDataLayer {
 
 			if (count) {
 				if (until) {
-					queryString += `WHERE time < ${until} ORDER BY time LIMIT ${count} `;
+					queryString += `WHERE time < ${until} ORDER BY time DESC LIMIT ${count} `;
 				} else {
 					queryString += `WHERE time > ${from} ORDER BY time LIMIT ${count} `;
 				}
@@ -48,7 +49,7 @@ export default class CacheDataLayer {
 					queryString += `WHERE time >= ${from} AND time <= ${until} ORDER BY time DESC LIMIT ${count}`;
 				}
 				else if (from) {
-					queryString += `WHERE time >= ${from} ORDER BY time DESC LIMIT ${count}`;
+					queryString += `WHERE time >= ${from} ORDER BY time LIMIT ${count}`;
 				}
 				else {
 					queryString += `WHERE time < ${until} ORDER BY time DESC LIMIT ${count}`;
@@ -59,9 +60,14 @@ export default class CacheDataLayer {
 				if (err)
 					return reject(err);
 
+				if (oCount && until)
+					rows = rows.reverse();
+
 				let mergedBuffer = Buffer.concat(rows.map(row => row.data), rows.length * (10 * Float64Array.BYTES_PER_ELEMENT));
 
 				log.info('DataLayer', `Reading ${symbol}-${timeFrame} took ${Date.now() - now} ms`);
+
+				rows = null;
 
 				resolve(mergedBuffer);
 			});

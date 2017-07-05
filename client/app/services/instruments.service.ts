@@ -106,6 +106,7 @@ export class InstrumentsService {
 		}
 
 		this.instruments$.next(this._instruments);
+		this.groupIds$.next([]);
 
 		return instrumentModels
 	}

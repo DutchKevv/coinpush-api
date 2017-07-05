@@ -22,6 +22,7 @@ label {
 
 form {
     display: flex;
+    padding: 0 20px;
 }
 
 .form-control.ng-invalid {
@@ -42,7 +43,6 @@ form {
 ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
     color:    #909;
 }
-
 
 @media (min-width: 576px) {
     .form-inline .form-control {

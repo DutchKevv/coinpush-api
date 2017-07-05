@@ -2,7 +2,7 @@
 @import '~bootstrap/scss/_mixins';
 @import '~bootstrap/scss/_transitions';
 @import '~bootstrap/scss/_progress';
-
+@import '../../style/variables/variables';
 
 .progress {
 	contain: layout;
@@ -11,8 +11,8 @@
 	text-align: center;
 	width: 100%;
 	height: 20px;
-	display: inline-block;
 	margin-bottom: 0;
+	// border: 1px solid $border-color-light;
 
 	span {
 		position: absolute;
@@ -25,7 +25,6 @@
 }
 
 .progress-bar {
-
 	height: 20px;
 	width: 0;
 }
@@ -39,7 +38,7 @@
 }
 
 .bg-success {
-	background-color: #167304;
+	background-color: #115504;
 }
 
 .bg-error {

@@ -10,7 +10,7 @@ module.exports = (app: App, socket) => {
 			let instruments = await app.controllers.instrument.create(options);
 			cb(null, instruments.map(instrument => instrument.options));
 		} catch (error) {
-			log.error('InstrumentAPI', error);
+			log.error('InstrumentAPI -> Create', error);
 			cb(error);
 		}
 	});
@@ -20,7 +20,7 @@ module.exports = (app: App, socket) => {
 		try {
 			cb(null, await app.controllers.instrument.read(options));
 		} catch (error) {
-			log.error('InstrumentAPI', error);
+			log.error('InstrumentAPI -> Read', error);
 			cb(error);
 		}
 	});

@@ -1,10 +1,19 @@
+@import '~bootstrap/scss/_variables';
+@import '~bootstrap/scss/_mixins';
+@import '~bootstrap/scss/_buttons';
+
 @import '../../style/variables/variables';
+@import '../../style/helpers/normalize';
 @import '../../style/components/key-value-list';
 @import '../../style/components/progress-bar';
 
 :host {
 	contain: layout;
 	width: 100%;
+	margin-top: 10px;
+	display: block;
+	border-top: 1px solid grey;
+	padding-top: 10px;
 }
 
 .text-negative {
@@ -16,21 +25,11 @@
 }
 
 .progress {
-	margin-top: 20px;
+	margin-left: 5px;
+	margin-right: 10px;
 }
 
-.progress-main {
-	margin-left: 10px;
-}
-
-ul {
-	list-style: none;
-	margin: 0;
-	padding: 0;
-}
-
-li,
-h4,
-h5 {
-	color: $font-color-light;
+.btn-xs {
+	padding: 2px 5px;
+	font-size: 12px;
 }
