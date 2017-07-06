@@ -17,7 +17,8 @@ export interface IOrder {
 	closeTime?: number;
 	profit?: number;
 	closeValue?: number;
-	equality?: number;
+	openEquality?: number;
+	closeEquality?: number;
 
 }
 
@@ -65,8 +66,10 @@ export default class OrderManager extends Base {
 		if (this.options.live) {
 
 		} else {
-			this._orders.push(order);
 			this._accountManager.addEquality(-orderPrice);
+			order.openEquality = this._accountManager.equality;
+			this._orders.push(order);
+
 			this.emit('order', order)
 		}
 
@@ -105,7 +108,7 @@ export default class OrderManager extends Base {
 			order.profit = profit;
 
 			this._accountManager.addEquality(order.closeValue);
-			order.equality = this._accountManager.equality;
+			order.closeEquality = this._accountManager.equality;
 			this._closedOrders.push(order);
 		}
 	}
@@ -125,13 +128,18 @@ export default class OrderManager extends Base {
 	public getValue(order: IOrder, bid: number, ask: number) {
 		let value, profit;
 
-		if (order.type === 'sell') {
+		if (order.type === 'buy') {
 			value = bid * order.count;
-			profit = (bid - order.openAsk) * order.count;
+			profit = (bid - order.openBid) * order.count;
 		} else {
-			value = ask * order.count;
-			profit = (ask * order.openBid) * order.count;
+
+			profit = (order.openBid - ask) * order.count;
+			value = (order.openBid * order.count) + profit
 		}
+
+		console.log(order.type, order.openBid, bid, profit);
+
+		profit = parseFloat(profit.toFixed(2));
 
 		return {value, profit};
 	}
@@ -146,16 +154,7 @@ export default class OrderManager extends Base {
 		return total
 	}
 
-	public checkOrderEquality(order: IOrder): boolean {
-		let required = order.count * order.openAsk;
-		return;
-	}
-
 	private _calculateOrderPrice(order: IOrder): number {
-		return order.count * order.openAsk;
-	}
-
-	private _calculateOrderProfit(order: IOrder, bid: number, ask: number) {
-		return order.openAsk - bid;
+		return order.count * (order.type === 'sell' ? order.openBid : order.openAsk);
 	}
 }

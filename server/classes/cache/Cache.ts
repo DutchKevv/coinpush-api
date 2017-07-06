@@ -360,6 +360,7 @@ export default class Cache extends WorkerChild {
 
 			symbol.bid = price.bid;
 			symbol.ask = price.ask;
+			symbol.favorite = OandaApi.FAVORITE_SYMBOLS.indexOf(symbol.name) > -1;
 		});
 
 		await this._dataLayer.createInstrumentTables(symbolList.map(symbol => symbol.name));

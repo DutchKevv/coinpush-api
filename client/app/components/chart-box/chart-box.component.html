@@ -1,5 +1,5 @@
 <div #draghandle
-	 class="chart-header clearfix"
+	 class="chart-header"
 	 (onBeforeResize)="pinToCorner($event)"
 	 (onAfterResize)="unpinFromCorner()"
 >
@@ -33,11 +33,13 @@
 </div>
 <div dialogAnchor></div>
 
-<div style="position: relative;" class="chart-content">
-
-	<div class="spinner">
-		<div class="dot1"></div>
-		<div class="dot2"></div>
+<div style="height: 100%;">
+	<div class="chart-content" #candles>
+		<div class="spinner">
+			<div class="dot1"></div>
+			<div class="dot2"></div>
+		</div>
 	</div>
-	<!--<chart #chart [model]="model"></chart>-->
+	<div class="chart-content2" #volume>
+	</div>
 </div>

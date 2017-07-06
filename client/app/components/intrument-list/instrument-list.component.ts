@@ -95,6 +95,9 @@ export class InstrumentListComponent implements OnDestroy, OnInit, AfterViewInit
 
 		this.cacheService.symbolList$.subscribe((symbolList: CacheSymbol[]) => {
 			symbolList.forEach(symbol => {
+				// if (symbol.options.favorite === false)
+					// return;
+
 				body += `
 <tr data-symbol="${symbol.options.name}">
 	<td><i class="fa"></i>${symbol.options.name}</td>

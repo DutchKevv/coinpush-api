@@ -12,7 +12,7 @@
     border: 1px solid #999999;
     overflow: hidden;
     background: black; // rgba(0,0,0,0.7);
-    contain: layout;
+    // contain: layout;
 }
 
 :host(.black) {
@@ -71,6 +71,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    height: 22px;
 }
 
 .chart-options {
@@ -99,7 +100,12 @@
 
 .chart-content {
     position: relative;
-    height: calc(100% - 25px);
+    height: calc(80% - 25px);
+}
+
+.chart-content2 {
+    position: relative;
+    height: calc(20%);
 }
 
 .spinner {

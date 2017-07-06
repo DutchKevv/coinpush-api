@@ -1,6 +1,6 @@
 import EA from '../../../server/classes/ea/EA';
 import {IEA} from 'tradejs/ea';
-import OrderManager from "../../../server/modules/order/OrderManager";
+import {IOrder} from '../../../server/modules/order/OrderManager';
 
 export default class MyEA extends EA implements IEA {
 
@@ -34,34 +34,63 @@ export default class MyEA extends EA implements IEA {
 	}
 
 	public async onTick(time: number, bid: number, ask: number): Promise<void> {
+		let hasOrders = !!this.orderManager.orders.length;
+		await this.checkOrders();
 
-		if (this.MA1.value > bid * 1.00001 && !this.orderManager.orders.length) {
+		if (hasOrders)
+			return;
+
+		if (bid > this.MA1.value * 1.001 && !this.orderManager.orders.length) {
+
+				try {
+					// Place order
+					let id = await this.addOrder({
+						instrument: this.symbol,
+						count: 2000,
+						type: 'sell',
+						openBid: bid,
+						openAsk: ask
+					});
+				} catch (error) {
+				}
+		}
+
+		else if (bid < this.MA1.value * 0.999 && !this.orderManager.orders.length) {
 
 			try {
 				// Place order
 				let id = await this.addOrder({
 					instrument: this.symbol,
 					count: 2000,
-					type: 'sell',
+					type: 'buy',
 					openBid: bid,
 					openAsk: ask
 				});
 			} catch (error) {
 			}
-
-		} else {
-
-			if (this.model.options.status.tickCount % 4 === 0 && this.orderManager.orders.length) {
-
-				// Close order
-				await this.closeOrder(this.orderManager.orders[0].id, bid, ask);
-			}
 		}
+
 
 // 		await new Promise((resolve, reject) => {
 // 			setTimeout(() => {
 // 				resolve();
 // 			}, 1)
 // 		});
+	}
+
+	async checkOrders() {
+		return Promise.all(this.orderManager.orders.map((order: IOrder) => {
+			return Promise.resolve().then(async () => {
+				if (order.type === 'buy') {
+					if (this.bid > this.MA1.value) {
+						await this.closeOrder(order.id, this.bid, this.ask);
+					}
+				} else {
+					if (this.bid < this.MA1.value) {
+						await this.closeOrder(order.id, this.bid, this.ask);
+					}
+				}
+			});
+		}));
 	}
 }

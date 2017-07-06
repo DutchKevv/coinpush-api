@@ -16,6 +16,7 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {CacheService} from '../../services/cache.service';
 import {Base} from '../../../../shared/classes/Base';
 import {IOrder} from '../../../../server/modules/order/OrderManager';
+import * as moment from 'moment';
 
 declare let $: any;
 declare let getEventListeners: any;
@@ -34,41 +35,23 @@ declare let getEventListeners: any;
 
 export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 
-	public static readonly DEFAULT_CHUNK_LENGTH = 1000;
-	public static readonly VIEW_STATE_WINDOWED = 1;
-	public static readonly VIEW_STATE_STRETCHED = 2;
-	public static readonly VIEW_STATE_MINIMIZED = 3;
-
-	public static _prepareData(data: any) {
-		let i = 0,
-			rowLength = 10,
-			length = data.length,
-			volume = new Array(length / rowLength),
-			candles = new Array(length / rowLength);
-
-		// TODO - Volume
-		for (; i < length; i += rowLength)
-			candles[i / rowLength] = {x: new Date(data[i]), y: [data[i + 1], data[i + 3], data[i + 5], data[i + 7]]};
-
-		return {
-			candles: candles,
-			volume: volume
-		};
-	}
-
 	@Input() model: InstrumentModel;
 	@Output() loading$ = new BehaviorSubject(true);
 
 	@ViewChild(DialogAnchorDirective) private _dialogAnchor: DialogAnchorDirective;
 	@ViewChild('draghandle') private _dragHandle: ElementRef;
+	@ViewChild('candles') private _candlesRef: ElementRef;
+	@ViewChild('volume') private _volumeRef: ElementRef;
 
 	@Output() public viewState$: BehaviorSubject<any> = new BehaviorSubject('windowed');
+
 	public viewState = 'windowed';
 
 	$el: any;
 
 	private _data = {
 		candles: [],
+		volume: [],
 		indicators: [],
 		orders: []
 	};
@@ -82,11 +65,39 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 	private _scrollSpeedMax = 20;
 
 	private _chart: any;
-	private _chartEl: HTMLElement = null;
+	private _chartVolume: any;
 	private _onScrollBounced: Function = null;
 	private _onScrollTooltipTimeout = null;
 	private _oCanvasMouseMoveFunc = null;
 	private _mouseActive = true;
+
+	public static readonly DEFAULT_CHUNK_LENGTH = 1000;
+	public static readonly VIEW_STATE_WINDOWED = 1;
+	public static readonly VIEW_STATE_STRETCHED = 2;
+	public static readonly VIEW_STATE_MINIMIZED = 3;
+
+	public static _prepareData(data: any) {
+		let i = 0,
+			rowLength = 10,
+			length = data.length,
+			volume = new Array(length / rowLength),
+			candles = new Array(length / rowLength);
+
+		// TODO - Volume
+		for (; i < length; i += rowLength) {
+			let date = moment(data[i]).format('DD-MM hh:mm'),
+				c = i / rowLength;
+
+			candles[c] = {time: data[i], y: [data[i + 1], data[i + 3], data[i + 5], data[i + 7]]};
+			volume[c] = {label: date, y: data[i + 9]};
+		}
+
+
+		return {
+			candles: candles,
+			volume: volume
+		};
+	}
 
 	constructor(public instrumentsService: InstrumentsService,
 				private _zone: NgZone,
@@ -97,7 +108,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	ngOnInit() {
 		this.$el = $(this._elementRef.nativeElement);
-		this._chartEl = this._elementRef.nativeElement.shadowRoot.lastElementChild;
 		this._onScrollBounced = throttle(this._onScroll.bind(this), 33);
 
 		this._restoreStyles();
@@ -134,11 +144,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 					case 'indicator':
 						this._updateIndicators();
 						dirty = true;
-						// let change = changes[key];
-						// if (change.type === 'add') {
-						//
-						// 	// this._updateIndicators([indicator]);
-						// }
 						break;
 					case 'focus':
 						this.toggleViewState(true);
@@ -197,9 +202,14 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 	public reflow() {
 		if (!this._chart)
 			return;
-
-		this._chart.options.height = this._chartEl.clientHeight;
-		this._chart.options.width = this._chartEl.clientWidth;
+		console.log('reflow');
+		// this._chart.options.height = this._candlesRef.nativeElement.parentNode.clientHeight * 0.7;
+		// this._candlesRef.nativeElement.style.height = (this._candlesRef.nativeElement.parentNode.clientHeight * 0.7) + 'px';
+		// this._volumeRef.nativeElement.style.height = (this._candlesRef.nativeElement.parentNode.clientHeight * 0.3) + 'px';
+		this._chartVolume.options.height = this._volumeRef.nativeElement.clientHeight;
+		this._chartVolume.options.width = this._volumeRef.nativeElement.clientWidth;
+		this._chart.options.height = this._candlesRef.nativeElement.clientHeight;
+		this._chart.options.width = this._candlesRef.nativeElement.clientWidth;
 
 		this._updateViewPort();
 	}
@@ -209,6 +219,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 			return;
 
 		this._chart.render();
+		this._chartVolume.render();
 	}
 
 	public toggleTimeFrame() {
@@ -226,13 +237,19 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 				exportEnabled: false,
 				animationEnabled: false,
 				backgroundColor: '#000',
-				dataPointWidth: 5,
+				dataPointWidth: 2,
 				creditText: '',
 				toolTip: {
 					animationEnabled: false,
 					borderThickness: 0,
 					cornerRadius: 0
 				},
+				scales: {
+					xAxes: [{
+						display: false
+					}]
+				},
+
 				axisY2: {
 					includeZero: false,
 					// title: 'Prices',
@@ -252,7 +269,10 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 						thickness: 0.5,
 						color: '#d2d2d5'
 					}],
-					tickThickness: 0
+					tickThickness: 0.5,
+					lineThickness: 0.5,
+					labelMinWidth: 40,
+					labelMaxWidth: 40
 				},
 				axisX: {
 					includeZero: false,
@@ -261,7 +281,12 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 					gridDashType: 'dash',
 					gridColor: '#787D73',
 					gridThickness: 0.5,
-					tickThickness: 0
+					tickThickness: 0,
+					valueFormatString: ' ',
+					labelFormatter: function(e){
+						return  ''
+					},
+					lineThickness: 1
 				},
 				data: [
 					{
@@ -269,6 +294,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 						connectNullData: false,
 						// fillOpacity: 0,
 						// risingColor: '#000000',
+						color: '#1381ff',
 						risingColor: '#17EFDA',
 						dataPoints: this._data.candles,
 						axisYType: 'secondary',
@@ -279,16 +305,63 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 						type: 'line',
 						connectNullData: false,
 						bevelEnabled: false,
-						markerType: "triangle",
+						markerType: 'triangle',
+						lineThickness: 1,
 						markerSize: 10,
 						dataPoints: [],
-						axisYType: 'secondary'
+						axisYType: 'secondary',
+						valueFormatString: ' ',
+						toolTipContent: '#{id}</br>Profit: {profit}'
 					}
 				]
 			};
 
-			this._chart = new window['CanvasJS'].Chart(this._chartEl, chartOptions);
-			this._chartEl.addEventListener('mousewheel', <any>this._onScrollBounced);
+			this._chart = new window['CanvasJS'].Chart(this._candlesRef.nativeElement, chartOptions);
+			this._chartVolume = new window['CanvasJS'].Chart(this._volumeRef.nativeElement, {
+				exportEnabled: false,
+				animationEnabled: false,
+				backgroundColor: '#000',
+				dataPointWidth: 2,
+				creditText: '',
+				toolTip: {
+					animationEnabled: false,
+					borderThickness: 0,
+					cornerRadius: 0
+				},
+				axisX: {
+					includeZero: false,
+					labelFontColor: '#fff',
+					labelFontSize: '12',
+					gridDashType: 'dash',
+					gridColor: '#787D73',
+					gridThickness: 0.5,
+					tickThickness: 0
+				},
+				axisY2: {
+					includeZero: false,
+					// title: 'Prices',
+					// prefix: '$',
+					labelFontColor: '#fff',
+					labelFontSize: '12',
+					gridDashType: 'dash',
+					gridColor: '#787D73',
+					gridThickness: 0.5,
+					tickThickness: 0,
+					labelMinWidth: 40,
+					labelMaxWidth: 40
+				},
+				data: [
+					{
+						type: 'column',
+						dataPoints: this._data.volume,
+						connectNullData: false,
+						bevelEnabled: false,
+						axisYType: 'secondary',
+						color: 'white'
+					}
+				]
+			});
+			this._candlesRef.nativeElement.addEventListener('mousewheel', <any>this._onScrollBounced);
 			this._updateViewPort();
 			this._updateIndicators();
 			this._updateOrders();
@@ -320,13 +393,10 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 
 			this._scrollOffset = offset;
 
-			min = data[data.length - offset - viewable];
-			max = data[data.length - offset - 1];
-
-			if (min && max) {
-				this._chart.options.axisX.viewportMinimum = min.x;
-				this._chart.options.axisX.viewportMaximum = max.x
-			}
+			this._chart.options.axisX.viewportMinimum = data.length - offset - viewable;
+			this._chartVolume.options.axisX.viewportMinimum = data.length - offset - viewable;
+			this._chart.options.axisX.viewportMaximum = data.length - offset - 1;
+			this._chartVolume.options.axisX.viewportMaximum = data.length - offset - 1;
 		});
 	}
 
@@ -342,6 +412,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 				}));
 
 				this._data.candles.push(...data.candles);
+				this._data.volume.push(...data.volume);
 
 				if (!this._chart)
 					this._createChart();
@@ -419,13 +490,16 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 									type: drawBuffer.type,
 									lineThickness: 0.5,
 									bevelEnabled: false,
+									connectNullData: false,
 									color: drawBuffer.style.color,
+									valueFormatString: ' ',
 									name: indicator.id,
 									axisYType: 'secondary',
-									markerType: "circle",
+									markerType: 'circle',
 									markerSize: 0,
-									dataPoints: drawBuffer.data.map(point => ({
-										x: new Date(point[0]),
+									dataPoints: drawBuffer.data.map((point, i) => ({
+										// label: moment(point[0]).format('DD-MM hh:mm'),
+										// x: i,
 										y: point[1]
 									}))
 								});
@@ -444,57 +518,42 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 		this._zone.runOutsideAngular(() => {
 
 			orders.forEach((order: IOrder) => {
-				// console.log( [{x: new Date(order.openTime), y: order.bid}, {x: new Date(order.closeTime), y: order.bid}]);
+				if (order.closeTime < this._chart.options.data[0].dataPoints[0].time)
+					return;
+
 				this._chart.options.data[1].dataPoints.push(...[
-					{
-						x: new Date(order.openTime),
-						y: order.openBid,
-						lineColor: order.type === 'sell' ? 'blue' : 'purple',
-						color: order.profit > 0 ? '#26c840' : 'red'
-					},
-					{
-						x: new Date(order.closeTime),
-						y: order.closeBid,
-						color: order.profit > 0 ? '#26c840' : 'red'
-						// lineColor: 'red'
-					},
-					{
-						x: new Date(order.closeTime),
-						y: null,
-						// lineColor: 'red'
-					}
+						{
+							// label: moment(order.openTime).format('DD-MM hh:mm'),
+							// x: this._chart.options.data[0].dataPoints.find(point => point.time === order.openTime).x,
+							y: null,
+							lineColor: order.type === 'sell' ? '#ff00e1' : '#007fff',
+							color: order.profit > 0 ? '#01ff00' : 'red',
+							id: order.id,
+							profit: order.profit
+							// lineColor: 'red'
+						},
+						{
+							// label: moment(order.openTime).format('DD-MM hh:mm'),
+							x: this._chart.options.data[0].dataPoints.findIndex(point => point.time === order.openTime),
+							y: order.openBid,
+							lineColor: order.type === 'sell' ? '#ff00e1' : '#007fff',
+							color: order.profit > 0 ? '#01ff00' : 'red',
+							id: order.id,
+							profit: order.profit
+						},
+						{
+							// label: moment(order.closeTime).format('DD-MM hh:mm'),
+							x: this._chart.options.data[0].dataPoints.findIndex(point => point.time === order.closeTime),
+							y: order.closeBid,
+							id: order.id,
+							profit: order.profit,
+							// lineColor: order.type === 'sell' ? '#ff00e1' : '#007fff',
+							color: order.profit > 0 ? '#01ff00' : 'red'
+							// lineColor: 'red'
+						}
 					]
 				);
-
-				// this._chart.options.data.push({
-				// 	type: 'line',
-				// 	lineThickness: 1,
-				// 	bevelEnabled: false,
-				// 	markerType: "square",
-				// 	// markerSize: 10,
-				// 	color: order.profit > 0 ? '#00e933' : '#9d0012',
-				// 	axisYType: 'secondary',
-				// 	dataPoints: [{x: new Date(order.openTime), y: order.openBid}, {
-				// 		x: new Date(order.closeTime),
-				// 		y: order.closeBid
-				// 	}]
-				// });
 			});
-
-			// dataPoints.push(...data);
-			// this._chart.options.data.push({
-			// 	type: drawBuffer.type,
-			// 	color: drawBuffer.style.color,
-			// 	name: indicator.id,
-			// 	axisYType: 'secondary',
-			// 	dataPoints: drawBuffer.data.map(point => ({
-			// 		x: new Date(point[0]),
-			// 		y: point[1]
-			// 	}))
-			// });
-			//
-			// this._chart.options.data[1].dataPoints.push(...orders.map(order => ({})))
-			// // this._chart.get('orders').setData(orders.map(order => [order.openTime, order.bid, null]));
 		});
 	}
 
@@ -782,7 +841,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 
 	private _destroyChart() {
-		this._chartEl.removeEventListener('mousewheel', <any>this._onScrollBounced);
+		this._candlesRef.nativeElement.removeEventListener('mousewheel', <any>this._onScrollBounced);
 
 		if (this._chart)
 			this._chart.destroy();

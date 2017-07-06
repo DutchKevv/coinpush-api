@@ -3,13 +3,10 @@ import Indicator from '../Indicator';
 export default class MA extends Indicator {
 
 	public get value() {
-		let data = this.getById('MA').data[0];
+		let drawBuffer = this.getById('MA').data,
+			last = drawBuffer[drawBuffer.length - 1];
 
-		if (data)
-			return data[1];
-
-
-		return null;
+		return last ? last[1] : null;
 	}
 
 	public async init(): Promise<any> {

@@ -109,7 +109,8 @@ export class CacheService {
 					bidDirection: 'up',
 					bid: symbol.bid,
 					ask: symbol.ask,
-					askDirection: 'up'
+					askDirection: 'up',
+					favorite: symbol.favorite
 				});
 			});
 

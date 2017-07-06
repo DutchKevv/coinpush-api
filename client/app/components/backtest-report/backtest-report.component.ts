@@ -55,6 +55,8 @@ export class BacktestReportComponent implements AfterViewInit, OnInit, OnDestroy
 		this._zone.runOutsideAngular(() => {
 			this._chart = new window['CanvasJS'].Chart(this.chartRef.nativeElement,
 				{
+					exportEnabled: false,
+					animationEnabled: false,
 					backgroundColor: '#000',
 					axisX: {
 						includeZero: false,
@@ -77,7 +79,8 @@ export class BacktestReportComponent implements AfterViewInit, OnInit, OnDestroy
 						{
 							type: 'line',
 							dataPoints: this._prepareData(),
-							markerSize: 6,
+							markerSize: 0,
+							toolTipContent: '#{id}</br>{type}</br>Profit: {profit}'
 						}
 					]
 				});
@@ -139,11 +142,12 @@ export class BacktestReportComponent implements AfterViewInit, OnInit, OnDestroy
 	}
 
 	private _prepareData(data?) {
-		let i = data ? this._chart.options.data[0].dataPoints.length : 0;
+		let i = data ? this._chart.options.data[0].dataPoints.length : 0,
+			orders;
 
 		data = data || this.model.options.orders;
 
-		return data.map(order => ({x: ++i, y: order.equality}));
+		return data.map(order => ({x: new Date(order.closeTime), y: order.closeEquality, id: order.id, profit: order.profit.toFixed(2), type: order.type}));
 	}
 
 	ngOnDestroy() {

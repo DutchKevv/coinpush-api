@@ -21,6 +21,6 @@ export default class AccountManager extends Base {
 	}
 
 	public addEquality(amount: number) {
-		this._equality = +(this._equality + amount).toFixed(2);
+		this._equality = parseFloat((this._equality + amount).toFixed(2));
 	}
 }

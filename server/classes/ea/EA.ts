@@ -171,7 +171,8 @@ export default class EA extends Instrument implements IEA {
 			status: {
 				type: 'finished',
 				endTime: Date.now(),
-				progress: 100
+				progress: 100,
+				equality: this.accountManager.equality
 			}
 		});
 
