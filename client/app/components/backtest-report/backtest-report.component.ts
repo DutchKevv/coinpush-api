@@ -7,6 +7,8 @@ const CanvasJS = require('../../../assets/vendor/js/canvasjs/canvasjs.min');
 import {minBy, maxBy} from 'lodash';
 import * as moment from 'moment';
 
+const Engine = require('../../../chart/index.js');
+
 @Component({
 	selector: 'backtest-report',
 	templateUrl: './backtest-report.component.html',
@@ -19,6 +21,7 @@ export class BacktestReportComponent implements AfterViewInit, OnInit, OnDestroy
 
 	@Input() public model: InstrumentModel;
 	@ViewChild('chart') chartRef: ElementRef;
+	// @ViewChild('chart2') chart2Ref: ElementRef;
 
 	public Math = Math;
 
@@ -30,7 +33,6 @@ export class BacktestReportComponent implements AfterViewInit, OnInit, OnDestroy
 	}
 
 	ngOnInit() {
-
 	}
 
 	ngAfterViewInit(): void {
@@ -53,45 +55,58 @@ export class BacktestReportComponent implements AfterViewInit, OnInit, OnDestroy
 
 	private _createChart(): void {
 		this._zone.runOutsideAngular(() => {
-			this._chart = new window['CanvasJS'].Chart(this.chartRef.nativeElement,
-				{
-					exportEnabled: false,
-					animationEnabled: false,
-					backgroundColor: '#000',
-					axisX: {
-						includeZero: false,
-						labelFontColor: '#fff',
-						gridDashType: 'dash',
-						gridColor: '#787D73',
-						gridThickness: 1,
-						tickThickness: 0
-					},
-					axisY: {
-						includeZero: false,
-						labelFontColor: '#fff',
-						gridDashType: 'dash',
-						gridColor: '#787D73',
-						gridThickness: 1,
-						tickThickness: 0
-						// minimum: this.model.options.startEquality
-					},
-					data: [
-						{
-							type: 'line',
-							dataPoints: this._prepareData(),
-							markerSize: 0,
-							toolTipContent: '#{id}</br>{type}</br>Profit: {profit}'
-						}
-					]
-				});
 
-			// this._chart.options.axisY.minimum = this.model.options.startEquality;
-			this._chart.render();
+			Engine.createInstrument({
+				id: this.model.options.id,
+				symbol: this.model.options.symbol,
+				timeFrame: this.model.options.timeFrame,
+				from: this.model.options.from,
+				until: this.model.options.until,
+				canvas: this.chartRef.nativeElement
+			});
+
+			// this._chart = new window['CanvasJS'].Chart(this.chartRef.nativeElement,
+			// 	{
+			// 		exportEnabled: false,
+			// 		animationEnabled: false,
+			// 		backgroundColor: '#000',
+			// 		axisX: {
+			// 			includeZero: false,
+			// 			labelFontColor: '#fff',
+			// 			gridDashType: 'dash',
+			// 			gridColor: '#787D73',
+			// 			gridThickness: 1,
+			// 			tickThickness: 0
+			// 		},
+			// 		axisY: {
+			// 			includeZero: false,
+			// 			labelFontColor: '#fff',
+			// 			gridDashType: 'dash',
+			// 			gridColor: '#787D73',
+			// 			gridThickness: 1,
+			// 			tickThickness: 0
+			// 			// minimum: this.model.options.startEquality
+			// 		},
+			// 		data: [
+			// 			{
+			// 				type: 'line',
+			// 				dataPoints: this._prepareData(),
+			// 				markerSize: 0,
+			// 				toolTipContent: '#{id}</br>{type}</br>Profit: {profit}'
+			// 			}
+			// 		]
+			// 	});
+			//
+			// // this._chart.options.axisY.minimum = this.model.options.startEquality;
+			// this._chart.render();
 		});
 	}
 
 	private _updateData(data) {
 		this._zone.runOutsideAngular(() => {
+			if (!this._chart)
+				return;
+
 			let arr = this._chart.options.data[0].dataPoints;
 
 			// Update orders
@@ -142,6 +157,9 @@ export class BacktestReportComponent implements AfterViewInit, OnInit, OnDestroy
 	}
 
 	private _prepareData(data?) {
+		if (!this._chart)
+			return;
+
 		let i = data ? this._chart.options.data[0].dataPoints.length : 0,
 			orders;
 

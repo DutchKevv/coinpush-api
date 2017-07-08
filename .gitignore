@@ -26,6 +26,9 @@ Thumbs.db
 
 # Client
 /client/dist/
+/client/chart/build
+/client/chart/cmake-build-debug
+/client/chart/extern
 
 # Server
 /server/config/tradejs.config.json

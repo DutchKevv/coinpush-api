@@ -1,0 +1,30 @@
+{
+  "releaseName": "tradejs",
+  "name": "tradejs",
+  "version": "0.0.1-alpha-4",
+  "description": "Javascript Trading Client and Server",
+  "email": "kewin@frontend-freelance.com",
+  "author": "Kewin Brandsma",
+  "main": "index.js",
+  "private": false,
+  "license": "CC-BY-NC-ND-4.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DutchKevv/TradeJS.git"
+  },
+  "keywords": [
+    "TradeJS",
+    "Stock",
+    "Forex",
+    "Trade",
+    "Trading",
+    "Node",
+    "Trading",
+    "NodeJS"
+  ],
+  "scripts": {
+    "start": "emcc main.cpp --bind -s WASM=1 -O3 -o index.js -s LEGACY_GL_EMULATION=1  -s GL_UNSAFE_OPTS=0 --pre-js Module.js -s ASSERTIONS=1 -s INVOKE_RUN=0 "
+  }
+}
+
+

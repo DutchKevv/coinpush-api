@@ -63,6 +63,10 @@ import './assets/vendor/js/ace/mode-typescript.js';
  */
 import './node_modules/canvasjs/dist/canvasjs.min.js';
 
+/**
+ * Web Assembly
+ */
+import './chart/index.js';
 
 /**
  * Custom

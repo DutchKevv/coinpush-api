@@ -4,8 +4,10 @@ import {SocketService}  from './services/socket.service';
 import {SystemService}  from './services/system.service';
 import {CacheService} from './services/cache.service';
 
+const Engine = require('../chart/index.js');
+
 @Component({
-	selector: 'body',
+	selector: 'app',
 	template: `
 		<div modalAnchor></div>
 		<router-outlet></router-outlet>
@@ -28,6 +30,8 @@ export class AppComponent implements AfterViewInit {
 
 	ngAfterViewInit() {
 		document.body.addEventListener('contextmenu', e => e.preventDefault(), false);
+
+		Engine.run({});
 
 		this._constantsService.init();
 		this._socketService.init();
