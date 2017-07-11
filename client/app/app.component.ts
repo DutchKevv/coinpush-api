@@ -4,7 +4,7 @@ import {SocketService}  from './services/socket.service';
 import {SystemService}  from './services/system.service';
 import {CacheService} from './services/cache.service';
 
-const Engine = require('../chart/index.js');
+const Engine = require('../index.js');
 
 @Component({
 	selector: 'app',
@@ -31,11 +31,17 @@ export class AppComponent implements AfterViewInit {
 	ngAfterViewInit() {
 		document.body.addEventListener('contextmenu', e => e.preventDefault(), false);
 
-		Engine.run({});
-
 		this._constantsService.init();
 		this._socketService.init();
 		this._systemService.init();
 		this._cacheService.init();
+
+		Engine.custom.run({});
+
+		$(document).on('keydown keyup keypress', function(e) {
+			if (e.target.nodeName.toLowerCase() !== 'canvas') {
+				e.preventDefault();
+			}
+		});
 	}
 }

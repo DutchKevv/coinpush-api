@@ -20,11 +20,12 @@
     "Trading",
     "Node",
     "Trading",
-    "NodeJS"
+    "NodeJS",
+    "??-s EXPORTED_FUNCTIONS=['createInstrument']         -s VERBOSE=1         -s DEMANGLE_SUPPORT=0"
   ],
   "scripts": {
-    "start": "emcc main.cpp --bind -s WASM=1 -O3 -o index.js -s LEGACY_GL_EMULATION=1  -s GL_UNSAFE_OPTS=0 --pre-js Module.js -s ASSERTIONS=1 -s INVOKE_RUN=0 "
-  }
+    "start": "emcc src/main.cpp src/**/*.cpp -s SAFE_HEAP=1 --bind  -s WASM=1 -O3 -o ../index.js -s LEGACY_GL_EMULATION=0  -s GL_UNSAFE_OPTS=0 --pre-js pre-module.js --post-js post-module.js -s ASSERTIONS=1 -s GL_ASSERTIONS=1 -s INVOKE_RUN=0  -std=c++11 -s USE_WEBGL2=1 -s FULL_ES3=1 -s USE_GLFW=3 -s OFFSCREENCANVAS_SUPPORT=1 --preload-file shaders --use-preload-plugins",
+    "start2": "emcc main.cpp -s SAFE_HEAP=1 --bind  -s WASM=1 -O3 -o index.js -s LEGACY_GL_EMULATION=1  -s GL_UNSAFE_OPTS=0 --pre-js pre-module.js --post-js post-module.js -s ASSERTIONS=1 -s GL_ASSERTIONS=1 -s INVOKE_RUN=0 -s OFFSCREENCANVAS_SUPPORT=1"
+  },
+  "dependencies": {}
 }
-
-

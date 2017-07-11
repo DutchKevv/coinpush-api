@@ -1,0 +1,155 @@
+set(load_shaders_dynamically true)
+
+if (load_shaders_dynamically)
+    set(include_dir)
+    set(destination_dir ${CMAKE_BINARY_DIR}/shaders)
+else()
+    set(include_dir ${CMAKE_BINARY_DIR}/include)
+    set(destination_dir ${include_dir}/shaders)
+endif()
+
+
+set(
+        bootstrap_shaders_files
+        TriangleFragment.glsl
+        TriangleVertex.glsl
+        # list shader files here.
+)
+
+
+add_custom_target(
+        shaders
+        COMMAND ${CMAKE_COMMAND}
+        -DLOAD_SHADERS_DYNAMICALLY=${load_shaders_dynamically}
+        -DSOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR}
+        -DFILES="${bootstrap_shaders_files}"
+        -DDESTINATION_DIR=${destination_dir}
+        -P ../cmake/shaders.cmake
+        COMMENT "Creating the files to include the GLSL shaders"
+)
+
+
+set(
+        SHADERS_INCLUDE_DIRS
+        ${include_dir}
+        CACHE INTERNAL
+        "Include directories for the shaders"
+)precision mediump float;
+
+uniform sampler2D mytexture;
+uniform highp float sprite;
+
+in vec4 f_color;
+out vec4 outputColor;
+
+void main(void) {
+	if (sprite > 1.0)
+		outputColor = texture(mytexture, gl_PointCoord) * f_color;
+	else
+		outputColor = f_color; //vec4(1.0, 0.0, 0.0, 1.0);
+}
+layout(location = 0) in vec2 coord2d;
+out vec4 f_color;
+
+uniform lowp float offset_x;
+uniform lowp float scale_x;
+uniform highp float sprite;
+uniform highp float point_size;
+
+void main(void) {
+	gl_Position = vec4((coord2d.x + offset_x) * scale_x, coord2d.y, 0, 1);
+	f_color = vec4(coord2d.xy / 2.0 + 0.5, 1, 1);
+	// gl_PointSize = max(1.0, sprite);
+	gl_PointSize = point_size;
+}
+#version 300 es
+
+#define PI 3.141592
+
+// size of a square in pixel
+#define N 20.0
+
+// rotation angle
+#define A iGlobalTime
+
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+	fragCoord-=iResolution.xy/2.0;
+
+    // rotation
+    vec2 Coord = mat2(cos(A),-sin(A),sin(A),cos(A))*fragCoord;
+
+    // the grid in itself
+    Coord = cos(PI/N*Coord);
+	fragColor = vec4(1.0)-0.5*smoothstep(0.9,1.0,max(Coord.x,Coord.y));
+}
+
+/* // golfed version from FabriceNeyret2
+void mainImage( out vec4 O, vec2 U )
+{
+	U = cos ( PI/N * mat2(sin(A+PI*vec4(.5,1,0,.5))) * (U-iResolution.xy/2.) );
+	O += 1.-.5*smoothstep(.9,1.,max(U.x,U.y)) -O;
+}
+*/#version 300 es
+precision mediump float;
+
+out vec4 outFragColor;
+
+void main()
+{
+	vec4 tex_color;
+	tex_color = vec4( 1,1,1,1 );
+
+	outFragColor = tex_color;
+}#version 300 es
+
+uniform mat4 uProjectionMatrix;
+uniform mat4 uModelviewMatrix;
+
+in vec3 inCoord;
+
+void main()
+{
+	gl_Position = uProjectionMatrix * uModelviewMatrix * vec4(inCoord, 1);
+}#version 300 es
+precision mediump float;
+
+in vec4 v_color;
+out vec4 colorOut;
+
+void main(void)
+{
+   vec4 a = gl_Vertex;
+   a.x = a.x * 0.5;
+   a.y = a.y * 0.5;
+
+
+   gl_Position = gl_ModelViewProjectionMatrix * a;
+}#version 300 es
+
+layout(location = 0) in vec4 vertexPosition_modelspace;
+
+void main(){
+
+    gl_Position.xyz = vertexPosition_modelspace;
+    gl_Position.w = 1.0;
+
+}
+
+precision mediump float;
+
+in vec4 v_color;
+out vec4 colorOut;
+
+void main()
+{
+    colorOut = v_color; // vec4(1.0, 0.0, 0.0, 1.0);
+}layout(location = 0) in vec3 vertexPosition_modelspace;
+out vec4 v_color;
+
+void main(){
+    gl_Position.xyz = vertexPosition_modelspace;
+    gl_Position.w = 1.0;
+
+    v_color = gl_Position * 0.5 + 0.5;
+}
