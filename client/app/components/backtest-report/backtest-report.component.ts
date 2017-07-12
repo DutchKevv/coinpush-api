@@ -7,7 +7,7 @@ const CanvasJS = require('../../../assets/vendor/js/canvasjs/canvasjs.min');
 import {minBy, maxBy} from 'lodash';
 import * as moment from 'moment';
 
-const Engine = require('../../../index.js');
+declare let Module:any;
 
 @Component({
 	selector: 'backtest-report',
@@ -56,7 +56,7 @@ export class BacktestReportComponent implements AfterViewInit, OnInit, OnDestroy
 	private _createChart(): void {
 		this._zone.runOutsideAngular(() => {
 
-			Engine.custom.createInstrument({
+			Module.custom.createInstrument({
 				id: this.model.options.id,
 				symbol: this.model.options.symbol,
 				timeFrame: this.model.options.timeFrame,

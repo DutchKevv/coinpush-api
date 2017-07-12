@@ -1,9 +1,9 @@
 var bootCanvas = document.createElement('canvas');
 
-bootCanvas.style.position = 'absolute';
-bootCanvas.style.top = 0;
-bootCanvas.style.left = 0;
-document.body.appendChild(bootCanvas);
+// bootCanvas.style.position = 'absolute';
+// bootCanvas.style.top = 0;
+// bootCanvas.style.left = 0;
+// document.body.appendChild(bootCanvas);
 
 Module = Module || {};
 Module.canvas = bootCanvas;

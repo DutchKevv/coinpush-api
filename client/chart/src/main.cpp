@@ -102,8 +102,8 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 
 int main(int argc, char **argv) {
     // int *resolution = get_resolution();
-    int width = 100;
-    int height = 100;
+    int width = 2000;
+    int height = 150;
 
     consoleLog("WebAssembly init \n");
     glfwSetErrorCallback(error_callback);

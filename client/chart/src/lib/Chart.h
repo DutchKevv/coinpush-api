@@ -19,12 +19,13 @@ private:
     int width = 100;
     int height = 100;
     int squareSize = 50;
-    int backgroundColor[4] = {0, 0, 0, 1};
-    int gridColor[4] = {50, 50, 50, 1};
-
+    GLfloat backgroundColor[4] = {0, 0, 0, 1};
+    GLfloat gridColor[4] = {50, 50, 50, 1};
+    GLfloat borderColor[4] = {50, 50, 50, 1};
+    GLfloat lineColor[4] = {50, 50, 50, 1};
 
     EMSCRIPTEN_WEBGL_CONTEXT_HANDLE context;
-    int programID;
+    int programId;
     GLuint triangleVertexBuffer;
     GLuint triangleVertexArrayId;
 
@@ -37,6 +38,7 @@ private:
     void drawGrid();
     // void startKeyPressUpdateLoop(char *type, int num);
     void updateZoomAndPan();
+    int initResources();
 
 public:
     Chart(char* id, char* canvasId, int width, int height);

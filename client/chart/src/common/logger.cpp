@@ -18,7 +18,14 @@ void consoleLog(string text) {
         printf("%s \n", text.c_str());
 #ifdef __EMSCRIPTEN__
         EM_ASM_({
-                    console.info(Module.UTF8ToString($0));
+                    var string = "";
+                    if (Module.UTF8ToString($0))
+                        string = Module.UTF8ToString($0);
+
+                    if (Module.UTF8ArrayToString($0))
+                        string = Module.UTF8ToString($0);
+
+                    console.info(string);
                 }, text.c_str());
 #endif
     } else {

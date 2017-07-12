@@ -4,8 +4,6 @@ import {SocketService}  from './services/socket.service';
 import {SystemService}  from './services/system.service';
 import {CacheService} from './services/cache.service';
 
-const Engine = require('../index.js');
-
 @Component({
 	selector: 'app',
 	template: `
@@ -36,7 +34,6 @@ export class AppComponent implements AfterViewInit {
 		this._systemService.init();
 		this._cacheService.init();
 
-		Engine.custom.run({});
 
 		$(document).on('keydown keyup keypress', function(e) {
 			if (e.target.nodeName.toLowerCase() !== 'canvas') {

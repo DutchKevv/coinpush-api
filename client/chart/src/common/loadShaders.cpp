@@ -51,7 +51,6 @@ GLuint LoadShader(const char *vertex_path, const char *fragment_path) {
     GLint Result = GL_FALSE;
 
     // Compile vertex shader
-    consoleLog("Compiling vertex shader.\n");
     glShaderSource(vertShader, 1, &vertShaderSrc, NULL);
     glCompileShader(vertShader);
 
@@ -66,7 +65,6 @@ GLuint LoadShader(const char *vertex_path, const char *fragment_path) {
     }
 
     // Compile fragment shader
-    consoleLog("Compiling fragment shader.\n");
     glShaderSource(fragShader, 1, &fragShaderSrc, NULL);
     glCompileShader(fragShader);
 
@@ -80,7 +78,6 @@ GLuint LoadShader(const char *vertex_path, const char *fragment_path) {
         //printf("%s\n", &FragmentShaderErrorMessage[0]);
     }
 
-    consoleLog("Linking program\n");
     GLuint program = glCreateProgram();
     glAttachShader(program, vertShader);
     glAttachShader(program, fragShader);
