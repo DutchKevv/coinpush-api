@@ -82,7 +82,7 @@ GLuint create_shader(const char *filename, GLenum type) {
 #ifdef GL_ES_VERSION_3
             "#version 300 es\n"  // OpenGL ES 2.0
 #else
-            "#version 300 es\n"  // OpenGL ES 3.0
+            "#version 120 es\n"  // OpenGL ES 3.0
 //#elseif GL_ES_VERSION_3_0
 //    "#version 300 es\n"  // OpenGL ES 3.0
 //#else

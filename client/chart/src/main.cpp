@@ -47,7 +47,7 @@ void loop() {
     if (!focused)
         return;
 
-    focused->render();
+    // focused->render();
 
 //    glfwMakeContextCurrent(window);
 //

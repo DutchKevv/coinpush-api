@@ -274,45 +274,45 @@ void Chart::render(void) {
     }
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
-//    glBufferData(GL_ARRAY_BUFFER, sizeof ticks, ticks, GL_DYNAMIC_DRAW);
-//    glVertexAttribPointer(attribute_coord2d, 2, GL_FLOAT, GL_FALSE, 0, 0);
-//    glDrawArrays(GL_LINES, 0, 42);
-//
-//    /* ---------------------------------------------------------------- */
-//    /* Draw the x tick marks */
-//
-//    float tickspacing = 0.1 * powf(10, -floor(log10(scale_x)));	// desired space between ticks, in graph coordinates
-//    float left = -1.0 / scale_x - offset_x;	// left edge, in graph coordinates
-//    float right = 1.0 / scale_x - offset_x;	// right edge, in graph coordinates
-//    int left_i = ceil(left / tickspacing);	// index of left tick, counted from the origin
-//    int right_i = floor(right / tickspacing);	// index of right tick, counted from the origin
-//    float rem = left_i * tickspacing - left;	// space between left edge of graph and the first tick
-//
-//    float firsttick = -1.0 + rem * scale_x;	// first tick in device coordinates
-//
-//    int nticks = right_i - left_i + 1;	// number of ticks to show
-//
-//    if (nticks > 21)
-//        nticks = 21;	// should not happen
-//
-//    for (int i = 0; i < nticks; i++) {
-//        float x = firsttick + i * tickspacing * scale_x;
-//        float tickscale = ((i + left_i) % 10) ? 0.5 : 1;
-//
-//        ticks[i * 2].x = x;
-//        ticks[i * 2].y = -1;
-//        ticks[i * 2 + 1].x = x;
-//        ticks[i * 2 + 1].y = -1 - tickSize * tickscale * pixel_y;
-//    }
-//
-//    glBufferData(GL_ARRAY_BUFFER, sizeof ticks, ticks, GL_DYNAMIC_DRAW);
-//    glVertexAttribPointer(attribute_coord2d, 2, GL_FLOAT, GL_FALSE, 0, 0);
-//    glDrawArrays(GL_LINES, 0, nticks * 2);
-//
-//
-//    // And we are done.
-//
-//    glDisableVertexAttribArray(attribute_coord2d);
+    glBufferData(GL_ARRAY_BUFFER, sizeof ticks, ticks, GL_DYNAMIC_DRAW);
+    glVertexAttribPointer(attribute_coord2d, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    glDrawArrays(GL_LINES, 0, 42);
+
+    /* ---------------------------------------------------------------- */
+    /* Draw the x tick marks */
+
+    float tickspacing = 0.1 * powf(10, -floor(log10(scale_x)));	// desired space between ticks, in graph coordinates
+    float left = -1.0 / scale_x - offset_x;	// left edge, in graph coordinates
+    float right = 1.0 / scale_x - offset_x;	// right edge, in graph coordinates
+    int left_i = ceil(left / tickspacing);	// index of left tick, counted from the origin
+    int right_i = floor(right / tickspacing);	// index of right tick, counted from the origin
+    float rem = left_i * tickspacing - left;	// space between left edge of graph and the first tick
+
+    float firsttick = -1.0 + rem * scale_x;	// first tick in device coordinates
+
+    int nticks = right_i - left_i + 1;	// number of ticks to show
+
+    if (nticks > 21)
+        nticks = 21;	// should not happen
+
+    for (int i = 0; i < nticks; i++) {
+        float x = firsttick + i * tickspacing * scale_x;
+        float tickscale = ((i + left_i) % 10) ? 0.5 : 1;
+
+        ticks[i * 2].x = x;
+        ticks[i * 2].y = -1;
+        ticks[i * 2 + 1].x = x;
+        ticks[i * 2 + 1].y = -1 - tickSize * tickscale * pixel_y;
+    }
+
+    glBufferData(GL_ARRAY_BUFFER, sizeof ticks, ticks, GL_DYNAMIC_DRAW);
+    glVertexAttribPointer(attribute_coord2d, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    glDrawArrays(GL_LINES, 0, nticks * 2);
+
+
+    // And we are done.
+
+    glDisableVertexAttribArray(attribute_coord2d);
 
     glFlush();
 }
@@ -381,7 +381,7 @@ void Chart::onKeyDown(int key) {
             break;
     }
 
-    // this->render();
+    this->render();
 }
 
 void Chart::onKeyUp(int key) {

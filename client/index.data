@@ -38,7 +38,6 @@ set(
 
 uniform vec4 color;
 out vec4 outColor;
-
 void main(void) {
 	outColor = color;
 }in vec2 coord2d;
