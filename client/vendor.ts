@@ -66,7 +66,7 @@ import './node_modules/canvasjs/dist/canvasjs.min.js';
 /**
  * Web Assembly
  */
-// import './index.js';
+// import '../shared/engine/engine.js';
 
 /**
  * Custom

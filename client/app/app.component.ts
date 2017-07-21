@@ -37,7 +37,7 @@ export class AppComponent implements AfterViewInit {
 
 		$(document).on('keydown keyup keypress', function(e) {
 			if (e.target.nodeName.toLowerCase() !== 'canvas') {
-				e.preventDefault();
+				// e.preventDefault();
 			}
 		});
 	}

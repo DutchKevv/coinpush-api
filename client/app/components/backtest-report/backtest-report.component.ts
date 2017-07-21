@@ -7,7 +7,7 @@ const CanvasJS = require('../../../assets/vendor/js/canvasjs/canvasjs.min');
 import {minBy, maxBy} from 'lodash';
 import * as moment from 'moment';
 
-declare let Module:any;
+declare let Module: any;
 
 @Component({
 	selector: 'backtest-report',
@@ -33,9 +33,20 @@ export class BacktestReportComponent implements AfterViewInit, OnInit, OnDestroy
 	}
 
 	ngOnInit() {
+		$(window).on('resize.orders-chart-' + this.model.options.id, () => this.updateCanvasSize());
+
+		$(window).keydown(function(e) {
+			if (e.keyCode === 37) { // left
+
+			}
+			else if (e.keyCode === 39) { // right
+
+			}
+		});
 	}
 
 	ngAfterViewInit(): void {
+		this.updateCanvasSize();
 		this._createChart();
 
 		this._elProgressBar = this._elementRef.nativeElement.shadowRoot.querySelector('.progress-bar');
@@ -53,17 +64,24 @@ export class BacktestReportComponent implements AfterViewInit, OnInit, OnDestroy
 		// console.log('CHECK!!');
 	}
 
+	updateCanvasSize() {
+		this.chartRef.nativeElement.setAttribute('width', this.chartRef.nativeElement.parentNode.clientWidth);
+		// this.chartRef.nativeElement.setAttribute('height', this.chartRef.nativeElement.parentNode.clientWidth);
+	}
+
 	private _createChart(): void {
 		this._zone.runOutsideAngular(() => {
 
-			Module.custom.createInstrument({
-				id: this.model.options.id,
-				symbol: this.model.options.symbol,
-				timeFrame: this.model.options.timeFrame,
-				from: this.model.options.from,
-				until: this.model.options.until,
-				canvas: this.chartRef.nativeElement
-			});
+			setTimeout(() => {
+				Module.custom.createInstrument({
+					id: this.model.options.id,
+					symbol: this.model.options.symbol,
+					timeFrame: this.model.options.timeFrame,
+					from: this.model.options.from,
+					until: this.model.options.until,
+					img: this.chartRef.nativeElement
+				});
+			}, 2000);
 
 			// this._chart = new window['CanvasJS'].Chart(this.chartRef.nativeElement,
 			// 	{
@@ -169,6 +187,7 @@ export class BacktestReportComponent implements AfterViewInit, OnInit, OnDestroy
 	}
 
 	ngOnDestroy() {
+		$(window).off('resize.orders-chart-' + this.model.options.id);
 		// this.models.forEach(model => {
 		// 	model.options$.unsubscribe();
 		// });

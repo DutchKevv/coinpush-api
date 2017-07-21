@@ -5,6 +5,7 @@
     <title>TradeJS - Practise</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <!--<base href="./" target="_blank">-->
 
     <style>
         html,
@@ -87,12 +88,17 @@
         </div>
     </app>
 
-    <script src="./index.js"></script>
+    <script>
+        Module = {
+            filePackagePrefixURL: '/engine/'
+        };
+    </script>
+    <script src="engine/engine.js"></script>
     <script>
         window.Module.custom.run({});
     </script>
-    <script src="./dist/vendor.bundle.js"></script>
-    <script src="./dist/app.bundle.js"></script>
+    <script src="/vendor.bundle.js"></script>
+    <script src="/app.bundle.js"></script>
 <!--<script async src="./chart/index.js"></script>-->
 
 <!--&lt;!&ndash; Insert this line above script imports  &ndash;&gt;-->

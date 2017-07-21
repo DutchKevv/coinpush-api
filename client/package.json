@@ -14,7 +14,8 @@
     "NodeJS"
   ],
   "scripts": {
-    "start": "node node_modules/webpack-dev-server/bin/webpack-dev-server.js --port 4200",
+    "start": "webpack-dev-server --port 4200 --config ./config/webpack.dev.js",
+    "prod": "webpack --config config/webpack.prod.js  --progress --profile --colors",
     "build": "ng build --prod --aot"
   },
   "dependencies": {
@@ -70,6 +71,12 @@
     "webpack": "^3.0.0",
     "webpack-bundle-size-analyzer": "2.7.0",
     "webpack-dev-server": "^2.5.0",
+    "webpack-merge": "^4.1.0",
     "zone.js": "0.8.12"
+  },
+  "devDependencies": {
+    "copy-webpack-plugin": "^4.0.1",
+    "html-webpack-plugin": "^2.29.0",
+    "write-file-webpack-plugin": "^4.1.0"
   }
 }

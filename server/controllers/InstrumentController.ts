@@ -13,7 +13,8 @@ export default class InstrumentController extends Base {
 		return this._instruments;
 	}
 
-	private _unique = 0;
+	private _uniqueId = 0;
+	private _uniqueGroupId = 0;
 	private _instruments: Array<any> = [];
 	private _workers: Array<WorkerHost> = [];
 
@@ -26,7 +27,7 @@ export default class InstrumentController extends Base {
 	}
 
 	public async create(instruments: Array<any>): Promise<Array<any>> {
-		let groupId = ++this._unique;
+		let groupId = this._uniqueGroupId++;
 
 		return Promise.all(instruments.map(async options => {
 			log.info('InstrumentController', `Creating instrument ${options.symbol}`);
@@ -36,7 +37,7 @@ export default class InstrumentController extends Base {
 				return Promise.reject('InstrumentController:create - illegal or no symbol name given');
 			}
 
-			options.id = `${options.symbol}_${++this._unique}`;
+			options.id = this._uniqueId++;
 			options.groupId = groupId;
 
 			let workerPath = PATH_INSTRUMENT,

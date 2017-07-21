@@ -55,7 +55,7 @@ export class JSEditorComponent implements AfterViewInit {
 
 	setEditor() {
 		this._zone.runOutsideAngular(() => {
-			ace.require('ace/config').set('workerPath', '/assets/js/ace/');
+			ace.require('ace/config').set('workerPath', '/assets222/js/ace/');
 
 			this.editor = ace.edit(this.editorRef.nativeElement);
 			// this.editor.setAutoScrollEditorIntoView(true);
