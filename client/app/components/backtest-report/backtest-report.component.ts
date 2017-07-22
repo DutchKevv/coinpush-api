@@ -72,16 +72,20 @@ export class BacktestReportComponent implements AfterViewInit, OnInit, OnDestroy
 	private _createChart(): void {
 		this._zone.runOutsideAngular(() => {
 
-			setTimeout(() => {
-				Module.custom.createInstrument({
-					id: this.model.options.id,
-					symbol: this.model.options.symbol,
-					timeFrame: this.model.options.timeFrame,
-					from: this.model.options.from,
-					until: this.model.options.until,
-					img: this.chartRef.nativeElement
-				});
-			}, 2000);
+			// setTimeout(() => {
+			// 	Module.custom.addInstrument({
+			// 		id: this.model.options.id,
+			// 		symbol: this.model.options.symbol,
+			// 		timeFrame: this.model.options.timeFrame,
+			// 		from: this.model.options.from,
+			// 		until: this.model.options.until,
+			// 		img: this.chartRef.nativeElement
+			// 	});
+			//
+				Module.custom.updateInstrument(this.model.options.id, {orders: this._prepareData()});
+				let id = Module.custom.addChart(this.model.options.id, this.chartRef.nativeElement);
+				Module.custom.renderChart(id);
+			// }, 2000);
 
 			// this._chart = new window['CanvasJS'].Chart(this.chartRef.nativeElement,
 			// 	{
@@ -122,6 +126,9 @@ export class BacktestReportComponent implements AfterViewInit, OnInit, OnDestroy
 
 	private _updateData(data) {
 		this._zone.runOutsideAngular(() => {
+			console.log('asdfasddf', data);
+			Module.custom.updateInstrument(this.model.options.id, this._prepareData(data));
+
 			if (!this._chart)
 				return;
 
@@ -175,12 +182,6 @@ export class BacktestReportComponent implements AfterViewInit, OnInit, OnDestroy
 	}
 
 	private _prepareData(data?) {
-		if (!this._chart)
-			return;
-
-		let i = data ? this._chart.options.data[0].dataPoints.length : 0,
-			orders;
-
 		data = data || this.model.options.orders;
 
 		return data.map(order => ({x: new Date(order.closeTime), y: order.closeEquality, id: order.id, profit: order.profit.toFixed(2), type: order.type}));

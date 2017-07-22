@@ -80,6 +80,8 @@ export class InstrumentListComponent implements OnDestroy, OnInit, AfterViewInit
 			if (symbols.indexOf(symbol.options.name) === - 1)
 				return;
 
+
+			console.log('222s12s22');
 			let row = this._elements[symbol.options.name];
 
 			row.children[0].firstElementChild.className = 'fa fa-arrow-' + symbol.options.direction;

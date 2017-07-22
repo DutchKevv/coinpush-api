@@ -10,6 +10,8 @@ import {ModalService} from './modal.service';
 import {InstrumentModel} from '../../../shared/models/InstrumentModel';
 import {Subject} from 'rxjs/Subject';
 
+declare let Module: any;
+
 @Injectable()
 export class InstrumentsService {
 
@@ -73,11 +75,13 @@ export class InstrumentsService {
 			if (err)
 				throw err;
 
-			_instruments.forEach((instrument, i) => models[i].set({
-				id: instrument.id,
-				groupId: instrument.groupId,
-				status: status
-			}));
+			_instruments.forEach((instrument, i) => {
+				models[i].set({
+					id: instrument.id,
+					groupId: instrument.groupId,
+					status: status
+				});
+			});
 
 			this.instruments$.next(this._instruments);
 		});
@@ -96,6 +100,8 @@ export class InstrumentsService {
 					console.warn('Instrument already known! : ' + instrumentModel.options.id);
 					return instrumentModel;
 				}
+
+				Module.custom.addInstrument(instrumentModel.options);
 			}
 
 			this._instruments.push(instrumentModel);

@@ -87,8 +87,8 @@ module.exports = {
             // {output}/file.txt
             // {output}/file.txt
             {from: './assets', to: 'assets'},
-            {from: path.join(__dirname, '..', 'index.html')},
-            // {from: './../shared/engine/engine.wasm', to: 'engine.wasm'},
+            {from: path.join(__dirname, '..', 'index.html'), to: 'index.html'},
+            {from: './../shared/engine/dist', to: 'engine'},
             // {from: './../shared/engine/engine.data', to: 'engine.data'}
         ]),
 // new ngToolsWebpack.AotPlugin({

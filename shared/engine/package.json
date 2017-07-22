@@ -1,0 +1,31 @@
+{
+  "releaseName": "tradejs",
+  "name": "tradejs",
+  "version": "0.0.1-alpha-4",
+  "description": "Javascript Trading Client and Server",
+  "email": "kewin@frontend-freelance.com",
+  "author": "Kewin Brandsma",
+  "main": "index.js",
+  "private": false,
+  "license": "CC-BY-NC-ND-4.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DutchKevv/TradeJS.git"
+  },
+  "keywords": [
+    "TradeJS",
+    "Stock",
+    "Forex",
+    "Trade",
+    "Trading",
+    "Node",
+    "Trading",
+    "NodeJS",
+    "??-s EXPORTED_FUNCTIONS=['createInstrument']         -s VERBOSE=1         -s DEMANGLE_SUPPORT=0 -s ALLOW_MEMORY_GROWTH=1"
+  ],
+  "scripts": {
+    "start": "emcmake cmake && make",
+    "start2": "emcc main.cpp ./src/*.cpp ./extern/*.cpp -o dist/engine.js -g  -s DISABLE_EXCEPTION_CATCHING=0 -s TOTAL_MEMORY=33554432  -s DEMANGLE_SUPPORT=1 -s SAFE_HEAP=1 --bind -s WASM=1 -Os -s LEGACY_GL_EMULATION=0  -s GL_UNSAFE_OPTS=0 --pre-js pre-module.js --post-js post-module.js -s ASSERTIONS=2 -s GL_ASSERTIONS=1 -s INVOKE_RUN=0  -std=c++11 -s USE_WEBGL2=1 -s FULL_ES3=1 -s USE_GLFW=3 -s OFFSCREENCANVAS_SUPPORT=1 --preload-file textures --preload-file shaders --preload-file extern --use-preload-plugins "
+  },
+  "dependencies": {}
+}

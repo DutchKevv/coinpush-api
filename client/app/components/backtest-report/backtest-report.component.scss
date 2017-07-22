@@ -33,3 +33,10 @@
 	padding: 2px 5px;
 	font-size: 12px;
 }
+
+canvas {
+	border: 1px solid transparent;
+}
+.focused {
+	border-color: yellow;
+}
