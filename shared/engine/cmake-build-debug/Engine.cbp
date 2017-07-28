@@ -5,7 +5,7 @@
 		<Option title="Engine"/>
 		<Option makefile_is_custom="1"/>
 		<Option compiler="gcc"/>
-		<Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\..\;CMake Files\..\..\..\..\..\;CMake Files\..\..\..\..\..\..\;CMake Files\..\..\..\..\..\..\usr\;CMake Files\..\..\..\..\..\..\usr\local\;CMake Files\..\..\..\..\..\..\usr\local\lib\;CMake Files\..\..\..\..\..\..\usr\local\lib\cmake\;CMake Files\..\..\..\..\..\..\usr\local\lib\cmake\SDL2\;CMake Files\..\..\..\..\..\..\usr\local\lib\cmake\glfw3\;CMake Files\..\..\..\..\..\..\usr\local\lib\cmake\assimp-3.3\;"/>
+		<Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\..\;CMake Files\..\..\..\..\..\;CMake Files\..\..\..\..\..\..\;CMake Files\..\..\..\..\..\..\usr\;CMake Files\..\..\..\..\..\..\usr\local\;CMake Files\..\..\..\..\..\..\usr\local\lib\;CMake Files\..\..\..\..\..\..\usr\local\lib\cmake\;CMake Files\..\..\..\..\..\..\usr\local\lib\cmake\glfw3\;CMake Files\..\..\..\..\..\..\usr\local\lib\cmake\assimp-3.3\;CMake Files\..\..\..\..\..\..\usr\local\lib\cmake\glm\;"/>
 		<Build>
 			<Target title="all">
 				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug"/>
@@ -45,11 +45,9 @@
 				<Option compiler="gcc"/>
 				<Compiler>
 					<Add option="-DGLFW_DLL"/>
-					<Add directory="/emscripten"/>
-					<Add directory="/emscripten/emscripten/incoming/system/include"/>
 					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/local/Cellar/freetype/2.8/include/freetype2"/>
 					<Add directory="/usr/local/include/freetype2"/>
-					<Add directory="/System/Library/Frameworks/OpenGL.framework"/>
 					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
 					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
 					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
@@ -72,11 +70,9 @@
 				<Option compiler="gcc"/>
 				<Compiler>
 					<Add option="-DGLFW_DLL"/>
-					<Add directory="/emscripten"/>
-					<Add directory="/emscripten/emscripten/incoming/system/include"/>
 					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/local/Cellar/freetype/2.8/include/freetype2"/>
 					<Add directory="/usr/local/include/freetype2"/>
-					<Add directory="/System/Library/Frameworks/OpenGL.framework"/>
 					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
 					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
 					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
@@ -143,6 +139,36 @@
 		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Instrument.h">
 			<Option target="Engine"/>
 		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Level.cpp">
+			<Option target="Engine"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Level.h">
+			<Option target="Engine"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Mesh.cpp">
+			<Option target="Engine"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Mesh.h">
+			<Option target="Engine"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Model.cpp">
+			<Option target="Engine"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Model.h">
+			<Option target="Engine"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/SkyBox.cpp">
+			<Option target="Engine"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/SkyBox.h">
+			<Option target="Engine"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Text.cpp">
+			<Option target="Engine"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Text.h">
+			<Option target="Engine"/>
+		</Unit>
 		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/logger.cpp">
 			<Option target="Engine"/>
 		</Unit>
@@ -152,13 +178,10 @@
 		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
-		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../../../../usr/local/lib/cmake/SDL2/sdl2-config.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\local\lib\cmake\SDL2\"/>
-		</Unit>
-		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../../../../usr/local/lib/cmake/glfw3/glfw3ConfigVersion.cmake">
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../../../../usr/local/lib/cmake/glfw3/GLFW3ConfigVersion.cmake">
 			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\local\lib\cmake\glfw3\"/>
 		</Unit>
-		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../../../../usr/local/lib/cmake/glfw3/glfw3Config.cmake">
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../../../../usr/local/lib/cmake/glfw3/GLFW3Config.cmake">
 			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\local\lib\cmake\glfw3\"/>
 		</Unit>
 		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../../../../usr/local/lib/cmake/glfw3/glfw3Targets.cmake">
@@ -172,6 +195,15 @@
 		</Unit>
 		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../../../../usr/local/lib/cmake/assimp-3.3/assimp-config.cmake">
 			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\local\lib\cmake\assimp-3.3\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../../../../usr/local/lib/cmake/glm/glmConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\local\lib\cmake\glm\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../../../../usr/local/lib/cmake/glm/glmConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\local\lib\cmake\glm\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../../../../usr/local/lib/cmake/glm/glmTargets.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\local\lib\cmake\glm\"/>
 		</Unit>
 	</Project>
 </CodeBlocks_project_file>

@@ -5,17 +5,19 @@
 #ifndef ENGINE_CHART_H
 #define ENGINE_CHART_H
 
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
+#include "GL/glew.h"
+#include "GLFW/glfw3.h"
 #include "Camera.h"
 #include "Instrument.h"
+#include "Text.h"
 
 class Chart {
 private:
     GLFWwindow *window;
     Camera *camera;
-    GLuint VAO[3];
-    GLuint VBO[3];
+    Text *text;
+    unsigned int VAO[3];
+    unsigned int VBO[3];
 //    GLuint vbo[3];
     float offset_x = 0;
     float scale_x = 1;
@@ -31,14 +33,13 @@ public:
     int width;
     int height;
 
-    int render(int windowWidth = NULL, int windowHeight = NULL);
-    int checkKeys();
+    int render(int windowWidth = 0, int windowHeight = 0);
+    int checkKeys(struct context *ctx);
     int destroy();
     int initResources();
-    Chart* getChartById(int id);
     int border = 10;
-    GLfloat lineColor[4] = { 1, 0, 0, 1 }; // red
-    GLfloat borderColor[4] = { 0.9f, 0.9f, 0.9f, 1 }; // grey
+    float lineColor[4] = { 1, 0, 0, 1 }; // red
+    float borderColor[4] = { 0.9f, 0.9f, 0.9f, 1 }; // grey
 
     int ticksize = 10;
 };

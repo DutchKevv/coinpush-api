@@ -7,21 +7,14 @@
 #include "Instrument.h"
 #include "../extern/json/json.hpp"
 #include "logger.h"
-#include <ft2build.h>
-#include FT_FREETYPE_H
+
 
 using namespace std;
-
-FT_Library ft;
 
 vector<Instrument *> instruments;
 
 Engine::Engine() {
 
-    if(FT_Init_FreeType(&ft)) {
-        fprintf(stderr, "Could not init freetype22 library\n");
-        return;
-    }
 }
 
 int Engine::initGL() {
@@ -57,13 +50,17 @@ Instrument* Engine::getInstrumentById(int id) {
 }
 
 int Engine::render() {
-    this->gl->render();
+//    this->gl->render();
     return 0;
 }
 
 int Engine::destroy() {
     if (this->gl != NULL) {
         this->gl->destroy();
+    }
+
+    for (auto &instrument : instruments) {
+        instrument->destroy();
     }
 
     return 0;

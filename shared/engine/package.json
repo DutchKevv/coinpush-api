@@ -21,11 +21,11 @@
     "Node",
     "Trading",
     "NodeJS",
-    "??-s EXPORTED_FUNCTIONS=['createInstrument']         -s VERBOSE=1         -s DEMANGLE_SUPPORT=0 -s ALLOW_MEMORY_GROWTH=1"
+    "??-s EXPORTED_FUNCTIONS=['createInstrument']         -s VERBOSE=1"
   ],
   "scripts": {
-    "start": "emcmake cmake && make",
-    "start2": "emcc main.cpp ./src/*.cpp ./extern/*.cpp -o dist/engine.js -g  -s DISABLE_EXCEPTION_CATCHING=0 -s TOTAL_MEMORY=33554432  -s DEMANGLE_SUPPORT=1 -s SAFE_HEAP=1 --bind -s WASM=1 -Os -s LEGACY_GL_EMULATION=0  -s GL_UNSAFE_OPTS=0 --pre-js pre-module.js --post-js post-module.js -s ASSERTIONS=2 -s GL_ASSERTIONS=1 -s INVOKE_RUN=0  -std=c++11 -s USE_WEBGL2=1 -s FULL_ES3=1 -s USE_GLFW=3 -s OFFSCREENCANVAS_SUPPORT=1 --preload-file textures --preload-file shaders --preload-file extern --use-preload-plugins "
+    "start": "emcmake cmake -DCMAKE_TOOLCHAIN_FILE=/emscripten/emscripten/incoming/cmake/Modules/Platform/Emscripten.cmake -DCMAKE_BUILD_TYPE=Debug -G \"Unix Makefiles\" . && make",
+    "start2": "emcc main.cpp ./src/*.cpp ./extern/*.cpp -s USE_FREETYPE=1 -o dist/engine.js -s DISABLE_EXCEPTION_CATCHING=0 -s DEMANGLE_SUPPORT=1 -s SAFE_HEAP=1 --bind -s WASM=1 -O2 -s LEGACY_GL_EMULATION=0  -s GL_UNSAFE_OPTS=0 --pre-js pre-module.js --post-js post-module.js -s ASSERTIONS=1 -s GL_ASSERTIONS=1 -s INVOKE_RUN=0  -std=c++11 -s USE_WEBGL2=1 -s FULL_ES3=1 -s USE_GLFW=3 -s OFFSCREENCANVAS_SUPPORT=1 --preload-file textures --preload-file shaders"
   },
   "dependencies": {}
 }

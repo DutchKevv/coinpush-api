@@ -5,8 +5,6 @@
 #ifndef ENGINE_CUBES_H
 #define ENGINE_CUBES_H
 
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
 #include "Camera.h"
 
 class Cubes {

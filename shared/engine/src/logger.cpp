@@ -1,15 +1,14 @@
 #include "logger.h"
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
+
+#ifdef __EMSCRIPTEN__
 #include <emscripten.h>
 #include <emscripten/html5.h>
-
+#endif
 
 using namespace std;
 
 void consoleLog(string text) {
     if (isEmscripten == true) {
-        printf("%s \n", text.c_str());
 
 #ifdef __EMSCRIPTEN__
         EM_ASM_({
@@ -20,7 +19,7 @@ void consoleLog(string text) {
                     if (Module.UTF8ArrayToString($0))
                         string = Module.UTF8ArrayToString($0);
 
-                    console.info(string);
+                    console.log('WebAssembly: ', string);
                 }, text.c_str());
 #endif
     } else {

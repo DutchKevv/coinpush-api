@@ -10,6 +10,8 @@
 #include "common/Shader.h"
 #include "../extern/stb_image.h"
 #include "Cubes.h"
+#include "GL/glew.h"
+#include <GLFW/glfw3.h>
 
 static GLuint VertexArrayID;
 static GLuint vertexbuffer;
@@ -90,7 +92,7 @@ Cubes::Cubes(GLFWwindow *window, Camera *camera): window(window), camera(camera)
 };
 
 int Cubes::setup() {
-    shader = new Shader("shaders/TriangleVertex.glsl", "shaders/TriangleFragment.glsl");
+    shader = new Shader("assets/shaders/TriangleVertex.glsl", "assets/shaders/TriangleFragment.glsl");
     shader->use();
     // glUseProgram(programID);
 
@@ -133,7 +135,7 @@ int Cubes::setup() {
 // load and generate the texture
 
     int width, height, nrChannels;
-    unsigned char *data = stbi_load("textures/background_1.png", &width, &height, &nrChannels, 0);
+    unsigned char *data = stbi_load("assets/textures/background_1.png", &width, &height, &nrChannels, 0);
 
     if (data) {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
@@ -190,17 +192,6 @@ int Cubes::render() {
 };
 
 int Cubes::move() {
-    float cameraSpeed = 2.5f * deltaTime;
-
-    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-        this->camera->Position += cameraSpeed * this->camera->Front;
-    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-        this->camera->Position -= cameraSpeed * this->camera->Front;
-    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-        this->camera->Position -= glm::normalize(glm::cross(this->camera->Front, this->camera->Up)) * cameraSpeed;
-    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-        this->camera->Position += glm::normalize(glm::cross(this->camera->Front, this->camera->Up)) * cameraSpeed;
-
     return 0;
 }
 

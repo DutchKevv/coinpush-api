@@ -13,6 +13,11 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Engine.cpp" "/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/CMakeFiles/Engine.dir/src/Engine.cpp.o"
   "/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/GL.cpp" "/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/CMakeFiles/Engine.dir/src/GL.cpp.o"
   "/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Instrument.cpp" "/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/CMakeFiles/Engine.dir/src/Instrument.cpp.o"
+  "/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Level.cpp" "/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/CMakeFiles/Engine.dir/src/Level.cpp.o"
+  "/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Mesh.cpp" "/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/CMakeFiles/Engine.dir/src/Mesh.cpp.o"
+  "/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Model.cpp" "/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/CMakeFiles/Engine.dir/src/Model.cpp.o"
+  "/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/SkyBox.cpp" "/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/CMakeFiles/Engine.dir/src/SkyBox.cpp.o"
+  "/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Text.cpp" "/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/CMakeFiles/Engine.dir/src/Text.cpp.o"
   "/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/logger.cpp" "/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/CMakeFiles/Engine.dir/src/logger.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "AppleClang")
@@ -24,11 +29,9 @@ set(CMAKE_TARGET_DEFINITIONS_CXX
 
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
-  "/emscripten"
-  "/emscripten/emscripten/incoming/system/include"
   "/usr/local/include"
+  "/usr/local/Cellar/freetype/2.8/include/freetype2"
   "/usr/local/include/freetype2"
-  "/System/Library/Frameworks/OpenGL.framework"
   )
 
 # Targets to which this target links.

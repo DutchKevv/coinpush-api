@@ -6,5 +6,5 @@ CXX_FLAGS = -g   -std=gnu++11
 
 CXX_DEFINES = -DGLFW_DLL
 
-CXX_INCLUDES = -I/emscripten -I/emscripten/emscripten/incoming/system/include -isystem /usr/local/include -I/usr/local/include/freetype2 
+CXX_INCLUDES = -isystem /usr/local/include -I/usr/local/Cellar/freetype/2.8/include/freetype2 -I/usr/local/include/freetype2 
 

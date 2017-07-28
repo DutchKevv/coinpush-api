@@ -14,6 +14,9 @@
 # EXTERNAL cache entries
 ########################
 
+//The directory containing a CMake configuration file for ASSIMP.
+ASSIMP_DIR:PATH=/usr/local/lib/cmake/assimp-3.3
+
 //the suffix for the openrave libraries
 ASSIMP_LIBRARY_SUFFIX:STRING=
 
@@ -216,6 +219,9 @@ GLEW_LIBRARY_DEBUG:FILEPATH=GLEW_LIBRARY_DEBUG-NOTFOUND
 //Path to a library.
 GLEW_LIBRARY_RELEASE:FILEPATH=/usr/local/lib/libGLEW.dylib
 
+//The directory containing a CMake configuration file for GLFW3.
+GLFW3_DIR:PATH=/usr/local/lib/cmake/glfw3
+
 //Include for OpenGL on OS X
 OPENGL_INCLUDE_DIR:PATH=/System/Library/Frameworks/OpenGL.framework
 
@@ -228,20 +234,11 @@ OPENGL_glu_LIBRARY:FILEPATH=/System/Library/Frameworks/OpenGL.framework
 //Path to a program.
 ProcessorCount_cmd_sysctl:FILEPATH=/usr/sbin/sysctl
 
-//The directory containing a CMake configuration file for SDL2.
-SDL2_DIR:PATH=/usr/local/lib/cmake/SDL2
-
 //The directory containing a CMake configuration file for assimp.
 assimp_DIR:PATH=/usr/local/lib/cmake/assimp-3.3
 
-//Value Computed by CMake
-engine_BINARY_DIR:STATIC=/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug
-
-//Value Computed by CMake
-engine_SOURCE_DIR:STATIC=/Users/kewinbrandsma/Projects/TradeJS/shared/engine
-
-//The directory containing a CMake configuration file for glfw3.
-glfw3_DIR:PATH=/usr/local/lib/cmake/glfw3
+//The directory containing a CMake configuration file for glm.
+glm_DIR:PATH=/usr/local/lib/cmake/glm
 
 
 ########################
@@ -386,7 +383,7 @@ CMAKE_UNAME:INTERNAL=/usr/bin/uname
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
 //Details about finding Freetype
-FIND_PACKAGE_MESSAGE_DETAILS_Freetype:INTERNAL=[/usr/local/lib/libfreetype.dylib][/usr/local/include/freetype2][v2.7.1()]
+FIND_PACKAGE_MESSAGE_DETAILS_Freetype:INTERNAL=[/usr/local/lib/libfreetype.dylib][/usr/local/include/freetype2][v2.8.0()]
 //Details about finding GLEW
 FIND_PACKAGE_MESSAGE_DETAILS_GLEW:INTERNAL=[/usr/local/include][/usr/local/lib/libGLEW.dylib][v()]
 //Details about finding OpenGL

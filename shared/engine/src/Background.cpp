@@ -12,6 +12,10 @@
 #include "common/Shader.h"
 #include "../extern/stb_image.h"
 #include "Background.h"
+#include "Text.h"
+
+#include "GL/glew.h"
+#include "GLFW/glfw3.h"
 
 static GLuint VertexArrayID;
 static GLuint vertexbuffer;
@@ -42,7 +46,7 @@ Background::Background(GLFWwindow *window, Camera *camera): window(window), came
 
 int Background::setup() {
 
-    shader = new Shader("shaders/TriangleVertex.glsl", "shaders/TriangleFragment.glsl");
+    shader = new Shader("assets/shaders/TriangleVertex.glsl", "assets/shaders/TriangleFragment.glsl");
     shader->use();
 
     vertexColorLocation = glGetUniformLocation(shader->ID, "aColor");
@@ -84,7 +88,7 @@ int Background::setup() {
 // load and generate the texture
 
     int width, height, nrChannels;
-    unsigned char *data = stbi_load("textures/background_1.png", &width, &height, &nrChannels, 0);
+    unsigned char *data = stbi_load("assets/textures/background_1.png", &width, &height, &nrChannels, 0);
 
     if (data) {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
@@ -95,7 +99,7 @@ int Background::setup() {
     }
 
     stbi_image_free(data);
-    consoleLog("F22222222");
+
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 

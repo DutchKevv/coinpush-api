@@ -1,6 +1,7 @@
 const
     path = require('path'),
-    webpack = require("webpack");
+    webpack = require("webpack"),
+    CleanWebpackPlugin = require('clean-webpack-plugin'); //installed via npm
 
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 
@@ -37,7 +38,7 @@ module.exports = {
             {
                 test: /\.ts/,
                 loaders: ['awesome-typescript-loader', 'angular2-template-loader'],
-                exclude: [/node_modules/, /server/]
+                exclude: [/node_modules/, /server/, /engine/]
             },
             {
                 test: /\.html$/,
@@ -83,12 +84,15 @@ module.exports = {
         ]
     },
     plugins: [
+        new CleanWebpackPlugin([path.join(__dirname, 'dist', '*.*')], {}),
+
         new CopyWebpackPlugin([
             // {output}/file.txt
             // {output}/file.txt
             {from: './assets', to: 'assets'},
             {from: path.join(__dirname, '..', 'index.html'), to: 'index.html'},
             {from: './../shared/engine/dist', to: 'engine'},
+            {from: './favicon.ico', to: 'favicon.ico'}
             // {from: './../shared/engine/engine.data', to: 'engine.data'}
         ]),
 // new ngToolsWebpack.AotPlugin({

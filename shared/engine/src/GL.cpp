@@ -2,12 +2,10 @@
 // Created by Kewin Brandsma on 20/07/2017.
 //
 
-#include <GL/glew.h>
-//#define GLFW_INCLUDE_NONE
-
-#include <GLFW/glfw3.h>
 #include "Camera.h"
+#include "GL/glew.h"
 #include "GL.h"
+
 #include "Background.h"
 #include "Cubes.h"
 #include "Chart.h"
@@ -15,8 +13,15 @@
 #include "../extern/stb_image.h"
 #include "logger.h"
 #include "Instrument.h"
+#include "SkyBox.h"
+
+#ifdef __EMSCRIPTEN__
 #include <emscripten.h>
 #include <emscripten/html5.h>
+#endif
+
+#include "Text.h"
+#include "Level.h"
 
 using namespace std;
 
@@ -30,9 +35,8 @@ void windowCloseCallback(GLFWwindow *window);
 
 void errorCallback(int error, const char *description);
 
-int window_width = 1024;
-int window_height = 800;
-float yaw = 0, pitch = 0;
+int window_width = 1600;
+int window_height = 1200;
 float lastX = window_width / 2.0f;
 float lastY = window_height / 2.0f;
 bool firstMouse = true;
@@ -40,16 +44,59 @@ bool firstMouse = true;
 Background *background;
 Camera *camera;
 Cubes *cubes;
+Text *text;
 vector<Chart *> charts;
+SkyBox *skyBox;
+Level *level;
+
+GL *gl;
+
+/**
+ * Loop handler that gets called each animation frame,
+ * process the input, update the position of the owl and
+ * then render the texture
+ */
+void loop_handler(void *arg) {
+    struct context *ctx = (context *) arg;
+
+    gl->render();
+}
+
+
+void t() {};
 
 GL::GL() {
     initOpenGLWindow();
 
     camera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f));
-    background = new Background(window, camera);
-    cubes = new Cubes(window, camera);
+    skyBox = new SkyBox(ctx->window, camera);
+//    background = new Background(ctx->window, camera);
+    text = new Text(ctx->window);
+    cubes = new Cubes(ctx->window, camera);
+    level = new Level(ctx->window, camera);
 
-    render();
+    level->build();
+
+#ifdef __EMSCRIPTEN__
+    emscripten_set_main_loop_arg(loop_handler, &ctx, 0, 0);
+#else
+    /* Draw the Image on rendering surface */
+    while (!glfwWindowShouldClose(ctx->window))
+    {
+
+        camera->processInput(ctx->window);
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        level->render();
+
+        skyBox->render();
+        cubes->render();
+//        background->render();
+        glfwSwapBuffers(ctx->window);
+        glfwPollEvents();
+    }
+#endif
 }
 
 int GL::initOpenGLWindow() {
@@ -69,14 +116,14 @@ int GL::initOpenGLWindow() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     // Open a window and create its OpenGL context
-    window = glfwCreateWindow(window_width, window_height, "Tutorial 02 - Red triangle", NULL, NULL);
-    if (window == NULL) {
+    ctx->window = glfwCreateWindow(window_width, window_height, "Tutorial 02 - Red triangle", NULL, NULL);
+    if (ctx->window == NULL) {
         fprintf(stderr, "Failed to open GLFW window. \n");
         getchar();
         glfwTerminate();
         return -1;
     }
-    glfwMakeContextCurrent(window);
+    glfwMakeContextCurrent(ctx->window);
 
     glewExperimental = true; // Needed for core profile on OS X
     if (glewInit() != GLEW_OK) {
@@ -88,11 +135,11 @@ int GL::initOpenGLWindow() {
 
     glEnable(GL_DEPTH_TEST);
 
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    glfwSetCursorPosCallback(window, mouseCallback);
-    glfwSetKeyCallback(window, keyCallback);
-    glfwSetWindowSizeCallback(window, windowSizeCallback);
-    glfwSetWindowCloseCallback(window, windowCloseCallback);
+    glfwSetInputMode(ctx->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetCursorPosCallback(ctx->window, mouseCallback);
+    glfwSetKeyCallback(ctx->window, keyCallback);
+    glfwSetWindowSizeCallback(ctx->window, windowSizeCallback);
+    glfwSetWindowCloseCallback(ctx->window, windowCloseCallback);
 
     glClearColor(0.0f, 0.0f, 0.0f, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -103,38 +150,24 @@ int GL::initOpenGLWindow() {
     return 0;
 }
 
-void GL::renderTest() {
-    glClearColor(0.0f, 0.0f, 0.0f, 1);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glfwGetWindowSize(window, &this->windowWidth, &this->windowHeight);
-
-    camera->processInput(window);
-
-    cubes->render();
-    background->render();
-
-    glfwSwapBuffers(window);
-    glfwPollEvents();
-}
-
 void GL::render() {
 
     for (auto &chart : charts) {
-        if (chart->id == focusedId && chart->checkKeys() == 1) {
-            glfwSetWindowSize(window, chart->width, chart->height);
-            glClearColor(0.0f, 0.0f, 0.0f, 1);
+        if (chart->id == this->focusedId && chart->checkKeys(ctx) == 1) {
+
+            this->setWindowSize(chart->width, chart->height);
+
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             chart->render(chart->width, chart->height);
 
-            glfwSwapBuffers(window);
+            glfwSwapBuffers(ctx->window);
 
 #ifdef __EMSCRIPTEN__
             EM_ASM_({
-                 window.Module.custom.updateClientCanvas($0);
-            }, chart->id);
+                        window.Module.custom.updateClientCanvas($0);
+                    }, chart->id);
 #endif
-            glfwPollEvents();
         }
     }
 }
@@ -143,34 +176,49 @@ void GL::renderSingle(int id, int width, int height) {
 
     for (auto &chart : charts) {
         if (chart->id == id) {
-            glfwSetWindowSize(window, width, height);
-            glClearColor(0.0f, 0.0f, 0.0f, 1);
+
+            this->setWindowSize(chart->width, chart->height);
+
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            chart->render(width, height);
+            chart->render(chart->width, chart->height);
 
-            glfwSwapBuffers(window);
+            glfwSwapBuffers(ctx->window);
 
 #ifdef __EMSCRIPTEN__
             EM_ASM_({
                  window.Module.custom.updateClientCanvas($0);
             }, chart->id);
 #endif
-            glfwPollEvents();
         }
+    }
+}
+
+void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods) {
+    if (key == GLFW_KEY_ESCAPE) {
+#ifndef __EMSCRIPTEN__
+//        destroy();
+#endif
     }
 }
 
 int GL::createChart(int id, Instrument *instrument, int type) {
 
-    Chart *chart = new Chart(id, instrument, window, camera);
+    Chart *chart = new Chart(id, instrument, ctx->window, camera);
     charts.push_back(chart);
 
     return 0;
 }
 
-void GL::getWindowSize(int &width, int &height) {
-    glfwGetWindowSize(window, &width, &height);
+void GL::getWindowSize(int width, int height) {
+    glfwGetWindowSize(ctx->window, &width, &height);
+}
+
+void GL::setWindowSize(int width, int height) {
+#ifdef __EMSCRIPTEN__
+    emscripten_set_canvas_size(width, height);
+#endif
+    glfwSetWindowSize(ctx->window, width, height);
 }
 
 void mouseCallback(GLFWwindow *window, double xpos, double ypos) {
@@ -185,60 +233,38 @@ void mouseCallback(GLFWwindow *window, double xpos, double ypos) {
     lastX = xpos;
     lastY = ypos;
 
-    float sensitivity = 0.05;
-    xoffset *= sensitivity;
-    yoffset *= sensitivity;
-
-    yaw += xoffset;
-    pitch += yoffset;
-
-    if (pitch > 89.0f)
-        pitch = 89.0f;
-    if (pitch < -89.0f)
-        pitch = -89.0f;
-
-    glm::vec3 front;
-    front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    front.y = sin(glm::radians(pitch));
-    front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-
-    camera->Front = glm::normalize(front);
+    camera->ProcessMouseMovement(xoffset, yoffset);
 }
 
 void windowSizeCallback(GLFWwindow *window, int width, int height) {
 
 }
 
-void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods) {
-    if (key == GLFW_KEY_ESCAPE) {
-#ifndef __EMSCRIPTEN__
-//        destroy();
-#endif
-    }
-}
-
 void errorCallback(int error, const char *description) {
-    fprintf(stderr, "Error: %s\n", description);
+    consoleLog(error);
+    consoleLog(description);
 }
 
 void windowCloseCallback(GLFWwindow *window) {
-    glfwSetWindowShouldClose(window, GLFW_FALSE);
+    glfwSetWindowShouldClose(window, GLFW_TRUE);
 }
 
 int GL::destroy() {
-    //    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    camera->processInput(window);
-
-//    cubes->render();
-//    background->render();
-
-    for (auto &chart : charts) {
-//         chart->render();
+    if (background != NULL) {
+        background->destroy();
+        background = NULL;
     }
 
-    glfwSwapBuffers(window);
-    glfwPollEvents();
+    if (cubes != NULL) {
+        cubes->destroy();
+        cubes = NULL;
+    }
+
+    for (auto &chart : charts) {
+        chart->destroy();
+    }
+
+    charts.clear();
 
     return 0;
 }

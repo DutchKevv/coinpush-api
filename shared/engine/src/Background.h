@@ -5,9 +5,10 @@
 #ifndef ENGINE_BACKGROUND_H
 #define ENGINE_BACKGROUND_H
 
-#include <GL/glew.h>
+#include "GL/glew.h"
 #include <GLFW/glfw3.h>
 #include "Camera.h"
+#include "Text.h"
 
 class Background {
 private:

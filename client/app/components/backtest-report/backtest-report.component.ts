@@ -32,18 +32,7 @@ export class BacktestReportComponent implements AfterViewInit, OnInit, OnDestroy
 				private _elementRef: ElementRef) {
 	}
 
-	ngOnInit() {
-		$(window).on('resize.orders-chart-' + this.model.options.id, () => this.updateCanvasSize());
-
-		$(window).keydown(function(e) {
-			if (e.keyCode === 37) { // left
-
-			}
-			else if (e.keyCode === 39) { // right
-
-			}
-		});
-	}
+	ngOnInit() {}
 
 	ngAfterViewInit(): void {
 		this.updateCanvasSize();
@@ -65,68 +54,23 @@ export class BacktestReportComponent implements AfterViewInit, OnInit, OnDestroy
 	}
 
 	updateCanvasSize() {
-		this.chartRef.nativeElement.setAttribute('width', this.chartRef.nativeElement.parentNode.clientWidth);
-		// this.chartRef.nativeElement.setAttribute('height', this.chartRef.nativeElement.parentNode.clientWidth);
+		let currentWidth = parseInt(this.chartRef.nativeElement.getAttribute('width'), 10),
+			parentWidth = parseInt(this.chartRef.nativeElement.parentNode.clientWidth, 10) - 2;
+
+		if (currentWidth !== parentWidth)
+			this.chartRef.nativeElement.setAttribute('width', parentWidth);
 	}
 
 	private _createChart(): void {
-		this._zone.runOutsideAngular(() => {
-
-			// setTimeout(() => {
-			// 	Module.custom.addInstrument({
-			// 		id: this.model.options.id,
-			// 		symbol: this.model.options.symbol,
-			// 		timeFrame: this.model.options.timeFrame,
-			// 		from: this.model.options.from,
-			// 		until: this.model.options.until,
-			// 		img: this.chartRef.nativeElement
-			// 	});
-			//
-				Module.custom.updateInstrument(this.model.options.id, {orders: this._prepareData()});
-				let id = Module.custom.addChart(this.model.options.id, this.chartRef.nativeElement);
-				Module.custom.renderChart(id);
-			// }, 2000);
-
-			// this._chart = new window['CanvasJS'].Chart(this.chartRef.nativeElement,
-			// 	{
-			// 		exportEnabled: false,
-			// 		animationEnabled: false,
-			// 		backgroundColor: '#000',
-			// 		axisX: {
-			// 			includeZero: false,
-			// 			labelFontColor: '#fff',
-			// 			gridDashType: 'dash',
-			// 			gridColor: '#787D73',
-			// 			gridThickness: 1,
-			// 			tickThickness: 0
-			// 		},
-			// 		axisY: {
-			// 			includeZero: false,
-			// 			labelFontColor: '#fff',
-			// 			gridDashType: 'dash',
-			// 			gridColor: '#787D73',
-			// 			gridThickness: 1,
-			// 			tickThickness: 0
-			// 			// minimum: this.model.options.startEquality
-			// 		},
-			// 		data: [
-			// 			{
-			// 				type: 'line',
-			// 				dataPoints: this._prepareData(),
-			// 				markerSize: 0,
-			// 				toolTipContent: '#{id}</br>{type}</br>Profit: {profit}'
-			// 			}
-			// 		]
-			// 	});
-			//
-			// // this._chart.options.axisY.minimum = this.model.options.startEquality;
-			// this._chart.render();
+		this._zone.runOutsideAngular(async () => {
+			await Module.custom.updateInstrument(this.model.options.id, {orders: this._prepareData()});
+			let id = await Module.custom.addChart(this.model.options.id, this.chartRef.nativeElement);
+			await Module.custom.renderChart(id);
 		});
 	}
 
 	private _updateData(data) {
 		this._zone.runOutsideAngular(() => {
-			console.log('asdfasddf', data);
 			Module.custom.updateInstrument(this.model.options.id, this._prepareData(data));
 
 			if (!this._chart)
@@ -145,7 +89,6 @@ export class BacktestReportComponent implements AfterViewInit, OnInit, OnDestroy
 	}
 
 	private _onInstrumentStatusUpdate() {
-		console.log(this.model.options.status);
 
 		switch (this.model.options.status.type) {
 			case 'fetching':
@@ -188,7 +131,7 @@ export class BacktestReportComponent implements AfterViewInit, OnInit, OnDestroy
 	}
 
 	ngOnDestroy() {
-		$(window).off('resize.orders-chart-' + this.model.options.id);
+		Module.custom.destroyChart(this.model.options.id);
 		// this.models.forEach(model => {
 		// 	model.options$.unsubscribe();
 		// });

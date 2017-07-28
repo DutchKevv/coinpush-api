@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include "GL/glew.h"
+#include "GLFW/glfw3.h"
 
 #define GLM_FORCE_RADIANS
 
@@ -12,71 +14,54 @@
 #include "Chart.h"
 #include "Instrument.h"
 #include "logger.h"
+#include "Text.h"
 
 using namespace std;
-
-Shader *shader;
-
-GLint attribute_coord2d;
-GLint uniform_color;
-GLint uniform_transform;
 
 struct point {
     GLfloat x;
     GLfloat y;
 };
 
-float getHighestValue(json orders) {
-    float highest = 0;
+float getHighestValue(json orders);
 
-    for (json &order : orders) {
-        if (order.value("y", 0) > highest)
-            highest = order.value("y", 0);
-    }
+float getLowestValue(json orders);
 
-    return highest;
-}
+void prepareData(Instrument *instrument, point graph[]);
 
-float getLowestValue(json orders) {
-    float lowest = NULL;
+int initCommonResources();
 
-    for (json &order : orders) {
-        if (lowest == NULL || order.value("y", 0) < lowest)
-            lowest = order.value("y", 0);
-    }
+static bool commonResourcesLoaded = false;
+static Shader *shader;
+static GLint attribute_coord2d;
+static GLint uniform_color;
+static GLint uniform_transform;
+static const point borderObject[4] = {{-1, -1},
+                                      {1,  -1},
+                                      {1,  1},
+                                      {-1, 1}};
 
-    return lowest;
-}
+static GLuint textVBO;
+static GLuint borderVBO;
+static GLuint borderVAO;
+static GLuint axisVBO;
+static GLuint axisVAO;
 
-void prepareData(Instrument *instrument, point graph[]) {
-    json orders = instrument->orders;
+static GLint attribute_coord;
+static GLint uniform_tex;
+//static GLint uniform_color;
 
-    float len = orders.size();
-    float high = getHighestValue(orders) * 1;
-    float low = getLowestValue(orders) * 1;
-    float space = high - low;
+int initCommonResources() {
+    if (commonResourcesLoaded == false)
+        commonResourcesLoaded = true;
+    else
+        return 0;
 
-    int i = 0;
-    for (json &order : orders) {
-        graph[i].x = i == 0 ? -1 : -1 + ((i / len) * 2);
-        consoleLog(graph[i].x);
-        graph[i].y = -1 + (((order.value("y", 0) - low) / space) * 2);
-        i++;
-    }
-}
-
-Chart::Chart(int id, Instrument *instrument, GLFWwindow *window, Camera *camera) : id(id), instrument(instrument),
-                                                                                   window(window), camera(camera) {
-//    this->id = id;
-
-    this->initResources();
-}
-
-int Chart::initResources() {
-    shader = new Shader("shaders/graph.v.glsl", "shaders/graph.f.glsl");
+    shader = new Shader("assets/shaders/graph.v.glsl", "assets/shaders/graph.f.glsl");
 
     if (shader->ID == 0) {
-        printf("ERROR ERROR");
+        consoleLog("Error - Shader returned");
+        return -1;
     }
 
     attribute_coord2d = shader->get_attrib("coord2d");
@@ -84,28 +69,49 @@ int Chart::initResources() {
     uniform_color = shader->get_uniform("color");
 
     if (attribute_coord2d == -1 || uniform_transform == -1 || uniform_color == -1) {
-        printf("ERROR ERROR");
-        return 0;
+        consoleLog("ERROR - Could not find ");
+        return -1;
     }
 
+    // Border
+    glGenBuffers(1, &borderVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, borderVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof borderObject, borderObject, GL_STATIC_DRAW);
+    glGenVertexArrays(1, &borderVAO);
+    glBindVertexArray(borderVAO);
+    glEnableVertexAttribArray(attribute_coord2d);
+    glVertexAttribPointer(attribute_coord2d, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+    // Axis
+    glGenBuffers(1, &axisVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, axisVBO);
+    glGenVertexArrays(1, &axisVAO);
+    glBindVertexArray(axisVAO);
+
+    // Create the vertex buffer object
+    glGenBuffers(1, &textVBO);
+
+    return 0;
+}
+
+Chart::Chart(int id, Instrument *instrument, GLFWwindow *window, Camera *camera) : id(id),
+                                                                                               instrument(instrument),
+                                                                                               window(window),
+                                                                                               camera(camera) {
+
+    this->initResources();
+}
+
+int Chart::initResources() {
+    initCommonResources();
 
     int len = instrument->orders.size();
 
-    // Create our own temporary buffer
+    // Create data
     point graph[len];
-
     prepareData(instrument, graph);
 
     pointsLength = len;
-
-//    point graph2[2000];
-//
-//    for (int i = 0; i < 2000; i++) {
-//        float x = (i - 1000.0) / 100.0;
-//
-//        graph2[i].x = x;
-//        graph2[i].y = sin(x * 10.0) / (1.0 + x * x);
-//    }
 
     /** ------------------- **/
 
@@ -117,34 +123,12 @@ int Chart::initResources() {
     glEnableVertexAttribArray(attribute_coord2d);
     glVertexAttribPointer(attribute_coord2d, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
-//    glEnableVertexAttribArray(0);
-
-    // Border
-    static const point border[4] = {{-1, -1},
-                                    {1,  -1},
-                                    {1,  1},
-                                    {-1, 1}};
-    glGenBuffers(1, &VBO[1]);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO[1]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof border, border, GL_STATIC_DRAW);
-    glGenVertexArrays(1, &VAO[1]);
-    glBindVertexArray(VAO[1]);
-    glEnableVertexAttribArray(attribute_coord2d);
-    glVertexAttribPointer(attribute_coord2d, 2, GL_FLOAT, GL_FALSE, 0, 0);
-
-//    glEnableVertexAttribArray(0);
-
-    // Axis
-    glGenBuffers(1, &VBO[2]);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO[2]);
-    glGenVertexArrays(1, &VAO[2]);
-    glBindVertexArray(VAO[2]);
     /** ------------------- **/
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
-    return 1;
+    return 0;
 }
 
 // Create a projection matrix that has the same effect as glViewport().
@@ -153,8 +137,6 @@ int Chart::initResources() {
 glm::mat4 Chart::viewportTransform(float x, float y, float width, float height, float *pixel_x, float *pixel_y) {
     // Map OpenGL coordinates (-1,-1) to window coordinates (x,y),
     // (1,1) to (x + width, y + height).
-
-    // First, we need to know the real window size:
 
     // Calculate how to translate the x and y coordinates:
     float offset_x = (2.0 * x + (width - this->width)) / this->width;
@@ -174,17 +156,17 @@ glm::mat4 Chart::viewportTransform(float x, float y, float width, float height, 
 }
 
 int Chart::render(int windowWidth, int windowHeight) {
-    if (windowWidth == NULL || windowHeight == NULL) {
+    if (windowWidth == 0 || windowHeight == 0) {
         glfwGetWindowSize(window, &windowWidth, &windowHeight);
     }
 
     this->width = windowWidth;
     this->height = windowHeight;
 
-    glUseProgram(shader->ID);
+    float sx = 2.0 / this->width;
+    float sy = 2.0 / this->height;
 
-//    glBindVertexArray(VAO[1]);
-//    glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+    shader->use();
 
     /* ---------------------------------------------------------------- */
     /* Draw the graph */
@@ -206,36 +188,47 @@ int Chart::render(int windowWidth, int windowHeight) {
                                          glm::vec3(offset_x, 0, 0));
     glUniformMatrix4fv(uniform_transform, 1, GL_FALSE, glm::value_ptr(transform));
 
-    // Set the line color
+    // Set line color and draw
     glUniform4fv(uniform_color, 1, lineColor);
-
-        // Draw using the vertices in our vertex buffer object
     glDrawArrays(GL_LINE_STRIP, 0, pointsLength);
-
 
     // Stop clipping
     glViewport(0, 0, windowWidth, windowHeight);
     glDisable(GL_SCISSOR_TEST);
 
+
+    /* ------ text -------*/
+
+    GLfloat black[4] = {0, 0, 0, 1};
+    GLfloat red[4] = {1, 0, 0, 1};
+    GLfloat transparent_green[4] = {0, 1, 0, 0.5};
+
+/* Effects of alignment */
+    text->renderText("The Quick Brown Fox Jumps Over The Lazy Dog", -1 + 8 * sx, 1 - 50 * sy, sx, sy, red);
+//    text->renderText("The Misaligned Fox Jumps Over The Lazy Dog", -1 + 8.5 * sx, 1 - 100.5 * sy, sx, sy,
+//                     transparent_green);
+
+    /* ------- text -------*/
+
+    shader->use();
+
     /* ---------------------------------------------------------------- */
     /* Draw the borders */
 
-    float pixel_x, pixel_y;
     // Calculate a transformation matrix that gives us the same normalized device coordinates as above
+    float pixel_x, pixel_y;
     transform = viewportTransform(border + ticksize, border + ticksize, windowWidth - border * 2 - ticksize,
                                   windowHeight - border * 2 - ticksize, &pixel_x, &pixel_y);
     shader->setMat4("transform", transform);
 
-    // Set the border color to black
+    glBindBuffer(GL_ARRAY_BUFFER, borderVBO);
+
+    // Set border color
     glUniform4fv(uniform_color, 1, borderColor);
 
-    // Draw a border around our graph
-    glBindBuffer(GL_ARRAY_BUFFER, VBO[1]);
-
-//    glBindVertexArray(VAO[1]);
+//    glBindVertexArray(borderVAO);
     glVertexAttribPointer(attribute_coord2d, 2, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(attribute_coord2d);
-
     glDrawArrays(GL_LINE_LOOP, 0, 4);
 
     /* ---------------------------------------------------------------- */
@@ -252,7 +245,7 @@ int Chart::render(int windowWidth, int windowHeight) {
         ticks[i * 2 + 1].y = y;
     }
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBO[2]);
+    glBindBuffer(GL_ARRAY_BUFFER, axisVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof ticks, ticks, GL_DYNAMIC_DRAW);
     glVertexAttribPointer(attribute_coord2d, 2, GL_FLOAT, GL_FALSE, 0, 0);
     glDrawArrays(GL_LINES, 0, 42);
@@ -296,7 +289,7 @@ int Chart::render(int windowWidth, int windowHeight) {
     return 0;
 }
 
-int Chart::checkKeys() {
+int Chart::checkKeys(struct context *ctx) {
 
     if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
         scale_x *= 1.5;
@@ -324,4 +317,42 @@ int Chart::checkKeys() {
 
 int Chart::destroy() {
     return 0;
+}
+
+float getHighestValue(json orders) {
+    float highest = 0;
+
+    for (json &order : orders) {
+        if (order.value("y", 0) > highest)
+            highest = order.value("y", 0);
+    }
+
+    return highest;
+}
+
+float getLowestValue(json orders) {
+    float lowest = NULL;
+
+    for (json &order : orders) {
+        if (lowest == NULL || order.value("y", 0) < lowest)
+            lowest = order.value("y", 0);
+    }
+
+    return lowest;
+}
+
+void prepareData(Instrument *instrument, point graph[]) {
+    json orders = instrument->orders;
+
+    float len = orders.size();
+    float high = getHighestValue(orders) * 1;
+    float low = getLowestValue(orders) * 1;
+    float space = high - low;
+
+    int i = 0;
+    for (json &order : orders) {
+        graph[i].x = i == 0 ? -1 : -1 + ((i / len) * 2);
+        graph[i].y = -1 + (((order.value("y", 0) - low) / space) * 2);
+        i++;
+    }
 }

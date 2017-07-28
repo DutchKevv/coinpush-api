@@ -81,9 +81,33 @@ CMakeFiles/Engine.dir/main.cpp.o.provides: CMakeFiles/Engine.dir/main.cpp.o.requ
 CMakeFiles/Engine.dir/main.cpp.o.provides.build: CMakeFiles/Engine.dir/main.cpp.o
 
 
+CMakeFiles/Engine.dir/extern/stb_image.cpp.o: CMakeFiles/Engine.dir/flags.make
+CMakeFiles/Engine.dir/extern/stb_image.cpp.o: ../extern/stb_image.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/Engine.dir/extern/stb_image.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Engine.dir/extern/stb_image.cpp.o -c /Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/stb_image.cpp
+
+CMakeFiles/Engine.dir/extern/stb_image.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Engine.dir/extern/stb_image.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/stb_image.cpp > CMakeFiles/Engine.dir/extern/stb_image.cpp.i
+
+CMakeFiles/Engine.dir/extern/stb_image.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Engine.dir/extern/stb_image.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/stb_image.cpp -o CMakeFiles/Engine.dir/extern/stb_image.cpp.s
+
+CMakeFiles/Engine.dir/extern/stb_image.cpp.o.requires:
+
+.PHONY : CMakeFiles/Engine.dir/extern/stb_image.cpp.o.requires
+
+CMakeFiles/Engine.dir/extern/stb_image.cpp.o.provides: CMakeFiles/Engine.dir/extern/stb_image.cpp.o.requires
+	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/extern/stb_image.cpp.o.provides.build
+.PHONY : CMakeFiles/Engine.dir/extern/stb_image.cpp.o.provides
+
+CMakeFiles/Engine.dir/extern/stb_image.cpp.o.provides.build: CMakeFiles/Engine.dir/extern/stb_image.cpp.o
+
+
 CMakeFiles/Engine.dir/src/Background.cpp.o: CMakeFiles/Engine.dir/flags.make
 CMakeFiles/Engine.dir/src/Background.cpp.o: ../src/Background.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/Engine.dir/src/Background.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/Engine.dir/src/Background.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Engine.dir/src/Background.cpp.o -c /Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Background.cpp
 
 CMakeFiles/Engine.dir/src/Background.cpp.i: cmake_force
@@ -107,7 +131,7 @@ CMakeFiles/Engine.dir/src/Background.cpp.o.provides.build: CMakeFiles/Engine.dir
 
 CMakeFiles/Engine.dir/src/Camera.cpp.o: CMakeFiles/Engine.dir/flags.make
 CMakeFiles/Engine.dir/src/Camera.cpp.o: ../src/Camera.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/Engine.dir/src/Camera.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/Engine.dir/src/Camera.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Engine.dir/src/Camera.cpp.o -c /Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Camera.cpp
 
 CMakeFiles/Engine.dir/src/Camera.cpp.i: cmake_force
@@ -129,9 +153,33 @@ CMakeFiles/Engine.dir/src/Camera.cpp.o.provides: CMakeFiles/Engine.dir/src/Camer
 CMakeFiles/Engine.dir/src/Camera.cpp.o.provides.build: CMakeFiles/Engine.dir/src/Camera.cpp.o
 
 
+CMakeFiles/Engine.dir/src/Cubes.cpp.o: CMakeFiles/Engine.dir/flags.make
+CMakeFiles/Engine.dir/src/Cubes.cpp.o: ../src/Cubes.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/Engine.dir/src/Cubes.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Engine.dir/src/Cubes.cpp.o -c /Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Cubes.cpp
+
+CMakeFiles/Engine.dir/src/Cubes.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Engine.dir/src/Cubes.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Cubes.cpp > CMakeFiles/Engine.dir/src/Cubes.cpp.i
+
+CMakeFiles/Engine.dir/src/Cubes.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Engine.dir/src/Cubes.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Cubes.cpp -o CMakeFiles/Engine.dir/src/Cubes.cpp.s
+
+CMakeFiles/Engine.dir/src/Cubes.cpp.o.requires:
+
+.PHONY : CMakeFiles/Engine.dir/src/Cubes.cpp.o.requires
+
+CMakeFiles/Engine.dir/src/Cubes.cpp.o.provides: CMakeFiles/Engine.dir/src/Cubes.cpp.o.requires
+	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/Cubes.cpp.o.provides.build
+.PHONY : CMakeFiles/Engine.dir/src/Cubes.cpp.o.provides
+
+CMakeFiles/Engine.dir/src/Cubes.cpp.o.provides.build: CMakeFiles/Engine.dir/src/Cubes.cpp.o
+
+
 CMakeFiles/Engine.dir/src/Chart.cpp.o: CMakeFiles/Engine.dir/flags.make
 CMakeFiles/Engine.dir/src/Chart.cpp.o: ../src/Chart.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/Engine.dir/src/Chart.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/Engine.dir/src/Chart.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Engine.dir/src/Chart.cpp.o -c /Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Chart.cpp
 
 CMakeFiles/Engine.dir/src/Chart.cpp.i: cmake_force
@@ -155,7 +203,7 @@ CMakeFiles/Engine.dir/src/Chart.cpp.o.provides.build: CMakeFiles/Engine.dir/src/
 
 CMakeFiles/Engine.dir/src/logger.cpp.o: CMakeFiles/Engine.dir/flags.make
 CMakeFiles/Engine.dir/src/logger.cpp.o: ../src/logger.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/Engine.dir/src/logger.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/Engine.dir/src/logger.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Engine.dir/src/logger.cpp.o -c /Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/logger.cpp
 
 CMakeFiles/Engine.dir/src/logger.cpp.i: cmake_force
@@ -179,7 +227,7 @@ CMakeFiles/Engine.dir/src/logger.cpp.o.provides.build: CMakeFiles/Engine.dir/src
 
 CMakeFiles/Engine.dir/src/Engine.cpp.o: CMakeFiles/Engine.dir/flags.make
 CMakeFiles/Engine.dir/src/Engine.cpp.o: ../src/Engine.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/Engine.dir/src/Engine.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/Engine.dir/src/Engine.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Engine.dir/src/Engine.cpp.o -c /Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Engine.cpp
 
 CMakeFiles/Engine.dir/src/Engine.cpp.i: cmake_force
@@ -203,7 +251,7 @@ CMakeFiles/Engine.dir/src/Engine.cpp.o.provides.build: CMakeFiles/Engine.dir/src
 
 CMakeFiles/Engine.dir/src/GL.cpp.o: CMakeFiles/Engine.dir/flags.make
 CMakeFiles/Engine.dir/src/GL.cpp.o: ../src/GL.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/Engine.dir/src/GL.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/Engine.dir/src/GL.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Engine.dir/src/GL.cpp.o -c /Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/GL.cpp
 
 CMakeFiles/Engine.dir/src/GL.cpp.i: cmake_force
@@ -227,7 +275,7 @@ CMakeFiles/Engine.dir/src/GL.cpp.o.provides.build: CMakeFiles/Engine.dir/src/GL.
 
 CMakeFiles/Engine.dir/src/Instrument.cpp.o: CMakeFiles/Engine.dir/flags.make
 CMakeFiles/Engine.dir/src/Instrument.cpp.o: ../src/Instrument.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/Engine.dir/src/Instrument.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/Engine.dir/src/Instrument.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Engine.dir/src/Instrument.cpp.o -c /Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Instrument.cpp
 
 CMakeFiles/Engine.dir/src/Instrument.cpp.i: cmake_force
@@ -249,86 +297,166 @@ CMakeFiles/Engine.dir/src/Instrument.cpp.o.provides: CMakeFiles/Engine.dir/src/I
 CMakeFiles/Engine.dir/src/Instrument.cpp.o.provides.build: CMakeFiles/Engine.dir/src/Instrument.cpp.o
 
 
-CMakeFiles/Engine.dir/extern/stb_image.cpp.o: CMakeFiles/Engine.dir/flags.make
-CMakeFiles/Engine.dir/extern/stb_image.cpp.o: ../extern/stb_image.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/Engine.dir/extern/stb_image.cpp.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Engine.dir/extern/stb_image.cpp.o -c /Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/stb_image.cpp
+CMakeFiles/Engine.dir/src/Text.cpp.o: CMakeFiles/Engine.dir/flags.make
+CMakeFiles/Engine.dir/src/Text.cpp.o: ../src/Text.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/Engine.dir/src/Text.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Engine.dir/src/Text.cpp.o -c /Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Text.cpp
 
-CMakeFiles/Engine.dir/extern/stb_image.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Engine.dir/extern/stb_image.cpp.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/stb_image.cpp > CMakeFiles/Engine.dir/extern/stb_image.cpp.i
+CMakeFiles/Engine.dir/src/Text.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Engine.dir/src/Text.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Text.cpp > CMakeFiles/Engine.dir/src/Text.cpp.i
 
-CMakeFiles/Engine.dir/extern/stb_image.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Engine.dir/extern/stb_image.cpp.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/stb_image.cpp -o CMakeFiles/Engine.dir/extern/stb_image.cpp.s
+CMakeFiles/Engine.dir/src/Text.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Engine.dir/src/Text.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Text.cpp -o CMakeFiles/Engine.dir/src/Text.cpp.s
 
-CMakeFiles/Engine.dir/extern/stb_image.cpp.o.requires:
+CMakeFiles/Engine.dir/src/Text.cpp.o.requires:
 
-.PHONY : CMakeFiles/Engine.dir/extern/stb_image.cpp.o.requires
+.PHONY : CMakeFiles/Engine.dir/src/Text.cpp.o.requires
 
-CMakeFiles/Engine.dir/extern/stb_image.cpp.o.provides: CMakeFiles/Engine.dir/extern/stb_image.cpp.o.requires
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/extern/stb_image.cpp.o.provides.build
-.PHONY : CMakeFiles/Engine.dir/extern/stb_image.cpp.o.provides
+CMakeFiles/Engine.dir/src/Text.cpp.o.provides: CMakeFiles/Engine.dir/src/Text.cpp.o.requires
+	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/Text.cpp.o.provides.build
+.PHONY : CMakeFiles/Engine.dir/src/Text.cpp.o.provides
 
-CMakeFiles/Engine.dir/extern/stb_image.cpp.o.provides.build: CMakeFiles/Engine.dir/extern/stb_image.cpp.o
+CMakeFiles/Engine.dir/src/Text.cpp.o.provides.build: CMakeFiles/Engine.dir/src/Text.cpp.o
 
 
-CMakeFiles/Engine.dir/src/Cubes.cpp.o: CMakeFiles/Engine.dir/flags.make
-CMakeFiles/Engine.dir/src/Cubes.cpp.o: ../src/Cubes.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/Engine.dir/src/Cubes.cpp.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Engine.dir/src/Cubes.cpp.o -c /Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Cubes.cpp
+CMakeFiles/Engine.dir/src/SkyBox.cpp.o: CMakeFiles/Engine.dir/flags.make
+CMakeFiles/Engine.dir/src/SkyBox.cpp.o: ../src/SkyBox.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/Engine.dir/src/SkyBox.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Engine.dir/src/SkyBox.cpp.o -c /Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/SkyBox.cpp
 
-CMakeFiles/Engine.dir/src/Cubes.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Engine.dir/src/Cubes.cpp.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Cubes.cpp > CMakeFiles/Engine.dir/src/Cubes.cpp.i
+CMakeFiles/Engine.dir/src/SkyBox.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Engine.dir/src/SkyBox.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/SkyBox.cpp > CMakeFiles/Engine.dir/src/SkyBox.cpp.i
 
-CMakeFiles/Engine.dir/src/Cubes.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Engine.dir/src/Cubes.cpp.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Cubes.cpp -o CMakeFiles/Engine.dir/src/Cubes.cpp.s
+CMakeFiles/Engine.dir/src/SkyBox.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Engine.dir/src/SkyBox.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/SkyBox.cpp -o CMakeFiles/Engine.dir/src/SkyBox.cpp.s
 
-CMakeFiles/Engine.dir/src/Cubes.cpp.o.requires:
+CMakeFiles/Engine.dir/src/SkyBox.cpp.o.requires:
 
-.PHONY : CMakeFiles/Engine.dir/src/Cubes.cpp.o.requires
+.PHONY : CMakeFiles/Engine.dir/src/SkyBox.cpp.o.requires
 
-CMakeFiles/Engine.dir/src/Cubes.cpp.o.provides: CMakeFiles/Engine.dir/src/Cubes.cpp.o.requires
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/Cubes.cpp.o.provides.build
-.PHONY : CMakeFiles/Engine.dir/src/Cubes.cpp.o.provides
+CMakeFiles/Engine.dir/src/SkyBox.cpp.o.provides: CMakeFiles/Engine.dir/src/SkyBox.cpp.o.requires
+	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/SkyBox.cpp.o.provides.build
+.PHONY : CMakeFiles/Engine.dir/src/SkyBox.cpp.o.provides
 
-CMakeFiles/Engine.dir/src/Cubes.cpp.o.provides.build: CMakeFiles/Engine.dir/src/Cubes.cpp.o
+CMakeFiles/Engine.dir/src/SkyBox.cpp.o.provides.build: CMakeFiles/Engine.dir/src/SkyBox.cpp.o
+
+
+CMakeFiles/Engine.dir/src/Level.cpp.o: CMakeFiles/Engine.dir/flags.make
+CMakeFiles/Engine.dir/src/Level.cpp.o: ../src/Level.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/Engine.dir/src/Level.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Engine.dir/src/Level.cpp.o -c /Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Level.cpp
+
+CMakeFiles/Engine.dir/src/Level.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Engine.dir/src/Level.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Level.cpp > CMakeFiles/Engine.dir/src/Level.cpp.i
+
+CMakeFiles/Engine.dir/src/Level.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Engine.dir/src/Level.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Level.cpp -o CMakeFiles/Engine.dir/src/Level.cpp.s
+
+CMakeFiles/Engine.dir/src/Level.cpp.o.requires:
+
+.PHONY : CMakeFiles/Engine.dir/src/Level.cpp.o.requires
+
+CMakeFiles/Engine.dir/src/Level.cpp.o.provides: CMakeFiles/Engine.dir/src/Level.cpp.o.requires
+	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/Level.cpp.o.provides.build
+.PHONY : CMakeFiles/Engine.dir/src/Level.cpp.o.provides
+
+CMakeFiles/Engine.dir/src/Level.cpp.o.provides.build: CMakeFiles/Engine.dir/src/Level.cpp.o
+
+
+CMakeFiles/Engine.dir/src/Mesh.cpp.o: CMakeFiles/Engine.dir/flags.make
+CMakeFiles/Engine.dir/src/Mesh.cpp.o: ../src/Mesh.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/Engine.dir/src/Mesh.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Engine.dir/src/Mesh.cpp.o -c /Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Mesh.cpp
+
+CMakeFiles/Engine.dir/src/Mesh.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Engine.dir/src/Mesh.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Mesh.cpp > CMakeFiles/Engine.dir/src/Mesh.cpp.i
+
+CMakeFiles/Engine.dir/src/Mesh.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Engine.dir/src/Mesh.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Mesh.cpp -o CMakeFiles/Engine.dir/src/Mesh.cpp.s
+
+CMakeFiles/Engine.dir/src/Mesh.cpp.o.requires:
+
+.PHONY : CMakeFiles/Engine.dir/src/Mesh.cpp.o.requires
+
+CMakeFiles/Engine.dir/src/Mesh.cpp.o.provides: CMakeFiles/Engine.dir/src/Mesh.cpp.o.requires
+	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/Mesh.cpp.o.provides.build
+.PHONY : CMakeFiles/Engine.dir/src/Mesh.cpp.o.provides
+
+CMakeFiles/Engine.dir/src/Mesh.cpp.o.provides.build: CMakeFiles/Engine.dir/src/Mesh.cpp.o
+
+
+CMakeFiles/Engine.dir/src/Model.cpp.o: CMakeFiles/Engine.dir/flags.make
+CMakeFiles/Engine.dir/src/Model.cpp.o: ../src/Model.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/Engine.dir/src/Model.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Engine.dir/src/Model.cpp.o -c /Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Model.cpp
+
+CMakeFiles/Engine.dir/src/Model.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Engine.dir/src/Model.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Model.cpp > CMakeFiles/Engine.dir/src/Model.cpp.i
+
+CMakeFiles/Engine.dir/src/Model.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Engine.dir/src/Model.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Model.cpp -o CMakeFiles/Engine.dir/src/Model.cpp.s
+
+CMakeFiles/Engine.dir/src/Model.cpp.o.requires:
+
+.PHONY : CMakeFiles/Engine.dir/src/Model.cpp.o.requires
+
+CMakeFiles/Engine.dir/src/Model.cpp.o.provides: CMakeFiles/Engine.dir/src/Model.cpp.o.requires
+	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/Model.cpp.o.provides.build
+.PHONY : CMakeFiles/Engine.dir/src/Model.cpp.o.provides
+
+CMakeFiles/Engine.dir/src/Model.cpp.o.provides.build: CMakeFiles/Engine.dir/src/Model.cpp.o
 
 
 # Object files for target Engine
 Engine_OBJECTS = \
 "CMakeFiles/Engine.dir/main.cpp.o" \
+"CMakeFiles/Engine.dir/extern/stb_image.cpp.o" \
 "CMakeFiles/Engine.dir/src/Background.cpp.o" \
 "CMakeFiles/Engine.dir/src/Camera.cpp.o" \
+"CMakeFiles/Engine.dir/src/Cubes.cpp.o" \
 "CMakeFiles/Engine.dir/src/Chart.cpp.o" \
 "CMakeFiles/Engine.dir/src/logger.cpp.o" \
 "CMakeFiles/Engine.dir/src/Engine.cpp.o" \
 "CMakeFiles/Engine.dir/src/GL.cpp.o" \
 "CMakeFiles/Engine.dir/src/Instrument.cpp.o" \
-"CMakeFiles/Engine.dir/extern/stb_image.cpp.o" \
-"CMakeFiles/Engine.dir/src/Cubes.cpp.o"
+"CMakeFiles/Engine.dir/src/Text.cpp.o" \
+"CMakeFiles/Engine.dir/src/SkyBox.cpp.o" \
+"CMakeFiles/Engine.dir/src/Level.cpp.o" \
+"CMakeFiles/Engine.dir/src/Mesh.cpp.o" \
+"CMakeFiles/Engine.dir/src/Model.cpp.o"
 
 # External object files for target Engine
 Engine_EXTERNAL_OBJECTS =
 
 Engine: CMakeFiles/Engine.dir/main.cpp.o
+Engine: CMakeFiles/Engine.dir/extern/stb_image.cpp.o
 Engine: CMakeFiles/Engine.dir/src/Background.cpp.o
 Engine: CMakeFiles/Engine.dir/src/Camera.cpp.o
+Engine: CMakeFiles/Engine.dir/src/Cubes.cpp.o
 Engine: CMakeFiles/Engine.dir/src/Chart.cpp.o
 Engine: CMakeFiles/Engine.dir/src/logger.cpp.o
 Engine: CMakeFiles/Engine.dir/src/Engine.cpp.o
 Engine: CMakeFiles/Engine.dir/src/GL.cpp.o
 Engine: CMakeFiles/Engine.dir/src/Instrument.cpp.o
-Engine: CMakeFiles/Engine.dir/extern/stb_image.cpp.o
-Engine: CMakeFiles/Engine.dir/src/Cubes.cpp.o
+Engine: CMakeFiles/Engine.dir/src/Text.cpp.o
+Engine: CMakeFiles/Engine.dir/src/SkyBox.cpp.o
+Engine: CMakeFiles/Engine.dir/src/Level.cpp.o
+Engine: CMakeFiles/Engine.dir/src/Mesh.cpp.o
+Engine: CMakeFiles/Engine.dir/src/Model.cpp.o
 Engine: CMakeFiles/Engine.dir/build.make
-Engine: /usr/local/lib/libfreetype.dylib
-Engine: /usr/local/lib/libGLEW.dylib
 Engine: /usr/local/lib/libglfw.3.2.dylib
 Engine: CMakeFiles/Engine.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Linking CXX executable Engine"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Linking CXX executable Engine"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/Engine.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -337,15 +465,20 @@ CMakeFiles/Engine.dir/build: Engine
 .PHONY : CMakeFiles/Engine.dir/build
 
 CMakeFiles/Engine.dir/requires: CMakeFiles/Engine.dir/main.cpp.o.requires
+CMakeFiles/Engine.dir/requires: CMakeFiles/Engine.dir/extern/stb_image.cpp.o.requires
 CMakeFiles/Engine.dir/requires: CMakeFiles/Engine.dir/src/Background.cpp.o.requires
 CMakeFiles/Engine.dir/requires: CMakeFiles/Engine.dir/src/Camera.cpp.o.requires
+CMakeFiles/Engine.dir/requires: CMakeFiles/Engine.dir/src/Cubes.cpp.o.requires
 CMakeFiles/Engine.dir/requires: CMakeFiles/Engine.dir/src/Chart.cpp.o.requires
 CMakeFiles/Engine.dir/requires: CMakeFiles/Engine.dir/src/logger.cpp.o.requires
 CMakeFiles/Engine.dir/requires: CMakeFiles/Engine.dir/src/Engine.cpp.o.requires
 CMakeFiles/Engine.dir/requires: CMakeFiles/Engine.dir/src/GL.cpp.o.requires
 CMakeFiles/Engine.dir/requires: CMakeFiles/Engine.dir/src/Instrument.cpp.o.requires
-CMakeFiles/Engine.dir/requires: CMakeFiles/Engine.dir/extern/stb_image.cpp.o.requires
-CMakeFiles/Engine.dir/requires: CMakeFiles/Engine.dir/src/Cubes.cpp.o.requires
+CMakeFiles/Engine.dir/requires: CMakeFiles/Engine.dir/src/Text.cpp.o.requires
+CMakeFiles/Engine.dir/requires: CMakeFiles/Engine.dir/src/SkyBox.cpp.o.requires
+CMakeFiles/Engine.dir/requires: CMakeFiles/Engine.dir/src/Level.cpp.o.requires
+CMakeFiles/Engine.dir/requires: CMakeFiles/Engine.dir/src/Mesh.cpp.o.requires
+CMakeFiles/Engine.dir/requires: CMakeFiles/Engine.dir/src/Model.cpp.o.requires
 
 .PHONY : CMakeFiles/Engine.dir/requires
 

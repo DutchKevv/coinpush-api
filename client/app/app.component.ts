@@ -4,6 +4,8 @@ import {SocketService}  from './services/socket.service';
 import {SystemService}  from './services/system.service';
 import {CacheService} from './services/cache.service';
 
+declare let Module: any;
+
 @Component({
 	selector: 'app',
 	template: `
@@ -34,11 +36,11 @@ export class AppComponent implements AfterViewInit {
 		this._systemService.init();
 		this._cacheService.init();
 
+		const keyCodes = [37, 38, 39, 40];
 
-		$(document).on('keydown keyup keypress', function(e) {
-			if (e.target.nodeName.toLowerCase() !== 'canvas') {
-				// e.preventDefault();
-			}
+		$(document).on('keydown', e => {
+			if (keyCodes.includes(e.keyCode) && Module.custom.getFocused())
+				return false;
 		});
 	}
 }

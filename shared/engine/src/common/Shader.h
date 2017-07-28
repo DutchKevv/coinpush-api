@@ -77,9 +77,9 @@ private:
         const GLchar *sources[] = {
                 // Define GLSL version
 #ifdef __EMSCRIPTEN__
-                "#version 300 es\n"  // OpenGL ES 2.0
+                "#version 300 es\n"
 #else
-                "#version 330 core\n"  // OpenGL 3.0
+                "#version 330 core\n"
 #endif
                 ,
                 // GLES2 precision specifiers
@@ -197,6 +197,9 @@ public:
     GLuint ID;
 
     Shader(const char *vertexPath, const char *fragmentPath, const char *geometryPath = nullptr) {
+        consoleLog(vertexPath);
+        consoleLog(fragmentPath);
+
         int ID = this->create_program(vertexPath, fragmentPath);
 
         if (ID > 0)
@@ -212,11 +215,13 @@ public:
     // utility uniform functions
     // ------------------------------------------------------------------------
     void setBool(const std::string &name, bool value) const {
+        consoleLog((int)ID);
         glUniform1i(glGetUniformLocation(ID, name.c_str()), (int) value);
     }
 
     // ------------------------------------------------------------------------
     void setInt(const std::string &name, int value) const {
+        consoleLog((int)ID);
         glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
     }
 

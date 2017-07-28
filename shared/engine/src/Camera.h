@@ -5,7 +5,7 @@
 #ifndef ENGINE_CAMERA_H
 #define ENGINE_CAMERA_H
 
-#include <GL/glew.h>
+#include "GL/glew.h"
 #include <GLFW/glfw3.h>
 
 #define GLM_FORCE_RADIANS
@@ -13,8 +13,10 @@
 #include "../extern/glm/vec3.hpp"
 #include "../extern/glm/detail/type_mat.hpp"
 #include "../extern/glm/gtc/matrix_transform.hpp"
+#include "logger.h"
 
 #include <vector>
+#include <string>
 
 static float deltaTime = 0.0f;	// time between current frame and last frame
 static float lastFrame = 0.0f;
@@ -28,7 +30,7 @@ enum Camera_Movement {
 };
 
 // Default camera values
-const float YAW        = -90.0f;
+const float YAW        = -180.0f;
 const float PITCH      =  0.0f;
 const float SPEED      =  2.5f;
 const float SENSITIVTY =  0.1f;
@@ -109,10 +111,12 @@ public:
             Position -= Right * velocity;
         if (direction == RIGHT)
             Position += Right * velocity;
+
+        Position = glm::vec3(Position.x, 0.1f, Position.z);
     }
 
     // Processes input received from a mouse input system. Expects the offset value in both the x and y direction.
-    void ProcessMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch = true)
+    void ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch = true)
     {
         xoffset *= MouseSensitivity;
         yoffset *= MouseSensitivity;
