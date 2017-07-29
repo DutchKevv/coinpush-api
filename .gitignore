@@ -1,16 +1,16 @@
-# IDEs
+#System Files
 .idea
+.DS_Store
+Thumbs.db
+
 
 # misc
 npm-debug.*
 node_modules
 testem.log
 /dist
-package-lock.json
+*.map
 
-#System Files
-.DS_Store
-Thumbs.db
 
 #### App ####
 /_logs

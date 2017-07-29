@@ -25,12 +25,12 @@
   "dependencies": {
     "@types/core-js": "^0.9.42",
     "@types/lodash": "^4.14.71",
-    "@types/mkdirp": "0.5.0",
+    "@types/mkdirp": "^0.5.0",
     "@types/moment": "2.13.0",
     "@types/node": "^8.0.17",
     "@types/socket.io": "1.4.29",
     "@types/socket.io-client": "1.4.29",
-    "@types/winston": "2.3.4",
+    "@types/winston": "^2.3.4",
     "backbone-events-standalone": "0.2.7",
     "codelyzer": "^3.1.2",
     "colors": "1.1.2",
@@ -39,9 +39,9 @@
     "mkdirp": "0.5.1",
     "moment": "2.18.1",
     "readable-timespan": "1.2.0",
-    "rxjs": "5.4.2",
+    "rxjs": "^5.4.2",
     "socket.io-client": "2.0.3",
-    "tslint": "5.5.0",
+    "tslint": "^5.5.0",
     "typescript": "^2.4.2",
     "winston": "2.3.1"
   }

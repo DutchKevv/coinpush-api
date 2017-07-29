@@ -27,6 +27,7 @@
     "start": "cross-env NODE_ENV=development gulp server:dev --web",
     "lint": "gulp tslint",
     "dist": "build",
+    "prod": "NODE_ENV=production node bootstrapper.js",
     "build": "gulp server:build",
     "build:custom": "gulp custom:build",
     "__temp-node-ipc": "git://github.com/RIAEvangelist/node-ipc.git#v9.x"
