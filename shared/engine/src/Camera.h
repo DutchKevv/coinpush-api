@@ -112,7 +112,7 @@ public:
         if (direction == RIGHT)
             Position += Right * velocity;
 
-        Position = glm::vec3(Position.x, 0.1f, Position.z);
+//        Position = glm::vec3(Position.x, 0.1f, Position.z);
     }
 
     // Processes input received from a mouse input system. Expects the offset value in both the x and y direction.

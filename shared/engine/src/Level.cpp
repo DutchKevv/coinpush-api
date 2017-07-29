@@ -100,6 +100,7 @@ Model *blenderModel;
 Model *boulderModel;
 Model *treeModel;
 Model *planeModel;
+Model *worldModel;
 
 Level::Level(GLFWwindow *window, Camera *camera): window(window), camera(camera) {
 
@@ -130,13 +131,25 @@ int Level::render() {
 
     glDrawArrays(GL_TRIANGLES, 0, 6);
 
-//    glBindVertexArray(0);
-
+    glBindVertexArray(0);
+    glActiveTexture(GL_TEXTURE0);
 //    model = glm::scale(model, glm::vec3( 0.1f,  0.1f,  0.01f));
 //    shader->setMat4("model", model);
 
-//    glActiveTexture(GL_TEXTURE0);
 //    glBindTexture(GL_TEXTURE_2D, boulderTexture);
+
+    modelShader->use();
+
+//    glBindVertexArray(VAO);
+//    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, grassTexture);
+
+    // camera/view transformation
+    modelShader->setMat4("projection", projection);
+    modelShader->setMat4("view", view);
+    modelShader->setMat4("model", model);
+    worldModel->Draw(modelShader);
+
 
     // Boulders
     for(unsigned int i = 0; i < 10; i++) {
@@ -144,9 +157,9 @@ int Level::render() {
         model = glm::translate(model, boulderPositions[i]);
         model = glm::rotate(model, i * glm::radians(50.0f), glm::vec3(1.0f, 0.0f, 0.0f));
         model = glm::scale(model, glm::vec3( 0.1f,  0.1f,  0.1f));
-        shader->setMat4("model", model);
+        modelShader->setMat4("model", model);
 
-        boulderModel->Draw(shader);
+        boulderModel->Draw(modelShader);
     }
 
 //    glActiveTexture(GL_TEXTURE0);
@@ -158,9 +171,9 @@ int Level::render() {
         model = glm::translate(model, treePositions[i]);
 //        model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(1.0f, 0.3f, 0.5f));
         model = glm::scale(model, glm::vec3( 0.3f,  0.3f,  0.3f));
-        shader->setMat4("model", model);
+        modelShader->setMat4("model", model);
 
-       treeModel->Draw(shader);
+       treeModel->Draw(modelShader);
     }
 
     // Planes
@@ -169,9 +182,9 @@ int Level::render() {
         model = glm::translate(model, planePositions[i]);
 //        model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(1.0f, 0.3f, 0.5f));
         model = glm::scale(model, glm::vec3( 0.3f,  0.3f,  0.3f));
-        shader->setMat4("model", model);
+        modelShader->setMat4("model", model);
 
-        planeModel->Draw(shader);
+        planeModel->Draw(modelShader);
     }
 
     // Blenders
@@ -180,10 +193,13 @@ int Level::render() {
         model = glm::translate(model, blenderPositions[i]);
 //        model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(1.0f, 0.3f, 0.5f));
         model = glm::scale(model, glm::vec3( 0.3f,  0.3f,  0.3f));
-        shader->setMat4("model", model);
+        modelShader->setMat4("model", model);
 
-        blenderModel->Draw(shader);
+        blenderModel->Draw(modelShader);
     }
+
+
+    glActiveTexture(GL_TEXTURE0);
 
     return 0;
 }
@@ -192,7 +208,7 @@ int Level::build() {
 
     /* FLOOR */
     shader = new Shader("assets/shaders/TriangleVertex.glsl", "assets/shaders/TriangleFragment.glsl");
-    modelShader = new Shader("assets/shaders/TriangleVertex.glsl", "assets/shaders/TriangleFragment.glsl");
+
     shader->use();
 
     glGenVertexArrays(1, &VAO);
@@ -220,11 +236,13 @@ int Level::build() {
     grassTexture = loadTexture("assets/textures/grass.jpg");
     boulderTexture = loadTexture("assets/textures/boulder.jpg");
 
-    boulderModel = new Model("assets/models/boulder.obj");
+    boulderModel = new Model("assets/models/newboulder.obj");
     planeModel = new Model("assets/models/flyhigh.obj");
     blenderModel = new Model("assets/models/BLENDERMAN!.obj");
     treeModel = new Model("assets/models/pointree.obj");
-//    ourModel = new Model("assets/models/BLENDERMAN!.obj");
+    worldModel = new Model("assets/models/world_.obj");
+
+    modelShader = new Shader("assets/shaders/model.v.glsl", "assets/shaders/model.f.glsl");
 
     return 0;
 }

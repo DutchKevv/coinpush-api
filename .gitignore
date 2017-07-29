@@ -24,12 +24,6 @@ Thumbs.db
 !/custom/ea/example/*
 !/custom/indicator/example/*
 
-# Client
-/client/dist/
-/client/chart/build
-/client/chart/cmake-build-debug
-/client/chart/extern
-
 # Server
 /server/config/tradejs.config.json
 /server/**/*.js
@@ -42,4 +36,14 @@ Thumbs.db
 /shared/dist
 /shared/**/*.js
 /shared/**/*.map
+
+# Engine
+/shared/engine/cmake
+/shared/engine/cmake-build-debug
+/shared/engine/CMakeFiles
+/shared/engine/cmake_install.cmake
+/shared/engine/Engine
+/shared/engine/Engine.cbp
+/shared/engine/Makefile
+
 

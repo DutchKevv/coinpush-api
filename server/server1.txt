@@ -8495,3 +8495,7 @@
 2017-07-28T13:06:16.077Z - info: App                  :  connection from http://localhost:4200
 2017-07-28T13:06:18.982Z - info: Cache                :  Read AUD_NZD-M15 from undefined until 1501192800000 count 1000
 2017-07-28T13:06:18.986Z - info: DataLayer            :  Reading AUD_NZD-M15 took 4 ms
+2017-07-29T18:20:59.741Z - info: WorkerChild          :  cache exiting 0
+2017-07-29T18:20:59.741Z - info: App                  :  Shutting down and cleaning up child processes
+2017-07-29T18:20:59.791Z - info: WorkerChild          :  0 exiting 0
+2017-07-29T18:20:59.801Z - info: WorkerChild          :  editor exiting 0
