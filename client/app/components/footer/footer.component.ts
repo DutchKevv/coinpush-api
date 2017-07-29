@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import * as moment from 'moment';
 import {InstrumentsService} from '../../services/instruments.service';
+import {UserService} from '../../services/user.service';
 
 declare let $: any;
 
@@ -32,6 +33,7 @@ export class FooterComponent implements OnInit, OnDestroy, AfterViewChecked {
 	}> = [];
 
 	constructor(public instrumentsService: InstrumentsService,
+				public userService: UserService,
 				private vcRef: ViewContainerRef,
 				private _zone: NgZone,
 				private _socketService: SocketService,

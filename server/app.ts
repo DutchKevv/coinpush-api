@@ -1,7 +1,6 @@
 require('source-map-support').install({handleUncaughtExceptions: true});
 
 import * as http            from 'http';
-import * as https            from 'https';
 import {json, urlencoded}   from 'body-parser';
 import * as path            from 'path';
 import * as freePort        from 'freeport';
@@ -193,14 +192,14 @@ export default class App extends Base {
 			this._http = http.createServer(this._httpApi);
 			this._io = io.listen(this._http);
 
+			// this._httpApi.use(cors({origin: 'http://localhost:4200'}));
+			this._httpApi.use(express.static(process.env.NODE_ENV === 'production' ? PATH_PUBLIC_PROD : PATH_PUBLIC_DEV));
+
 			this._httpApi.use(function(req, res, next) {
 				res.header('Access-Control-Allow-Origin', '*');
 				res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
 				next();
 			});
-
-			// this._httpApi.use(cors({origin: 'http://localhost:4200'}));
-			this._httpApi.use(express.static(process.env.NODE_ENV === 'production' ? PATH_PUBLIC_PROD : PATH_PUBLIC_DEV));
 
 			this._httpApi.use(json());
 			this._httpApi.use(urlencoded({extended: true}));
@@ -229,7 +228,7 @@ export default class App extends Base {
 			});
 
 			this._http.listen(port, () => {
-				
+
 				console.log(`\n
 	App      : 127.0.0.1:${port}
 	Cache    : 127.0.0.1:3001

@@ -12,9 +12,8 @@ module.exports = {
         // "app": "./main"
     },
     output: {
-        path: path.join(__dirname, '..', 'dist/'),
-        filename: "[name].bundle.js",
-        publicPath: path.join(__dirname, '..', 'dist/')
+        path: path.join(__dirname, '..', 'dist'),
+        filename: "[name].bundle.js"
     },
     resolve: {
         extensions: ['.js', '.ts', '.css', '.scss', '.html']

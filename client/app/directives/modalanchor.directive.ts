@@ -20,12 +20,15 @@ export class ModalAnchorDirective {
 	}
 
 	create(modalComponent: any, options = <any>{}): ComponentRef<ModalComponent> {
+		console.log(this.viewContainer.element);
 		this.viewContainer.clear();
 
 		let modalComponentFactory = this.componentFactoryResolver.resolveComponentFactory(modalComponent);
 		this.modalComponentRef = <any>this.viewContainer.createComponent(modalComponentFactory);
 		this.modalComponentRef.instance.model = options.model;
 		this.modalComponentRef.instance.options = options;
+
+		this.viewContainer.element.nativeElement.appendChild(this.modalComponentRef.instance.elementRef.nativeElement);
 
 		if (this.modalComponentRef.instance.close) {
 			this.modalComponentRef.instance.close.subscribe(() => this.destroy(this.modalComponentRef));
@@ -40,7 +43,7 @@ export class ModalAnchorDirective {
 	}
 
 	show() {
-		$(this.modalComponentRef.instance.elementRef.nativeElement.firstElementChild).modal('show');
+		$(this.modalComponentRef.instance.elementRef.nativeElement.shadowRoot.querySelector('.modal')).modal('show');
 	}
 
 	hide() {

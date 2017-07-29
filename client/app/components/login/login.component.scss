@@ -1,4 +1,8 @@
 @import '../../style/variables/variables';
+@import '~bootstrap/scss/_variables';
+@import '~bootstrap/scss/_mixins';
+@import '~bootstrap/scss/_modal';
+@import '~bootstrap/scss/_transitions';
 
 label {
     font-size: 12px;

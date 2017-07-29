@@ -12,18 +12,18 @@ export class SocketService {
 
 	init() {
 		// this._zone.runOutsideAngular(() => {
-			this.socket = io(this._getUrl());
+			this.socket = io(this._getUrl(), {secure: true});
 		// });
 	}
 
 	private _getUrl(): string {
 		// Electron
 		if (window.location.protocol === 'file:') {
-			return 'http://localhost:3000';
+			return 'https://localhost:3000';
 
 		// Browser | external
 		} else {
-			return window.location.hostname + ':3000';
+			return 'http://' + window.location.hostname + ':3000';
 		}
 	}
 

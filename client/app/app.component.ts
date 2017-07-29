@@ -13,9 +13,9 @@ declare let Module: any;
 		<router-outlet></router-outlet>
 	`,
 	styleUrls: [
-		'../node_modules/font-awesome/css/font-awesome.css',
-		'./style/components/contextmenu'
-		],
+		'./app.component.scss',
+		'../node_modules/font-awesome/css/font-awesome.css'
+	],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	encapsulation: ViewEncapsulation.None
 })

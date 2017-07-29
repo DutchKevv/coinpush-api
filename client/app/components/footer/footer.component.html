@@ -50,8 +50,17 @@
     </div>
 
     <div role="tabpanel" class="tab-pane" id="messages">...</div>
-    <div role="tabpanel" class="tab-pane" id="settings">
+    <div role="tabpanel" class="tab-pane" id="settings" style=" padding: 10px 20px;">
+
+        <h4>User</h4>
         <hr />
-        <button class="btn btn-danger" (click)="clearCache()">Clear cache</button>
+        <button class="btn btn-sm btn-default" (click)="userService.logout()">Logout</button>
+        <button class="btn btn-sm btn-default" (click)="userService.login()">Login</button>
+        <br />
+        <br />
+        <br />
+        <h4>System</h4>
+        <hr />
+        <button class="btn btn-sm btn-danger" (click)="clearCache()">Clear cache</button>
     </div>
 </div>
