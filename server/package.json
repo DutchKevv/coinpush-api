@@ -26,8 +26,7 @@
     "postinstall2": "electron-rebuild -w sqlite3 -v 1.6.10 && node copy-sql3-binary.js --version=53",
     "start": "cross-env NODE_ENV=development gulp server:dev --web",
     "lint": "gulp tslint",
-    "dist": "build",
-    "prod": "NODE_ENV=production node bootstrapper.js",
+    "prod": "NODE_ENV=production pm2 start bootstrapper.js",
     "build": "gulp server:build",
     "build:custom": "gulp custom:build",
     "__temp-node-ipc": "git://github.com/RIAEvangelist/node-ipc.git#v9.x"
