@@ -42,7 +42,7 @@ nav {
 
 	button {
 		padding: 0 5px;
-		margin: 2px;
+		margin: 1px;
 		font-size: 14px;
 		cursor: pointer;
 
@@ -73,9 +73,9 @@ nav {
 	}
 }
 
-.dropdown-toggle:not([disabled]):hover + .dropdown-menu {
-	display: block;
-}
+//.dropdown-toggle:not([disabled]):hover + .dropdown-menu {
+//	display: block;
+//}
 
 .dropdown-menu {
 	margin: 0;

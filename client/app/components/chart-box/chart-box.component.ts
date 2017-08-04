@@ -146,8 +146,10 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 						dirty = true;
 						break;
 					case 'focus':
-						this.toggleViewState(true);
-						this.putOnTop();
+						if (changes.focus === true) {
+							this.toggleViewState(true);
+							this.putOnTop();
+						}
 						break;
 					case 'orders':
 						this._updateOrders(changes.orders);
@@ -713,7 +715,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 				}
 			}
 		} else {
-			this.viewState = viewState ? 'stretched' : 'minimized';
+			this.viewState = viewState ? 'windowed' : 'minimized';
 			elClassList.toggle('minimized', !viewState);
 		}
 

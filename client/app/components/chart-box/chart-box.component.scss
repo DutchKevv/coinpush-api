@@ -21,6 +21,10 @@
     }
 }
 
+.fa-close {
+    color: $font-color-dark;
+}
+
 :host(.stretched) {
     transfrom: translate(0, 0) !important;
     -webkit-transform: translate(0, 0) !important;
@@ -72,30 +76,6 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     height: 22px;
-}
-
-.chart-options {
-    margin-top: 0;
-    margin-bottom: 0;
-    margin-right: 5px;
-
-    button {
-        padding: 0 2px;
-        font-size: 14px;
-        font-weight: bold;
-        // background: -moz-linear-gradient(top,  #F0F0F0 50%, #D4D4D4 50%);
-        // background: -webkit-gradient(linear, left top, left bottom, color-stop(50%,#F0F0F0), color-stop(50%,#D4D4D4));
-        // filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#F0F0F0', endColorstr='#D4D4D4',GradientType=0 );
-
-        i {
-            font-size: 14px;
-        }
-    }
-
-    @media screen and (max-width: 768px) {
-        font-size: 30px;
-        top: -15px;
-    }
 }
 
 .chart-content {

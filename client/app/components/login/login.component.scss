@@ -1,8 +1,5 @@
 @import '../../style/variables/variables';
-@import '~bootstrap/scss/_variables';
-@import '~bootstrap/scss/_mixins';
-@import '~bootstrap/scss/_modal';
-@import '~bootstrap/scss/_transitions';
+@import '../modal/modal.component.scss';
 
 label {
     font-size: 12px;
@@ -10,10 +7,6 @@ label {
 
 .form-control {
     max-width: 200px; float:left;
-}
-
-.modal-content {
-    background: $background-light;
 }
 
 .modal-footer button {

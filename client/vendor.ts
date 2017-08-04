@@ -1,17 +1,6 @@
 // Angular
 import './polyfills';
 
-// import {
-// 	enableProdMode, NgModule, Injectable, Component, Directive, OnInit, AfterViewInit, OnDestroy,
-// 	ChangeDetectionStrategy, ViewEncapsulation, ModuleWithProviders, ElementRef, Input, Output, NgZone,
-// 	QueryList, ViewChildren, EventEmitter, ViewChild, Pipe, PipeTransform, ViewContainerRef, ComponentFactoryResolver
-// } from '@angular/core';
-
-// import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule}				from '@angular/forms';
-// import {platformBrowserDynamic} 			from '@angular/platform-browser-dynamic';
-// import {RouterModule, Route, CanActivate}  	from '@angular/router';
-// import {CookieService} from 'ngx-cookie';
-
 /**
  * Angular
  */
@@ -40,23 +29,6 @@ import './node_modules/jquery-touchswipe/jquery.touchSwipe.js';
  */
 import 'tether';
 import './node_modules/bootstrap/dist/js/bootstrap.min.js';
-// import './node_modules/bootstrap/js/dist/util.js'
-// import './node_modules/bootstrap/js/dist/modal.js'
-// import './node_modules/bootstrap/js/dist/button.js'
-// import './node_modules/bootstrap/js/dist/dropdown.js'
-
-/**
- * File tree
- */
-import './node_modules/jstree/dist/jstree.js';
-
-/**
- * Ace editor
- */
-import './assets/vendor/js/ace/ace.js';
-import './assets/vendor/js/ace/theme-tomorrow_night_bright.js';
-import './assets/vendor/js/ace/mode-javascript.js';
-import './assets/vendor/js/ace/mode-typescript.js';
 
 /**
  *  CanvasJS
@@ -64,13 +36,14 @@ import './assets/vendor/js/ace/mode-typescript.js';
 import './node_modules/canvasjs/dist/canvasjs.min.js';
 
 /**
- * Web Assembly
- */
-// import '../shared/engine/engine.js';
-
-/**
  * Custom
  */
 import './assets/custom/js/electron.js';
+import './assets/custom/js/dropdown.ts';
 import './assets/custom/js/contextMenu.js';
 import './assets/custom/css/contextMenu.css';
+
+/**
+ editor
+ */
+import './editor';

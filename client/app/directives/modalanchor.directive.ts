@@ -28,7 +28,8 @@ export class ModalAnchorDirective {
 		this.modalComponentRef.instance.model = options.model;
 		this.modalComponentRef.instance.options = options;
 
-		this.viewContainer.element.nativeElement.appendChild(this.modalComponentRef.instance.elementRef.nativeElement);
+		console.log(this.modalComponentRef.instance.elementRef.nativeElement);
+		window['test'] = this.modalComponentRef.instance.elementRef.nativeElement;
 
 		if (this.modalComponentRef.instance.close) {
 			this.modalComponentRef.instance.close.subscribe(() => this.destroy(this.modalComponentRef));
@@ -44,6 +45,7 @@ export class ModalAnchorDirective {
 
 	show() {
 		$(this.modalComponentRef.instance.elementRef.nativeElement.shadowRoot.querySelector('.modal')).modal('show');
+		this.viewContainer.element.nativeElement.appendChild(this.modalComponentRef.instance.elementRef.nativeElement);
 	}
 
 	hide() {

@@ -5,7 +5,7 @@
 		<Option title="Engine"/>
 		<Option makefile_is_custom="1"/>
 		<Option compiler="gcc"/>
-		<Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\..\;CMake Files\..\..\..\..\..\;CMake Files\..\..\..\..\..\..\;CMake Files\..\..\..\..\..\..\usr\;CMake Files\..\..\..\..\..\..\usr\local\;CMake Files\..\..\..\..\..\..\usr\local\lib\;CMake Files\..\..\..\..\..\..\usr\local\lib\cmake\;CMake Files\..\..\..\..\..\..\usr\local\lib\cmake\glfw3\;CMake Files\..\..\..\..\..\..\usr\local\lib\cmake\assimp-3.3\;CMake Files\..\..\..\..\..\..\usr\local\lib\cmake\glm\;"/>
+		<Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\Engine\;CMake Files\..\..\..\..\;CMake Files\..\..\..\..\..\;CMake Files\..\..\..\..\..\..\;CMake Files\..\..\..\..\..\..\usr\;CMake Files\..\..\..\..\..\..\usr\local\;CMake Files\..\..\..\..\..\..\usr\local\lib\;CMake Files\..\..\..\..\..\..\usr\local\lib\cmake\;CMake Files\..\..\..\..\..\..\usr\local\lib\cmake\glfw3\;CMake Files\..\..\..\..\..\..\usr\local\lib\cmake\assimp-3.3\;CMake Files\..\..\..\..\..\..\usr\local\lib\cmake\glm\;"/>
 		<Build>
 			<Target title="all">
 				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug"/>
@@ -37,8 +37,8 @@
 					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="Engine">
-				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/Engine" prefix_auto="0" extension_auto="0"/>
+			<Target title="FlyHighGame">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/FlyHighGame" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
@@ -48,6 +48,61 @@
 					<Add directory="/usr/local/include"/>
 					<Add directory="/usr/local/Cellar/freetype/2.8/include/freetype2"/>
 					<Add directory="/usr/local/include/freetype2"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/Makefile&quot;  VERBOSE=1 FlyHighGame"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="FlyHighGame/fast">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/FlyHighGame" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DGLFW_DLL"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/local/Cellar/freetype/2.8/include/freetype2"/>
+					<Add directory="/usr/local/include/freetype2"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/Makefile&quot;  VERBOSE=1 FlyHighGame/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="Engine">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/libEngine.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/local/Cellar/freetype/2.8/include/freetype2"/>
+					<Add directory="/usr/local/include/freetype2"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern"/>
 					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
 					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
 					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
@@ -63,16 +118,17 @@
 				</MakeCommands>
 			</Target>
 			<Target title="Engine/fast">
-				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/Engine" prefix_auto="0" extension_auto="0"/>
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug/libEngine.a" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug"/>
 				<Option object_output="./"/>
-				<Option type="1"/>
+				<Option type="2"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add option="-DGLFW_DLL"/>
 					<Add directory="/usr/local/include"/>
 					<Add directory="/usr/local/Cellar/freetype/2.8/include/freetype2"/>
 					<Add directory="/usr/local/include/freetype2"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern"/>
 					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
 					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
 					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
@@ -88,95 +144,65 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/stb_image.cpp">
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/stb_image.cpp">
 			<Option target="Engine"/>
 		</Unit>
-		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/stb_image.h">
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/stb_image.h">
+			<Option target="Engine"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/include/engine/baseRenderObj.cpp">
+			<Option target="Engine"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/include/engine/baseRenderObj.h">
+			<Option target="Engine"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/include/engine/camera.cpp">
+			<Option target="Engine"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/include/engine/camera.h">
+			<Option target="Engine"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/include/engine/constants.h">
+			<Option target="Engine"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/include/engine/context.h">
+			<Option target="Engine"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/include/engine/engine.h">
+			<Option target="Engine"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/include/engine/logger.cpp">
+			<Option target="Engine"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/include/engine/logger.h">
+			<Option target="Engine"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/include/engine/renderer.cpp">
+			<Option target="Engine"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/include/engine/renderer.h">
+			<Option target="Engine"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/include/engine/shader.cpp">
+			<Option target="Engine"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/include/engine/shader.h">
 			<Option target="Engine"/>
 		</Unit>
 		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/main.cpp">
-			<Option target="Engine"/>
+			<Option target="FlyHighGame"/>
 		</Unit>
-		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Background.cpp">
-			<Option target="Engine"/>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/renderObjects/chart.cpp">
+			<Option target="FlyHighGame"/>
 		</Unit>
-		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Background.h">
-			<Option target="Engine"/>
-		</Unit>
-		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Camera.cpp">
-			<Option target="Engine"/>
-		</Unit>
-		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Camera.h">
-			<Option target="Engine"/>
-		</Unit>
-		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Chart.cpp">
-			<Option target="Engine"/>
-		</Unit>
-		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Chart.h">
-			<Option target="Engine"/>
-		</Unit>
-		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Cubes.cpp">
-			<Option target="Engine"/>
-		</Unit>
-		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Cubes.h">
-			<Option target="Engine"/>
-		</Unit>
-		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Engine.cpp">
-			<Option target="Engine"/>
-		</Unit>
-		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Engine.h">
-			<Option target="Engine"/>
-		</Unit>
-		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/GL.cpp">
-			<Option target="Engine"/>
-		</Unit>
-		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/GL.h">
-			<Option target="Engine"/>
-		</Unit>
-		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Instrument.cpp">
-			<Option target="Engine"/>
-		</Unit>
-		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Instrument.h">
-			<Option target="Engine"/>
-		</Unit>
-		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Level.cpp">
-			<Option target="Engine"/>
-		</Unit>
-		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Level.h">
-			<Option target="Engine"/>
-		</Unit>
-		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Mesh.cpp">
-			<Option target="Engine"/>
-		</Unit>
-		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Mesh.h">
-			<Option target="Engine"/>
-		</Unit>
-		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Model.cpp">
-			<Option target="Engine"/>
-		</Unit>
-		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Model.h">
-			<Option target="Engine"/>
-		</Unit>
-		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/SkyBox.cpp">
-			<Option target="Engine"/>
-		</Unit>
-		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/SkyBox.h">
-			<Option target="Engine"/>
-		</Unit>
-		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Text.cpp">
-			<Option target="Engine"/>
-		</Unit>
-		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/Text.h">
-			<Option target="Engine"/>
-		</Unit>
-		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/logger.cpp">
-			<Option target="Engine"/>
-		</Unit>
-		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/logger.h">
-			<Option target="Engine"/>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/src/renderObjects/chart.h">
+			<Option target="FlyHighGame"/>
 		</Unit>
 		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\"/>
 		</Unit>
 		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../../../../usr/local/lib/cmake/glfw3/GLFW3ConfigVersion.cmake">
 			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\local\lib\cmake\glfw3\"/>

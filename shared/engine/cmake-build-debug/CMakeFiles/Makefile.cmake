@@ -35,6 +35,7 @@ set(CMAKE_MAKEFILE_DEPENDS
   "/Applications/CLion.app/Contents/bin/cmake/share/cmake-3.8/Modules/Platform/UnixPaths.cmake"
   "/Applications/CLion.app/Contents/bin/cmake/share/cmake-3.8/Modules/ProcessorCount.cmake"
   "/Applications/CLion.app/Contents/bin/cmake/share/cmake-3.8/Modules/SelectLibraryConfigurations.cmake"
+  "/Users/kewinbrandsma/Projects/Engine/CMakeLists.txt"
   "../CMakeLists.txt"
   "CMakeFiles/3.8.2/CMakeCCompiler.cmake"
   "CMakeFiles/3.8.2/CMakeCXXCompiler.cmake"
@@ -63,5 +64,6 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
+  "CMakeFiles/FlyHighGame.dir/DependInfo.cmake"
   "CMakeFiles/Engine.dir/DependInfo.cmake"
   )

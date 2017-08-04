@@ -8,6 +8,21 @@
 @import '../../style/variables/variables';
 
 
+.modal-content {
+    background: $background-dark;
+
+    * {
+        box-sizing: border-box;
+    }
+}
+
+.modal-footer {
+    button {
+        margin: 0 5px;
+        cursor: pointer;
+    }
+}
+
 .dialog {
     border: 1px solid black;
     border-radius: 5px;
@@ -29,21 +44,6 @@
 
         h4 {
             margin: 0;
-        }
-    }
-
-    .modal-content {
-        background: $background-dark;
-
-        * {
-            box-sizing: border-box;
-        }
-    }
-
-    .modal-footer {
-        button {
-            margin: 0 5px;
-            cursor: pointer;
         }
     }
 }

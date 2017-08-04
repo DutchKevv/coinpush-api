@@ -4,7 +4,7 @@
 # compile CXX with /Library/Developer/CommandLineTools/usr/bin/c++
 CXX_FLAGS = -g   -std=gnu++11
 
-CXX_DEFINES = -DGLFW_DLL
+CXX_DEFINES = 
 
-CXX_INCLUDES = -isystem /usr/local/include -I/usr/local/Cellar/freetype/2.8/include/freetype2 -I/usr/local/include/freetype2 
+CXX_INCLUDES = -I/usr/local/include -I/usr/local/Cellar/freetype/2.8/include/freetype2 -I/usr/local/include/freetype2 -I/Users/kewinbrandsma/Projects/Engine/include -I/Users/kewinbrandsma/Projects/Engine/extern 
 

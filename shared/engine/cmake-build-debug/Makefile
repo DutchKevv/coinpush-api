@@ -111,6 +111,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named FlyHighGame
+
+# Build rule for target.
+FlyHighGame: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 FlyHighGame
+.PHONY : FlyHighGame
+
+# fast build rule for target.
+FlyHighGame/fast:
+	$(MAKE) -f CMakeFiles/FlyHighGame.dir/build.make CMakeFiles/FlyHighGame.dir/build
+.PHONY : FlyHighGame/fast
+
+#=============================================================================
 # Target rules for targets named Engine
 
 # Build rule for target.
@@ -123,32 +136,167 @@ Engine/fast:
 	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/build
 .PHONY : Engine/fast
 
-extern/stb_image.o: extern/stb_image.cpp.o
+Users/kewinbrandsma/Projects/Engine/extern/stb_image.o: Users/kewinbrandsma/Projects/Engine/extern/stb_image.cpp.o
 
-.PHONY : extern/stb_image.o
+.PHONY : Users/kewinbrandsma/Projects/Engine/extern/stb_image.o
 
 # target to build an object file
-extern/stb_image.cpp.o:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/extern/stb_image.cpp.o
-.PHONY : extern/stb_image.cpp.o
+Users/kewinbrandsma/Projects/Engine/extern/stb_image.cpp.o:
+	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/Users/kewinbrandsma/Projects/Engine/extern/stb_image.cpp.o
+.PHONY : Users/kewinbrandsma/Projects/Engine/extern/stb_image.cpp.o
 
-extern/stb_image.i: extern/stb_image.cpp.i
+Users/kewinbrandsma/Projects/Engine/extern/stb_image.i: Users/kewinbrandsma/Projects/Engine/extern/stb_image.cpp.i
 
-.PHONY : extern/stb_image.i
+.PHONY : Users/kewinbrandsma/Projects/Engine/extern/stb_image.i
 
 # target to preprocess a source file
-extern/stb_image.cpp.i:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/extern/stb_image.cpp.i
-.PHONY : extern/stb_image.cpp.i
+Users/kewinbrandsma/Projects/Engine/extern/stb_image.cpp.i:
+	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/Users/kewinbrandsma/Projects/Engine/extern/stb_image.cpp.i
+.PHONY : Users/kewinbrandsma/Projects/Engine/extern/stb_image.cpp.i
 
-extern/stb_image.s: extern/stb_image.cpp.s
+Users/kewinbrandsma/Projects/Engine/extern/stb_image.s: Users/kewinbrandsma/Projects/Engine/extern/stb_image.cpp.s
 
-.PHONY : extern/stb_image.s
+.PHONY : Users/kewinbrandsma/Projects/Engine/extern/stb_image.s
 
 # target to generate assembly for a file
-extern/stb_image.cpp.s:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/extern/stb_image.cpp.s
-.PHONY : extern/stb_image.cpp.s
+Users/kewinbrandsma/Projects/Engine/extern/stb_image.cpp.s:
+	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/Users/kewinbrandsma/Projects/Engine/extern/stb_image.cpp.s
+.PHONY : Users/kewinbrandsma/Projects/Engine/extern/stb_image.cpp.s
+
+Users/kewinbrandsma/Projects/Engine/include/engine/baseRenderObj.o: Users/kewinbrandsma/Projects/Engine/include/engine/baseRenderObj.cpp.o
+
+.PHONY : Users/kewinbrandsma/Projects/Engine/include/engine/baseRenderObj.o
+
+# target to build an object file
+Users/kewinbrandsma/Projects/Engine/include/engine/baseRenderObj.cpp.o:
+	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/Users/kewinbrandsma/Projects/Engine/include/engine/baseRenderObj.cpp.o
+.PHONY : Users/kewinbrandsma/Projects/Engine/include/engine/baseRenderObj.cpp.o
+
+Users/kewinbrandsma/Projects/Engine/include/engine/baseRenderObj.i: Users/kewinbrandsma/Projects/Engine/include/engine/baseRenderObj.cpp.i
+
+.PHONY : Users/kewinbrandsma/Projects/Engine/include/engine/baseRenderObj.i
+
+# target to preprocess a source file
+Users/kewinbrandsma/Projects/Engine/include/engine/baseRenderObj.cpp.i:
+	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/Users/kewinbrandsma/Projects/Engine/include/engine/baseRenderObj.cpp.i
+.PHONY : Users/kewinbrandsma/Projects/Engine/include/engine/baseRenderObj.cpp.i
+
+Users/kewinbrandsma/Projects/Engine/include/engine/baseRenderObj.s: Users/kewinbrandsma/Projects/Engine/include/engine/baseRenderObj.cpp.s
+
+.PHONY : Users/kewinbrandsma/Projects/Engine/include/engine/baseRenderObj.s
+
+# target to generate assembly for a file
+Users/kewinbrandsma/Projects/Engine/include/engine/baseRenderObj.cpp.s:
+	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/Users/kewinbrandsma/Projects/Engine/include/engine/baseRenderObj.cpp.s
+.PHONY : Users/kewinbrandsma/Projects/Engine/include/engine/baseRenderObj.cpp.s
+
+Users/kewinbrandsma/Projects/Engine/include/engine/camera.o: Users/kewinbrandsma/Projects/Engine/include/engine/camera.cpp.o
+
+.PHONY : Users/kewinbrandsma/Projects/Engine/include/engine/camera.o
+
+# target to build an object file
+Users/kewinbrandsma/Projects/Engine/include/engine/camera.cpp.o:
+	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/Users/kewinbrandsma/Projects/Engine/include/engine/camera.cpp.o
+.PHONY : Users/kewinbrandsma/Projects/Engine/include/engine/camera.cpp.o
+
+Users/kewinbrandsma/Projects/Engine/include/engine/camera.i: Users/kewinbrandsma/Projects/Engine/include/engine/camera.cpp.i
+
+.PHONY : Users/kewinbrandsma/Projects/Engine/include/engine/camera.i
+
+# target to preprocess a source file
+Users/kewinbrandsma/Projects/Engine/include/engine/camera.cpp.i:
+	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/Users/kewinbrandsma/Projects/Engine/include/engine/camera.cpp.i
+.PHONY : Users/kewinbrandsma/Projects/Engine/include/engine/camera.cpp.i
+
+Users/kewinbrandsma/Projects/Engine/include/engine/camera.s: Users/kewinbrandsma/Projects/Engine/include/engine/camera.cpp.s
+
+.PHONY : Users/kewinbrandsma/Projects/Engine/include/engine/camera.s
+
+# target to generate assembly for a file
+Users/kewinbrandsma/Projects/Engine/include/engine/camera.cpp.s:
+	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/Users/kewinbrandsma/Projects/Engine/include/engine/camera.cpp.s
+.PHONY : Users/kewinbrandsma/Projects/Engine/include/engine/camera.cpp.s
+
+Users/kewinbrandsma/Projects/Engine/include/engine/logger.o: Users/kewinbrandsma/Projects/Engine/include/engine/logger.cpp.o
+
+.PHONY : Users/kewinbrandsma/Projects/Engine/include/engine/logger.o
+
+# target to build an object file
+Users/kewinbrandsma/Projects/Engine/include/engine/logger.cpp.o:
+	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/Users/kewinbrandsma/Projects/Engine/include/engine/logger.cpp.o
+.PHONY : Users/kewinbrandsma/Projects/Engine/include/engine/logger.cpp.o
+
+Users/kewinbrandsma/Projects/Engine/include/engine/logger.i: Users/kewinbrandsma/Projects/Engine/include/engine/logger.cpp.i
+
+.PHONY : Users/kewinbrandsma/Projects/Engine/include/engine/logger.i
+
+# target to preprocess a source file
+Users/kewinbrandsma/Projects/Engine/include/engine/logger.cpp.i:
+	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/Users/kewinbrandsma/Projects/Engine/include/engine/logger.cpp.i
+.PHONY : Users/kewinbrandsma/Projects/Engine/include/engine/logger.cpp.i
+
+Users/kewinbrandsma/Projects/Engine/include/engine/logger.s: Users/kewinbrandsma/Projects/Engine/include/engine/logger.cpp.s
+
+.PHONY : Users/kewinbrandsma/Projects/Engine/include/engine/logger.s
+
+# target to generate assembly for a file
+Users/kewinbrandsma/Projects/Engine/include/engine/logger.cpp.s:
+	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/Users/kewinbrandsma/Projects/Engine/include/engine/logger.cpp.s
+.PHONY : Users/kewinbrandsma/Projects/Engine/include/engine/logger.cpp.s
+
+Users/kewinbrandsma/Projects/Engine/include/engine/renderer.o: Users/kewinbrandsma/Projects/Engine/include/engine/renderer.cpp.o
+
+.PHONY : Users/kewinbrandsma/Projects/Engine/include/engine/renderer.o
+
+# target to build an object file
+Users/kewinbrandsma/Projects/Engine/include/engine/renderer.cpp.o:
+	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/Users/kewinbrandsma/Projects/Engine/include/engine/renderer.cpp.o
+.PHONY : Users/kewinbrandsma/Projects/Engine/include/engine/renderer.cpp.o
+
+Users/kewinbrandsma/Projects/Engine/include/engine/renderer.i: Users/kewinbrandsma/Projects/Engine/include/engine/renderer.cpp.i
+
+.PHONY : Users/kewinbrandsma/Projects/Engine/include/engine/renderer.i
+
+# target to preprocess a source file
+Users/kewinbrandsma/Projects/Engine/include/engine/renderer.cpp.i:
+	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/Users/kewinbrandsma/Projects/Engine/include/engine/renderer.cpp.i
+.PHONY : Users/kewinbrandsma/Projects/Engine/include/engine/renderer.cpp.i
+
+Users/kewinbrandsma/Projects/Engine/include/engine/renderer.s: Users/kewinbrandsma/Projects/Engine/include/engine/renderer.cpp.s
+
+.PHONY : Users/kewinbrandsma/Projects/Engine/include/engine/renderer.s
+
+# target to generate assembly for a file
+Users/kewinbrandsma/Projects/Engine/include/engine/renderer.cpp.s:
+	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/Users/kewinbrandsma/Projects/Engine/include/engine/renderer.cpp.s
+.PHONY : Users/kewinbrandsma/Projects/Engine/include/engine/renderer.cpp.s
+
+Users/kewinbrandsma/Projects/Engine/include/engine/shader.o: Users/kewinbrandsma/Projects/Engine/include/engine/shader.cpp.o
+
+.PHONY : Users/kewinbrandsma/Projects/Engine/include/engine/shader.o
+
+# target to build an object file
+Users/kewinbrandsma/Projects/Engine/include/engine/shader.cpp.o:
+	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/Users/kewinbrandsma/Projects/Engine/include/engine/shader.cpp.o
+.PHONY : Users/kewinbrandsma/Projects/Engine/include/engine/shader.cpp.o
+
+Users/kewinbrandsma/Projects/Engine/include/engine/shader.i: Users/kewinbrandsma/Projects/Engine/include/engine/shader.cpp.i
+
+.PHONY : Users/kewinbrandsma/Projects/Engine/include/engine/shader.i
+
+# target to preprocess a source file
+Users/kewinbrandsma/Projects/Engine/include/engine/shader.cpp.i:
+	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/Users/kewinbrandsma/Projects/Engine/include/engine/shader.cpp.i
+.PHONY : Users/kewinbrandsma/Projects/Engine/include/engine/shader.cpp.i
+
+Users/kewinbrandsma/Projects/Engine/include/engine/shader.s: Users/kewinbrandsma/Projects/Engine/include/engine/shader.cpp.s
+
+.PHONY : Users/kewinbrandsma/Projects/Engine/include/engine/shader.s
+
+# target to generate assembly for a file
+Users/kewinbrandsma/Projects/Engine/include/engine/shader.cpp.s:
+	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/Users/kewinbrandsma/Projects/Engine/include/engine/shader.cpp.s
+.PHONY : Users/kewinbrandsma/Projects/Engine/include/engine/shader.cpp.s
 
 main.o: main.cpp.o
 
@@ -156,7 +304,7 @@ main.o: main.cpp.o
 
 # target to build an object file
 main.cpp.o:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/main.cpp.o
+	$(MAKE) -f CMakeFiles/FlyHighGame.dir/build.make CMakeFiles/FlyHighGame.dir/main.cpp.o
 .PHONY : main.cpp.o
 
 main.i: main.cpp.i
@@ -165,7 +313,7 @@ main.i: main.cpp.i
 
 # target to preprocess a source file
 main.cpp.i:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/main.cpp.i
+	$(MAKE) -f CMakeFiles/FlyHighGame.dir/build.make CMakeFiles/FlyHighGame.dir/main.cpp.i
 .PHONY : main.cpp.i
 
 main.s: main.cpp.s
@@ -174,359 +322,35 @@ main.s: main.cpp.s
 
 # target to generate assembly for a file
 main.cpp.s:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/main.cpp.s
+	$(MAKE) -f CMakeFiles/FlyHighGame.dir/build.make CMakeFiles/FlyHighGame.dir/main.cpp.s
 .PHONY : main.cpp.s
 
-src/Background.o: src/Background.cpp.o
+src/renderObjects/chart.o: src/renderObjects/chart.cpp.o
 
-.PHONY : src/Background.o
-
-# target to build an object file
-src/Background.cpp.o:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/Background.cpp.o
-.PHONY : src/Background.cpp.o
-
-src/Background.i: src/Background.cpp.i
-
-.PHONY : src/Background.i
-
-# target to preprocess a source file
-src/Background.cpp.i:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/Background.cpp.i
-.PHONY : src/Background.cpp.i
-
-src/Background.s: src/Background.cpp.s
-
-.PHONY : src/Background.s
-
-# target to generate assembly for a file
-src/Background.cpp.s:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/Background.cpp.s
-.PHONY : src/Background.cpp.s
-
-src/Camera.o: src/Camera.cpp.o
-
-.PHONY : src/Camera.o
+.PHONY : src/renderObjects/chart.o
 
 # target to build an object file
-src/Camera.cpp.o:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/Camera.cpp.o
-.PHONY : src/Camera.cpp.o
+src/renderObjects/chart.cpp.o:
+	$(MAKE) -f CMakeFiles/FlyHighGame.dir/build.make CMakeFiles/FlyHighGame.dir/src/renderObjects/chart.cpp.o
+.PHONY : src/renderObjects/chart.cpp.o
 
-src/Camera.i: src/Camera.cpp.i
+src/renderObjects/chart.i: src/renderObjects/chart.cpp.i
 
-.PHONY : src/Camera.i
-
-# target to preprocess a source file
-src/Camera.cpp.i:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/Camera.cpp.i
-.PHONY : src/Camera.cpp.i
-
-src/Camera.s: src/Camera.cpp.s
-
-.PHONY : src/Camera.s
-
-# target to generate assembly for a file
-src/Camera.cpp.s:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/Camera.cpp.s
-.PHONY : src/Camera.cpp.s
-
-src/Chart.o: src/Chart.cpp.o
-
-.PHONY : src/Chart.o
-
-# target to build an object file
-src/Chart.cpp.o:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/Chart.cpp.o
-.PHONY : src/Chart.cpp.o
-
-src/Chart.i: src/Chart.cpp.i
-
-.PHONY : src/Chart.i
+.PHONY : src/renderObjects/chart.i
 
 # target to preprocess a source file
-src/Chart.cpp.i:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/Chart.cpp.i
-.PHONY : src/Chart.cpp.i
+src/renderObjects/chart.cpp.i:
+	$(MAKE) -f CMakeFiles/FlyHighGame.dir/build.make CMakeFiles/FlyHighGame.dir/src/renderObjects/chart.cpp.i
+.PHONY : src/renderObjects/chart.cpp.i
 
-src/Chart.s: src/Chart.cpp.s
+src/renderObjects/chart.s: src/renderObjects/chart.cpp.s
 
-.PHONY : src/Chart.s
-
-# target to generate assembly for a file
-src/Chart.cpp.s:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/Chart.cpp.s
-.PHONY : src/Chart.cpp.s
-
-src/Cubes.o: src/Cubes.cpp.o
-
-.PHONY : src/Cubes.o
-
-# target to build an object file
-src/Cubes.cpp.o:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/Cubes.cpp.o
-.PHONY : src/Cubes.cpp.o
-
-src/Cubes.i: src/Cubes.cpp.i
-
-.PHONY : src/Cubes.i
-
-# target to preprocess a source file
-src/Cubes.cpp.i:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/Cubes.cpp.i
-.PHONY : src/Cubes.cpp.i
-
-src/Cubes.s: src/Cubes.cpp.s
-
-.PHONY : src/Cubes.s
+.PHONY : src/renderObjects/chart.s
 
 # target to generate assembly for a file
-src/Cubes.cpp.s:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/Cubes.cpp.s
-.PHONY : src/Cubes.cpp.s
-
-src/Engine.o: src/Engine.cpp.o
-
-.PHONY : src/Engine.o
-
-# target to build an object file
-src/Engine.cpp.o:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/Engine.cpp.o
-.PHONY : src/Engine.cpp.o
-
-src/Engine.i: src/Engine.cpp.i
-
-.PHONY : src/Engine.i
-
-# target to preprocess a source file
-src/Engine.cpp.i:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/Engine.cpp.i
-.PHONY : src/Engine.cpp.i
-
-src/Engine.s: src/Engine.cpp.s
-
-.PHONY : src/Engine.s
-
-# target to generate assembly for a file
-src/Engine.cpp.s:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/Engine.cpp.s
-.PHONY : src/Engine.cpp.s
-
-src/GL.o: src/GL.cpp.o
-
-.PHONY : src/GL.o
-
-# target to build an object file
-src/GL.cpp.o:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/GL.cpp.o
-.PHONY : src/GL.cpp.o
-
-src/GL.i: src/GL.cpp.i
-
-.PHONY : src/GL.i
-
-# target to preprocess a source file
-src/GL.cpp.i:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/GL.cpp.i
-.PHONY : src/GL.cpp.i
-
-src/GL.s: src/GL.cpp.s
-
-.PHONY : src/GL.s
-
-# target to generate assembly for a file
-src/GL.cpp.s:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/GL.cpp.s
-.PHONY : src/GL.cpp.s
-
-src/Instrument.o: src/Instrument.cpp.o
-
-.PHONY : src/Instrument.o
-
-# target to build an object file
-src/Instrument.cpp.o:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/Instrument.cpp.o
-.PHONY : src/Instrument.cpp.o
-
-src/Instrument.i: src/Instrument.cpp.i
-
-.PHONY : src/Instrument.i
-
-# target to preprocess a source file
-src/Instrument.cpp.i:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/Instrument.cpp.i
-.PHONY : src/Instrument.cpp.i
-
-src/Instrument.s: src/Instrument.cpp.s
-
-.PHONY : src/Instrument.s
-
-# target to generate assembly for a file
-src/Instrument.cpp.s:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/Instrument.cpp.s
-.PHONY : src/Instrument.cpp.s
-
-src/Level.o: src/Level.cpp.o
-
-.PHONY : src/Level.o
-
-# target to build an object file
-src/Level.cpp.o:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/Level.cpp.o
-.PHONY : src/Level.cpp.o
-
-src/Level.i: src/Level.cpp.i
-
-.PHONY : src/Level.i
-
-# target to preprocess a source file
-src/Level.cpp.i:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/Level.cpp.i
-.PHONY : src/Level.cpp.i
-
-src/Level.s: src/Level.cpp.s
-
-.PHONY : src/Level.s
-
-# target to generate assembly for a file
-src/Level.cpp.s:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/Level.cpp.s
-.PHONY : src/Level.cpp.s
-
-src/Mesh.o: src/Mesh.cpp.o
-
-.PHONY : src/Mesh.o
-
-# target to build an object file
-src/Mesh.cpp.o:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/Mesh.cpp.o
-.PHONY : src/Mesh.cpp.o
-
-src/Mesh.i: src/Mesh.cpp.i
-
-.PHONY : src/Mesh.i
-
-# target to preprocess a source file
-src/Mesh.cpp.i:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/Mesh.cpp.i
-.PHONY : src/Mesh.cpp.i
-
-src/Mesh.s: src/Mesh.cpp.s
-
-.PHONY : src/Mesh.s
-
-# target to generate assembly for a file
-src/Mesh.cpp.s:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/Mesh.cpp.s
-.PHONY : src/Mesh.cpp.s
-
-src/Model.o: src/Model.cpp.o
-
-.PHONY : src/Model.o
-
-# target to build an object file
-src/Model.cpp.o:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/Model.cpp.o
-.PHONY : src/Model.cpp.o
-
-src/Model.i: src/Model.cpp.i
-
-.PHONY : src/Model.i
-
-# target to preprocess a source file
-src/Model.cpp.i:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/Model.cpp.i
-.PHONY : src/Model.cpp.i
-
-src/Model.s: src/Model.cpp.s
-
-.PHONY : src/Model.s
-
-# target to generate assembly for a file
-src/Model.cpp.s:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/Model.cpp.s
-.PHONY : src/Model.cpp.s
-
-src/SkyBox.o: src/SkyBox.cpp.o
-
-.PHONY : src/SkyBox.o
-
-# target to build an object file
-src/SkyBox.cpp.o:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/SkyBox.cpp.o
-.PHONY : src/SkyBox.cpp.o
-
-src/SkyBox.i: src/SkyBox.cpp.i
-
-.PHONY : src/SkyBox.i
-
-# target to preprocess a source file
-src/SkyBox.cpp.i:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/SkyBox.cpp.i
-.PHONY : src/SkyBox.cpp.i
-
-src/SkyBox.s: src/SkyBox.cpp.s
-
-.PHONY : src/SkyBox.s
-
-# target to generate assembly for a file
-src/SkyBox.cpp.s:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/SkyBox.cpp.s
-.PHONY : src/SkyBox.cpp.s
-
-src/Text.o: src/Text.cpp.o
-
-.PHONY : src/Text.o
-
-# target to build an object file
-src/Text.cpp.o:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/Text.cpp.o
-.PHONY : src/Text.cpp.o
-
-src/Text.i: src/Text.cpp.i
-
-.PHONY : src/Text.i
-
-# target to preprocess a source file
-src/Text.cpp.i:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/Text.cpp.i
-.PHONY : src/Text.cpp.i
-
-src/Text.s: src/Text.cpp.s
-
-.PHONY : src/Text.s
-
-# target to generate assembly for a file
-src/Text.cpp.s:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/Text.cpp.s
-.PHONY : src/Text.cpp.s
-
-src/logger.o: src/logger.cpp.o
-
-.PHONY : src/logger.o
-
-# target to build an object file
-src/logger.cpp.o:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/logger.cpp.o
-.PHONY : src/logger.cpp.o
-
-src/logger.i: src/logger.cpp.i
-
-.PHONY : src/logger.i
-
-# target to preprocess a source file
-src/logger.cpp.i:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/logger.cpp.i
-.PHONY : src/logger.cpp.i
-
-src/logger.s: src/logger.cpp.s
-
-.PHONY : src/logger.s
-
-# target to generate assembly for a file
-src/logger.cpp.s:
-	$(MAKE) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/src/logger.cpp.s
-.PHONY : src/logger.cpp.s
+src/renderObjects/chart.cpp.s:
+	$(MAKE) -f CMakeFiles/FlyHighGame.dir/build.make CMakeFiles/FlyHighGame.dir/src/renderObjects/chart.cpp.s
+.PHONY : src/renderObjects/chart.cpp.s
 
 # Help Target
 help:
@@ -536,52 +360,32 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
+	@echo "... FlyHighGame"
 	@echo "... Engine"
-	@echo "... extern/stb_image.o"
-	@echo "... extern/stb_image.i"
-	@echo "... extern/stb_image.s"
+	@echo "... Users/kewinbrandsma/Projects/Engine/extern/stb_image.o"
+	@echo "... Users/kewinbrandsma/Projects/Engine/extern/stb_image.i"
+	@echo "... Users/kewinbrandsma/Projects/Engine/extern/stb_image.s"
+	@echo "... Users/kewinbrandsma/Projects/Engine/include/engine/baseRenderObj.o"
+	@echo "... Users/kewinbrandsma/Projects/Engine/include/engine/baseRenderObj.i"
+	@echo "... Users/kewinbrandsma/Projects/Engine/include/engine/baseRenderObj.s"
+	@echo "... Users/kewinbrandsma/Projects/Engine/include/engine/camera.o"
+	@echo "... Users/kewinbrandsma/Projects/Engine/include/engine/camera.i"
+	@echo "... Users/kewinbrandsma/Projects/Engine/include/engine/camera.s"
+	@echo "... Users/kewinbrandsma/Projects/Engine/include/engine/logger.o"
+	@echo "... Users/kewinbrandsma/Projects/Engine/include/engine/logger.i"
+	@echo "... Users/kewinbrandsma/Projects/Engine/include/engine/logger.s"
+	@echo "... Users/kewinbrandsma/Projects/Engine/include/engine/renderer.o"
+	@echo "... Users/kewinbrandsma/Projects/Engine/include/engine/renderer.i"
+	@echo "... Users/kewinbrandsma/Projects/Engine/include/engine/renderer.s"
+	@echo "... Users/kewinbrandsma/Projects/Engine/include/engine/shader.o"
+	@echo "... Users/kewinbrandsma/Projects/Engine/include/engine/shader.i"
+	@echo "... Users/kewinbrandsma/Projects/Engine/include/engine/shader.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
-	@echo "... src/Background.o"
-	@echo "... src/Background.i"
-	@echo "... src/Background.s"
-	@echo "... src/Camera.o"
-	@echo "... src/Camera.i"
-	@echo "... src/Camera.s"
-	@echo "... src/Chart.o"
-	@echo "... src/Chart.i"
-	@echo "... src/Chart.s"
-	@echo "... src/Cubes.o"
-	@echo "... src/Cubes.i"
-	@echo "... src/Cubes.s"
-	@echo "... src/Engine.o"
-	@echo "... src/Engine.i"
-	@echo "... src/Engine.s"
-	@echo "... src/GL.o"
-	@echo "... src/GL.i"
-	@echo "... src/GL.s"
-	@echo "... src/Instrument.o"
-	@echo "... src/Instrument.i"
-	@echo "... src/Instrument.s"
-	@echo "... src/Level.o"
-	@echo "... src/Level.i"
-	@echo "... src/Level.s"
-	@echo "... src/Mesh.o"
-	@echo "... src/Mesh.i"
-	@echo "... src/Mesh.s"
-	@echo "... src/Model.o"
-	@echo "... src/Model.i"
-	@echo "... src/Model.s"
-	@echo "... src/SkyBox.o"
-	@echo "... src/SkyBox.i"
-	@echo "... src/SkyBox.s"
-	@echo "... src/Text.o"
-	@echo "... src/Text.i"
-	@echo "... src/Text.s"
-	@echo "... src/logger.o"
-	@echo "... src/logger.i"
-	@echo "... src/logger.s"
+	@echo "... src/renderObjects/chart.o"
+	@echo "... src/renderObjects/chart.i"
+	@echo "... src/renderObjects/chart.s"
 .PHONY : help
 
 

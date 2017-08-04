@@ -63,7 +63,7 @@ export class InstrumentListComponent implements OnDestroy, OnInit, AfterViewInit
 	public search(text) {
 		text = text.toLowerCase();
 
-		console.log('swss2s');
+		console.log('sssssws');
 		let list = this.cacheService.symbolList$.getValue()
 				.filter(symbol => symbol.options.name.toLowerCase().includes(text))
 				.map(symbol => symbol.options.name),
@@ -87,7 +87,7 @@ export class InstrumentListComponent implements OnDestroy, OnInit, AfterViewInit
 			row.children[1].innerText = symbol.options.bid;
 			row.children[1].className = symbol.options.bidDirection;
 			row.children[2].innerText = symbol.options.ask;
-			row.children[2].className = symbol.options.askDirection;
+			row.children[2].classNae = symbol.options.askDirection;
 		});
 	}
 

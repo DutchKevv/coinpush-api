@@ -82,17 +82,23 @@ table {
 			height: 18px;
 		}
 
-		td.up {
-			color: #38cc38;
-		}
+		td {
+			&.up {
+				color: #38cc38;
+			}
 
-		td.down {
-			color: #f92929;
-		}
+			&.down {
+				color: #f92929;
+			}
 
-		td:first-child:hover {
-			background: #6f748e;
-			cursor: pointer;
+			&:first-child {
+				text-align: left;
+
+				&:hover {
+					background: #6f748e;
+					cursor: pointer;
+				}
+			}
 		}
 
 		td:nth-child(2) {

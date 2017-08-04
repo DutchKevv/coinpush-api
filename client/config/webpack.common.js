@@ -1,15 +1,14 @@
 const
     path = require('path'),
     webpack = require("webpack"),
-    CleanWebpackPlugin = require('clean-webpack-plugin'); //installed via npm
-
-var CopyWebpackPlugin = require('copy-webpack-plugin');
+    CleanWebpackPlugin = require('clean-webpack-plugin'),
+    CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
     entry: {
         "vendor": "./vendor",
         "app": "./main",
-        // "app": "./main"
+        // "editor": "./editor"
     },
     output: {
         path: path.join(__dirname, '..', 'dist'),
@@ -83,7 +82,7 @@ module.exports = {
         ]
     },
     plugins: [
-        new CleanWebpackPlugin([path.join(__dirname, 'dist', '*.*')], {}),
+        new CleanWebpackPlugin([path.join(__dirname, '..', 'dist', '*.*')], {}),
 
         new CopyWebpackPlugin([
             // {output}/file.txt

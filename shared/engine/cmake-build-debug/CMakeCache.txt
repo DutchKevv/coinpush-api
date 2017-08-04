@@ -195,6 +195,9 @@ CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 //Value Computed by CMake
 Engine_BINARY_DIR:STATIC=/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug
 
+//Dependencies for target
+Engine_LIB_DEPENDS:STATIC=
+
 //Value Computed by CMake
 Engine_SOURCE_DIR:STATIC=/Users/kewinbrandsma/Projects/TradeJS/shared/engine
 
@@ -209,6 +212,12 @@ FREETYPE_LIBRARY_DEBUG:FILEPATH=FREETYPE_LIBRARY_DEBUG-NOTFOUND
 
 //Path to a library.
 FREETYPE_LIBRARY_RELEASE:FILEPATH=/usr/local/lib/libfreetype.dylib
+
+//Value Computed by CMake
+FlyHighGame_BINARY_DIR:STATIC=/Users/kewinbrandsma/Projects/TradeJS/shared/engine/cmake-build-debug
+
+//Value Computed by CMake
+FlyHighGame_SOURCE_DIR:STATIC=/Users/kewinbrandsma/Projects/TradeJS/shared/engine
 
 //Path to a file.
 GLEW_INCLUDE_DIR:PATH=/usr/local/include
