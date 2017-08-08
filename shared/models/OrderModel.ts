@@ -2,6 +2,8 @@ import {BaseModel} 					from '../models/BaseModel';
 
 export class OrderModel extends BaseModel {
 
+	public symbolHandle: any;
+
 	public static readonly DEFAULTS = {
 		user: null,
 		channel: null,

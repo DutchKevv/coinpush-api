@@ -18,7 +18,7 @@ export class CacheSymbol extends Base {
 				bid: tick[1],
 				askDirection: this.options.ask > tick[2] ? 'down' : 'up',
 				ask: tick[2]
-			}, false, false);
+			}, false, true);
 		});
 
 		this.price$.next(true);
@@ -78,8 +78,8 @@ export class CacheService {
 	private _connect() {
 		this._zone.runOutsideAngular(() => {
 			this._socket = io(this._getUrl(), {
-				'reconnectionAttempts': 10, //avoid having user reconnect manually in order to prevent dead clients after a server restart
-				'timeout': 10000, //before connect_error and connect_timeout are emitted.
+				'reconnectionAttempts': 10, // avoid having user reconnect manually in order to prevent dead clients after a server restart
+				'timeout': 10000, // before connect_error and connect_timeout are emitted.
 				'transports': ['websocket']
 			});
 		});
@@ -98,6 +98,7 @@ export class CacheService {
 
 	public loadSymbolList() {
 		// Create symbol class for each symbol
+
 		let cacheSymbols = window['symbols'].map(symbol => {
 			return new CacheSymbol({
 				direction: 'up',
@@ -107,6 +108,20 @@ export class CacheService {
 				ask: symbol.ask,
 				askDirection: 'up',
 				favorite: symbol.favorite
+			});
+		});
+
+		this._socket.emit('symbol:list', {}, (err, symbolList) => {
+			if (err)
+				return console.error(err);
+
+			symbolList.forEach(symbol => {
+				const cSymbol = cacheSymbols.find(cs => cs.options.name === symbol.name);
+
+				cSymbol.set({
+					bid: symbol.bid,
+					ask: symbol.ask
+				});
 			});
 		});
 

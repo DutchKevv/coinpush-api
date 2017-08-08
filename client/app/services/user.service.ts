@@ -31,7 +31,7 @@ export class UserService {
 	}
 
 	create(user) {
-		return this._http.post('/social/users', user).map((res: Response) => res.json());
+		return this._http.post('/social/user', user).map((res: Response) => res.json());
 	}
 
 	getList() {
@@ -42,8 +42,8 @@ export class UserService {
 		model.set({follow: !!state});
 
 		if (state)
-			return this._http.post('/social/users/follow/' + model.get('_id'), '');
+			return this._http.post('/social/user/follow/' + model.get('_id'), '');
 
-		return this._http.post('/social/users/un-follow/' + model.get('_id'), '');
+		return this._http.post('/social/user/un-follow/' + model.get('_id'), '');
 	}
 }

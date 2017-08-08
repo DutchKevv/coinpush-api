@@ -2,7 +2,6 @@ import {
 	Component, OnInit, OnDestroy, ElementRef, Pipe, PipeTransform, ChangeDetectionStrategy,
 	ChangeDetectorRef, NgZone, ViewEncapsulation, ViewChild, AfterViewInit
 } from '@angular/core';
-import * as interact from 'interactjs';
 import {CookieService} from 'ngx-cookie';
 
 import {InstrumentsService} from '../../services/instruments.service';
@@ -35,7 +34,7 @@ export class SearchFilter implements PipeTransform {
 	encapsulation: ViewEncapsulation.Native,
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InstrumentListComponent implements OnDestroy, OnInit, AfterViewInit {
+export class InstrumentListComponent implements OnDestroy, OnInit {
 
 	@ViewChild('elementsContainer') elementsContainer: ElementRef;
 	@ViewChild('resizeHandle') splitter: ElementRef;
@@ -56,14 +55,9 @@ export class InstrumentListComponent implements OnDestroy, OnInit, AfterViewInit
 		this.cacheService.changed$.subscribe(symbols => this._updateRows(symbols));
 	}
 
-	ngAfterViewInit() {
-		this._setDraggable();
-	}
-
 	public search(text) {
 		text = text.toLowerCase();
 
-		console.log('sssssws');
 		let list = this.cacheService.symbolList$.getValue()
 				.filter(symbol => symbol.options.name.toLowerCase().includes(text))
 				.map(symbol => symbol.options.name),
@@ -83,11 +77,10 @@ export class InstrumentListComponent implements OnDestroy, OnInit, AfterViewInit
 
 			let row = this._elements[symbol.options.name];
 
-			row.children[0].className = 'fa fa-arrow-' + symbol.options.direction;
 			row.children[1].innerText = symbol.options.bid;
 			row.children[1].className = symbol.options.bidDirection;
 			row.children[2].innerText = symbol.options.ask;
-			row.children[2].classNae = symbol.options.askDirection;
+			row.children[2].className = symbol.options.askDirection;
 		});
 	}
 
@@ -96,13 +89,13 @@ export class InstrumentListComponent implements OnDestroy, OnInit, AfterViewInit
 
 		this.cacheService.symbolList$.subscribe((symbolList: CacheSymbol[]) => {
 			symbolList.forEach(symbol => {
-				// if (symbol.options.favorite === false)
-					// return;
 
 				body += `
-<a data-symbol="${symbol.options.name}">
-	<i class="fa"></i>${symbol.options.name}<span>${symbol.options.bid}</span>&nbsp;<span>${symbol.options.ask}</span>
-<a/>`;
+<tr data-symbol="${symbol.options.name}">
+	<td>${symbol.options.name.replace('_', ' / ')}</td>
+	<td>${symbol.options.bid}</td>
+	<td>${symbol.options.bid}</td>
+</tr>`;
 			});
 		});
 
@@ -131,25 +124,6 @@ export class InstrumentListComponent implements OnDestroy, OnInit, AfterViewInit
 					this.instrumentService.create([{symbol: symbol}]);
 				}
 			});
-		});
-	}
-
-
-	private _setDraggable() {
-		this._zone.runOutsideAngular(() => {
-			interact(this.splitter.nativeElement)
-				.resizable({
-					preserveAspectRatio: true,
-					edges: {left: false, right: false, bottom: true, top: false}
-				})
-				.on('resizemove', event => {
-					let target = this._elementRef.nativeElement,
-						y = parseFloat(target.getAttribute('data-y') || target.clientHeight);
-
-					target.style.height = event.rect.height + 'px';
-					target.setAttribute('data-y', event.rect.height);
-				})
-				.on('resizeend', () => this._storeHeightInCookie())
 		});
 	}
 

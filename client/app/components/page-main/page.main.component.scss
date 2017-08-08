@@ -67,6 +67,7 @@
     width: 100%;
     text-align: center;
     background: $background-light;
+    position: relative;
 
     input {
         margin: 6px;
@@ -79,5 +80,35 @@
         border: 1px solid black;
         color: $input-color-text;
         text-align: center;
+        box-sizing: border-box;
+    }
+
+    .search-drop-down {
+        position: absolute;
+        z-index: 1;
+        top: 30px;
+
+        left: calc(50% - 149px);
+        width: 298px;
+        background: $background-light;
+        box-sizing: border-box;
+
+        li {
+            padding: 10px;
+            border-bottom: $border-color-grey;
+            color: black;
+            text-align: left;
+            display: flex;
+            cursor: pointer;
+
+            span {
+                margin-left: 10px;
+            }
+
+            img {
+                width: 30px;
+                height: 30px;
+            }
+        }
     }
 }

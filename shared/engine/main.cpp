@@ -8,8 +8,10 @@
 #include "extern/json/json.hpp"
 #include <emscripten.h>
 #include <emscripten/html5.h>
+#include <src/app_world.h>
 
 Engine *engine;
+World *appWorld;
 
 using json = nlohmann::json;
 
@@ -21,6 +23,9 @@ extern "C" {
 
 EMSCRIPTEN_KEEPALIVE int _init() {
     engine = new Engine(ENGINE_TYPE_APP);
+    appWorld = new AppWorld();
+
+    engine->renderer->attachWorld(appWorld);
     engine->renderer->startLoop();
     return 0;
 }
@@ -31,11 +36,11 @@ EMSCRIPTEN_KEEPALIVE int _addInstrument(int id) {
 
 EMSCRIPTEN_KEEPALIVE int _addChart(int instrumentId, int type) {
     Chart *chart = new Chart((Instrument *)engine->getDataObjById(instrumentId), type);
-    return engine->renderer->attachRenderObj(chart);
+    return appWorld->attachRenderObj(chart);
 }
 
 EMSCRIPTEN_KEEPALIVE int _renderChart(int id, int width, int height, int type) {
-    return engine->renderer->renderSingleObj(id, width, height);
+    return appWorld->renderSingleObj(id, width, height);
 }
 
 EMSCRIPTEN_KEEPALIVE int _updateInstrumentData(int id, char *data) {

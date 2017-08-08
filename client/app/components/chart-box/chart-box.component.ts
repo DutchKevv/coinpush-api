@@ -779,7 +779,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 
 					// keep the element within the area of it's parent
 					restrict: {
-						restriction: this._elementRef.nativeElement.parentNode.host,
+						restriction: this._elementRef.nativeElement.parentNode,
 						endOnly: true,
 						elementRect: {top: 0, left: 0, bottom: 1, right: 1}
 					},

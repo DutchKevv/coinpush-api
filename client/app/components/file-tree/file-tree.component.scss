@@ -1,9 +1,10 @@
 @import '../../style/variables/variables';
 
 :host {
-    // transform: translate(-300px, 0px);
-    background: $background-dark;
+    background: $background-light;
     color: $font-color-light;
+    width: 240px;
+    max-width: 240px;
 }
 
 .spinner.absolute {

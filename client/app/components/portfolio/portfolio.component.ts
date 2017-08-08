@@ -1,19 +1,48 @@
-import {CookieService} from 'ngx-cookie';
 import {debounce} from 'lodash';
 import {
-	Component, ElementRef, OnInit, OnDestroy, ChangeDetectionStrategy, NgZone,
-	AfterViewChecked, ViewEncapsulation, Output
+	Component, OnInit, OnDestroy, ChangeDetectionStrategy,
+	AfterViewChecked, ViewEncapsulation, Output, Pipe, PipeTransform
 } from '@angular/core';
-import {InstrumentsService} from '../../services/instruments.service';
-import {UserService} from '../../services/user.service';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {TradingChannelService} from '../../services/trading.channel.service';
 import {OrderService} from '../../services/order.service';
 import {ConstantsService} from '../../services/constants.service';
 import {CacheService} from '../../services/cache.service';
 import {OrderModel} from '../../../../shared/models/OrderModel';
 
 declare let $: any;
+
+@Pipe({name: 'groupBy'})
+export class GroupByPipe implements PipeTransform {
+	transform(value: Array<any>, field: string): Array<any> {
+		const groupedObj = value.reduce((prev, cur) => {
+			if (!prev[cur.options[field]]) {
+				prev[cur.options[field]] = [cur];
+			} else {
+				prev[cur.options[field]].push(cur);
+			}
+			return prev;
+		}, {});
+
+		let result = Object.keys(groupedObj).map(key => ({
+			key,
+			items: groupedObj[key]
+		}));
+
+		result.forEach(row => {
+			row.symbolHandle = row.items[0].symbolHandle,
+			row.symbol = row.items[0].options.symbol,
+			row.amount = row.items.reduce((sum, order) => sum + order.options.amount, 0);
+			row.invested = row.items.reduce((sum, order) => sum + (order.options.amount * order.options.openPrice), 0);
+			row.value = row.items.reduce((sum, order) => sum + order.options.value, 0);
+			row.PL = row.items.reduce((sum, order) => sum + order.options.PL, 0);
+			row.PLPerc = row.items.reduce((sum, order) => sum + order.options.PLPerc, 0).toFixed(2);
+		});
+
+		console.log(result);
+		return result;
+	}
+}
+
 
 @Component({
 	selector: 'app-portfolio',
@@ -36,8 +65,10 @@ export class PortfolioComponent implements OnInit, OnDestroy, AfterViewChecked {
 		this.getList();
 	}
 
-	getList() {
-		this.orders$.getValue().forEach((order: OrderModel) => OrderModel.destroy());
+	ngAfterViewChecked() {}
+
+	getList(): void {
+		this._destroyModels();
 
 		this._orderService.getList().subscribe((list) => {
 			// Wait until cache is ready
@@ -45,11 +76,23 @@ export class PortfolioComponent implements OnInit, OnDestroy, AfterViewChecked {
 		});
 	}
 
-	ngAfterViewChecked() {
-		// console.log('FOOTER FOOTER CHECK!!');
+	public toggleRow(el, symbol: string): void {
+		let isOpen = !el.classList.contains('open');
+
+		el.classList.toggle('open', isOpen);
+	}
+
+	placeOrder(event, side, model) {
+		event.preventDefault();
+
+		this._orderService.create({symbol: model.options.symbol, side, amount: 1});
+	}
+
+	private _destroyModels() {
+		this.orders$.getValue().forEach((order: OrderModel) => order.destroy());
 	}
 
 	ngOnDestroy() {
-
+		this._destroyModels();
 	}
 }

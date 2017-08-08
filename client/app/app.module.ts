@@ -32,7 +32,7 @@ import {ModalService} from './services/modal.service';
 import {InstrumentsService} from './services/instruments.service';
 import {ResizableDirective} from './directives/resizable.directive';
 import {ChartBoxComponent} from './components/chart-box/chart-box.component';
-import {BacktestSettingsComponent, GroupByPipe} from './components/backtest-settings/backtest-settings.component';
+import {BacktestSettingsComponent} from './components/backtest-settings/backtest-settings.component';
 import {BacktestReportComponent} from './components/backtest-report/backtest-report.component';
 import {CacheService} from './services/cache.service';
 import {BacktestComponent, GroupIdsPipe} from './components/backtest/backtest.component';
@@ -52,7 +52,7 @@ import {UserOverviewComponent} from './components/user-overview/user.overview.co
 import {OrderService} from './services/order.service';
 import {ChannelOverviewComponent} from './components/channel-overview/channel-overview.component';
 import {TradingChannelService} from './services/trading.channel.service';
-import {PortfolioComponent} from './components/portfolio/portfolio.component';
+import {GroupByPipe, PortfolioComponent} from './components/portfolio/portfolio.component';
 
 @NgModule({
 	declarations: [
@@ -67,7 +67,6 @@ import {PortfolioComponent} from './components/portfolio/portfolio.component';
 		PageEditorComponent,
 		FileTreeComponent,
 		FooterComponent,
-		GroupByPipe,
 		GroupIdsPipe,
 		HeaderPlaygroundComponent,
 		HeaderEditorComponent,
@@ -87,7 +86,8 @@ import {PortfolioComponent} from './components/portfolio/portfolio.component';
 		ChannelOverviewComponent,
 		AlertComponent,
 		UserOverviewComponent,
-		PortfolioComponent
+		PortfolioComponent,
+		GroupByPipe
 	],
 	imports: [
 		BrowserModule,

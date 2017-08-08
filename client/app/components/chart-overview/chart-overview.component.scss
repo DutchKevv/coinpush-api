@@ -1,11 +1,9 @@
 @import '../../style/variables/variables';
 
 :host {
-    overflow: hidden;
     height: 100%;
     width: 100%;
     display: flex;
-    flex-flow: column;
 }
 
 .active {
@@ -17,6 +15,7 @@
     height: 100%;
     width: 100%;
     display: block;
+    overflow: hidden;
 }
 
 .chart-no-charts {

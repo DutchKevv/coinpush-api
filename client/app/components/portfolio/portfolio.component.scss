@@ -13,6 +13,8 @@
     height: 100%;
     width: 100%;
     padding: 20px;
+    box-sizing: border-box;
+    position: relative;
 }
 
 .filter-options {
@@ -60,40 +62,199 @@
     padding: 20px;
 }
 
-table {
+.order-table {
     width: 100%;
-}
+    color: $font-color-light;
+    font-weight: bold;
 
-th {
-    padding: 10px 20px;
-    text-align: left;
-}
+    .negative {
+        color: $general-error;
 
-tbody {
-    tr:nth-of-type(odd) {
-        background-color: #4b4b4b;
+    }
+
+    .positive {
+        color: $general-success;
     }
 }
 
+.order-table-row-head {
+    display: flex;
+    background-color: #4b4b4b;
 
-td {
-    padding: 10px 20px;
-    width: 16.66%;
-    box-sizing: border-box;
-    font-size: 12px;
+    > div {
+        width: 12.50%;
+        padding-left: 10px;
+        font-size: 14px;
+        color: #c1c0c0;
+        line-height: 30px;
+    }
+}
 
-    &:nth-child(2) {
+.order-table-row {
+    cursor: pointer;
 
-        span {
+    &:nth-child(odd) {
+        background-color: #4b4b4b;
+    }
+
+    &:hover {
+        background: #757575;
+    }
+
+    &.open {
+        .order-table-sub-rows {
+            display: block;
+        }
+    }
+
+    > .row-container {
+        display: flex;
+
+        > div {
+            width: 12.50%;
+            line-height: 70px;
+            padding-left: 10px;
+
             &:first-child {
-                min-width: 40px;
-                display: inline-block;
+                span {
+                    line-height: 70px;
+                    margin-left: 10px;
+                }
             }
 
             &:nth-child(2) {
-                color: $font-color-gray;
-                font-size: $font-size-s;
+
+                span {
+                    &:first-child {
+                        min-width: 40px;
+                        display: inline-block;
+                    }
+
+                    &:nth-child(2) {
+                        color: $font-color-gray;
+                        font-size: $font-size-s;
+                    }
+                }
             }
         }
+    }
+
+    button.btn-sm {
+        padding: 0;
+        background: $background-light;
+        width: 150px;
+        border-radius: 4px;
+
+        &.positive {
+            animation: fade-positive 2s ease;
+
+            span {
+                color: $general-success;
+            }
+        }
+
+        &.negative {
+            animation: fade-negative 2s ease;
+
+            span {
+                color: $general-error;
+            }
+        }
+
+        span:first-child {
+            color: $font-color-light;
+            padding: 8px;
+            font-size: 16px;
+            text-align: center;
+            border-radius: 4px 0 0 4px;
+        }
+
+        span:nth-child(2) {
+            background: #f8f8f8;
+            color: $font-color-dark;
+            padding: 5px;
+            display: inline-block;
+            width: 110px;
+            text-align: right;
+            border-radius: 0 4px 4px 0;
+            font-size: 16px;
+        }
+    }
+}
+
+.order-table-sub-rows {
+    display: none;
+    padding: 0 40px;
+}
+
+.order-table-sub-row {
+    background: #aaaaaa;
+    line-height: 40px;
+    padding-left: 20px;
+    display: flex;
+
+    &:nth-of-type(odd) {
+        background-color: #6c6c6c;
+    }
+
+    > div {
+        width: 11.11%;
+    }
+}
+
+.footer-overview {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    left: 0;
+    right: 0;
+    display: flex;
+
+    background-image: -webkit-linear-gradient(top, #7d7d7d 0%, #959595 51%, #727272 100%);
+    background-image: -moz-linear-gradient(top, white 0%, #fdfdfd 41%, #f4f4f4 100%);
+    background-image: -ms-linear-gradient(top, white 0%, #fdfdfd 41%, #f4f4f4 100%);
+    background-image: -o-linear-gradient(top, white 0%, #fdfdfd 41%, #f4f4f4 100%);
+    background-image: linear-gradient(top, white 0%, #fdfdfd 41%, #f4f4f4 100%);
+
+    > div {
+        width: 25%;
+        height: 100%;
+        padding: 14px;
+        border-left: 1px solid grey;
+        text-align: center;
+
+        &:first-child {
+            border-left: none;
+        }
+    }
+
+    h4 {
+        color: #f3f3f3;
+        font-size: 22px;
+        font-weight: normal;
+    }
+
+    P {
+        color: #c7c7c7;
+        font-size: 12px;
+        line-height: 20px;
+    }
+}
+
+@keyframes fade-positive {
+    0%, 100% {
+        background: $general-success
+    }
+    50% {
+        background: $background-light;
+    }
+}
+
+@keyframes fade-negative {
+    0%, 100% {
+        background: $general-error
+    }
+    50% {
+        background: $background-light;
     }
 }

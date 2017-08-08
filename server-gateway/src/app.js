@@ -1,9 +1,11 @@
+const url = require('url');
 const path = require('path');
 const express = require('express');
 const httpProxy = require('express-http-proxy');
 const expressJwt = require('express-jwt');
 const config = require('../config.json');
 const app = express();
+const request = require('request-promise');
 
 const apiServiceProxy = httpProxy('http://localhost:3000');
 const frontendDevServiceProxy = httpProxy('http://localhost:4200');
@@ -42,7 +44,7 @@ app.use(expressJwt({
     return (
         (/\.(gif|jpg|jpeg|tiff|png)$/i).test(req.originalUrl) ||
         (req.originalUrl === '/social/authenticate' && (req.method === 'POST' || req.method === 'OPTIONS')) ||
-        (req.originalUrl === '/social/users' && (req.method === 'POST' || req.method === 'OPTIONS'))
+        (req.originalUrl === '/social/user' && (req.method === 'POST' || req.method === 'OPTIONS'))
     );
 }));
 
@@ -56,8 +58,8 @@ app.use(function (err, req, res, next) {
 });
 
 app.use(function (req, res, next) {
-    if (req['user'])
-        req.headers._id = req['user'].sub;
+    if (req.user)
+        req.headers._id = req.user.sub;
 
     next();
 });
@@ -74,15 +76,15 @@ app.all('/social/authenticate', (req, res, next) => {
     socialServiceProxy(req, res, next);
 });
 
-app.all('/social/users', (req, res, next) => {
+app.get('/social/users', (req, res, next) => {
     socialServiceProxy(req, res, next);
 });
 
-app.post('/social/users/follow/*', (req, res, next) => {
+app.post('/social/user/follow/*', (req, res, next) => {
     socialServiceProxy(req, res, next);
 });
 
-app.post('/social/users/un-follow/*', (req, res, next) => {
+app.post('/social/user/un-follow/*', (req, res, next) => {
     socialServiceProxy(req, res, next);
 });
 
@@ -92,6 +94,41 @@ app.all('/order', (req, res, next) => {
 
 app.get('/orders', (req, res, next) => {
     orderServiceProxy(req, res, next);
+});
+
+app.get('/search', (req, res, next) => {
+    next();
+});
+
+app.get('/search/:text', async (req, res) => {
+    const text = req.params.text;
+    const returnObj = {
+        users: [],
+        channels: [],
+        symbols: []
+    };
+
+    try {
+        const userRequest = request({
+            uri: 'http://localhost:3002/social/search/' + text,
+            headers: {
+                '_id': req.user.sub
+            },
+            json: false
+        });
+
+        const result = await Promise.all([userRequest]);
+        returnObj.users = result[0];
+        returnObj.channels = result[1];
+        returnObj.symbols = result[2];
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).send(error);
+        return;
+    }
+
+    res.send(returnObj);
 });
 
 

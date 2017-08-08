@@ -45,7 +45,7 @@ export class TradingChannelService {
 				runTime: 100000000,
 				pips: 500,
 				profit: 10000,
-				profileImg: 'images/defaults/trading-channel/trader.jpeg',
+				profileImg: 'images/default/trading-channel/trader.jpeg',
 				description: 'blablablabla'
 			},
 			{
@@ -58,7 +58,7 @@ export class TradingChannelService {
 				runTime: 100000000,
 				pips: 500,
 				profit: 10000,
-				profileImg: 'images/defaults/trading-channel/trader.jpeg',
+				profileImg: 'images/default/trading-channel/trader.jpeg',
 				description: 'blablablabla'
 			},
 			{
@@ -71,7 +71,7 @@ export class TradingChannelService {
 				runTime: 100000000,
 				pips: 500,
 				profit: 10000,
-				profileImg: 'images/defaults/trading-channel/trader.jpeg',
+				profileImg: 'images/default/trading-channel/trader.jpeg',
 				description: 'blablablabla'
 			},
 			{
@@ -84,7 +84,7 @@ export class TradingChannelService {
 				runTime: 100000000,
 				pips: 500,
 				profit: 10000,
-				profileImg: 'images/defaults/trading-channel/trader.jpeg',
+				profileImg: 'images/default/trading-channel/trader.jpeg',
 				description: 'blablablabla'
 			}
 		];
@@ -97,8 +97,8 @@ export class TradingChannelService {
 		model.set({follow: !!state});
 
 		if (state)
-			return this._http.post('/social/users/follow/' + model.get('_id'), '');
+			return this._http.post('/social/user/follow/' + model.get('_id'), '');
 
-		return this._http.post('/social/users/un-follow/' + model.get('_id'), '');
+		return this._http.post('/social/user/un-follow/' + model.get('_id'), '');
 	}
 }

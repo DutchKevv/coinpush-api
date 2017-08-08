@@ -43,23 +43,31 @@ export class OrderService {
 	}
 
 	public createModel(data): OrderModel {
-		const model = new OrderModel(data);
+		let model = new OrderModel(data),
+			symbol = this._cacheService.getBySymbol(model.options.symbol),
+			symbolOptions$ = symbol.options$;
 
-		const subscription = this._cacheService.getBySymbol(model.options.symbol).options$.subscribe((options: any) => {
-				const openValue = (model.options.amount * options.openPrice);
-				const value = model.options.amount * options.ask;
-				const PL = value - openValue;
+		model.symbolHandle = symbol;
 
-				model.set({
-					value: value,
-					PL: PL,
-					PLPerc: ((value / openValue) * 100) - 100,
-				}, false);
-		});
+		this.updateModel(model, symbolOptions$.getValue());
+
+		const subscription = symbolOptions$.subscribe((options: any) => this.updateModel(model, options));
 
 		model.subscription.push(subscription);
 
 		return model;
+	}
+
+	public updateModel(orderModel, symbolOptions) {
+		const openValue = (orderModel.options.amount * orderModel.options.openPrice);
+		const value = orderModel.options.amount * symbolOptions.ask;
+		const PL = value - openValue;
+
+		orderModel.set({
+			value: value,
+			PL: parseFloat(PL.toFixed(2)),
+			PLPerc: parseFloat((((value / openValue) * 100) - 100).toFixed(2)),
+		}, false);
 	}
 
 	public update(id, options) {

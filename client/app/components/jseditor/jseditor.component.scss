@@ -2,12 +2,12 @@
 @import '../../style/variables/variables';
 
 :host {
-    position: relative;
     height: 100%;
     width: 100%;
-    display: block;
     background: $background-dark;
     overflow: auto;
+    display: flex;
+    border-left: 1px solid $border-color-grey;
 }
 
 .banner {
@@ -35,6 +35,7 @@
 .editor-wrapper {
     overflow: auto;
     height: 100%;
+    width: 100%;
     position: relative;
 }
 .ace_editor {

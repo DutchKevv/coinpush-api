@@ -1,8 +1,7 @@
 <nav class="nav-main">
     <a class="profile">
-        <img class="logo" src="http://localhost/images/defaults/profile/nl.png">
+        <img class="logo" src="http://localhost/images/default/profile/nl.png">
         <h4>DutchKevv</h4>
-        <!--<img class="logo" src="http://localhost:3000/corp/tradejs-medium.png">-->
     </a>
 
     <a [routerLink]="['/main/channels']" [routerLinkActive]="['active']">
@@ -41,7 +40,13 @@
 
 <main class="main-container">
     <nav class="nav-search">
-        <input placeholder="Markets / Channels / People">
+        <input (keyup)="onSearchKeyUp($event)" placeholder="Markets / Channels / People">
+        <ul class="search-drop-down" *ngIf="(searchResults$ | async) as result">
+            <li *ngFor="let user of result.users">
+                <img src="/images/default/profile/nl.png">
+                <span>{{user.username}}</span>
+            </li>
+        </ul>
     </nav>
     <router-outlet></router-outlet>
 </main>

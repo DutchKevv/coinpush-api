@@ -15,27 +15,6 @@ import * as moment from 'moment';
 
 declare let $: any;
 
-@Pipe({name: 'groupBy'})
-export class GroupByPipe implements PipeTransform {
-	transform(value: Array<any>, field: string): Array<any> {
-		field = field || 'groupId';
-
-		const groupedObj = value.reduce((prev, cur)=> {
-			// if (typeof cur.options[field] === 'undefined')
-			// 	return prev;
-
-			if(!prev[cur.options[field]]) {
-				prev[cur.options[field]] = [cur];
-			} else {
-				prev[cur.options[field]].push(cur);
-			}
-			return prev;
-		}, {});
-		console.log('groupedObj groupedObj', groupedObj);
-		return Object.keys(groupedObj).map(key => ({ key, value: groupedObj[key] }));
-	}
-}
-
 export class BacktestSettingsModel extends BaseModel {
 
 	public static readonly DEFAULTS = {

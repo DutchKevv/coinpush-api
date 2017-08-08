@@ -12,8 +12,6 @@ const
 	app = express(),
 	http = _http.createServer(app),
 	io = _io.listen(http),
-	tradingChannelsAPI = require('./api/trading_channels'),
-	usersAPI = require('./api/users'),
 	db = mongoose.connection;
 
 mongoose.Promise = global.Promise;
@@ -25,6 +23,11 @@ db.once('open', function () {
 	console.log('DB CONNECTED');
 });
 
+app.use(function (req, res, next) {
+	res.header('Access-Control-Allow-Origin', '*');
+	res.header('Access-Control-Allow-Headers', '_id, Authorization, Origin, X-Requested-With, Content-Type, Accept');
+	next();
+});
 
 app.use(morgan('dev'));
 app.use(helmet());
@@ -32,23 +35,19 @@ app.use(json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use((req: any, res, next) => {
 	let userId = req.headers['_id'];
-
-	if (!userId && req.originalUrl !== '/social/authenticate' && !(req.originalUrl === '/social/users' && req.method === 'POST'))
-		res.status(400).send('Invalid request');
+	
+	if (!userId && req.originalUrl !== '/social/authenticate' && !(req.originalUrl === '/social/user' && req.method === 'POST'))
+		return res.status(400).send('Invalid request');
 
 	req.user = {id: userId};
 	next();
 });
 
-app.use(function (req, res, next) {
-	res.header('Access-Control-Allow-Origin', '*');
-	res.header('Access-Control-Allow-Headers', '_id, Authorization, Origin, X-Requested-With, Content-Type, Accept');
-	next();
-});
-
 app.use('/social/authenticate', require('./api/authenticate'));
-app.use('/social/users', usersAPI);
-app.use('/social/trading-channels', tradingChannelsAPI);
+app.use('/social/user', require('./api/user'));
+app.use('/social/users', require('./api/users'));
+app.use('/social/trading-channels', require('./api/trading_channels'));
+app.use('/social/search', require('./api/search'));
 
 // Application routes (WebSockets)
 io.on('connection', socket => {

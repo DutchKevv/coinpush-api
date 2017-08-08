@@ -4,17 +4,15 @@ project(StockTrading)
 include(/Users/kewinbrandsma/Projects/Engine/CMakeLists.txt)
 
 set(CMAKE_CXX_STANDARD 11)
-#set(CMAKE_BUILD_TYPE_INIT "Release")
+set(CMAKE_BUILD_TYPE_INIT "Release")
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
-
-
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake")
 set(SOURCE_FILES
         main.cpp
         ./src/renderObjects/chart.h ./src/renderObjects/chart.cpp
         ./src/dataObjects/instrument.h ./src/dataObjects/instrument.cpp
-        )
+        src/app_world.cpp src/app_world.h)
 
 include_directories(
         ~/Projects/Engine/include

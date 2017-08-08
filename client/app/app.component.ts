@@ -43,9 +43,9 @@ export class AppComponent implements OnInit, AfterViewInit {
 
 		const keyCodes = [37, 38, 39, 40];
 
-		$(document).on('keydown', e => {
-			if (keyCodes.includes(e.keyCode) && Module.custom.getFocused())
-				return false;
-		});
+		// $(document).on('keydown', e => {
+		// 	if (keyCodes.includes(e.keyCode) && Module.custom.getFocused())
+		// 		return false;
+		// });
 	}
 }
