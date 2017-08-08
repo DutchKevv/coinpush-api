@@ -17,6 +17,8 @@ import {CacheService} from '../../services/cache.service';
 import {Base} from '../../../../shared/classes/Base';
 import {IOrder} from '../../../../server/modules/order/OrderManager';
 import * as moment from 'moment';
+import {OrderService} from '../../services/order.service';
+import {ConstantsService} from '../../services/constants.service';
 
 declare let $: any;
 declare let getEventListeners: any;
@@ -100,10 +102,12 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 
 	constructor(public instrumentsService: InstrumentsService,
+				public constantsService: ConstantsService,
 				private _zone: NgZone,
 				private _cacheService: CacheService,
 				private _cookieService: CookieService,
-				private _elementRef: ElementRef) {
+				private _elementRef: ElementRef,
+				private _orderService: OrderService) {
 	}
 
 	ngOnInit() {
@@ -161,6 +165,16 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 			if (dirty)
 				this.render();
 		});
+	}
+
+	placeOrder(event, side: number) {
+		event.preventDefault();
+
+		if (event.path[0].nodeName.toLowerCase() === 'input')
+			return;
+
+		const amount = parseFloat(event.currentTarget.querySelector('input').value);
+		this._orderService.create({symbol: this.model.options.symbol, side, amount});
 	}
 
 	ngAfterViewInit() {
@@ -528,7 +542,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 							// label: moment(order.openTime).format('DD-MM hh:mm'),
 							// x: this._chart.options.data[0].dataPoints.find(point => point.time === order.openTime).x,
 							y: null,
-							lineColor: order.type === 'sell' ? '#ff00e1' : '#007fff',
+							lineColor: order.side === 'sell' ? '#ff00e1' : '#007fff',
 							color: order.profit > 0 ? '#01ff00' : 'red',
 							id: order.id,
 							profit: order.profit
@@ -538,7 +552,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 							// label: moment(order.openTime).format('DD-MM hh:mm'),
 							x: this._chart.options.data[0].dataPoints.findIndex(point => point.time === order.openTime),
 							y: order.openBid,
-							lineColor: order.type === 'sell' ? '#ff00e1' : '#007fff',
+							lineColor: order.side === 'sell' ? '#ff00e1' : '#007fff',
 							color: order.profit > 0 ? '#01ff00' : 'red',
 							id: order.id,
 							profit: order.profit
@@ -684,8 +698,8 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	public setRandomPosition() {
 		let el = this._elementRef.nativeElement,
-			containerH = el.parentNode.host.clientHeight,
-			containerW = el.parentNode.host.clientWidth,
+			containerH = el.parentNode.clientHeight,
+			containerW = el.parentNode.clientWidth,
 			chartH = el.clientHeight,
 			chartW = el.clientWidth;
 
@@ -844,6 +858,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	private _destroyChart() {
 		this._candlesRef.nativeElement.removeEventListener('mousewheel', <any>this._onScrollBounced);
+		console.log('destroy!!');
 
 		if (this._chart)
 			this._chart.destroy();

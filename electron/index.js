@@ -80,7 +80,7 @@ function createWindow() {
 
 	});
 
-	// Create the Application's main menu (Only Mac)
+	// Create the Application's page-main menu (Only Mac)
 	if (require('os').platform() === 'darwin') {
 		var template = [{
 			label: "Application",

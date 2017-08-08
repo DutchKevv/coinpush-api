@@ -1,0 +1,70 @@
+<ul class="filter-options">
+    <li class="form-group">
+        <label for="exampleSelect1">PEOPLE FROM</label>
+        <select class="form-control" id="exampleSelect1">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+        </select>
+    </li>
+    <li class="form-group">
+        <label for="whoInvested">WHO INVESTED IN</label>
+        <select class="form-control" id="whoInvested">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+        </select>
+    </li>
+    <li class="form-group">
+        <label for="gainedMin">GAINED AT LEAST</label>
+        <select class="form-control" id="gainedMin">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+        </select>
+    </li>
+    <li class="form-group">
+        <label for="duringTime">DURING THE</label>
+        <select class="form-control" id="duringTime">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+        </select>
+    </li>
+    <li class="form-group">
+        <button class="btn btn-sm btn-primary">GO!</button>
+    </li>
+</ul>
+
+<div class="scroll-container">
+    <table>
+        <thead>
+        <tr>
+            <th>SYMBOL</th>
+            <th>AMOUNT</th>
+            <th>INVESTED</th>
+            <th>VALUE</th>
+            <th>P/L</th>
+            <th>P/L%</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let model of orders$ | async">
+            <td>{{model.options.symbol}}</td>
+            <td><span>{{model.options.amount}}</span><span>({{model.options.side === constantsService.constants.ORDER_SIDE_BUY ? 'SHORT' : 'LONG'}})</span></td>
+            <td>{{model.options.amount * model.options.openPrice | currency : 'EUR':true}}</td>
+            <td>{{(model.options$ | async).value | currency : 'EUR':true}}</td>
+            <td>{{model.options.profit}}</td>
+            <td>{{model.options.profitPerc}}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>

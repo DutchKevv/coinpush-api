@@ -41,6 +41,7 @@
     "electron-rebuild": "1.5.11",
     "event-pubsub": "4.2.4",
     "express": "4.15.3",
+    "express-http-proxy": "^1.0.6",
     "freeport": "1.0.5",
     "gulp-typescript": "3.1.7",
     "lodash": "^4.17.4",

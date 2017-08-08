@@ -2,7 +2,9 @@ import * as Stream 		from 'stream';
 import {Adapter} 		from './lib/OANDAAdapter';
 import {splitToChunks} 	from '../../util/util.date';
 import {log} 			from '../../logger';
-import {Base} 			from "../../classes/Base";
+import {Base} 			from '../../classes/Base';
+import * as Constants 	from '../../constants/constants';
+import {ORDER_TYPE_IF_TOUCHED, ORDER_TYPE_LIMIT, ORDER_TYPE_MARKET, ORDER_TYPE_STOP} from '../../constants/constants';
 
 export default class OandaApi extends Base {
 
@@ -173,6 +175,50 @@ export default class OandaApi extends Base {
 		});
 	}
 
+	public getOpenPositions() {
+
+	}
+
+	public getOrder(id) {
+
+	}
+
+	public getOrderList(options) {
+
+	}
+
+	public placeOrder(options) {
+		return new Promise((resolve, reject) => {
+			const _options = {
+				instrument: options.symbol,
+				units: options.amount,
+				side: options.side === Constants.ORDER_SIDE_BUY ? 'buy' : 'sell',
+				type: this.orderTypeConstantToString(options.type)
+			};
+
+			this._client.createOrder(this.options.accountId, _options, (err, result) => {
+				if (err)
+					return reject(err);
+
+				console.log(result.tradeOpened.id)
+				console.log('asfasfsdf', result);
+				resolve({
+					openTime: result.time,
+					openPrice: result.price,
+					b_id: result.tradeOpened.id || result.tradesClosed[0].id
+				})
+			});
+		});
+	}
+
+	public removeOrder(id) {
+
+	}
+
+	public updateOrder(id, options) {
+
+	}
+
 	public destroy(): void {
 		this.removeAllListeners();
 
@@ -214,5 +260,18 @@ export default class OandaApi extends Base {
 
 	private normalizeTypedArrayToBuffer(array) {
 		return new Buffer(array.buffer);
+	}
+
+	private orderTypeConstantToString(type) {
+		switch (type) {
+			case ORDER_TYPE_MARKET:
+				return 'market';
+			case ORDER_TYPE_LIMIT:
+				return 'limit';
+			case ORDER_TYPE_STOP:
+				return 'stop';
+			case ORDER_TYPE_IF_TOUCHED:
+				return 'marketIfTouched';
+		}
 	}
 }

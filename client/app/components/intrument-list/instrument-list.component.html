@@ -1,17 +1,19 @@
-<table>
-	<thead>
-	<tr>
-		<th>Instrument</th>
-		<th>Bid</th>
-		<th>Ask</th>
-	</tr>
-	<tr>
-		<th colspan="3">
-			<input class="search-instrument-list" type="text" placeholder="Search..." (keyup)="search($event.target.value)">
-		</th>
-	</tr>
-	</thead>
-	<tbody #tbody></tbody>
-</table>
+<div #elementsContainer class="elementsContainer"></div>
+
+<!--<table>-->
+	<!--<thead>-->
+	<!--<tr>-->
+		<!--<th>Instrument</th>-->
+		<!--<th>Bid</th>-->
+		<!--<th>Ask</th>-->
+	<!--</tr>-->
+	<!--<tr>-->
+		<!--<th colspan="3">-->
+			<!--<input class="search-instrument-list" type="text" placeholder="Search..." (keyup)="search($event.target.value)">-->
+		<!--</th>-->
+	<!--</tr>-->
+	<!--</thead>-->
+	<!--<tbody #tbody></tbody>-->
+<!--</table>-->
 
 <i #resizeHandle class="splitter fa fa-bars" aria-hidden="true">&nbsp;</i>

@@ -1,10 +1,14 @@
-export class UserModel {
-	id: number;
-	username: string;
-	password: string;
-	broker = 'oanda';
-	environment = 'practice';
-	accountId: string;
-	token: string;
-	connected: false
+import {Base} from '../../../shared/classes/Base';
+
+export class UserModel extends Base {
+	public static readonly DEFAULTS: any = {
+		id: 0,
+		username: '',
+		following: false,
+		followers: 0,
+		follow: false,
+		transactions: 0,
+		profileImg: ''
+	}
+
 }

@@ -1,5 +1,5 @@
 import * as os      from 'os';
-import * as SYSTEM from '../../shared/constants/system';
+import * as SYSTEM from '../../shared/constants/constants';
 import {SystemState} from '../../shared/models/SystemState';
 import {Base} from '../../shared/classes/Base';
 

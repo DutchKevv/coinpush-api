@@ -9,6 +9,7 @@ import CacheMapper      from '../../../shared/classes/cache/CacheMap';
 import {AccountSettings} from '../../../shared/interfaces/AccountSettings';
 import WorkerChild      from '../worker/WorkerChild';
 import CacheDataLayer   from './CacheDataLayer';
+import * as fs from 'fs';
 
 export default class Cache extends WorkerChild {
 

@@ -10,7 +10,8 @@ $general-active						: #085963;
 // Backgrounds
 $background-dark                    : #000;
 $background-light                   : #222122;
-$background-light2                  : #2d2d2d;
+$background-light2                  : #424242;
+$background-light3                  : #636363;
 
 // Borders
 $border-color-light                 : #eee;
@@ -26,10 +27,11 @@ $font-color-dark                    : #000;
 $input-color-background             : #6b6b6b;
 $input-color-border                 : #9d9d9d;
 $input-color-glyphicon-background   : #888;
+$input-color-text                   : #dddddd;
 
 // Chart
-$chart-header-background-blur       : -webkit-gradient(linear, left top, left bottom, color-stop(50%,#F0F0F0), color-stop(50%,#D4D4D4));;
-$chart-header-background-focus      : -webkit-gradient(linear, left top, left bottom, color-stop(50%,#085963), color-stop(50%, $general-active));;
+$chart-header-background-blur       : -webkit-gradient(linear, left top, left bottom, color-stop(50%,#F0F0F0), color-stop(50%,#D4D4D4));
+$chart-header-background-focus      : -webkit-gradient(linear, left top, left bottom, color-stop(50%, #465254), color-stop(50%, #373939));
 
 
 // Panel

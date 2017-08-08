@@ -1,0 +1,83 @@
+@import '../../../node_modules/bootstrap/scss/_variables';
+@import '../../../node_modules/bootstrap/scss/_mixins';
+@import '../../../node_modules/bootstrap/scss/_buttons';
+@import '../../../node_modules/bootstrap/scss/utilities/_clearfix';
+@import '../../style/helpers/normalize';
+@import '../../style/variables/variables';
+
+::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    color: $input-color-text;
+}
+
+:host {
+    display: flex;
+    height: 100%;
+}
+
+.nav-main {
+    background: $background-light;
+    overflow-y: scroll;
+    min-width: 240px;
+
+    a {
+        margin: 10px 0;
+        padding: 10px 10px;
+        font-size: 18px;
+        box-sizing: border-box;
+        display: block;
+
+        i {
+            padding: 0 20px;
+            width: 20px;
+        }
+
+        &:hover {
+            background: $background-light3;
+        }
+
+        &.active {
+            background: $background-light3;
+        }
+    }
+
+    .profile {
+        margin: 20px;
+        @include clearfix();
+
+        .logo {
+            width: 70px;
+            height: 70px;
+            float: left;
+            margin-right: 10px;
+        }
+
+        p {
+            float: left;
+        }
+    }
+}
+
+.main-container {
+    display: flex;
+    flex-flow: column;
+    width: 100%;
+}
+
+.nav-search {
+    width: 100%;
+    text-align: center;
+    background: $background-light;
+
+    input {
+        margin: 6px;
+        padding: 4px;
+        line-height: 14px;
+        width: 300px;
+        border-radius: 2px;
+        font-size: 14px;
+        background-color: $input-color-glyphicon-background;
+        border: 1px solid black;
+        color: $input-color-text;
+        text-align: center;
+    }
+}

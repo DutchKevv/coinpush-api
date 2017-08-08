@@ -1,0 +1,46 @@
+{
+  "name": "tradejs-social",
+  "version": "0.0.1",
+  "description": "TradeJS social part",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "tsc && node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DutchKevv/TradeJS-Social.git"
+  },
+  "keywords": [
+    "trading"
+  ],
+  "author": "H.K.Brandsma",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DutchKevv/TradeJS-Social/issues"
+  },
+  "homepage": "https://github.com/DutchKevv/TradeJS-Social#readme",
+  "dependencies": {
+    "@types/node": "^8.0.19",
+    "@types/socket.io": "^1.4.29",
+    "bcrypt": "^1.0.2",
+    "body-parser": "^1.17.2",
+    "cross-env": "^5.0.3",
+    "express": "^4.15.3",
+    "freeport": "^1.0.5",
+    "helmet": "^3.8.1",
+    "jsonwebtoken": "^7.4.2",
+    "lodash": "^4.17.4",
+    "minimist": "^1.2.0",
+    "mongoose": "^4.11.5",
+    "morgan": "^1.8.2",
+    "socket.io": "^2.0.3",
+    "typescript": "^2.4.2",
+    "validator": "^8.0.0"
+  },
+  "devDependencies": {
+    "@types/body-parser": "1.16.4",
+    "@types/express": "4.0.36",
+    "@types/freeport": "1.0.21"
+  }
+}

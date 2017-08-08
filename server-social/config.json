@@ -1,0 +1,6 @@
+{
+  "port": 3002,
+  "connectionString": "mongodb://localhost:27017/tradejs-social",
+  "apiUrl": "http://localhost:3002",
+  "secret": "REPLACE THIS WITH YOUR OWN SECRET, IT CAN BE ANY STRING"
+}

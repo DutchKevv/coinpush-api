@@ -27,9 +27,10 @@
 
 :host(.stretched) {
     transfrom: translate(0, 0) !important;
-    -webkit-transform: translate(0, 0) !important;
+    position: static;
     height: 100% !important;
     width: 100% !important;
+    border: none;
 }
 
 :host(.minimized) {
@@ -41,7 +42,6 @@
     padding: 0 !important;
     font-size: 10px !important;
 }
-
 
 :host(.focused) {
     border-color: #ad8f79;
@@ -55,7 +55,6 @@
 
     }
 }
-
 
 .chart-header {
     background: $chart-header-background-blur;
@@ -76,6 +75,40 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     height: 22px;
+}
+
+.quickOrderContainer {
+    padding: 10px;
+    position: absolute;
+    z-index: 2;
+
+    .buyButton,
+    .sellButton {
+        padding: 4px 10px 10px 10px;
+        display: inline-block;
+        width: 80px;
+    }
+
+    .buyButton {
+        background: #0089ff linear-gradient(180deg, #0089ff, #000);
+
+        &:hover {
+            background: #0089ff linear-gradient(180deg, #000, #0089ff);
+        }
+    }
+
+    .sellButton {
+        background: #0089ff linear-gradient(180deg, #dc00ff, #000);
+
+        &:hover {
+            background: #0089ff linear-gradient(180deg, #000, #dc00ff);
+        }
+    }
+
+    input {
+        width: 100%;
+        box-sizing: border-box;
+    }
 }
 
 .chart-content {

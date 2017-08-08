@@ -1,46 +1,44 @@
-import {Component, AfterViewInit, ElementRef, ViewEncapsulation} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import {AuthenticationService} from '../../services/authenticate.service';
+import {AlertService} from '../../services/alert.service';
 
 @Component({
-	selector: 'login',
-	templateUrl: './login.component.html',
 	styleUrls: ['./login.component.scss'],
-	encapsulation: ViewEncapsulation.Native
+	templateUrl: 'login.component.html'
 })
 
-export class LoginComponent implements AfterViewInit {
-	public isLoading = true;
+export class LoginComponent implements OnInit {
+	model: any = {};
+	loading = false;
+	returnUrl: string;
 
-	public options: any = {
-		buttons: {
+	constructor(
+		private route: ActivatedRoute,
+		private router: Router,
+		private authenticationService: AuthenticationService,
+		private alertService: AlertService) { }
 
-		},
-		model: {
-			broker: 'oanda'
-		}
-	};
+	ngOnInit() {
+		// reset login status
+		this.authenticationService.logout();
 
-
-	constructor(public elementRef: ElementRef) {
-
+		// get return url from route parameters or default to '/'
+		this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
 	}
 
-	ngAfterViewInit() {
-	}
+	login(e) {
+		e.preventDefault();
 
-	onClickButton(value) {
-		if (typeof this.options.onClickButton === 'function' && this.options.onClickButton(value) === false)
-			return;
-	}
-
-	async onSubmit(event: Event) {
-		event.preventDefault();
-
-		this.isLoading = true;
-
-		// let result = await this._userService.login();
-		//
-		// this.isLoading = false;
-		//
-		// console.log('LOGIN RESULT', result);
+		this.loading = true;
+		this.authenticationService.login(this.model.email, this.model.password)
+			.subscribe(
+				data => {
+					this.router.navigate([this.returnUrl]);
+				},
+				error => {
+					this.alertService.error(error);
+					this.loading = false;
+				});
 	}
 }

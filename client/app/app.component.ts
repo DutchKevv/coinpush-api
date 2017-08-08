@@ -1,5 +1,5 @@
 import {ConstantsService} from './services/constants.service';
-import {Component, ChangeDetectionStrategy, ViewEncapsulation, AfterViewInit} from '@angular/core';
+import {Component, ChangeDetectionStrategy, ViewEncapsulation, AfterViewInit, OnInit} from '@angular/core';
 import {SocketService}  from './services/socket.service';
 import {SystemService}  from './services/system.service';
 import {CacheService} from './services/cache.service';
@@ -20,12 +20,17 @@ declare let Module: any;
 	encapsulation: ViewEncapsulation.None
 })
 
-export class AppComponent implements AfterViewInit {
+export class AppComponent implements OnInit, AfterViewInit {
 
 	constructor(private _cacheService: CacheService,
 				private _constantsService: ConstantsService,
 				private _socketService: SocketService,
 				private _systemService: SystemService) {
+	}
+
+	ngOnInit() {
+		this._cacheService.init();
+		this._cacheService.loadSymbolList();
 	}
 
 	ngAfterViewInit() {
@@ -34,7 +39,7 @@ export class AppComponent implements AfterViewInit {
 		this._constantsService.init();
 		this._socketService.init();
 		this._systemService.init();
-		this._cacheService.init();
+
 
 		const keyCodes = [37, 38, 39, 40];
 

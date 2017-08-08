@@ -6,6 +6,13 @@
 @import '../../style/components/key-value-list';
 @import '../../style/components/progress-bar';
 
+:host {
+    display: block;
+    height: 100%;
+    padding: 20px;
+    background: $background-light2;
+}
+
 .text-negative {
     color: $general-error;
 }

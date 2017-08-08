@@ -37,7 +37,7 @@ export class SearchFilter implements PipeTransform {
 })
 export class InstrumentListComponent implements OnDestroy, OnInit, AfterViewInit {
 
-	@ViewChild('tbody') tbody: ElementRef;
+	@ViewChild('elementsContainer') elementsContainer: ElementRef;
 	@ViewChild('resizeHandle') splitter: ElementRef;
 
 	private _elements: any = {};
@@ -83,7 +83,7 @@ export class InstrumentListComponent implements OnDestroy, OnInit, AfterViewInit
 
 			let row = this._elements[symbol.options.name];
 
-			row.children[0].firstElementChild.className = 'fa fa-arrow-' + symbol.options.direction;
+			row.children[0].className = 'fa fa-arrow-' + symbol.options.direction;
 			row.children[1].innerText = symbol.options.bid;
 			row.children[1].className = symbol.options.bidDirection;
 			row.children[2].innerText = symbol.options.ask;
@@ -100,17 +100,15 @@ export class InstrumentListComponent implements OnDestroy, OnInit, AfterViewInit
 					// return;
 
 				body += `
-<tr data-symbol="${symbol.options.name}">
-	<td><i class="fa"></i>${symbol.options.name}</td>
-	<td>${symbol.options.bid}</td>
-	<td>${symbol.options.bid}</td>
-</tr>`;
+<a data-symbol="${symbol.options.name}">
+	<i class="fa"></i>${symbol.options.name}<span>${symbol.options.bid}</span>&nbsp;<span>${symbol.options.ask}</span>
+<a/>`;
 			});
 		});
 
-		this.tbody.nativeElement.innerHTML = body;
+		this.elementsContainer.nativeElement.innerHTML = body;
 
-		Array.prototype.forEach.call(this.tbody.nativeElement.children, (child) => {
+		Array.prototype.forEach.call(this.elementsContainer.nativeElement.children, (child) => {
 			child.onclick = e => this.instrumentService.create([{symbol: e.currentTarget.getAttribute('data-symbol')}]);
 			this._elements[child.getAttribute('data-symbol')] = child;
 		});

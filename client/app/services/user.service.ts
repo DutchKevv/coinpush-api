@@ -4,6 +4,8 @@ import {CookieService} from 'ngx-cookie';
 import {SocketService} from './socket.service';
 import {ModalService} from './modal.service';
 import {UserModel} from '../models/user.model';
+import {CustomHttp} from './http.service';
+import {Http, Response} from '@angular/http';
 
 declare var $: any;
 
@@ -12,13 +14,14 @@ export class UserService {
 
 	public model: UserModel = new UserModel();
 
-	constructor(private _cookieService: CookieService,
+	constructor(private _http: Http,
+				private _cookieService: CookieService,
 				private _modalService: ModalService,
 				private _socketService: SocketService) {
 	}
 
 	get connected() {
-		return this.model.connected;
+		return this.model.options.connected;
 	}
 
 	init() {
@@ -27,72 +30,20 @@ export class UserService {
 		});
 	}
 
-	login() {
-		let self = this;
-
-		let loginComponentRef = this._modalService.create(LoginComponent, {
-			showCloseButton: false,
-			model: this.model,
-			buttons: [
-				{value: 'login', text: 'Login', type: 'primary'},
-				{text: 'Offline', type: 'default'}
-			],
-			onClickButton(value) {
-				if (value === 'login') {
-
-					$.post('http://localhost:3000/login', this.model, (response, status) => {
-
-						if (status === 'success') {
-							this.model.connected = true;
-
-							self._modalService.destroy(loginComponentRef);
-
-						} else {
-
-							alert('error! ' + status);
-						}
-					});
-				}
-			}
-		});
+	create(user) {
+		return this._http.post('/social/users', user).map((res: Response) => res.json());
 	}
 
-	logout() {
-		return new Promise((resolve, reject) => {
-
-			$.get('http://localhost:3000/logout', (response, status) => {
-				if (status === 'success') {
-
-					this.model.connected = false;
-
-					resolve({
-						status: 'success'
-					});
-				} else {
-					alert('error!');
-					reject();
-				}
-			});
-		});
+	getList() {
+		return this._http.get('/social/users').map((res: Response) => res.json());
 	}
 
-	storeSession(): Object {
-		let data: any = null;
+	toggleFollow(state: boolean, model: UserModel) {
+		model.set({follow: !!state});
 
-		try {
-			let cookie = this._cookieService.get('account-settings');
+		if (state)
+			return this._http.post('/social/users/follow/' + model.get('_id'), '');
 
-			if (cookie)
-				data = JSON.parse(cookie);
-
-		} catch (err) {
-			// TODO
-		}
-
-		return data;
-	}
-
-	deleteSessesion(): void {
-		// this._cookieService.put('account-settings', JSON.stringify(this.model));
+		return this._http.post('/social/users/un-follow/' + model.get('_id'), '');
 	}
 }

@@ -380,24 +380,6 @@ OandaAdapter.prototype.getOpenTrades = function (accountId, callback) {
  * @param {Function} callback
  */
 OandaAdapter.prototype.createOrder = function (accountId, order, callback) {
-	if (!order.instrument) {
-		return callback('instrument is a required field');
-	}
-	if (!order.units) {
-		return callback('units is a required field');
-	}
-	if (!order.side) {
-		return callback('side is a required field. Specify buy or sell');
-	}
-	if (!order.type) {
-		return callback('type is a required field. Specify market, marketIfTouched, stop or limit');
-	}
-	if ((order.type !== 'market') && !order.expiry) {
-		return callback('expiry is a required field for order type' + order.type);
-	}
-	if ((order.type !== 'market') && !order.price) {
-		return callback('price is a required field for order type' + order.type);
-	}
 	this._sendRESTRequest({
 		method: 'POST',
 		path: '/v1/accounts/' + accountId + '/orders',
@@ -406,9 +388,7 @@ OandaAdapter.prototype.createOrder = function (accountId, order, callback) {
 			Authorization: 'Bearer ' + this.accessToken,
 			'Content-Type': 'application/x-www-form-urlencoded'
 		},
-	}, function (body) {
-		callback(null, body);
-	});
+	}, callback);
 };
 OandaAdapter.prototype.closeTrade = function (accountId, tradeId, callback) {
 	this._sendRESTRequest({

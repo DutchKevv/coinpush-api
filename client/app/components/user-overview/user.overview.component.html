@@ -1,0 +1,83 @@
+<ul class="filter-options">
+    <li class="form-group">
+        <label for="exampleSelect1">PEOPLE FROM</label>
+        <select class="form-control" id="exampleSelect1">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+        </select>
+    </li>
+    <li class="form-group">
+        <label for="whoInvested">WHO INVESTED IN</label>
+        <select class="form-control" id="whoInvested">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+        </select>
+    </li>
+    <li class="form-group">
+        <label for="gainedMin">GAINED AT LEAST</label>
+        <select class="form-control" id="gainedMin">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+        </select>
+    </li>
+    <li class="form-group">
+        <label for="duringTime">DURING THE</label>
+        <select class="form-control" id="duringTime">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+        </select>
+    </li>
+    <li class="form-group">
+        <button class="btn btn-sm btn-success">Go !</button>
+    </li>
+</ul>
+
+<div class="scroll-container">
+    <h2 class="editors-choices-header">Editors' Choice</h2>
+
+    <section class="editor-choices">
+        <div *ngFor="let model of users$ | async" class="card clearfix">
+            <header [style.background]="'url(' + model.options.profileImg + ')'"></header>
+            <main>
+                <h4><a>{{model.options.username}}</a></h4>
+                <h3 class="roi">114.2 %</h3>
+                <h4 style="color: #b7b7b7;"><span>{{model.options.transactions}}</span> transactions</h4>
+            </main>
+            <footer class="clearfix">
+                <p class="pull-left" style="color: #b7b7b7;"><span class="followers">312</span> followers</p>
+                <button *ngIf="model.options.follow === false" (click)="toggleFollow(true, model)" class="btn btn-sm btn-success pull-right">Follow</button>
+                <button *ngIf="model.options.follow === true" (click)="toggleFollow(false, model)" class="btn btn-sm btn-danger pull-right">UnFollow</button>
+            </footer>
+        </div>
+    </section>
+
+    <h2 class="editors-choices-header">Top Investors</h2>
+
+    <section class="editor-choices">
+        <div *ngFor="let model of users$ | async" class="card clearfix">
+            <header [style.background]="'url(' + model.options.profileImg + ')'"></header>
+            <main>
+                <h4><a>{{model.options.username}}</a></h4>
+                <h3 class="roi">114.2 %</h3>
+                <h4 style="color: #b7b7b7;"><span>{{model.options.transactions}}</span> transactions</h4>
+            </main>
+            <footer class="clearfix">
+                <p class="pull-left" style="color: #b7b7b7;"><span class="followers">312</span> followers</p>
+                <button *ngIf="model.options.follow === false" (click)="toggleFollow(true, model)" class="btn btn-sm btn-success pull-right">Follow</button>
+                <button *ngIf="model.options.follow === true" (click)="toggleFollow(false, model)" class="btn btn-sm btn-danger pull-right">UnFollow</button>
+            </footer>
+        </div>
+    </section>
+</div>

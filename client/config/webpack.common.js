@@ -90,7 +90,9 @@ module.exports = {
             {from: './assets', to: 'assets'},
             {from: path.join(__dirname, '..', 'index.html'), to: 'index.html'},
             {from: './../shared/engine/dist', to: 'engine'},
-            {from: './favicon.ico', to: 'favicon.ico'}
+            {from: './favicon.ico', to: 'favicon.ico'},
+            {from: './sounds', to: 'sounds'},
+            {from: './data', to: 'data'}
             // {from: './../shared/engine/engine.data', to: 'engine.data'}
         ]),
 // new ngToolsWebpack.AotPlugin({

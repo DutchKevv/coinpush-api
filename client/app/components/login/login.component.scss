@@ -1,18 +1,30 @@
+@import '~bootstrap/scss/_variables';
+@import '~bootstrap/scss/_mixins';
+@import '~bootstrap/scss/_grid';
+@import '~bootstrap/scss/_buttons';
+@import '~bootstrap/scss/_forms';
+@import '~bootstrap/scss/_jumbotron';
 @import '../../style/variables/variables';
-@import '../modal/modal.component.scss';
+@import '../../style/helpers/normalize';
 
 label {
     font-size: 12px;
 }
 
-.form-control {
-    max-width: 200px; float:left;
+.simpleHeader {
+    height: 50px;
+    background: white;
+    margin-bottom: 20px;
+    text-align: center;
+    padding: 10px 0;
+
+    img {
+        height: 100%;
+    }
 }
 
-.modal-footer button {
+label {
+    color: $font-color-dark;
+    margin-right: 10px;
     margin-left: 10px;
-}
-
-.modal .close span {
-    color: $font-color-light;
 }

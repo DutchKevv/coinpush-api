@@ -1,14 +1,15 @@
-import { Injectable }   from '@angular/core';
-import * as SYSTEM      from '../../../shared/constants/system';
+import {Injectable} from '@angular/core';
+import * as CONSTANTS from '../../../shared/constants/constants';
 
 @Injectable()
 export class ConstantsService {
 
-    public constants: any;
+	public constants: any;
 
-    constructor() {}
+	constructor() {
+	}
 
-    init() {
-        this.constants = SYSTEM;
-    }
+	init() {
+		this.constants = CONSTANTS;
+	}
 }

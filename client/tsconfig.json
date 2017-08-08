@@ -21,5 +21,11 @@
       "shared",
       "node_modules"
     ]
+  },
+  "awesomeTypescriptLoaderOptions": {
+    "useWebpackText": true,
+    "useTranspileModule": true,
+    "doTypeCheck": true,
+    "forkChecker": true
   }
 }

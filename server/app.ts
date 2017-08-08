@@ -1,25 +1,26 @@
 require('source-map-support').install({handleUncaughtExceptions: true});
 
-import * as http            from 'http';
-import {json, urlencoded}   from 'body-parser';
-import * as path            from 'path';
-import * as freePort        from 'freeport';
-import * as express     	from 'express';
-import * as io              from 'socket.io';
-import * as colors          from '../shared/node_modules/colors';
+import * as http from 'http';
+import {json, urlencoded} from 'body-parser';
+import * as path from 'path';
+import * as freePort from 'freeport';
+import * as express from 'express';
+import * as io from 'socket.io';
+import * as proxy from 'express-http-proxy';
+import * as colors from '../shared/node_modules/colors';
 
-import IPC                  from './classes/ipc/IPC';
-import AccountController 	from './controllers/AccountController';
-import CacheController      from './controllers/CacheController';
-import SystemController     from './controllers/SystemController';
+import IPC from './classes/ipc/IPC';
+import AccountController from './controllers/AccountController';
+import CacheController from './controllers/CacheController';
+import SystemController from './controllers/SystemController';
 import InstrumentController from './controllers/InstrumentController';
-import EditorController     from './controllers/EditorController';
-import ConfigController     from './controllers/ConfigController';
-import BrokerController     from './controllers/BrokerController';
-import BacktestController 	from './controllers/BacktestController';
-import {log} 				from '../shared/logger';
-import {Base} 				from '../shared/classes/Base';
-import {InstrumentModel} 	from '../shared/models/InstrumentModel';
+import EditorController from './controllers/EditorController';
+import ConfigController from './controllers/ConfigController';
+import BrokerController from './controllers/BrokerController';
+import BacktestController from './controllers/BacktestController';
+import {log} from '../shared/logger';
+import {Base} from '../shared/classes/Base';
+import {InstrumentModel} from '../shared/models/InstrumentModel';
 
 process.stdin.resume();
 
@@ -147,7 +148,7 @@ export default class App extends Base {
 
 	public debug(type: string, text: string, data?: Object, socket?): void {
 		// if (type === 'error')
-			// log.error('App', text);
+		// log.error('App', text);
 
 		let lastMessage = this._debugLastMessage;
 
@@ -192,12 +193,12 @@ export default class App extends Base {
 			this._http = http.createServer(this._httpApi);
 			this._io = io.listen(this._http);
 
-			// this._httpApi.use(cors({origin: 'http://localhost:4200'}));
 			this._httpApi.use(express.static(process.env.NODE_ENV === 'production' ? PATH_PUBLIC_PROD : PATH_PUBLIC_DEV));
 
 			this._httpApi.use(function(req, res, next) {
 				res.header('Access-Control-Allow-Origin', '*');
 				res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+				res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, OPTIONS, DETELE');
 				next();
 			});
 

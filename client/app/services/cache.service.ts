@@ -42,10 +42,10 @@ export class CacheService {
 		this._mapper = new CacheMap();
 		this._connect();
 
-		this._socketService.socket.on('system:state', (systemState: SystemState) => {
-			if (!systemState.booting && systemState.connected)
-				this._loadSymbolList();
-		});
+		// this._socketService.socket.on('system:state', (systemState: SystemState) => {
+		// 	if (!systemState.booting && systemState.connected)
+		//
+		// });
 
 		this._socket.on('ticks', ticks => {
 
@@ -78,9 +78,9 @@ export class CacheService {
 	private _connect() {
 		this._zone.runOutsideAngular(() => {
 			this._socket = io(this._getUrl(), {
-				"reconnectionAttempts": 10, //avoid having user reconnect manually in order to prevent dead clients after a server restart
-				"timeout" : 10000, //before connect_error and connect_timeout are emitted.
-				"transports" : ["websocket"]
+				'reconnectionAttempts': 10, //avoid having user reconnect manually in order to prevent dead clients after a server restart
+				'timeout': 10000, //before connect_error and connect_timeout are emitted.
+				'transports': ['websocket']
 			});
 		});
 	}
@@ -96,26 +96,21 @@ export class CacheService {
 		}
 	}
 
-	private _loadSymbolList() {
-		this._socket.emit('symbol:list', {}, (err, symbolList) => {
-			if (err)
-				return console.error(err);
-
-			// Create symbol class for each symbol
-			let cacheSymbols = symbolList.map(symbol => {
-				return new CacheSymbol({
-					direction: 'up',
-					name: symbol.name,
-					bidDirection: 'up',
-					bid: symbol.bid,
-					ask: symbol.ask,
-					askDirection: 'up',
-					favorite: symbol.favorite
-				});
+	public loadSymbolList() {
+		// Create symbol class for each symbol
+		let cacheSymbols = window['symbols'].map(symbol => {
+			return new CacheSymbol({
+				direction: 'up',
+				name: symbol.name,
+				bidDirection: 'up',
+				bid: symbol.bid,
+				ask: symbol.ask,
+				askDirection: 'up',
+				favorite: symbol.favorite
 			});
-
-			this.symbolList$.next(cacheSymbols);
 		});
+
+		this.symbolList$.next(cacheSymbols);
 	}
 
 	public add(model) {

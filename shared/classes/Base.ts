@@ -13,6 +13,7 @@ export class Base extends EventEmitter {
 	public static readonly isWin = /^win/.test(process.platform);
 	public static readonly isElectron = process && (process.env.ELECTRON || process.versions['electron']);
 	public static readonly isNode = !!process;
+	public subscription = [];
 
 	public static getObjectDiff(a, b): any {
 		return reduce(a, function(result, value, key) {
@@ -56,9 +57,17 @@ export class Base extends EventEmitter {
 		}
 	}
 
+	public destroy() {
+		this.subscription.forEach(subscription => subscription.unsubscribe());
+	}
+
 	public onDestroy() {
 		this.changed$.unsubscribe();
 		this.options$.unsubscribe();
+
+		this.subscription.forEach(subscription => {
+			subscription.unsubscribe();
+		});
 	}
 
 	private __setInitialOptions(target, options) {

@@ -1,11 +1,14 @@
-<chart-box *ngFor="let model of instrumentsService.instruments$ | async"
-           [ngClass]="{focused: model.options.focus}"
-           [model]="model"
-           class="chart-absolute"
-           (click)="instrumentsService.setFocus(model)">
-</chart-box>
+<instrument-list></instrument-list>
+<div class="charts-container">
+    <chart-box *ngFor="let model of instrumentsService.instruments$ | async"
+               [ngClass]="{focused: model.options.focus}"
+               [model]="model"
+               class="chart-absolute"
+               (click)="instrumentsService.setFocus(model)">
+    </chart-box>
 
-<div *ngIf="instrumentsService.instruments.length === 0" class="chart-no-charts">
-    <p>No charts, click on any instrument in the left panel to open up a new chart.</p>
+    <div *ngIf="instrumentsService.instruments.length === 0" class="chart-no-charts">
+        <p>No charts, click on any instrument in the left panel to open up a new chart.</p>
+    </div>
+    <i class="fa fa-table" (click)="tileWindows()"></i>
 </div>
-<i class="fa fa-table" (click)="tileWindows()"></i>

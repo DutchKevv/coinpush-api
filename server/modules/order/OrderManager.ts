@@ -5,7 +5,7 @@ import {remove} from 'lodash';
 export interface IOrder {
 	symbol: string;
 	count: number;
-	type: string;
+	side: string;
 	id?: number | string;
 	openBid?: number;
 	openAsk?: number;
