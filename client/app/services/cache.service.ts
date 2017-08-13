@@ -135,4 +135,10 @@ export class CacheService {
 	public getBySymbol(symbol: string) {
 		return this.symbolList$.getValue().find(_symbol => _symbol.options.name === symbol)
 	}
+
+	public getByText(text: string) {
+		text = text.trim().toLowerCase();
+		const regex = new RegExp(text, 'i');
+		return this.symbolList$.getValue().filter(symbol => symbol.options.name.toLowerCase().indexOf(text) > -1);
+	}
 }

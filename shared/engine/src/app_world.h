@@ -2,7 +2,7 @@
 // Created by Kewin Brandsma on 08/08/2017.
 //
 
-#pragma once;
+#pragma once
 
 
 #include <engine/world.h>

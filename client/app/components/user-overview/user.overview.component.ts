@@ -30,7 +30,6 @@ export class UserOverviewComponent implements OnInit, OnDestroy, AfterViewChecke
 
 	ngOnInit() {
 		return this._userService.getList().subscribe(users => {
-			console.log(users);
 			this.users$.next(users.map(user => new UserModel(user)));
 		});
 	}

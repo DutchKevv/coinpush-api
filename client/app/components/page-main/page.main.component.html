@@ -16,7 +16,7 @@
         <i class="fa fa-newspaper-o"></i>
         <span>News feed</span>
     </a>
-    <a [routerLink]="['/main/users']" [routerLinkActive]="['active']">
+    <a [routerLink]="['/main/user']" [routerLinkActive]="['active']">
         <i class="fa fa-users"></i>
         <span>Users</span>
     </a>
@@ -32,6 +32,10 @@
         <i class="fa fa-code"></i>
         <span>Editor</span>
     </a>
+    <a [routerLink]="['/main/settings']" [routerLinkActive]="['active']">
+        <i class="fa fa-gears"></i>
+        <span>Settings</span>
+    </a>
     <a (click)="logout()">
         <i class="fa fa-sign-out"></i>
         <span>Logout</span>
@@ -40,11 +44,15 @@
 
 <main class="main-container">
     <nav class="nav-search">
-        <input (keyup)="onSearchKeyUp($event)" placeholder="Markets / Channels / People">
+        <input (keyup)="onSearchKeyUp($event)" placeholder="Markets / Channels / People" #input>
         <ul class="search-drop-down" *ngIf="(searchResults$ | async) as result">
             <li *ngFor="let user of result.users">
                 <img src="/images/default/profile/nl.png">
                 <span>{{user.username}}</span>
+            </li>
+            <li *ngFor="let symbol of result.symbols">
+                <img src="/images/default/symbol/spx500-70x70.png">
+                <span>{{symbol.name}}</span>
             </li>
         </ul>
     </nav>

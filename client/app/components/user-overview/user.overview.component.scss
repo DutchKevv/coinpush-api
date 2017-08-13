@@ -17,6 +17,7 @@
     width: 100%;
     padding: 20px;
     box-sizing: border-box;
+    display: block;
 }
 
 .filter-options {
@@ -55,7 +56,7 @@
 }
 
 .scroll-container {
-    overflow: scroll;
+    overflow-y: auto;
     position: absolute;
     top: 80px;
     left: 0;
@@ -82,9 +83,9 @@
 
 .editor-choices {
     display: flex;
-    overflow-x: scroll;
+    overflow-x: auto;
     margin: 20px 0;
-    height: 280px;
+    padding-bottom: 20px;
 }
 
 .card {
@@ -101,6 +102,13 @@
         background-size: cover;
         width: 100%;
         height: 150px;
+
+        a {
+            display: block;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
     }
 
     main {
@@ -109,7 +117,13 @@
     }
 
     footer {
+        display: flex;
+        justify-content: space-between;
         padding: 10px;
+
+        p {
+            color: #b7b7b7;
+        }
     }
 
     .roi {

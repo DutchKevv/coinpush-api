@@ -1,84 +1,51 @@
 import {Router} from 'express';
 import {User} from '../schemas/user';
+import {userController} from '../controllers/user.controller';
 
 const router = Router();
 
-router.get('/', async function (req: any, res) {
-	const data = await Promise.all([User.find({}).limit(50), User.findById(req.user.id)]);
+const getRootAllowedFields = ['_id', 'username', 'profileImg', 'country', 'followers', 'following', 'followersCount', 'followingCount'];
+router.get('/', async function (req: any, res, next) {
 
-	const following = data[1].following;
+	// Filter allowed fields
+	const fields = {};
+	(req.body.fields || []).filter(field => getRootAllowedFields.includes(field)).forEach(field => fields[field] = 1);
 
-	data[0].forEach((user, i) => {
-		if (!user.profileImg)
-			user.profileImg = 'http://localhost/images/defaults/profile/nl.png';
-
-		data[0][i] = user = user.toObject();
-		user.follow = following.includes(user._id.toString());
-	});
-
-	res.send(data[0]);
-});
-
-router.post('/', (req, res) => {
-
-	let userData = {
-		email: req.body.email,
-		username: req.body.username,
-		password: req.body.password,
-		passwordConf: req.body.passwordConf
-	};
-
-	if (!userData.email || !userData.username || !userData.password || !userData.passwordConf)
-		return res.status(400).send('Missing attributes');
-
-	// use schema.create to insert data into the db
-	User.create(userData, function (err, user) {
-		if (err) {
-			res.status(500).send(err);
-			console.error(err);
-		} else {
-			console.log('User created', user);
-			res.send(user);
-		}
-	});
+	try {
+		res.send(await User.aggregate([
+			{
+				$project: {
+					username: 1,
+					// followersC: {$size: ['$followers']},
+					// followingC: {$size: 'following'},
+				}
+			}
+		], fields));
+	} catch (error) {
+		next(error);
+	}
 });
 
 router.get('/:id', function (req, res, next) {
+	const fields = {};
+	(req.body.fields || []).forEach(field => fields[field] = 1);
 
-	User.findById(req.params.id)
-		.exec(function (error, user) {
+	User.findById(req.params.id, fields)
+		.exec((error, user) => {
 			if (error) {
 				return next(error);
 			} else {
-				if (user === null) {
-					const err = new Error('Not authorized! Go back!');
-					err['status'] = 400;
-					return next(err);
-				} else {
-					return res.send('<h1>Name: </h1>' + user.username + '<h2>Mail: </h2>' + user.email + '<br><a type="button" href="/logout">Logout</a>')
-				}
+				res.send(user);
 			}
 		});
 });
 
-router.post('/follow/:id', function (req: any, res, next) {
-
-	User.follow(req.user.id, req.params.id, error => {
-		if (error)
-			return next(error);
-
-		res.status(200).end();
-	});
-});
-
-router.post('/un-follow/:id', function (req: any, res, next) {
-
-	User.unFollow(req.user.id, req.params.id, error => {
-		if (error)
-			return next(error);
-
-		res.status(200).end();
-	});
+router.post('/', async (req, res) => {
+	try {
+		res.send(await userController.create(req.body));
+	} catch (error) {
+		res.status(500).send(error);
+	}
 });
 
 export = router;

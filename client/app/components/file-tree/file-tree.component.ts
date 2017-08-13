@@ -29,7 +29,7 @@ let speed = 200;
 export class FileTreeComponent implements AfterViewInit, OnDestroy {
 
 	@ViewChild(DialogAnchorDirective) private _dialogAnchor: DialogAnchorDirective;
-	@Output() updateEvent = new EventEmitter<any>();
+	@Output() updateEvent$ = new EventEmitter<any>();
 
 	socket: any;
 	$el: any;
@@ -99,7 +99,7 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 				});
 
 				this.$el.on('select_node.jstree', (e: any, data: any) => {
-					this.updateEvent.emit({
+					this.updateEvent$.emit({
 						type: 'select',
 						value: data.node.id
 					});
@@ -267,7 +267,7 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 
 							this.jstree.rename_node(filePath, newName);
 
-							this.updateEvent.emit({
+							this.updateEvent$.emit({
 								type: 'rename',
 								value: newName
 							});
@@ -293,7 +293,7 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 
 			this.jstree.delete_node(filePath);
 
-			this.updateEvent.emit({
+			this.updateEvent$.emit({
 				type: 'delete',
 				value: filePath
 			});
@@ -341,7 +341,7 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 								icon: 'glyphicon glyphicon-file'
 							}, 'inside');
 
-							this.updateEvent.emit({
+							this.updateEvent$.emit({
 								type: 'createFile',
 								value: model.inputs[0].value
 							});
@@ -382,7 +382,7 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 						if (err)
 							return alert(err);
 
-						this.updateEvent.emit({
+						this.updateEvent$.emit({
 							type: 'createDirectory',
 							value: model.inputs[0].value
 						});

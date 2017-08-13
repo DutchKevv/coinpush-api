@@ -11,19 +11,21 @@ export const orderController = {
 
 	},
 
-	findById(id) {
+	findById(id: string) {
 		return Order.findById(id);
 	},
 
-	async findByUserId(userId) {
+	async findByUserId(userId: string) {
 		return Order.find({user: userId}).limit(50);
 	},
 
 	async create(params) {
 		try {
 			Object.assign(params, await global['brokerAPI'].placeOrder(params));
+
+			return await Order.create(params);
 		} catch (error) {
-			console.error(error);
+			console.error('ORDER CREATE : ', error);
 
 			switch (error.code) {
 				case BROKER_OANDA_ERROR_INVALID_ARGUMENT:
@@ -43,8 +45,6 @@ export const orderController = {
 					});
 			}
 		}
-
-		return await Order.create(params);
 	},
 
 	update() {

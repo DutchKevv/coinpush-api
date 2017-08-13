@@ -10,6 +10,8 @@ import {PortfolioComponent} from './components/portfolio/portfolio.component';
 import {ChartOverviewComponent} from './components/chart-overview/chart-overview.component';
 import {BacktestComponent} from './components/backtest/backtest.component';
 import {JSEditorComponent} from './components/jseditor/jseditor.component';
+import {ProfileComponent} from './components/profile/profile.component';
+import {PageSubUserComponent} from './components/page-sub-user/page.sub.user.component';
 
 const routes: Routes = [
 	{path: '', redirectTo: 'main', pathMatch: 'full', canActivate: [AuthGuard]},
@@ -18,10 +20,21 @@ const routes: Routes = [
 	{
 		path: 'main', component: PageMainComponent, canActivate: [AuthGuard],
 		children: [
-			{path: '', redirectTo: 'users', pathMatch: 'full'},
+			{path: '', redirectTo: 'user', pathMatch: 'full'},
 			{path: 'channels', component: ChannelOverviewComponent},
 			{path: 'portfolio', component: PortfolioComponent},
-			{path: 'users', component: UserOverviewComponent},
+			{
+				path: 'user', component: PageSubUserComponent,
+				children: [
+					{path: '', redirectTo: 'overview', pathMatch: 'full'},
+					{
+						path: 'overview', component: UserOverviewComponent,
+					},
+					{
+						path: 'profile/:id', component: ProfileComponent,
+					}
+				]
+			},
 			{path: 'charts', component: ChartOverviewComponent},
 			{path: 'backtest', component: BacktestComponent},
 			{path: 'editor', component: JSEditorComponent},

@@ -1,6 +1,6 @@
 <instrument-list></instrument-list>
 
-<div class="charts-container">
+<div class="charts-container" #container>
     <chart-box *ngFor="let model of instrumentsService.instruments$ | async"
                [ngClass]="{focused: model.options.focus}"
                [model]="model"

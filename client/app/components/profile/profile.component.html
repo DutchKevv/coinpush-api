@@ -1,0 +1,63 @@
+<ng-container *ngIf="user$ | async as user">
+    <header>
+        <div class="profile-details">
+            <img class="profileImg" src="{{user.profileImg}}">
+            <div class="meta-data">
+                <h2>{{user.username}}</h2>
+            </div>
+        </div>
+        <nav class="nav">
+            <a class="active"><i class="fa fa-comments-o"></i>Feed</a>
+            <a><i class="fa fa-bar-chart"></i>Stats</a>
+            <a><i class="fa fa-pie-chart"></i>Portfolio</a>
+            <a><i class="fa fa-area-chart"></i>Chart</a>
+        </nav>
+    </header>
+
+    <main class="scroll-container">
+
+        <div class="box-container">
+            <dl>
+                <dt>Username:</dt>
+                <dd>{{user.username}}</dd>
+                <dt>Age:</dt>
+                <dd>{{user.age}}</dd>
+                <dt> Member since:</dt>
+                <dd>Comment</dd>
+            </dl>
+        </div>
+
+        <div class="box-container pull-right">
+            <dl>
+                <dt>Username:</dt>
+                <dd>{{user.username}}</dd>
+                <dt>Age:</dt>
+                <dd>{{user.age}}</dd>
+                <dt> Member since:</dt>
+                <dd>Comment</dd>
+            </dl>
+        </div>
+
+        <div class="box-container">
+            <dl>
+                <dt>Username:</dt>
+                <dd>{{user.username}}</dd>
+                <dt>Age:</dt>
+                <dd>{{user.age}}</dd>
+                <dt> Member since:</dt>
+                <dd>Comment</dd>
+            </dl>
+        </div>
+
+        <div class="box-container pull-right">
+            <dl>
+                <dt>Username:</dt>
+                <dd>{{user.username}}</dd>
+                <dt>Age:</dt>
+                <dd>{{user.age}}</dd>
+                <dt> Member since:</dt>
+                <dd>Comment</dd>
+            </dl>
+        </div>
+    </main>
+</ng-container>

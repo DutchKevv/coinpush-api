@@ -4,7 +4,6 @@ import * as express from 'express';
 import * as helmet from 'helmet';
 import * as morgan from 'morgan';
 import * as mongoose from 'mongoose';
-import bodyParser = require('body-parser');
 import OandaApi from '../../shared/brokers/oanda/index';
 
 const config = require('../../tradejs.config.json');
@@ -33,7 +32,7 @@ brokerAPI.init();
 app.use(morgan('dev'));
 app.use(helmet());
 app.use(json());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(urlencoded({extended: false}));
 
 /**
  * Add 'user' variable to request, holding userID

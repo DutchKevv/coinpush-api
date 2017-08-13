@@ -3,12 +3,14 @@ import {Http} from '@angular/http';
 import {ConstantsService} from './constants.service';
 import {OrderModel} from '../../../shared/models/OrderModel';
 import {CacheService} from './cache.service';
+import {AlertService} from './alert.service';
 
 @Injectable()
 export class OrderService {
 
 	constructor(private _constantsService: ConstantsService,
 				private _cacheService: CacheService,
+				private _alertService: AlertService,
 				private http: Http) {
 	}
 
@@ -35,7 +37,9 @@ export class OrderService {
 			let file = options.side === this._constantsService.constants.ORDER_SIDE_BUY ? 'sounds/3.mp3' : 'sounds/2.mp3';
 			let audio = new Audio(file);
 			audio.play();
+			this._alertService.success('Order set');
 		}, error => {
+			this._alertService.error(error);
 			console.error(error);
 		});
 

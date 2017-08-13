@@ -17,6 +17,7 @@ import 'ngx-cookie';
 import 'rxjs';
 import 'moment';
 import {forEach, throttle, debounce, random} from 'lodash';
+import {attachBackspaceFix, simulateBackspace} from 'assets/custom/js/backspace-fix'
 
 /**
  * jQuery (plugins)

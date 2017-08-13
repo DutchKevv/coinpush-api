@@ -6,6 +6,8 @@ import * as helmet from 'helmet';
 import * as morgan from 'morgan';
 import * as mongoose from 'mongoose';
 import bodyParser = require('body-parser');
+import {toolsController} from './controllers/tools.controller';
+import {User} from './schemas/user';
 
 const
 	config = require('../config'),
@@ -45,6 +47,7 @@ app.use((req: any, res, next) => {
 
 app.use('/social/authenticate', require('./api/authenticate'));
 app.use('/social/user', require('./api/user'));
+app.use('/social/follow', require('./api/follow'));
 app.use('/social/users', require('./api/users'));
 app.use('/social/trading-channels', require('./api/trading_channels'));
 app.use('/social/search', require('./api/search'));
@@ -55,4 +58,7 @@ io.on('connection', socket => {
 });
 
 http.listen(config.port, () => console.log(`\n Social service started on      : 127.0.0.1:${config.port}`));
+
+
+// toolsController.updateFieldType(User, 'followers', 'following', 'array');
 

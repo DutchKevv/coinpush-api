@@ -6,7 +6,6 @@ const express = require("express");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
 const index_1 = require("../../shared/brokers/oanda/index");
 const config = require('../../tradejs.config.json');
 const app = express();
@@ -30,7 +29,7 @@ brokerAPI.init();
 app.use(morgan('dev'));
 app.use(helmet());
 app.use(body_parser_1.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(body_parser_1.urlencoded({ extended: false }));
 /**
  * Add 'user' variable to request, holding userID
  */

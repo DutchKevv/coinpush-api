@@ -49,17 +49,21 @@
 
     <section class="editor-choices">
         <div *ngFor="let model of users$ | async" class="card clearfix">
-            <header [style.background]="'url(' + model.options.profileImg + ')'"></header>
-            <main>
-                <h4><a>{{model.options.username}}</a></h4>
-                <h3 class="roi">114.2 %</h3>
-                <h4 style="color: #b7b7b7;"><span>{{model.options.transactions}}</span> transactions</h4>
-            </main>
-            <footer class="clearfix">
-                <p class="pull-left" style="color: #b7b7b7;"><span class="followers">312</span> followers</p>
-                <button *ngIf="model.options.follow === false" (click)="toggleFollow(true, model)" class="btn btn-sm btn-success pull-right">Follow</button>
-                <button *ngIf="model.options.follow === true" (click)="toggleFollow(false, model)" class="btn btn-sm btn-danger pull-right">UnFollow</button>
-            </footer>
+            <ng-container *ngIf="model.options$ | async as options" >
+                <header [style.background]="'url(' + model.options.profileImg + ')'">
+                    <a [routerLink]="['/main/user/profile/' + model.options._id]" [routerLinkActive]="['active']"></a>
+                </header>
+                <main>
+                    <h4><a>{{model.options.username}}</a></h4>
+                    <h3 class="roi">114.2 %</h3>
+                    <h4 style="color: #b7b7b7;"><span>{{options.transactions}}</span> transactions</h4>
+                </main>
+                <footer>
+                    <p><span class="followers">{{options.followersCount}}</span> followers</p>
+                    <button *ngIf="options.follow === false" (click)="toggleFollow(true, model)" class="btn btn-sm btn-success pull-right">Follow</button>
+                    <button *ngIf="options.follow === true" (click)="toggleFollow(false, model)" class="btn btn-sm btn-danger pull-right">UnFollow</button>
+                </footer>
+            </ng-container>
         </div>
     </section>
 
@@ -73,8 +77,8 @@
                 <h3 class="roi">114.2 %</h3>
                 <h4 style="color: #b7b7b7;"><span>{{model.options.transactions}}</span> transactions</h4>
             </main>
-            <footer class="clearfix">
-                <p class="pull-left" style="color: #b7b7b7;"><span class="followers">312</span> followers</p>
+            <footer>
+                <p><span class="followers">{{model.options.followersC}}</span> followers</p>
                 <button *ngIf="model.options.follow === false" (click)="toggleFollow(true, model)" class="btn btn-sm btn-success pull-right">Follow</button>
                 <button *ngIf="model.options.follow === true" (click)="toggleFollow(false, model)" class="btn btn-sm btn-danger pull-right">UnFollow</button>
             </footer>

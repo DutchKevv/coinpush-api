@@ -19,6 +19,7 @@ declare let $: any;
 export class ChartOverviewComponent implements OnInit {
 
 	@ViewChildren(ChartBoxComponent) charts: QueryList<ChartBoxComponent>;
+	@ViewChild('container') container;
 
 	constructor(public instrumentsService: InstrumentsService,
 				private _zone: NgZone,
@@ -31,8 +32,9 @@ export class ChartOverviewComponent implements OnInit {
 
 	tileWindows() {
 		this._zone.runOutsideAngular(() => {
-			let containerW = this._elementRef.nativeElement.clientWidth,
-				containerH = this._elementRef.nativeElement.clientHeight,
+			
+			let containerW = this.container.nativeElement.clientWidth,
+				containerH = this.container.nativeElement.clientHeight,
 				size = Math.floor(this._getTileSize(containerW, containerH, this.charts.length)),
 				columnCounter = 0,
 				rowCount = 0;

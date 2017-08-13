@@ -1,11 +1,13 @@
-import { Component } from '@angular/core';
+import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
 import { Router } from '@angular/router';
 import {UserService} from '../../services/user.service';
 import {AlertService} from '../../services/alert.service';
 
 @Component({
 	styleUrls: ['./register.component.scss'],
-	templateUrl: 'register.component.html'
+	templateUrl: 'register.component.html',
+	encapsulation: ViewEncapsulation.Native,
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class RegisterComponent {

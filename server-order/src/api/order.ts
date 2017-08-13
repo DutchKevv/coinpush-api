@@ -19,8 +19,10 @@ router.post('/', async (req, res) => {
 		takeProfit: req.body.takeProfit,
 		trailingStop: req.body.trailingStop,
 		type: req.body.type || ORDER_TYPE_MARKET,
-		user: req.user.id
+		users: req.body.users
 	};
+
+	console.log('PARAMS', params);
 
 	if (typeof params.symbol !== 'string' ||
 		typeof params.amount !== 'number' ||
@@ -29,7 +31,11 @@ router.post('/', async (req, res) => {
 	}
 
 	try {
-		res.send(await orderController.create(params));
+		// create array of promises that each create a new order
+		const promises = params.users.map((user: string) => orderController.create(Object.assign(params, {user})));
+
+		// send result back
+		res.send(await Promise.all(promises));
 	} catch (error) {
 		switch (error.code) {
 			case BROKER_ERROR_INVALID_ARGUMENT:

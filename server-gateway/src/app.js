@@ -1,3 +1,5 @@
+"use strict";
+
 const url = require('url');
 const path = require('path');
 const express = require('express');
@@ -5,22 +7,38 @@ const httpProxy = require('express-http-proxy');
 const expressJwt = require('express-jwt');
 const config = require('../config.json');
 const app = express();
+const morgan = require('morgan');
+const helmet = require('helmet');
 const request = require('request-promise');
+const {json, urlencoded} = require('body-parser');
 
-const apiServiceProxy = httpProxy('http://localhost:3000');
-const frontendDevServiceProxy = httpProxy('http://localhost:4200');
-const cacheServiceProxy = httpProxy('http://localhost:3001');
-const socialServiceProxy = httpProxy('http://localhost:3002');
-const userServiceProxy = httpProxy('http://localhost:3003');
-const newsServiceProxy = httpProxy('http://localhost:3004');
-const orderServiceProxy = httpProxy('http://localhost:3005');
-const scriptRunnerServiceProxy = httpProxy('http://localhost:3006');
-const scriptBuilderProxy = httpProxy('http://localhost:3007');
+const URL_BASIC_API = 'http://localhost:3000';
+const URL_CACHE_API = 'http://localhost:3001';
+const URL_SOCIAL_API = 'http://localhost:3002';
+const URL_USER_API = 'http://localhost:3003';
+const URL_NEWS_API = 'http://localhost:3004';
+const URL_ORDER_API = 'http://localhost:3005';
+const URL_MESSAGE_API = 'http://localhost:3000';
+const URL_FE_DEV_API = 'http://localhost:3000';
 
 const PATH_PUBLIC_PROD = path.join(__dirname, '../../client/dist');
 const PATH_PUBLIC_DEV = path.join(__dirname, '../../client/dist');
 const PATH_IMAGES_PROD = path.join(__dirname, '../../images');
 const PATH_IMAGES_DEV = path.join(__dirname, '../../images');
+
+const apiServiceProxy = httpProxy(URL_BASIC_API);
+const cacheServiceProxy = httpProxy(URL_CACHE_API);
+const socialServiceProxy = httpProxy(URL_SOCIAL_API);
+const userServiceProxy = httpProxy(URL_USER_API);
+const newsServiceProxy = httpProxy(URL_NEWS_API);
+const orderServiceProxy = httpProxy(URL_ORDER_API);
+const scriptRunnerServiceProxy = httpProxy('http://localhost:3006');
+const scriptBuilderProxy = httpProxy('http://localhost:3007');
+const frontendDevServiceProxy = httpProxy(URL_FE_DEV_API);
+
+app.use(morgan('dev'));
+app.use(helmet());
+app.use(json());
 
 app.use(express.static(process.env.NODE_ENV === 'production' ? PATH_PUBLIC_PROD : PATH_PUBLIC_DEV));
 app.use(express.static(process.env.NODE_ENV === 'production' ? PATH_IMAGES_PROD : PATH_IMAGES_DEV));
@@ -43,6 +61,7 @@ app.use(expressJwt({
 }).unless(function(req) {
     return (
         (/\.(gif|jpg|jpeg|tiff|png)$/i).test(req.originalUrl) ||
+        req.originalUrl === '/' ||
         (req.originalUrl === '/social/authenticate' && (req.method === 'POST' || req.method === 'OPTIONS')) ||
         (req.originalUrl === '/social/user' && (req.method === 'POST' || req.method === 'OPTIONS'))
     );
@@ -76,23 +95,73 @@ app.all('/social/authenticate', (req, res, next) => {
     socialServiceProxy(req, res, next);
 });
 
+app.all('/social/user', (req, res, next) => {
+    socialServiceProxy(req, res, next);
+});
+
+app.all('/social/user/*', (req, res, next) => {
+    socialServiceProxy(req, res, next);
+});
+
 app.get('/social/users', (req, res, next) => {
     socialServiceProxy(req, res, next);
 });
 
-app.post('/social/user/follow/*', (req, res, next) => {
+app.post('/social/follow/*', (req, res, next) => {
     socialServiceProxy(req, res, next);
 });
 
-app.post('/social/user/un-follow/*', (req, res, next) => {
-    socialServiceProxy(req, res, next);
-});
-
-app.all('/order', (req, res, next) => {
+app.get('/order', (req, res, next) => {
     orderServiceProxy(req, res, next);
 });
 
-app.get('/orders', (req, res, next) => {
+app.post('/order', async (req, res) => {
+
+    const params = req.body;
+    params.users = [req.user.id];
+
+    try {
+        // Place order
+        const order = await request({
+            method: 'POST',
+            uri: url.resolve(URL_ORDER_API, 'order'),
+            headers: {'_id': req.user.sub},
+            json: params
+        });
+        res.send(order);
+    } catch (error) {
+        res.status(error.statusCode).send(error.error.message);
+        return;
+    }
+
+
+    // Get followers and call orders again for all followers
+    try {
+        const result = await request({
+            uri: url.resolve(URL_SOCIAL_API, 'social/user'),
+            headers: {'_id': req.user.sub},
+            json: {
+                fields: ['followers']
+            }
+        });
+
+        if (result.followers.length) {
+
+            params.users = result.followers;
+
+            await request({
+                method: 'POST',
+                uri: url.resolve(URL_ORDER_API, 'order'),
+                headers: {'_id': req.user.sub},
+                json: params
+            });
+        }
+    } catch (error) {
+        console.log('FOLLOWERS ERROR: ', error);
+    }
+});
+
+app.get('/orders', async (req, res, next) => {
     orderServiceProxy(req, res, next);
 });
 
@@ -117,10 +186,10 @@ app.get('/search/:text', async (req, res) => {
             json: false
         });
 
-        const result = await Promise.all([userRequest]);
-        returnObj.users = result[0];
-        returnObj.channels = result[1];
-        returnObj.symbols = result[2];
+        const results = await Promise.all([userRequest]);
+        returnObj.users = results[0];
+        returnObj.channels = results[1];
+        returnObj.symbols = results[2];
     } catch (error) {
         console.error(error);
 

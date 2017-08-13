@@ -11,9 +11,21 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 export class AlertComponent {
 	@Output() public message$: BehaviorSubject<any> = new BehaviorSubject(null);
 
+	private _timer;
+	private _timeout = 10000;
+
 	constructor(private alertService: AlertService) { }
 
 	ngOnInit() {
-		this.alertService.getMessage().subscribe(message => { this.message$.next(message); });
+		this.alertService.getMessage().subscribe(message => { {
+
+			clearTimeout(this._timer);
+
+			this.message$.next(message);
+
+			this._timer = setTimeout(() => {
+				this.message$.next(null);
+			}, this._timeout);
+		} });
 	}
 }

@@ -1,3 +1,5 @@
+import {FileTreeComponent} from '../file-tree/file-tree.component';
+
 declare var ace: any;
 declare var $: any;
 
@@ -17,6 +19,8 @@ import {SocketService} from '../../services/socket.service';
 })
 
 export class JSEditorComponent implements AfterViewInit {
+
+	@ViewChild(FileTreeComponent) fileTree: FileTreeComponent;
 	@ViewChild('editor') editorRef: ElementRef;
 
 	editor: any;
@@ -31,7 +35,7 @@ export class JSEditorComponent implements AfterViewInit {
 
 	private _$el;
 	private _$banner;
-	// private _editorEl: HTMLElement;
+	private _fileTreeSubscription;
 
 	constructor(private _zone: NgZone,
 				private _ref: ChangeDetectorRef,
@@ -43,8 +47,34 @@ export class JSEditorComponent implements AfterViewInit {
 		this._$banner = this._$el.find('.banner');
 		// this._editorEl = this._$el.find('.editor')[0];
 
-
 		this.setEditor();
+
+		this._fileTreeSubscription = this.fileTree.updateEvent$.subscribe(event => this.fileTreeUpdate(event));
+
+		this.fileTree.$el.off('select_node.jstree').on('select_node.jstree', (e: any, data: any) => {
+			if (data.node && data.node.original.isFile) {
+				let path = this.fileTree.$el.jstree(true).get_path(data.node, '/');
+			}
+		});
+	}
+
+	fileTreeUpdate(event) {
+		switch (event.type) {
+			case 'select':
+				this.loadFile(event.value);
+				break;
+			case 'delete':
+				break;
+			case 'createFile':
+				this.loadFile(event.value);
+				break;
+			case 'createDirectory':
+				break;
+			case 'rename':
+				break;
+			default:
+				throw new Error('Unknown fileTree update event');
+		}
 	}
 
 	onBlur() {

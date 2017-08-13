@@ -1,4 +1,5 @@
-import {Component, AfterViewInit, Output, OnInit, ElementRef, ViewEncapsulation, ViewChild} from '@angular/core';
+///<reference path="../../../node_modules/@angular/core/src/metadata/view.d.ts"/>
+import {Component, AfterViewInit, Output, OnInit, ElementRef, ViewEncapsulation, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {SocialService} from '../../services/social.service';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {AuthenticationService} from '../../services/authenticate.service';
@@ -7,13 +8,14 @@ import {Subject} from 'rxjs/Subject';
 import {CacheService, CacheSymbol} from '../../services/cache.service';
 
 @Component({
-	selector: 'page-main',
-	templateUrl: './page.main.component.html',
-	styleUrls: ['./page.main.component.scss'],
+	selector: 'page-sub-user',
+	template: '<router-outlet></router-outlet>',
+	styleUrls: ['./page.sub.user.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 	encapsulation: ViewEncapsulation.Native
 })
 
-export class PageMainComponent implements OnInit, AfterViewInit {
+export class PageSubUserComponent implements OnInit, AfterViewInit {
 
 	@Output() public searchResults$: Subject<any> = new Subject();
 	@ViewChild('input') public input;

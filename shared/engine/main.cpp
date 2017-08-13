@@ -48,7 +48,7 @@ EMSCRIPTEN_KEEPALIVE int _updateInstrumentData(int id, char *data) {
 }
 
 EMSCRIPTEN_KEEPALIVE int _setFocus(int id) {
-//    engine->gl->focusedId = id;
+    engine->renderer->worlds[0]->toggleFocusedRenderObj(engine->renderer->worlds[0]->getRenderObjectById(id));
     return 0;
 }
 }

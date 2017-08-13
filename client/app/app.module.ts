@@ -53,6 +53,8 @@ import {OrderService} from './services/order.service';
 import {ChannelOverviewComponent} from './components/channel-overview/channel-overview.component';
 import {TradingChannelService} from './services/trading.channel.service';
 import {GroupByPipe, PortfolioComponent} from './components/portfolio/portfolio.component';
+import {ProfileComponent} from './components/profile/profile.component';
+import {PageSubUserComponent} from './components/page-sub-user/page.sub.user.component';
 
 @NgModule({
 	declarations: [
@@ -87,7 +89,9 @@ import {GroupByPipe, PortfolioComponent} from './components/portfolio/portfolio.
 		AlertComponent,
 		UserOverviewComponent,
 		PortfolioComponent,
-		GroupByPipe
+		GroupByPipe,
+		ProfileComponent,
+		PageSubUserComponent
 	],
 	imports: [
 		BrowserModule,

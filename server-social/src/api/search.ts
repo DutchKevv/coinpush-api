@@ -5,9 +5,8 @@ const router = Router();
 
 router.get('/:text', async function (req: any, res) {
 
-	console.log(req.params.text);
 	try {
-		res.send(await searchController.search(req.params.text));
+		res.send(await searchController.search(req.params.text, req.body.limit));
 	} catch (error) {
 		res.status(500).send('Search error');
 	}

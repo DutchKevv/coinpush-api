@@ -3,6 +3,7 @@ import {Component, ChangeDetectionStrategy, ViewEncapsulation, AfterViewInit, On
 import {SocketService}  from './services/socket.service';
 import {SystemService}  from './services/system.service';
 import {CacheService} from './services/cache.service';
+import {simulateBackspace} from '../assets/custom/js/backspace-fix';
 
 declare let Module: any;
 
@@ -10,6 +11,7 @@ declare let Module: any;
 	selector: 'app',
 	template: `
 		<div modalAnchor></div>
+        <app-alert></app-alert>
 		<router-outlet></router-outlet>
 	`,
 	styleUrls: [
@@ -43,9 +45,18 @@ export class AppComponent implements OnInit, AfterViewInit {
 
 		const keyCodes = [37, 38, 39, 40];
 
-		// $(document).on('keydown', e => {
-		// 	if (keyCodes.includes(e.keyCode) && Module.custom.getFocused())
-		// 		return false;
-		// });
+		$(document).on('keydown', e => {
+			// Backspace
+			if (e.keyCode === 8) {
+				const target = e.originalEvent['path'][0];
+
+				if (target.nodeName.toLowerCase() === 'input') {
+					simulateBackspace(target);
+				}
+			}
+
+			if (keyCodes.includes(e.keyCode) && Module.custom.getFocused())
+				return false;
+		});
 	}
 }

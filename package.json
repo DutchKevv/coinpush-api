@@ -25,5 +25,7 @@
   "scripts": {
     "postinstall": "cd server && npm i"
   },
-  "dependencies": {}
+  "dependencies": {
+    "faker": "^4.1.0"
+  }
 }

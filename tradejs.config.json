@@ -1,5 +1,9 @@
 {
   "server": {
+    "social": {
+      "port": 3005,
+      "connectionString": "mongodb://localhost:27017/tradejs-users"
+    },
     "order": {
       "port": 3005,
       "connectionString": "mongodb://localhost:27017/tradejs-orders"

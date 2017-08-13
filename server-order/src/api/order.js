@@ -13,15 +13,19 @@ router.post('/', async (req, res) => {
         takeProfit: req.body.takeProfit,
         trailingStop: req.body.trailingStop,
         type: req.body.type || constants_1.ORDER_TYPE_MARKET,
-        user: req.user.id
+        users: req.body.users
     };
+    console.log('PARAMS', params);
     if (typeof params.symbol !== 'string' ||
         typeof params.amount !== 'number' ||
         typeof params.side !== 'number') {
         return res.status(400).send('Missing attributes');
     }
     try {
-        res.send(await order_controller_1.orderController.create(params));
+        // create array of promises that each create a new order
+        const promises = params.users.map((user) => order_controller_1.orderController.create(Object.assign(params, { user })));
+        // send result back
+        res.send(await Promise.all(promises));
     }
     catch (error) {
         switch (error.code) {
