@@ -32,7 +32,7 @@ export class ChartOverviewComponent implements OnInit {
 
 	tileWindows() {
 		this._zone.runOutsideAngular(() => {
-			
+
 			let containerW = this.container.nativeElement.clientWidth,
 				containerH = this.container.nativeElement.clientHeight,
 				size = Math.floor(this._getTileSize(containerW, containerH, this.charts.length)),
