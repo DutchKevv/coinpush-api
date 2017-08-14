@@ -23,7 +23,7 @@ testem.log
 !/custom/tsconfig.json
 !/custom/ea/example/*
 !/custom/indicator/example/*
-/images
+images/images/profile
 
 # Server
 /server/config/tradejs.config.json
