@@ -1,9 +1,10 @@
 import {Schema, Types, model} from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import {isEmail} from 'validator';
+import {join} from 'path';
 import * as jwt from 'jsonwebtoken';
 
-const config = require('../../config');
+const config = require('../../../tradejs.config');
 
 const UserSchema = new Schema({
 	email: {
@@ -93,7 +94,7 @@ const UserSchema = new Schema({
 });
 
 // authenticate input against database
-UserSchema.statics.authenticate = function (email, password, callback) {
+UserSchema.statics.authenticate = function (email, password, token, callback) {
 
 	User.findOne({email: email})
 		.exec(function (err, user) {
@@ -109,13 +110,14 @@ UserSchema.statics.authenticate = function (email, password, callback) {
 				if (result !== true)
 					return callback(null, null);
 
+				user.profileImg = User.normalizeProfileImg(user.profileImg);
 
 				callback(null, {
 					_id: user._id,
 					username: user.username,
-					firstName: user.firstName,
-					lastName: user.lastName,
-					token: jwt.sign({sub: user._id}, config.secret)
+					email: user.email,
+					profileImg: user.profileImg,
+					token: jwt.sign({sub: user._id}, config.server.social.secret)
 				});
 			});
 		});
@@ -136,6 +138,22 @@ UserSchema.statics.toggleFollow = async function(from, to) {
 			User.update({_id: to}, {$addToSet: {followers: Types.ObjectId(from)}})
 		]).then(() => ({state: !isFollowing}));
 	}
+};
+
+/**
+ * Transform image filename to full url
+ * @param filename
+ * @returns {any}
+ */
+UserSchema.statics.normalizeProfileImg = function(filename) {
+	if (filename) {
+		if (filename.indexOf('http://') > -1)
+			return filename;
+
+		return join(config.image.profileBaseUrl,  filename);
+	}
+	else
+		return config.image.profileDefaultUrl;
 };
 
 // hashing a password before saving it to the database

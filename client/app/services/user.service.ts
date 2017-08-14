@@ -1,25 +1,19 @@
-import {Injectable} from '@angular/core';
-import {LoginComponent} from '../components/login/login.component';
-import {CookieService} from 'ngx-cookie';
-import {SocketService} from './socket.service';
-import {ModalService} from './modal.service';
+import {Injectable, Output} from '@angular/core';
 import {UserModel} from '../models/user.model';
-import {CustomHttp} from './http.service';
 import {Http, Response} from '@angular/http';
 import {AlertService} from './alert.service';
-
-declare var $: any;
+import {USER_FETCH_TYPE_SLIM} from '../../../shared/constants/constants';
+import {StartupService} from './startup.service';
 
 @Injectable()
 export class UserService {
 
-	public model: UserModel = new UserModel();
+	@Output() model: UserModel = new UserModel();
 
 	constructor(private _http: Http,
 				private _alertService: AlertService,
-				private _cookieService: CookieService,
-				private _modalService: ModalService,
-				private _socketService: SocketService) {
+				private _startupService: StartupService) {
+		this.init();
 	}
 
 	get connected() {
@@ -27,17 +21,15 @@ export class UserService {
 	}
 
 	init() {
-		this._socketService.socket.on('user-details', () => {
-
-		});
+		this.model = this._startupService.getLoggedInUser;
 	}
 
 	create(user) {
 		return this._http.post('/social/user', user).map((res: Response) => res.json());
 	}
 
-	get(id: string) {
-		return this._http.get('/social/user/' + id).map((res: Response) => new UserModel(res.json()));
+	get(id = '', type = USER_FETCH_TYPE_SLIM) {
+		return this._http.get('/social/user/' + id, {body: {type}}).map((res: Response) => new UserModel(res.json()));
 	}
 
 	getList() {
@@ -71,5 +63,9 @@ export class UserService {
 		});
 
 		return subscription;
+	}
+
+	setSelfUser(data) {
+		this.model.set(data);
 	}
 }

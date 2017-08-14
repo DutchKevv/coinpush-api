@@ -12,6 +12,7 @@ import {BacktestComponent} from './components/backtest/backtest.component';
 import {JSEditorComponent} from './components/jseditor/jseditor.component';
 import {ProfileComponent} from './components/profile/profile.component';
 import {PageSubUserComponent} from './components/page-sub-user/page.sub.user.component';
+import {SettingsComponent} from './components/settings/settings.component';
 
 const routes: Routes = [
 	{path: '', redirectTo: 'main', pathMatch: 'full', canActivate: [AuthGuard]},
@@ -38,6 +39,7 @@ const routes: Routes = [
 			{path: 'charts', component: ChartOverviewComponent},
 			{path: 'backtest', component: BacktestComponent},
 			{path: 'editor', component: JSEditorComponent},
+			{path: 'settings', component: SettingsComponent},
 		]
 	}
 ];

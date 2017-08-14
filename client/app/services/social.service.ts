@@ -1,6 +1,5 @@
 import {Injectable, NgZone, Output} from '@angular/core';
 import {SocketService} from './socket.service';
-import {UserModel} from '../models/user.model';
 import {TradingChannelModel} from '../models/social.trader.model';
 import {Http, Response} from '@angular/http';
 

@@ -17,42 +17,36 @@
 .nav-main {
     background: $background-light;
     overflow-y: auto;
-    min-width: 240px;
+    width: 300px;
 
     a {
-        margin: 10px 0;
-        padding: 10px 10px;
+        padding: 15px 10px 15px 30px;
         font-size: 18px;
         box-sizing: border-box;
         display: block;
 
         i {
-            padding: 0 20px;
+            padding-right: 20px;
             width: 20px;
         }
 
         &:hover {
-            background: $background-light3;
+            background: $background-light2;
         }
 
         &.active {
-            background: $background-light3;
+            background: $background-light2;
         }
     }
 
     .profile {
-        margin: 20px;
-        @include clearfix();
+        padding-top: 40px;
 
-        .logo {
-            width: 70px;
-            height: 70px;
-            float: left;
-            margin-right: 10px;
-        }
-
-        p {
-            float: left;
+        h4 {
+            margin-top: 10px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
     }
 }
@@ -86,27 +80,36 @@
     .search-drop-down {
         position: absolute;
         z-index: 122;
-        top: 30px;
+        top: 40px;
         left: calc(50% - 149px);
         width: 298px;
         background: $background-light;
         box-sizing: border-box;
 
-        li {
+        &.hidden {
+            display: none;
+        }
+
+        a {
             padding: 10px;
             border-bottom: $border-color-grey;
-            color: black;
+            color: $font-color-light;
             text-align: left;
-            display: flex;
             cursor: pointer;
+            display: flex;
+
+            &:hover {
+                background: $background-light2
+            }
 
             span {
-                margin-left: 10px;
+                line-height: 30px;
             }
 
             img {
                 width: 30px;
                 height: 30px;
+                margin-right: 10px;
             }
         }
     }

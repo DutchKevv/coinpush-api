@@ -3,8 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
 const bcrypt = require("bcrypt");
 const validator_1 = require("validator");
+const path_1 = require("path");
 const jwt = require("jsonwebtoken");
-const config = require('../../config');
+const config = require('../../../tradejs.config');
 const UserSchema = new mongoose_1.Schema({
     email: {
         type: String,
@@ -92,7 +93,7 @@ const UserSchema = new mongoose_1.Schema({
     }
 });
 // authenticate input against database
-UserSchema.statics.authenticate = function (email, password, callback) {
+UserSchema.statics.authenticate = function (email, password, token, callback) {
     exports.User.findOne({ email: email })
         .exec(function (err, user) {
         if (err) {
@@ -106,12 +107,13 @@ UserSchema.statics.authenticate = function (email, password, callback) {
                 return callback(_err);
             if (result !== true)
                 return callback(null, null);
+            user.profileImg = exports.User.normalizeProfileImg(user.profileImg);
             callback(null, {
                 _id: user._id,
                 username: user.username,
-                firstName: user.firstName,
-                lastName: user.lastName,
-                token: jwt.sign({ sub: user._id }, config.secret)
+                email: user.email,
+                profileImg: user.profileImg,
+                token: jwt.sign({ sub: user._id }, config.server.social.secret)
             });
         });
     });
@@ -131,6 +133,20 @@ UserSchema.statics.toggleFollow = async function (from, to) {
             exports.User.update({ _id: to }, { $addToSet: { followers: mongoose_1.Types.ObjectId(from) } })
         ]).then(() => ({ state: !isFollowing }));
     }
+};
+/**
+ * Transform image filename to full url
+ * @param filename
+ * @returns {any}
+ */
+UserSchema.statics.normalizeProfileImg = function (filename) {
+    if (filename) {
+        if (filename.indexOf('http://') > -1)
+            return filename;
+        return path_1.join(config.image.profileBaseUrl, filename);
+    }
+    else
+        return config.image.profileDefaultUrl;
 };
 // hashing a password before saving it to the database
 UserSchema.pre('save', function (next) {

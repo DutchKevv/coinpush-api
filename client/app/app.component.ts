@@ -4,6 +4,7 @@ import {SocketService}  from './services/socket.service';
 import {SystemService}  from './services/system.service';
 import {CacheService} from './services/cache.service';
 import {simulateBackspace} from '../assets/custom/js/backspace-fix';
+import {AuthenticationService} from './services/authenticate.service';
 
 declare let Module: any;
 
@@ -25,23 +26,22 @@ declare let Module: any;
 export class AppComponent implements OnInit, AfterViewInit {
 
 	constructor(private _cacheService: CacheService,
+				private _authenticationService: AuthenticationService,
 				private _constantsService: ConstantsService,
 				private _socketService: SocketService,
 				private _systemService: SystemService) {
 	}
 
 	ngOnInit() {
+		this._socketService.init();
+		this._systemService.init();
+
 		this._cacheService.init();
 		this._cacheService.loadSymbolList();
 	}
 
 	ngAfterViewInit() {
 		document.body.addEventListener('contextmenu', e => e.preventDefault(), false);
-
-		this._constantsService.init();
-		this._socketService.init();
-		this._systemService.init();
-
 
 		const keyCodes = [37, 38, 39, 40];
 

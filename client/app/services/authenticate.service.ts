@@ -2,15 +2,33 @@ import {Injectable} from '@angular/core';
 import {Http, Response} from '@angular/http';
 import 'rxjs/add/operator/map'
 import {Router} from '@angular/router';
+import {UserService} from './user.service';
 
 @Injectable()
 export class AuthenticationService {
 
-	constructor(private router: Router, private http: Http) {
+	constructor(
+		private router: Router,
+		private http: Http,
+		private _userService: UserService) {
+	}
+
+	init() {}
+
+	getToken() {
+		return localStorage.getItem('currentUser');
+	}
+
+	removeToken() {
+		localStorage.removeItem('currentUser');
 	}
 
 	login(username: string, password: string) {
-		return this.http.post('/social/authenticate', {username: username, password: password})
+		return this.authenticateAndLoadUserData(username, password);
+	}
+
+	authenticateAndLoadUserData(username?, password?, token?) {
+		return this.http.post('/social/authenticate', {username, password, token})
 			.map((response: Response) => {
 				// login successful if there's a jwt token in the response
 				let user = response.json();
@@ -19,13 +37,15 @@ export class AuthenticationService {
 					localStorage.setItem('currentUser', JSON.stringify(user));
 				}
 
+				this._userService.model.set(user);
+
 				return user;
 			});
 	}
 
 	logout() {
 		// remove user from local storage to log user out
-		localStorage.removeItem('currentUser');
+		this.removeToken();
 		this.router.navigate(['/login']);
 	}
 }

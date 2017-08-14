@@ -1,7 +1,7 @@
 <nav class="nav-main">
     <a class="profile">
-        <img class="logo" src="http://localhost/images/default/profile/nl.png">
-        <h4>DutchKevv</h4>
+        <img class="logo" width="70" height="70" src="{{userService.model.options.profileImg}}">
+        <h4>{{userService.model.options.username}}</h4>
     </a>
 
     <a [routerLink]="['/main/channels']" [routerLinkActive]="['active']">
@@ -45,16 +45,16 @@
 <main class="main-container">
     <nav class="nav-search">
         <input (keyup)="onSearchKeyUp($event)" placeholder="Markets / Channels / People" #input>
-        <ul class="search-drop-down" *ngIf="(searchResults$ | async) as result">
-            <li *ngFor="let user of result.users">
-                <img src="/images/default/profile/nl.png">
-                <span>{{user.username}}</span>
-            </li>
-            <li *ngFor="let symbol of result.symbols">
+        <div class="search-drop-down" *ngIf="(searchResults$ | async) as result" (click)="onClickDropdownItem()" #dropdown>
+            <a *ngFor="let symbol of result.symbols">
                 <img src="/images/default/symbol/spx500-70x70.png">
                 <span>{{symbol.name}}</span>
-            </li>
-        </ul>
+            </a>
+            <a *ngFor="let user of result.users" [routerLink]="['/main/user/profile/' + user._id]">
+                <img src="{{user.profileImg}}">
+                <span>{{user.username}}</span>
+            </a>
+        </div>
     </nav>
     <router-outlet></router-outlet>
 </main>

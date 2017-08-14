@@ -5,20 +5,23 @@ import {AuthenticationService} from '../../services/authenticate.service';
 import {Http} from '@angular/http';
 import {Subject} from 'rxjs/Subject';
 import {CacheService, CacheSymbol} from '../../services/cache.service';
+import {UserService} from '../../services/user.service';
 
 @Component({
 	selector: 'page-main',
 	templateUrl: './page.main.component.html',
-	styleUrls: ['./page.main.component.scss'],
-	encapsulation: ViewEncapsulation.Native
+	styleUrls: ['./page.main.component.scss']
+	// encapsulation: ViewEncapsulation.Native
 })
 
 export class PageMainComponent implements OnInit, AfterViewInit {
 
 	@Output() public searchResults$: Subject<any> = new Subject();
 	@ViewChild('input') public input;
+	@ViewChild('dropdown') public dropdown;
 
-	constructor(private _http: Http,
+	constructor(public userService: UserService,
+				private _http: Http,
 				private _cacheService: CacheService,
 				private _authenticationService: AuthenticationService) {
 	}
@@ -27,7 +30,8 @@ export class PageMainComponent implements OnInit, AfterViewInit {
 		// attachBackspaceFix(this.input.nativeElement);
 	}
 
-	ngAfterViewInit(): void {}
+	ngAfterViewInit(): void {
+	}
 
 	public onSearchKeyUp(event): void {
 		const value = event.target.value.trim();
@@ -47,12 +51,25 @@ export class PageMainComponent implements OnInit, AfterViewInit {
 			channels: []
 		};
 
+		this.toggleDropdownVisibility(true);
 		this.searchResults$.next(currentResult);
 
 		this._http.get('/search/' + value, {body: {limit: 5}}).map(res => res.json()).subscribe((result: any) => {
 			currentResult.users = JSON.parse(result.users);
 			this.searchResults$.next(currentResult);
 		});
+	}
+
+	public onClickDropdownItem() {
+		this.toggleDropdownVisibility(false);
+	}
+
+	public toggleDropdownVisibility(state) {
+		if (this.dropdown) {
+			requestAnimationFrame(() => {
+				this.dropdown.nativeElement.classList.toggle('hidden', !state)
+			})
+		}
 	}
 
 	public logout(): void {

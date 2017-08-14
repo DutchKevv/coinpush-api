@@ -38,7 +38,7 @@ const frontendDevServiceProxy = httpProxy(URL_FE_DEV_API);
 
 app.use(morgan('dev'));
 app.use(helmet());
-app.use(json());
+// app.use(json());
 
 app.use(express.static(process.env.NODE_ENV === 'production' ? PATH_PUBLIC_PROD : PATH_PUBLIC_DEV));
 app.use(express.static(process.env.NODE_ENV === 'production' ? PATH_IMAGES_PROD : PATH_IMAGES_DEV));
@@ -104,6 +104,10 @@ app.all('/social/user/*', (req, res, next) => {
 });
 
 app.get('/social/users', (req, res, next) => {
+    socialServiceProxy(req, res, next);
+});
+
+app.post('/social/file-upload/*', (req, res, next) => {
     socialServiceProxy(req, res, next);
 });
 

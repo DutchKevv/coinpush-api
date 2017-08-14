@@ -1,6 +1,6 @@
 // Lib
 import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
+import {APP_INITIALIZER, NgModule} from '@angular/core';
 
 
 import {HeaderPlaygroundComponent}  from './components/header-playground/header-playground.component';
@@ -55,6 +55,12 @@ import {TradingChannelService} from './services/trading.channel.service';
 import {GroupByPipe, PortfolioComponent} from './components/portfolio/portfolio.component';
 import {ProfileComponent} from './components/profile/profile.component';
 import {PageSubUserComponent} from './components/page-sub-user/page.sub.user.component';
+import {SettingsComponent} from './components/settings/settings.component';
+import {StartupService} from './services/startup.service';
+
+export function startupServiceFactory(startupService: StartupService): Function {
+	return () => startupService.load();
+}
 
 @NgModule({
 	declarations: [
@@ -91,7 +97,8 @@ import {PageSubUserComponent} from './components/page-sub-user/page.sub.user.com
 		PortfolioComponent,
 		GroupByPipe,
 		ProfileComponent,
-		PageSubUserComponent
+		PageSubUserComponent,
+		SettingsComponent
 	],
 	imports: [
 		BrowserModule,
@@ -109,6 +116,7 @@ import {PageSubUserComponent} from './components/page-sub-user/page.sub.user.com
 		AuthenticationService,
 		UserService,
 		TradingChannelService,
+		StartupService,
 
 		{provide: OrderService, useClass: OrderService},
 		{provide: SystemService, useClass: SystemService},
@@ -117,7 +125,13 @@ import {PageSubUserComponent} from './components/page-sub-user/page.sub.user.com
 		{provide: ModalService, useClass: ModalService},
 		{provide: InstrumentsService, useClass: InstrumentsService},
 		{provide: CacheService, useClass: CacheService},
-		{provide: SocialService, useClass: SocialService}
+		{provide: SocialService, useClass: SocialService},
+		{
+			provide: APP_INITIALIZER,
+			useFactory: startupServiceFactory,
+			deps: [StartupService],
+			multi: true
+		}
 	],
 	bootstrap: [
 		AppComponent

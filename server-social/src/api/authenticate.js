@@ -11,16 +11,10 @@ router.get('/', function (req, res, next) {
     });
 });
 router.post('/', (req, res, next) => {
-    console.log(req.body);
+    // console.log(req.body);
     if (!req.body.username || !req.body.password)
         return res.status(400).send('Username or password is incorrect');
-    let userData = {
-        email: req.body.email,
-        username: req.body.username,
-        password: req.body.password,
-        passwordConf: req.body.passwordConf
-    };
-    user_1.User.authenticate(req.body.username, req.body.password, (err, result) => {
+    user_1.User.authenticate(req.body.username, req.body.password, req.body.token, (err, result) => {
         if (err) {
             console.error(err);
             return res.status(500).send('Error');
