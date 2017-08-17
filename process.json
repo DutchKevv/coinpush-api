@@ -6,7 +6,7 @@
     "instances": 1
   },
   {
-    "script": "server/app.js",
+    "script": "server/bootstrapper.js",
     "name": "old-api",
     "exec_mode": "fork",
     "instances": 1
