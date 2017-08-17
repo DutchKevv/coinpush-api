@@ -1,0 +1,1740 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="GLFW"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\Engine\;CMake Files\..\..\..\Engine\extern\;CMake Files\..\..\..\Engine\extern\glfw-3.1.2\;CMake Files\..\..\..\Engine\extern\glfw-3.1.2\src\;CMake Files\..\..\..\Engine\extern\glfw-3.1.2\docs\;CMake Files\..\..\..\Engine\extern\glfw-3.1.2\examples\;CMake Files\..\..\..\Engine\extern\glfw-3.1.2\CMake\;CMake Files\..\..\..\Engine\extern\glfw-3.1.2\tests\;CMake Files\..\..\..\Engine\extern\assimp-3.0.1270\;CMake Files\..\..\..\Engine\extern\assimp-3.0.1270\contrib\;CMake Files\..\..\..\Engine\extern\assimp-3.0.1270\contrib\zlib\;CMake Files\..\..\..\Engine\extern\assimp-3.0.1270\code\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="uninstall">
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/Makefile&quot;  VERBOSE=1 uninstall"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="glfw">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/src/libglfw3.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/src"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add option="-D_GLFW_USE_CONFIG_H"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/src"/>
+					<Add directory="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/src"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/src/Makefile&quot;  VERBOSE=1 glfw"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/src/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/src/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/src/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="glfw/fast">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/src/libglfw3.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/src"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add option="-D_GLFW_USE_CONFIG_H"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/src"/>
+					<Add directory="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/src"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/src/Makefile&quot;  VERBOSE=1 glfw/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/src/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/src/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/src/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="heightmap">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/heightmap.app/Contents/MacOS/heightmap" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples"/>
+				<Option object_output="./"/>
+				<Option type="0"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 heightmap"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="heightmap/fast">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/heightmap.app/Contents/MacOS/heightmap" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples"/>
+				<Option object_output="./"/>
+				<Option type="0"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 heightmap/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="wave">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/wave.app/Contents/MacOS/wave" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples"/>
+				<Option object_output="./"/>
+				<Option type="0"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 wave"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="wave/fast">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/wave.app/Contents/MacOS/wave" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples"/>
+				<Option object_output="./"/>
+				<Option type="0"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 wave/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="splitview">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/splitview.app/Contents/MacOS/splitview" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples"/>
+				<Option object_output="./"/>
+				<Option type="0"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 splitview"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="splitview/fast">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/splitview.app/Contents/MacOS/splitview" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples"/>
+				<Option object_output="./"/>
+				<Option type="0"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 splitview/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="simple">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/simple.app/Contents/MacOS/simple" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples"/>
+				<Option object_output="./"/>
+				<Option type="0"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 simple"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="simple/fast">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/simple.app/Contents/MacOS/simple" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples"/>
+				<Option object_output="./"/>
+				<Option type="0"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 simple/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="particles">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/particles.app/Contents/MacOS/particles" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples"/>
+				<Option object_output="./"/>
+				<Option type="0"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 particles"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="particles/fast">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/particles.app/Contents/MacOS/particles" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples"/>
+				<Option object_output="./"/>
+				<Option type="0"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 particles/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="gears">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/gears.app/Contents/MacOS/gears" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples"/>
+				<Option object_output="./"/>
+				<Option type="0"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 gears"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="gears/fast">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/gears.app/Contents/MacOS/gears" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples"/>
+				<Option object_output="./"/>
+				<Option type="0"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 gears/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="boing">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/boing.app/Contents/MacOS/boing" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples"/>
+				<Option object_output="./"/>
+				<Option type="0"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 boing"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="boing/fast">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/boing.app/Contents/MacOS/boing" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples"/>
+				<Option object_output="./"/>
+				<Option type="0"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 boing/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/examples/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="windows">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/windows.app/Contents/MacOS/windows" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests"/>
+				<Option object_output="./"/>
+				<Option type="0"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 windows"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="windows/fast">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/windows.app/Contents/MacOS/windows" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests"/>
+				<Option object_output="./"/>
+				<Option type="0"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 windows/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="title">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/title.app/Contents/MacOS/title" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests"/>
+				<Option object_output="./"/>
+				<Option type="0"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 title"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="title/fast">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/title.app/Contents/MacOS/title" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests"/>
+				<Option object_output="./"/>
+				<Option type="0"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 title/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="threads">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/threads.app/Contents/MacOS/threads" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests"/>
+				<Option object_output="./"/>
+				<Option type="0"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 threads"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="threads/fast">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/threads.app/Contents/MacOS/threads" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests"/>
+				<Option object_output="./"/>
+				<Option type="0"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 threads/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="tearing">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/tearing.app/Contents/MacOS/tearing" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests"/>
+				<Option object_output="./"/>
+				<Option type="0"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 tearing"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="tearing/fast">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/tearing.app/Contents/MacOS/tearing" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests"/>
+				<Option object_output="./"/>
+				<Option type="0"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 tearing/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="empty">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/empty.app/Contents/MacOS/empty" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests"/>
+				<Option object_output="./"/>
+				<Option type="0"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 empty"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="empty/fast">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/empty.app/Contents/MacOS/empty" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests"/>
+				<Option object_output="./"/>
+				<Option type="0"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 empty/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="glfwinfo">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/glfwinfo" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 glfwinfo"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="glfwinfo/fast">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/glfwinfo" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 glfwinfo/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="cursor">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/cursor" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 cursor"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="cursor/fast">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/cursor" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 cursor/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="monitors">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/monitors" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 monitors"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="monitors/fast">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/monitors" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 monitors/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="reopen">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/reopen" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 reopen"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="reopen/fast">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/reopen" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 reopen/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="joysticks">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/joysticks" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 joysticks"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="joysticks/fast">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/joysticks" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 joysticks/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="events">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/events" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 events"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="events/fast">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/events" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 events/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="iconify">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/iconify" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 iconify"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="iconify/fast">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/iconify" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 iconify/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="gamma">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/gamma" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 gamma"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="gamma/fast">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/gamma" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 gamma/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="sharing">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/sharing.app/Contents/MacOS/sharing" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests"/>
+				<Option object_output="./"/>
+				<Option type="0"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 sharing"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="sharing/fast">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/sharing.app/Contents/MacOS/sharing" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests"/>
+				<Option object_output="./"/>
+				<Option type="0"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 sharing/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="msaa">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/msaa" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 msaa"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="msaa/fast">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/msaa" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 msaa/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="clipboard">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/clipboard" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clipboard"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="clipboard/fast">
+				<Option output="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/clipboard" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DTW_STATIC"/>
+					<Add option="-DTW_NO_LIB_PRAGMA"/>
+					<Add option="-DTW_NO_DIRECT3D"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add option="-DGLEW_STATIC"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include"/>
+					<Add directory="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clipboard/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps/getopt.c">
+			<Option target="particles"/>
+			<Option target="tearing"/>
+			<Option target="glfwinfo"/>
+			<Option target="monitors"/>
+			<Option target="events"/>
+			<Option target="iconify"/>
+			<Option target="gamma"/>
+			<Option target="msaa"/>
+			<Option target="clipboard"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps/getopt.h">
+			<Option target="particles"/>
+			<Option target="tearing"/>
+			<Option target="glfwinfo"/>
+			<Option target="monitors"/>
+			<Option target="events"/>
+			<Option target="iconify"/>
+			<Option target="gamma"/>
+			<Option target="msaa"/>
+			<Option target="clipboard"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps/glad.c">
+			<Option target="heightmap"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps/glad/glad.h">
+			<Option target="heightmap"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps/tinycthread.c">
+			<Option target="particles"/>
+			<Option target="threads"/>
+			<Option target="empty"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/deps/tinycthread.h">
+			<Option target="particles"/>
+			<Option target="threads"/>
+			<Option target="empty"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/examples/boing.c">
+			<Option target="boing"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/examples/gears.c">
+			<Option target="gears"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/examples/heightmap.c">
+			<Option target="heightmap"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/examples/particles.c">
+			<Option target="particles"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/examples/simple.c">
+			<Option target="simple"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/examples/splitview.c">
+			<Option target="splitview"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/examples/wave.c">
+			<Option target="wave"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include/GLFW/glfw3.h">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/include/GLFW/glfw3native.h">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/src/cocoa_init.m">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/src/cocoa_monitor.m">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/src/cocoa_platform.h">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/src/cocoa_window.m">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/src/context.c">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/src/init.c">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/src/input.c">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/src/internal.h">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/src/iokit_joystick.h">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/src/iokit_joystick.m">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/src/mach_time.c">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/src/monitor.c">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/src/nsgl_context.h">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/src/nsgl_context.m">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/src/posix_tls.c">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/src/posix_tls.h">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/src/window.c">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/tests/clipboard.c">
+			<Option target="clipboard"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/tests/cursor.c">
+			<Option target="cursor"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/tests/empty.c">
+			<Option target="empty"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/tests/events.c">
+			<Option target="events"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/tests/gamma.c">
+			<Option target="gamma"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/tests/glfwinfo.c">
+			<Option target="glfwinfo"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/tests/iconify.c">
+			<Option target="iconify"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/tests/joysticks.c">
+			<Option target="joysticks"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/tests/monitors.c">
+			<Option target="monitors"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/tests/msaa.c">
+			<Option target="msaa"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/tests/reopen.c">
+			<Option target="reopen"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/tests/sharing.c">
+			<Option target="sharing"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/tests/tearing.c">
+			<Option target="tearing"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/tests/threads.c">
+			<Option target="threads"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/tests/title.c">
+			<Option target="title"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/Engine/extern/glfw-3.1.2/tests/windows.c">
+			<Option target="windows"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/extern/glfw-3.1.2/src/glfw_config.h">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/cmake_uninstall.cmake.in">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/cmake_uninstall.cmake.in">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/src/glfw3Config.cmake.in">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\src\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/src/glfw_config.h.in">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\src\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/src/glfw3.pc.in">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\src\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/src/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\src\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/src/glfw3Config.cmake.in">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\src\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/src/glfw_config.h.in">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\src\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/src/glfw3.pc.in">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\src\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/src/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\src\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/docs/Doxyfile.in">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\docs\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/docs/Doxyfile.in">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\docs\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/examples/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\examples\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/examples/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\examples\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/CMake/MacOSXBundleInfo.plist.in">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\CMake\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/CMake/MacOSXBundleInfo.plist.in">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\CMake\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/CMake/MacOSXBundleInfo.plist.in">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\CMake\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/CMake/MacOSXBundleInfo.plist.in">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\CMake\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/CMake/MacOSXBundleInfo.plist.in">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\CMake\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/CMake/MacOSXBundleInfo.plist.in">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\CMake\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/CMake/MacOSXBundleInfo.plist.in">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\CMake\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/CMake/MacOSXBundleInfo.plist.in">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\CMake\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/CMake/MacOSXBundleInfo.plist.in">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\CMake\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/CMake/MacOSXBundleInfo.plist.in">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\CMake\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/CMake/MacOSXBundleInfo.plist.in">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\CMake\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/CMake/MacOSXBundleInfo.plist.in">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\CMake\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/CMake/MacOSXBundleInfo.plist.in">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\CMake\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/CMake/MacOSXBundleInfo.plist.in">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\CMake\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/CMake/MacOSXBundleInfo.plist.in">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\CMake\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/CMake/MacOSXBundleInfo.plist.in">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\CMake\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/CMake/MacOSXBundleInfo.plist.in">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\CMake\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/CMake/MacOSXBundleInfo.plist.in">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\CMake\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/CMake/MacOSXBundleInfo.plist.in">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\CMake\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/CMake/MacOSXBundleInfo.plist.in">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\CMake\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/CMake/MacOSXBundleInfo.plist.in">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\CMake\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/CMake/MacOSXBundleInfo.plist.in">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\CMake\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/CMake/MacOSXBundleInfo.plist.in">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\CMake\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/CMake/MacOSXBundleInfo.plist.in">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\CMake\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/CMake/MacOSXBundleInfo.plist.in">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\CMake\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/CMake/MacOSXBundleInfo.plist.in">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\CMake\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/tests/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\tests\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/glfw-3.1.2/tests/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\glfw-3.1.2\tests\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/assimp-3.0.1270/contrib/zlib/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\assimp-3.0.1270\contrib\zlib\"/>
+		</Unit>
+		<Unit filename="/Users/kewinbrandsma/Projects/TradeJS/shared/engine/../../../Engine/extern/assimp-3.0.1270/code/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\..\..\..\Engine\extern\assimp-3.0.1270\code\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

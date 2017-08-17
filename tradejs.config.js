@@ -1,7 +1,11 @@
 const path = require('path');
 
 module.exports = {
-    'server': {
+    server: {
+        gateway: {
+            port: 80,
+            "secret": "REPLACE THIS WITH YOUR OWN SECRET, IT CAN BE ANY STRING"
+        },
         'social': {
             "port": 3002,
             "connectionString": "mongodb://localhost:27017/tradejs-social",

@@ -5,7 +5,7 @@ const path = require('path');
 const express = require('express');
 const httpProxy = require('http-proxy');
 const expressJwt = require('express-jwt');
-const config = require('../config.json');
+const config = require('../../tradejs.config');
 const app = express();
 const morgan = require('morgan');
 const helmet = require('helmet');
@@ -54,7 +54,7 @@ app.use((req, res, next) => {
 
 // use JWT auth to secure the api, the token can be passed in the authorization header or query string
 app.use(expressJwt({
-    secret: config.secret,
+    secret: config.server.gateway.secret,
     getToken(req) {
         if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer')
             return req.headers.authorization.split(' ')[1];
@@ -211,17 +211,6 @@ app.get('/search/:text', async (req, res) => {
     res.send(returnObj);
 });
 
-
-//
-// app.post('/social/users', (req, res, next) => {
-//     socialServiceProxy(req, res, next);
-// });
-//
-// app.use((err, req, res, next) => {
-//     res.status(404).send('url not found!');
-//     next()
-// });
-
-app.listen(80, () => {
-    console.log('Gateway listening on port : 80');
+app.listen(config.server.gateway.port, () => {
+    console.log('Gateway listening on port : ' + config.server.gateway.port);
 });
