@@ -4,7 +4,8 @@ const search_controller_1 = require("../controllers/search.controller");
 const router = express_1.Router();
 router.get('/:text', async function (req, res) {
     try {
-        res.send(await search_controller_1.searchController.search(req.params.text, req.body.limit));
+        console.log(req.body);
+        res.send(await search_controller_1.searchController.search(req.params.text, req.query.limit));
     }
     catch (error) {
         res.status(500).send('Search error');

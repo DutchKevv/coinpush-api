@@ -1,7 +1,9 @@
-import {join} from 'path';
 import {Types, ObjectId} from 'mongoose';
+import * as redis from '../modules/redis';
 import {User} from '../schemas/user';
-import {USER_FETCH_TYPE_PROFILE, USER_FETCH_TYPE_PROFILE_SETTINGS, USER_FETCH_TYPE_SLIM} from '../../../shared/constants/constants';
+import {
+	USER_FETCH_TYPE_BROKER_DETAILS, USER_FETCH_TYPE_PROFILE, USER_FETCH_TYPE_PROFILE_SETTINGS, USER_FETCH_TYPE_SLIM,
+} from '../../../shared/constants/constants';
 
 const config = require('../../../tradejs.config');
 
@@ -26,57 +28,100 @@ export const userController = {
 
 	getAllowedFields: ['_id', 'username', 'profileImg', 'country', 'followers', 'following', 'membershipStartDate', 'description'],
 
-	async get(userId, type = USER_FETCH_TYPE_SLIM) {
+	async get (userId, type = USER_FETCH_TYPE_SLIM, forceReload = false) {
+		console.log('type!!!', type);
 
-		let fields = this.getAllowedFields.filter(field => this.getAllowedFields.includes(field));
+		let REDIS_KEY = 'user_' + userId;
+		let fieldsArr = [];
+		let user;
 
 		switch (type) {
-			case USER_FETCH_TYPE_SLIM:
-				fields = ['username', 'profileImg', 'country'];
+			case USER_FETCH_TYPE_PROFILE_SETTINGS:
+				return this.getProfileSettings(userId);
+			case USER_FETCH_TYPE_BROKER_DETAILS:
+				fieldsArr = ['brokerToken', 'brokerAccountId'];
 				break;
 			case USER_FETCH_TYPE_PROFILE:
-
 				break;
-			case USER_FETCH_TYPE_PROFILE_SETTINGS:
-				fields = ['username', 'profileImg', 'country', 'email', 'description'];
+			case USER_FETCH_TYPE_SLIM:
+			default:
+				fieldsArr = ['username', 'profileImg', 'country'];
 				break;
 		}
 
-		this.getAllowedFields.forEach(field => fields[field] = 1);
+		if (!forceReload)
+			user = await this.getCached(REDIS_KEY, fieldsArr);
 
-		return User.aggregate([
-			{
-				$match: {
-					_id: Types.ObjectId(userId)
-				}
-			},
-			{
-				$project: {
-					followersCount: {$size: {'$ifNull': ['$followers', []]}},
-					followingCount: {$size: {'$ifNull': ['$following', []]}},
-					...fields
-				}
-			},
-			{
-				$limit: 1
-			}
-		]).then(users => {
-			const user = users[0];
+		if (!user) {
 
-			if (!user)
-				return null;
+			let fieldsObj = {};
+			this.getAllowedFields.forEach(field => fieldsObj[field] = 1);
+
+			user = (await User.aggregate([
+				{
+					$match: {
+						_id: Types.ObjectId(userId)
+					}
+				},
+				{
+					$project: {
+						followersCount: {$size: {'$ifNull': ['$followers', []]}},
+						followingCount: {$size: {'$ifNull': ['$following', []]}},
+						username: 1,
+						profileImg: 1,
+						country: 1,
+						brokerToken: 1,
+						brokerAccountId: 1,
+						description: 1
+					}
+				},
+				{
+					$limit: 1
+				}
+			]))[0];
 
 			user.profileImg = User.normalizeProfileImg(user.profileImg);
 
-			return user;
+			redis.client.set(REDIS_KEY, JSON.stringify(user), function () {
+				// Why wait?
+			});
+		}
+
+		Object.keys(user)
+			.filter(key => !fieldsArr.includes(key))
+			.forEach(key => delete user[key]);
+
+		return user;
+	},
+
+	async getProfileSettings(userId) {
+		const user = await User.findById(userId, {
+			username: 1,
+			email: 1,
+			profileImg: 1,
+			country: 1,
+			brokerToken: 1,
+			brokerAccountId: 1,
+			description: 1
+		});
+
+		user.profileImg = User.normalizeProfileImg(user.profileImg);
+
+		return user;
+	},
+
+	async getCached(key, fields) {
+		return new Promise((resolve, reject) => {
+			redis.client.get(key, function (err, reply) {
+				if (err)
+					reject(err);
+				else
+					resolve(JSON.parse(reply))
+			});
 		});
 	},
 
-	async getProfile(userId, isSelf = false) {
-
-	},
-
-	async getMany (params, reqUserId) {
+	async getMany(params, reqUserId) {
 		const limit = params.limit || 20;
 		const sort = params.sort || -1;
 
@@ -114,7 +159,16 @@ export const userController = {
 	},
 
 	// TODO - Filter fields
-	async update(userId, params) {
-		return User.update({_id: Types.ObjectId(userId)}, {...params})
+	async update(id, params) {
+		// Update DB
+		const result = await User.update({_id: Types.ObjectId(id)}, params);
+
+		if (result.nModified && result.ok) {
+			return this.get(id, undefined, true);
+		}
+	},
+
+	async remove(id) {
+
 	}
 };

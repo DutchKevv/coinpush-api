@@ -6,7 +6,7 @@ import * as morgan from 'morgan';
 import * as mongoose from 'mongoose';
 import OandaApi from '../../shared/brokers/oanda/index';
 
-const config = require('../../tradejs.config.json');
+const config = require('../../tradejs.config');
 const app = express();
 const http = _http.createServer(app);
 const db = mongoose.connection;

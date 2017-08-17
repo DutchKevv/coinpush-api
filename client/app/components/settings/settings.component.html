@@ -7,11 +7,10 @@
             <div class="form-box-column">
                 <div class="form-box">
                     <label for="country">Country</label>
-                    <input id="country" formControlName="username"  autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-                </div>
-                <div class="form-box">
-                    <label for="dob">Date of birth</label>
-                    <input id="dob" formControlName="username"  autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+                    <select id="country">
+                        <option value="m">Male</option>
+                        <option value="m">Female</option>
+                    </select>
                 </div>
                 <div class="form-box">
                     <label for="gender">Gender</label>
@@ -25,7 +24,7 @@
                 <div class="form-box" class="profileImg">
                     <!-- File input for upload without using the plugin. -->
                     <input accept=".jpg,.jpeg,.png,.gif,.bmp" (change)="onChangeFileInput($event)" id="uploadProfileImg" type="file"class="uploadInput" #uploadBtn/>
-                    <label for="uploadProfileImg" class="uploadInputBtn" [ngStyle]="{'background-image': 'url(' + model.options.profileImg + ')'}" #uploadImageHolder></label>
+                    <label for="uploadProfileImg" class="uploadInputBtn" [ngStyle]="{'background-image': 'url(' + model?.options.profileImg + ')'}" #uploadImageHolder></label>
                     <div class="saveOptions hidden" #saveOptions>
                         <span>save?</span> <a (click)="saveProfileImg()">Yes</a><a (click)="resetProfileImg()">No</a>
                     </div>
@@ -35,7 +34,7 @@
 
         <div class="form-box">
             <label for="description">About you</label>
-            <textarea id="description" formControlName="description" placeholder="Example: tell what kind of dog shit you like to eat the most">{{model.options.description}}</textarea>
+            <textarea id="description" formControlName="description"></textarea>
         </div>
 
         <!-- Privacy -->
@@ -48,18 +47,34 @@
             </div>
         </div>
 
+        <!-- Broker -->
+        <h2 class="headline-header">Broker</h2>
+        <div class="form-box">
+            <label for="brokerName">Name</label>
+            <select id="brokerName">
+                <option value="m" selected>Oanda</option>
+            </select>
+        </div>
+        <div class="form-box">
+            <label for="brokerAccountId">Account ID</label>
+            <input id="brokerAccountId" formControlName="brokerAccountId"  autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+        </div>
+        <div class="form-box">
+            <label for="brokerToken">Access token</label>
+            <textarea id="brokerToken" formControlName="brokerToken"  autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
+        </div>
+
         <!-- Account -->
         <h2 class="headline-header">Account</h2>
-        <div class="form-box-column">
-            <div class="form-box">
-                <label for="username">Username</label>
-                <input id="username" formControlName="username"  autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-            </div>
 
-            <div class="form-box">
-                <label for="email">Email</label>
-                <input id="email" formControlName="email" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-            </div>
+        <div class="form-box">
+            <label for="username">Username</label>
+            <input id="username" formControlName="username"  autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+        </div>
+
+        <div class="form-box">
+            <label for="email">Email</label>
+            <input id="email" formControlName="email" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
         </div>
         <div class="form-box">
             <button class="btn btn-sm btn-danger">Remove account</button>

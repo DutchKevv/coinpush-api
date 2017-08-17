@@ -28,12 +28,24 @@ export class UserService {
 		return this._http.post('/social/user', user).map((res: Response) => res.json());
 	}
 
-	get(id = '', type = USER_FETCH_TYPE_SLIM) {
-		return this._http.get('/social/user/' + id, {body: {type}}).map((res: Response) => new UserModel(res.json()));
+	get(id?: string, type = USER_FETCH_TYPE_SLIM) {
+		id = id || '';
+		return this._http.get('/social/user/' + id, {params: {type: type}}).map((res: Response) => new UserModel(res.json()));
 	}
 
 	getList() {
-		return this._http.get('/social/users').map((res: Response) => res.json());
+		return this._http.get('/social/users/').map((res: Response) => res.json());
+	}
+
+	update(changes) {
+		console.log('changes!', changes);
+		this.model.set(changes);
+
+		return this._http.put('/social/user/', changes).subscribe(() => {
+			this._alertService.success('Settings updated')
+		}, () => {
+			this._alertService.error('Error updating settings')
+		});
 	}
 
 	toggleFollow(state: boolean, model: UserModel) {

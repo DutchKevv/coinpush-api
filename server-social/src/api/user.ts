@@ -1,29 +1,14 @@
 import {Router} from 'express';
-import {User} from '../schemas/user';
 import {userController} from '../controllers/user.controller';
 
 const router = Router();
 
-router.get('/', async function (req: any, res, next) {
+router.get('/:id', async function (req: any, res, next) {
 	try {
-		res.send(await userController.get(req.user.id));
+		res.send(await userController.get(req.params.id, parseInt(req.query.type, 10)));
 	} catch (error) {
 		next(error);
 	}
-});
-
-router.get('/:id', function (req, res, next) {
-	const fields = {};
-	(req.body.fields || []).forEach(field => fields[field] = 1);
-
-	User.findById(req.params.id, fields)
-		.exec((error, user) => {
-			if (error) {
-				return next(error);
-			} else {
-				res.send(user);
-			}
-		});
 });
 
 router.post('/', async (req, res) => {
@@ -34,11 +19,21 @@ router.post('/', async (req, res) => {
 	}
 });
 
-router.put('/', async (req: any, res) => {
+router.put('/:id', async (req: any, res) => {
 	try {
-		res.send(await userController.update(req.body, req.user.id));
+		res.send(await userController.update(req.params.id, req.body));
 	} catch (error) {
+		console.log(error);
 		res.status(500).send(error);
+	}
+});
+
+router.delete('/:id', async (req: any, res, next) => {
+	try {
+		res.send(await userController.remove(req.params.id));
+	} catch (error) {
+		console.log(error);
+		next(error)
 	}
 });
 

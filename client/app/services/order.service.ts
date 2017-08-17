@@ -31,7 +31,7 @@ export class OrderService {
 	}
 
 	public create(options) {
-		const subscription = this.http.post('/order', options).map(res => this.createModel(res.json()));
+		const subscription = this.http.post('/order', options).map(res => console.log(res.json()) || this.createModel(res.json()));
 
 		subscription.subscribe(() => {
 			let file = options.side === this._constantsService.constants.ORDER_SIDE_BUY ? 'sounds/3.mp3' : 'sounds/2.mp3';

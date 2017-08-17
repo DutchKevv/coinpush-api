@@ -1,0 +1,29 @@
+[
+  {
+    "script": "server-gateway/index.js",
+    "name": "gateway",
+    "exec_mode": "fork",
+    "instances": 1
+  },
+  {
+    "script": "server/app.js",
+    "name": "old-api",
+    "exec_mode": "fork",
+    "instances": 1
+    // number of CPUs -1
+  },
+  {
+    "script": "server-social/index.js",
+    "name": "social-api",
+    "exec_mode": "fork",
+    "instances": 1
+    // number of CPUs -1
+  },
+  {
+    "script": "server-order/index.js",
+    "name": "order-api",
+    "exec_mode": "fork",
+    "instances": 1
+    // number of CPUs -1
+  }
+]

@@ -10,6 +10,7 @@ module.exports = {
         },
         'order': {
             'port': 3005,
+            "apiUrl": "http://localhost:3005",
             'connectionString': 'mongodb://localhost:27017/tradejs-orders'
         }
     },
@@ -18,6 +19,14 @@ module.exports = {
 		profileBaseUrl: '/images/profile/',
 		profileDefaultPath: path.join(__dirname, 'images', 'images', 'default', 'profile', 'nl.png'),
 		profileDefaultUrl: '/images/default/profile/nl.png'
+    },
+    redis: {
+        host: '127.0.0.1',
+        port: 6379,
+        key: {
+            user: 'user_'
+        }
+
     },
     'broker': {
         'account': {

@@ -14,7 +14,7 @@ mongoose.connect(config.server.social.connectionString);
 // handle mongo error
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
-    console.log('DB CONNECTED');
+    console.log('DB connected');
 });
 app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
@@ -29,10 +29,6 @@ app.use(body_parser_1.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use((req, res, next) => {
     let userId = req.headers['_id'];
-    if (!userId && req.originalUrl !== '/social/authenticate' &&
-        // !(req.originalUrl === '/social/file-upload/profile' && req.method === 'OPTIONS') &&
-        !(req.originalUrl === '/social/user' && req.method === 'POST'))
-        return res.status(400).send('Invalid request');
     req.user = { id: userId };
     next();
 });

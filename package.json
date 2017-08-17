@@ -23,7 +23,8 @@
     "NodeJS"
   ],
   "scripts": {
-    "postinstall": "cd server && npm i"
+    "postinstall": "cd server && npm i",
+    "redis": "redis-server --maxmemory 10mb --maxmemory-policy allkeys-lru"
   },
   "dependencies": {
     "faker": "^4.1.0"

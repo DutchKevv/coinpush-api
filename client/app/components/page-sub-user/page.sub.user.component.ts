@@ -51,7 +51,7 @@ export class PageSubUserComponent implements OnInit, AfterViewInit {
 
 		this.searchResults$.next(currentResult);
 
-		this._http.get('/search/' + value, {body: {limit: 5}}).map(res => res.json()).subscribe((result: any) => {
+		this._http.get('/search/' + value, {body: {params: 5}}).map(res => res.json()).subscribe((result: any) => {
 			currentResult.users = JSON.parse(result.users);
 			this.searchResults$.next(currentResult);
 		});

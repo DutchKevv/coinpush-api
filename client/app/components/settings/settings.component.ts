@@ -1,8 +1,10 @@
-import {ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, NgZone, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {UserService} from '../../services/user.service';
 import {AlertService} from '../../services/alert.service';
 import {Http} from '@angular/http';
 import {FormBuilder} from '@angular/forms';
+import {USER_FETCH_TYPE_PROFILE_SETTINGS} from '../../../../shared/constants/constants';
+import {UserModel} from '../../models/user.model';
 
 // define the constant url we would be uploading to.
 const URL = '/social/file-upload/profile';
@@ -26,6 +28,7 @@ export class SettingsComponent implements OnInit {
 	@ViewChild('saveOptions') saveOptions: ElementRef;
 
 	constructor(private _http: Http,
+				private _zone: NgZone,
 				private _elementRef: ElementRef,
 				private _formBuilder: FormBuilder,
 				private _userService: UserService) {
@@ -37,13 +40,36 @@ export class SettingsComponent implements OnInit {
 		this.model = this._userService.model;
 
 		this.form = this._formBuilder.group({
-			username: this.model.options.username,
-			email: this.model.options.email,
-			description: this.model.options.description
+			username: this._userService.model.options.username,
+			email: this._userService.model.options.email,
+			description: '',
+			country: this._userService.model.options.country,
+			brokerToken: '',
+			brokerAccountId: '',
 		});
 
-		this.form.valueChanges.subscribe(data => {
-			console.log('Form changes', data);
+		this._userService.get('', USER_FETCH_TYPE_PROFILE_SETTINGS).subscribe((user: UserModel) => {
+			console.log(user.options);
+
+			this.form.setValue({
+				username: user.options.username,
+				email: user.options.email,
+				country: user.options.country,
+				description: user.options.description,
+				brokerToken: user.options.brokerToken,
+				brokerAccountId: user.options.brokerAccountId
+			}, {onlySelf: true});
+
+			this.form.valueChanges.subscribe(data => {
+				const changes = {};
+
+				Object.keys(data).forEach(key => {
+					if (data[key] !== null)
+						changes[key] = data[key];
+				});
+
+				this._userService.update(changes);
+			});
 		});
 	}
 
