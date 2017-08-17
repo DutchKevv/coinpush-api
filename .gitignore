@@ -35,7 +35,7 @@ images/images/profile
 
 # Shared
 /shared/dist
-/shared/**/*.js
+#/shared/**/*.js
 /shared/**/*.map
 
 # Engine
