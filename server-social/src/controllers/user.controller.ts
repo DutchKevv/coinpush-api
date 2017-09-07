@@ -5,8 +5,6 @@ import {
 	USER_FETCH_TYPE_BROKER_DETAILS, USER_FETCH_TYPE_PROFILE, USER_FETCH_TYPE_PROFILE_SETTINGS, USER_FETCH_TYPE_SLIM,
 } from '../../../shared/constants/constants';
 
-const config = require('../../../tradejs.config');
-
 export const userController = {
 
 	async create(params) {
@@ -16,6 +14,8 @@ export const userController = {
 			username: params.username,
 			password: params.password,
 			passwordConf: params.passwordConf,
+			profileImg: params.profileImg,
+			description: params.description,
 			country: params.country
 		};
 

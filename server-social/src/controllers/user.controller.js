@@ -4,7 +4,6 @@ const mongoose_1 = require("mongoose");
 const redis = require("../modules/redis");
 const user_1 = require("../schemas/user");
 const constants_1 = require("../../../shared/constants/constants");
-const config = require('../../../tradejs.config');
 exports.userController = {
     async create(params) {
         let userData = {
@@ -12,6 +11,8 @@ exports.userController = {
             username: params.username,
             password: params.password,
             passwordConf: params.passwordConf,
+            profileImg: params.profileImg,
+            description: params.description,
             country: params.country
         };
         if (!userData.email || !userData.username || !userData.password || !userData.passwordConf)
