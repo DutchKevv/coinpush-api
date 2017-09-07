@@ -54,9 +54,9 @@ module.exports = {
             'timezone': 'America/New_York'
         },
         'path': {
-            'custom': '/Users/kewinbrandsma/Projects/TradeJS/custom',
-            'cache': '/Users/kewinbrandsma/Projects/TradeJS/_cache',
-            'config': '/Users/kewinbrandsma/Projects/TradeJS/_config'
+            'custom': path.join(__dirname, 'custom'),
+            'cache': path.join(__dirname, '_cache'),
+            'config': path.join(__dirname, '_config')
         }
     }
 };
