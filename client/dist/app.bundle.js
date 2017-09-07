@@ -4063,6 +4063,14 @@ UserModel.DEFAULTS = {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const events_1 = __webpack_require__(165);
 const merge = __webpack_require__(770);
@@ -4088,8 +4096,10 @@ class Base extends events_1.EventEmitter {
     get options() {
         return this._options;
     }
-    async init() {
-        this.initialized = true;
+    init() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.initialized = true;
+        });
     }
     get(key) {
         return typeof key === 'undefined' ? this._options : this._options[key];
@@ -4128,7 +4138,9 @@ Base.isWin = /^win/.test(process.platform);
 Base.isElectron = process && (process.env.ELECTRON || process.versions['electron']);
 Base.isNode = !!process;
 exports.Base = Base;
+
 //# sourceMappingURL=Base.js.map
+
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9)))
 
 /***/ }),
@@ -55226,7 +55238,9 @@ function mergeRanges(ranges) {
     return stack;
 }
 exports.mergeRanges = mergeRanges;
+
 //# sourceMappingURL=util.date.js.map
+
 
 /***/ }),
 /* 805 */
@@ -63893,6 +63907,7 @@ let CustomHttp = class CustomHttp extends __WEBPACK_IMPORTED_MODULE_1__angular_h
         return super.get(__WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].apiUrl + url, this.addJwt(options)).catch(this.handleError);
     }
     post(url, body, options) {
+        console.info(__WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].apiUrl + url);
         return super.post(__WEBPACK_IMPORTED_MODULE_2__app_config__["a" /* appConfig */].apiUrl + url, body, this.addJwt(options)).catch(this.handleError);
     }
     put(url, body, options) {
@@ -63944,7 +63959,7 @@ var _a, _b;
 
 "use strict";
 const appConfig = {
-    apiUrl: 'http://localhost'
+    apiUrl: ''
 };
 /* harmony export (immutable) */ __webpack_exports__["a"] = appConfig;
 

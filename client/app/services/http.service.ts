@@ -18,6 +18,7 @@ export class CustomHttp extends Http {
 	}
 
 	post(url: string, body: string, options?: RequestOptionsArgs): Observable<Response> {
+		console.info(appConfig.apiUrl + url);
 		return super.post(appConfig.apiUrl + url, body, this.addJwt(options)).catch(this.handleError);
 	}
 

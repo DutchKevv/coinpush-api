@@ -45,4 +45,5 @@ exports.log = {
         logger.error(ensureStringLength(owner) + ' : ', ...params);
     }
 };
+
 //# sourceMappingURL=logger.js.map

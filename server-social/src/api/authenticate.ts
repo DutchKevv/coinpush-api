@@ -15,15 +15,13 @@ router.get('/', function (req, res, next) {
 });
 
 router.post('/', (req, res, next) => {
-	// console.log(req.body);
-
 	if (!req.body.username || !req.body.password)
 		return res.status(400).send('Username or password is incorrect');
 
 	User.authenticate(req.body.username, req.body.password, req.body.token, (err, result) => {
 		if (err) {
 			console.error(err);
-			return res.status(500).send('Error');
+			next(err);
 		}
 
 		if (!result)

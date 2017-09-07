@@ -3,26 +3,27 @@ const path = require('path');
 module.exports = {
     server: {
         gateway: {
-            port: 80,
-            "secret": "REPLACE THIS WITH YOUR OWN SECRET, IT CAN BE ANY STRING"
+            port: 8008,
+            secret: 'I LIKE BOOBIES'
         },
-        'social': {
-            "port": 3002,
-            "connectionString": "mongodb://localhost:27017/tradejs-social",
-            "apiUrl": "http://localhost:3002"
+        social: {
+            'port': 3002,
+            'connectionString': 'mongodb://localhost:27017/tradejs-social',
+            'apiUrl': 'http://localhost:3002',
+            secret: 'I LIKE BOOBIES'
         },
-        'order': {
+        order: {
             'port': 3005,
-            "apiUrl": "http://localhost:3005",
+            'apiUrl': 'http://localhost:3005',
             'connectionString': 'mongodb://localhost:27017/tradejs-orders'
         },
-        'broker': {
+        broker: {
             'port': 3006,
-            "apiUrl": "http://localhost:3006"
+            'apiUrl': 'http://localhost:3006'
         },
-        'fe': {
+        fe: {
             'port': 4200,
-            "apiUrl": "http://localhost:4200"
+            'apiUrl': 'http://localhost:4200'
         }
     },
     image: {
@@ -39,7 +40,7 @@ module.exports = {
         }
 
     },
-    'broker': {
+    broker: {
         'account': {
             'broker': 'oanda',
             'id': null,
