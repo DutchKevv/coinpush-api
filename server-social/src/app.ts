@@ -6,7 +6,7 @@ import * as helmet from 'helmet';
 import * as morgan from 'morgan';
 import * as mongoose from 'mongoose';
 import bodyParser = require('body-parser');
-import {toolsController} from './controllers/tools.controller';
+import {toolsController} from './tools/tools.controller';
 
 const
 	config = require('../../tradejs.config'),

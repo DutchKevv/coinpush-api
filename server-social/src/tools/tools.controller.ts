@@ -1,6 +1,6 @@
 import * as faker from 'faker';
 import {User} from '../schemas/user';
-import {userController} from './user.controller';
+import {userController} from '../controllers/user.controller';
 
 
 export const toolsController = {

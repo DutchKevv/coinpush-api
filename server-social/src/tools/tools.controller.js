@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const faker = require("faker");
 const user_1 = require("../schemas/user");
-const user_controller_1 = require("./user.controller");
+const user_controller_1 = require("../controllers/user.controller");
 exports.toolsController = {
     injectUsers(amount = 1) {
         let i = 0;

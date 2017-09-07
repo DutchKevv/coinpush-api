@@ -9,7 +9,11 @@ npm-debug.*
 node_modules
 testem.log
 /dist
-*.map
+/**/*.map
+dump.rdb
+
+#### Log ####
+server.txt
 
 
 #### App ####
@@ -31,7 +35,6 @@ images/images/profile
 !/server/gulpfile.js
 !/server/copy-sql3-binary.js
 /server/**/*.map
-/server/server.txt
 
 # Shared
 /shared/dist
