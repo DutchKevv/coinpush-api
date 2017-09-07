@@ -1,4 +1,0 @@
-{
-  "port": 3005,
-  "connectionString": "mongodb://localhost:27017/tradejs-orders"
-}

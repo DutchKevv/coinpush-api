@@ -9,13 +9,20 @@ module.exports = {
         'social': {
             "port": 3002,
             "connectionString": "mongodb://localhost:27017/tradejs-social",
-            "apiUrl": "http://localhost:3002",
-            "secret": "REPLACE THIS WITH YOUR OWN SECRET, IT CAN BE ANY STRING"
+            "apiUrl": "http://localhost:3002"
         },
         'order': {
             'port': 3005,
             "apiUrl": "http://localhost:3005",
             'connectionString': 'mongodb://localhost:27017/tradejs-orders'
+        },
+        'broker': {
+            'port': 3006,
+            "apiUrl": "http://localhost:3006"
+        },
+        'fe': {
+            'port': 4200,
+            "apiUrl": "http://localhost:4200"
         }
     },
     image: {

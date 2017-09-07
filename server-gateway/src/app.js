@@ -12,36 +12,16 @@ const helmet = require('helmet');
 const request = require('request-promise');
 const {raw, urlencoded} = require('body-parser');
 
-const URL_BASIC_API = 'http://localhost:3000';
-const URL_CACHE_API = 'http://localhost:3001';
-const URL_SOCIAL_API = 'http://localhost:3002';
-const URL_USER_API = 'http://localhost:3003';
-const URL_NEWS_API = 'http://localhost:3004';
-const URL_ORDER_API = 'http://localhost:3005';
-const URL_MESSAGE_API = 'http://localhost:3006';
-const URL_FE_DEV_API = 'http://localhost:3000';
-
 const PATH_PUBLIC_PROD = path.join(__dirname, '../../client/dist');
 const PATH_PUBLIC_DEV = path.join(__dirname, '../../client/dist');
 const PATH_IMAGES_PROD = path.join(__dirname, '../../images');
 const PATH_IMAGES_DEV = path.join(__dirname, '../../images');
-
-// const apiServiceProxy = httpProxy(URL_BASIC_API);
-// const cacheServiceProxy = httpProxy(URL_CACHE_API);
-// const socialServiceProxy = httpProxy(URL_SOCIAL_API);
-// const userServiceProxy = httpProxy(URL_USER_API);
-// const newsServiceProxy = httpProxy(URL_NEWS_API);
-// const orderServiceProxy = httpProxy(URL_ORDER_API);
-// const scriptRunnerServiceProxy = httpProxy('http://localhost:3006');
-// const scriptBuilderProxy = httpProxy('http://localhost:3007');
-// const frontendDevServiceProxy = httpProxy(URL_FE_DEV_API);
 
 const proxy = httpProxy.createProxyServer({});
 
 app.use(morgan('dev'));
 app.use(helmet());
 app.use(urlencoded({extended: false}));
-// app.use(json());
 
 app.use(express.static(process.env.NODE_ENV === 'production' ? PATH_PUBLIC_PROD : PATH_PUBLIC_DEV));
 app.use(express.static(process.env.NODE_ENV === 'production' ? PATH_IMAGES_PROD : PATH_IMAGES_DEV));
@@ -89,15 +69,15 @@ app.use(function (req, res, next) {
 });
 
 app.get('/', (req, res) => {
-    proxy.web(req, res, {target: URL_FE_DEV_API});
+    proxy.web(req, res, {target: config.server.fe.apiUrl});
 });
 
 app.get('/images/*', (req, res) => {
-    proxy.web(req, res, {target: URL_FE_DEV_API});
+    proxy.web(req, res, {target: config.server.fe.apiUrl});
 });
 
 app.all('/social/authenticate', (req, res) => {
-    proxy.web(req, res, {target: URL_SOCIAL_API});
+    proxy.web(req, res, {target: config.server.social.apiUrl});
 });
 
 app.all('/social/user/:id?', (req, res) => {
@@ -105,23 +85,23 @@ app.all('/social/user/:id?', (req, res) => {
         let pieces = url.parse(req.url);
         req.url = url.resolve(pieces.pathname + '/', req.user.id + '/') + (pieces.search || '');
     }
-    proxy.web(req, res, {target: URL_SOCIAL_API});
+    proxy.web(req, res, {target: config.server.social.apiUrl});
 });
 
 app.get('/social/users', (req, res) => {
-    proxy.web(req, res, {target: URL_SOCIAL_API});
+    proxy.web(req, res, {target: config.server.social.apiUrl});
 });
 
 app.post('/social/file-upload/*', (req, res) => {
-    proxy.web(req, res, {target: URL_SOCIAL_API});
+    proxy.web(req, res, {target: config.server.social.apiUrl});
 });
 
 app.post('/social/follow/*', (req, res) => {
-    proxy.web(req, res, {target: URL_SOCIAL_API});
+    proxy.web(req, res, {target: config.server.social.apiUrl});
 });
 
 app.all('/order', (req, res) => {
-    proxy.web(req, res, {target: URL_ORDER_API});
+    proxy.web(req, res, {target: config.server.broker.apiUrl});
 });
 
 // app.post('/order', async (req, res) => {
@@ -173,7 +153,7 @@ app.all('/order', (req, res) => {
 // });
 
 app.get('/orders', async (req, res) => {
-    proxy.web(req, res, {target: URL_ORDER_API});
+    proxy.web(req, res, {target: config.server.broker.apiUrl});
 });
 
 app.get('/search', (req, res, next) => {
