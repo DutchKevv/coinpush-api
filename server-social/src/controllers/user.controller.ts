@@ -45,15 +45,14 @@ export const userController = {
 				break;
 			case USER_FETCH_TYPE_SLIM:
 			default:
-				fieldsArr = ['username', 'profileImg', 'country'];
+				fieldsArr = ['_id', 'username', 'profileImg', 'country'];
 				break;
 		}
 
-		if (!forceReload)
+		if (type !== USER_FETCH_TYPE_BROKER_DETAILS && !forceReload)
 			user = await this.getCached(REDIS_KEY, fieldsArr);
 
 		if (!user) {
-
 			let fieldsObj = {};
 			this.getAllowedFields.forEach(field => fieldsObj[field] = 1);
 

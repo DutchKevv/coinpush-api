@@ -6,6 +6,8 @@ import {isEqual, reduce, omit} 		from 'lodash';
 
 export class Base extends EventEmitter {
 
+	private _options: any = {};
+
 	public initialized = false;
 	public readonly changed$: Subject<any> = new Subject();
 	public readonly options$ = new BehaviorSubject({});
@@ -25,8 +27,6 @@ export class Base extends EventEmitter {
 	public get options() {
 		return this._options;
 	}
-
-	private _options: any = {};
 
 	constructor(options?: any) {
 		super();
@@ -57,7 +57,7 @@ export class Base extends EventEmitter {
 		}
 	}
 
-	public destroy() {
+	public destroy(...params: Array<any>) {
 		this.subscription.forEach(subscription => subscription.unsubscribe());
 	}
 

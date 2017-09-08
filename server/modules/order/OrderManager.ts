@@ -128,7 +128,7 @@ export default class OrderManager extends Base {
 	public getValue(order: IOrder, bid: number, ask: number) {
 		let value, profit;
 
-		if (order.type === 'buy') {
+		if (order.side === 'buy') {
 			value = bid * order.count;
 			profit = (bid - order.openBid) * order.count;
 		} else {
@@ -137,7 +137,7 @@ export default class OrderManager extends Base {
 			value = (order.openBid * order.count) + profit
 		}
 
-		console.log(order.type, order.openBid, bid, profit);
+		console.log(order.side, order.openBid, bid, profit);
 
 		profit = parseFloat(profit.toFixed(2));
 
@@ -155,6 +155,6 @@ export default class OrderManager extends Base {
 	}
 
 	private _calculateOrderPrice(order: IOrder): number {
-		return order.count * (order.type === 'sell' ? order.openBid : order.openAsk);
+		return order.count * (order.side === 'sell' ? order.openBid : order.openAsk);
 	}
 }

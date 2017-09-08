@@ -128,7 +128,7 @@ UserSchema.statics.authenticate = function (email, password, token, callback) {
                 username: user.username,
                 email: user.email,
                 profileImg: user.profileImg,
-                token: jwt.sign({ sub: user._id }, config.server.social.secret)
+                token: jwt.sign({ sub: user._id }, config.token.secret)
             });
         });
     });

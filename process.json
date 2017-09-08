@@ -3,24 +3,54 @@
     "script": "server-gateway/index.js",
     "name": "gateway",
     "exec_mode": "fork",
+    "env_production" : {
+      "NODE_ENV": "production"
+    },
     "instances": 1
   },
   {
     "script": "server/bootstrapper.js",
     "name": "old-api",
     "exec_mode": "fork",
+    "env_production" : {
+      "NODE_ENV": "production"
+    },
     "instances": 1
   },
   {
     "script": "server-social/index.js",
     "name": "social-api",
     "exec_mode": "fork",
+    "env_production" : {
+      "NODE_ENV": "production"
+    },
     "instances": 1
   },
   {
     "script": "server-order/index.js",
     "name": "order-api",
     "exec_mode": "fork",
+    "env_production" : {
+      "NODE_ENV": "production"
+    },
+    "instances": 1
+  },
+  {
+    "script": "server-broker/index.js",
+    "name": "broker-api",
+    "exec_mode": "fork",
+    "env_production" : {
+      "NODE_ENV": "production"
+    },
+    "instances": 1
+  },
+  {
+    "script": "server-cache/index.js",
+    "name": "cache-api",
+    "exec_mode": "fork",
+    "env_production" : {
+      "NODE_ENV": "production"
+    },
     "instances": 1
   }
 ]

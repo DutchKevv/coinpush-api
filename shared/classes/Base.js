@@ -16,11 +16,11 @@ const lodash_1 = require("lodash");
 class Base extends events_1.EventEmitter {
     constructor(options) {
         super();
+        this._options = {};
         this.initialized = false;
         this.changed$ = new Subject_1.Subject();
         this.options$ = new BehaviorSubject_1.BehaviorSubject({});
         this.subscription = [];
-        this._options = {};
         this.__setInitialOptions(new.target, options);
     }
     static getObjectDiff(a, b) {
@@ -50,7 +50,7 @@ class Base extends events_1.EventEmitter {
                 this.options$.next(this._options);
         }
     }
-    destroy() {
+    destroy(...params) {
         this.subscription.forEach(subscription => subscription.unsubscribe());
     }
     onDestroy() {

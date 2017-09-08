@@ -13,6 +13,8 @@ import {JSEditorComponent} from './components/jseditor/jseditor.component';
 import {ProfileComponent} from './components/profile/profile.component';
 import {PageSubUserComponent} from './components/page-sub-user/page.sub.user.component';
 import {SettingsComponent} from './components/settings/settings.component';
+import {SocialFeedComponent} from './components/social-feed/social.feed.component';
+import {ProfileChannelOverviewComponent} from './components/profile-channel-overview/profile.channel.overview.component';
 
 const routes: Routes = [
 	{path: '', redirectTo: 'main', pathMatch: 'full', canActivate: [AuthGuard]},
@@ -25,15 +27,14 @@ const routes: Routes = [
 			{path: 'channels', component: ChannelOverviewComponent},
 			{path: 'portfolio', component: PortfolioComponent},
 			{
-				path: 'user', component: PageSubUserComponent,
-				children: [
+				path: 'user', component: PageSubUserComponent, children: [
 					{path: '', redirectTo: 'overview', pathMatch: 'full'},
-					{
-						path: 'overview', component: UserOverviewComponent,
-					},
-					{
-						path: 'profile/:id', component: ProfileComponent,
-					}
+					{path: 'overview', component: UserOverviewComponent},
+					{path: 'profile/:id', component: ProfileComponent, children: [
+						{path: '', redirectTo: 'feed', pathMatch: 'full'},
+						{path: 'feed', component: SocialFeedComponent},
+						{path: 'channels', component: ProfileChannelOverviewComponent},
+					]}
 				]
 			},
 			{path: 'charts', component: ChartOverviewComponent},

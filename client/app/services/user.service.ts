@@ -8,7 +8,7 @@ import {StartupService} from './startup.service';
 @Injectable()
 export class UserService {
 
-	@Output() model: UserModel = new UserModel();
+	@Output() model: UserModel = new UserModel(JSON.parse(localStorage.getItem('currentUser') || '{}'));
 
 	constructor(private _http: Http,
 				private _alertService: AlertService,

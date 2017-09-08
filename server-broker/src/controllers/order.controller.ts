@@ -93,9 +93,9 @@ export const orderController = {
 	async _getUser(id) {
 		let user = await this.getCached();
 
-		if (user)
-			return user;
-
+		// if (user)
+		// 	return user;
+		console.log('ID ID USDER USER USER USER USER ID ID ID ID ID', id);
 		return await request({
 			uri: url.resolve(config.server.social.apiUrl, 'social/user/' + id),
 			qs: {

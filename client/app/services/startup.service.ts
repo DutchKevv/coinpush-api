@@ -5,19 +5,18 @@ import {UserModel} from '../models/user.model';
 @Injectable()
 export class StartupService {
 
-	private loggedInUser: UserModel = new UserModel();
+	private _loggedInUser: UserModel = new UserModel(JSON.parse(localStorage.getItem('currentUser') || '{}'));
 	private baseApiUrl: string;
 
-	constructor(
-		private _http: Http) {
+	constructor(private _http: Http) {
 	}
 
 	load(): Promise<any> {
-		this.loggedInUser = new UserModel();
+		this._loggedInUser = new UserModel();
 
 		return this._http.get('/social/user', {body: {type: 2}})
 			.map((res) => {
-				this.loggedInUser.set(res.json());
+				this._loggedInUser.set(res.json());
 			})
 			.toPromise()
 			.catch((err: any) => {
@@ -26,6 +25,6 @@ export class StartupService {
 	}
 
 	get getLoggedInUser(): any {
-		return this.loggedInUser;
+		return this._loggedInUser;
 	}
 }

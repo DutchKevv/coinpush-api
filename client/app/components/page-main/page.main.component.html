@@ -1,5 +1,5 @@
 <nav class="nav-main">
-    <a class="profile">
+    <a [routerLink]="['/main/user/profile/' + userService.model.get('_id')]" [routerLinkActive]="['active']" class="profile">
         <img class="logo" width="70" height="70" src="{{userService.model.options.profileImg}}">
         <h4>{{userService.model.options.username}}</h4>
     </a>
@@ -9,7 +9,7 @@
         <span>Watchlist</span>
     </a>
     <a [routerLink]="['/main/portfolio']" [routerLinkActive]="['active']">
-        <i class="fa fa-tasks"></i>
+        <i class="fa fa-handshake-o"></i>
         <span>Portfolio</span>
     </a>
     <a [routerLink]="['/main/news']" [routerLinkActive]="['active']">

@@ -7,57 +7,13 @@
             </div>
         </div>
         <nav class="nav">
-            <a class="active"><i class="fa fa-comments-o"></i>Feed</a>
-            <a><i class="fa fa-bar-chart"></i>Stats</a>
-            <a><i class="fa fa-pie-chart"></i>Portfolio</a>
-            <a><i class="fa fa-area-chart"></i>Chart</a>
+            <a [routerLink]="['/main/user/profile/' + user._id + '/feed']" [routerLinkActive]="['active']"><i class="fa fa-comments-o"></i>Feed</a>
+            <a [routerLink]="['/main/user/profile/' + user._id + '/channels']" [routerLinkActive]="['active']"><i class="fa fa-exchange"></i>Channels</a>
+            <a [routerLink]="['/main/user/profile/' + user._id + '/statistics']" [routerLinkActive]="['active']"><i class="fa fa-bar-chart"></i>Stats</a>
+            <a [routerLink]="['/main/user/profile/' + user._id + '/chart']" [routerLinkActive]="['active']"><i class="fa fa-area-chart"></i>Chart</a>
         </nav>
     </header>
 
-    <main class="scroll-container">
+    <router-outlet></router-outlet>
 
-        <div class="box-container">
-            <dl>
-                <dt>Username:</dt>
-                <dd>{{user.username}}</dd>
-                <dt>Age:</dt>
-                <dd>{{user.age}}</dd>
-                <dt> Member since:</dt>
-                <dd>Comment</dd>
-            </dl>
-        </div>
-
-        <div class="box-container pull-right">
-            <dl>
-                <dt>Username:</dt>
-                <dd>{{user.username}}</dd>
-                <dt>Age:</dt>
-                <dd>{{user.age}}</dd>
-                <dt> Member since:</dt>
-                <dd>Comment</dd>
-            </dl>
-        </div>
-
-        <div class="box-container">
-            <dl>
-                <dt>Username:</dt>
-                <dd>{{user.username}}</dd>
-                <dt>Age:</dt>
-                <dd>{{user.age}}</dd>
-                <dt> Member since:</dt>
-                <dd>Comment</dd>
-            </dl>
-        </div>
-
-        <div class="box-container pull-right">
-            <dl>
-                <dt>Username:</dt>
-                <dd>{{user.username}}</dd>
-                <dt>Age:</dt>
-                <dd>{{user.age}}</dd>
-                <dt> Member since:</dt>
-                <dd>Comment</dd>
-            </dl>
-        </div>
-    </main>
 </ng-container>

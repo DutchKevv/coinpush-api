@@ -118,6 +118,7 @@ UserSchema.statics.authenticate = function (email, password, token, callback) {
 			} else if (!user) {
 				return callback(null, null);
 			}
+
 			bcrypt.compare(password, user.password, function (_err, result) {
 				if (_err)
 					return callback(_err);
@@ -132,7 +133,7 @@ UserSchema.statics.authenticate = function (email, password, token, callback) {
 					username: user.username,
 					email: user.email,
 					profileImg: user.profileImg,
-					token: jwt.sign({sub: user._id}, config.server.social.secret)
+					token: jwt.sign({sub: user._id}, config.token.secret)
 				});
 			});
 		});

@@ -3,6 +3,7 @@
 const url = require('url');
 const path = require('path');
 const express = require('express');
+const http = require('http');
 const httpProxy = require('http-proxy');
 const expressJwt = require('express-jwt');
 const config = require('../../tradejs.config');
@@ -11,13 +12,19 @@ const morgan = require('morgan');
 const helmet = require('helmet');
 const request = require('request-promise');
 const {raw, urlencoded} = require('body-parser');
-
 const PATH_PUBLIC_PROD = path.join(__dirname, '../../client/dist');
 const PATH_PUBLIC_DEV = path.join(__dirname, '../../client/dist');
 const PATH_IMAGES_PROD = path.join(__dirname, '../../images');
 const PATH_IMAGES_DEV = path.join(__dirname, '../../images');
 
+const server = app.listen(config.server.gateway.port, () => {
+    console.log('Gateway listening on port : ' + config.server.gateway.port);
+});
+
 const proxy = httpProxy.createProxyServer({});
+proxy.on('error', function (err, req, res) {
+    console.error(err);
+});
 
 app.use(morgan('dev'));
 app.use(helmet());
@@ -34,7 +41,7 @@ app.use((req, res, next) => {
 
 // use JWT auth to secure the api, the token can be passed in the authorization header or query string
 app.use(expressJwt({
-    secret: config.server.gateway.secret,
+    secret: config.token.secret,
     getToken(req) {
         if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer')
             return req.headers.authorization.split(' ')[1];
@@ -68,14 +75,38 @@ app.use(function (req, res, next) {
     next();
 });
 
+/**
+ * index.html
+ */
 app.get('/', (req, res) => {
     proxy.web(req, res, {target: config.server.fe.apiUrl});
 });
 
+/**
+ * images
+ */
 app.get('/images/*', (req, res) => {
     proxy.web(req, res, {target: config.server.fe.apiUrl});
 });
 
+/**
+ * websocket
+ */
+server.on('upgrade', (req, socket, head) => {
+    proxy.ws(req, socket, head, { target: config.server.cache.apiUrl });
+});
+
+/**
+ * channel
+ */
+app.all('/channel', (req, res) => {
+    proxy.web(req, res, {target: config.server.channel.apiUrl});
+});
+
+
+/**
+ * social
+ */
 app.all('/social/authenticate', (req, res) => {
     proxy.web(req, res, {target: config.server.social.apiUrl});
 });
@@ -100,62 +131,21 @@ app.post('/social/follow/*', (req, res) => {
     proxy.web(req, res, {target: config.server.social.apiUrl});
 });
 
+/**
+ * ORDER
+ */
 app.all('/order', (req, res) => {
-    proxy.web(req, res, {target: config.server.broker.apiUrl});
+    console.log('ORDER!!!!');
+    proxy.web(req, res, {target: config.server.order.apiUrl});
 });
-
-// app.post('/order', async (req, res) => {
-//     proxy.web(req, res, {target: URL_ORDER_API});
-
-    // // console.log(req);
-    // const params = JSON.parse(req.rawBody);
-    // params.users = [req.user.sub];
-    //
-    // try {
-    //     // Place order
-    //     const order = await request({
-    //         method: 'POST',
-    //         uri: url.resolve(URL_ORDER_API, 'order'),
-    //         headers: {'_id': req.user.sub},
-    //         json: params
-    //     });
-    //     res.send(order[0]);
-    // } catch (error) {
-    //     res.status(error.statusCode).send(error.error.message);
-    //     return;
-    // }
-    //
-    //
-    // // Get followers and call orders again for all followers
-    // try {
-    //     const result = await request({
-    //         uri: url.resolve(URL_SOCIAL_API, 'social/user'),
-    //         headers: {'_id': req.user.sub},
-    //         qs: {
-    //             fields: ['followers']
-    //         },
-    //         json: true
-    //     });
-    //     if (result.followers.length) {
-    //
-    //         params.users = result.followers;
-    //
-    //         await request({
-    //             method: 'POST',
-    //             uri: url.resolve(URL_ORDER_API, 'order'),
-    //             headers: {'_id': req.user.sub},
-    //             json: params
-    //         });
-    //     }
-    // } catch (error) {
-    //     console.log('FOLLOWERS ERROR: ', error);
-    // }
-// });
 
 app.get('/orders', async (req, res) => {
-    proxy.web(req, res, {target: config.server.broker.apiUrl});
+    proxy.web(req, res, {target: config.server.order.apiUrl});
 });
 
+/**
+ * SEARCH
+ */
 app.get('/search', (req, res, next) => {
     next();
 });
@@ -189,8 +179,4 @@ app.get('/search/:text', async (req, res) => {
     }
 
     res.send(returnObj);
-});
-
-app.listen(config.server.gateway.port, () => {
-    console.log('Gateway listening on port : ' + config.server.gateway.port);
 });

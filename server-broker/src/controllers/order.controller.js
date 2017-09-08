@@ -23,6 +23,7 @@ exports.orderController = {
         try {
             // Get user that created order
             const user = JSON.parse(await this._getUser(params.user));
+            console.log("USER SDFSDF", user);
             // Create a new broker class
             // TODO : Refactor
             const broker = new index_1.default({
@@ -69,8 +70,9 @@ exports.orderController = {
     },
     async _getUser(id) {
         let user = await this.getCached();
-        if (user)
-            return user;
+        // if (user)
+        // 	return user;
+        console.log('ID ID USDER USER USER USER USER ID ID ID ID ID', id);
         return await request({
             uri: url.resolve(config.server.social.apiUrl, 'social/user/' + id),
             qs: {

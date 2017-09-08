@@ -77,23 +77,13 @@ export class CacheService {
 
 	private _connect() {
 		this._zone.runOutsideAngular(() => {
-			this._socket = io(this._getUrl(), {
+			this._socket = io('/', {
 				'reconnectionAttempts': 10, // avoid having user reconnect manually in order to prevent dead clients after a server restart
 				'timeout': 10000, // before connect_error and connect_timeout are emitted.
-				'transports': ['websocket']
+				'transports': ['websocket'],
+				path: '/candles'
 			});
 		});
-	}
-
-	private _getUrl(): string {
-		// Electron
-		if (window.location.protocol === 'file:') {
-			return 'http://localhost:3001';
-
-			// Browser | external
-		} else {
-			return window.location.hostname + ':3001';
-		}
 	}
 
 	public loadSymbolList() {

@@ -36,7 +36,7 @@ export default class BrokerController extends Base {
 
 			await Promise.all([
 				this._broker.testConnection(),
-				this.app.controllers.cache.updateBrokerSettings(accountConfig)
+				// this.app.controllers.cache.updateBrokerSettings(accountConfig)
 			]);
 
 			this.app.controllers.system.update({connected: true});
@@ -54,7 +54,7 @@ export default class BrokerController extends Base {
 
 		if (this._broker) {
 			try {
-				await Promise.all([this._broker.destroy(), this.app.controllers.cache.updateBrokerSettings({})]);
+				await this._broker.destroy();
 			} catch (error) {
 				log.error('BrokerController', error);
 			}

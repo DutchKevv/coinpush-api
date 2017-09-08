@@ -23,6 +23,7 @@ mongoose.connect(config.server.social.connectionString);
 				profileImg: faker.random.image(),
 				description: faker.lorem.sentence()
 			});
+
 		} catch (error) {
 			console.error('USER ERROR', error);
 		}

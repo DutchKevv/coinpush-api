@@ -1,29 +1,49 @@
 const path = require('path');
 
 module.exports = {
+    system: {
+        'port': 3000,
+        'timezone': 'America/New_York'
+    },
+    path: {
+        'custom': path.join(__dirname, 'custom'),
+        'config': path.join(__dirname, '_config')
+    },
+    token: {
+        secret: 'BUTTERFLY1942'
+    },
     server: {
         gateway: {
-            port: 8008,
-            secret: 'I LIKE BOOBIES'
+            port: 80
+        },
+        cache: {
+            port: 3001,
+            apiUrl: 'http://localhost:3001',
+            connectionString: 'mongodb://localhost:27017/tradejs-cache'
         },
         social: {
-            'port': 3002,
-            'connectionString': 'mongodb://localhost:27017/tradejs-social',
-            'apiUrl': 'http://localhost:3002',
-            secret: 'I LIKE BOOBIES'
+            port: 3002,
+            apiUrl: 'http://localhost:3002',
+            connectionString: 'mongodb://localhost:27017/tradejs-social'
         },
         order: {
-            'port': 3005,
-            'apiUrl': 'http://localhost:3005',
-            'connectionString': 'mongodb://localhost:27017/tradejs-orders'
+            port: 3005,
+            apiUrl: 'http://localhost:3005',
+            connectionString: 'mongodb://localhost:27017/tradejs-orders'
         },
         broker: {
-            'port': 3006,
-            'apiUrl': 'http://localhost:3006'
+            port: 3006,
+            apiUrl: 'http://localhost:3006'
+        },
+        channel: {
+            port: 3007,
+            apiUrl: 'http://localhost:3007',
+            connectionString: 'mongodb://localhost:27017/tradejs-channels'
+
         },
         fe: {
-            'port': 4200,
-            'apiUrl': 'http://localhost:4200'
+            port: 4200,
+            apiUrl: 'http://localhost:4200'
         }
     },
     image: {
@@ -41,22 +61,12 @@ module.exports = {
 
     },
     broker: {
-        'account': {
+        account: {
             'broker': 'oanda',
-            'id': null,
             'environment': '',
             'username': null,
             'token': '067331173f67faf3cef7e69263a3015a-fefb596cddfe98d2f24e9ca843c3c443',
             'accountId': '1218398'
-        },
-        'system': {
-            'port': 3000,
-            'timezone': 'America/New_York'
-        },
-        'path': {
-            'custom': path.join(__dirname, 'custom'),
-            'cache': path.join(__dirname, '_cache'),
-            'config': path.join(__dirname, '_config')
         }
     }
 };

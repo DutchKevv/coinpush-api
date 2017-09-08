@@ -57,6 +57,9 @@ import {ProfileComponent} from './components/profile/profile.component';
 import {PageSubUserComponent} from './components/page-sub-user/page.sub.user.component';
 import {SettingsComponent} from './components/settings/settings.component';
 import {StartupService} from './services/startup.service';
+import {SocialFeedComponent} from './components/social-feed/social.feed.component';
+import {ChannelRowComponent} from './components/channel-row/channel.row.component';
+import {ProfileChannelOverviewComponent} from './components/profile-channel-overview/profile.channel.overview.component';
 
 export function startupServiceFactory(startupService: StartupService): Function {
 	return () => startupService.load();
@@ -82,6 +85,8 @@ export function startupServiceFactory(startupService: StartupService): Function 
 		PagePlaygroundComponent,
 		InstrumentListComponent,
 		JSEditorComponent,
+		SocialFeedComponent,
+		ChannelRowComponent,
 		LoginComponent,
 		RegisterComponent,
 		ModalComponent,
@@ -97,6 +102,7 @@ export function startupServiceFactory(startupService: StartupService): Function 
 		PortfolioComponent,
 		GroupByPipe,
 		ProfileComponent,
+		ProfileChannelOverviewComponent,
 		PageSubUserComponent,
 		SettingsComponent
 	],

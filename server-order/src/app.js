@@ -10,10 +10,10 @@ const index_1 = require("../../shared/brokers/oanda/index");
 const config = require('../../tradejs.config');
 const app = express();
 const http = _http.createServer(app);
-const db = mongoose.connection;
 /**
- *  Database
+ *  DB
  */
+const db = mongoose.connection;
 mongoose.Promise = global.Promise;
 mongoose.connect(config.server.order.connectionString);
 // handle mongo error

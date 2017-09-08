@@ -199,9 +199,7 @@ export default class OandaApi extends Base {
 			this._client.createOrder(this.options.accountId, _options, (err, result) => {
 				if (err)
 					return reject(err);
-
-				console.log(result.tradeOpened.id)
-				console.log('asfasfsdf', result);
+				
 				resolve({
 					openTime: result.time,
 					openPrice: result.price,

@@ -36,10 +36,10 @@ exports.userController = {
                 break;
             case constants_1.USER_FETCH_TYPE_SLIM:
             default:
-                fieldsArr = ['username', 'profileImg', 'country'];
+                fieldsArr = ['_id', 'username', 'profileImg', 'country'];
                 break;
         }
-        if (!forceReload)
+        if (type !== constants_1.USER_FETCH_TYPE_BROKER_DETAILS && !forceReload)
             user = await this.getCached(REDIS_KEY, fieldsArr);
         if (!user) {
             let fieldsObj = {};

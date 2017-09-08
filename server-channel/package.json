@@ -1,0 +1,24 @@
+{
+  "name": "tradejs-channel-server",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "tsc && node index.js"
+  },
+  "author": "H.K.Brandsma",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.4",
+    "helmet": "^3.8.1",
+    "jsonwebtoken": "^7.4.2",
+    "minimist": "^1.2.0",
+    "mongoose": "^4.11.5",
+    "morgan": "^1.8.2",
+    "redis": "^2.8.0",
+    "typescript": "^2.4.2",
+    "validator": "^8.0.0"
+  }
+}

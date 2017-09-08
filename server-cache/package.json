@@ -1,0 +1,31 @@
+{
+  "name": "tradejs-cache-server",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "tsc && node index.js"
+  },
+  "author": "H.K.Brandsma",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "cross-env": "^5.0.4",
+    "express": "^4.15.4",
+    "express-http-proxy": "^1.0.6",
+    "express-jwt": "^5.3.0",
+    "helmet": "^3.8.1",
+    "jsonwebtoken": "^7.4.2",
+    "minimist": "^1.2.0",
+    "mkdirp": "^0.5.1",
+    "mongoose": "^4.11.5",
+    "morgan": "^1.8.2",
+    "redis": "^2.8.0",
+    "request": "^2.81.0",
+    "request-promise": "^4.2.1",
+    "socket.io": "^2.0.3",
+    "typescript": "^2.4.2",
+    "validator": "^8.0.0"
+  }
+}

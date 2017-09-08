@@ -59,7 +59,7 @@ export default class BacktestController extends Base {
 		return this._backtests.find(backtest => backtest.model.get('id') === id);
 	}
 
-	public destroy(id) {
+	public destroy() {
 
 	}
 }

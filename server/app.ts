@@ -7,11 +7,10 @@ import * as freePort from 'freeport';
 import * as express from 'express';
 import * as io from 'socket.io';
 import * as proxy from 'express-http-proxy';
-import * as colors from '../shared/node_modules/colors';
+// import * as colors from '../shared/node_modules/colors';
 
 import IPC from './classes/ipc/IPC';
 import AccountController from './controllers/AccountController';
-import CacheController from './controllers/CacheController';
 import SystemController from './controllers/SystemController';
 import InstrumentController from './controllers/InstrumentController';
 import EditorController from './controllers/EditorController';
@@ -74,7 +73,6 @@ export default class App extends Base {
 		account: AccountController,
 		backtest: BacktestController,
 		broker: BrokerController,
-		cache: CacheController,
 		config: ConfigController,
 		editor: EditorController,
 		instrument: InstrumentController,
@@ -122,7 +120,6 @@ export default class App extends Base {
 		this.controllers.system = new SystemController({}, this);
 		this.controllers.broker = new BrokerController({}, this);
 		this.controllers.account = new AccountController({}, this);
-		this.controllers.cache = new CacheController({path: config.path.cache}, this);
 		this.controllers.editor = new EditorController({path: config.path.custom}, this);
 		this.controllers.instrument = new InstrumentController({}, this);
 		this.controllers.backtest = new BacktestController({}, this);
@@ -130,7 +127,7 @@ export default class App extends Base {
 		// Initialize controllers
 		await this.controllers.system.init();
 		await this.controllers.broker.init();
-		await this.controllers.cache.init();
+		// await this.controllers.cache.init();
 		await this.controllers.instrument.init();
 		await this.controllers.editor.init();
 		await this.controllers.backtest.init();
@@ -232,7 +229,6 @@ export default class App extends Base {
 
 				console.log(`\n
 	App      : 127.0.0.1:${port}
-	Cache    : 127.0.0.1:3001
 	${process.env.NODE_ENV === 'production' ? '' : 'Angular  : 127.0.0.1:4200'}
 				`);
 
@@ -255,10 +251,6 @@ export default class App extends Base {
 			this.controllers.instrument.on('created', (instrument: InstrumentModel) => {
 				this._io.sockets.emit('instrument:created', instrument.options);
 			});
-
-			// this.ipc.on('cache:fetch:status', (data) => {
-			// 	this._io.sockets.emit('cache:fetch:status', data);
-			// });
 
 			this.controllers.editor.on('directory-list', (directoryList) => {
 				this._io.sockets.emit('editor:directory-list', directoryList);
@@ -309,9 +301,9 @@ export default class App extends Base {
 		};
 
 		process.on('SIGTERM', processExitHandler);
+		process.on('SIGINT', processExitHandler);
 		process.on('exit', processExitHandler);
 		process.on('beforeExit', processExitHandler);
-		process.on('SIGINT', processExitHandler);
 		process.on('unhandledRejection', processExitHandler);
 	}
 
@@ -321,9 +313,6 @@ export default class App extends Base {
 
 		if (this.controllers.instrument)
 			this.controllers.instrument.destroyAll();
-
-		if (this.controllers.cache)
-			this.controllers.cache.destroy();
 
 		if (this.controllers.editor)
 			this.controllers.editor.destroy();

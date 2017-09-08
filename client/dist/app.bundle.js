@@ -95,7 +95,7 @@ let UserService = class UserService {
         this._http = _http;
         this._alertService = _alertService;
         this._startupService = _startupService;
-        this.model = new __WEBPACK_IMPORTED_MODULE_1__models_user_model__["a" /* UserModel */]();
+        this.model = new __WEBPACK_IMPORTED_MODULE_1__models_user_model__["a" /* UserModel */](JSON.parse(localStorage.getItem('currentUser') || '{}'));
         this.init();
     }
     get connected() {
@@ -2798,22 +2798,13 @@ let CacheService = class CacheService {
     }
     _connect() {
         this._zone.runOutsideAngular(() => {
-            this._socket = __WEBPACK_IMPORTED_MODULE_5_socket_io_client__(this._getUrl(), {
+            this._socket = __WEBPACK_IMPORTED_MODULE_5_socket_io_client__('/', {
                 'reconnectionAttempts': 10,
                 'timeout': 10000,
-                'transports': ['websocket']
+                'transports': ['websocket'],
+                path: '/candles'
             });
         });
-    }
-    _getUrl() {
-        // Electron
-        if (window.location.protocol === 'file:') {
-            return 'http://localhost:3001';
-            // Browser | external
-        }
-        else {
-            return window.location.hostname + ':3001';
-        }
     }
     loadSymbolList() {
         // Create symbol class for each symbol
@@ -4080,11 +4071,11 @@ const lodash_1 = __webpack_require__(780);
 class Base extends events_1.EventEmitter {
     constructor(options) {
         super();
+        this._options = {};
         this.initialized = false;
         this.changed$ = new Subject_1.Subject();
         this.options$ = new BehaviorSubject_1.BehaviorSubject({});
         this.subscription = [];
-        this._options = {};
         this.__setInitialOptions(new.target, options);
     }
     static getObjectDiff(a, b) {
@@ -4114,7 +4105,7 @@ class Base extends events_1.EventEmitter {
                 this.options$.next(this._options);
         }
     }
-    destroy() {
+    destroy(...params) {
         this.subscription.forEach(subscription => subscription.unsubscribe());
     }
     onDestroy() {
@@ -31503,13 +31494,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 let StartupService = class StartupService {
     constructor(_http) {
         this._http = _http;
-        this.loggedInUser = new __WEBPACK_IMPORTED_MODULE_2__models_user_model__["a" /* UserModel */]();
+        this._loggedInUser = new __WEBPACK_IMPORTED_MODULE_2__models_user_model__["a" /* UserModel */](JSON.parse(localStorage.getItem('currentUser') || '{}'));
     }
     load() {
-        this.loggedInUser = new __WEBPACK_IMPORTED_MODULE_2__models_user_model__["a" /* UserModel */]();
+        this._loggedInUser = new __WEBPACK_IMPORTED_MODULE_2__models_user_model__["a" /* UserModel */]();
         return this._http.get('/social/user', { body: { type: 2 } })
             .map((res) => {
-            this.loggedInUser.set(res.json());
+            this._loggedInUser.set(res.json());
         })
             .toPromise()
             .catch((err) => {
@@ -31517,7 +31508,7 @@ let StartupService = class StartupService {
         });
     }
     get getLoggedInUser() {
-        return this.loggedInUser;
+        return this._loggedInUser;
     }
 };
 StartupService = __decorate([
@@ -33868,6 +33859,9 @@ Object(__WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_dynamic__["a" /* pl
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_51__components_page_sub_user_page_sub_user_component__ = __webpack_require__(371);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_52__components_settings_settings_component__ = __webpack_require__(372);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_53__services_startup_service__ = __webpack_require__(358);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_54__components_social_feed_social_feed_component__ = __webpack_require__(876);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_55__components_channel_row_channel_row_component__ = __webpack_require__(879);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_56__components_profile_channel_overview_profile_channel_overview_component__ = __webpack_require__(882);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -33875,6 +33869,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 // Lib
+
+
+
 
 
 
@@ -33955,6 +33952,8 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_35__components_page_playground_page_playground_component__["a" /* PagePlaygroundComponent */],
             __WEBPACK_IMPORTED_MODULE_13__components_intrument_list_instrument_list_component__["a" /* InstrumentListComponent */],
             __WEBPACK_IMPORTED_MODULE_6__components_jseditor_jseditor_component__["a" /* JSEditorComponent */],
+            __WEBPACK_IMPORTED_MODULE_54__components_social_feed_social_feed_component__["a" /* SocialFeedComponent */],
+            __WEBPACK_IMPORTED_MODULE_55__components_channel_row_channel_row_component__["a" /* ChannelRowComponent */],
             __WEBPACK_IMPORTED_MODULE_17__components_login_login_component__["a" /* LoginComponent */],
             __WEBPACK_IMPORTED_MODULE_43__components_register_register_component__["a" /* RegisterComponent */],
             __WEBPACK_IMPORTED_MODULE_22__components_modal_modal_component__["a" /* ModalComponent */],
@@ -33970,6 +33969,7 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_49__components_portfolio_portfolio_component__["b" /* PortfolioComponent */],
             __WEBPACK_IMPORTED_MODULE_49__components_portfolio_portfolio_component__["a" /* GroupByPipe */],
             __WEBPACK_IMPORTED_MODULE_50__components_profile_profile_component__["a" /* ProfileComponent */],
+            __WEBPACK_IMPORTED_MODULE_56__components_profile_channel_overview_profile_channel_overview_component__["a" /* ProfileChannelOverviewComponent */],
             __WEBPACK_IMPORTED_MODULE_51__components_page_sub_user_page_sub_user_component__["a" /* PageSubUserComponent */],
             __WEBPACK_IMPORTED_MODULE_52__components_settings_settings_component__["a" /* SettingsComponent */]
         ],
@@ -55365,6 +55365,10 @@ module.exports = "data:image/svg+xml;base64,bW9kdWxlLmV4cG9ydHMgPSBfX3dlYnBhY2tf
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__components_profile_profile_component__ = __webpack_require__(370);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__components_page_sub_user_page_sub_user_component__ = __webpack_require__(371);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__components_settings_settings_component__ = __webpack_require__(372);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__components_social_feed_social_feed_component__ = __webpack_require__(876);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__components_profile_channel_overview_profile_channel_overview_component__ = __webpack_require__(882);
+
+
 
 
 
@@ -55390,15 +55394,14 @@ const routes = [
             { path: 'channels', component: __WEBPACK_IMPORTED_MODULE_6__components_channel_overview_channel_overview_component__["a" /* ChannelOverviewComponent */] },
             { path: 'portfolio', component: __WEBPACK_IMPORTED_MODULE_7__components_portfolio_portfolio_component__["b" /* PortfolioComponent */] },
             {
-                path: 'user', component: __WEBPACK_IMPORTED_MODULE_12__components_page_sub_user_page_sub_user_component__["a" /* PageSubUserComponent */],
-                children: [
+                path: 'user', component: __WEBPACK_IMPORTED_MODULE_12__components_page_sub_user_page_sub_user_component__["a" /* PageSubUserComponent */], children: [
                     { path: '', redirectTo: 'overview', pathMatch: 'full' },
-                    {
-                        path: 'overview', component: __WEBPACK_IMPORTED_MODULE_5__components_user_overview_user_overview_component__["a" /* UserOverviewComponent */],
-                    },
-                    {
-                        path: 'profile/:id', component: __WEBPACK_IMPORTED_MODULE_11__components_profile_profile_component__["a" /* ProfileComponent */],
-                    }
+                    { path: 'overview', component: __WEBPACK_IMPORTED_MODULE_5__components_user_overview_user_overview_component__["a" /* UserOverviewComponent */] },
+                    { path: 'profile/:id', component: __WEBPACK_IMPORTED_MODULE_11__components_profile_profile_component__["a" /* ProfileComponent */], children: [
+                            { path: '', redirectTo: 'feed', pathMatch: 'full' },
+                            { path: 'feed', component: __WEBPACK_IMPORTED_MODULE_14__components_social_feed_social_feed_component__["a" /* SocialFeedComponent */] },
+                            { path: 'channels', component: __WEBPACK_IMPORTED_MODULE_15__components_profile_channel_overview_profile_channel_overview_component__["a" /* ProfileChannelOverviewComponent */] },
+                        ] }
                 ]
             },
             { path: 'charts', component: __WEBPACK_IMPORTED_MODULE_8__components_chart_overview_chart_overview_component__["a" /* ChartOverviewComponent */] },
@@ -55419,7 +55422,7 @@ const routing = __WEBPACK_IMPORTED_MODULE_0__angular_router__["d" /* RouterModul
 /* 816 */
 /***/ (function(module, exports) {
 
-module.exports = "<nav class=\"nav-main\">\n    <a class=\"profile\">\n        <img class=\"logo\" width=\"70\" height=\"70\" src=\"{{userService.model.options.profileImg}}\">\n        <h4>{{userService.model.options.username}}</h4>\n    </a>\n\n    <a [routerLink]=\"['/main/channels']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-upload\"></i>\n        <span>Watchlist</span>\n    </a>\n    <a [routerLink]=\"['/main/portfolio']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-tasks\"></i>\n        <span>Portfolio</span>\n    </a>\n    <a [routerLink]=\"['/main/news']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-newspaper-o\"></i>\n        <span>News feed</span>\n    </a>\n    <a [routerLink]=\"['/main/user']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-users\"></i>\n        <span>Users</span>\n    </a>\n    <a [routerLink]=\"['/main/charts']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-bar-chart\"></i>\n        <span>Charts</span>\n    </a>\n    <a [routerLink]=\"['/main/backtest']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-flash\"></i>\n        <span>Backtest</span>\n    </a>\n    <a [routerLink]=\"['/main/editor']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-code\"></i>\n        <span>Editor</span>\n    </a>\n    <a [routerLink]=\"['/main/settings']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-gears\"></i>\n        <span>Settings</span>\n    </a>\n    <a (click)=\"logout()\">\n        <i class=\"fa fa-sign-out\"></i>\n        <span>Logout</span>\n    </a>\n</nav>\n\n<main class=\"main-container\">\n    <nav class=\"nav-search\">\n        <input (keyup)=\"onSearchKeyUp($event)\" placeholder=\"Markets / Channels / People\" #input>\n        <div class=\"search-drop-down\" *ngIf=\"(searchResults$ | async) as result\" (click)=\"onClickDropdownItem()\" #dropdown>\n            <a *ngFor=\"let symbol of result.symbols\">\n                <img src=\"/images/default/symbol/spx500-70x70.png\">\n                <span>{{symbol.name}}</span>\n            </a>\n            <a *ngFor=\"let user of result.users\" [routerLink]=\"['/main/user/profile/' + user._id]\">\n                <img src=\"{{user.profileImg}}\">\n                <span>{{user.username}}</span>\n            </a>\n        </div>\n    </nav>\n    <router-outlet></router-outlet>\n</main>\n"
+module.exports = "<nav class=\"nav-main\">\n    <a [routerLink]=\"['/main/user/profile/' + userService.model.get('_id')]\" [routerLinkActive]=\"['active']\" class=\"profile\">\n        <img class=\"logo\" width=\"70\" height=\"70\" src=\"{{userService.model.options.profileImg}}\">\n        <h4>{{userService.model.options.username}}</h4>\n    </a>\n\n    <a [routerLink]=\"['/main/channels']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-upload\"></i>\n        <span>Watchlist</span>\n    </a>\n    <a [routerLink]=\"['/main/portfolio']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-handshake-o\"></i>\n        <span>Portfolio</span>\n    </a>\n    <a [routerLink]=\"['/main/news']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-newspaper-o\"></i>\n        <span>News feed</span>\n    </a>\n    <a [routerLink]=\"['/main/user']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-users\"></i>\n        <span>Users</span>\n    </a>\n    <a [routerLink]=\"['/main/charts']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-bar-chart\"></i>\n        <span>Charts</span>\n    </a>\n    <a [routerLink]=\"['/main/backtest']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-flash\"></i>\n        <span>Backtest</span>\n    </a>\n    <a [routerLink]=\"['/main/editor']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-code\"></i>\n        <span>Editor</span>\n    </a>\n    <a [routerLink]=\"['/main/settings']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-gears\"></i>\n        <span>Settings</span>\n    </a>\n    <a (click)=\"logout()\">\n        <i class=\"fa fa-sign-out\"></i>\n        <span>Logout</span>\n    </a>\n</nav>\n\n<main class=\"main-container\">\n    <nav class=\"nav-search\">\n        <input (keyup)=\"onSearchKeyUp($event)\" placeholder=\"Markets / Channels / People\" #input>\n        <div class=\"search-drop-down\" *ngIf=\"(searchResults$ | async) as result\" (click)=\"onClickDropdownItem()\" #dropdown>\n            <a *ngFor=\"let symbol of result.symbols\">\n                <img src=\"/images/default/symbol/spx500-70x70.png\">\n                <span>{{symbol.name}}</span>\n            </a>\n            <a *ngFor=\"let user of result.users\" [routerLink]=\"['/main/user/profile/' + user._id]\">\n                <img src=\"{{user.profileImg}}\">\n                <span>{{user.username}}</span>\n            </a>\n        </div>\n    </nav>\n    <router-outlet></router-outlet>\n</main>\n"
 
 /***/ }),
 /* 817 */
@@ -55569,13 +55572,13 @@ module.exports = ".btn {\n  display: inline-block;\n  font-weight: normal;\n  li
 /* 834 */
 /***/ (function(module, exports) {
 
-module.exports = "<ng-container *ngIf=\"user$ | async as user\">\n    <header>\n        <div class=\"profile-details\">\n            <img class=\"profileImg\" src=\"{{user.profileImg}}\">\n            <div class=\"meta-data\">\n                <h2>{{user.username}}</h2>\n            </div>\n        </div>\n        <nav class=\"nav\">\n            <a class=\"active\"><i class=\"fa fa-comments-o\"></i>Feed</a>\n            <a><i class=\"fa fa-bar-chart\"></i>Stats</a>\n            <a><i class=\"fa fa-pie-chart\"></i>Portfolio</a>\n            <a><i class=\"fa fa-area-chart\"></i>Chart</a>\n        </nav>\n    </header>\n\n    <main class=\"scroll-container\">\n\n        <div class=\"box-container\">\n            <dl>\n                <dt>Username:</dt>\n                <dd>{{user.username}}</dd>\n                <dt>Age:</dt>\n                <dd>{{user.age}}</dd>\n                <dt> Member since:</dt>\n                <dd>Comment</dd>\n            </dl>\n        </div>\n\n        <div class=\"box-container pull-right\">\n            <dl>\n                <dt>Username:</dt>\n                <dd>{{user.username}}</dd>\n                <dt>Age:</dt>\n                <dd>{{user.age}}</dd>\n                <dt> Member since:</dt>\n                <dd>Comment</dd>\n            </dl>\n        </div>\n\n        <div class=\"box-container\">\n            <dl>\n                <dt>Username:</dt>\n                <dd>{{user.username}}</dd>\n                <dt>Age:</dt>\n                <dd>{{user.age}}</dd>\n                <dt> Member since:</dt>\n                <dd>Comment</dd>\n            </dl>\n        </div>\n\n        <div class=\"box-container pull-right\">\n            <dl>\n                <dt>Username:</dt>\n                <dd>{{user.username}}</dd>\n                <dt>Age:</dt>\n                <dd>{{user.age}}</dd>\n                <dt> Member since:</dt>\n                <dd>Comment</dd>\n            </dl>\n        </div>\n    </main>\n</ng-container>"
+module.exports = "<ng-container *ngIf=\"user$ | async as user\">\n    <header>\n        <div class=\"profile-details\">\n            <img class=\"profileImg\" src=\"{{user.profileImg}}\">\n            <div class=\"meta-data\">\n                <h2>{{user.username}}</h2>\n            </div>\n        </div>\n        <nav class=\"nav\">\n            <a [routerLink]=\"['/main/user/profile/' + user._id + '/feed']\" [routerLinkActive]=\"['active']\"><i class=\"fa fa-comments-o\"></i>Feed</a>\n            <a [routerLink]=\"['/main/user/profile/' + user._id + '/channels']\" [routerLinkActive]=\"['active']\"><i class=\"fa fa-exchange\"></i>Channels</a>\n            <a [routerLink]=\"['/main/user/profile/' + user._id + '/statistics']\" [routerLinkActive]=\"['active']\"><i class=\"fa fa-bar-chart\"></i>Stats</a>\n            <a [routerLink]=\"['/main/user/profile/' + user._id + '/chart']\" [routerLinkActive]=\"['active']\"><i class=\"fa fa-area-chart\"></i>Chart</a>\n        </nav>\n    </header>\n\n    <router-outlet></router-outlet>\n\n</ng-container>"
 
 /***/ }),
 /* 835 */
 /***/ (function(module, exports) {
 
-module.exports = "a, p, li, span, h1, h2, h3, h4, h5, h6, td, th, label {\n  color: #fff;\n  margin: 0;\n  -webkit-user-select: none;\n  user-select: none; }\n\nbutton {\n  color: #000;\n  cursor: pointer; }\n\nul {\n  list-style: none;\n  margin: 0;\n  padding: 0; }\n\na {\n  cursor: pointer;\n  text-decoration: none; }\n  a:hover, a:visited {\n    text-decoration: none; }\n\ntable {\n  border-collapse: collapse;\n  border-spacing: 0; }\n\ntd {\n  padding: 0; }\n\n:host {\n  display: flex;\n  flex-flow: column;\n  height: 100%; }\n\nheader {\n  background: #424242; }\n  header .profile-details {\n    padding: 20px;\n    display: flex; }\n  header > nav {\n    display: flex;\n    background: #222122;\n    align-items: center;\n    justify-content: center;\n    border-top: 1px solid #eee;\n    border-bottom: 1px solid #eee; }\n    header > nav a {\n      padding: 20px;\n      line-height: 34px;\n      display: flex; }\n      header > nav a:hover, header > nav a.active {\n        background: #424242;\n        color: #44f444; }\n      header > nav a i {\n        margin-right: 20px;\n        font-size: 30px !important; }\n  header .profileImg {\n    width: 70px;\n    height: 70px;\n    border-radius: 50%;\n    margin-right: 20px; }\n\nmain {\n  padding: 20px;\n  background: #424242;\n  height: 100%; }\n  main .scroll-container {\n    overflow-y: auto;\n    position: absolute;\n    top: 80px;\n    left: 0;\n    right: 0;\n    bottom: 0; }\n  main dl,\n  main dt,\n  main dd {\n    color: #fff; }\n\n.box-container {\n  padding: 20px;\n  border: 1px solid #eee;\n  width: 250px; }\n"
+module.exports = "a, p, li, span, h1, h2, h3, h4, h5, h6, td, th, label {\n  color: #fff;\n  margin: 0;\n  -webkit-user-select: none;\n  user-select: none; }\n\nbutton {\n  color: #000;\n  cursor: pointer; }\n\nul {\n  list-style: none;\n  margin: 0;\n  padding: 0; }\n\na {\n  cursor: pointer;\n  text-decoration: none; }\n  a:hover, a:visited {\n    text-decoration: none; }\n\ntable {\n  border-collapse: collapse;\n  border-spacing: 0; }\n\ntd {\n  padding: 0; }\n\n:host {\n  display: flex;\n  flex-flow: column;\n  height: 100%; }\n\nheader {\n  background: #424242; }\n  header .profile-details {\n    padding: 20px;\n    display: flex; }\n  header > nav {\n    display: flex;\n    background: #222122;\n    align-items: center;\n    justify-content: center;\n    border-top: 1px solid #eee;\n    border-bottom: 1px solid #eee; }\n    header > nav a {\n      padding: 20px;\n      line-height: 34px;\n      display: flex; }\n      header > nav a:hover, header > nav a.active {\n        background: #424242;\n        color: #44f444; }\n      header > nav a i {\n        margin-right: 20px;\n        font-size: 30px !important; }\n  header .profileImg {\n    width: 70px;\n    height: 70px;\n    border-radius: 50%;\n    margin-right: 20px; }\n"
 
 /***/ }),
 /* 836 */
@@ -64212,6 +64215,235 @@ function computeIgnoreFrames() {
 computeIgnoreFrames();
 
 })));
+
+
+/***/ }),
+/* 876 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SocialFeedComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_user_service__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_http__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_forms__ = __webpack_require__(49);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+let SocialFeedComponent = class SocialFeedComponent {
+    constructor(_http, _zone, _elementRef, _formBuilder, _userService) {
+        this._http = _http;
+        this._zone = _zone;
+        this._elementRef = _elementRef;
+        this._formBuilder = _formBuilder;
+        this._userService = _userService;
+    }
+    ngOnInit() {
+    }
+    onChangeFileInput(event) {
+    }
+};
+__decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["F" /* Input */])(),
+    __metadata("design:type", Object)
+], SocialFeedComponent.prototype, "model", void 0);
+SocialFeedComponent = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* Component */])({
+        selector: 'app-social-feed',
+        styles: [__webpack_require__(877)],
+        template: __webpack_require__(878),
+        encapsulation: __WEBPACK_IMPORTED_MODULE_0__angular_core__["_20" /* ViewEncapsulation */].Native,
+        changeDetection: __WEBPACK_IMPORTED_MODULE_0__angular_core__["k" /* ChangeDetectionStrategy */].OnPush
+    }),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__angular_http__["c" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_http__["c" /* Http */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["R" /* NgZone */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["R" /* NgZone */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["v" /* ElementRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["v" /* ElementRef */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_3__angular_forms__["a" /* FormBuilder */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_forms__["a" /* FormBuilder */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_1__services_user_service__["a" /* UserService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__services_user_service__["a" /* UserService */]) === "function" && _e || Object])
+], SocialFeedComponent);
+
+var _a, _b, _c, _d, _e;
+
+
+/***/ }),
+/* 877 */
+/***/ (function(module, exports) {
+
+module.exports = "a, p, li, span, h1, h2, h3, h4, h5, h6, td, th, label {\n  color: #fff;\n  margin: 0;\n  -webkit-user-select: none;\n  user-select: none; }\n\nbutton {\n  color: #000;\n  cursor: pointer; }\n\nul {\n  list-style: none;\n  margin: 0;\n  padding: 0; }\n\na {\n  cursor: pointer;\n  text-decoration: none; }\n  a:hover, a:visited {\n    text-decoration: none; }\n\ntable {\n  border-collapse: collapse;\n  border-spacing: 0; }\n\ntd {\n  padding: 0; }\n\nmain {\n  padding: 20px;\n  background: #424242;\n  height: 100%; }\n  main .scroll-container {\n    overflow-y: auto;\n    position: absolute;\n    top: 80px;\n    left: 0;\n    right: 0;\n    bottom: 0; }\n  main dl,\n  main dt,\n  main dd {\n    color: #fff; }\n\n.box-container {\n  padding: 20px;\n  border: 1px solid #eee;\n  width: 250px; }\n"
+
+/***/ }),
+/* 878 */
+/***/ (function(module, exports) {
+
+module.exports = "<main>\n\n    <!--<div class=\"box-container\">-->\n        <!--<dl>-->\n            <!--<dt>Username:</dt>-->\n            <!--<dd>{{model.options.username}}</dd>-->\n            <!--<dt>Age:</dt>-->\n            <!--<dd>{{model.options.age}}</dd>-->\n            <!--<dt> Member since:</dt>-->\n            <!--<dd>Comment</dd>-->\n        <!--</dl>-->\n    <!--</div>-->\n\n    <!--<div class=\"box-container pull-right\">-->\n        <!--<dl>-->\n            <!--<dt>Username:</dt>-->\n            <!--<dd>{{model.options.username}}</dd>-->\n            <!--<dt>Age:</dt>-->\n            <!--<dd>{{model.options.age}}</dd>-->\n            <!--<dt> Member since:</dt>-->\n            <!--<dd>Comment</dd>-->\n        <!--</dl>-->\n    <!--</div>-->\n\n    <!--<div class=\"box-container\">-->\n        <!--<dl>-->\n            <!--<dt>Username:</dt>-->\n            <!--<dd>{{model.options.username}}</dd>-->\n            <!--<dt>Age:</dt>-->\n            <!--<dd>{{model.options.age}}</dd>-->\n            <!--<dt> Member since:</dt>-->\n            <!--<dd>Comment</dd>-->\n        <!--</dl>-->\n    <!--</div>-->\n\n    <!--<div class=\"box-container pull-right\">-->\n        <!--<dl>-->\n            <!--<dt>Username:</dt>-->\n            <!--<dd>{{model.options.username}}</dd>-->\n            <!--<dt>Age:</dt>-->\n            <!--<dd>{{model.options.age}}</dd>-->\n            <!--<dt> Member since:</dt>-->\n            <!--<dd>Comment</dd>-->\n        <!--</dl>-->\n    <!--</div>-->\n</main>"
+
+/***/ }),
+/* 879 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ChannelRowComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__(34);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_user_service__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_alert_service__ = __webpack_require__(43);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+let ChannelRowComponent = class ChannelRowComponent {
+    constructor(_route, _userService, alertService) {
+        this._route = _route;
+        this._userService = _userService;
+        this.alertService = alertService;
+    }
+    ngOnInit() {
+    }
+};
+__decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["F" /* Input */])(),
+    __metadata("design:type", Object)
+], ChannelRowComponent.prototype, "model", void 0);
+ChannelRowComponent = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* Component */])({
+        selector: 'app-channel-row',
+        template: __webpack_require__(880),
+        styles: [__webpack_require__(881)],
+        encapsulation: __WEBPACK_IMPORTED_MODULE_0__angular_core__["_20" /* ViewEncapsulation */].Native,
+        changeDetection: __WEBPACK_IMPORTED_MODULE_0__angular_core__["k" /* ChangeDetectionStrategy */].OnPush
+    }),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__services_user_service__["a" /* UserService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__services_user_service__["a" /* UserService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3__services_alert_service__["a" /* AlertService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__services_alert_service__["a" /* AlertService */]) === "function" && _c || Object])
+], ChannelRowComponent);
+
+var _a, _b, _c;
+
+
+/***/ }),
+/* 880 */
+/***/ (function(module, exports) {
+
+module.exports = "<table class=\"card\">\n    <tr>\n        <td></td>\n        <td>\n            <div class=\"profile\">\n                <a>\n                    <img src=\"{{model.options.profileImg}}\">\n                </a>\n            </div>\n        </td>\n\n        <td class=\"profile-details\">\n            <h4><a>{{model.options.username}}</a></h4>\n            <span>{{model.options.description}}</span>\n        </td>\n        <td class=\"graph\">\n            <img src=\"/images/default/chart-wide.png\">\n        </td>\n        <td>\n            <table class=\"results-overview\">\n                <tr>\n                    <td>\n                        <h5>Pips</h5>\n                        <span>{{model.options.pips}}</span>\n                    </td>\n                    <td>\n                        <h5>Transactions</h5>\n                        <span>{{model.options.transactions}}</span>\n                    </td>\n                    <td>\n                        <h5>ROI</h5>\n                        <span>{{model.options.transactions}}</span>\n                    </td>\n                    <td>\n                        <h5>Weeks</h5>\n                        <span>{{model.options.runTime / 604800000}}</span>\n                    </td>\n                    <td>\n                        <h5>Followers</h5>\n                        <span>{{model.options.followers}}</span>\n                    </td>\n                </tr>\n                <tr>\n                    <td colspan=\"3\">\n                        <span>Followers equality</span>\n                        <span>{{model.options.followersEquality}}</span>\n                    </td>\n                    <td colspan=\"2\">\n                        <button *ngIf=\"model.options.following === false\" class=\"btn btn-sm btn-primary pull-right\">Follow</button>\n                        <button *ngIf=\"model.options.following === true\" class=\"btn btn-sm btn-danger pull-right\">Unfollow</button>\n                    </td>\n                </tr>\n            </table>\n        </td>\n    </tr>\n</table>"
+
+/***/ }),
+/* 881 */
+/***/ (function(module, exports) {
+
+module.exports = "a, p, li, span, h1, h2, h3, h4, h5, h6, td, th, label {\n  color: #fff;\n  margin: 0;\n  -webkit-user-select: none;\n  user-select: none; }\n\nbutton {\n  color: #000;\n  cursor: pointer; }\n\nul {\n  list-style: none;\n  margin: 0;\n  padding: 0; }\n\na {\n  cursor: pointer;\n  text-decoration: none; }\n  a:hover, a:visited {\n    text-decoration: none; }\n\ntable {\n  border-collapse: collapse;\n  border-spacing: 0; }\n\ntd {\n  padding: 0; }\n\n:host {\n  display: flex;\n  flex-flow: column;\n  height: 100%; }\n\n.card {\n  width: 100%;\n  border-bottom: 1px solid #8c8a8a;\n  background: #434343;\n  margin: 10px 0;\n  box-sizing: border-box; }\n  .card td:first-child {\n    width: 1px; }\n  .card td:nth-child(2) {\n    width: 80px; }\n  .card td:nth-child(3) {\n    width: 80px; }\n  .card td:nth-child(5) {\n    width: 200px; }\n  .card .graph img {\n    width: 100%;\n    height: 100%;\n    box-sizing: border-box;\n    padding-right: 20px; }\n\n.id {\n  padding: 20px; }\n\n.profile img {\n  width: 70px; }\n\n.profile-details {\n  padding: 0 10px; }\n  .profile-details span {\n    font-size: 12px; }\n\n.results-overview h5 {\n  padding-right: 10px;\n  color: #ccc; }\n\n.results-overview span {\n  padding-right: 10px; }\n\ntable tr td:first-child {\n  text-align: left;\n  margin: 0;\n  padding: 0; }\n"
+
+/***/ }),
+/* 882 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ProfileChannelOverviewComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_alert_service__ = __webpack_require__(43);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__models_user_model__ = __webpack_require__(75);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_BehaviorSubject__ = __webpack_require__(27);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_BehaviorSubject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_BehaviorSubject__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_http__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__models_channel_model__ = __webpack_require__(885);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+
+let ProfileChannelOverviewComponent = class ProfileChannelOverviewComponent {
+    constructor(_http, alertService) {
+        this._http = _http;
+        this.alertService = alertService;
+        this.model$ = new __WEBPACK_IMPORTED_MODULE_3_rxjs_BehaviorSubject__["BehaviorSubject"](new __WEBPACK_IMPORTED_MODULE_2__models_user_model__["a" /* UserModel */]());
+        this.customChannels = new __WEBPACK_IMPORTED_MODULE_3_rxjs_BehaviorSubject__["BehaviorSubject"](new __WEBPACK_IMPORTED_MODULE_2__models_user_model__["a" /* UserModel */]());
+        this.loading = false;
+    }
+    ngOnInit() {
+        this._http.get('/channel', { params: { type: 'profile-overview' } }).map((res) => res.json()).subscribe(data => {
+            console.log('CHANNELS!!!!', data);
+            const model = new __WEBPACK_IMPORTED_MODULE_5__models_channel_model__["a" /* ChannelModel */](data);
+        });
+    }
+};
+__decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["U" /* Output */])(),
+    __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3_rxjs_BehaviorSubject__["BehaviorSubject"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3_rxjs_BehaviorSubject__["BehaviorSubject"]) === "function" && _a || Object)
+], ProfileChannelOverviewComponent.prototype, "model$", void 0);
+__decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["U" /* Output */])(),
+    __metadata("design:type", typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3_rxjs_BehaviorSubject__["BehaviorSubject"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3_rxjs_BehaviorSubject__["BehaviorSubject"]) === "function" && _b || Object)
+], ProfileChannelOverviewComponent.prototype, "customChannels", void 0);
+ProfileChannelOverviewComponent = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* Component */])({
+        selector: 'app-profile-channel-overview',
+        template: __webpack_require__(883),
+        styles: [__webpack_require__(884)],
+        encapsulation: __WEBPACK_IMPORTED_MODULE_0__angular_core__["_20" /* ViewEncapsulation */].Native,
+        changeDetection: __WEBPACK_IMPORTED_MODULE_0__angular_core__["k" /* ChangeDetectionStrategy */].OnPush
+    }),
+    __metadata("design:paramtypes", [typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_4__angular_http__["c" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__angular_http__["c" /* Http */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_1__services_alert_service__["a" /* AlertService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__services_alert_service__["a" /* AlertService */]) === "function" && _d || Object])
+], ProfileChannelOverviewComponent);
+
+var _a, _b, _c, _d;
+
+
+/***/ }),
+/* 883 */
+/***/ (function(module, exports) {
+
+module.exports = "<h2 class=\"header-title\">Combined<sup> * only public trades are shared</sup></h2>\n\n<app-channel-row [model]=\"model$ | async\"></app-channel-row>\n\n<h2 class=\"header-title\">Custom channels</h2>\n\n<app-channel-row [model]=\"model$ | async\"></app-channel-row>"
+
+/***/ }),
+/* 884 */
+/***/ (function(module, exports) {
+
+module.exports = "a, p, li, span, h1, h2, h3, h4, h5, h6, td, th, label {\n  color: #fff;\n  margin: 0;\n  -webkit-user-select: none;\n  user-select: none; }\n\nbutton {\n  color: #000;\n  cursor: pointer; }\n\nul {\n  list-style: none;\n  margin: 0;\n  padding: 0; }\n\na {\n  cursor: pointer;\n  text-decoration: none; }\n  a:hover, a:visited {\n    text-decoration: none; }\n\ntable {\n  border-collapse: collapse;\n  border-spacing: 0; }\n\ntd {\n  padding: 0; }\n\n:host {\n  display: flex;\n  flex-flow: column;\n  height: 100%;\n  padding: 20px; }\n\nheader {\n  background: #424242; }\n  header .profile-details {\n    padding: 20px;\n    display: flex; }\n  header > nav {\n    display: flex;\n    background: #222122;\n    align-items: center;\n    justify-content: center;\n    border-top: 1px solid #eee;\n    border-bottom: 1px solid #eee; }\n    header > nav a {\n      padding: 20px;\n      line-height: 34px;\n      display: flex; }\n      header > nav a:hover, header > nav a.active {\n        background: #424242;\n        color: #44f444; }\n      header > nav a i {\n        margin-right: 20px;\n        font-size: 30px !important; }\n  header .profileImg {\n    width: 70px;\n    height: 70px;\n    border-radius: 50%;\n    margin-right: 20px; }\n\n.header-title {\n  border-bottom: 1px solid white;\n  color: #ddd;\n  position: relative;\n  margin-bottom: 20px;\n  padding-bottom: 5px; }\n  .header-title:after {\n    display: block;\n    width: 100%;\n    content: \"\";\n    border-bottom: 1px solid #e0e0e0;\n    position: absolute;\n    bottom: 0; }\n"
+
+/***/ }),
+/* 885 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__shared_classes_Base__ = __webpack_require__(76);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__shared_classes_Base___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__shared_classes_Base__);
+
+class ChannelModel extends __WEBPACK_IMPORTED_MODULE_0__shared_classes_Base__["Base"] {
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = ChannelModel;
+
+ChannelModel.DEFAULTS = {
+    id: 0,
+    user_id: null,
+    followers: 0,
+    iFollow: false,
+    public: true,
+    trades: 0,
+    startDate: null,
+    liveTime: 0
+};
 
 
 /***/ })

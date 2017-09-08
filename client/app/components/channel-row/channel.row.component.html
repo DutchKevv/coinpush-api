@@ -1,0 +1,56 @@
+<table class="card">
+    <tr>
+        <td></td>
+        <td>
+            <div class="profile">
+                <a>
+                    <img src="{{model.options.profileImg}}">
+                </a>
+            </div>
+        </td>
+
+        <td class="profile-details">
+            <h4><a>{{model.options.username}}</a></h4>
+            <span>{{model.options.description}}</span>
+        </td>
+        <td class="graph">
+            <img src="/images/default/chart-wide.png">
+        </td>
+        <td>
+            <table class="results-overview">
+                <tr>
+                    <td>
+                        <h5>Pips</h5>
+                        <span>{{model.options.pips}}</span>
+                    </td>
+                    <td>
+                        <h5>Transactions</h5>
+                        <span>{{model.options.transactions}}</span>
+                    </td>
+                    <td>
+                        <h5>ROI</h5>
+                        <span>{{model.options.transactions}}</span>
+                    </td>
+                    <td>
+                        <h5>Weeks</h5>
+                        <span>{{model.options.runTime / 604800000}}</span>
+                    </td>
+                    <td>
+                        <h5>Followers</h5>
+                        <span>{{model.options.followers}}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        <span>Followers equality</span>
+                        <span>{{model.options.followersEquality}}</span>
+                    </td>
+                    <td colspan="2">
+                        <button *ngIf="model.options.following === false" class="btn btn-sm btn-primary pull-right">Follow</button>
+                        <button *ngIf="model.options.following === true" class="btn btn-sm btn-danger pull-right">Unfollow</button>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
