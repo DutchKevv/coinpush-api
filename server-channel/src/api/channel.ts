@@ -1,5 +1,5 @@
 import {Router} from 'express';
-import {Candle} from '../schemas/candle';
+import {Channel} from '../schemas/channel';
 
 import {channelController} from '../controllers/channel.controller';
 

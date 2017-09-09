@@ -1,12 +1,22 @@
-import * as path from 'path';
-import * as redis from '../modules/redis';
-
-import {Candle, CandleSchema} from '../schemas/candle';
+import {client} from '../modules/redis';
+import {Channel} from '../schemas/channel';
+import {CHANNEL_TYPE_MAIN} from '../../../shared/constants/constants';
 
 const config = require('../../../tradejs.config');
 
-// import * as mkdirp      from '../../../shared/node_modules/mkdirp';
-import {log} from '../../../shared/logger';
+client.subscribe('user-created');
+
+client.on('message', (channel, message) => {
+	const json = JSON.parse(message);
+
+	if (channel === 'user-created') {
+		channelController.create({
+			user_id: json._id
+		})
+	}
+
+	console.log('Message ' + message + ' on channel ' + channel + ' arrived!')
+});
 
 export const channelController = {
 
@@ -14,7 +24,11 @@ export const channelController = {
 
 	},
 
-	async findByUserId(id, publicOnly = true) {
+	async findByUserId(id) {
+		return Channel.findOne({user_id: id, type: CHANNEL_TYPE_MAIN});
+	},
 
+	create(params) {
+		return Channel.create(params);
 	}
 };

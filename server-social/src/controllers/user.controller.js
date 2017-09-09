@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
-const redis = require("../modules/redis");
+const redis_1 = require("../modules/redis");
 const user_1 = require("../schemas/user");
 const constants_1 = require("../../../shared/constants/constants");
 exports.userController = {
@@ -18,7 +18,11 @@ exports.userController = {
         if (!userData.email || !userData.username || !userData.password || !userData.passwordConf)
             throw 'Missing attributes';
         // use schema.create to insert data into the db
-        return user_1.User.create(userData);
+        const user = await user_1.User.create(userData);
+        redis_1.client.publish('user-created', JSON.stringify({
+            _id: user._id,
+            username: user.username
+        }));
     },
     getAllowedFields: ['_id', 'username', 'profileImg', 'country', 'followers', 'following', 'membershipStartDate', 'description'],
     async get(userId, type = constants_1.USER_FETCH_TYPE_SLIM, forceReload = false) {
@@ -67,7 +71,7 @@ exports.userController = {
                 }
             ]))[0];
             user.profileImg = user_1.User.normalizeProfileImg(user.profileImg);
-            redis.client.set(REDIS_KEY, JSON.stringify(user), function () {
+            redis_1.client.set(REDIS_KEY, JSON.stringify(user), function () {
                 // Why wait?
             });
         }
@@ -91,7 +95,7 @@ exports.userController = {
     },
     async getCached(key, fields) {
         return new Promise((resolve, reject) => {
-            redis.client.get(key, function (err, reply) {
+            redis_1.client.get(key, function (err, reply) {
                 if (err)
                     reject(err);
                 else

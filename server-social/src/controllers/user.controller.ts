@@ -1,5 +1,5 @@
 import {Types, ObjectId} from 'mongoose';
-import * as redis from '../modules/redis';
+import {client} from '../modules/redis';
 import {User} from '../schemas/user';
 import {
 	USER_FETCH_TYPE_BROKER_DETAILS, USER_FETCH_TYPE_PROFILE, USER_FETCH_TYPE_PROFILE_SETTINGS, USER_FETCH_TYPE_SLIM,
@@ -23,7 +23,14 @@ export const userController = {
 			throw 'Missing attributes';
 
 		// use schema.create to insert data into the db
-		return User.create(userData);
+		const user = await User.create(userData);
+
+		client.publish('user-created', JSON.stringify({
+			_id: user._id,
+			username: user.username
+		}));
+
+		return user;
 	},
 
 	getAllowedFields: ['_id', 'username', 'profileImg', 'country', 'followers', 'following', 'membershipStartDate', 'description'],
@@ -81,7 +88,7 @@ export const userController = {
 
 			user.profileImg = User.normalizeProfileImg(user.profileImg);
 
-			redis.client.set(REDIS_KEY, JSON.stringify(user), function () {
+			client.set(REDIS_KEY, JSON.stringify(user), function () {
 				// Why wait?
 			});
 		}
@@ -111,7 +118,7 @@ export const userController = {
 
 	async getCached(key, fields) {
 		return new Promise((resolve, reject) => {
-			redis.client.get(key, function (err, reply) {
+			client.get(key, function (err, reply) {
 				if (err)
 					reject(err);
 				else

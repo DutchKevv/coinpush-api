@@ -22254,7 +22254,11 @@ exports.BROKER_OANDA_ERROR_INVALID_ARGUMENT = 1, exports.BROKER_OANDA_ERROR_MARK
 /**
  * USER
  */
-exports.USER_FETCH_TYPE_SLIM = 0, exports.USER_FETCH_TYPE_FULL = 1, exports.USER_FETCH_TYPE_PROFILE = 2, exports.USER_FETCH_TYPE_PROFILE_SETTINGS = 3, exports.USER_FETCH_TYPE_BROKER_DETAILS = 4;
+exports.USER_FETCH_TYPE_SLIM = 0, exports.USER_FETCH_TYPE_FULL = 1, exports.USER_FETCH_TYPE_PROFILE = 2, exports.USER_FETCH_TYPE_PROFILE_SETTINGS = 3, exports.USER_FETCH_TYPE_BROKER_DETAILS = 4, 
+/**
+ * CHANNEL
+ */
+exports.CHANNEL_TYPE_MAIN = 0, exports.CHANNEL_TYPE_CUSTOM = 1;
 //# sourceMappingURL=constants.js.map
 
 /***/ }),
@@ -64414,7 +64418,7 @@ var _a, _b, _c, _d;
 /* 883 */
 /***/ (function(module, exports) {
 
-module.exports = "<h2 class=\"header-title\">Combined<sup> * only public trades are shared</sup></h2>\n\n<app-channel-row [model]=\"model$ | async\"></app-channel-row>\n\n<h2 class=\"header-title\">Custom channels</h2>\n\n<app-channel-row [model]=\"model$ | async\"></app-channel-row>"
+module.exports = "<h2 class=\"header-title\">Combined<sup> * all public trades combined into one channel</sup></h2>\n\n<app-channel-row [model]=\"model$ | async\"></app-channel-row>\n\n<h2 class=\"header-title\">Custom channels</h2>\n\n<app-channel-row [model]=\"model$ | async\"></app-channel-row>"
 
 /***/ }),
 /* 884 */
