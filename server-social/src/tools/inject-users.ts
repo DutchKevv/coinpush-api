@@ -7,6 +7,7 @@ const config = require('../../../tradejs.config');
 mongoose.Promise = global.Promise;
 mongoose.connect(config.server.social.connectionString);
 
+// Export userIds
 (async () => {
 	let i = 0;
 
@@ -31,3 +32,30 @@ mongoose.connect(config.server.social.connectionString);
 
 	process.exit();
 })();
+
+/*
+(async () => {
+	let i = 0;
+
+	while (i++ < 1000) {
+		console.log('user:' , i);
+
+		try {
+			await userController.create({
+				username: faker.name.findName(),
+				email: faker.internet.email(),
+				country: faker.address.countryCode(),
+				password: faker.internet.password(),
+				passwordConf: faker.internet.password(),
+				profileImg: faker.random.image(),
+				description: faker.lorem.sentence()
+			});
+
+		} catch (error) {
+			console.error('USER ERROR', error);
+		}
+	}
+
+	process.exit();
+})();
+*/

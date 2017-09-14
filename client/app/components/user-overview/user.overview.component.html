@@ -51,7 +51,7 @@
         <div *ngFor="let model of users$ | async" class="card clearfix">
             <ng-container *ngIf="model.options$ | async as options" >
                 <header [style.background]="'url(' + model.options.profileImg + ')'">
-                    <a [routerLink]="['/main/user/profile/' + model.options._id]" [routerLinkActive]="['active']"></a>
+                    <a [routerLink]="['/main/user/profile/', model.options._id]" [routerLinkActive]="['active']"></a>
                 </header>
                 <main>
                     <h4><a>{{model.options.username}}</a></h4>
@@ -60,8 +60,10 @@
                 </main>
                 <footer>
                     <p><span class="followers">{{options.followersCount}}</span> followers</p>
-                    <button *ngIf="options.follow === false" (click)="toggleFollow(true, model)" class="btn btn-sm btn-success pull-right">Follow</button>
-                    <button *ngIf="options.follow === true" (click)="toggleFollow(false, model)" class="btn btn-sm btn-danger pull-right">UnFollow</button>
+                    <button *ngIf="!options.iCopy" (click)="toggleCopy(true, model)" class="btn btn-sm btn-success pull-right">Copy</button>
+                    <button *ngIf="options.iCopy" (click)="toggleCopy(false, model)" class="btn btn-sm btn-danger pull-right">UnCopy</button>
+                    <button *ngIf="!options.iFollow" (click)="toggleFollow(true, model)" class="btn btn-sm btn-success pull-right">Follow</button>
+                    <button *ngIf="options.iFollow" (click)="toggleFollow(false, model)" class="btn btn-sm btn-danger pull-right">UnFollow</button>
                 </footer>
             </ng-container>
         </div>
@@ -79,8 +81,10 @@
             </main>
             <footer>
                 <p><span class="followers">{{model.options.followersC}}</span> followers</p>
-                <button *ngIf="model.options.follow === false" (click)="toggleFollow(true, model)" class="btn btn-sm btn-success pull-right">Follow</button>
-                <button *ngIf="model.options.follow === true" (click)="toggleFollow(false, model)" class="btn btn-sm btn-danger pull-right">UnFollow</button>
+                <button *ngIf="!model.options.iCopy" (click)="toggleCopy(true, model)" class="btn btn-sm btn-success pull-right">Copy</button>
+                <button *ngIf="model.options.iCopy" (click)="toggleCopy(false, model)" class="btn btn-sm btn-danger pull-right">UnCopy</button>
+                <button *ngIf="!model.options.iFollow" (click)="toggleFollow(true, model)" class="btn btn-sm btn-success pull-right">Follow</button>
+                <button *ngIf="model.options.iFollow" (click)="toggleFollow(false, model)" class="btn btn-sm btn-danger pull-right">UnFollow</button>
             </footer>
         </div>
     </section>

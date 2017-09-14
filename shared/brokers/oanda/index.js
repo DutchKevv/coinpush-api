@@ -1,12 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const Stream = require("stream");
 const OANDAAdapter_1 = require("./lib/OANDAAdapter");
@@ -20,31 +12,26 @@ class OandaApi extends Base_1.Base {
         super(...arguments);
         this._client = null;
     }
-    init() {
-        const _super = name => super[name];
-        return __awaiter(this, void 0, void 0, function* () {
-            yield _super("init").call(this);
-            this._client = new OANDAAdapter_1.Adapter({
-                // 'live', 'practice' or 'sandbox'
-                environment: this.options.environment,
-                // Generate your API access in the 'Manage API Access' section of 'My Account' on OANDA's website
-                accessToken: this.options.token,
-                // Optional. Required only if environment is 'sandbox'
-                username: this.options.username
-            });
+    async init() {
+        await super.init();
+        this._client = new OANDAAdapter_1.Adapter({
+            // 'live', 'practice' or 'sandbox'
+            environment: this.options.environment,
+            // Generate your API access in the 'Manage API Access' section of 'My Account' on OANDA's website
+            accessToken: this.options.token,
+            // Optional. Required only if environment is 'sandbox'
+            username: this.options.username
         });
     }
-    testConnection() {
-        return __awaiter(this, void 0, void 0, function* () {
-            // TODO: Stupid way to check, and should also check heartbeat
-            try {
-                yield this.getAccounts();
-                return true;
-            }
-            catch (error) {
-                return false;
-            }
-        });
+    async testConnection() {
+        // TODO: Stupid way to check, and should also check heartbeat
+        try {
+            await this.getAccounts();
+            return true;
+        }
+        catch (error) {
+            return false;
+        }
     }
     getAccounts() {
         return new Promise((resolve, reject) => {
@@ -230,5 +217,4 @@ OandaApi.FAVORITE_SYMBOLS = [
 OandaApi.FETCH_CHUNK_LIMIT = 5000;
 OandaApi.WRITE_CHUNK_COUNT = 5000;
 exports.default = OandaApi;
-
 //# sourceMappingURL=index.js.map

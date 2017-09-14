@@ -21,7 +21,6 @@ import {ChartOverviewComponent} from './components/chart-overview/chart-overview
 import {AuthGuard} from './guards/auth.guard';
 import {UserService} from './services/user.service';
 import {LoginComponent} from './components/login/login.component';
-import {StatusComponent} from './components/status/status.component';
 import {SystemService} from './services/system.service';
 import {ConstantsService} from './services/constants.service';
 import {DialogComponent} from './components/dialog/dialog.component';
@@ -60,6 +59,8 @@ import {StartupService} from './services/startup.service';
 import {SocialFeedComponent} from './components/social-feed/social.feed.component';
 import {ChannelRowComponent} from './components/channel-row/channel.row.component';
 import {ProfileChannelOverviewComponent} from './components/profile-channel-overview/profile.channel.overview.component';
+import {ChannelService} from './services/channel.service';
+import {ChannelDetailsModalComponent} from './components/channel-details-modal/channel.details.modal.component';
 
 export function startupServiceFactory(startupService: StartupService): Function {
 	return () => startupService.load();
@@ -93,7 +94,6 @@ export function startupServiceFactory(startupService: StartupService): Function 
 		ModalAnchorDirective,
 		ResizableDirective,
 		SearchFilter,
-		StatusComponent,
 		CoreListComponent,
 		PageMainComponent,
 		ChannelOverviewComponent,
@@ -104,7 +104,8 @@ export function startupServiceFactory(startupService: StartupService): Function 
 		ProfileComponent,
 		ProfileChannelOverviewComponent,
 		PageSubUserComponent,
-		SettingsComponent
+		SettingsComponent,
+		ChannelDetailsModalComponent
 	],
 	imports: [
 		BrowserModule,
@@ -123,6 +124,7 @@ export function startupServiceFactory(startupService: StartupService): Function 
 		UserService,
 		TradingChannelService,
 		StartupService,
+		ChannelService,
 
 		{provide: OrderService, useClass: OrderService},
 		{provide: SystemService, useClass: SystemService},
@@ -143,7 +145,7 @@ export function startupServiceFactory(startupService: StartupService): Function 
 		AppComponent
 	],
 
-	entryComponents: [DialogComponent]
+	entryComponents: [DialogComponent, ChannelDetailsModalComponent]
 })
 
 export class AppModule {

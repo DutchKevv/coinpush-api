@@ -7,7 +7,6 @@ const _io = require("socket.io");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
 const config = require('../../tradejs.config'), app = express(), http = _http.createServer(app), io = _io.listen(http), db = mongoose.connection;
 mongoose.Promise = global.Promise;
 mongoose.connect(config.server.social.connectionString);
@@ -26,7 +25,7 @@ app.use(function (req, res, next) {
 app.use(morgan('dev'));
 app.use(helmet());
 app.use(body_parser_1.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(body_parser_1.urlencoded({ extended: false }));
 app.use((req, res, next) => {
     let userId = req.headers['_id'];
     req.user = { id: userId };

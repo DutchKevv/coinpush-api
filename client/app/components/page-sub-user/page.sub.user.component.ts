@@ -15,49 +15,7 @@ import {CacheService, CacheSymbol} from '../../services/cache.service';
 	encapsulation: ViewEncapsulation.Native
 })
 
-export class PageSubUserComponent implements OnInit, AfterViewInit {
+export class PageSubUserComponent {
 
-	@Output() public searchResults$: Subject<any> = new Subject();
-	@ViewChild('input') public input;
-
-	constructor(private _http: Http,
-				private _cacheService: CacheService,
-				private _authenticationService: AuthenticationService) {
-	}
-
-	ngOnInit(): void {
-		// attachBackspaceFix(this.input.nativeElement);
-	}
-
-	ngAfterViewInit(): void {}
-
-	public onSearchKeyUp(event): void {
-		const value = event.target.value.trim();
-
-		if (!value.length) {
-			this.searchResults$.next();
-			return;
-		}
-
-		const symbols = this._cacheService.getByText(value).map((symbol: CacheSymbol) => ({
-			name: symbol.options.name
-		})).slice(0, 5);
-
-		const currentResult = {
-			users: [],
-			symbols: symbols,
-			channels: []
-		};
-
-		this.searchResults$.next(currentResult);
-
-		this._http.get('/search/' + value, {body: {params: 5}}).map(res => res.json()).subscribe((result: any) => {
-			currentResult.users = JSON.parse(result.users);
-			this.searchResults$.next(currentResult);
-		});
-	}
-
-	public logout(): void {
-		this._authenticationService.logout();
-	}
+	constructor() {}
 }

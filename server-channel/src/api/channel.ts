@@ -1,28 +1,43 @@
 import {Router} from 'express';
-import {Channel} from '../schemas/channel';
-
 import {channelController} from '../controllers/channel.controller';
 
 const router = Router();
 
 /**
- * LIST
+ * GET SINGLE
  */
-router.get('/:id?', async (req, res, next) => {
-	const type = req.query.type;
-
+router.get('/:id', async (req, res, next) => {
 	try {
+		res.send(await channelController.findById(req.query));
+	} catch (error) {
+		next(error);
+	}
+});
 
-		if (type === 'profile-overview') {
+/**
+ * GET LIST
+ */
+router.get('/', async (req, res, next) => {
+	try {
+		const pList = [], result = {};
 
-			let results = await Promise.all([
-				channelController.findByUserId(req.params.id || req.user.id)
-			]);
+		if (req.query.user)
+			pList.push(['user', channelController.findByUserId(req.query.user)]);
 
-			res.send({
-				user: results[0]
+		const pResults = await Promise.all(pList.map(p => p[1]));
+
+		pResults.forEach((channels, index) => {
+
+			channels.forEach(channel => {
+				// channel.profileImg = User.normalizeProfileImg(user.profileImg);
+				channel.iFollow = channel.followers.indexOf(req.user.id) > -1;
+				channel.iCopy = channel.copiers.indexOf(req.user.id) > -1;
 			});
-		}
+
+			result[pList[index][0]] = channels;
+		});
+
+		res.send(result);
 
 	} catch (error) {
 		console.error(error);
@@ -31,12 +46,63 @@ router.get('/:id?', async (req, res, next) => {
 });
 
 /**
- * SINGLE
+ * Update
  */
-router.get('/:id', function (req, res, next) {
-	console.log(req.query);
+router.put('/:id', async (req, res, next) => {
+	try {
+		res.send(await channelController.update(req.user.id, req.params.id, req.body));
+	} catch (error) {
+		console.error(error);
+		next(error);
+	}
+});
 
-	channelController.find(req.query);
+/**
+ * FOLLOW (TOGGLE)
+ */
+router.post('/:id/follow', async (req, res, next) => {
+	try {
+		res.send(await channelController.toggleFollow(req.user.id, req.params.id));
+	} catch (error) {
+		console.error(error);
+		next(error);
+	}
+});
+
+/**
+ * COPY (TOGGLE)
+ */
+router.post('/:id/copy', async (req, res, next) => {
+	try {
+		res.send(await channelController.toggleCopy(req.user.id, req.params.id));
+	} catch (error) {
+		console.error(error);
+		next(error);
+	}
+});
+
+// /**
+//  * Create
+//  */
+// router.post('/', async (req, res, next) => {
+// 	try {
+// 		res.send(await channelController.create(req.user.id, req.body));
+// 	} catch (error) {
+// 		console.error(error);
+// 		next(error);
+// 	}
+// });
+
+/**
+ * Delete
+ */
+router.delete('/:id', async (req, res, next) => {
+	try {
+		res.send(await channelController.delete(req.user.id, req.params.id));
+	} catch (error) {
+		console.error(error);
+		next(error);
+	}
 });
 
 export = router;

@@ -1,15 +1,17 @@
 import {Base} from '../../../shared/classes/Base';
+import {CHANNEL_TYPE_CUSTOM} from '../../../shared/constants/constants';
 
 export class ChannelModel extends Base {
 	public static readonly DEFAULTS: any = {
-		id: 0,
+		_id: null,
 		user_id: null,
+		name: '',
+		description: '',
 		followers: 0,
-		iFollow: false,
+		following: false,
 		public: true,
-		trades: 0,
-		startDate: null,
-		liveTime: 0
+		transactions: 0,
+		type: CHANNEL_TYPE_CUSTOM
 	}
 
 }

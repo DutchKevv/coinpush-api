@@ -25,7 +25,7 @@ export class UserService {
 	}
 
 	create(user) {
-		return this._http.post('/social/user', user).map((res: Response) => res.json());
+		return this._http.post('/user', user).map((res: Response) => res.json());
 	}
 
 	get(id?: string, type = USER_FETCH_TYPE_SLIM) {
@@ -50,21 +50,49 @@ export class UserService {
 
 	toggleFollow(state: boolean, model: UserModel) {
 
-		const subscription = this._http.post('/social/follow/' + model.get('_id'), '').map(res => res.json());
+		const subscription = this._http.post('/user/' + model.get('_id') + '/follow', null).map(res => res.json());
 
 		subscription.subscribe(result => {
 			let text;
 
 			if (result.state) {
 				model.set({
-					follow: !!state,
+					iFollow: !!state,
 					followersCount: ++model.options.followersCount
 				});
 				text = `You are now following ${model.options.username} !`;
 			} else {
 				text = `Unsigned from ${model.options.username}`;
 				model.set({
-					follow: !!state,
+					iFollow: !!state,
+					followersCount: --model.options.followersCount
+				});
+			}
+			this._alertService.success(text);
+		}, (error) => {
+			console.error(error);
+			this._alertService.error(`An error occurred when following ${model.options.username}...`);
+		});
+
+		return subscription;
+	}
+
+	toggleCopy(model: UserModel, state: boolean) {
+		const subscription = this._http.post('/user/' + model.get('_id') + '/copy', '').map(res => res.json());
+
+		subscription.subscribe(result => {
+			let text;
+
+			if (result.state) {
+				model.set({
+					iCopy: !!state,
+					followersCount: ++model.options.followersCount
+				});
+				text = `You are now following ${model.options.username} !`;
+			} else {
+				text = `Unsigned from ${model.options.username}`;
+				model.set({
+					iCopy: !!state,
 					followersCount: --model.options.followersCount
 				});
 			}

@@ -1,12 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs = require("fs");
 const path = require("path");
@@ -23,17 +15,15 @@ class Mapper {
     get mode() {
         return this._mode;
     }
-    init() {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (this.options.path) {
-                this._mode = Mapper.MODE_PERSISTENT;
-                this._pathFile = path.join(this.options.path, 'database-mapper.json');
-                yield this._loadFromFile();
-            }
-            else {
-                this._mode = Mapper.MODE_MEMORY;
-            }
-        });
+    async init() {
+        if (this.options.path) {
+            this._mode = Mapper.MODE_PERSISTENT;
+            this._pathFile = path.join(this.options.path, 'database-mapper.json');
+            await this._loadFromFile();
+        }
+        else {
+            this._mode = Mapper.MODE_MEMORY;
+        }
     }
     update(symbol, timeFrame, from, until, count) {
         let map = this.map, ranges = this.findByParams(symbol, timeFrame, true);
@@ -166,5 +156,4 @@ class Mapper {
 Mapper.MODE_PERSISTENT = 0;
 Mapper.MODE_MEMORY = 1;
 exports.default = Mapper;
-
 //# sourceMappingURL=CacheMap.js.map

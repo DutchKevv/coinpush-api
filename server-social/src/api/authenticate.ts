@@ -6,7 +6,7 @@ const router = Router();
 router.get('/', function (req, res, next) {
 	console.log(req.params);
 
-	User.statics.authenticate({}, function (err, users) {
+	User.authenticate({}, function (err, users) {
 		if (err)
 			return next(err);
 
@@ -15,6 +15,7 @@ router.get('/', function (req, res, next) {
 });
 
 router.post('/', (req, res, next) => {
+	console.log('adasfdadsfasdfasdf', req.body);
 	if (!req.body.username || !req.body.password)
 		return res.status(400).send('Username or password is incorrect');
 

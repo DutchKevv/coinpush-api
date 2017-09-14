@@ -4,14 +4,14 @@
         <td>
             <div class="profile">
                 <a>
-                    <img src="{{model.options.profileImg}}">
+                    <img src="{{model.options.profileImg || '/images/default/trading-channel/trader.jpeg'}}">
                 </a>
             </div>
         </td>
 
         <td class="profile-details">
-            <h4><a>{{model.options.username}}</a></h4>
-            <span>{{model.options.description}}</span>
+            <h4><a>{{model.options.name}}</a></h4>
+            <span>{{model.options.description || 'No description'}}</span>
         </td>
         <td class="graph">
             <img src="/images/default/chart-wide.png">
@@ -37,17 +37,26 @@
                     </td>
                     <td>
                         <h5>Followers</h5>
-                        <span>{{model.options.followers}}</span>
+                        <span>{{model.options.followers.length}}</span>
+                    </td>
+                    <td>
+                        <a *ngIf="isSelf"><i class="fa fa-lock"></i></a>
+                        <a *ngIf="isSelf" (click)="onClickDelete()"><i class="fa fa-trash"></i></a>
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="3">
+                    <td colspan="5">
                         <span>Followers equality</span>
                         <span>{{model.options.followersEquality}}</span>
                     </td>
-                    <td colspan="2">
-                        <button *ngIf="model.options.following === false" class="btn btn-sm btn-primary pull-right">Follow</button>
-                        <button *ngIf="model.options.following === true" class="btn btn-sm btn-danger pull-right">Unfollow</button>
+                    <td colspan="1">
+                        <ng-container *ngIf="isSelf === false">
+                            <button *ngIf="model.options.following === false" class="btn btn-sm btn-primary pull-right">Follow</button>
+                            <button *ngIf="model.options.following === true" class="btn btn-sm btn-danger pull-right">Unfollow</button>
+                        </ng-container>
+                        <ng-container *ngIf="isSelf && model.get('type') !== 0">
+
+                        </ng-container>
                     </td>
                 </tr>
             </table>

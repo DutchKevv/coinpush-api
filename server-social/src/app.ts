@@ -5,7 +5,6 @@ import * as _io from 'socket.io';
 import * as helmet from 'helmet';
 import * as morgan from 'morgan';
 import * as mongoose from 'mongoose';
-import bodyParser = require('body-parser');
 import {toolsController} from './tools/tools.controller';
 
 const
@@ -36,7 +35,7 @@ app.use(function (req, res, next) {
 app.use(morgan('dev'));
 app.use(helmet());
 app.use(json());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(urlencoded({extended: false}));
 app.use((req: any, res, next) => {
 	let userId = req.headers['_id'];
 

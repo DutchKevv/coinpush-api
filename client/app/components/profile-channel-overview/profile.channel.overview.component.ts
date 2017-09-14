@@ -1,10 +1,15 @@
-import {ChangeDetectionStrategy, Component, OnInit, Output, ViewEncapsulation} from '@angular/core';
-import {UserService} from '../../services/user.service';
+import {ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, Output, ViewChild, ViewEncapsulation} from '@angular/core';
 import {AlertService} from '../../services/alert.service';
-import {UserModel} from '../../models/user.model';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {Http} from '@angular/http';
+import {Response, Http} from '@angular/http';
 import {ChannelModel} from '../../models/channel.model';
+import {ActivatedRoute, RoutesRecognized} from '@angular/router';
+import {CHANNEL_TYPE_MAIN} from '../../../../shared/constants/constants';
+import {ChannelService} from '../../services/channel.service';
+import {UserService} from '../../services/user.service';
+import {ModalService} from '../../services/modal.service';
+import {DialogComponent} from '../dialog/dialog.component';
+import {ChannelDetailsModalComponent} from '../channel-details-modal/channel.details.modal.component';
 
 @Component({
 	selector: 'app-profile-channel-overview',
@@ -14,24 +19,72 @@ import {ChannelModel} from '../../models/channel.model';
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class ProfileChannelOverviewComponent implements OnInit {
+export class ProfileChannelOverviewComponent implements OnInit, OnDestroy {
 
-	@Output() public model$: BehaviorSubject<[]> = new BehaviorSubject(new UserModel());
-	@Output() public customChannels: BehaviorSubject<[]> = new BehaviorSubject(new UserModel());
-	loading = false;
+	@Output() public combinedChannel$: BehaviorSubject<ChannelModel> = new BehaviorSubject(new ChannelModel());
+	@Output() public customChannels$: BehaviorSubject<ChannelModel[]> = new BehaviorSubject([]);
+
+	@ViewChild('addChannelOptions') addChannelOptions: ElementRef;
+
+	public addModel = new ChannelModel();
+	public isSelf = false;
 
 	private _id: number;
 	private _sub: any;
 
-	constructor(
-		private _http: Http,
-		private alertService: AlertService) { }
+	constructor(private _channelService: ChannelService,
+				private _modalService: ModalService,
+				private _alertService: AlertService,
+				private _userService: UserService,
+				private _route: ActivatedRoute,
+				private _http: Http) {
+	}
 
 	ngOnInit() {
+		this._sub = this._route.parent.params.subscribe(params => {
+			this._id = params.id;
+			this.isSelf = this._userService.model.get('_id') === this._id;
 
-		this._http.get('/channel', {params: {type: 'profile-overview'}}).map((res: Response) => res.json()).subscribe(data => {
-			console.log('CHANNELS!!!!', data);
-			const model = new ChannelModel(data);
+			this.loadChannels();
 		});
+	}
+
+	public loadChannels() {
+		this._http.get('/channel', {params: {user: this._id, custom: true}}).map((res: Response) => res.json()).subscribe(data => {
+			const models = data.user.map(channel => new ChannelModel(channel));
+
+			this.combinedChannel$.next(models.find(channel => channel.get('type') === CHANNEL_TYPE_MAIN));
+			this.customChannels$.next(models.filter(channel => channel.get('type') !== CHANNEL_TYPE_MAIN));
+		});
+	}
+
+	onClickAddChannel() {
+		this.addChannelOptions.nativeElement.classList.toggle('hidden');
+	}
+
+	addChannel() {
+		this._channelService.create(this.addModel).subscribe((channel: ChannelModel) => {
+			this.customChannels$.getValue().push(channel);
+			this._alertService.success(`Channel '${channel.get('name')}' created`)
+		}, () => {
+			this._alertService.error(`Error creating channel: ${this.addModel.get('name')}`)
+		});
+	}
+
+	showDetails(model: ChannelModel) {
+		let dialogComponentRef = this._modalService.create(ChannelDetailsModalComponent, {
+			type: 'dialog',
+			title: 'New file',
+			showBackdrop: true,
+			showCloseButton: false,
+			buttons: [
+				{value: 'add', text: 'add', type: 'primary'},
+				{text: 'cancel', type: 'candel'}
+			]
+		});
+	}
+
+	ngOnDestroy() {
+		this._sub.unsubscribe();
 	}
 }

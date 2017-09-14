@@ -28,7 +28,7 @@ export class GroupByPipe implements PipeTransform {
 			items: groupedObj[key]
 		}));
 
-		result.forEach(row => {
+		result.forEach((row: any) => {
 			row.symbolHandle = row.items[0].symbolHandle,
 			row.symbol = row.items[0].options.symbol,
 			row.amount = row.items.reduce((sum, order) => sum + order.options.amount, 0);
@@ -54,10 +54,9 @@ export class GroupByPipe implements PipeTransform {
 
 export class PortfolioComponent implements OnInit, OnDestroy, AfterViewChecked {
 
-	@Output() public orders$: BehaviorSubject<[]> = new BehaviorSubject([]);
+	@Output() public orders$: BehaviorSubject<any[]> = new BehaviorSubject([]);
 
 	constructor(public constantsService: ConstantsService,
-				public cacheService: CacheService,
 				private _orderService: OrderService) {
 	}
 

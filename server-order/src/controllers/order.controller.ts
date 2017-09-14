@@ -42,14 +42,15 @@ export const orderController = {
 
 			await broker.init();
 
-			console.log('11111111');
 			// Place order and merge result
 			Object.assign(params, await broker.placeOrder(params));
-			console.log('22222222222');
+
 			// Create order model from result
 			const order = await Order.create(params);
-			console.log('3333333333');
+
 			console.log('DATABASE ORDER', order);
+
+			redis.client.publish('order-created', JSON.stringify(order));
 
 			return order;
 

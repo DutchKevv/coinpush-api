@@ -30,7 +30,6 @@ export class SystemService {
 			if (!this._initialLoginShown) {
 				if (!this._systemState.booting && this._systemState.connected === false) {
 					this._initialLoginShown = true;
-					this._userService.login();
 				}
 			}
 		});

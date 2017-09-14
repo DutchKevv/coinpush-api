@@ -5,7 +5,6 @@ import {
 	AfterViewChecked, ViewEncapsulation, Output
 } from '@angular/core';
 import {InstrumentsService} from '../../services/instruments.service';
-import {UserService} from '../../services/user.service';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {TradingChannelService} from '../../services/trading.channel.service';
 
@@ -21,7 +20,7 @@ declare let $: any;
 
 export class ChannelOverviewComponent implements OnInit, OnDestroy, AfterViewChecked {
 
-	@Output() public channels$: BehaviorSubject<[]> = new BehaviorSubject([]);
+	@Output() public channels$: BehaviorSubject<any[]> = new BehaviorSubject([]);
 
 	constructor(public instrumentsService: InstrumentsService,
 				private _tradingChannelService: TradingChannelService) {

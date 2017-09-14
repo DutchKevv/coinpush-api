@@ -4,6 +4,7 @@ const mongoose_1 = require("mongoose");
 const redis_1 = require("../modules/redis");
 const user_1 = require("../schemas/user");
 const constants_1 = require("../../../shared/constants/constants");
+redis_1.client.subscribe('order-create');
 exports.userController = {
     async create(params) {
         let userData = {
@@ -19,10 +20,14 @@ exports.userController = {
             throw 'Missing attributes';
         // use schema.create to insert data into the db
         const user = await user_1.User.create(userData);
-        redis_1.client.publish('user-created', JSON.stringify({
-            _id: user._id,
-            username: user.username
-        }));
+        //
+        // client.publish('user-created', JSON.stringify({
+        // 	_id: user._id,
+        // 	username: user.username
+        // }), function(err) {
+        // 	console.log('CALLBACK!!!!! CALLBACK!!!!! CALLBACK!!!!! CALLBACK!!!!!', arguments);
+        // });
+        return user;
     },
     getAllowedFields: ['_id', 'username', 'profileImg', 'country', 'followers', 'following', 'membershipStartDate', 'description'],
     async get(userId, type = constants_1.USER_FETCH_TYPE_SLIM, forceReload = false) {

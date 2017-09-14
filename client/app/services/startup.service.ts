@@ -12,9 +12,9 @@ export class StartupService {
 	}
 
 	load(): Promise<any> {
-		this._loggedInUser = new UserModel();
+		this._loggedInUser = new UserModel(JSON.parse(localStorage.getItem('currentUser') || '{}'));
 
-		return this._http.get('/social/user', {body: {type: 2}})
+		return this._http.get('/social/user/' + this._loggedInUser.get('_id') || '', {body: {type: 2}})
 			.map((res) => {
 				this._loggedInUser.set(res.json());
 			})

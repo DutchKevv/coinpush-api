@@ -12,6 +12,7 @@ declare let $: any;
 export class ModalAnchorDirective {
 
 	public modalComponentRef;
+	public options;
 
 	constructor(private viewContainer: ViewContainerRef,
 				private componentFactoryResolver: ComponentFactoryResolver,
@@ -20,6 +21,8 @@ export class ModalAnchorDirective {
 	}
 
 	create(modalComponent: any, options = <any>{}): ComponentRef<ModalComponent> {
+		this.options = options;
+
 		console.log(this.viewContainer.element);
 		this.viewContainer.clear();
 
@@ -28,13 +31,12 @@ export class ModalAnchorDirective {
 		this.modalComponentRef.instance.model = options.model;
 		this.modalComponentRef.instance.options = options;
 
-		console.log(this.modalComponentRef.instance.elementRef.nativeElement);
-		window['test'] = this.modalComponentRef.instance.elementRef.nativeElement;
+		// console.log(this.modalComponentRef.instance);
+		// window['test'] = this.modalComponentRef.instance.elementRef.nativeElement;
 
 		if (this.modalComponentRef.instance.close) {
 			this.modalComponentRef.instance.close.subscribe(() => this.destroy(this.modalComponentRef));
 		}
-
 
 		this.modalComponentRef.changeDetectorRef.detectChanges();
 
@@ -44,7 +46,7 @@ export class ModalAnchorDirective {
 	}
 
 	show() {
-		$(this.modalComponentRef.instance.elementRef.nativeElement.shadowRoot.querySelector('.modal')).modal('show');
+		$(this.modalComponentRef.instance.elementRef.nativeElement.querySelector('.modal')).modal('show');
 		this.viewContainer.element.nativeElement.appendChild(this.modalComponentRef.instance.elementRef.nativeElement);
 	}
 

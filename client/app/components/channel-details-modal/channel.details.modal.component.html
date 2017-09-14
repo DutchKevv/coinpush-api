@@ -1,0 +1,27 @@
+<div class="modal fade" id="loginModal" keyboard="false" backdrop="static">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Login to your broker</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" (ngSubmit)="onSubmit($event)">
+
+                </form>
+            </div>
+            <div class="modal-footer">
+
+                <button *ngFor="let button of options.buttons"
+                        value="{{button.value}}"
+                        class="btn btn-sm btn-{{button.type || 'primary'}} pull-right"
+                        (click)="onClickButton($event.srcElement.getAttribute('value'))"
+                >
+                    {{button.text}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

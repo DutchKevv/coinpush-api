@@ -4,7 +4,6 @@
 :host {
 	display: flex;
 	flex-flow: column;
-	height: 100%;
 }
 
 .card {
@@ -13,6 +12,10 @@
     background: #434343;
     margin: 10px 0;
     box-sizing: border-box;
+
+    &:hover {
+        cursor: pointer;
+    }
 
     td:first-child {
         width: 1px;
@@ -29,6 +32,20 @@
     td:nth-child(5) {
         width: 200px;
     }
+
+    tr:first-child td:last-child {
+        vertical-align: top;
+        min-width: 50px;
+
+        i {
+            padding-right: 5px;
+        }
+
+        i.fa-trash {
+            color: red;
+        }
+    }
+
 
     .graph img {
         width: 100%;

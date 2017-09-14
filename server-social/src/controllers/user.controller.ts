@@ -5,6 +5,8 @@ import {
 	USER_FETCH_TYPE_BROKER_DETAILS, USER_FETCH_TYPE_PROFILE, USER_FETCH_TYPE_PROFILE_SETTINGS, USER_FETCH_TYPE_SLIM,
 } from '../../../shared/constants/constants';
 
+client.subscribe('order-create');
+
 export const userController = {
 
 	async create(params) {
@@ -28,7 +30,9 @@ export const userController = {
 		client.publish('user-created', JSON.stringify({
 			_id: user._id,
 			username: user.username
-		}));
+		}), () => {
+			console.log('CALLBACK!!!!! CALLBACK!!!!! CALLBACK!!!!! CALLBACK!!!!!')
+		});
 
 		return user;
 	},

@@ -1,9 +1,13 @@
+@import '~bootstrap/scss/_variables';
+@import '~bootstrap/scss/_mixins';
+@import '~bootstrap/scss/_grid';
+@import '~bootstrap/scss/_buttons';
+@import '~bootstrap/scss/_forms';
+
 @import '../../style/variables/variables';
 @import '../../style/helpers/normalize';
 
 :host {
-	display: flex;
-	flex-flow: column;
 	height: 100%;
     padding: 20px;
 }
@@ -51,7 +55,6 @@ header {
 	}
 }
 
-
 .header-title {
     border-bottom: 1px solid white;
     color: #ddd;
@@ -66,5 +69,50 @@ header {
         border-bottom: 1px solid #e0e0e0;
         position: absolute;
         bottom: 0;
+    }
+}
+
+.add-channel-container {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.add-channel-button {
+    margin-bottom: 20px;
+
+    i {
+        color: #4ecd4e;
+        font-size: 20px;
+    }
+}
+
+.add-channel-options {
+    width: 700px;
+    border: 1px solid $border-color-light;
+    padding: 10px;
+
+    &.hidden {
+        display: none;
+    }
+
+    form {
+        input,
+        textarea {
+            box-sizing: border-box;
+        }
+
+        .form-control-label {
+            margin-bottom: 5px;
+            display: block;
+        }
+
+
+        .form-group {
+            box-sizing: border-box;
+
+            :last-child {
+                margin-bottom: 0;
+            }
+        }
     }
 }

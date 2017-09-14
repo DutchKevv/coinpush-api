@@ -4,20 +4,41 @@ const mongoose_1 = require("mongoose");
 const constants_1 = require("../../../shared/constants/constants");
 exports.ChannelSchema = new mongoose_1.Schema({
     user_id: {
-        type: String,
-        lowercase: true,
-        default: Date.now
+        type: mongoose_1.Schema.Types.ObjectId,
+        required: true
     },
     name: {
         type: String,
         required: true
     },
-    trades: {
+    profileImg: {
+        type: String
+    },
+    description: {
+        type: String
+    },
+    transactions: {
         type: Number,
         default: 0
     },
+    orders: {
+        type: [mongoose_1.Schema.Types.ObjectId],
+        default: []
+    },
     points: {
         type: Array,
+        default: []
+    },
+    pips: {
+        type: Number,
+        default: 0
+    },
+    followers: {
+        type: [mongoose_1.Schema.Types.ObjectId],
+        default: []
+    },
+    copiers: {
+        type: [mongoose_1.Schema.Types.ObjectId],
         default: []
     },
     public: {

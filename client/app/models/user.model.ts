@@ -6,7 +6,8 @@ export class UserModel extends Base {
 		username: '',
 		following: false,
 		followers: 0,
-		follow: false,
+		iFollow: false,
+		iCopy: false,
 		transactions: 0,
 		profileImg: ''
 	}

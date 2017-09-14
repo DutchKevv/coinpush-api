@@ -75,17 +75,4 @@ export class HeaderSocialComponent implements OnInit {
 			win = window.open(url, 'editor');
 		}
 	}
-
-	onClickLogin() {
-		this.userService.login();
-	}
-
-	clearCache() {
-		this.socketService.send('system:clear-cache', {}, (err: any) => {
-			if (err)
-				alert(err);
-
-			alert('Cleaned cache');
-		});
-	}
 }

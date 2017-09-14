@@ -1,5 +1,5 @@
 <nav class="nav-main">
-    <a [routerLink]="['/main/user/profile/' + userService.model.get('_id')]" [routerLinkActive]="['active']" class="profile">
+    <a [routerLink]="['/main/user/profile/', userService.model.get('_id')]" [routerLinkActive]="['active']" class="profile">
         <img class="logo" width="70" height="70" src="{{userService.model.options.profileImg}}">
         <h4>{{userService.model.options.username}}</h4>
     </a>

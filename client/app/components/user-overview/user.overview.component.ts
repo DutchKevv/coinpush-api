@@ -1,7 +1,7 @@
 import {debounce} from 'lodash';
 import {
-	Component, ElementRef, OnInit, OnDestroy, ChangeDetectionStrategy,
-	AfterViewChecked, ViewEncapsulation, Output, Response
+	Component, OnInit, OnDestroy, ChangeDetectionStrategy,
+	AfterViewChecked, ViewEncapsulation, Output
 } from '@angular/core';
 import {InstrumentsService} from '../../services/instruments.service';
 import {UserService} from '../../services/user.service';
@@ -20,7 +20,7 @@ declare let $: any;
 
 export class UserOverviewComponent implements OnInit, OnDestroy, AfterViewChecked {
 
-	@Output() public users$: BehaviorSubject<[]> = new BehaviorSubject([]);
+	@Output() public users$: BehaviorSubject<any[]> = new BehaviorSubject([]);
 
 	private _moveInterval;
 
@@ -39,7 +39,7 @@ export class UserOverviewComponent implements OnInit, OnDestroy, AfterViewChecke
 	}
 
 	setMoveInterval() {
-		this._moveTimeout = setInterval(() => this.moveCards());
+		this._moveInterval = setInterval(() => this.moveCards());
 	}
 
 	clearMoveInterval() {
@@ -51,11 +51,11 @@ export class UserOverviewComponent implements OnInit, OnDestroy, AfterViewChecke
 	}
 
 	toggleFollow(state: boolean, model: UserModel) {
-		this._userService.toggleFollow(state, model).subscribe(result => {
+		this._userService.toggleFollow(state, model);
+	}
 
-		}, error => {
-
-		});
+	toggleCopy(state: boolean, model: UserModel) {
+		this._userService.toggleCopy(model, state);
 	}
 
 	ngOnDestroy() {

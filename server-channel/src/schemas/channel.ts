@@ -1,12 +1,11 @@
-import {Schema, model} from 'mongoose';
+import {Schema, model, Types} from 'mongoose';
 import {isEmail} from 'validator';
 import {CHANNEL_TYPE_MAIN} from '../../../shared/constants/constants';
 
 export const ChannelSchema = new Schema({
 	user_id: {
-		type: String,
-		lowercase: true,
-		default: Date.now
+		type: Schema.Types.ObjectId,
+		required: true
 	},
 	name: {
 		type: String,
@@ -18,16 +17,28 @@ export const ChannelSchema = new Schema({
 	description: {
 		type: String
 	},
-	trades: {
+	transactions: {
 		type: Number,
 		default: 0
 	},
 	orders: {
-		type: Array,
+		type: [Schema.Types.ObjectId],
 		default: []
 	},
 	points: {
 		type: Array,
+		default: []
+	},
+	pips: {
+		type: Number,
+		default: 0
+	},
+	followers: {
+		type: [Schema.Types.ObjectId],
+		default: []
+	},
+	copiers: {
+		type: [Schema.Types.ObjectId],
 		default: []
 	},
 	public: {
