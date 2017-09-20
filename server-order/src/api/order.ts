@@ -9,6 +9,22 @@ import {orderController} from '../controllers/order.controller';
 
 const router = Router();
 
+router.get('/:id', async (req, res, next) => {
+	try {
+		res.send(await orderController.findById(req.user, req.user.id));
+	} catch (error) {
+		next(error);
+	}
+});
+
+router.get('/', async (req, res) => {
+	try {
+		res.send(await orderController.findByUserId(req.user, req.user.id));
+	} catch (error) {
+		res.status(500).send(error);
+	}
+});
+
 router.post('/', async (req, res) => {
 
 	let params = <any>{
@@ -50,34 +66,6 @@ router.post('/', async (req, res) => {
 	}
 });
 
-router.get('/:id', function (req, res, next) {
-
-	Order.findById(req.params.id)
-		.exec(function (error, user) {
-			if (error) {
-				return next(error);
-			} else {
-				if (user === null) {
-					const err = new Error('Not authorized! Go back!');
-					err['status'] = 400;
-					return next(err);
-				} else {
-					return res.send('<h1>Name: </h1>' + user.username + '<h2>Mail: </h2>' + user.email + '<br><a type="button" href="/logout">Logout</a>')
-				}
-			}
-		});
-});
-
-router.delete('/:id', function (req: any, res, next) {
-
-	Order.follow(req.user.id, req.params.id, error => {
-		if (error)
-			return next(error);
-
-		res.status(200).end();
-	});
-});
-
 router.put('/:id', function (req: any, res, next) {
 
 	Order.unFollow(req.user.id, req.params.id, error => {
@@ -86,6 +74,14 @@ router.put('/:id', function (req: any, res, next) {
 
 		res.status(200).end();
 	});
+});
+
+router.delete('/:id', async (req: any, res, next) => {
+	try {
+		res.send(await orderController.close(req.user, req.params.id))
+	} catch (error) {
+		next(error);
+	}
 });
 
 export = router;

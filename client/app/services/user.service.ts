@@ -4,11 +4,26 @@ import {Http, Response} from '@angular/http';
 import {AlertService} from './alert.service';
 import {USER_FETCH_TYPE_SLIM} from '../../../shared/constants/constants';
 import {StartupService} from './startup.service';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+
+export interface IAccountStatus {
+	available: number,
+	equity: number,
+	openMargin: number,
+	profit: number
+}
 
 @Injectable()
 export class UserService {
 
 	@Output() model: UserModel = new UserModel(JSON.parse(localStorage.getItem('currentUser') || '{}'));
+
+	@Output() public accountStatus$: BehaviorSubject<IAccountStatus> = new BehaviorSubject({
+		available: 0,
+		equity: 0,
+		openMargin: 0,
+		profit: 0
+	});
 
 	constructor(private _http: Http,
 				private _alertService: AlertService,
@@ -24,17 +39,21 @@ export class UserService {
 		this.model = this._startupService.getLoggedInUser;
 	}
 
-	create(user) {
-		return this._http.post('/user', user).map((res: Response) => res.json());
-	}
-
 	get(id?: string, type = USER_FETCH_TYPE_SLIM) {
 		id = id || '';
-		return this._http.get('/social/user/' + id, {params: {type: type}}).map((res: Response) => new UserModel(res.json()));
+		return this._http.get('/user' + id, {params: {type: type}}).map((res: Response) => new UserModel(res.json()));
 	}
 
 	getList() {
-		return this._http.get('/social/users/').map((res: Response) => res.json());
+		return this._http.get('/user').map((res: Response) => res.json());
+	}
+
+	getOverview() {
+		return this._http.get('/user-overview').map((res: Response) => res.json().editorChoice.map(user => new UserModel(user)));
+	}
+
+	create(user) {
+		return this._http.post('/user', user).map((res: Response) => res.json());
 	}
 
 	update(changes) {
@@ -48,7 +67,7 @@ export class UserService {
 		});
 	}
 
-	toggleFollow(state: boolean, model: UserModel) {
+	toggleFollow(model: UserModel, state: boolean) {
 
 		const subscription = this._http.post('/user/' + model.get('_id') + '/follow', null).map(res => res.json());
 
@@ -86,14 +105,14 @@ export class UserService {
 			if (result.state) {
 				model.set({
 					iCopy: !!state,
-					followersCount: ++model.options.followersCount
+					copiersCount: ++model.options.followersCount
 				});
 				text = `You are now following ${model.options.username} !`;
 			} else {
 				text = `Unsigned from ${model.options.username}`;
 				model.set({
 					iCopy: !!state,
-					followersCount: --model.options.followersCount
+					copiersCount: --model.options.followersCount
 				});
 			}
 			this._alertService.success(text);

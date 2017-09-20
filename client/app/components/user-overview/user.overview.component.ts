@@ -7,6 +7,7 @@ import {InstrumentsService} from '../../services/instruments.service';
 import {UserService} from '../../services/user.service';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {UserModel} from '../../models/user.model';
+import {ChannelService} from '../../services/channel.service';
 
 declare let $: any;
 
@@ -25,13 +26,12 @@ export class UserOverviewComponent implements OnInit, OnDestroy, AfterViewChecke
 	private _moveInterval;
 
 	constructor(public instrumentsService: InstrumentsService,
-				private _userService: UserService) {
+				public channelService: ChannelService,
+				public userService: UserService) {
 	}
 
 	ngOnInit() {
-		return this._userService.getList().subscribe(users => {
-			this.users$.next(users.map(user => new UserModel(user)));
-		});
+		return this.userService.getOverview().subscribe((users: Array<UserModel>) => this.users$.next(users));
 	}
 
 	ngAfterViewChecked() {
@@ -48,14 +48,6 @@ export class UserOverviewComponent implements OnInit, OnDestroy, AfterViewChecke
 
 	moveCards() {
 
-	}
-
-	toggleFollow(state: boolean, model: UserModel) {
-		this._userService.toggleFollow(state, model);
-	}
-
-	toggleCopy(state: boolean, model: UserModel) {
-		this._userService.toggleCopy(model, state);
 	}
 
 	ngOnDestroy() {

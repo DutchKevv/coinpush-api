@@ -1,14 +1,27 @@
 import * as url from 'url';
 import * as request from 'request-promise';
 import * as redis from '../modules/redis';
-import {CHANNEL_TYPE_MAIN} from '../../../shared/constants/constants';
+import {CHANNEL_TYPE_MAIN, REDIS_USER_PREFIX} from '../../../shared/constants/constants';
+import {channelController} from './channel.controller';
 
 const config = require('../../../tradejs.config');
 
 export const userController = {
 
-	find(params): Promise<Array<any>> {
+	async find(reqUser: {id: string}, userId: string): Promise<Array<any>> {
 		return Promise.resolve([]);
+	},
+
+	async findMany(reqUserId: string, params): Promise<Array<any>> {
+
+		const results = await Promise.all([
+			this.find(reqUserId),
+			request({uri: 'http://localhost:3002/social/users/', json: true})
+		]);
+
+		console.log(results);
+
+		return results[1];
 	},
 
 	async create(params) {
@@ -62,12 +75,19 @@ export const userController = {
 		}
 	},
 
+	getOverviewList() {
+
+	},
+
 	update(userId, params) {
 
 	},
 
+	/*
+		TODO: Not request main channel but let channel service find user main channel
+	 */
 	async toggleFollow(followerId, toFollowId?: boolean) {
-// Get user main channel
+
 		// Get user main channel
 		const channel = await request({
 			uri: config.server.channel.apiUrl + '/channel/',
@@ -80,18 +100,14 @@ export const userController = {
 		});
 
 		// Subscribe to channel
-		const result = await request({
-			uri: config.server.channel.apiUrl + '/channel/' + channel.user[0]._id + '/follow',
-			method: 'POST',
-			headers: {
-				'_id': followerId
-			},
-			json: true
-		});
+		const result = await channelController.toggleFollow(followerId, channel.user[0]._id);
 
 		return result;
 	},
 
+	/*
+		TODO: Not request main channel but let channel service find user main channel
+	 */
 	async toggleCopy(followerId, toFollowId) {
 
 		// Get user main channel
@@ -106,19 +122,25 @@ export const userController = {
 		});
 
 		// Subscribe to channel
-		const result = await request({
-			uri: config.server.channel.apiUrl + '/channel/' + channel.user[0]._id + '/copy',
-			method: 'POST',
-			headers: {
-				'_id': followerId
-			},
-			json: true
-		});
+		const result = await channelController.toggleCopy(followerId, channel.user[0]._id);
 
 		return result;
 	},
 
 	remove() {
 
+	},
+
+	getSelf(userId: string): Promise<any> {
+		let REDIS_KEY = REDIS_USER_PREFIX + userId;
+
+		return new Promise((resolve, reject) => {
+			redis.client.get(REDIS_KEY, (err, content) => {
+				if (!err)
+					return resolve(JSON.parse(content));
+
+				this.find(userId);
+			});
+		});
 	}
 };

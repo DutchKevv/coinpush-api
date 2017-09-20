@@ -18,14 +18,14 @@ export class ChannelRowComponent implements OnInit {
 	@Input() model: ChannelModel;
 	public isSelf = false;
 
-	constructor(private _channelService: ChannelService, private _userService: UserService) {}
+	constructor(public channelService: ChannelService, private _userService: UserService) {}
 
 	ngOnInit() {
 		this.isSelf = this._userService.model.get('_id') === this.model.get('user_id');
 	}
 
 	onClickDelete() {
-		this._channelService.delete(this.model).subscribe(() => {
+		this.channelService.delete(this.model).subscribe(() => {
 
 		}, () => {
 
@@ -33,7 +33,7 @@ export class ChannelRowComponent implements OnInit {
 	}
 
 	onClickTogglePublic(state) {
-		this._channelService.update(this.model, {public: !!state}).subscribe(() => {
+		this.channelService.update(this.model, {public: !!state}).subscribe(() => {
 			console.log('asdf');
 		});
 	}

@@ -3,7 +3,7 @@ import {Component, ChangeDetectionStrategy, ViewEncapsulation, AfterViewInit, On
 import {SocketService}  from './services/socket.service';
 import {SystemService}  from './services/system.service';
 import {CacheService} from './services/cache.service';
-import {simulateBackspace} from '../assets/custom/js/backspace-fix';
+// import {simulateBackspace} from '../assets/custom/js/backspace-fix';
 import {AuthenticationService} from './services/authenticate.service';
 
 declare let Module: any;
@@ -51,7 +51,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 				const target = e.originalEvent['path'][0];
 
 				if (target.nodeName.toLowerCase() === 'input') {
-					simulateBackspace(target);
+					// simulateBackspace(target);
 				}
 			}
 

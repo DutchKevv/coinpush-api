@@ -6,7 +6,7 @@ const router = Router();
 
 router.get('/', async function (req: any, res) {
 	try {
-		res.send(await userController.getMany(req.body, req.user.id));
+		res.send(await userController.getMany(req.user.id, req.body));
 	} catch (error) {
 		console.log(error);
 		res.status(500).send(error);

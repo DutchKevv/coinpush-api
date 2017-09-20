@@ -38,6 +38,8 @@ declare let getEventListeners: any;
 export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	@Input() model: InstrumentModel;
+	@Input() showBox: Boolean = false;
+	@Input() quickBuy: Boolean = false;
 	@Output() loading$ = new BehaviorSubject(true);
 
 	@ViewChild(DialogAnchorDirective) private _dialogAnchor: DialogAnchorDirective;

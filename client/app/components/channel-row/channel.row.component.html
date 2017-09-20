@@ -4,7 +4,7 @@
         <td>
             <div class="profile">
                 <a>
-                    <img src="{{model.options.profileImg || '/images/default/trading-channel/trader.jpeg'}}">
+                    <img src="{{model.options.profileImg}}">
                 </a>
             </div>
         </td>
@@ -50,10 +50,12 @@
                         <span>{{model.options.followersEquality}}</span>
                     </td>
                     <td colspan="1">
-                        <ng-container *ngIf="isSelf === false">
-                            <button *ngIf="model.options.following === false" class="btn btn-sm btn-primary pull-right">Follow</button>
-                            <button *ngIf="model.options.following === true" class="btn btn-sm btn-danger pull-right">Unfollow</button>
-                        </ng-container>
+                        <!--<ng-container *ngIf="isSelf === false">-->
+                        <!--<button *ngIf="!model.options.iCopy" (click)="channelService.toggleCopy(model, true)" class="btn btn-sm btn-success pull-right">Copy</button>-->
+                        <!--<button *ngIf="model.options.iCopy" (click)="channelService.toggleCopy(model, false)" class="btn btn-sm btn-danger pull-right">UnCopy</button>-->
+                        <!--<button *ngIf="!model.options.iFollow" (click)="channelService.toggleFollow(model, true)" class="btn btn-sm btn-success pull-right">Follow</button>-->
+                        <!--<button *ngIf="model.options.iFollow" (click)="channelService.toggleFollow(model, false)" class="btn btn-sm btn-danger pull-right">UnFollow</button>-->
+                        <!--</ng-container>-->
                         <ng-container *ngIf="isSelf && model.get('type') !== 0">
 
                         </ng-container>

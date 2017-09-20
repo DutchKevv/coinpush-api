@@ -10,12 +10,16 @@ import {AlertService} from './alert.service';
 
 @Injectable()
 export class ChannelService {
-	constructor(private _http: Http) {
+	constructor(private _http: Http, private _alertService: AlertService) {
 
 	}
 
-	get(id: string): Observable<Response> {
-		return this._http.get('/channel/' + id).map(res => res.json());
+	get(channelId: string): Observable<ChannelModel> {
+		return this._http.get('/channel/' + channelId).map(res => new ChannelModel(res.json().user[0]));
+	}
+
+	getByUserId(userId: string): Observable<ChannelModel> {
+		return this._http.get('/channel/', {params: {user: userId}}).map(res => new ChannelModel(res.json().user[0]));
 	}
 
 	create(model: ChannelModel): Observable<ChannelModel> {
@@ -28,6 +32,63 @@ export class ChannelService {
 
 	update(model: ChannelModel, options): Observable<Response> {
 		return this._http.put('/channel/' + model.get('_id'), options);
+	}
+
+	toggleFollow(model: ChannelModel, state: boolean) {
+
+		const subscription = this._http.post('/channel/' + model.get('_id') + '/follow', null).map(res => res.json());
+
+		subscription.subscribe(result => {
+			let text;
+
+			if (result.state) {
+				model.set({
+					iFollow: !!state,
+					followersCount: ++model.options.followersCount
+				});
+				text = `Now following ${model.options.name}`;
+			} else {
+				text = `Stopped following ${model.options.name}`;
+				model.set({
+					iFollow: !!state,
+					followersCount: --model.options.followersCount
+				});
+			}
+			this._alertService.success(text);
+		}, (error) => {
+			console.error(error);
+			this._alertService.error(`An error occurred when following ${model.options.username}...`);
+		});
+
+		return subscription;
+	}
+
+	toggleCopy(model: ChannelModel, state: boolean) {
+		const subscription = this._http.post('/channel/' + model.get('_id') + '/copy', '').map(res => res.json());
+
+		subscription.subscribe(result => {
+			let text;
+
+			if (result.state) {
+				model.set({
+					iCopy: !!state,
+					followersCount: ++model.options.followersCount
+				});
+				text = `Now copying ${model.options.name}`;
+			} else {
+				text = `Stopped copying ${model.options.name}`;
+				model.set({
+					iCopy: !!state,
+					followersCount: --model.options.followersCount
+				});
+			}
+			this._alertService.success(text);
+		}, (error) => {
+			console.error(error);
+			this._alertService.error(`An error occurred when copying ${model.options.username}...`);
+		});
+
+		return subscription;
 	}
 
 	delete(model: ChannelModel): Observable<Response> {

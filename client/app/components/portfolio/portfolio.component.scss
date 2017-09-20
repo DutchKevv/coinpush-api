@@ -12,60 +12,16 @@
     background-color: $background-light2;
     height: 100%;
     width: 100%;
-    padding: 20px;
     box-sizing: border-box;
     position: relative;
-}
-
-.filter-options {
-    background: $background-light2;
-    display: flex;
-    justify-content: space-between;
-    flex-direction: row;
-    align-items: center;
-
-    li {
-        width: 25%;
-        padding-left: 20px;
-        margin-bottom: 0;
-
-        &:first-child {
-            padding-left: 0;
-        }
-    }
-
-    label {
-        display: block;
-        color: #e8e8e8;
-        font-size: 12px;
-        margin-bottom: 6px;
-    }
-
-    button {
-        margin-top: 18px;
-    }
-
-    select {
-        height: 30px !important;
-        background-color: $input-color-glyphicon-background;
-        color: $input-color-text;
-    }
-}
-
-.scroll-container {
-    overflow: scroll;
-    position: absolute;
-    top: 80px;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    padding: 20px;
 }
 
 .order-table {
     width: 100%;
     color: $font-color-light;
     font-weight: bold;
+    padding: 20px;
+    box-sizing: border-box;
 
     .negative {
         color: $general-error;
@@ -111,7 +67,7 @@
         display: flex;
 
         > div {
-            width: 12.50%;
+            width: 12.5%;
             line-height: 70px;
             padding-left: 10px;
 
@@ -199,46 +155,17 @@
 
     > div {
         width: 11.11%;
+
+        &:last-child {
+            width: 2%;
+        }
+
     }
 }
 
-.footer-overview {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    left: 0;
-    right: 0;
-    display: flex;
-
-    background-image: -webkit-linear-gradient(top, #7d7d7d 0%, #959595 51%, #727272 100%);
-    background-image: -moz-linear-gradient(top, white 0%, #fdfdfd 41%, #f4f4f4 100%);
-    background-image: -ms-linear-gradient(top, white 0%, #fdfdfd 41%, #f4f4f4 100%);
-    background-image: -o-linear-gradient(top, white 0%, #fdfdfd 41%, #f4f4f4 100%);
-    background-image: linear-gradient(top, white 0%, #fdfdfd 41%, #f4f4f4 100%);
-
-    > div {
-        width: 25%;
-        height: 100%;
-        padding: 14px;
-        border-left: 1px solid grey;
-        text-align: center;
-
-        &:first-child {
-            border-left: none;
-        }
-    }
-
-    h4 {
-        color: #f3f3f3;
-        font-size: 22px;
-        font-weight: normal;
-    }
-
-    P {
-        color: #c7c7c7;
-        font-size: 12px;
-        line-height: 20px;
-    }
+.chart-header {
+    background: $background-light;
+    height: 40px;
 }
 
 @keyframes fade-positive {

@@ -14,7 +14,7 @@ module.exports = {
     },
     server: {
         gateway: {
-            port: 80
+            port: 3100
         },
         cache: {
             port: 3001,
@@ -50,7 +50,11 @@ module.exports = {
         profilePath: path.join(__dirname, 'images', 'images', 'profile'),
 		profileBaseUrl: '/images/profile/',
 		profileDefaultPath: path.join(__dirname, 'images', 'images', 'default', 'profile', 'nl.png'),
-		profileDefaultUrl: '/images/default/profile/nl.png'
+		profileDefaultUrl: '/images/default/profile/nl.png',
+        channelPath: path.join(__dirname, 'images', 'images', 'channel'),
+        channelBaseUrl: '/images/profile/',
+        channelDefaultPath: path.join(__dirname, 'images', 'images', 'default', 'profile', 'nl.png'),
+        channelDefaultUrl: '/images/default/channel/channel.jpeg'
     },
     redis: {
         host: '127.0.0.1',

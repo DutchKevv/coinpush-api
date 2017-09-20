@@ -6,6 +6,7 @@ import {Http} from '@angular/http';
 import {Subject} from 'rxjs/Subject';
 import {CacheService, CacheSymbol} from '../../services/cache.service';
 import {UserService} from '../../services/user.service';
+import {OrderService} from '../../services/order.service';
 
 @Component({
 	selector: 'page-main',
@@ -23,11 +24,12 @@ export class PageMainComponent implements OnInit, AfterViewInit {
 	constructor(public userService: UserService,
 				private _http: Http,
 				private _cacheService: CacheService,
+				private _orderService: OrderService,
 				private _authenticationService: AuthenticationService) {
 	}
 
 	ngOnInit(): void {
-		// attachBackspaceFix(this.input.nativeElement);
+		this._orderService.init();
 	}
 
 	ngAfterViewInit(): void {

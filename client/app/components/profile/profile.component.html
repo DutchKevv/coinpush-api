@@ -1,19 +1,30 @@
 <ng-container *ngIf="user$ | async as user">
-    <header>
-        <div class="profile-details">
-            <img class="profileImg" src="{{user.profileImg}}">
-            <div class="meta-data">
-                <h2>{{user.username}}</h2>
+    <ng-container *ngIf="user.options$ | async as options">
+        <header>
+            <div class="profile-details">
+                <img class="profileImg" src="{{options.profileImg}}">
+                <div class="meta-data">
+                    <h2>{{options.name}}</h2>
+                    <div class="profile-details-meta-container">
+                        <div *ngIf="!isSelf">
+                            <button *ngIf="!options.iCopy" (click)="channelService.toggleCopy(user, true)" class="btn btn-sm btn-success">Copy</button>
+                            <button *ngIf="options.iCopy" (click)="channelService.toggleCopy(user, false)" class="btn btn-sm btn-danger ">UnCopy</button>
+                            <button *ngIf="!options.iFollow" (click)="channelService.toggleFollow(user, true)" class="btn btn-sm btn-success ">Follow
+                            </button>
+                            <button *ngIf="options.iFollow" (click)="channelService.toggleFollow(user, false)" class="btn btn-sm btn-danger ">UnFollow
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-        <nav class="nav">
-            <a [routerLink]="['/main/user/profile/' + user._id + '/feed']" [routerLinkActive]="['active']"><i class="fa fa-comments-o"></i>Feed</a>
-            <a [routerLink]="['/main/user/profile/' + user._id + '/channels']" [routerLinkActive]="['active']"><i class="fa fa-exchange"></i>Channels</a>
-            <a [routerLink]="['/main/user/profile/' + user._id + '/statistics']" [routerLinkActive]="['active']"><i class="fa fa-bar-chart"></i>Stats</a>
-            <a [routerLink]="['/main/user/profile/' + user._id + '/chart']" [routerLinkActive]="['active']"><i class="fa fa-area-chart"></i>Chart</a>
-        </nav>
-    </header>
+            <nav class="nav">
+                <a [routerLink]="['/main/user/profile/' + userId + '/feed']" [routerLinkActive]="['active']"><i class="fa fa-comments-o"></i>Feed</a>
+                <a [routerLink]="['/main/user/profile/' + userId + '/channels']" [routerLinkActive]="['active']"><i class="fa fa-exchange"></i>Channels</a>
+                <a [routerLink]="['/main/user/profile/' + userId + '/statistics']" [routerLinkActive]="['active']"><i class="fa fa-bar-chart"></i>Stats</a>
+                <a [routerLink]="['/main/user/profile/' + userId + '/chart']" [routerLinkActive]="['active']"><i class="fa fa-area-chart"></i>Chart</a>
+            </nav>
+        </header>
 
-    <router-outlet></router-outlet>
-
+        <router-outlet></router-outlet>
+    </ng-container>
 </ng-container>

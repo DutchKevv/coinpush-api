@@ -1,7 +1,7 @@
 <h2 class="header-title">Combined<sup>* only public trades</sup></h2>
 
-<app-channel-row [model]="combinedChannel$ | async" (click)="showDetails(model)"></app-channel-row>
-
+<app-channel-row [model]="combinedChannel$ | async" ></app-channel-row>
+<!--(click)="showDetails(model)"-->
 <div *ngIf="isSelf" class="add-channel-container">
     <button (click)="onClickAddChannel()" class="btn btn-primary add-channel-button">Add channel&nbsp;&nbsp;<i class="fa fa-plus"></i></button>
 
@@ -44,4 +44,4 @@
 
 <h2 class="header-title">Custom</h2>
 
-<app-channel-row *ngFor="let model of customChannels$ | async" [model]="model" (click)="showDetails(model)"></app-channel-row>
+<app-channel-row *ngFor="let model of customChannels$ | async" [model]="model" ></app-channel-row>

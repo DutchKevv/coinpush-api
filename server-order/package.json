@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsc && node index.js"
+    "start": "tsc-watch --onSuccess \"node index.js\""
   },
   "author": "H.K.Brandsma",
   "license": "ISC",
@@ -23,6 +23,7 @@
     "redis": "^2.8.0",
     "request": "^2.81.0",
     "request-promise": "^4.2.1",
+    "tsc-watch": "^1.0.8",
     "typescript": "^2.5.2",
     "validator": "^8.2.0"
   }

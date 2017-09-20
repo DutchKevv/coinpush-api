@@ -16,6 +16,10 @@ const UserSchema = new Schema({
 		lowercase: true,
 		trim: true
 	},
+	balance: {
+		type: Number,
+		default: 0
+	},
 	username: {
 		type: String,
 		unique: true,

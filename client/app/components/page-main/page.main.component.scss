@@ -55,13 +55,22 @@
     display: flex;
     flex-flow: column;
     width: 100%;
+
+    .account-details {
+        display: flex;
+        justify-content: space-around;
+        padding: 4px 0;
+    }
 }
 
-.nav-search {
+header {
     width: 100%;
     text-align: center;
     background: $background-light;
-    position: relative;
+
+    .header-search {
+        position: relative;
+    }
 
     input {
         margin: 6px;

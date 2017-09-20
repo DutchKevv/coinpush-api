@@ -1,123 +1,91 @@
-<ul class="filter-options">
-    <li class="form-group">
-        <label for="exampleSelect1">PEOPLE FROM</label>
-        <select class="form-control" id="exampleSelect1">
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-        </select>
-    </li>
-    <li class="form-group">
-        <label for="whoInvested">WHO INVESTED IN</label>
-        <select class="form-control" id="whoInvested">
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-        </select>
-    </li>
-    <li class="form-group">
-        <label for="gainedMin">GAINED AT LEAST</label>
-        <select class="form-control" id="gainedMin">
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-        </select>
-    </li>
-    <li class="form-group">
-        <label for="duringTime">DURING THE</label>
-        <select class="form-control" id="duringTime">
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-        </select>
-    </li>
-    <li class="form-group">
-        <button class="btn btn-sm btn-primary">GO!</button>
-    </li>
-</ul>
-
-<div class="scroll-container">
-    <div class="order-table">
-        <div class="order-table-row-head">
-            <div>SYMBOL</div>
-            <div>UNITS</div>
-            <div>INVESTED</div>
-            <div>VALUE</div>
-            <div>P/L</div>
-            <div>P/L%</div>
-            <div>BUY</div>
-            <div>SELL</div>
-        </div>
-
-        <div (click)="toggleRow(row, position.symbol)" class="order-table-row" *ngFor="let position of orders$ | async | groupBy:'symbol'" #row>
-            <div class="row-container" >
-                <!--*ngIf="(row.options$ | async) as options"-->
-                <div><img src="/images/default/symbol/spx500-70x70.png" width="70" height="70" align="left"><span>{{position.key}}</span></div>
-                <div><span>{{position.amount}}</span></div>
-                <div>{{position.invested | currency : 'EUR':true}}</div>
-                <div>{{position.value | currency :'EUR':true}}</div>
-                <div [ngClass]="{'positive': position.PL > 0, 'negative': position.PL < 0}">{{position.PL | currency :'EUR':true }}</div>
-                <div [ngClass]="{'positive': position.PLPerc > 0, 'negative': position.PLPerc < 0}">{{position.PLPerc}}%</div>
-                <div>
-                    <button [ngClass]="{'positive': position.symbolHandle.options.bidDirection === 'up', 'negative': position.symbolHandle.options.bidDirection === 'down'}"
-                            (click)="placeOrder($event, constantsService.constants.ORDER_SIDE_BUY, model)" class="btn btn-sm">
-                        <span>B</span>
-                        <span>{{position.symbolHandle.options.bid}}</span>
-                    </button>
-                </div>
-                <div>
-                    <button [ngClass]="{'positive': position.symbolHandle.options.askDirection === 'up', 'negative': position.symbolHandle.options.askDirection === 'down'}"
-                            (click)="placeOrder($event, constantsService.constants.ORDER_SIDE_SELL, model)" class="btn btn-sm">
-                        <span>S</span>
-                        <span>{{position.symbolHandle.options.ask}}</span>
-                    </button>
-                </div>
+<div style="display: flex; flex-flow: column; height: 100%;">
+    <div class="orders-overview" style="height: 60%; overflow: auto;">
+        <div class="order-table">
+            <div class="order-table-row-head">
+                <div>SYMBOL</div>
+                <div>UNITS</div>
+                <div>INVESTED</div>
+                <div>VALUE</div>
+                <div>P/L</div>
+                <div>P/L%</div>
+                <div>BUY</div>
+                <div>SELL</div>
             </div>
-            <div class="order-table-sub-rows">
 
-                <div class="order-table-row-head">
-                    <div>ACTION</div>
-                    <div>UNITS</div>
-                    <div>AMOUNT</div>
-                    <div>OPEN</div>
-                    <div>CURRENT</div>
-                    <div>SL</div>
-                    <div>TP</div>
-                    <div>P/L</div>
-                    <div>P/L%</div>
+            <div (click)="toggleRow(row, position.symbol)" class="order-table-row" *ngFor="let position of orderService.orders$ | async | groupBy:'symbol'" #row>
+                <div class="row-container">
+                    <!--*ngIf="(row.options$ | async) as options"-->
+                    <div><img src="/images/default/symbol/spx500-70x70.png" width="70" height="70" align="left"><span>{{position.key}}</span></div>
+                    <div><span>{{position.amount}}</span></div>
+                    <div>{{position.invested | currency : 'EUR':true}}</div>
+                    <div>{{position.value | currency :'EUR':true}}</div>
+                    <div [ngClass]="{'positive': position.PL > 0, 'negative': position.PL < 0}">{{position.PL | currency :'EUR':true }}</div>
+                    <div [ngClass]="{'positive': position.PLPerc > 0, 'negative': position.PLPerc < 0}">{{position.PLPerc}}%</div>
+                    <div>
+                        <button [ngClass]="{'positive': position.symbolHandle.options.bidDirection === 'up', 'negative': position.symbolHandle.options.bidDirection === 'down'}"
+                                (click)="placeOrder($event, constantsService.constants.ORDER_SIDE_BUY, model)" class="btn btn-sm">
+                            <span>B</span>
+                            <span>{{position.symbolHandle.options.bid}}</span>
+                        </button>
+                    </div>
+                    <div>
+                        <button [ngClass]="{'positive': position.symbolHandle.options.askDirection === 'up', 'negative': position.symbolHandle.options.askDirection === 'down'}"
+                                (click)="placeOrder($event, constantsService.constants.ORDER_SIDE_SELL, model)" class="btn btn-sm">
+                            <span>S</span>
+                            <span>{{position.symbolHandle.options.ask}}</span>
+                        </button>
+                    </div>
                 </div>
+                <div class="order-table-sub-rows">
 
-                <div class="order-table-sub-row" *ngFor="let model of position.items">
-                    <ng-container *ngIf="(model.options$ | async) as options">
-                        <div>{{model.options.side === constantsService.constants.ORDER_SIDE_BUY ? 'Sell' : 'Buy'}}</div>
-                        <div>{{model.options.amount}}</div>
-                        <div>
-                            <span>{{model.options.amount}}</span>
-                        </div>
-                        <div>{{model.options.amount * model.options.openPrice | currency : 'EUR':true}}</div>
-                        <div>{{options.value | currency :'EUR':true}}</div>
-                        <div></div>
-                        <div></div>
-                        <div [ngClass]="{'positive': options.PL > 0, 'negative': options.PL < 0}">{{options.PL | currency :'EUR':true }}</div>
-                        <div [ngClass]="{'positive': options.PLPerc > 0, 'negative': options.PLPerc < 0}">{{options.PLPerc}}%</div>
-                    </ng-container>
+                    <div class="order-table-row-head">
+                        <div>ACTION</div>
+                        <div>UNITS</div>
+                        <div>AMOUNT</div>
+                        <div>OPEN</div>
+                        <div>CURRENT</div>
+                        <div>SL</div>
+                        <div>TP</div>
+                        <div>P/L</div>
+                        <div>P/L%</div>
+                        <div>&nbsp;</div>
+                    </div>
+
+                    <div class="order-table-sub-row" *ngFor="let model of position.items">
+                        <ng-container *ngIf="(model.options$ | async) as options">
+                            <div>{{model.options.side === constantsService.constants.ORDER_SIDE_BUY ? 'Sell' : 'Buy'}}</div>
+                            <div>{{model.options.amount}}</div>
+                            <div>
+                                <span>{{model.options.amount}}</span>
+                            </div>
+                            <div>{{model.options.amount * model.options.openPrice | currency : 'EUR':true}}</div>
+                            <div>{{options.value | currency :'EUR':true}}</div>
+                            <div></div>
+                            <div></div>
+                            <div [ngClass]="{'positive': options.PL > 0, 'negative': options.PL < 0}">{{options.PL | currency :'EUR':true }}</div>
+                            <div [ngClass]="{'positive': options.PLPerc > 0, 'negative': options.PLPerc < 0}">{{options.PLPerc}}%</div>
+                            <div>
+                                <a (click)="closeOrder($event, model)"><i class="fa fa-close"></i></a>
+                            </div>
+                        </ng-container>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <div class="chart-header">
+        <!--<a><i class="fa fa-glass"></i></a>-->
+    </div>
+    <div class="chart-container" style="height: 40%; width: 100%; display: block;">
+        <chart-box *ngIf="activeSymbol" [model]="activeSymbol" [showBox]="false"
+                   style="position: static; height: 100%; width: 100%; display: block; border: none"></chart-box>
+    </div>
 </div>
 
-<div class="footer-overview">
-    <div><h4>$ 23.234,23</h4><p>AVAILABLE</p></div>
-    <div><h4>$ 23.234,23</h4><p>TOTAL ALLOCATED</p></div>
-    <div><h4>$ 23.234,23</h4><p>PROFIT</p></div>
-    <div><h4>$ 23.234,23</h4><p>(VIRTUAL) EQUALITY</p></div>
-</div>
+<!--<div class="footer-overview" *ngIf="userService.model.options$ | async as options">-->
+<!--<div><h4>{{options.balance | currency : 'EUR':true}}</h4><p>AVAILABLE</p></div>-->
+<!--<div><h4>{{totalAllocated | currency : 'EUR':true}}</h4><p>TOTAL ALLOCATED</p></div>-->
+<!--<div><h4>$ 23.234,23</h4><p>PROFIT</p></div>-->
+<!--<div><h4>$ 23.234,23</h4><p>(VIRTUAL) EQUALITY</p></div>-->
+<!--</div>-->

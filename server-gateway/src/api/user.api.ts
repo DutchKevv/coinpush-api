@@ -4,11 +4,11 @@ import {userController} from '../controllers/user.controller';
 const router = Router();
 
 /**
- * List
+ * Find single
  */
-router.get('/', async (req, res, next) => {
+router.get('/:id', async (req, res, next) => {
 	try {
-		res.send(await userController.find(req.query));
+		res.send(await userController.find(req.user, req.params.id));
 	} catch (error) {
 		console.error(error);
 		next(error);
@@ -16,11 +16,11 @@ router.get('/', async (req, res, next) => {
 });
 
 /**
- * Find single
+ * List
  */
-router.get('/:id', async (req, res, next) => {
+router.get('/', async (req, res, next) => {
 	try {
-		res.send(await userController.find(req.params.id));
+		res.send(await userController.findMany(req.user.id, req.query));
 	} catch (error) {
 		console.error(error);
 		next(error);
@@ -56,7 +56,6 @@ router.post('/:id/follow', async (req, res, next) => {
  */
 router.post('/:id/copy', async (req, res, next) => {
 	try {
-		console.log('bitch cosadfasfasdfasdfasdfasdfpy');
 		res.send(await userController.toggleCopy(req.user.id, req.params.id));
 	} catch (error) {
 		console.error(error);
@@ -64,18 +63,16 @@ router.post('/:id/copy', async (req, res, next) => {
 	}
 });
 
-
-// /**
-//  * Create
-//  */
-// router.post('/', async (req, res, next) => {
-// 	try {
-// 		console.log('USER POST!!!!!');
-// 		res.send(await userController.create(req.body));
-// 	} catch (error) {
-// 		console.error(error);
-// 		next(error);
-// 	}
-// });
+/**
+ * Create
+ */
+router.post('/', async (req, res, next) => {
+	try {
+		res.send(await userController.create(req.body));
+	} catch (error) {
+		console.error(error);
+		next(error);
+	}
+});
 
 export = router;

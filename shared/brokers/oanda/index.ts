@@ -209,8 +209,19 @@ export default class OandaApi extends Base {
 		});
 	}
 
-	public removeOrder(id) {
+	public closeOrder(id) {
+		return new Promise((resolve, reject) => {
+			this._client.closeOrder(this.options.accountId, id, (err, result) => {
+				if (err)
+					return reject(err);
 
+				resolve({
+					openTime: result.time,
+					openPrice: result.price,
+					b_id: result.tradeOpened.id || result.tradesClosed[0].id
+				})
+			});
+		});
 	}
 
 	public updateOrder(id, options) {

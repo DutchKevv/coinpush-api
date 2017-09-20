@@ -23,7 +23,6 @@ exports.orderController = {
         try {
             // Get user that created order
             const user = JSON.parse(await this._getUser(params.user));
-            console.log("USER SDFSDF", user);
             // Create a new broker class
             // TODO : Refactor
             const broker = new index_1.default({

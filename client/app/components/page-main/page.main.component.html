@@ -43,18 +43,38 @@
 </nav>
 
 <main class="main-container">
-    <nav class="nav-search">
-        <input (keyup)="onSearchKeyUp($event)" placeholder="Markets / Channels / People" #input>
-        <div class="search-drop-down" *ngIf="(searchResults$ | async) as result" (click)="onClickDropdownItem()" #dropdown>
-            <a *ngFor="let symbol of result.symbols">
-                <img src="/images/default/symbol/spx500-70x70.png">
-                <span>{{symbol.name}}</span>
-            </a>
-            <a *ngFor="let user of result.users" [routerLink]="['/main/user/profile/' + user._id]">
-                <img src="{{user.profileImg}}">
-                <span>{{user.username}}</span>
-            </a>
+    <header>
+        <div class="account-details" *ngIf="userService.accountStatus$ | async as status">
+            <div>
+                <h3>{{status.available | currency : 'EUR':true}}</h3>
+                <span>available</span>
+            </div>
+            <div>
+                <h3>{{status.equity | currency : 'EUR':true}}</h3>
+                <span>equlity</span>
+            </div>
+            <div>
+                <h3>{{status.openMargin | currency : 'EUR':true}}</h3>
+                <span>O. margin</span>
+            </div>
+            <div>
+                <h3>{{status.profit | currency : 'EUR':true}}</h3>
+                <span>profit</span>
+            </div>
+            <div class="header-search">
+                <input (keyup)="onSearchKeyUp($event)" placeholder="Markets / Channels / People" #input>
+                <div class="search-drop-down" *ngIf="(searchResults$ | async) as result" (click)="onClickDropdownItem()" #dropdown>
+                    <a *ngFor="let symbol of result.symbols">
+                        <img src="/images/default/symbol/spx500-70x70.png">
+                        <span>{{symbol.name}}</span>
+                    </a>
+                    <a *ngFor="let user of result.users" [routerLink]="['/main/user/profile/' + user._id]">
+                        <img src="{{user.profileImg}}">
+                        <span>{{user.username}}</span>
+                    </a>
+                </div>
+            </div>
         </div>
-    </nav>
+    </header>
     <router-outlet></router-outlet>
 </main>

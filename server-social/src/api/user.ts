@@ -3,7 +3,7 @@ import {userController} from '../controllers/user.controller';
 
 const router = Router();
 
-router.get('/:id', async function (req: any, res, next) {
+router.get('/:id', async (req: any, res, next) => {
 	try {
 		res.send(await userController.get(req.params.id, parseInt(req.query.type, 10)));
 	} catch (error) {

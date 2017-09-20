@@ -160,7 +160,18 @@ class OandaApi extends Base_1.Base {
             });
         });
     }
-    removeOrder(id) {
+    closeOrder(id) {
+        return new Promise((resolve, reject) => {
+            this._client.closeOrder(this.options.accountId, id, (err, result) => {
+                if (err)
+                    return reject(err);
+                resolve({
+                    openTime: result.time,
+                    openPrice: result.price,
+                    b_id: result.tradeOpened.id || result.tradesClosed[0].id
+                });
+            });
+        });
     }
     updateOrder(id, options) {
     }

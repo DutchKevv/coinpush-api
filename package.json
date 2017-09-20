@@ -23,8 +23,19 @@
     "NodeJS"
   ],
   "scripts": {
-    "postinstall": "cd server && npm i",
-    "redis": "redis-server --maxmemory 10mb --maxmemory-policy allkeys-lru"
+    "start": "pm2 start process.json",
+    "start-redis": "redis-server --maxmemory 10mb --maxmemory-policy allkeys-lru",
+    "install-all-server": "npm run install-gateway & npm run install-cache & npm run install-order & npm run install-server & npm run install-social & npm run install-channel & npm run install-shared",
+    "install-all": "npm run install-all-server & npm run install-client",
+    "install-client": "cd ./client && npm i",
+    "install-broker": "cd ./server-broker && npm i",
+    "install-cache": "cd ./server-cache && npm i",
+    "install-channel": "cd ./server-channel && npm i",
+    "install-gateway": "cd ./server-gateway && npm i",
+    "install-order": "cd ./server-order && npm i",
+    "install-server": "cd ./server && npm i",
+    "install-social": "cd ./server-social && npm i",
+    "install-shared": "cd ./shared && npm i"
   },
   "dependencies": {
     "faker": "^4.1.0"

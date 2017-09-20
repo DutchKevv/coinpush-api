@@ -29,14 +29,29 @@ server.on('upgrade', (req, socket, head) => {
 	proxy.ws(req, socket, head, {target: config.server.cache.apiUrl});
 });
 
+/**
+ * proxy
+ */
 const proxy = httpProxy.createProxyServer({});
+
+proxy.on('proxyReq', function(proxyReq, req, res, options) {
+	if (req.body) {
+		let bodyData = JSON.stringify(req.body);
+		// incase if content-type is application/x-www-form-urlencoded -> we need to change to application/json
+		proxyReq.setHeader('Content-Type', 'application/json');
+		proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+		// stream the content
+		proxyReq.write(bodyData);
+	}
+});
+
 proxy.on('error', function (err, req, res) {
 	console.error(err);
 });
 
 app.use(morgan('dev'));
 app.use(helmet());
-// app.use(json());
+app.use(json());
 // app.use(urlencoded({extended: false}));
 
 app.use(express.static(process.env.NODE_ENV === 'production' ? PATH_PUBLIC_PROD : PATH_PUBLIC_DEV));
@@ -71,7 +86,7 @@ app.use(expressJwt({
  * error - unauthorized
  */
 app.use((err, req, res, next) => {
-	console.log('ERRORO NAME: ', err.name, err);
+	console.log('ERRORO NAME: ', err.name);
 
 	if (err.name === 'UnauthorizedError')
 		return res.status(401).send('invalid token...');
@@ -80,7 +95,7 @@ app.use((err, req, res, next) => {
 });
 
 /**
- * set client user id for upcoming proxy requests
+ * set client user id for upcoming (proxy) requests
  */
 app.use((req, res, next) => {
 	if (req.user)
@@ -102,18 +117,18 @@ app.get('/images/*', (req, res) => proxy.web(req, res, {target: config.server.fe
 /**
  * user
  */
-app.use('/user/**', require('./api/user.api'));
 app.use('/user', require('./api/user.api'));
+app.use('/user-overview', require('./api/user.overview.api'));
 
 /**
  * channel
  */
-app.use('/channel/**', require('./api/channel.api'));
 app.use('/channel', require('./api/channel.api'));
 
-// app.all('/channel/?*', (req, res) => {
-// 	proxy.web(req, res, {target: config.server.channel.apiUrl});
-// });
+/**
+ * order
+ */
+app.use('/order', require('./api/order.api'));
 
 /**
  * social
@@ -141,18 +156,6 @@ app.post('/social/file-upload/*', (req, res) => {
 
 app.post('/social/follow/*', (req, res) => {
 	proxy.web(req, res, {target: config.server.social.apiUrl});
-});
-
-/**
- * ORDER
- */
-app.all('/order', (req, res) => {
-	console.log('ORDER!!!!');
-	proxy.web(req, res, {target: config.server.order.apiUrl});
-});
-
-app.get('/orders', async (req, res) => {
-	proxy.web(req, res, {target: config.server.order.apiUrl});
 });
 
 /**

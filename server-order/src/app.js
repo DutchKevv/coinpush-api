@@ -34,10 +34,10 @@ app.use(body_parser_1.urlencoded({ extended: false }));
  * Add 'user' variable to request, holding userID
  */
 app.use((req, res, next) => {
-    let userID = req.headers['_id'];
-    if (!userID)
+    let userId = req.headers['_id'];
+    if (!userId)
         res.status(400).send('Invalid request: _id header is missing');
-    req.user = { id: userID };
+    req.user = { id: userId };
     next();
 });
 app.use(function (req, res, next) {
@@ -46,6 +46,5 @@ app.use(function (req, res, next) {
     next();
 });
 app.use('/order', require('./api/order'));
-app.use('/orders', require('./api/orders'));
 http.listen(config.server.order.port, () => console.log(`\n Order service started on      : 127.0.0.1:${config.server.order.port}`));
 //# sourceMappingURL=app.js.map

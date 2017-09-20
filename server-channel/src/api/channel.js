@@ -7,7 +7,7 @@ const router = express_1.Router();
  */
 router.get('/:id', async (req, res, next) => {
     try {
-        res.send(await channel_controller_1.channelController.findById(req.query));
+        res.send(await channel_controller_1.channelController.findById(req.user, req.query));
     }
     catch (error) {
         next(error);
@@ -20,14 +20,11 @@ router.get('/', async (req, res, next) => {
     try {
         const pList = [], result = {};
         if (req.query.user)
-            pList.push(['user', channel_controller_1.channelController.findByUserId(req.query.user)]);
+            pList.push(['user', channel_controller_1.channelController.findByUserId(req.user, req.query.user)]);
+        else
+            pList.push(['editorChoice', channel_controller_1.channelController.findMany(req.user)]);
         const pResults = await Promise.all(pList.map(p => p[1]));
         pResults.forEach((channels, index) => {
-            channels.forEach(channel => {
-                // channel.profileImg = User.normalizeProfileImg(user.profileImg);
-                channel.iFollow = channel.followers.indexOf(req.user.id) > -1;
-                channel.iCopy = channel.copiers.indexOf(req.user.id) > -1;
-            });
             result[pList[index][0]] = channels;
         });
         res.send(result);
@@ -54,7 +51,7 @@ router.put('/:id', async (req, res, next) => {
  */
 router.post('/:id/follow', async (req, res, next) => {
     try {
-        res.send(await channel_controller_1.channelController.toggleFollow(req.user.id, req.params.id));
+        res.send(await channel_controller_1.channelController.toggleFollow(req.user, req.params.id));
     }
     catch (error) {
         console.error(error);
@@ -66,7 +63,7 @@ router.post('/:id/follow', async (req, res, next) => {
  */
 router.post('/:id/copy', async (req, res, next) => {
     try {
-        res.send(await channel_controller_1.channelController.toggleCopy(req.user.id, req.params.id));
+        res.send(await channel_controller_1.channelController.toggleCopy(req.user, req.params.id));
     }
     catch (error) {
         console.error(error);

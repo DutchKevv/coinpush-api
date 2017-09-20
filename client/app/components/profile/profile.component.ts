@@ -4,6 +4,8 @@ import {UserService} from '../../services/user.service';
 import {AlertService} from '../../services/alert.service';
 import {UserModel} from '../../models/user.model';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {ChannelService} from '../../services/channel.service';
+import {ChannelModel} from '../../models/channel.model';
 
 @Component({
 	selector: 'app-profile',
@@ -15,22 +17,31 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
 export class ProfileComponent implements OnInit {
 
-	@Output() public user$: BehaviorSubject<UserModel> = new BehaviorSubject(new UserModel());
+	@Output() public user$: BehaviorSubject<ChannelModel> = new BehaviorSubject(new ChannelModel());
 	loading = false;
 
-	private _id: string;
+	public userId: string;
+	public channelId: string;
+	public isSelf: boolean;
+
 	private _sub: any;
 
-	constructor(private _route: ActivatedRoute,
-				private _userService: UserService) {
+	constructor(public channelService: ChannelService,
+				public userService: UserService,
+				private _route: ActivatedRoute) {
 	}
 
 	ngOnInit() {
-		this._sub = this._route.params.subscribe(params => {
-			this._id = params['id'];
+		this.userId = this._route.params['_value'].id;
 
-			this._userService.get(this._id).subscribe((user: UserModel) => {
-				this.user$.next(user.options);
+
+		this._sub = this._route.params.subscribe(params => {
+			this.userId = params['id'];
+			this.isSelf = this.userId === this.userService.model.get('_id');
+
+			this.channelService.getByUserId(this.userId).subscribe((channel: ChannelModel) => {
+				this.channelId = channel.get('_id');
+				this.user$.next(channel);
 			});
 		});
 	}

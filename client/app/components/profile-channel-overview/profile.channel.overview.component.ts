@@ -50,7 +50,7 @@ export class ProfileChannelOverviewComponent implements OnInit, OnDestroy {
 	}
 
 	public loadChannels() {
-		this._http.get('/channel', {params: {user: this._id, custom: true}}).map((res: Response) => res.json()).subscribe(data => {
+		this._http.get('/channel/', {params: {user: this._id, custom: true}}).map((res: Response) => res.json()).subscribe(data => {
 			const models = data.user.map(channel => new ChannelModel(channel));
 
 			this.combinedChannel$.next(models.find(channel => channel.get('type') === CHANNEL_TYPE_MAIN));

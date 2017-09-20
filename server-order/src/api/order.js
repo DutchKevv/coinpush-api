@@ -4,6 +4,22 @@ const order_1 = require("../schemas/order");
 const constants_1 = require("../../../shared/constants/constants");
 const order_controller_1 = require("../controllers/order.controller");
 const router = express_1.Router();
+router.get('/:id', async (req, res, next) => {
+    try {
+        res.send(await order_controller_1.orderController.findById(req.user, req.user.id));
+    }
+    catch (error) {
+        next(error);
+    }
+});
+router.get('/', async (req, res) => {
+    try {
+        res.send(await order_controller_1.orderController.findByUserId(req.user, req.user.id));
+    }
+    catch (error) {
+        res.status(500).send(error);
+    }
+});
 router.post('/', async (req, res) => {
     let params = {
         amount: req.body.amount,
@@ -42,37 +58,20 @@ router.post('/', async (req, res) => {
         }
     }
 });
-router.get('/:id', function (req, res, next) {
-    order_1.Order.findById(req.params.id)
-        .exec(function (error, user) {
-        if (error) {
-            return next(error);
-        }
-        else {
-            if (user === null) {
-                const err = new Error('Not authorized! Go back!');
-                err['status'] = 400;
-                return next(err);
-            }
-            else {
-                return res.send('<h1>Name: </h1>' + user.username + '<h2>Mail: </h2>' + user.email + '<br><a type="button" href="/logout">Logout</a>');
-            }
-        }
-    });
-});
-router.delete('/:id', function (req, res, next) {
-    order_1.Order.follow(req.user.id, req.params.id, error => {
-        if (error)
-            return next(error);
-        res.status(200).end();
-    });
-});
 router.put('/:id', function (req, res, next) {
     order_1.Order.unFollow(req.user.id, req.params.id, error => {
         if (error)
             return next(error);
         res.status(200).end();
     });
+});
+router.delete('/:id', async (req, res, next) => {
+    try {
+        res.send(await order_controller_1.orderController.close(req.user, req.params.id));
+    }
+    catch (error) {
+        next(error);
+    }
 });
 module.exports = router;
 //# sourceMappingURL=order.js.map

@@ -363,6 +363,7 @@ OandaAdapter.prototype.getOpenTrades = function (accountId, callback) {
  * @param {Function} callback
  */
 OandaAdapter.prototype.createOrder = function (accountId, order, callback) {
+    console.log('accountId accountIdaccountId accountId accountId accountId accountId', accountId);
     this._sendRESTRequest({
         method: 'POST',
         path: '/v1/accounts/' + accountId + '/orders',
@@ -373,7 +374,7 @@ OandaAdapter.prototype.createOrder = function (accountId, order, callback) {
         },
     }, callback);
 };
-OandaAdapter.prototype.closeTrade = function (accountId, tradeId, callback) {
+OandaAdapter.prototype.closeOrder = function (accountId, tradeId, callback) {
     this._sendRESTRequest({
         method: 'DELETE',
         path: '/v1/accounts/' + accountId + '/trades/' + tradeId

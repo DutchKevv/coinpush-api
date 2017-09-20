@@ -8,7 +8,7 @@
     "target": "es2017",
     "mapRoot": "./app",
     "outDir": "./dist",
-    "baseUrl": "./",
+//    "baseUrl": "./",
     "module": "es6",
     "moduleResolution": "node",
     "typeRoots": [

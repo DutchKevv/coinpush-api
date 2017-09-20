@@ -1,21 +1,30 @@
-import {Injectable, NgZone} from '@angular/core';
+import {Injectable, Output} from '@angular/core';
 import {Http} from '@angular/http';
 import {ConstantsService} from './constants.service';
 import {OrderModel} from '../../../shared/models/OrderModel';
 import {CacheService} from './cache.service';
 import {AlertService} from './alert.service';
+import {UserService} from './user.service';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
 @Injectable()
 export class OrderService {
 
+	@Output() public orders$: BehaviorSubject<Array<OrderModel>> = new BehaviorSubject([]);
+
 	constructor(private _constantsService: ConstantsService,
 				private _cacheService: CacheService,
+				private _userService: UserService,
 				private _alertService: AlertService,
 				private http: Http) {
 	}
 
 	init() {
-
+		this.getList().subscribe((list: Array<OrderModel>) => {
+			this.orders$.next(list);
+		}, () => {
+			this._alertService.error('Could not load order list');
+		})
 	}
 
 	public get (id) {
@@ -23,7 +32,7 @@ export class OrderService {
 	}
 
 	public getList() {
-		return this.http.get('/orders/').map(res => res.json().map(order => this.createModel(order)));
+		return this.http.get('/order/').map(res => res.json().map(order => this.createModel(order)));
 	}
 
 	public getById() {
@@ -55,7 +64,11 @@ export class OrderService {
 
 		this.updateModel(model, symbolOptions$.getValue());
 
-		const subscription = symbolOptions$.subscribe((options: any) => this.updateModel(model, options));
+		const subscription = symbolOptions$.subscribe((options: any) => {
+			this.updateModel(model, options);
+
+			this._calculateAccountStatus()
+		});
 
 		model.subscription.push(subscription);
 
@@ -81,4 +94,16 @@ export class OrderService {
 	public remove(id) {
 		return this.http.delete('/order/' + id);
 	}
+
+	private _calculateAccountStatus() {
+		const orders = this.orders$.getValue();
+
+		this._userService.accountStatus$.next({
+			available: 0,
+			equity: orders.reduce((sum: number, order: OrderModel) => sum + order.get('value'), 0),
+			openMargin: 0,
+			profit: orders.reduce((sum: number, order: OrderModel) => sum + order.get('PL'), 0),
+		});
+	}
 }
+

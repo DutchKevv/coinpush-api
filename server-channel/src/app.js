@@ -8,6 +8,7 @@ const body_parser_1 = require("body-parser");
 const config = require('../../tradejs.config');
 const app = express();
 const server = app.listen(config.server.channel.port, () => console.log(`\n Channel service started on      : 127.0.0.1:${config.server.channel.port}`));
+mongoose.set('debug', true);
 mongoose.Promise = global.Promise;
 mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
 mongoose.connection.once('open', function () {

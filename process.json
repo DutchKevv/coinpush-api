@@ -9,8 +9,8 @@
     "instances": 1
   },
   {
-    "script": "server/bootstrapper.js",
-    "name": "old-api",
+    "script": "server-cache/index.js",
+    "name": "cache-api",
     "exec_mode": "fork",
     "env_production" : {
       "NODE_ENV": "production"
@@ -45,8 +45,17 @@
     "instances": 1
   },
   {
-    "script": "server-cache/index.js",
-    "name": "cache-api",
+    "script": "server-channel/index.js",
+    "name": "channel-api",
+    "exec_mode": "fork",
+    "env_production" : {
+      "NODE_ENV": "production"
+    },
+    "instances": 1
+  },
+  {
+    "script": "server/bootstrapper.js",
+    "name": "old-api",
     "exec_mode": "fork",
     "env_production" : {
       "NODE_ENV": "production"

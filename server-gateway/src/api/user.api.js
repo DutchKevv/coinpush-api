@@ -3,11 +3,11 @@ const express_1 = require("express");
 const user_controller_1 = require("../controllers/user.controller");
 const router = express_1.Router();
 /**
- * List
+ * Find single
  */
-router.get('/', async (req, res, next) => {
+router.get('/:id', async (req, res, next) => {
     try {
-        res.send(await user_controller_1.userController.find(req.query));
+        res.send(await user_controller_1.userController.find(req.user, req.params.id));
     }
     catch (error) {
         console.error(error);
@@ -15,11 +15,11 @@ router.get('/', async (req, res, next) => {
     }
 });
 /**
- * Find single
+ * List
  */
-router.get('/:id', async (req, res, next) => {
+router.get('/', async (req, res, next) => {
     try {
-        res.send(await user_controller_1.userController.find(req.params.id));
+        res.send(await user_controller_1.userController.findMany(req.user.id, req.query));
     }
     catch (error) {
         console.error(error);
@@ -55,8 +55,19 @@ router.post('/:id/follow', async (req, res, next) => {
  */
 router.post('/:id/copy', async (req, res, next) => {
     try {
-        console.log('bitch cosadfasfasdfasdfasdfasdfpy');
         res.send(await user_controller_1.userController.toggleCopy(req.user.id, req.params.id));
+    }
+    catch (error) {
+        console.error(error);
+        next(error);
+    }
+});
+/**
+ * Create
+ */
+router.post('/', async (req, res, next) => {
+    try {
+        res.send(await user_controller_1.userController.create(req.body));
     }
     catch (error) {
         console.error(error);
