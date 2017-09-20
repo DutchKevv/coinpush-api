@@ -25,8 +25,8 @@
   "scripts": {
     "start": "pm2 start process.json",
     "start-redis": "redis-server --maxmemory 10mb --maxmemory-policy allkeys-lru",
-    "install-all-server": "npm run install-gateway & npm run install-cache & npm run install-order & npm run install-server & npm run install-social & npm run install-channel & npm run install-shared",
-    "install-all": "npm run install-all-server & npm run install-client",
+    "install-all-server": "npm run install-gateway && npm run install-cache && npm run install-order && npm run install-server && npm run install-social && npm run install-channel && npm run install-shared",
+    "install-all": "npm run install-all-server && npm run install-client",
     "install-client": "cd ./client && npm i",
     "install-broker": "cd ./server-broker && npm i",
     "install-cache": "cd ./server-cache && npm i",
