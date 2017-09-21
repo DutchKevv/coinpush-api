@@ -43,5 +43,4 @@ io.on('connection', socket => {
     console.info('App', `connectfion from ${socket.handshake.headers.origin}`);
 });
 http.listen(config.server.social.port, () => console.log(`\n Social service started on      : 127.0.0.1:${config.server.social.port}`));
-// toolsController.updateFieldType(User, 'followers', 'following', 'array');
 //# sourceMappingURL=app.js.map

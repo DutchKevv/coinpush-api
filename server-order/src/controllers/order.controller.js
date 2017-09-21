@@ -71,9 +71,9 @@ exports.orderController = {
                 token: config.broker.account.token
             });
             await broker.init();
-            await broker.closeOrder(tradeId);
-            redis.client.publish('order-closed', JSON.stringify(order));
-            return order;
+            await broker.closeOrder(orderId);
+            redis.client.publish('order-closed', JSON.stringify({ id: orderId }));
+            return true;
         }
         catch (error) {
             console.error('ORDER CREATE : ', error);

@@ -91,12 +91,11 @@ export const orderController = {
 			});
 
 			await broker.init();
-			await broker.closeOrder(tradeId);
+			await broker.closeOrder(orderId);
 
-			redis.client.publish('order-closed', JSON.stringify(order));
+			redis.client.publish('order-closed', JSON.stringify({id: orderId}));
 
-			return order;
-
+			return true;
 		} catch (error) {
 			console.error('ORDER CREATE : ', error);
 

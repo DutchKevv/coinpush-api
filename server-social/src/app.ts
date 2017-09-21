@@ -5,7 +5,6 @@ import * as _io from 'socket.io';
 import * as helmet from 'helmet';
 import * as morgan from 'morgan';
 import * as mongoose from 'mongoose';
-import {toolsController} from './tools/tools.controller';
 
 const
 	config = require('../../tradejs.config'),
@@ -57,7 +56,3 @@ io.on('connection', socket => {
 });
 
 http.listen(config.server.social.port, () => console.log(`\n Social service started on      : 127.0.0.1:${config.server.social.port}`));
-
-
-// toolsController.updateFieldType(User, 'followers', 'following', 'array');
-
