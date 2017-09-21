@@ -28,7 +28,7 @@ exports.userController = {
                 json: true
             });
             // create channel
-            channel = await channel_controller_1.channelController.create(reqUser, {
+            channel = await channel_controller_1.channelController.create({ id: user._id }, {
                 name: params.username,
                 type: constants_1.CHANNEL_TYPE_MAIN
             });
@@ -38,7 +38,8 @@ exports.userController = {
             if (user && user._id)
                 this.remove(reqUser, user._id);
             if (channel && channel._id)
-                channel_controller_1.channelController.remove(reqUser, user._id);
+                channel_controller_1.channelController.remove(reqUser, channel._id);
+            console.error(error);
             throw new Error(error);
         }
     },
@@ -49,37 +50,37 @@ exports.userController = {
     /*
         TODO: Not request main channel but let channel service find user main channel
      */
-    async toggleFollow(followerId, toFollowId) {
+    async toggleFollow(reqUser, toFollowId) {
         // Get user main channel
         const channel = await request({
             uri: config.server.channel.apiUrl + '/channel/',
             method: 'GET',
-            headers: { '_id': followerId },
+            headers: { '_id': reqUser.id },
             qs: {
                 user: toFollowId
             },
             json: true
         });
         // Subscribe to channel
-        const result = await channel_controller_1.channelController.toggleFollow(followerId, channel.user[0]._id);
+        const result = await channel_controller_1.channelController.toggleFollow(reqUser.id, channel.user[0]._id);
         return result;
     },
     /*
         TODO: Not request main channel but let channel service find user main channel
      */
-    async toggleCopy(followerId, toFollowId) {
+    async toggleCopy(reqUser, toFollowId) {
         // Get user main channel
         const channel = await request({
             uri: config.server.channel.apiUrl + '/channel/',
             method: 'GET',
-            headers: { '_id': followerId },
+            headers: { '_id': reqUser.id },
             qs: {
                 user: toFollowId
             },
             json: true
         });
         // Subscribe to channel
-        const result = await channel_controller_1.channelController.toggleCopy(followerId, channel.user[0]._id);
+        const result = await channel_controller_1.channelController.toggleCopy(reqUser.id, channel.user[0]._id);
         return result;
     },
     remove(reqUser, userId) {

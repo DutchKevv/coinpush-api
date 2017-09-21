@@ -69,7 +69,7 @@ router.post('/:id/copy', async (req, res, next) => {
  */
 router.post('/', async (req, res, next) => {
 	try {
-		res.send(await channelController.create(req.user.id, req.body));
+		res.send(await channelController.create(req.user, req.body));
 	} catch (error) {
 		console.error(error);
 		next(error);

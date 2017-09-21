@@ -33,7 +33,7 @@ export const userController = {
 			});
 
 			// create channel
-			channel = await channelController.create(reqUser, {
+			channel = await channelController.create({id: user._id}, {
 				name: params.username,
 				type: CHANNEL_TYPE_MAIN
 			});
@@ -45,8 +45,9 @@ export const userController = {
 				this.remove(reqUser, user._id);
 
 			if (channel && channel._id)
-				channelController.remove(reqUser, user._id);
+				channelController.remove(reqUser, channel._id);
 
+			console.error(error);
 			throw new Error(error);
 		}
 	},
@@ -62,13 +63,13 @@ export const userController = {
 	/*
 		TODO: Not request main channel but let channel service find user main channel
 	 */
-	async toggleFollow(followerId, toFollowId?: boolean) {
+	async toggleFollow(reqUser, toFollowId?: boolean) {
 
 		// Get user main channel
 		const channel = await request({
 			uri: config.server.channel.apiUrl + '/channel/',
 			method: 'GET',
-			headers: {'_id': followerId},
+			headers: {'_id': reqUser.id},
 			qs: {
 				user: toFollowId
 			},
@@ -76,7 +77,7 @@ export const userController = {
 		});
 
 		// Subscribe to channel
-		const result = await channelController.toggleFollow(followerId, channel.user[0]._id);
+		const result = await channelController.toggleFollow(reqUser.id, channel.user[0]._id);
 
 		return result;
 	},
@@ -84,13 +85,13 @@ export const userController = {
 	/*
 		TODO: Not request main channel but let channel service find user main channel
 	 */
-	async toggleCopy(followerId, toFollowId) {
+	async toggleCopy(reqUser, toFollowId) {
 
 		// Get user main channel
 		const channel = await request({
 			uri: config.server.channel.apiUrl + '/channel/',
 			method: 'GET',
-			headers: {'_id': followerId},
+			headers: {'_id': reqUser.id},
 			qs: {
 				user: toFollowId
 			},
@@ -98,7 +99,7 @@ export const userController = {
 		});
 
 		// Subscribe to channel
-		const result = await channelController.toggleCopy(followerId, channel.user[0]._id);
+		const result = await channelController.toggleCopy(reqUser.id, channel.user[0]._id);
 
 		return result;
 	},

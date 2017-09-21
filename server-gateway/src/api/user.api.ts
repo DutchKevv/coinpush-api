@@ -45,7 +45,7 @@ router.put('/', async (req, res, next) => {
  */
 router.post('/:id/follow', async (req, res, next) => {
 	try {
-		res.send(await userController.toggleFollow(req.user.id, req.params.id));
+		res.send(await userController.toggleFollow(req.user, req.params.id));
 	} catch (error) {
 		console.error(error);
 		next(error);
@@ -57,7 +57,7 @@ router.post('/:id/follow', async (req, res, next) => {
  */
 router.post('/:id/copy', async (req, res, next) => {
 	try {
-		res.send(await userController.toggleCopy(req.user.id, req.params.id));
+		res.send(await userController.toggleCopy(req.user, req.params.id));
 	} catch (error) {
 		console.error(error);
 		next(error);

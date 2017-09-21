@@ -82,9 +82,11 @@ export const channelController = {
 		return channels
 	},
 
-	create(userId, options, type = CHANNEL_TYPE_CUSTOM): Promise<any> {
+	create(reqUser, options, type = CHANNEL_TYPE_CUSTOM): Promise<any> {
+		console.log('REU SUSDF USER US UER', reqUser);
+
 		return Channel.create({
-			user_id: userId,
+			user_id: reqUser.id,
 			name: options.name,
 			description: options.description,
 			public: options.public,

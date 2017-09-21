@@ -66,9 +66,10 @@ exports.channelController = {
         });
         return channels;
     },
-    create(userId, options, type = constants_1.CHANNEL_TYPE_CUSTOM) {
+    create(reqUser, options, type = constants_1.CHANNEL_TYPE_CUSTOM) {
+        console.log('REU SUSDF USER US UER', reqUser);
         return channel_1.Channel.create({
-            user_id: userId,
+            user_id: reqUser.id,
             name: options.name,
             description: options.description,
             public: options.public,
