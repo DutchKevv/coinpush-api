@@ -166,4 +166,5 @@ class Mapper {
 Mapper.MODE_PERSISTENT = 0;
 Mapper.MODE_MEMORY = 1;
 exports.default = Mapper;
+
 //# sourceMappingURL=CacheMap.js.map

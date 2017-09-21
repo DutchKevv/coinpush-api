@@ -37,4 +37,5 @@ class MA extends Indicator_1.default {
     }
 }
 exports.default = MA;
+
 //# sourceMappingURL=index.js.map

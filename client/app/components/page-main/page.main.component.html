@@ -58,7 +58,7 @@
                 <span>O. margin</span>
             </div>
             <div>
-                <h3>{{status.profit | currency : 'EUR':true}}</h3>
+                <h3 [ngClass]="{'positive': status.profit > 0, 'negative': status.profit < 0}">{{status.profit | currency : 'EUR':true}}</h3>
                 <span>profit</span>
             </div>
             <div class="header-search">

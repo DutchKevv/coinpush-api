@@ -433,4 +433,5 @@ OandaAdapter.prototype.kill = function () {
     this.off();
 };
 exports.Adapter = OandaAdapter;
+
 //# sourceMappingURL=OANDAAdapter.js.map

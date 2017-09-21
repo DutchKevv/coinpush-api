@@ -14,6 +14,14 @@
     height: 100%;
 }
 
+.positive {
+    color: $general-success;
+}
+
+.negative {
+    color: $general-error;
+}
+
 .nav-main {
     background: $background-light;
     overflow-y: auto;

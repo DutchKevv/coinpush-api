@@ -8,4 +8,5 @@ class InstrumentListModel extends SyncModel_1.SyncModel {
     }
 }
 exports.InstrumentListModel = InstrumentListModel;
+
 //# sourceMappingURL=InstrumentList.js.map

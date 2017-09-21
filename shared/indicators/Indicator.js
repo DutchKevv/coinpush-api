@@ -61,4 +61,5 @@ class Indicator {
     }
 }
 exports.default = Indicator;
+
 //# sourceMappingURL=Indicator.js.map

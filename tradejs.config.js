@@ -16,6 +16,10 @@ module.exports = {
         gateway: {
             port: 3100
         },
+        oldApi: {
+            port: 3000,
+            apiUrl: 'http://localhost:3000'
+        },
         cache: {
             port: 3001,
             apiUrl: 'http://localhost:3001',

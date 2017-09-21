@@ -11,20 +11,14 @@ export class SocketService {
 	constructor(private _zone: NgZone) {}
 
 	init() {
-		// this._zone.runOutsideAngular(() => {
-			this.socket = io(this._getUrl(), {secure: true});
-		// });
-	}
-
-	private _getUrl(): string {
-		// Electron
-		if (window.location.protocol === 'file:') {
-			return 'https://localhost:3000';
-
-		// Browser | external
-		} else {
-			return 'http://' + window.location.hostname + ':3000';
-		}
+		this._zone.runOutsideAngular(() => {
+			this.socket = io('/', {
+				'reconnectionAttempts': 10, // avoid having user reconnect manually in order to prevent dead clients after a server restart
+				'timeout': 10000, // before connect_error and connect_timeout are emitted.
+				'transports': ['websocket'],
+				path: '/api'
+			});
+		});
 	}
 
 	public send(event: string, data?, cb?: Function): void {

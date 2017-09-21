@@ -16,4 +16,5 @@ OrderModel.DEFAULTS = {
     profitPerc: 0
 };
 exports.OrderModel = OrderModel;
+
 //# sourceMappingURL=OrderModel.js.map

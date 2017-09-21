@@ -85,8 +85,6 @@ module.exports = {
         new CleanWebpackPlugin([path.join(__dirname, '..', 'dist', '*.*')], {}),
 
         new CopyWebpackPlugin([
-            // {output}/file.txt
-            // {output}/file.txt
             {from: './assets', to: 'assets'},
             {from: path.join(__dirname, '..', 'index.html'), to: 'index.html'},
             {from: './../shared/engine/dist', to: 'engine'},

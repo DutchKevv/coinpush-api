@@ -83,4 +83,5 @@ InstrumentModel.DEFAULTS = {
     }
 };
 exports.InstrumentModel = InstrumentModel;
+
 //# sourceMappingURL=InstrumentModel.js.map

@@ -14,4 +14,5 @@ class SystemState {
     }
 }
 exports.SystemState = SystemState;
+
 //# sourceMappingURL=SystemState.js.map

@@ -1,4 +1,6 @@
-const url = require('url');
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const url_1 = require("url");
 const path = require('path');
 const express = require('express');
 const http = require('http');
@@ -24,7 +26,14 @@ const server = app.listen(config.server.gateway.port, () => {
  * websocket
  */
 server.on('upgrade', (req, socket, head) => {
-    proxy.ws(req, socket, head, { target: config.server.cache.apiUrl });
+    switch (url_1.parse(req.url).pathname) {
+        case '/api/':
+            proxy.ws(req, socket, head, { target: config.server.oldApi.apiUrl });
+            break;
+        case '/candles/':
+            proxy.ws(req, socket, head, { target: config.server.cache.apiUrl });
+            break;
+    }
 });
 /**
  * proxy

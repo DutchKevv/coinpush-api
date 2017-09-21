@@ -188,7 +188,10 @@ export default class App extends Base {
 
 			this._httpApi = express();
 			this._http = http.createServer(this._httpApi);
-			this._io = io.listen(this._http);
+
+			this._http.listen(port);
+
+			this._io = require('socket.io')(this._http, { path: '/api' }).listen(this._http);
 
 			this._httpApi.use(express.static(process.env.NODE_ENV === 'production' ? PATH_PUBLIC_PROD : PATH_PUBLIC_DEV));
 
@@ -223,18 +226,6 @@ export default class App extends Base {
 				socket.emit('system:state', this.controllers.system.state);
 
 				this.debug('info', 'Connected to server');
-			});
-
-			this._http.listen(port, () => {
-
-				console.log(`\n
-	App      : 127.0.0.1:${port}
-	${process.env.NODE_ENV === 'production' ? '' : 'Angular  : 127.0.0.1:4200'}
-				`);
-
-				this.debug('info', 'Public API started');
-
-				resolve();
 			});
 
 			/**

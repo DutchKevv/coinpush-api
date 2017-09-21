@@ -52,7 +52,7 @@
     "jquery": "3.2.1",
     "jquery-resizable-dom": "0.20.0",
     "jquery-touchswipe": "1.6.15",
-    "jstree": "3.3.4",
+    "jstree": "^3.3.4",
     "ngx-cookie": "1.0.0",
     "node-sass": "4.5.3",
     "raw-loader": "0.5.1",

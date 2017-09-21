@@ -160,7 +160,8 @@ var _a, _b, _c, _d, _e;
 /* 16 */,
 /* 17 */,
 /* 18 */,
-/* 19 */
+/* 19 */,
+/* 20 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -184,19 +185,14 @@ let SocketService = SocketService_1 = class SocketService {
         this._zone = _zone;
     }
     init() {
-        // this._zone.runOutsideAngular(() => {
-        this.socket = __WEBPACK_IMPORTED_MODULE_1_socket_io_client__(this._getUrl(), { secure: true });
-        // });
-    }
-    _getUrl() {
-        // Electron
-        if (window.location.protocol === 'file:') {
-            return 'https://localhost:3000';
-            // Browser | external
-        }
-        else {
-            return 'http://' + window.location.hostname + ':3000';
-        }
+        this._zone.runOutsideAngular(() => {
+            this.socket = __WEBPACK_IMPORTED_MODULE_1_socket_io_client__('/', {
+                'reconnectionAttempts': 10,
+                'timeout': 10000,
+                'transports': ['websocket'],
+                path: '/api'
+            });
+        });
     }
     send(event, data, cb) {
         this._zone.runOutsideAngular(() => {
@@ -223,7 +219,6 @@ var SocketService_1, _a;
 
 
 /***/ }),
-/* 20 */,
 /* 21 */,
 /* 22 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -2462,7 +2457,7 @@ var VERSION = new __WEBPACK_IMPORTED_MODULE_1__angular_core__["_16" /* Version *
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash__ = __webpack_require__(78);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_lodash__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__socket_service__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__socket_service__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs__ = __webpack_require__(132);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__models_indicator__ = __webpack_require__(362);
@@ -2750,13 +2745,13 @@ var _a, _b, _c, _d, _e, _f;
 /* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__.p + "images/_/_/node_modules/jstree/dist/themes/default/32px.png";
+module.exports = __webpack_require__.p + "images/_/_/assets/vendor/css/jstree/default/32px.png";
 
 /***/ }),
 /* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__.p + "images/_/_/node_modules/jstree/dist/themes/default-dark/32px.png";
+module.exports = __webpack_require__.p + "images/_/_/assets/vendor/css/jstree/default-dark/32px.png";
 
 /***/ }),
 /* 27 */,
@@ -2839,17 +2834,16 @@ var _a;
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CacheService; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__socket_service__ = __webpack_require__(19);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs__ = __webpack_require__(132);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__shared_classes_cache_CacheMap__ = __webpack_require__(812);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__shared_classes_cache_CacheMap___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__shared_classes_cache_CacheMap__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__shared_classes_Base__ = __webpack_require__(53);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__shared_classes_Base___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__shared_classes_Base__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_socket_io_client__ = __webpack_require__(343);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_socket_io_client___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_socket_io_client__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_Subject__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_Subject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_rxjs_Subject__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs__ = __webpack_require__(132);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_rxjs__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__shared_classes_cache_CacheMap__ = __webpack_require__(812);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__shared_classes_cache_CacheMap___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__shared_classes_cache_CacheMap__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__shared_classes_Base__ = __webpack_require__(53);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__shared_classes_Base___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__shared_classes_Base__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_socket_io_client__ = __webpack_require__(343);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_socket_io_client___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_socket_io_client__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_Subject__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_Subject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_Subject__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -2865,11 +2859,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
-class CacheSymbol extends __WEBPACK_IMPORTED_MODULE_4__shared_classes_Base__["Base"] {
+class CacheSymbol extends __WEBPACK_IMPORTED_MODULE_3__shared_classes_Base__["Base"] {
     constructor() {
         super(...arguments);
-        this.price$ = new __WEBPACK_IMPORTED_MODULE_6_rxjs_Subject__["Subject"]();
+        this.price$ = new __WEBPACK_IMPORTED_MODULE_5_rxjs_Subject__["Subject"]();
     }
     tick(ticks) {
         ticks.forEach(tick => {
@@ -2887,19 +2880,14 @@ class CacheSymbol extends __WEBPACK_IMPORTED_MODULE_4__shared_classes_Base__["Ba
 /* unused harmony export CacheSymbol */
 
 let CacheService = class CacheService {
-    constructor(_zone, _socketService) {
+    constructor(_zone) {
         this._zone = _zone;
-        this._socketService = _socketService;
-        this.symbolList$ = new __WEBPACK_IMPORTED_MODULE_2_rxjs__["BehaviorSubject"]([]);
-        this.changed$ = new __WEBPACK_IMPORTED_MODULE_6_rxjs_Subject__["Subject"]();
+        this.symbolList$ = new __WEBPACK_IMPORTED_MODULE_1_rxjs__["BehaviorSubject"]([]);
+        this.changed$ = new __WEBPACK_IMPORTED_MODULE_5_rxjs_Subject__["Subject"]();
     }
     init() {
-        this._mapper = new __WEBPACK_IMPORTED_MODULE_3__shared_classes_cache_CacheMap___default.a();
+        this._mapper = new __WEBPACK_IMPORTED_MODULE_2__shared_classes_cache_CacheMap___default.a();
         this._connect();
-        // this._socketService.socket.on('system:state', (systemState: SystemState) => {
-        // 	if (!systemState.booting && systemState.connected)
-        //
-        // });
         this._socket.on('ticks', ticks => {
             this._zone.runOutsideAngular(() => {
                 for (let _symbol in ticks) {
@@ -2923,7 +2911,7 @@ let CacheService = class CacheService {
     }
     _connect() {
         this._zone.runOutsideAngular(() => {
-            this._socket = __WEBPACK_IMPORTED_MODULE_5_socket_io_client__('/', {
+            this._socket = __WEBPACK_IMPORTED_MODULE_4_socket_io_client__('/', {
                 'reconnectionAttempts': 10,
                 'timeout': 10000,
                 'transports': ['websocket'],
@@ -2971,18 +2959,18 @@ let CacheService = class CacheService {
 };
 __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["U" /* Output */])(),
-    __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2_rxjs__["BehaviorSubject"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2_rxjs__["BehaviorSubject"]) === "function" && _a || Object)
+    __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1_rxjs__["BehaviorSubject"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_rxjs__["BehaviorSubject"]) === "function" && _a || Object)
 ], CacheService.prototype, "symbolList$", void 0);
 __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["U" /* Output */])(),
-    __metadata("design:type", typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_6_rxjs_Subject__["Subject"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6_rxjs_Subject__["Subject"]) === "function" && _b || Object)
+    __metadata("design:type", typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_5_rxjs_Subject__["Subject"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5_rxjs_Subject__["Subject"]) === "function" && _b || Object)
 ], CacheService.prototype, "changed$", void 0);
 CacheService = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */])(),
-    __metadata("design:paramtypes", [typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["R" /* NgZone */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["R" /* NgZone */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_1__socket_service__["a" /* SocketService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__socket_service__["a" /* SocketService */]) === "function" && _d || Object])
+    __metadata("design:paramtypes", [typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["R" /* NgZone */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["R" /* NgZone */]) === "function" && _c || Object])
 ], CacheService);
 
-var _a, _b, _c, _d;
+var _a, _b, _c;
 
 
 /***/ }),
@@ -3782,6 +3770,14 @@ exports.decodePayloadAsBinary = function (data, binaryType, callback) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const events_1 = __webpack_require__(169);
 const merge = __webpack_require__(779);
@@ -3807,8 +3803,10 @@ class Base extends events_1.EventEmitter {
     get options() {
         return this._options;
     }
-    async init() {
-        this.initialized = true;
+    init() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.initialized = true;
+        });
     }
     get(key) {
         return typeof key === 'undefined' ? this._options : this._options[key];
@@ -3847,7 +3845,9 @@ Base.isWin = /^win/.test(process.platform);
 Base.isElectron = process && (process.env.ELECTRON || process.versions['electron']);
 Base.isNode = !!process;
 exports.Base = Base;
+
 //# sourceMappingURL=Base.js.map
+
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9)))
 
 /***/ }),
@@ -3889,7 +3889,9 @@ exports.CHANNEL_TYPE_MAIN = 0, exports.CHANNEL_TYPE_CUSTOM = 1,
  * REDIS
  */
 exports.REDIS_USER_PREFIX = 'user_';
+
 //# sourceMappingURL=constants.js.map
+
 
 /***/ }),
 /* 55 */
@@ -3981,13 +3983,13 @@ var _a;
 /* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__.p + "images/_/_/node_modules/jstree/dist/themes/default/40px.png";
+module.exports = __webpack_require__.p + "images/_/_/assets/vendor/css/jstree/default/40px.png";
 
 /***/ }),
 /* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__.p + "images/_/_/node_modules/jstree/dist/themes/default-dark/40px.png";
+module.exports = __webpack_require__.p + "images/_/_/assets/vendor/css/jstree/default-dark/40px.png";
 
 /***/ }),
 /* 59 */
@@ -4188,7 +4190,7 @@ var _a, _b, _c, _d;
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SystemService; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__socket_service__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__socket_service__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__constants_service__ = __webpack_require__(55);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__shared_models_SystemState__ = __webpack_require__(792);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__shared_models_SystemState___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__shared_models_SystemState__);
@@ -21637,7 +21639,9 @@ InstrumentModel.DEFAULTS = {
     }
 };
 exports.InstrumentModel = InstrumentModel;
+
 //# sourceMappingURL=InstrumentModel.js.map
+
 
 /***/ }),
 /* 106 */
@@ -22675,11 +22679,22 @@ exports.$$rxSubscriber = exports.rxSubscriber;
 
 "use strict";
 
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const Base_1 = __webpack_require__(53);
 class BaseModel extends Base_1.Base {
-    async init() {
-        await super.init();
+    init() {
+        const _super = name => super[name];
+        return __awaiter(this, void 0, void 0, function* () {
+            yield _super("init").call(this);
+        });
     }
     toJson() {
         return JSON.stringify(this.options);
@@ -22690,7 +22705,9 @@ class BaseModel extends Base_1.Base {
     }
 }
 exports.BaseModel = BaseModel;
+
 //# sourceMappingURL=BaseModel.js.map
+
 
 /***/ }),
 /* 147 */
@@ -28684,7 +28701,7 @@ exports.BaseModel = BaseModel;
 /* WEBPACK VAR INJECTION */(function($) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return FileTreeComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__directives_dialoganchor_directive__ = __webpack_require__(149);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_socket_service__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_socket_service__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_modal_service__ = __webpack_require__(79);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__dialog_dialog_component__ = __webpack_require__(56);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -29113,13 +29130,13 @@ var _a, _b;
 /* 150 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__.p + "images/_/_/node_modules/jstree/dist/themes/default/throbber.gif";
+module.exports = __webpack_require__.p + "images/_/_/assets/vendor/css/jstree/default/throbber.gif";
 
 /***/ }),
 /* 151 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__.p + "images/_/_/node_modules/jstree/dist/themes/default-dark/throbber.gif";
+module.exports = __webpack_require__.p + "images/_/_/assets/vendor/css/jstree/default-dark/throbber.gif";
 
 /***/ }),
 /* 152 */
@@ -29129,7 +29146,7 @@ module.exports = __webpack_require__.p + "images/_/_/node_modules/jstree/dist/th
 /* WEBPACK VAR INJECTION */(function($) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return JSEditorComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__file_tree_file_tree_component__ = __webpack_require__(148);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_socket_service__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_socket_service__ = __webpack_require__(20);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -32089,7 +32106,7 @@ var _a, _b, _c;
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TradingChannelService; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__socket_service__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__socket_service__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__models_user_model__ = __webpack_require__(142);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_http__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__models_social_trader_model__ = __webpack_require__(831);
@@ -34255,7 +34272,7 @@ Object(__WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_dynamic__["a" /* pl
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_footer_footer_component__ = __webpack_require__(800);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_file_tree_file_tree_component__ = __webpack_require__(148);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_jseditor_jseditor_component__ = __webpack_require__(152);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__services_socket_service__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__services_socket_service__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_ngx_cookie__ = __webpack_require__(50);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__angular_forms__ = __webpack_require__(44);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__app_component__ = __webpack_require__(811);
@@ -34467,7 +34484,7 @@ AppModule = __decorate([
 "use strict";
 /* WEBPACK VAR INJECTION */(function($) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return HeaderPlaygroundComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_socket_service__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_socket_service__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__login_login_component__ = __webpack_require__(76);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_user_service__ = __webpack_require__(14);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__services_system_service__ = __webpack_require__(77);
@@ -54957,7 +54974,9 @@ class SystemState {
     }
 }
 exports.SystemState = SystemState;
+
 //# sourceMappingURL=SystemState.js.map
+
 
 /***/ }),
 /* 793 */
@@ -54990,7 +55009,7 @@ module.exports = ".dropup,\n.dropdown {\n  position: relative; }\n\n.dropdown-to
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return HeaderEditorComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_socket_service__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_socket_service__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__login_login_component__ = __webpack_require__(76);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_user_service__ = __webpack_require__(14);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__services_system_service__ = __webpack_require__(77);
@@ -55104,7 +55123,7 @@ module.exports = ":host {\n  background: #000;\n  contain: layout;\n  width: 100
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_lodash__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_interactjs__ = __webpack_require__(147);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_interactjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_interactjs__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_socket_service__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_socket_service__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_core__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_moment__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_moment__);
@@ -55349,7 +55368,7 @@ module.exports = ":host {\n  height: 100%;\n  width: 100%;\n  background: #42424
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__services_constants_service__ = __webpack_require__(55);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_socket_service__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_socket_service__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_system_service__ = __webpack_require__(77);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__services_cache_service__ = __webpack_require__(41);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__services_authenticate_service__ = __webpack_require__(104);
@@ -55579,7 +55598,9 @@ class Mapper {
 Mapper.MODE_PERSISTENT = 0;
 Mapper.MODE_MEMORY = 1;
 exports.default = Mapper;
+
 //# sourceMappingURL=CacheMap.js.map
+
 
 /***/ }),
 /* 813 */
@@ -55654,7 +55675,9 @@ function mergeRanges(ranges) {
     return stack;
 }
 exports.mergeRanges = mergeRanges;
+
 //# sourceMappingURL=util.date.js.map
+
 
 /***/ }),
 /* 814 */
@@ -55821,19 +55844,21 @@ OrderModel.DEFAULTS = {
     profitPerc: 0
 };
 exports.OrderModel = OrderModel;
+
 //# sourceMappingURL=OrderModel.js.map
+
 
 /***/ }),
 /* 825 */
 /***/ (function(module, exports) {
 
-module.exports = "<nav class=\"nav-main\">\n    <a [routerLink]=\"['/main/user/profile/', userService.model.get('_id')]\" [routerLinkActive]=\"['active']\" class=\"profile\">\n        <img class=\"logo\" width=\"70\" height=\"70\" src=\"{{userService.model.options.profileImg}}\">\n        <h4>{{userService.model.options.username}}</h4>\n    </a>\n\n    <a [routerLink]=\"['/main/channels']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-upload\"></i>\n        <span>Watchlist</span>\n    </a>\n    <a [routerLink]=\"['/main/portfolio']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-handshake-o\"></i>\n        <span>Portfolio</span>\n    </a>\n    <a [routerLink]=\"['/main/news']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-newspaper-o\"></i>\n        <span>News feed</span>\n    </a>\n    <a [routerLink]=\"['/main/user']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-users\"></i>\n        <span>Users</span>\n    </a>\n    <a [routerLink]=\"['/main/charts']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-bar-chart\"></i>\n        <span>Charts</span>\n    </a>\n    <a [routerLink]=\"['/main/backtest']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-flash\"></i>\n        <span>Backtest</span>\n    </a>\n    <a [routerLink]=\"['/main/editor']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-code\"></i>\n        <span>Editor</span>\n    </a>\n    <a [routerLink]=\"['/main/settings']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-gears\"></i>\n        <span>Settings</span>\n    </a>\n    <a (click)=\"logout()\">\n        <i class=\"fa fa-sign-out\"></i>\n        <span>Logout</span>\n    </a>\n</nav>\n\n<main class=\"main-container\">\n    <header>\n        <div class=\"account-details\" *ngIf=\"userService.accountStatus$ | async as status\">\n            <div>\n                <h3>{{status.available | currency : 'EUR':true}}</h3>\n                <span>available</span>\n            </div>\n            <div>\n                <h3>{{status.equity | currency : 'EUR':true}}</h3>\n                <span>equlity</span>\n            </div>\n            <div>\n                <h3>{{status.openMargin | currency : 'EUR':true}}</h3>\n                <span>O. margin</span>\n            </div>\n            <div>\n                <h3>{{status.profit | currency : 'EUR':true}}</h3>\n                <span>profit</span>\n            </div>\n            <div class=\"header-search\">\n                <input (keyup)=\"onSearchKeyUp($event)\" placeholder=\"Markets / Channels / People\" #input>\n                <div class=\"search-drop-down\" *ngIf=\"(searchResults$ | async) as result\" (click)=\"onClickDropdownItem()\" #dropdown>\n                    <a *ngFor=\"let symbol of result.symbols\">\n                        <img src=\"/images/default/symbol/spx500-70x70.png\">\n                        <span>{{symbol.name}}</span>\n                    </a>\n                    <a *ngFor=\"let user of result.users\" [routerLink]=\"['/main/user/profile/' + user._id]\">\n                        <img src=\"{{user.profileImg}}\">\n                        <span>{{user.username}}</span>\n                    </a>\n                </div>\n            </div>\n        </div>\n    </header>\n    <router-outlet></router-outlet>\n</main>\n"
+module.exports = "<nav class=\"nav-main\">\n    <a [routerLink]=\"['/main/user/profile/', userService.model.get('_id')]\" [routerLinkActive]=\"['active']\" class=\"profile\">\n        <img class=\"logo\" width=\"70\" height=\"70\" src=\"{{userService.model.options.profileImg}}\">\n        <h4>{{userService.model.options.username}}</h4>\n    </a>\n\n    <a [routerLink]=\"['/main/channels']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-upload\"></i>\n        <span>Watchlist</span>\n    </a>\n    <a [routerLink]=\"['/main/portfolio']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-handshake-o\"></i>\n        <span>Portfolio</span>\n    </a>\n    <a [routerLink]=\"['/main/news']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-newspaper-o\"></i>\n        <span>News feed</span>\n    </a>\n    <a [routerLink]=\"['/main/user']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-users\"></i>\n        <span>Users</span>\n    </a>\n    <a [routerLink]=\"['/main/charts']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-bar-chart\"></i>\n        <span>Charts</span>\n    </a>\n    <a [routerLink]=\"['/main/backtest']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-flash\"></i>\n        <span>Backtest</span>\n    </a>\n    <a [routerLink]=\"['/main/editor']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-code\"></i>\n        <span>Editor</span>\n    </a>\n    <a [routerLink]=\"['/main/settings']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-gears\"></i>\n        <span>Settings</span>\n    </a>\n    <a (click)=\"logout()\">\n        <i class=\"fa fa-sign-out\"></i>\n        <span>Logout</span>\n    </a>\n</nav>\n\n<main class=\"main-container\">\n    <header>\n        <div class=\"account-details\" *ngIf=\"userService.accountStatus$ | async as status\">\n            <div>\n                <h3>{{status.available | currency : 'EUR':true}}</h3>\n                <span>available</span>\n            </div>\n            <div>\n                <h3>{{status.equity | currency : 'EUR':true}}</h3>\n                <span>equlity</span>\n            </div>\n            <div>\n                <h3>{{status.openMargin | currency : 'EUR':true}}</h3>\n                <span>O. margin</span>\n            </div>\n            <div>\n                <h3 [ngClass]=\"{'positive': status.profit > 0, 'negative': status.profit < 0}\">{{status.profit | currency : 'EUR':true}}</h3>\n                <span>profit</span>\n            </div>\n            <div class=\"header-search\">\n                <input (keyup)=\"onSearchKeyUp($event)\" placeholder=\"Markets / Channels / People\" #input>\n                <div class=\"search-drop-down\" *ngIf=\"(searchResults$ | async) as result\" (click)=\"onClickDropdownItem()\" #dropdown>\n                    <a *ngFor=\"let symbol of result.symbols\">\n                        <img src=\"/images/default/symbol/spx500-70x70.png\">\n                        <span>{{symbol.name}}</span>\n                    </a>\n                    <a *ngFor=\"let user of result.users\" [routerLink]=\"['/main/user/profile/' + user._id]\">\n                        <img src=\"{{user.profileImg}}\">\n                        <span>{{user.username}}</span>\n                    </a>\n                </div>\n            </div>\n        </div>\n    </header>\n    <router-outlet></router-outlet>\n</main>\n"
 
 /***/ }),
 /* 826 */
 /***/ (function(module, exports) {
 
-module.exports = ".btn {\n  display: inline-block;\n  font-weight: normal;\n  line-height: 1.25;\n  text-align: center;\n  white-space: nowrap;\n  vertical-align: middle;\n  user-select: none;\n  border: 1px solid transparent;\n  padding: 0.5rem 1rem;\n  font-size: 1rem;\n  border-radius: 0.25rem;\n  transition: all 0.2s ease-in-out; }\n  .btn:focus, .btn:hover {\n    text-decoration: none; }\n  .btn:focus, .btn.focus {\n    outline: 0;\n    box-shadow: 0 0 0 2px rgba(2, 117, 216, 0.25); }\n  .btn.disabled, .btn:disabled {\n    cursor: not-allowed;\n    opacity: .65; }\n  .btn:active, .btn.active {\n    background-image: none; }\n\na.btn.disabled,\nfieldset[disabled] a.btn {\n  pointer-events: none; }\n\n.btn-primary {\n  color: #fff;\n  background-color: #0275d8;\n  border-color: #0275d8; }\n  .btn-primary:hover {\n    color: #fff;\n    background-color: #025aa5;\n    border-color: #01549b; }\n  .btn-primary:focus, .btn-primary.focus {\n    box-shadow: 0 0 0 2px rgba(2, 117, 216, 0.5); }\n  .btn-primary.disabled, .btn-primary:disabled {\n    background-color: #0275d8;\n    border-color: #0275d8; }\n  .btn-primary:active, .btn-primary.active,\n  .show > .btn-primary.dropdown-toggle {\n    color: #fff;\n    background-color: #025aa5;\n    background-image: none;\n    border-color: #01549b; }\n\n.btn-secondary {\n  color: #292b2c;\n  background-color: #fff;\n  border-color: #ccc; }\n  .btn-secondary:hover {\n    color: #292b2c;\n    background-color: #e6e6e6;\n    border-color: #adadad; }\n  .btn-secondary:focus, .btn-secondary.focus {\n    box-shadow: 0 0 0 2px rgba(204, 204, 204, 0.5); }\n  .btn-secondary.disabled, .btn-secondary:disabled {\n    background-color: #fff;\n    border-color: #ccc; }\n  .btn-secondary:active, .btn-secondary.active,\n  .show > .btn-secondary.dropdown-toggle {\n    color: #292b2c;\n    background-color: #e6e6e6;\n    background-image: none;\n    border-color: #adadad; }\n\n.btn-info {\n  color: #fff;\n  background-color: #5bc0de;\n  border-color: #5bc0de; }\n  .btn-info:hover {\n    color: #fff;\n    background-color: #31b0d5;\n    border-color: #2aabd2; }\n  .btn-info:focus, .btn-info.focus {\n    box-shadow: 0 0 0 2px rgba(91, 192, 222, 0.5); }\n  .btn-info.disabled, .btn-info:disabled {\n    background-color: #5bc0de;\n    border-color: #5bc0de; }\n  .btn-info:active, .btn-info.active,\n  .show > .btn-info.dropdown-toggle {\n    color: #fff;\n    background-color: #31b0d5;\n    background-image: none;\n    border-color: #2aabd2; }\n\n.btn-success {\n  color: #fff;\n  background-color: #5cb85c;\n  border-color: #5cb85c; }\n  .btn-success:hover {\n    color: #fff;\n    background-color: #449d44;\n    border-color: #419641; }\n  .btn-success:focus, .btn-success.focus {\n    box-shadow: 0 0 0 2px rgba(92, 184, 92, 0.5); }\n  .btn-success.disabled, .btn-success:disabled {\n    background-color: #5cb85c;\n    border-color: #5cb85c; }\n  .btn-success:active, .btn-success.active,\n  .show > .btn-success.dropdown-toggle {\n    color: #fff;\n    background-color: #449d44;\n    background-image: none;\n    border-color: #419641; }\n\n.btn-warning {\n  color: #fff;\n  background-color: #f0ad4e;\n  border-color: #f0ad4e; }\n  .btn-warning:hover {\n    color: #fff;\n    background-color: #ec971f;\n    border-color: #eb9316; }\n  .btn-warning:focus, .btn-warning.focus {\n    box-shadow: 0 0 0 2px rgba(240, 173, 78, 0.5); }\n  .btn-warning.disabled, .btn-warning:disabled {\n    background-color: #f0ad4e;\n    border-color: #f0ad4e; }\n  .btn-warning:active, .btn-warning.active,\n  .show > .btn-warning.dropdown-toggle {\n    color: #fff;\n    background-color: #ec971f;\n    background-image: none;\n    border-color: #eb9316; }\n\n.btn-danger {\n  color: #fff;\n  background-color: #d9534f;\n  border-color: #d9534f; }\n  .btn-danger:hover {\n    color: #fff;\n    background-color: #c9302c;\n    border-color: #c12e2a; }\n  .btn-danger:focus, .btn-danger.focus {\n    box-shadow: 0 0 0 2px rgba(217, 83, 79, 0.5); }\n  .btn-danger.disabled, .btn-danger:disabled {\n    background-color: #d9534f;\n    border-color: #d9534f; }\n  .btn-danger:active, .btn-danger.active,\n  .show > .btn-danger.dropdown-toggle {\n    color: #fff;\n    background-color: #c9302c;\n    background-image: none;\n    border-color: #c12e2a; }\n\n.btn-outline-primary {\n  color: #0275d8;\n  background-image: none;\n  background-color: transparent;\n  border-color: #0275d8; }\n  .btn-outline-primary:hover {\n    color: #fff;\n    background-color: #0275d8;\n    border-color: #0275d8; }\n  .btn-outline-primary:focus, .btn-outline-primary.focus {\n    box-shadow: 0 0 0 2px rgba(2, 117, 216, 0.5); }\n  .btn-outline-primary.disabled, .btn-outline-primary:disabled {\n    color: #0275d8;\n    background-color: transparent; }\n  .btn-outline-primary:active, .btn-outline-primary.active,\n  .show > .btn-outline-primary.dropdown-toggle {\n    color: #fff;\n    background-color: #0275d8;\n    border-color: #0275d8; }\n\n.btn-outline-secondary {\n  color: #ccc;\n  background-image: none;\n  background-color: transparent;\n  border-color: #ccc; }\n  .btn-outline-secondary:hover {\n    color: #fff;\n    background-color: #ccc;\n    border-color: #ccc; }\n  .btn-outline-secondary:focus, .btn-outline-secondary.focus {\n    box-shadow: 0 0 0 2px rgba(204, 204, 204, 0.5); }\n  .btn-outline-secondary.disabled, .btn-outline-secondary:disabled {\n    color: #ccc;\n    background-color: transparent; }\n  .btn-outline-secondary:active, .btn-outline-secondary.active,\n  .show > .btn-outline-secondary.dropdown-toggle {\n    color: #fff;\n    background-color: #ccc;\n    border-color: #ccc; }\n\n.btn-outline-info {\n  color: #5bc0de;\n  background-image: none;\n  background-color: transparent;\n  border-color: #5bc0de; }\n  .btn-outline-info:hover {\n    color: #fff;\n    background-color: #5bc0de;\n    border-color: #5bc0de; }\n  .btn-outline-info:focus, .btn-outline-info.focus {\n    box-shadow: 0 0 0 2px rgba(91, 192, 222, 0.5); }\n  .btn-outline-info.disabled, .btn-outline-info:disabled {\n    color: #5bc0de;\n    background-color: transparent; }\n  .btn-outline-info:active, .btn-outline-info.active,\n  .show > .btn-outline-info.dropdown-toggle {\n    color: #fff;\n    background-color: #5bc0de;\n    border-color: #5bc0de; }\n\n.btn-outline-success {\n  color: #5cb85c;\n  background-image: none;\n  background-color: transparent;\n  border-color: #5cb85c; }\n  .btn-outline-success:hover {\n    color: #fff;\n    background-color: #5cb85c;\n    border-color: #5cb85c; }\n  .btn-outline-success:focus, .btn-outline-success.focus {\n    box-shadow: 0 0 0 2px rgba(92, 184, 92, 0.5); }\n  .btn-outline-success.disabled, .btn-outline-success:disabled {\n    color: #5cb85c;\n    background-color: transparent; }\n  .btn-outline-success:active, .btn-outline-success.active,\n  .show > .btn-outline-success.dropdown-toggle {\n    color: #fff;\n    background-color: #5cb85c;\n    border-color: #5cb85c; }\n\n.btn-outline-warning {\n  color: #f0ad4e;\n  background-image: none;\n  background-color: transparent;\n  border-color: #f0ad4e; }\n  .btn-outline-warning:hover {\n    color: #fff;\n    background-color: #f0ad4e;\n    border-color: #f0ad4e; }\n  .btn-outline-warning:focus, .btn-outline-warning.focus {\n    box-shadow: 0 0 0 2px rgba(240, 173, 78, 0.5); }\n  .btn-outline-warning.disabled, .btn-outline-warning:disabled {\n    color: #f0ad4e;\n    background-color: transparent; }\n  .btn-outline-warning:active, .btn-outline-warning.active,\n  .show > .btn-outline-warning.dropdown-toggle {\n    color: #fff;\n    background-color: #f0ad4e;\n    border-color: #f0ad4e; }\n\n.btn-outline-danger {\n  color: #d9534f;\n  background-image: none;\n  background-color: transparent;\n  border-color: #d9534f; }\n  .btn-outline-danger:hover {\n    color: #fff;\n    background-color: #d9534f;\n    border-color: #d9534f; }\n  .btn-outline-danger:focus, .btn-outline-danger.focus {\n    box-shadow: 0 0 0 2px rgba(217, 83, 79, 0.5); }\n  .btn-outline-danger.disabled, .btn-outline-danger:disabled {\n    color: #d9534f;\n    background-color: transparent; }\n  .btn-outline-danger:active, .btn-outline-danger.active,\n  .show > .btn-outline-danger.dropdown-toggle {\n    color: #fff;\n    background-color: #d9534f;\n    border-color: #d9534f; }\n\n.btn-link {\n  font-weight: normal;\n  color: #0275d8;\n  border-radius: 0; }\n  .btn-link, .btn-link:active, .btn-link.active, .btn-link:disabled {\n    background-color: transparent; }\n  .btn-link, .btn-link:focus, .btn-link:active {\n    border-color: transparent; }\n  .btn-link:hover {\n    border-color: transparent; }\n  .btn-link:focus, .btn-link:hover {\n    color: #014c8c;\n    text-decoration: underline;\n    background-color: transparent; }\n  .btn-link:disabled {\n    color: #636c72; }\n    .btn-link:disabled:focus, .btn-link:disabled:hover {\n      text-decoration: none; }\n\n.btn-lg {\n  padding: 0.75rem 1.5rem;\n  font-size: 1.25rem;\n  border-radius: 0.3rem; }\n\n.btn-sm {\n  padding: 0.25rem 0.5rem;\n  font-size: 0.875rem;\n  border-radius: 0.2rem; }\n\n.btn-block {\n  display: block;\n  width: 100%; }\n\n.btn-block + .btn-block {\n  margin-top: 0.5rem; }\n\ninput[type=\"submit\"].btn-block,\ninput[type=\"reset\"].btn-block,\ninput[type=\"button\"].btn-block {\n  width: 100%; }\n\n.clearfix::after {\n  display: block;\n  content: \"\";\n  clear: both; }\n\na, p, li, span, h1, h2, h3, h4, h5, h6, td, th, label {\n  color: #fff;\n  margin: 0;\n  -webkit-user-select: none;\n  user-select: none; }\n\nbutton {\n  color: #000;\n  cursor: pointer; }\n\nul {\n  list-style: none;\n  margin: 0;\n  padding: 0; }\n\na {\n  cursor: pointer;\n  text-decoration: none; }\n  a:hover, a:visited {\n    text-decoration: none; }\n\ntable {\n  border-collapse: collapse;\n  border-spacing: 0; }\n\ntd {\n  padding: 0; }\n\nsup,\nsub {\n  margin-left: 4px;\n  font-size: 12px; }\n\n::-webkit-input-placeholder {\n  /* WebKit, Blink, Edge */\n  color: #dddddd; }\n\n:host {\n  display: flex;\n  height: 100%; }\n\n.nav-main {\n  background: #222122;\n  overflow-y: auto;\n  width: 300px; }\n  .nav-main a {\n    padding: 15px 10px 15px 30px;\n    font-size: 18px;\n    box-sizing: border-box;\n    display: block; }\n    .nav-main a i {\n      padding-right: 20px;\n      width: 20px; }\n    .nav-main a:hover {\n      background: #424242; }\n    .nav-main a.active {\n      background: #424242; }\n  .nav-main .profile {\n    padding-top: 40px; }\n    .nav-main .profile h4 {\n      margin-top: 10px;\n      overflow: hidden;\n      white-space: nowrap;\n      text-overflow: ellipsis; }\n\n.main-container {\n  display: flex;\n  flex-flow: column;\n  width: 100%; }\n  .main-container .account-details {\n    display: flex;\n    justify-content: space-around;\n    padding: 4px 0; }\n\nheader {\n  width: 100%;\n  text-align: center;\n  background: #222122; }\n  header .header-search {\n    position: relative; }\n  header input {\n    margin: 6px;\n    padding: 4px;\n    line-height: 14px;\n    width: 300px;\n    border-radius: 2px;\n    font-size: 14px;\n    background-color: #888;\n    border: 1px solid black;\n    color: #dddddd;\n    text-align: center;\n    box-sizing: border-box; }\n  header .search-drop-down {\n    position: absolute;\n    z-index: 122;\n    top: 40px;\n    left: calc(50% - 149px);\n    width: 298px;\n    background: #222122;\n    box-sizing: border-box; }\n    header .search-drop-down.hidden {\n      display: none; }\n    header .search-drop-down a {\n      padding: 10px;\n      border-bottom: #8c8a8a;\n      color: #fff;\n      text-align: left;\n      cursor: pointer;\n      display: flex; }\n      header .search-drop-down a:hover {\n        background: #424242; }\n      header .search-drop-down a span {\n        line-height: 30px; }\n      header .search-drop-down a img {\n        width: 30px;\n        height: 30px;\n        margin-right: 10px; }\n"
+module.exports = ".btn {\n  display: inline-block;\n  font-weight: normal;\n  line-height: 1.25;\n  text-align: center;\n  white-space: nowrap;\n  vertical-align: middle;\n  user-select: none;\n  border: 1px solid transparent;\n  padding: 0.5rem 1rem;\n  font-size: 1rem;\n  border-radius: 0.25rem;\n  transition: all 0.2s ease-in-out; }\n  .btn:focus, .btn:hover {\n    text-decoration: none; }\n  .btn:focus, .btn.focus {\n    outline: 0;\n    box-shadow: 0 0 0 2px rgba(2, 117, 216, 0.25); }\n  .btn.disabled, .btn:disabled {\n    cursor: not-allowed;\n    opacity: .65; }\n  .btn:active, .btn.active {\n    background-image: none; }\n\na.btn.disabled,\nfieldset[disabled] a.btn {\n  pointer-events: none; }\n\n.btn-primary {\n  color: #fff;\n  background-color: #0275d8;\n  border-color: #0275d8; }\n  .btn-primary:hover {\n    color: #fff;\n    background-color: #025aa5;\n    border-color: #01549b; }\n  .btn-primary:focus, .btn-primary.focus {\n    box-shadow: 0 0 0 2px rgba(2, 117, 216, 0.5); }\n  .btn-primary.disabled, .btn-primary:disabled {\n    background-color: #0275d8;\n    border-color: #0275d8; }\n  .btn-primary:active, .btn-primary.active,\n  .show > .btn-primary.dropdown-toggle {\n    color: #fff;\n    background-color: #025aa5;\n    background-image: none;\n    border-color: #01549b; }\n\n.btn-secondary {\n  color: #292b2c;\n  background-color: #fff;\n  border-color: #ccc; }\n  .btn-secondary:hover {\n    color: #292b2c;\n    background-color: #e6e6e6;\n    border-color: #adadad; }\n  .btn-secondary:focus, .btn-secondary.focus {\n    box-shadow: 0 0 0 2px rgba(204, 204, 204, 0.5); }\n  .btn-secondary.disabled, .btn-secondary:disabled {\n    background-color: #fff;\n    border-color: #ccc; }\n  .btn-secondary:active, .btn-secondary.active,\n  .show > .btn-secondary.dropdown-toggle {\n    color: #292b2c;\n    background-color: #e6e6e6;\n    background-image: none;\n    border-color: #adadad; }\n\n.btn-info {\n  color: #fff;\n  background-color: #5bc0de;\n  border-color: #5bc0de; }\n  .btn-info:hover {\n    color: #fff;\n    background-color: #31b0d5;\n    border-color: #2aabd2; }\n  .btn-info:focus, .btn-info.focus {\n    box-shadow: 0 0 0 2px rgba(91, 192, 222, 0.5); }\n  .btn-info.disabled, .btn-info:disabled {\n    background-color: #5bc0de;\n    border-color: #5bc0de; }\n  .btn-info:active, .btn-info.active,\n  .show > .btn-info.dropdown-toggle {\n    color: #fff;\n    background-color: #31b0d5;\n    background-image: none;\n    border-color: #2aabd2; }\n\n.btn-success {\n  color: #fff;\n  background-color: #5cb85c;\n  border-color: #5cb85c; }\n  .btn-success:hover {\n    color: #fff;\n    background-color: #449d44;\n    border-color: #419641; }\n  .btn-success:focus, .btn-success.focus {\n    box-shadow: 0 0 0 2px rgba(92, 184, 92, 0.5); }\n  .btn-success.disabled, .btn-success:disabled {\n    background-color: #5cb85c;\n    border-color: #5cb85c; }\n  .btn-success:active, .btn-success.active,\n  .show > .btn-success.dropdown-toggle {\n    color: #fff;\n    background-color: #449d44;\n    background-image: none;\n    border-color: #419641; }\n\n.btn-warning {\n  color: #fff;\n  background-color: #f0ad4e;\n  border-color: #f0ad4e; }\n  .btn-warning:hover {\n    color: #fff;\n    background-color: #ec971f;\n    border-color: #eb9316; }\n  .btn-warning:focus, .btn-warning.focus {\n    box-shadow: 0 0 0 2px rgba(240, 173, 78, 0.5); }\n  .btn-warning.disabled, .btn-warning:disabled {\n    background-color: #f0ad4e;\n    border-color: #f0ad4e; }\n  .btn-warning:active, .btn-warning.active,\n  .show > .btn-warning.dropdown-toggle {\n    color: #fff;\n    background-color: #ec971f;\n    background-image: none;\n    border-color: #eb9316; }\n\n.btn-danger {\n  color: #fff;\n  background-color: #d9534f;\n  border-color: #d9534f; }\n  .btn-danger:hover {\n    color: #fff;\n    background-color: #c9302c;\n    border-color: #c12e2a; }\n  .btn-danger:focus, .btn-danger.focus {\n    box-shadow: 0 0 0 2px rgba(217, 83, 79, 0.5); }\n  .btn-danger.disabled, .btn-danger:disabled {\n    background-color: #d9534f;\n    border-color: #d9534f; }\n  .btn-danger:active, .btn-danger.active,\n  .show > .btn-danger.dropdown-toggle {\n    color: #fff;\n    background-color: #c9302c;\n    background-image: none;\n    border-color: #c12e2a; }\n\n.btn-outline-primary {\n  color: #0275d8;\n  background-image: none;\n  background-color: transparent;\n  border-color: #0275d8; }\n  .btn-outline-primary:hover {\n    color: #fff;\n    background-color: #0275d8;\n    border-color: #0275d8; }\n  .btn-outline-primary:focus, .btn-outline-primary.focus {\n    box-shadow: 0 0 0 2px rgba(2, 117, 216, 0.5); }\n  .btn-outline-primary.disabled, .btn-outline-primary:disabled {\n    color: #0275d8;\n    background-color: transparent; }\n  .btn-outline-primary:active, .btn-outline-primary.active,\n  .show > .btn-outline-primary.dropdown-toggle {\n    color: #fff;\n    background-color: #0275d8;\n    border-color: #0275d8; }\n\n.btn-outline-secondary {\n  color: #ccc;\n  background-image: none;\n  background-color: transparent;\n  border-color: #ccc; }\n  .btn-outline-secondary:hover {\n    color: #fff;\n    background-color: #ccc;\n    border-color: #ccc; }\n  .btn-outline-secondary:focus, .btn-outline-secondary.focus {\n    box-shadow: 0 0 0 2px rgba(204, 204, 204, 0.5); }\n  .btn-outline-secondary.disabled, .btn-outline-secondary:disabled {\n    color: #ccc;\n    background-color: transparent; }\n  .btn-outline-secondary:active, .btn-outline-secondary.active,\n  .show > .btn-outline-secondary.dropdown-toggle {\n    color: #fff;\n    background-color: #ccc;\n    border-color: #ccc; }\n\n.btn-outline-info {\n  color: #5bc0de;\n  background-image: none;\n  background-color: transparent;\n  border-color: #5bc0de; }\n  .btn-outline-info:hover {\n    color: #fff;\n    background-color: #5bc0de;\n    border-color: #5bc0de; }\n  .btn-outline-info:focus, .btn-outline-info.focus {\n    box-shadow: 0 0 0 2px rgba(91, 192, 222, 0.5); }\n  .btn-outline-info.disabled, .btn-outline-info:disabled {\n    color: #5bc0de;\n    background-color: transparent; }\n  .btn-outline-info:active, .btn-outline-info.active,\n  .show > .btn-outline-info.dropdown-toggle {\n    color: #fff;\n    background-color: #5bc0de;\n    border-color: #5bc0de; }\n\n.btn-outline-success {\n  color: #5cb85c;\n  background-image: none;\n  background-color: transparent;\n  border-color: #5cb85c; }\n  .btn-outline-success:hover {\n    color: #fff;\n    background-color: #5cb85c;\n    border-color: #5cb85c; }\n  .btn-outline-success:focus, .btn-outline-success.focus {\n    box-shadow: 0 0 0 2px rgba(92, 184, 92, 0.5); }\n  .btn-outline-success.disabled, .btn-outline-success:disabled {\n    color: #5cb85c;\n    background-color: transparent; }\n  .btn-outline-success:active, .btn-outline-success.active,\n  .show > .btn-outline-success.dropdown-toggle {\n    color: #fff;\n    background-color: #5cb85c;\n    border-color: #5cb85c; }\n\n.btn-outline-warning {\n  color: #f0ad4e;\n  background-image: none;\n  background-color: transparent;\n  border-color: #f0ad4e; }\n  .btn-outline-warning:hover {\n    color: #fff;\n    background-color: #f0ad4e;\n    border-color: #f0ad4e; }\n  .btn-outline-warning:focus, .btn-outline-warning.focus {\n    box-shadow: 0 0 0 2px rgba(240, 173, 78, 0.5); }\n  .btn-outline-warning.disabled, .btn-outline-warning:disabled {\n    color: #f0ad4e;\n    background-color: transparent; }\n  .btn-outline-warning:active, .btn-outline-warning.active,\n  .show > .btn-outline-warning.dropdown-toggle {\n    color: #fff;\n    background-color: #f0ad4e;\n    border-color: #f0ad4e; }\n\n.btn-outline-danger {\n  color: #d9534f;\n  background-image: none;\n  background-color: transparent;\n  border-color: #d9534f; }\n  .btn-outline-danger:hover {\n    color: #fff;\n    background-color: #d9534f;\n    border-color: #d9534f; }\n  .btn-outline-danger:focus, .btn-outline-danger.focus {\n    box-shadow: 0 0 0 2px rgba(217, 83, 79, 0.5); }\n  .btn-outline-danger.disabled, .btn-outline-danger:disabled {\n    color: #d9534f;\n    background-color: transparent; }\n  .btn-outline-danger:active, .btn-outline-danger.active,\n  .show > .btn-outline-danger.dropdown-toggle {\n    color: #fff;\n    background-color: #d9534f;\n    border-color: #d9534f; }\n\n.btn-link {\n  font-weight: normal;\n  color: #0275d8;\n  border-radius: 0; }\n  .btn-link, .btn-link:active, .btn-link.active, .btn-link:disabled {\n    background-color: transparent; }\n  .btn-link, .btn-link:focus, .btn-link:active {\n    border-color: transparent; }\n  .btn-link:hover {\n    border-color: transparent; }\n  .btn-link:focus, .btn-link:hover {\n    color: #014c8c;\n    text-decoration: underline;\n    background-color: transparent; }\n  .btn-link:disabled {\n    color: #636c72; }\n    .btn-link:disabled:focus, .btn-link:disabled:hover {\n      text-decoration: none; }\n\n.btn-lg {\n  padding: 0.75rem 1.5rem;\n  font-size: 1.25rem;\n  border-radius: 0.3rem; }\n\n.btn-sm {\n  padding: 0.25rem 0.5rem;\n  font-size: 0.875rem;\n  border-radius: 0.2rem; }\n\n.btn-block {\n  display: block;\n  width: 100%; }\n\n.btn-block + .btn-block {\n  margin-top: 0.5rem; }\n\ninput[type=\"submit\"].btn-block,\ninput[type=\"reset\"].btn-block,\ninput[type=\"button\"].btn-block {\n  width: 100%; }\n\n.clearfix::after {\n  display: block;\n  content: \"\";\n  clear: both; }\n\na, p, li, span, h1, h2, h3, h4, h5, h6, td, th, label {\n  color: #fff;\n  margin: 0;\n  -webkit-user-select: none;\n  user-select: none; }\n\nbutton {\n  color: #000;\n  cursor: pointer; }\n\nul {\n  list-style: none;\n  margin: 0;\n  padding: 0; }\n\na {\n  cursor: pointer;\n  text-decoration: none; }\n  a:hover, a:visited {\n    text-decoration: none; }\n\ntable {\n  border-collapse: collapse;\n  border-spacing: 0; }\n\ntd {\n  padding: 0; }\n\nsup,\nsub {\n  margin-left: 4px;\n  font-size: 12px; }\n\n::-webkit-input-placeholder {\n  /* WebKit, Blink, Edge */\n  color: #dddddd; }\n\n:host {\n  display: flex;\n  height: 100%; }\n\n.positive {\n  color: #6eaf0f; }\n\n.negative {\n  color: #e1191d; }\n\n.nav-main {\n  background: #222122;\n  overflow-y: auto;\n  width: 300px; }\n  .nav-main a {\n    padding: 15px 10px 15px 30px;\n    font-size: 18px;\n    box-sizing: border-box;\n    display: block; }\n    .nav-main a i {\n      padding-right: 20px;\n      width: 20px; }\n    .nav-main a:hover {\n      background: #424242; }\n    .nav-main a.active {\n      background: #424242; }\n  .nav-main .profile {\n    padding-top: 40px; }\n    .nav-main .profile h4 {\n      margin-top: 10px;\n      overflow: hidden;\n      white-space: nowrap;\n      text-overflow: ellipsis; }\n\n.main-container {\n  display: flex;\n  flex-flow: column;\n  width: 100%; }\n  .main-container .account-details {\n    display: flex;\n    justify-content: space-around;\n    padding: 4px 0; }\n\nheader {\n  width: 100%;\n  text-align: center;\n  background: #222122; }\n  header .header-search {\n    position: relative; }\n  header input {\n    margin: 6px;\n    padding: 4px;\n    line-height: 14px;\n    width: 300px;\n    border-radius: 2px;\n    font-size: 14px;\n    background-color: #888;\n    border: 1px solid black;\n    color: #dddddd;\n    text-align: center;\n    box-sizing: border-box; }\n  header .search-drop-down {\n    position: absolute;\n    z-index: 122;\n    top: 40px;\n    left: calc(50% - 149px);\n    width: 298px;\n    background: #222122;\n    box-sizing: border-box; }\n    header .search-drop-down.hidden {\n      display: none; }\n    header .search-drop-down a {\n      padding: 10px;\n      border-bottom: #8c8a8a;\n      color: #fff;\n      text-align: left;\n      cursor: pointer;\n      display: flex; }\n      header .search-drop-down a:hover {\n        background: #424242; }\n      header .search-drop-down a span {\n        line-height: 30px; }\n      header .search-drop-down a img {\n        width: 30px;\n        height: 30px;\n        margin-right: 10px; }\n"
 
 /***/ }),
 /* 827 */
@@ -56430,7 +56455,7 @@ var _a, _b, _c, _d;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ngx_cookie__ = __webpack_require__(50);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_forms__ = __webpack_require__(44);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_socket_service__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_socket_service__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__services_cache_service__ = __webpack_require__(41);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__services_instruments_service__ = __webpack_require__(24);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__shared_models_BaseModel__ = __webpack_require__(146);
@@ -63974,7 +63999,7 @@ module.exports = ":host {\n  display: grid;\n  grid-template-areas: \"header hea
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PageEditorComponent; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__services_socket_service__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__services_socket_service__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__(28);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__file_tree_file_tree_component__ = __webpack_require__(148);
@@ -64073,7 +64098,7 @@ module.exports = ":host {\n  display: grid;\n  grid-template-areas: \"header hea
 "use strict";
 /* WEBPACK VAR INJECTION */(function($) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return HeaderSocialComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_socket_service__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_socket_service__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__login_login_component__ = __webpack_require__(76);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_user_service__ = __webpack_require__(14);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__services_system_service__ = __webpack_require__(77);
@@ -64178,7 +64203,7 @@ module.exports = ".dropup,\n.dropdown {\n  position: relative; }\n\n.dropdown-to
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SocialService; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__socket_service__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__socket_service__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_http__ = __webpack_require__(22);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;

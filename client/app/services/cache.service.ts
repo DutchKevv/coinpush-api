@@ -34,18 +34,12 @@ export class CacheService {
 	private _mapper: CacheMap;
 	private _socket: any;
 
-	constructor(private _zone: NgZone,
-				private _socketService: SocketService) {
+	constructor(private _zone: NgZone) {
 	}
 
 	public init(): void {
 		this._mapper = new CacheMap();
 		this._connect();
-
-		// this._socketService.socket.on('system:state', (systemState: SystemState) => {
-		// 	if (!systemState.booting && systemState.connected)
-		//
-		// });
 
 		this._socket.on('ticks', ticks => {
 

@@ -18,8 +18,8 @@ let speed = 200;
 	selector: 'file-tree',
 	templateUrl: './file-tree.component.html',
 	styleUrls: [
-		'../../../node_modules/jstree/dist/themes/default/style.css',
-		'../../../node_modules/jstree/dist/themes/default-dark/style.css',
+		'../../../assets/vendor/css/jstree/default/style.css',
+		'../../../assets/vendor/css/jstree/default-dark/style.css',
 		'./file-tree.component.scss'
 	],
 	encapsulation: ViewEncapsulation.Native,
