@@ -1,13 +1,14 @@
 "use strict";
 const express_1 = require("express");
 const user_controller_1 = require("../controllers/user.controller");
+const config = require('../../../tradejs.config');
 const router = express_1.Router();
 /**
- * Find single
+ * Single
  */
 router.get('/:id', async (req, res, next) => {
     try {
-        res.send(await user_controller_1.userController.find(req.user, req.params.id));
+        res.send(await user_controller_1.userController.find(req.user, req.params.id, req.query));
     }
     catch (error) {
         console.error(error);
@@ -67,7 +68,7 @@ router.post('/:id/copy', async (req, res, next) => {
  */
 router.post('/', async (req, res, next) => {
     try {
-        res.send(await user_controller_1.userController.create(req.body));
+        res.send(await user_controller_1.userController.create(req.user, req.body));
     }
     catch (error) {
         console.error(error);

@@ -32,5 +32,4 @@ exports.CHANNEL_TYPE_MAIN = 0, exports.CHANNEL_TYPE_CUSTOM = 1,
  * REDIS
  */
 exports.REDIS_USER_PREFIX = 'user_';
-
 //# sourceMappingURL=constants.js.map

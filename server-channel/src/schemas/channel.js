@@ -51,6 +51,10 @@ exports.ChannelSchema = new mongoose_1.Schema({
     type: {
         type: Number,
         default: constants_1.CHANNEL_TYPE_MAIN
+    },
+    created: {
+        type: Date,
+        default: Date.now
     }
 });
 exports.ChannelSchema.statics.normalize = function (user, doc) {

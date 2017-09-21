@@ -43,5 +43,4 @@ app.use((req: any, res, next) => {
 	next();
 });
 
-app.use('/channel/**', require('./api/channel'));
 app.use('/channel', require('./api/channel'));

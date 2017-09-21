@@ -4,7 +4,7 @@ const user_controller_1 = require("../controllers/user.controller");
 const router = express_1.Router();
 router.get('/:id', async (req, res, next) => {
     try {
-        res.send(await user_controller_1.userController.get(req.params.id, parseInt(req.query.type, 10)));
+        res.send(await user_controller_1.userController.get(req.user, req.params.id, parseInt(req.query.type, 10)));
     }
     catch (error) {
         next(error);

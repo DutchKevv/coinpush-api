@@ -1,9 +1,15 @@
 import {Router} from 'express';
+import * as httpProxy from 'http-proxy';
 import * as request from 'request-promise';
 import {channelController} from '../controllers/channel.controller';
 
 const config = require('../../../tradejs.config');
 const router = Router();
+const proxy = httpProxy.createProxyServer({});
+
+proxy.on('error', function (err, req, res) {
+	console.error(err);
+});
 
 /**
  * Single
@@ -31,32 +37,39 @@ router.get('/', async (req, res, next) => {
 	res.send(channels)
 });
 
-router.post('/', function (req, res, next) {
-	channelController.create(req.user.id, req.body)
-});
-
 /**
  * Follow
  */
 router.post('/:id/follow', async (req, res, next) => {
-	try {
-		res.send(await channelController.toggleFollow(req.user.id, req.params.id));
-	} catch (error) {
-		console.error(error);
-		next(error);
-	}
+	proxy.web(req, res, {target: config.server.channel.apiUrl + '/channel/'}, next);
 });
 
 /**
  * Copy
  */
 router.post('/:id/copy', async (req, res, next) => {
-	try {
-		res.send(await channelController.toggleCopy(req.user.id, req.params.id));
-	} catch (error) {
-		console.error(error);
-		next(error);
-	}
+	proxy.web(req, res, {target: config.server.channel.apiUrl + '/channel/'}, next);
+});
+//
+/**
+ * Create
+ */
+router.post('/', function (req, res, next) {
+	channelController.create(req.user.id, req.body)
+});
+
+/**
+ * Update
+ */
+router.put('/', function (req, res, next) {
+	channelController.create(req.user.id, req.body)
+});
+
+/**
+ * Delete
+ */
+router.delete('/', function (req, res, next) {
+	channelController.create(req.user.id, req.body)
 });
 
 export = router;

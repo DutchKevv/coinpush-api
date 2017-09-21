@@ -1,4 +1,3 @@
-import * as url from 'url';
 import * as request from 'request-promise';
 import * as redis from '../modules/redis';
 import {CHANNEL_TYPE_MAIN, REDIS_USER_PREFIX} from '../../../shared/constants/constants';
@@ -8,70 +7,47 @@ const config = require('../../../tradejs.config');
 
 export const userController = {
 
-	async find(reqUser: {id: string}, userId: string): Promise<Array<any>> {
-		return Promise.resolve([]);
+	async find(reqUser: {id: string}, userId: string, params: any = {}): Promise<any> {
+		const user = await Promise.all([
+			request({uri: 'http://localhost:3002/social/user/' + userId, qs: {type: params.type}, headers: {_id: reqUser.id}, json: true}),
+			request({uri: 'http://localhost:3007/channel', qs: {user: userId}, headers: {_id: reqUser.id}, json: true}),
+		]);
+		console.log(user[0]);
+		return Object.assign(user[0], user[1].user[0]);
 	},
 
 	async findMany(reqUserId: string, params): Promise<Array<any>> {
-
-		const results = await Promise.all([
-			this.find(reqUserId),
-			request({uri: 'http://localhost:3002/social/users/', json: true})
-		]);
-
-		console.log(results);
-
-		return results[1];
+		return request({uri: 'http://localhost:3002/social/users/', json: true})
 	},
 
-	async create(params) {
+	async create(reqUser, params) {
+		let user, channel;
+
 		try {
-			// Create user
-			const user = await request({
+			// create user
+			user = await request({
 				uri: 'http://localhost:3002/social/user/',
 				method: 'POST',
 				body: params,
 				json: true
 			});
 
-			console.log('user', user);
-
-			// Create channel
-			const channel = await request({
-				uri: config.server.channel.apiUrl + '/channel',
-				method: 'POST',
-				headers: {
-					'_id': user._id
-				},
-				body: {
-					name: 'main',
-					type: CHANNEL_TYPE_MAIN
-				},
-				json: true
+			// create channel
+			channel = await channelController.create(reqUser, {
+				name: params.username,
+				type: CHANNEL_TYPE_MAIN
 			});
-
-			console.log('channel', channel);
-
-			// // Update user with main channel
-			// const result = await request({
-			// 	uri: 'http://localhost:3002/social/user/' + user._id + '/',
-			// 	method: 'PUT',
-			// 	headers: {
-			// 		'_id': user._id
-			// 	},
-			// 	body: {
-			// 		channels: [channel._id]
-			// 	},
-			// 	json: true
-			// });
-			//
-			// console.log('RESULT RESULT RESULT!!', result);
 
 			return user;
 
 		} catch (error) {
-			console.error(error);
-			throw new Error('ERROR');
+			if (user && user._id)
+				this.remove(reqUser, user._id);
+
+			if (channel && channel._id)
+				channelController.remove(reqUser, user._id);
+
+			throw new Error(error);
 		}
 	},
 
@@ -127,7 +103,7 @@ export const userController = {
 		return result;
 	},
 
-	remove() {
+	remove(reqUser, userId) {
 
 	},
 

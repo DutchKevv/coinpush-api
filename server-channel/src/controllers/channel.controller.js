@@ -36,8 +36,6 @@ exports.channelController = {
         return channels;
     },
     async findMany(reqUser, params = {}) {
-        const limit = params.limit || 20;
-        const sort = params.sort || -1;
         const results = await channel_1.Channel.aggregate([
             {
                 $project: {
@@ -53,11 +51,11 @@ exports.channelController = {
                 }
             },
             {
-                $limit: limit
+                $limit: params.limit || 20
             },
             {
                 $sort: {
-                    _id: sort
+                    _id: params.sort || -1
                 }
             }
         ]);

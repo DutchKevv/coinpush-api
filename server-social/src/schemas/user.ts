@@ -50,13 +50,16 @@ const UserSchema = new Schema({
 	description: {
 		type: String,
 		required: false,
-		trim: true
+		trim: true,
+		default: ''
 	},
-	followers: {
+	// TODO
+	copying: {
 		type: [Schema.Types.ObjectId],
 		required: false,
 		default: []
 	},
+	// TODO
 	following: {
 		type: [Schema.Types.ObjectId],
 		required: false,
@@ -76,20 +79,6 @@ const UserSchema = new Schema({
 		type: Date,
 		required: false,
 		default: Date.now
-	},
-	brokerAccountId: {
-		type: String,
-		required: false,
-		trim: true
-	},
-	brokerToken: {
-		type: String,
-		required: false
-	},
-	brokerName: {
-		type: Number,
-		required: false,
-		default: BROKER_GENERAL_TYPE_OANDA
 	},
 	membershipStartDate: {
 		type: Date,

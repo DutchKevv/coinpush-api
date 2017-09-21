@@ -37,6 +37,5 @@ app.use((req, res, next) => {
     req.user = { id: userId };
     next();
 });
-app.use('/channel/**', require('./api/channel'));
 app.use('/channel', require('./api/channel'));
 //# sourceMappingURL=app.js.map

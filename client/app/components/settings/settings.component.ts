@@ -28,12 +28,8 @@ export class SettingsComponent implements OnInit {
 	@ViewChild('saveOptions') saveOptions: ElementRef;
 
 	constructor(private _http: Http,
-				private _zone: NgZone,
-				private _elementRef: ElementRef,
 				private _formBuilder: FormBuilder,
 				private _userService: UserService) {
-
-
 	}
 
 	ngOnInit() {
@@ -48,7 +44,7 @@ export class SettingsComponent implements OnInit {
 			brokerAccountId: '',
 		});
 
-		this._userService.get('', USER_FETCH_TYPE_PROFILE_SETTINGS).subscribe((user: UserModel) => {
+		this._userService.get(this._userService.model.get('user_id'), USER_FETCH_TYPE_PROFILE_SETTINGS).subscribe((user: UserModel) => {
 			console.log(user.options);
 
 			this.form.setValue({

@@ -14,7 +14,6 @@ const storage = multer.diskStorage({
 	destination: DIR,
 	filename: function (req, file, cb) {
 		cb(null, req.user.id + '_' + Date.now() + extname(file.originalname));
-		return ;
 	}
 });
 
@@ -23,7 +22,6 @@ const upload = multer({ storage: storage });
 router.post('/profile', upload.single('image'), async (req: any, res, next) => {
 	try {
 		await userController.update(req.user.id, {profileImg: req.file.filename});
-		console.log('FIEL FILE LDSFKSDLFSDFDF', User.normalizeProfileImg(req.file.filename));
 		res.send({url: User.normalizeProfileImg(req.file.filename)});
 	} catch (error) {
 		next(error);

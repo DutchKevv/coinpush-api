@@ -39,9 +39,8 @@ export class UserService {
 		this.model = this._startupService.getLoggedInUser;
 	}
 
-	get(id?: string, type = USER_FETCH_TYPE_SLIM) {
-		id = id || '';
-		return this._http.get('/user' + id, {params: {type: type}}).map((res: Response) => new UserModel(res.json()));
+	get(id: string, type = USER_FETCH_TYPE_SLIM) {
+		return this._http.get('/user/' + id, {params: {type: type}}).map((res: Response) => new UserModel(res.json()));
 	}
 
 	getList() {

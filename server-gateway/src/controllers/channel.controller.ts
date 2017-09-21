@@ -20,46 +20,20 @@ export const channelController = {
 		});
 	},
 
-	async create(userId, params) {
-		try {
+	create(reqUser, params: {name: string, type: number}) {
 
-			// Create channel
-			const channel = await request({
-				uri: config.server.channel.apiUrl + '/channel/',
-				method: 'POST',
-				headers: {
-					'_id': userId
-				},
-				body: {
-					name: 'main',
-					type: CHANNEL_TYPE_MAIN
-				},
-				json: true
-			});
-
-			console.log('channel', channel);
-
-			// // Update user with main channel
-			// const result = await request({
-			// 	uri: 'http://localhost:3002/social/user/' + user._id + '/',
-			// 	method: 'PUT',
-			// 	headers: {
-			// 		'_id': user._id
-			// 	},
-			// 	body: {
-			// 		channels: [channel._id]
-			// 	},
-			// 	json: true
-			// });
-			//
-			// console.log('RESULT RESULT RESULT!!', result);
-
-			return channel;
-
-		} catch (error) {
-			console.error(error);
-			throw new Error('ERROR');
-		}
+		return request({
+			uri: config.server.channel.apiUrl + '/channel/',
+			method: 'POST',
+			headers: {
+				'_id': reqUser.id
+			},
+			body: {
+				name: params.name,
+				type: params.type
+			},
+			json: true
+		});
 	},
 
 	update(userId, params) {
@@ -95,7 +69,7 @@ export const channelController = {
 		return result;
 	},
 
-	remove() {
+	remove(reqUser, channelId) {
 
 	}
 };

@@ -52,6 +52,10 @@ export const ChannelSchema = new Schema({
 	type: {
 		type: Number,
 		default: CHANNEL_TYPE_MAIN
+	},
+	created: {
+		type: Date,
+		default: Date.now
 	}
 });
 

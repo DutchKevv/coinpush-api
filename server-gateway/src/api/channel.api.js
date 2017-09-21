@@ -1,9 +1,14 @@
 "use strict";
 const express_1 = require("express");
+const httpProxy = require("http-proxy");
 const request = require("request-promise");
 const channel_controller_1 = require("../controllers/channel.controller");
 const config = require('../../../tradejs.config');
 const router = express_1.Router();
+const proxy = httpProxy.createProxyServer({});
+proxy.on('error', function (err, req, res) {
+    console.error(err);
+});
 /**
  * Single
  */
@@ -26,32 +31,36 @@ router.get('/', async (req, res, next) => {
     });
     res.send(channels);
 });
-router.post('/', function (req, res, next) {
-    channel_controller_1.channelController.create(req.user.id, req.body);
-});
 /**
  * Follow
  */
 router.post('/:id/follow', async (req, res, next) => {
-    try {
-        res.send(await channel_controller_1.channelController.toggleFollow(req.user.id, req.params.id));
-    }
-    catch (error) {
-        console.error(error);
-        next(error);
-    }
+    proxy.web(req, res, { target: config.server.channel.apiUrl + '/channel/' }, next);
 });
 /**
  * Copy
  */
 router.post('/:id/copy', async (req, res, next) => {
-    try {
-        res.send(await channel_controller_1.channelController.toggleCopy(req.user.id, req.params.id));
-    }
-    catch (error) {
-        console.error(error);
-        next(error);
-    }
+    proxy.web(req, res, { target: config.server.channel.apiUrl + '/channel/' }, next);
+});
+//
+/**
+ * Create
+ */
+router.post('/', function (req, res, next) {
+    channel_controller_1.channelController.create(req.user.id, req.body);
+});
+/**
+ * Update
+ */
+router.put('/', function (req, res, next) {
+    channel_controller_1.channelController.create(req.user.id, req.body);
+});
+/**
+ * Delete
+ */
+router.delete('/', function (req, res, next) {
+    channel_controller_1.channelController.create(req.user.id, req.body);
 });
 module.exports = router;
 //# sourceMappingURL=channel.api.js.map

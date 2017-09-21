@@ -38,11 +38,11 @@ server.on('upgrade', (req, socket, head) => {
 /**
  * proxy
  */
-const proxy = httpProxy.createProxyServer({});
+const proxy = global['proxyHandler'] = httpProxy.createProxyServer({});
 proxy.on('proxyReq', function (proxyReq, req, res, options) {
     if (req.body) {
         let bodyData = JSON.stringify(req.body);
-        // incase if content-type is application/x-www-form-urlencoded -> we need to change to application/json
+        // in case if content-type is application/x-www-form-urlencoded -> we need to change to application/json
         proxyReq.setHeader('Content-Type', 'application/json');
         proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
         // stream the content
@@ -52,9 +52,25 @@ proxy.on('proxyReq', function (proxyReq, req, res, options) {
 proxy.on('error', function (err, req, res) {
     console.error(err);
 });
+/**
+ *
+ * body parsing (json) - needs this middleware for form-multipart (file-upload) to work
+ */
+const isMultipartRequest = function (req) {
+    let contentTypeHeader = req.headers['content-type'];
+    return contentTypeHeader && contentTypeHeader.indexOf('multipart') > -1;
+};
+const bodyParserJsonMiddleware = function () {
+    return function (req, res, next) {
+        if (isMultipartRequest(req)) {
+            return next();
+        }
+        return json()(req, res, next);
+    };
+};
+app.use(bodyParserJsonMiddleware());
 app.use(morgan('dev'));
 app.use(helmet());
-app.use(json());
 // app.use(urlencoded({extended: false}));
 app.use(express.static(process.env.NODE_ENV === 'production' ? PATH_PUBLIC_PROD : PATH_PUBLIC_DEV));
 app.use(express.static(process.env.NODE_ENV === 'production' ? PATH_IMAGES_PROD : PATH_IMAGES_DEV));
@@ -172,4 +188,12 @@ app.get('/search/:text', async (req, res) => {
     }
     res.send(returnObj);
 });
+function errorHandler(err, req, res, next) {
+    if (res.headersSent) {
+        return next(err);
+    }
+    res.status(500);
+    res.render('error', { error: err });
+}
+app.use(errorHandler);
 //# sourceMappingURL=app.js.map

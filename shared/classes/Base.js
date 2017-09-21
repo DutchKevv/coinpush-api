@@ -1,12 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const events_1 = require("events");
 const merge = require("deepmerge");
@@ -32,10 +24,8 @@ class Base extends events_1.EventEmitter {
     get options() {
         return this._options;
     }
-    init() {
-        return __awaiter(this, void 0, void 0, function* () {
-            this.initialized = true;
-        });
+    async init() {
+        this.initialized = true;
     }
     get(key) {
         return typeof key === 'undefined' ? this._options : this._options[key];
@@ -74,5 +64,4 @@ Base.isWin = /^win/.test(process.platform);
 Base.isElectron = process && (process.env.ELECTRON || process.versions['electron']);
 Base.isNode = !!process;
 exports.Base = Base;
-
 //# sourceMappingURL=Base.js.map

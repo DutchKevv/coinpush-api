@@ -42,7 +42,9 @@ export class OrderService {
 	public create(options) {
 		const subscription = this.http.post('/order', options).map(res => console.log(res.json()) || this.createModel(res.json()));
 
-		subscription.subscribe(() => {
+		subscription.subscribe((order: OrderModel) => {
+			this.orders$.getValue().push(order);
+
 			let file = options.side === this._constantsService.constants.ORDER_SIDE_BUY ? 'sounds/3.mp3' : 'sounds/2.mp3';
 			let audio = new Audio(file);
 			audio.play();
@@ -99,7 +101,7 @@ export class OrderService {
 		const orders = this.orders$.getValue();
 
 		this._userService.accountStatus$.next({
-			available: 0,
+			available: this._userService.model.get('balance'),
 			equity: orders.reduce((sum: number, order: OrderModel) => sum + order.get('value'), 0),
 			openMargin: 0,
 			profit: orders.reduce((sum: number, order: OrderModel) => sum + order.get('PL'), 0),

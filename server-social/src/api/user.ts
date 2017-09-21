@@ -5,7 +5,7 @@ const router = Router();
 
 router.get('/:id', async (req: any, res, next) => {
 	try {
-		res.send(await userController.get(req.params.id, parseInt(req.query.type, 10)));
+		res.send(await userController.get(req.user, req.params.id, parseInt(req.query.type, 10)));
 	} catch (error) {
 		next(error);
 	}

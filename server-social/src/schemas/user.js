@@ -5,7 +5,6 @@ const bcrypt = require("bcrypt");
 const validator_1 = require("validator");
 const path_1 = require("path");
 const jwt = require("jsonwebtoken");
-const constants_1 = require("../../../shared/constants/constants");
 const config = require('../../../tradejs.config');
 const UserSchema = new mongoose_1.Schema({
     email: {
@@ -50,13 +49,16 @@ const UserSchema = new mongoose_1.Schema({
     description: {
         type: String,
         required: false,
-        trim: true
+        trim: true,
+        default: ''
     },
-    followers: {
+    // TODO
+    copying: {
         type: [mongoose_1.Schema.Types.ObjectId],
         required: false,
         default: []
     },
+    // TODO
     following: {
         type: [mongoose_1.Schema.Types.ObjectId],
         required: false,
@@ -76,20 +78,6 @@ const UserSchema = new mongoose_1.Schema({
         type: Date,
         required: false,
         default: Date.now
-    },
-    brokerAccountId: {
-        type: String,
-        required: false,
-        trim: true
-    },
-    brokerToken: {
-        type: String,
-        required: false
-    },
-    brokerName: {
-        type: Number,
-        required: false,
-        default: constants_1.BROKER_GENERAL_TYPE_OANDA
     },
     membershipStartDate: {
         type: Date,

@@ -1,14 +1,15 @@
 import {Router} from 'express';
+import * as httpProxy from 'http-proxy';
 import {userController} from '../controllers/user.controller';
-
+const config = require('../../../tradejs.config');
 const router = Router();
 
 /**
- * Find single
+ * Single
  */
 router.get('/:id', async (req, res, next) => {
 	try {
-		res.send(await userController.find(req.user, req.params.id));
+		res.send(await userController.find(req.user, req.params.id, req.query));
 	} catch (error) {
 		console.error(error);
 		next(error);
@@ -68,7 +69,7 @@ router.post('/:id/copy', async (req, res, next) => {
  */
 router.post('/', async (req, res, next) => {
 	try {
-		res.send(await userController.create(req.body));
+		res.send(await userController.create(req.user, req.body));
 	} catch (error) {
 		console.error(error);
 		next(error);
