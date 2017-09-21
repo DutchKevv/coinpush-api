@@ -3,7 +3,6 @@ import {Component, ChangeDetectionStrategy, ViewEncapsulation, AfterViewInit, On
 import {SocketService}  from './services/socket.service';
 import {SystemService}  from './services/system.service';
 import {CacheService} from './services/cache.service';
-// import {simulateBackspace} from '../assets/custom/js/backspace-fix';
 import {AuthenticationService} from './services/authenticate.service';
 
 declare let Module: any;
@@ -41,22 +40,6 @@ export class AppComponent implements OnInit, AfterViewInit {
 	}
 
 	ngAfterViewInit() {
-		document.body.addEventListener('contextmenu', e => e.preventDefault(), false);
 
-		const keyCodes = [37, 38, 39, 40];
-
-		$(document).on('keydown', e => {
-			// Backspace
-			if (e.keyCode === 8) {
-				const target = e.originalEvent['path'][0];
-
-				if (target.nodeName.toLowerCase() === 'input') {
-					// simulateBackspace(target);
-				}
-			}
-
-			if (keyCodes.includes(e.keyCode) && Module.custom.getFocused())
-				return false;
-		});
 	}
 }

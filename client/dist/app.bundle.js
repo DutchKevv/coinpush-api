@@ -21637,9 +21637,7 @@ InstrumentModel.DEFAULTS = {
     }
 };
 exports.InstrumentModel = InstrumentModel;
-
 //# sourceMappingURL=InstrumentModel.js.map
-
 
 /***/ }),
 /* 106 */
@@ -29063,7 +29061,7 @@ FileTreeComponent = __decorate([
 
 var _a, _b, _c, _d, _e;
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(11)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(12)))
 
 /***/ }),
 /* 149 */
@@ -29283,7 +29281,7 @@ JSEditorComponent = __decorate([
 
 var _a, _b, _c, _d, _e, _f;
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(11)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(12)))
 
 /***/ }),
 /* 153 */,
@@ -32023,7 +32021,7 @@ UserOverviewComponent = __decorate([
 
 var _a, _b, _c, _d;
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(11)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(12)))
 
 /***/ }),
 /* 367 */
@@ -33236,7 +33234,7 @@ ChartBoxComponent = ChartBoxComponent_1 = __decorate([
 
 var ChartBoxComponent_1, _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(11)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(12)))
 
 /***/ }),
 /* 372 */
@@ -34554,7 +34552,7 @@ HeaderPlaygroundComponent = __decorate([
 
 var _a, _b, _c, _d, _e, _f;
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(11)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(12)))
 
 /***/ }),
 /* 758 */
@@ -54959,9 +54957,7 @@ class SystemState {
     }
 }
 exports.SystemState = SystemState;
-
 //# sourceMappingURL=SystemState.js.map
-
 
 /***/ }),
 /* 793 */
@@ -55251,7 +55247,7 @@ FooterComponent = __decorate([
 
 var _a, _b, _c, _d, _e, _f, _g, _h;
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(11)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(12)))
 
 /***/ }),
 /* 801 */
@@ -55350,7 +55346,7 @@ module.exports = ":host {\n  height: 100%;\n  width: 100%;\n  background: #42424
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function($) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppComponent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__services_constants_service__ = __webpack_require__(55);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_socket_service__ = __webpack_require__(19);
@@ -55371,7 +55367,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-// import {simulateBackspace} from '../assets/custom/js/backspace-fix';
 
 let AppComponent = class AppComponent {
     constructor(_cacheService, _authenticationService, _constantsService, _socketService, _systemService) {
@@ -55388,19 +55383,6 @@ let AppComponent = class AppComponent {
         this._cacheService.loadSymbolList();
     }
     ngAfterViewInit() {
-        document.body.addEventListener('contextmenu', e => e.preventDefault(), false);
-        const keyCodes = [37, 38, 39, 40];
-        $(document).on('keydown', e => {
-            // Backspace
-            if (e.keyCode === 8) {
-                const target = e.originalEvent['path'][0];
-                if (target.nodeName.toLowerCase() === 'input') {
-                    // simulateBackspace(target);
-                }
-            }
-            if (keyCodes.includes(e.keyCode) && Module.custom.getFocused())
-                return false;
-        });
     }
 };
 AppComponent = __decorate([
@@ -55423,7 +55405,6 @@ AppComponent = __decorate([
 
 var _a, _b, _c, _d, _e;
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(11)))
 
 /***/ }),
 /* 812 */
@@ -55431,6 +55412,14 @@ var _a, _b, _c, _d, _e;
 
 "use strict";
 
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs = __webpack_require__(138);
 const path = __webpack_require__(138);
@@ -55447,15 +55436,17 @@ class Mapper {
     get mode() {
         return this._mode;
     }
-    async init() {
-        if (this.options.path) {
-            this._mode = Mapper.MODE_PERSISTENT;
-            this._pathFile = path.join(this.options.path, 'database-mapper.json');
-            await this._loadFromFile();
-        }
-        else {
-            this._mode = Mapper.MODE_MEMORY;
-        }
+    init() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (this.options.path) {
+                this._mode = Mapper.MODE_PERSISTENT;
+                this._pathFile = path.join(this.options.path, 'database-mapper.json');
+                yield this._loadFromFile();
+            }
+            else {
+                this._mode = Mapper.MODE_MEMORY;
+            }
+        });
     }
     update(symbol, timeFrame, from, until, count) {
         let map = this.map, ranges = this.findByParams(symbol, timeFrame, true);
@@ -56171,7 +56162,7 @@ InstrumentListComponent = __decorate([
 
 var _a, _b, _c, _d, _e, _f, _g;
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(11)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(12)))
 
 /***/ }),
 /* 854 */
@@ -56313,7 +56304,7 @@ ModalAnchorDirective = __decorate([
 
 var _a, _b, _c;
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(11)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(12)))
 
 /***/ }),
 /* 860 */
@@ -56591,7 +56582,7 @@ BacktestSettingsComponent = __decorate([
 
 var _a, _b, _c, _d, _e, _f, _g, _h;
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(11)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(12)))
 
 /***/ }),
 /* 862 */
@@ -63924,7 +63915,7 @@ CoreListComponent = __decorate([
 
 var _a, _b, _c, _d;
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(11)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(12)))
 
 /***/ }),
 /* 869 */
@@ -64166,7 +64157,7 @@ HeaderSocialComponent = __decorate([
 
 var _a, _b, _c, _d, _e, _f;
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(11)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(12)))
 
 /***/ }),
 /* 878 */

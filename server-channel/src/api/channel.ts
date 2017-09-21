@@ -41,18 +41,6 @@ router.get('/', async (req, res, next) => {
 });
 
 /**
- * Update
- */
-router.put('/:id', async (req, res, next) => {
-	try {
-		res.send(await channelController.update(req.user.id, req.params.id, req.body));
-	} catch (error) {
-		console.error(error);
-		next(error);
-	}
-});
-
-/**
  * FOLLOW (TOGGLE)
  */
 router.post('/:id/follow', async (req, res, next) => {
@@ -76,17 +64,29 @@ router.post('/:id/copy', async (req, res, next) => {
 	}
 });
 
-// /**
-//  * Create
-//  */
-// router.post('/', async (req, res, next) => {
-// 	try {
-// 		res.send(await channelController.create(req.user.id, req.body));
-// 	} catch (error) {
-// 		console.error(error);
-// 		next(error);
-// 	}
-// });
+/**
+ * Create
+ */
+router.post('/', async (req, res, next) => {
+	try {
+		res.send(await channelController.create(req.user.id, req.body));
+	} catch (error) {
+		console.error(error);
+		next(error);
+	}
+});
+
+/**
+ * Update
+ */
+router.put('/:id', async (req, res, next) => {
+	try {
+		res.send(await channelController.update(req.user.id, req.params.id, req.body));
+	} catch (error) {
+		console.error(error);
+		next(error);
+	}
+});
 
 /**
  * Delete
