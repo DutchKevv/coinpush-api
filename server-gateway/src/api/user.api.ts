@@ -29,18 +29,6 @@ router.get('/', async (req, res, next) => {
 });
 
 /**
- * Update
- */
-router.put('/', async (req, res, next) => {
-	try {
-		res.send(await userController.update(req.user.id, req.body));
-	} catch (error) {
-		console.error(error);
-		next(error);
-	}
-});
-
-/**
  * Follow
  */
 router.post('/:id/follow', async (req, res, next) => {
@@ -68,8 +56,22 @@ router.post('/:id/copy', async (req, res, next) => {
  * Create
  */
 router.post('/', async (req, res, next) => {
+	console.log('POST POST POST!!')
+
 	try {
 		res.send(await userController.create(req.user, req.body));
+	} catch (error) {
+		console.error(error);
+		next(error);
+	}
+});
+
+/**
+ * Update
+ */
+router.put('/', async (req, res, next) => {
+	try {
+		res.send(await userController.update(req.user.id, req.body));
 	} catch (error) {
 		console.error(error);
 		next(error);

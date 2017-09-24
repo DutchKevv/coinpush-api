@@ -49,9 +49,16 @@ export class OrderService {
 			let audio = new Audio(file);
 			audio.play();
 			this._alertService.success('Order set');
-		}, error => {
-			this._alertService.error(error);
-			console.error(error);
+		},  (error) => {
+			let audio = new Audio('sounds/fail.mp3');
+			audio.play();
+
+			try {
+				error = JSON.parse(error);
+				this._alertService.error(error.error.error.message);
+			} catch (error) {
+				this._alertService.error('Unknown error occurred');
+			}
 		});
 
 		return subscription;

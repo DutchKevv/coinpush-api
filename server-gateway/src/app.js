@@ -91,7 +91,7 @@ app.use(expressJwt({
     return ((/\.(gif|jpg|jpeg|tiff|png)$/i).test(req.originalUrl) ||
         req.originalUrl === '/' ||
         req.originalUrl.indexOf('/sounds/') > -1 ||
-        (req.originalUrl === '/social/authenticate' && (req.method === 'POST' || req.method === 'OPTIONS')) ||
+        (req.originalUrl === '/authenticate' && (req.method === 'POST' || req.method === 'OPTIONS')) ||
         (req.originalUrl === '/user' && (req.method === 'POST' || req.method === 'OPTIONS')));
 }));
 /**
@@ -118,6 +118,14 @@ app.use((req, res, next) => {
  */
 app.get('/', (req, res) => proxy.web(req, res, { target: config.server.fe.apiUrl }));
 /**
+ * authenticate
+ */
+app.use('/authenticate', require('./api/authenticate.api'));
+/**
+ * upload
+ */
+app.use('/upload', require('./api/upload.api'));
+/**
  * image
  */
 app.get('/images/*', (req, res) => proxy.web(req, res, { target: config.server.fe.apiUrl }));
@@ -134,29 +142,6 @@ app.use('/channel', require('./api/channel.api'));
  * order
  */
 app.use('/order', require('./api/order.api'));
-/**
- * social
- */
-app.all('/social/authenticate', (req, res) => {
-    console.log('asdfasdf');
-    proxy.web(req, res, { target: config.server.social.apiUrl });
-});
-app.all('/social/user/:id?', (req, res) => {
-    // if (!req.params.id && req.method !== 'POST') {
-    // 	let pieces = url.parse(req.url);
-    // 	req.url = url.resolve(pieces.pathname + '/', req.user.id + '/') + (pieces.search || '');
-    // }
-    proxy.web(req, res, { target: config.server.social.apiUrl });
-});
-app.get('/social/users', (req, res) => {
-    proxy.web(req, res, { target: config.server.social.apiUrl });
-});
-app.post('/social/file-upload/*', (req, res) => {
-    proxy.web(req, res, { target: config.server.social.apiUrl });
-});
-app.post('/social/follow/*', (req, res) => {
-    proxy.web(req, res, { target: config.server.social.apiUrl });
-});
 /**
  * SEARCH
  */
@@ -194,8 +179,7 @@ function errorHandler(err, req, res, next) {
     if (res.headersSent) {
         return next(err);
     }
-    res.status(500);
-    res.render('error', { error: err });
+    res.status(500).send({ error: err });
 }
 app.use(errorHandler);
 //# sourceMappingURL=app.js.map

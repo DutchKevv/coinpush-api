@@ -1,10 +1,10 @@
-import {Stream} 		from "stream";
+import {Stream} from 'stream';
 import * as querystring from 'querystring';
-import * as constants 	from '../../../constants/broker';
-import * as Events 		from './Events';
-import * as httpClient	from './httpClient';
-import * as utils 		from './utils';
-import {throttle}		from 'lodash';
+import * as constants from '../../../constants/constants';
+import * as Events from './Events';
+import * as httpClient from './httpClient';
+import * as utils from './utils';
+import {throttle} from 'lodash';
 
 let environments = {
 	sandbox: {
@@ -24,6 +24,7 @@ let environments = {
 	}
 };
 let maxSockets = 2, maxRequestsPerSecond = 15, maxRequestsWarningThreshold = 1000;
+
 /*
  * config.environment
  * config.accessToken
@@ -45,6 +46,7 @@ function OandaAdapter(config) {
 	this._pricesBuffer = [];
 	this._sendRESTRequest = utils.rateLimit(this._sendRESTRequest, this, 1000 / maxRequestsPerSecond, maxRequestsWarningThreshold);
 }
+
 Events.mixin(OandaAdapter.prototype);
 /*
  * Subscribes to events for all accounts authorized by the token
@@ -114,8 +116,7 @@ OandaAdapter.prototype._onEventsData = function (data) {
 			this._eventsBuffer.push(line);
 			try {
 				update = JSON.parse(this._eventsBuffer.join(''));
-			}
-			catch (error) {
+			} catch (error) {
 				if (this._eventsBuffer.length <= 5) {
 					// Wait for next line.
 					return;
@@ -226,6 +227,7 @@ OandaAdapter.prototype._streamPrices = function (accountId) {
 	}, []).sort().join('%2C');
 	changed = !this.lastPriceSubscriptions || this.priceSubscriptions !== this.lastPriceSubscriptions;
 	this.lastPriceSubscriptions = this.priceSubscriptions;
+
 	if (!changed) {
 		return;
 	}
@@ -262,8 +264,7 @@ OandaAdapter.prototype._onPricesData = function (data) {
 			this._pricesBuffer.push(line);
 			try {
 				update = JSON.parse(this._pricesBuffer.join(''));
-			}
-			catch (error) {
+			} catch (error) {
 				if (this._pricesBuffer.length <= 5) {
 					// Wait for next update.
 					return;
@@ -293,10 +294,11 @@ OandaAdapter.prototype._onPricesData = function (data) {
 OandaAdapter.prototype._pricesHeartbeatTimeout = function () {
 	console.warn('[WARN] OandaAdapter: No heartbeat received from prices stream for 10 seconds. Reconnecting.');
 	delete this.lastPriceSubscriptions;
+	this.trigger('stream-timeout');
 	this._streamPrices();
 };
 
-OandaAdapter.prototype._candlesJsonStringToArray = function(chunk) {
+OandaAdapter.prototype._candlesJsonStringToArray = function (chunk) {
 
 };
 
@@ -380,7 +382,7 @@ OandaAdapter.prototype.getOpenTrades = function (accountId, callback) {
  * @param {Function} callback
  */
 OandaAdapter.prototype.createOrder = function (accountId, order, callback) {
-	console.log('accountId accountIdaccountId accountId accountId accountId accountId', accountId);
+
 	this._sendRESTRequest({
 		method: 'POST',
 		path: '/v1/accounts/' + accountId + '/orders',
@@ -407,8 +409,8 @@ OandaAdapter.prototype.closeOrder = function (accountId, tradeId, callback) {
 OandaAdapter.prototype._sendRESTRequest = function (request, callback, onData) {
 	request.hostname = this.restHost;
 	request.headers = request.headers || {
-			Authorization: 'Bearer ' + this.accessToken
-		};
+		Authorization: 'Bearer ' + this.accessToken
+	};
 	request.secure = this.secure;
 
 	httpClient.sendRequest(request, (error, body, httpCode) => {

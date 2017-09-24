@@ -72,14 +72,14 @@ export class ChannelService {
 			if (result.state) {
 				model.set({
 					iCopy: !!state,
-					followersCount: ++model.options.followersCount
+					copiersCount: ++model.options.copiersCount
 				});
 				text = `Now copying ${model.options.name}`;
 			} else {
 				text = `Stopped copying ${model.options.name}`;
 				model.set({
 					iCopy: !!state,
-					followersCount: --model.options.followersCount
+					copiersCount: --model.options.copiersCount
 				});
 			}
 			this._alertService.success(text);

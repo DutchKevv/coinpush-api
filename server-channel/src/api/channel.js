@@ -63,7 +63,7 @@ router.post('/:id/copy', async (req, res, next) => {
  */
 router.post('/', async (req, res, next) => {
     try {
-        res.send(await channel_controller_1.channelController.create(req.user, req.body));
+        res.send(await channel_controller_1.channelController.create(req.user, req.body, req.body.type));
     }
     catch (error) {
         console.error(error);
@@ -73,9 +73,14 @@ router.post('/', async (req, res, next) => {
 /**
  * Update
  */
-router.put('/:id', async (req, res, next) => {
+router.put('/:id?', async (req, res, next) => {
     try {
-        res.send(await channel_controller_1.channelController.update(req.user.id, req.params.id, req.body));
+        if (req.params.id)
+            res.send(await channel_controller_1.channelController.update(req.user, req.params.id, req.body));
+        else if (req.query.user)
+            res.send(await channel_controller_1.channelController.updateByUserId(req.user, req.query.user, req.body));
+        else
+            next();
     }
     catch (error) {
         console.error(error);

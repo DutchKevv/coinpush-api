@@ -20,14 +20,32 @@ exports.channelController = {
             headers: {
                 '_id': reqUser.id
             },
-            body: {
-                name: params.name,
-                type: params.type
+            body: params,
+            json: true
+        });
+    },
+    update(reqUser, channelId, params) {
+        return request({
+            uri: config.server.channel.apiUrl + '/channel/' + channelId,
+            method: 'PUT',
+            headers: {
+                '_id': reqUser.id
             },
             json: true
         });
     },
-    update(userId, params) {
+    updateByUserId(reqUser, userId, params) {
+        return request({
+            uri: config.server.channel.apiUrl + '/channel/',
+            method: 'PUT',
+            headers: {
+                '_id': reqUser.id
+            },
+            qs: {
+                user: userId
+            },
+            json: true
+        });
     },
     async toggleFollow(followerId, channelId) {
         // Subscribe to channel

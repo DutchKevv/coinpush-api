@@ -23,12 +23,12 @@ export class AuthenticationService {
 		localStorage.removeItem('currentUser');
 	}
 
-	login(username: string, password: string) {
-		return this.authenticateAndLoadUserData(username, password);
+	login(email: string, password: string) {
+		return this.authenticateAndLoadUserData(email, password);
 	}
 
-	authenticateAndLoadUserData(username?, password?, token?) {
-		return this.http.post('/social/authenticate', {username, password, token})
+	authenticateAndLoadUserData(email: string, password: string, token?: string) {
+		return this.http.post('/authenticate', {email, password, token})
 			.map((response: Response) => {
 				// login successful if there's a jwt token in the response
 				let user = response.json();

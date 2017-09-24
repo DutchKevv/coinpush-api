@@ -67,17 +67,21 @@ exports.channelController = {
         return channels;
     },
     create(reqUser, options, type = constants_1.CHANNEL_TYPE_CUSTOM) {
-        console.log('REU SUSDF USER US UER', reqUser);
+        console.log('REU SUSDF USER US UER', options);
         return channel_1.Channel.create({
             user_id: reqUser.id,
             name: options.name,
             description: options.description,
             public: options.public,
+            profileImg: options.profileImg,
             type
         });
     },
-    update(userId, id, options) {
-        return Promise.reject('TODO');
+    update(reqUser, channelId, params) {
+        return channel_1.Channel.update({ _id: mongoose.Types.ObjectId(channelId), type: constants_1.CHANNEL_TYPE_MAIN }, params);
+    },
+    updateByUserId(reqUser, userId, params) {
+        return channel_1.Channel.update({ user_id: mongoose.Types.ObjectId(userId), type: constants_1.CHANNEL_TYPE_MAIN }, params);
     },
     async toggleFollow(reqUser, channelId, state) {
         console.log(reqUser.id, channelId, state);

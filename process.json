@@ -18,15 +18,6 @@
     "instances": 1
   },
   {
-    "script": "server-social/index.js",
-    "name": "social-api",
-    "exec_mode": "fork",
-    "env_production" : {
-      "NODE_ENV": "production"
-    },
-    "instances": 1
-  },
-  {
     "script": "server-order/index.js",
     "name": "order-api",
     "exec_mode": "fork",
@@ -47,6 +38,15 @@
   {
     "script": "server-channel/index.js",
     "name": "channel-api",
+    "exec_mode": "fork",
+    "env_production" : {
+      "NODE_ENV": "production"
+    },
+    "instances": 1
+  },
+  {
+    "script": "server-user/index.js",
+    "name": "user-api",
     "exec_mode": "fork",
     "env_production" : {
       "NODE_ENV": "production"

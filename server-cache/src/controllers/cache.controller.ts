@@ -12,6 +12,7 @@ import CacheMapper from '../../../shared/classes/cache/CacheMap';
 import {timeFrameSteps} from '../../../shared/util/util.date';
 import {AccountSettings} from '../../../shared/interfaces/AccountSettings';
 import {dataLayer} from './cache.datalayer';
+import {BROKER_HEARTBEAT_TIMEOUT} from '../../../shared/constants/constants';
 
 // export default class Cache {
 //
@@ -165,12 +166,6 @@ const READ_COUNT_DEFAULT = 500;
 /**
  * Broker
  */
-const brokerApi = new OandaApi(config.broker.account);
-
-brokerApi.init().then(async () => {
-	await cacheController.loadAvailableSymbols();
-	await cacheController.openTickStream();
-}).catch(console.error);
 
 const dataMapper = new CacheMapper({
 	path: path.join(__dirname, '..', '..', '_data')
@@ -184,10 +179,13 @@ export const cacheController = {
 	_fetchQueue: Promise.resolve(),
 	_tickStreamOpen: false,
 	_tickIntervalTimer: null,
+	_brokerApi: null,
 
-	init() {
-		return dataMapper.init();
+	async init() {
+		await dataMapper.init();
+		await this._initBrokerApi();
 	},
+
 
 	async find(params: { symbol: string, timeFrame: string, from: number, until: number, count: number }) {
 		let symbol = params.symbol,
@@ -283,7 +281,7 @@ export const cacheController = {
 
 					log.info('Cache', `Fetching ${symbol} from ${chunk.from} until ${chunk.until} count ${chunk.count}`);
 
-					brokerApi.getCandles(symbol, timeFrame, chunk.from, chunk.until, chunk.count, async (buf: NodeBuffer) => {
+					this._brokerApi.getCandles(symbol, timeFrame, chunk.from, chunk.until, chunk.count, async (buf: NodeBuffer) => {
 						streamChunkTotal++;
 
 						// Store candles in DB
@@ -338,9 +336,9 @@ export const cacheController = {
 	},
 
 	async loadAvailableSymbols(): Promise<void> {
-		let symbolList = await brokerApi.getSymbols();
+		let symbolList = await this._brokerApi.getSymbols();
 
-		let currentPrices = await brokerApi.getCurrentPrices(symbolList.map(symbol => symbol.name));
+		let currentPrices = await this._brokerApi.getCurrentPrices(symbolList.map(symbol => symbol.name));
 
 		symbolList.forEach(symbol => {
 			let price = currentPrices.find(priceObj => priceObj.instrument === symbol.name);
@@ -358,11 +356,11 @@ export const cacheController = {
 	},
 
 	async openTickStream(): Promise<any> {
-		brokerApi.removeAllListeners('tick');
+		this._brokerApi.removeAllListeners('tick');
 
-		await brokerApi.subscribePriceStream(this.symbols.map(symbol => symbol.name));
+		await this._brokerApi.subscribePriceStream(this.symbols.map(symbol => symbol.name));
 
-		brokerApi.on('tick', tick => this._onTickReceive(tick));
+		this._brokerApi.on('tick', tick => this._onTickReceive(tick));
 		this._tickStreamOpen = true;
 		dataMapper.streamOpenSince = Date.now();
 
@@ -406,6 +404,29 @@ export const cacheController = {
 			this._tickBuffer[tick.instrument] = [];
 
 		this._tickBuffer[tick.instrument].push([tick.time, tick.bid, tick.ask]);
-	}
+	},
 
+	async _initBrokerApi() {
+		await this.destroyBrokerApi();
+
+		this._brokerApi = new OandaApi(config.broker.account);
+		this._brokerApi.on('stream-timeout', () => {this._initBrokerApi().catch(console.error)});
+
+		await this._brokerApi.init();
+		await this.loadAvailableSymbols();
+		await this.openTickStream();
+	},
+
+	async destroyBrokerApi(): Promise<boolean> {
+		if (!this._brokerApi)
+			return;
+		
+		try {
+			this._brokerApi.destroy();
+			return true;
+		} catch (error) {
+			console.error(error);
+			return false;
+		}
+	}
 };

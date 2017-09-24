@@ -61,6 +61,7 @@ import {ChannelRowComponent} from './components/channel-row/channel.row.componen
 import {ProfileChannelOverviewComponent} from './components/profile-channel-overview/profile.channel.overview.component';
 import {ChannelService} from './services/channel.service';
 import {ChannelDetailsModalComponent} from './components/channel-details-modal/channel.details.modal.component';
+import {CommentBoxComponent} from './components/comment-box/comment-box.component';
 
 export function startupServiceFactory(startupService: StartupService): Function {
 	return () => startupService.load();
@@ -105,7 +106,8 @@ export function startupServiceFactory(startupService: StartupService): Function 
 		ProfileChannelOverviewComponent,
 		PageSubUserComponent,
 		SettingsComponent,
-		ChannelDetailsModalComponent
+		ChannelDetailsModalComponent,
+		CommentBoxComponent
 	],
 	imports: [
 		BrowserModule,

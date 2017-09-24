@@ -30,6 +30,14 @@ export default class OandaApi extends Base {
 			// Optional. Required only if environment is 'sandbox'
 			username: this.options.username
 		});
+
+		this._client.on('stream-timeout', () => {
+			try {
+				this._client.on('stream-timeout', () => this.emit('stream-timeout'));
+			} catch (error) {
+				console.log(error);
+			}
+		});
 	}
 
 	public async testConnection(): Promise<boolean> {

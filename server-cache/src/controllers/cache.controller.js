@@ -8,6 +8,7 @@ const logger_1 = require("../../../shared/logger");
 const oanda_1 = require("../../../shared/brokers/oanda");
 const CacheMap_1 = require("../../../shared/classes/cache/CacheMap");
 const cache_datalayer_1 = require("./cache.datalayer");
+const constants_1 = require("../../../shared/constants/constants");
 // export default class Cache {
 //
 // 	public static READ_COUNT_DEFAULT = 500;
@@ -158,11 +159,6 @@ const READ_COUNT_DEFAULT = 500;
 /**
  * Broker
  */
-const brokerApi = new oanda_1.default(config.broker.account);
-brokerApi.init().then(async () => {
-    await exports.cacheController.loadAvailableSymbols();
-    await exports.cacheController.openTickStream();
-}).catch(console.error);
 const dataMapper = new CacheMap_1.default({
     path: path.join(__dirname, '..', '..', '_data')
 });
@@ -172,8 +168,10 @@ exports.cacheController = {
     _fetchQueue: Promise.resolve(),
     _tickStreamOpen: false,
     _tickIntervalTimer: null,
-    init() {
-        return dataMapper.init();
+    _brokerApi: null,
+    async init() {
+        await dataMapper.init();
+        await this._initBrokerApi();
     },
     async find(params) {
         let symbol = params.symbol, timeFrame = params.timeFrame, from = params.from, until = params.until, count = params.count, candles = null, softUntil;
@@ -230,7 +228,7 @@ exports.cacheController = {
                 return new Promise((resolve, reject) => {
                     let now = Date.now(), streamChunkTotal = 0, streamChunkWritten = 0, endTriggered = false, total = 0;
                     logger_1.log.info('Cache', `Fetching ${symbol} from ${chunk.from} until ${chunk.until} count ${chunk.count}`);
-                    brokerApi.getCandles(symbol, timeFrame, chunk.from, chunk.until, chunk.count, async (buf) => {
+                    this._brokerApi.getCandles(symbol, timeFrame, chunk.from, chunk.until, chunk.count, async (buf) => {
                         streamChunkTotal++;
                         // Store candles in DB
                         await cache_datalayer_1.dataLayer.write(symbol, timeFrame, buf);
@@ -268,8 +266,8 @@ exports.cacheController = {
         return this._fetchQueue;
     },
     async loadAvailableSymbols() {
-        let symbolList = await brokerApi.getSymbols();
-        let currentPrices = await brokerApi.getCurrentPrices(symbolList.map(symbol => symbol.name));
+        let symbolList = await this._brokerApi.getSymbols();
+        let currentPrices = await this._brokerApi.getCurrentPrices(symbolList.map(symbol => symbol.name));
         symbolList.forEach(symbol => {
             let price = currentPrices.find(priceObj => priceObj.instrument === symbol.name);
             symbol.bid = price.bid;
@@ -281,9 +279,9 @@ exports.cacheController = {
         logger_1.log.info('Cache', 'Symbol list loaded');
     },
     async openTickStream() {
-        brokerApi.removeAllListeners('tick');
-        await brokerApi.subscribePriceStream(this.symbols.map(symbol => symbol.name));
-        brokerApi.on('tick', tick => this._onTickReceive(tick));
+        this._brokerApi.removeAllListeners('tick');
+        await this._brokerApi.subscribePriceStream(this.symbols.map(symbol => symbol.name));
+        this._brokerApi.on('tick', tick => this._onTickReceive(tick));
         this._tickStreamOpen = true;
         dataMapper.streamOpenSince = Date.now();
         logger_1.log.info('Cache', 'Tick stream opened');
@@ -318,6 +316,30 @@ exports.cacheController = {
         if (!this._tickBuffer[tick.instrument])
             this._tickBuffer[tick.instrument] = [];
         this._tickBuffer[tick.instrument].push([tick.time, tick.bid, tick.ask]);
+    },
+    async _initBrokerApi() {
+        await this.destroyBrokerApi();
+        this._brokerApi = new oanda_1.default(config.broker.account);
+        this._brokerApi.on('error', (error) => {
+            if (error.code === constants_1.BROKER_HEARTBEAT_TIMEOUT) {
+                this._initBrokerApi().catch(console.error);
+            }
+        });
+        await this._brokerApi.init();
+        await this.loadAvailableSymbols();
+        await this.openTickStream();
+    },
+    async destroyBrokerApi() {
+        if (!this._brokerApi)
+            return;
+        try {
+            this._brokerApi.destroy();
+            return true;
+        }
+        catch (error) {
+            console.error(error);
+            return false;
+        }
     }
 };
 //# sourceMappingURL=cache.controller.js.map

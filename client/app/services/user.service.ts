@@ -59,7 +59,7 @@ export class UserService {
 		console.log('changes!', changes);
 		this.model.set(changes);
 
-		return this._http.put('/social/user/', changes).subscribe(() => {
+		return this._http.put('/user/', changes).subscribe(() => {
 			this._alertService.success('Settings updated')
 		}, () => {
 			this._alertService.error('Error updating settings')

@@ -45,6 +45,6 @@ app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Headers', '_id, Authorization, Origin, X-Requested-With, Content-Type, Accept');
     next();
 });
-app.use('/order', require('./api/order'));
+app.use('/order', require('./api/order.api'));
 http.listen(config.server.order.port, () => console.log(`\n Order service started on      : 127.0.0.1:${config.server.order.port}`));
 //# sourceMappingURL=app.js.map

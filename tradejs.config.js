@@ -25,11 +25,6 @@ module.exports = {
             apiUrl: 'http://localhost:3001',
             connectionString: 'mongodb://localhost:27017/tradejs-cache'
         },
-        social: {
-            port: 3002,
-            apiUrl: 'http://localhost:3002',
-            connectionString: 'mongodb://localhost:27017/tradejs-social'
-        },
         order: {
             port: 3005,
             apiUrl: 'http://localhost:3005',
@@ -43,7 +38,11 @@ module.exports = {
             port: 3007,
             apiUrl: 'http://localhost:3007',
             connectionString: 'mongodb://localhost:27017/tradejs-channels'
-
+        },
+        user: {
+            port: 3008,
+            apiUrl: 'http://localhost:3008',
+            connectionString: 'mongodb://localhost:27017/tradejs-user'
         },
         fe: {
             port: 4200,

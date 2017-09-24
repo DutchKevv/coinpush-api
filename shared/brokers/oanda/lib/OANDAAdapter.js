@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const stream_1 = require("stream");
 const querystring = require("querystring");
-const constants = require("../../../constants/broker");
+const constants = require("../../../constants/constants");
 const Events = require("./Events");
 const httpClient = require("./httpClient");
 const utils = require("./utils");
@@ -285,6 +285,7 @@ OandaAdapter.prototype._onPricesData = function (data) {
 OandaAdapter.prototype._pricesHeartbeatTimeout = function () {
     console.warn('[WARN] OandaAdapter: No heartbeat received from prices stream for 10 seconds. Reconnecting.');
     delete this.lastPriceSubscriptions;
+    this.trigger('stream-timeout');
     this._streamPrices();
 };
 OandaAdapter.prototype._candlesJsonStringToArray = function (chunk) {
@@ -363,7 +364,6 @@ OandaAdapter.prototype.getOpenTrades = function (accountId, callback) {
  * @param {Function} callback
  */
 OandaAdapter.prototype.createOrder = function (accountId, order, callback) {
-    console.log('accountId accountIdaccountId accountId accountId accountId accountId', accountId);
     this._sendRESTRequest({
         method: 'POST',
         path: '/v1/accounts/' + accountId + '/orders',
@@ -433,5 +433,4 @@ OandaAdapter.prototype.kill = function () {
     this.off();
 };
 exports.Adapter = OandaAdapter;
-
 //# sourceMappingURL=OANDAAdapter.js.map

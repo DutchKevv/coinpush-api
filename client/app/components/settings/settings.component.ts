@@ -6,9 +6,6 @@ import {FormBuilder} from '@angular/forms';
 import {USER_FETCH_TYPE_PROFILE_SETTINGS} from '../../../../shared/constants/constants';
 import {UserModel} from '../../models/user.model';
 
-// define the constant url we would be uploading to.
-const URL = '/social/file-upload/profile';
-
 declare let $: any;
 
 @Component({
@@ -39,9 +36,7 @@ export class SettingsComponent implements OnInit {
 			username: this._userService.model.options.username,
 			email: this._userService.model.options.email,
 			description: '',
-			country: this._userService.model.options.country,
-			brokerToken: '',
-			brokerAccountId: '',
+			country: this._userService.model.options.country
 		});
 
 		this._userService.get(this._userService.model.get('user_id'), USER_FETCH_TYPE_PROFILE_SETTINGS).subscribe((user: UserModel) => {
@@ -51,9 +46,7 @@ export class SettingsComponent implements OnInit {
 				username: user.options.username,
 				email: user.options.email,
 				country: user.options.country,
-				description: user.options.description,
-				brokerToken: user.options.brokerToken,
-				brokerAccountId: user.options.brokerAccountId
+				description: user.options.description
 			}, {onlySelf: true});
 
 			this.form.valueChanges.subscribe(data => {
@@ -89,7 +82,7 @@ export class SettingsComponent implements OnInit {
 		let data = new FormData();
 		data.append('image', this.uploadBtn.nativeElement.files.item(0));
 
-		this._http.post(URL, data).map(res => res.json()).subscribe((result) => {
+		this._http.post('/upload/profile', data).map(res => res.json()).subscribe((result) => {
 			this._userService.model.set({profileImg: result.url});
 		}, (error) => console.error(error));
 	}

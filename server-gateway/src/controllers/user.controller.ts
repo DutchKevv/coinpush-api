@@ -8,25 +8,26 @@ const config = require('../../../tradejs.config');
 export const userController = {
 
 	async find(reqUser: {id: string}, userId: string, params: any = {}): Promise<any> {
-		const user = await Promise.all([
-			request({uri: 'http://localhost:3002/social/user/' + userId, qs: {type: params.type}, headers: {_id: reqUser.id}, json: true}),
-			request({uri: 'http://localhost:3007/channel', qs: {user: userId}, headers: {_id: reqUser.id}, json: true}),
+		const results = await Promise.all([
+			request({uri: config.server.user.apiUrl + '/user/' + userId, qs: {type: params.type}, headers: {_id: reqUser.id}, json: true}),
+			request({uri: config.server.channel.apiUrl + '/channel/', qs: {user: userId}, headers: {_id: reqUser.id}, json: true}),
 		]);
-		console.log(user[0]);
-		return Object.assign(user[0], user[1].user[0]);
+
+		console.log(results[0], results[1].user[0]);
+		return Object.assign({}, results[0] || {}, results[1].user[0] || {});
 	},
 
 	async findMany(reqUserId: string, params): Promise<Array<any>> {
-		return request({uri: 'http://localhost:3002/social/users/', json: true})
+		return request({uri: config.server.user.apiUrl + '/user/' + reqUserId, json: true})
 	},
 
-	async create(reqUser, params) {
+	async create(reqUser, params): Promise<{user: any, channel: any}> {
 		let user, channel;
 
 		try {
 			// create user
 			user = await request({
-				uri: 'http://localhost:3002/social/user/',
+				uri: config.server.user.apiUrl + '/user',
 				method: 'POST',
 				body: params,
 				json: true
@@ -35,10 +36,11 @@ export const userController = {
 			// create channel
 			channel = await channelController.create({id: user._id}, {
 				name: params.username,
-				type: CHANNEL_TYPE_MAIN
+				type: CHANNEL_TYPE_MAIN,
+				profileImg: params.profileImg
 			});
 
-			return user;
+			return {user, channel};
 
 		} catch (error) {
 			if (user && user._id)
@@ -56,8 +58,15 @@ export const userController = {
 
 	},
 
-	update(userId, params) {
+	async update(reqUser, params) {
 
+		// create user
+		return request({
+			uri: config.server.user.apiUrl + '/user/' + reqUser.id,
+			method: 'PUT',
+			body: params,
+			json: true
+		});
 	},
 
 	/*
