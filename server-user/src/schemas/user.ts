@@ -99,8 +99,6 @@ UserSchema.statics.authenticate = function (email, password) {
 				if (result !== true)
 					return resolve(false);
 
-				user.profileImg = User.normalizeProfileImg(user.profileImg);
-
 				resolve({
 					_id: user._id,
 					username: user.username,
