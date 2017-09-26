@@ -350,6 +350,8 @@ export const cacheController = {
 
 		this.symbols = symbolList;
 
+		this._updateRedis(this.symbols);
+
 		await dataLayer.setModels(symbolList.map(symbol => symbol.name));
 
 		log.info('Cache', 'Symbol list loaded');
@@ -378,17 +380,6 @@ export const cacheController = {
 		log.info('Cache', 'Reset complete');
 	},
 
-	async getCached(key, fields) {
-		return new Promise((resolve, reject) => {
-			redis.client.get(key, function (err, reply) {
-				if (err)
-					reject(err);
-				else
-					resolve(JSON.parse(reply))
-			});
-		});
-	},
-
 	startBroadcastInterval(io) {
 		this._tickIntervalTimer = setInterval(() => {
 			if (!Object.getOwnPropertyNames(this._tickBuffer).length) return;
@@ -399,9 +390,21 @@ export const cacheController = {
 		}, 200);
 	},
 
+	_updateRedis(symbols) {
+		symbols.forEach(symbol => redis.client.set(`symbol-${symbol.name}`, JSON.stringify(symbol)));
+	},
+
 	_onTickReceive(tick): void {
 		if (!this._tickBuffer[tick.instrument])
 			this._tickBuffer[tick.instrument] = [];
+
+		let symbolObj = this.symbols.find(symbol => symbol.name === tick.instrument);
+
+		symbolObj.bid = tick.bid;
+		symbolObj.ask = tick.ask;
+		symbolObj.lastTick = tick.time;
+
+		this._updateRedis([symbolObj]);
 
 		this._tickBuffer[tick.instrument].push([tick.time, tick.bid, tick.ask]);
 	},

@@ -33,10 +33,12 @@ export class SettingsComponent implements OnInit {
 		this.model = this._userService.model;
 
 		this.form = this._formBuilder.group({
-			username: this._userService.model.options.username,
-			email: this._userService.model.options.email,
-			description: '',
-			country: this._userService.model.options.country
+			username: this._userService.model.get('username'),
+			email: this._userService.model.get('email'),
+			description: this._userService.model.get('description'),
+			country: this._userService.model.get('country'),
+			balance: this._userService.model.get('balance'),
+			leverage: this._userService.model.get('leverage'),
 		});
 
 		this._userService.get(this._userService.model.get('user_id'), USER_FETCH_TYPE_PROFILE_SETTINGS).subscribe((user: UserModel) => {
@@ -46,7 +48,9 @@ export class SettingsComponent implements OnInit {
 				username: user.options.username,
 				email: user.options.email,
 				country: user.options.country,
-				description: user.options.description
+				description: user.options.description,
+				balance: this._userService.model.get('balance'),
+				leverage: this._userService.model.get('leverage')
 			}, {onlySelf: true});
 
 			this.form.valueChanges.subscribe(data => {
@@ -83,7 +87,7 @@ export class SettingsComponent implements OnInit {
 		data.append('image', this.uploadBtn.nativeElement.files.item(0));
 
 		this._http.post('/upload/profile', data).map(res => res.json()).subscribe((result) => {
-			this._userService.model.set({profileImg: result.url});
+			this._userService.update({profileImg: result.url}, false);
 		}, (error) => console.error(error));
 	}
 

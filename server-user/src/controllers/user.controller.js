@@ -14,23 +14,16 @@ exports.userController = {
         let user;
         switch (type) {
             case constants_1.USER_FETCH_TYPE_ACCOUNT_DETAILS:
-                fieldsArr = ['country', 'balance'];
-                break;
-            case constants_1.USER_FETCH_TYPE_BROKER_DETAILS:
-                fieldsArr = ['brokerToken', 'brokerAccountId'];
+                fieldsArr = ['country', 'balance', 'leverage'];
                 break;
             case constants_1.USER_FETCH_TYPE_PROFILE_SETTINGS:
-                return this.getProfileSettings(userId);
-            case constants_1.USER_FETCH_TYPE_PROFILE:
-                fieldsArr = [''];
+                fieldsArr = ['email', 'country', 'leverage'];
                 break;
             case constants_1.USER_FETCH_TYPE_SLIM:
             default:
-                fieldsArr = ['username', 'profileImg', 'country', 'description'];
+                fieldsArr = ['country'];
                 break;
         }
-        if (![constants_1.USER_FETCH_TYPE_ACCOUNT_DETAILS, constants_1.USER_FETCH_TYPE_BROKER_DETAILS].includes(type) && !forceReload)
-            user = await this.getCached(REDIS_KEY);
         if (!user) {
             let fieldsObj = {};
             fieldsArr.forEach(field => fieldsObj[field] = 1);
@@ -47,12 +40,6 @@ exports.userController = {
                     $limit: 1
                 }
             ]))[0];
-            if (user) {
-                user.profileImg = user_1.User.normalizeProfileImg(user.profileImg);
-                redis_1.client.set(REDIS_KEY, JSON.stringify(user), function () {
-                    // Why wait?
-                });
-            }
         }
         if (user) {
             Object.keys(user)
@@ -80,7 +67,6 @@ exports.userController = {
                 }
             }
         ]);
-        data.forEach(user => user.profileImg = user_1.User.normalizeProfileImg(user.profileImg));
         return data;
     },
     async create(params) {
@@ -106,19 +92,6 @@ exports.userController = {
         });
         return user;
     },
-    async getProfileSettings(userId) {
-        const user = await user_1.User.findById(userId, {
-            username: 1,
-            email: 1,
-            profileImg: 1,
-            country: 1,
-            brokerToken: 1,
-            brokerAccountId: 1,
-            description: 1
-        });
-        user.profileImg = user_1.User.normalizeProfileImg(user.profileImg);
-        return user;
-    },
     async getCached(key) {
         return new Promise((resolve, reject) => {
             redis_1.client.get(key, function (err, reply) {
@@ -132,7 +105,7 @@ exports.userController = {
     // TODO - Filter fields
     async update(reqUser, userId, params) {
         // Update DB
-        const user = await user_1.User.findByIdAndUpdate(userId, params, { upsert: true });
+        const user = await user_1.User.findByIdAndUpdate(userId, params);
         // Update redis and other micro services
         if (user)
             redis_1.client.publish('user-updated', JSON.stringify(user));

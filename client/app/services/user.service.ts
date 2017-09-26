@@ -16,7 +16,7 @@ export interface IAccountStatus {
 @Injectable()
 export class UserService {
 
-	@Output() model: UserModel = new UserModel(JSON.parse(localStorage.getItem('currentUser') || '{}'));
+	@Output() model: UserModel;
 
 	@Output() public accountStatus$: BehaviorSubject<IAccountStatus> = new BehaviorSubject({
 		available: 0,
@@ -28,15 +28,11 @@ export class UserService {
 	constructor(private _http: Http,
 				private _alertService: AlertService,
 				private _startupService: StartupService) {
-		this.init();
-	}
 
-	get connected() {
-		return this.model.options.connected;
 	}
 
 	init() {
-		this.model = this._startupService.getLoggedInUser;
+		this.model = this._startupService.loggedInUser;
 	}
 
 	get(id: string, type = USER_FETCH_TYPE_SLIM) {
@@ -55,15 +51,21 @@ export class UserService {
 		return this._http.post('/user', user).map((res: Response) => res.json());
 	}
 
-	update(changes) {
-		console.log('changes!', changes);
+	update(changes, toServer = true) {
 		this.model.set(changes);
 
-		return this._http.put('/user/', changes).subscribe(() => {
-			this._alertService.success('Settings updated')
-		}, () => {
-			this._alertService.error('Error updating settings')
-		});
+		if (toServer) {
+			return this._http.put('/user/' + this.model.get('_id'), changes).subscribe(() => {
+				this.storeLocalStoreUser();
+				this._alertService.success('Settings saved');
+			}, error => {
+				console.error(error);
+				this._alertService.error('Error saving settings')
+			});
+		}
+		else {
+			this._alertService.success('Settings saved');
+		}
 	}
 
 	toggleFollow(model: UserModel, state: boolean) {
@@ -123,7 +125,11 @@ export class UserService {
 		return subscription;
 	}
 
-	setSelfUser(data) {
-		this.model.set(data);
+	loadLocalStorageUser() {
+		return JSON.parse(localStorage.getItem('currentUser'));
+	}
+
+	storeLocalStoreUser() {
+		localStorage.setItem('currentUser', JSON.stringify(this.model.options));
 	}
 }

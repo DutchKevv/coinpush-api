@@ -1,6 +1,6 @@
 import * as request from 'request-promise';
 import * as redis from '../modules/redis';
-import {CHANNEL_TYPE_MAIN, REDIS_USER_PREFIX} from '../../../shared/constants/constants';
+import {CHANNEL_TYPE_MAIN, USER_FETCH_TYPE_ACCOUNT_DETAILS, USER_FETCH_TYPE_FULL} from '../../../shared/constants/constants';
 import {channelController} from './channel.controller';
 
 const config = require('../../../tradejs.config');
@@ -8,17 +8,25 @@ const config = require('../../../tradejs.config');
 export const userController = {
 
 	async find(reqUser: {id: string}, userId: string, params: any = {}): Promise<any> {
+
 		const results = await Promise.all([
-			request({uri: config.server.user.apiUrl + '/user/' + userId, qs: {type: params.type}, headers: {_id: reqUser.id}, json: true}),
-			request({uri: config.server.channel.apiUrl + '/channel/', qs: {user: userId}, headers: {_id: reqUser.id}, json: true}),
+			this._getUser(reqUser, userId, params.type),
+			channelController.findByUserId(reqUser, userId),
 		]);
 
-		console.log(results[0], results[1].user[0]);
 		return Object.assign({}, results[0] || {}, results[1].user[0] || {});
 	},
 
 	async findMany(reqUserId: string, params): Promise<Array<any>> {
 		return request({uri: config.server.user.apiUrl + '/user/' + reqUserId, json: true})
+	},
+
+	async getBalance(reqUser, userId) {
+		const user = await this._getUser(reqUser, userId, USER_FETCH_TYPE_ACCOUNT_DETAILS);
+
+		if (user) {
+			return user.balance;
+		}
 	},
 
 	async create(reqUser, params): Promise<{user: any, channel: any}> {
@@ -28,6 +36,7 @@ export const userController = {
 			// create user
 			user = await request({
 				uri: config.server.user.apiUrl + '/user',
+				headers: {'_id': reqUser.id},
 				method: 'POST',
 				body: params,
 				json: true
@@ -54,15 +63,20 @@ export const userController = {
 		}
 	},
 
-	getOverviewList() {
-
-	},
-
-	async update(reqUser, params) {
-
-		// create user
+	update(reqUser, params) {
 		return request({
 			uri: config.server.user.apiUrl + '/user/' + reqUser.id,
+			headers: {'_id': reqUser.id},
+			method: 'PUT',
+			body: params,
+			json: true
+		});
+	},
+
+	updateBalance(reqUser, params) {
+		return request({
+			uri: config.server.user.apiUrl + '/wallet/' + reqUser.id,
+			headers: {'_id': reqUser.id},
 			method: 'PUT',
 			body: params,
 			json: true
@@ -117,16 +131,7 @@ export const userController = {
 
 	},
 
-	getSelf(userId: string): Promise<any> {
-		let REDIS_KEY = REDIS_USER_PREFIX + userId;
-
-		return new Promise((resolve, reject) => {
-			redis.client.get(REDIS_KEY, (err, content) => {
-				if (!err)
-					return resolve(JSON.parse(content));
-
-				this.find(userId);
-			});
-		});
+	_getUser(reqUser, userId, type) {
+		return request({uri: config.server.user.apiUrl + '/user/' + userId, qs: {type}, headers: {_id: reqUser.id}, json: true})
 	}
 };

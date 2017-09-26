@@ -28,14 +28,18 @@ app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Headers', '_id, Authorization, Origin, X-Requested-With, Content-Type, Accept');
     next();
 });
+/**
+ * Add 'user' variable to request, holding userID
+ */
 app.use((req, res, next) => {
-    if (req.user)
-        req.user.id = req.headers._id = req.user.sub;
-    else
-        req.user = {};
+    let userId = req.headers['_id'];
+    // if (!userId)
+    // 	res.status(400).send('Invalid request: _id header is missing');
+    req.user = { id: userId };
     next();
 });
 app.use('/user', require('./api/user.api'));
+app.use('/wallet', require('./api/wallet.api'));
 app.use('/authenticate', require('./api/authenticate.api'));
 app.use('/search', require('./api/search.api'));
 //# sourceMappingURL=app.js.map

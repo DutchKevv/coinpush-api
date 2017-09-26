@@ -40,6 +40,7 @@ export interface IApp {
 	}
 }
 
+
 /**
  * @class App
  */

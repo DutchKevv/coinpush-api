@@ -1,21 +1,25 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const request = require("request-promise");
-const redis = require("../modules/redis");
 const constants_1 = require("../../../shared/constants/constants");
 const channel_controller_1 = require("./channel.controller");
 const config = require('../../../tradejs.config');
 exports.userController = {
     async find(reqUser, userId, params = {}) {
         const results = await Promise.all([
-            request({ uri: config.server.user.apiUrl + '/user/' + userId, qs: { type: params.type }, headers: { _id: reqUser.id }, json: true }),
-            request({ uri: config.server.channel.apiUrl + '/channel/', qs: { user: userId }, headers: { _id: reqUser.id }, json: true }),
+            this._getUser(reqUser, userId, params.type),
+            channel_controller_1.channelController.findByUserId(reqUser, userId),
         ]);
-        console.log(results[0], results[1].user[0]);
         return Object.assign({}, results[0] || {}, results[1].user[0] || {});
     },
     async findMany(reqUserId, params) {
         return request({ uri: config.server.user.apiUrl + '/user/' + reqUserId, json: true });
+    },
+    async getBalance(reqUser, userId) {
+        const user = await this._getUser(reqUser, userId, constants_1.USER_FETCH_TYPE_ACCOUNT_DETAILS);
+        if (user) {
+            return user.balance;
+        }
     },
     async create(reqUser, params) {
         let user, channel;
@@ -23,6 +27,7 @@ exports.userController = {
             // create user
             user = await request({
                 uri: config.server.user.apiUrl + '/user',
+                headers: { '_id': reqUser.id },
                 method: 'POST',
                 body: params,
                 json: true
@@ -44,12 +49,19 @@ exports.userController = {
             throw new Error(error);
         }
     },
-    getOverviewList() {
-    },
-    async update(reqUser, params) {
-        // create user
+    update(reqUser, params) {
         return request({
             uri: config.server.user.apiUrl + '/user/' + reqUser.id,
+            headers: { '_id': reqUser.id },
+            method: 'PUT',
+            body: params,
+            json: true
+        });
+    },
+    updateBalance(reqUser, params) {
+        return request({
+            uri: config.server.user.apiUrl + '/wallet/' + reqUser.id,
+            headers: { '_id': reqUser.id },
             method: 'PUT',
             body: params,
             json: true
@@ -93,15 +105,8 @@ exports.userController = {
     },
     remove(reqUser, userId) {
     },
-    getSelf(userId) {
-        let REDIS_KEY = constants_1.REDIS_USER_PREFIX + userId;
-        return new Promise((resolve, reject) => {
-            redis.client.get(REDIS_KEY, (err, content) => {
-                if (!err)
-                    return resolve(JSON.parse(content));
-                this.find(userId);
-            });
-        });
+    _getUser(reqUser, userId, type) {
+        return request({ uri: config.server.user.apiUrl + '/user/' + userId, qs: { type }, headers: { _id: reqUser.id }, json: true });
     }
 };
 //# sourceMappingURL=user.controller.js.map

@@ -56,8 +56,6 @@ router.post('/:id/copy', async (req, res, next) => {
  * Create
  */
 router.post('/', async (req, res, next) => {
-	console.log('POST POST POST!!')
-
 	try {
 		res.send(await userController.create(req.user, req.body));
 	} catch (error) {
@@ -69,9 +67,9 @@ router.post('/', async (req, res, next) => {
 /**
  * Update
  */
-router.put('/', async (req, res, next) => {
+router.put('/:id', async (req, res, next) => {
 	try {
-		res.send(await userController.update(req.user.id, req.body));
+		res.send(await userController.update(req.user, req.body));
 	} catch (error) {
 		console.error(error);
 		next(error);

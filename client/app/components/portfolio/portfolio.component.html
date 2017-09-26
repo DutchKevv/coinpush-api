@@ -78,7 +78,7 @@
         <!--<a><i class="fa fa-glass"></i></a>-->
     </div>
     <div class="chart-container" style="height: 40%; width: 100%; display: block;">
-        <chart-box *ngIf="activeSymbol" [model]="activeSymbol" [showBox]="false"
+        <chart-box *ngIf="activeSymbol$ | async as symbolModel" [model]="symbolModel" [showBox]="false"
                    style="position: static; height: 100%; width: 100%; display: block; border: none"></chart-box>
     </div>
 </div>

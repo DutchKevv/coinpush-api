@@ -1,10 +1,9 @@
 import {client} from '../modules/redis';
 import {Channel} from '../schemas/channel';
-import * as mongoose from 'mongoose';
+import {Types} from 'mongoose';
 import {CHANNEL_TYPE_CUSTOM, CHANNEL_TYPE_MAIN} from '../../../shared/constants/constants';
 
 const config = require('../../../tradejs.config');
-const ObjectID = require('mongodb').ObjectID;
 
 client.subscribe('user-created');
 
@@ -96,11 +95,12 @@ export const channelController = {
 	},
 
 	update(reqUser, channelId, params): Promise<any> {
-		return Channel.update({_id: mongoose.Types.ObjectId(channelId), type: CHANNEL_TYPE_MAIN}, params);
+		return Channel.update({_id: Types.ObjectId(channelId), type: CHANNEL_TYPE_MAIN}, params);
 	},
 
-	updateByUserId(reqUser, userId, params): Promise<any> {
-		return Channel.update({user_id: mongoose.Types.ObjectId(userId), type: CHANNEL_TYPE_MAIN}, params);
+	updateByUserId(reqUser: {id: string}, userId: string, params): Promise<any> {
+		console.log('USER USR UER SUDF SDFSDF', userId, params);
+		return Channel.update({user_id: userId, type: CHANNEL_TYPE_MAIN}, params);
 	},
 
 	async toggleFollow(reqUser: {id: string}, channelId: string, state?: boolean): Promise<any> {
@@ -112,7 +112,7 @@ export const channelController = {
 		if (!channel)
 			throw new Error('Channel not found');
 
-		if (channel.user_id === reqUser.id)
+		if (channel.user_id.toString() === reqUser.id)
 			throw new Error('Cannot follow self managed channels');
 
 		const isFollowing = channel.followers && channel.followers.indexOf(reqUser.id) > -1;
@@ -140,14 +140,14 @@ export const channelController = {
 		const isCopying = channel.copiers && channel.copiers.indexOf(reqUser.id) > -1;
 		console.log('isCopying isCopying isCopying isCopying', isCopying, channel);
 		if (isCopying)
-			await channel.update({$pull: {copiers: ObjectID(reqUser.id)}});
+			await channel.update({$pull: {copiers: Types.ObjectId(reqUser.id)}});
 		else
-			await channel.update({$addToSet: {copiers: ObjectID(reqUser.id)}});
+			await channel.update({$addToSet: {copiers: Types.ObjectId(reqUser.id)}});
 
 		return {state: !isCopying};
 	},
 
 	delete(userId: string, id: string): Promise<any> {
-		return Channel.deleteOne({_id: mongoose.Types.ObjectId(id), user_id: mongoose.Types.ObjectId(userId)});
+		return Channel.deleteOne({_id: Types.ObjectId(id), user_id: Types.ObjectId(userId)});
 	}
 };

@@ -3,7 +3,7 @@ import * as bcrypt from 'bcrypt';
 import {isEmail} from 'validator';
 import {join} from 'path';
 import * as jwt from 'jsonwebtoken';
-import {BROKER_GENERAL_TYPE_OANDA} from '../../../shared/constants/constants';
+import {BROKER_GENERAL_TYPE_OANDA, LEVERAGE_TYPE_1} from '../../../shared/constants/constants';
 
 const config = require('../../../tradejs.config');
 
@@ -20,21 +20,13 @@ const UserSchema = new Schema({
 		type: Number,
 		default: 0
 	},
-	username: {
-		type: String,
-		unique: true,
-		required: true,
-		trim: true
+	leverage: {
+		type: Number,
+		default: LEVERAGE_TYPE_1
 	},
 	password: {
 		type: String,
 		required: true,
-	},
-	profileImg: {
-		type: String,
-		required: false,
-		trim: true,
-		default: ''
 	},
 	country: {
 		type: String,
@@ -47,12 +39,6 @@ const UserSchema = new Schema({
 		required: false,
 		trim: true
 	},
-	description: {
-		type: String,
-		required: false,
-		trim: true,
-		default: ''
-	},
 	// TODO
 	copying: {
 		type: [Schema.Types.ObjectId],
@@ -62,11 +48,6 @@ const UserSchema = new Schema({
 	// TODO
 	following: {
 		type: [Schema.Types.ObjectId],
-		required: false,
-		default: []
-	},
-	channels: {
-		type: Array,
 		required: false,
 		default: []
 	},
@@ -123,8 +104,6 @@ UserSchema.statics.authenticate = function (email, password) {
 				resolve({
 					_id: user._id,
 					username: user.username,
-					email: user.email,
-					profileImg: user.profileImg,
 					token: jwt.sign({sub: user._id}, config.token.secret)
 				});
 			});
@@ -148,22 +127,6 @@ UserSchema.statics.toggleFollow = async function(from, to) {
 			User.update({_id: to}, {$addToSet: {followers: Types.ObjectId(from)}})
 		]).then(() => ({state: !isFollowing}));
 	}
-};
-
-/**
- * Transform image filename to full url
- * @param filename
- * @returns {any}
- */
-UserSchema.statics.normalizeProfileImg = function(filename) {
-	if (filename) {
-		if (filename.indexOf('http://') > -1)
-			return filename;
-
-		return join(config.image.profileBaseUrl,  filename);
-	}
-	else
-		return config.image.profileDefaultUrl;
 };
 
 // hashing a password before saving it to the database

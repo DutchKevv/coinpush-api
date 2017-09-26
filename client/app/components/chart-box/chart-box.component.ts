@@ -2,7 +2,7 @@ import {forEach, random, throttle} from 'lodash';
 import {
 	Component, OnDestroy, ElementRef, Input, ViewChild,
 	OnInit, AfterViewInit, ChangeDetectionStrategy, ViewEncapsulation, ContentChild, NgZone, Output, EventEmitter,
-	ChangeDetectorRef
+	ChangeDetectorRef, SimpleChanges, OnChanges
 } from '@angular/core';
 
 import {DialogComponent} from '../dialog/dialog.component';
@@ -30,14 +30,15 @@ declare let getEventListeners: any;
 		'./chart-box.component.scss'
 	],
 	encapsulation: ViewEncapsulation.Native,
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	// changeDetection: ChangeDetectionStrategy.OnPush,
 	entryComponents: [DialogComponent]
 })
 
 
-export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
+export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
 
 	@Input() model: InstrumentModel;
+
 	@Input() showBox: Boolean = false;
 	@Input() quickBuy: Boolean = false;
 	@Output() loading$ = new BehaviorSubject(true);
@@ -62,6 +63,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	private minimized = false;
 
+	private _model;
 	private _offset = 0;
 	private _scrollOffset = -1;
 	private _scrollSpeedStep = 6;
@@ -110,6 +112,10 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit {
 				private _cookieService: CookieService,
 				private _elementRef: ElementRef,
 				private _orderService: OrderService) {
+	}
+
+	ngOnChanges(changes: SimpleChanges) {
+		console.log(changes);
 	}
 
 	ngOnInit() {

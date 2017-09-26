@@ -31,7 +31,7 @@ export class UserOverviewComponent implements OnInit, OnDestroy, AfterViewChecke
 	}
 
 	ngOnInit() {
-		return this.userService.getOverview().subscribe((users: Array<UserModel>) => this.users$.next(users));
+		return this.userService.getOverview().subscribe((users: Array<UserModel>) => this.users$.next(users.reverse()));
 	}
 
 	ngAfterViewChecked() {

@@ -14,27 +14,25 @@ proxy.on('error', function (err, req, res) {
 /**
  * Single
  */
-router.get('/:id', function (req, res, next) {
-	console.log(req.query);
+router.get('/:id', async (req, res, next) => {
+	try {
+		res.send(await channelController.findById(req.user, req.params.id));
+	} catch (error) {
+		console.error(error);
+		next(error);
+	}
 });
 
 /**
  * List
  */
 router.get('/', async (req, res, next) => {
-
-	// Get user main channel
-	const channels = await request({
-		uri: config.server.channel.apiUrl + '/channel/',
-		method: 'GET',
-		headers: {'_id': req.user.id},
-		qs: {
-			user: req.query.user || req.user.id
-		},
-		json: true
-	});
-
-	res.send(channels)
+	try {
+		res.send(await channelController.findByUserId(req.user, req.query.user || req.user.id));
+	} catch (error) {
+		console.error(error);
+		next(error);
+	}
 });
 
 /**
@@ -61,15 +59,25 @@ router.post('/', function (req, res, next) {
 /**
  * Update
  */
-router.put('/', function (req, res, next) {
-	channelController.create(req.user.id, req.body)
+router.put('/:id', async (req, res, next) => {
+	try {
+		res.send(await channelController.update(req.user, req.params.id, req.body));
+	} catch (error) {
+		console.error(error);
+		next(error);
+	}
 });
 
 /**
  * Delete
  */
-router.delete('/', function (req, res, next) {
-	channelController.create(req.user.id, req.body)
+router.delete('/:id', async (req, res, next) => {
+	try {
+		res.send(await channelController.remove(req.user, req.params.id));
+	} catch (error) {
+		console.error(error);
+		next(error);
+	}
 });
 
 export = router;

@@ -7,27 +7,39 @@ const config = require('../../../tradejs.config');
 
 export const channelController = {
 
-	async find(reqUser, params): Promise<Array<any>> {
-
-		return Promise.resolve([]);
+	findById(reqUser, channelId): Promise<any> {
+		return request({
+			uri: config.server.channel.apiUrl + '/channel/' + channelId,
+			headers: {'_id': reqUser.id},
+			json: true
+		});
 	},
 
-	async findMany(reqUser, params): Promise<Array<any>> {
-		return await request({
+	findByUserId(reqUser, userId): Promise<any> {
+		return request({
+			uri: config.server.channel.apiUrl + '/channel/',
+			headers: {'_id': reqUser.id},
+			qs: {
+				user: userId
+			},
+			json: true
+		});
+	},
+
+	findMany(reqUser, params): Promise<Array<any>> {
+		return request({
 			uri: config.server.channel.apiUrl + '/channel',
 			headers: {'_id': reqUser.id},
 			json: true
 		});
 	},
 
-	create(reqUser, params: {name: string, type: number, profileImg?: string}) {
+	create(reqUser, params: { name: string, type: number, profileImg?: string }) {
 
 		return request({
 			uri: config.server.channel.apiUrl + '/channel/',
 			method: 'POST',
-			headers: {
-				'_id': reqUser.id
-			},
+			headers: {'_id': reqUser.id},
 			body: params,
 			json: true
 		});
@@ -37,9 +49,8 @@ export const channelController = {
 		return request({
 			uri: config.server.channel.apiUrl + '/channel/' + channelId,
 			method: 'PUT',
-			headers: {
-				'_id': reqUser.id
-			},
+			body: params,
+			headers: {'_id': reqUser.id},
 			json: true
 		});
 	},
@@ -48,39 +59,29 @@ export const channelController = {
 		return request({
 			uri: config.server.channel.apiUrl + '/channel/',
 			method: 'PUT',
-			headers: {
-				'_id': reqUser.id
-			},
-			qs: {
-				user: userId
-			},
+			body: params,
+			headers: {'_id': reqUser.id},
+			qs: {user: userId},
 			json: true
 		});
 	},
 
-	async toggleFollow(followerId, channelId?: boolean) {
-		// Subscribe to channel
+	async toggleFollow(followerId: string, channelId: string) {
 		const result = await request({
 			uri: config.server.channel.apiUrl + '/channel/' + channelId + '/follow',
 			method: 'POST',
-			headers: {
-				'_id': followerId
-			},
+			headers: {'_id': followerId},
 			json: true
 		});
 
 		return result;
 	},
 
-	async toggleCopy(followerId, channelId) {
-
-		// Subscribe to channel
+	async toggleCopy(followerId: string, channelId: string) {
 		const result = await request({
 			uri: config.server.channel.apiUrl + '/channel/' + channelId + '/copy',
 			method: 'POST',
-			headers: {
-				'_id': followerId
-			},
+			headers: {'_id': followerId},
 			json: true
 		});
 

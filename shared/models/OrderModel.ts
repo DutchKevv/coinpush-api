@@ -11,6 +11,7 @@ export class OrderModel extends BaseModel {
 		amount: 0,
 		symbol: null,
 		stopLoss: 0,
+		balance: 0,
 		takeProfit: 0,
 		magic: 0,
 		profit: 0,

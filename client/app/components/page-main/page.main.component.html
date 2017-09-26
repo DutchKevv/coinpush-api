@@ -1,7 +1,7 @@
 <nav class="nav-main">
     <a [routerLink]="['/main/user/profile/', userService.model.get('_id')]" [routerLinkActive]="['active']" class="profile">
-        <img class="logo" width="70" height="70" src="{{userService.model.options.profileImg}}">
-        <h4>{{userService.model.options.username}}</h4>
+        <img class="logo" width="70" height="70" src="{{(userService.model.options$ | async).profileImg}}">
+        <h4>{{userService.model.options.name}}</h4>
     </a>
 
     <a [routerLink]="['/main/channels']" [routerLinkActive]="['active']">
@@ -70,7 +70,7 @@
                     </a>
                     <a *ngFor="let user of result.users" [routerLink]="['/main/user/profile/' + user._id]">
                         <img src="{{user.profileImg}}">
-                        <span>{{user.username}}</span>
+                        <span>{{user.name}}</span>
                     </a>
                 </div>
             </div>

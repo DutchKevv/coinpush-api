@@ -3,11 +3,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const request = require("request-promise");
 const config = require('../../../tradejs.config');
 exports.channelController = {
-    async find(reqUser, params) {
-        return Promise.resolve([]);
+    findById(reqUser, channelId) {
+        return request({
+            uri: config.server.channel.apiUrl + '/channel/' + channelId,
+            headers: { '_id': reqUser.id },
+            json: true
+        });
     },
-    async findMany(reqUser, params) {
-        return await request({
+    findByUserId(reqUser, userId) {
+        return request({
+            uri: config.server.channel.apiUrl + '/channel/',
+            headers: { '_id': reqUser.id },
+            qs: {
+                user: userId
+            },
+            json: true
+        });
+    },
+    findMany(reqUser, params) {
+        return request({
             uri: config.server.channel.apiUrl + '/channel',
             headers: { '_id': reqUser.id },
             json: true
@@ -17,9 +31,7 @@ exports.channelController = {
         return request({
             uri: config.server.channel.apiUrl + '/channel/',
             method: 'POST',
-            headers: {
-                '_id': reqUser.id
-            },
+            headers: { '_id': reqUser.id },
             body: params,
             json: true
         });
@@ -28,9 +40,8 @@ exports.channelController = {
         return request({
             uri: config.server.channel.apiUrl + '/channel/' + channelId,
             method: 'PUT',
-            headers: {
-                '_id': reqUser.id
-            },
+            body: params,
+            headers: { '_id': reqUser.id },
             json: true
         });
     },
@@ -38,35 +49,26 @@ exports.channelController = {
         return request({
             uri: config.server.channel.apiUrl + '/channel/',
             method: 'PUT',
-            headers: {
-                '_id': reqUser.id
-            },
-            qs: {
-                user: userId
-            },
+            body: params,
+            headers: { '_id': reqUser.id },
+            qs: { user: userId },
             json: true
         });
     },
     async toggleFollow(followerId, channelId) {
-        // Subscribe to channel
         const result = await request({
             uri: config.server.channel.apiUrl + '/channel/' + channelId + '/follow',
             method: 'POST',
-            headers: {
-                '_id': followerId
-            },
+            headers: { '_id': followerId },
             json: true
         });
         return result;
     },
     async toggleCopy(followerId, channelId) {
-        // Subscribe to channel
         const result = await request({
             uri: config.server.channel.apiUrl + '/channel/' + channelId + '/copy',
             method: 'POST',
-            headers: {
-                '_id': followerId
-            },
+            headers: { '_id': followerId },
             json: true
         });
         return result;

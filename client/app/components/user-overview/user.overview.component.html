@@ -79,7 +79,9 @@
     <section class="editor-choices">
         <div *ngFor="let model of users$ | async" class="card clearfix">
             <ng-container *ngIf="model.options$ | async as options">
-                <header [style.background]="'url(' + model.options.profileImg + ')'"></header>
+                <header [style.background]="'url(' + model.options.profileImg + ')'">
+                    <a [routerLink]="['/main/user/profile/', options.user_id]" [routerLinkActive]="['active']"></a>
+                </header>
                 <main>
                     <h4><a>{{model.options.name}}</a></h4>
                     <h3 class="roi">114.2 %</h3>

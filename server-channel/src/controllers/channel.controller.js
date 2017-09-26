@@ -2,10 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const redis_1 = require("../modules/redis");
 const channel_1 = require("../schemas/channel");
-const mongoose = require("mongoose");
+const mongoose_1 = require("mongoose");
 const constants_1 = require("../../../shared/constants/constants");
 const config = require('../../../tradejs.config');
-const ObjectID = require('mongodb').ObjectID;
 redis_1.client.subscribe('user-created');
 redis_1.client.on('message', async (channel, message) => {
     console.log(channel + ': ' + message);
@@ -78,10 +77,11 @@ exports.channelController = {
         });
     },
     update(reqUser, channelId, params) {
-        return channel_1.Channel.update({ _id: mongoose.Types.ObjectId(channelId), type: constants_1.CHANNEL_TYPE_MAIN }, params);
+        return channel_1.Channel.update({ _id: mongoose_1.Types.ObjectId(channelId), type: constants_1.CHANNEL_TYPE_MAIN }, params);
     },
     updateByUserId(reqUser, userId, params) {
-        return channel_1.Channel.update({ user_id: mongoose.Types.ObjectId(userId), type: constants_1.CHANNEL_TYPE_MAIN }, params);
+        console.log('USER USR UER SUDF SDFSDF', userId, params);
+        return channel_1.Channel.update({ user_id: userId, type: constants_1.CHANNEL_TYPE_MAIN }, params);
     },
     async toggleFollow(reqUser, channelId, state) {
         console.log(reqUser.id, channelId, state);
@@ -89,7 +89,7 @@ exports.channelController = {
         // Validity checks
         if (!channel)
             throw new Error('Channel not found');
-        if (channel.user_id === reqUser.id)
+        if (channel.user_id.toString() === reqUser.id)
             throw new Error('Cannot follow self managed channels');
         const isFollowing = channel.followers && channel.followers.indexOf(reqUser.id) > -1;
         if (isFollowing)
@@ -109,13 +109,13 @@ exports.channelController = {
         const isCopying = channel.copiers && channel.copiers.indexOf(reqUser.id) > -1;
         console.log('isCopying isCopying isCopying isCopying', isCopying, channel);
         if (isCopying)
-            await channel.update({ $pull: { copiers: ObjectID(reqUser.id) } });
+            await channel.update({ $pull: { copiers: mongoose_1.Types.ObjectId(reqUser.id) } });
         else
-            await channel.update({ $addToSet: { copiers: ObjectID(reqUser.id) } });
+            await channel.update({ $addToSet: { copiers: mongoose_1.Types.ObjectId(reqUser.id) } });
         return { state: !isCopying };
     },
     delete(userId, id) {
-        return channel_1.Channel.deleteOne({ _id: mongoose.Types.ObjectId(id), user_id: mongoose.Types.ObjectId(userId) });
+        return channel_1.Channel.deleteOne({ _id: mongoose_1.Types.ObjectId(id), user_id: mongoose_1.Types.ObjectId(userId) });
     }
 };
 //# sourceMappingURL=channel.controller.js.map

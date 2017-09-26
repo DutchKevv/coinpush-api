@@ -30,15 +30,20 @@ app.use(function (req, res, next) {
 	next();
 });
 
-app.use((req, res, next) => {
-	if (req.user)
-		req.user.id = req.headers._id = req.user.sub;
-	else
-		req.user = {};
+/**
+ * Add 'user' variable to request, holding userID
+ */
+app.use((req: any, res, next) => {
+	let userId = req.headers['_id'];
 
+	// if (!userId)
+	// 	res.status(400).send('Invalid request: _id header is missing');
+
+	req.user = {id: userId};
 	next();
 });
 
 app.use('/user', require('./api/user.api'));
+app.use('/wallet', require('./api/wallet.api'));
 app.use('/authenticate', require('./api/authenticate.api'));
 app.use('/search', require('./api/search.api'));

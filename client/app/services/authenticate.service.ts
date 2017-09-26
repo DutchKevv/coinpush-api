@@ -19,7 +19,7 @@ export class AuthenticationService {
 		return localStorage.getItem('currentUser');
 	}
 
-	removeToken() {
+	removeCurrentUser() {
 		localStorage.removeItem('currentUser');
 	}
 
@@ -44,8 +44,7 @@ export class AuthenticationService {
 	}
 
 	logout() {
-		// remove user from local storage to log user out
-		this.removeToken();
+		this.removeCurrentUser();
 		this.router.navigate(['/login']);
 	}
 }

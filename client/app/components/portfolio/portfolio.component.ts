@@ -1,7 +1,7 @@
 import {debounce} from 'lodash';
 import {
 	Component, OnInit, OnDestroy, ChangeDetectionStrategy,
-	AfterViewChecked, ViewEncapsulation, Output, Pipe, PipeTransform, ChangeDetectorRef, NgZone
+	AfterViewChecked, ViewEncapsulation, Output, Pipe, PipeTransform, ChangeDetectorRef, NgZone, ViewChild
 } from '@angular/core';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {OrderService} from '../../services/order.service';
@@ -10,6 +10,7 @@ import {CacheService} from '../../services/cache.service';
 import {OrderModel} from '../../../../shared/models/OrderModel';
 import {UserService} from '../../services/user.service';
 import {InstrumentModel} from '../../../../shared/models/InstrumentModel';
+import {ChartBoxComponent} from '../chart-box/chart-box.component';
 
 declare let $: any;
 
@@ -66,15 +67,11 @@ export class PortfolioComponent implements OnInit, OnDestroy {
 	public totalAllocated: Number = 0;
 	public activeSymbol$: BehaviorSubject<InstrumentModel> = new BehaviorSubject(null);
 
-	public activeSymbol;
 	private _ordersSubscription;
 
 	constructor(public constantsService: ConstantsService,
 				public userService: UserService,
-				public orderService: OrderService,
-				public cacheService: CacheService,
-				private _zone: NgZone,
-				private cdRef: ChangeDetectorRef) {
+				public orderService: OrderService) {
 	}
 
 	ngOnInit() {
@@ -94,17 +91,13 @@ export class PortfolioComponent implements OnInit, OnDestroy {
 	}
 
 	public toggleRow(el, symbol: string): void {
+
 		let isOpen = !el.classList.contains('open');
 
 		this.activeSymbol$.next(new InstrumentModel({
 			symbol: symbol,
 			timeFrame: 'M15'
 		}));
-
-		this.activeSymbol = new InstrumentModel({
-			symbol: symbol,
-			timeFrame: 'M15'
-		});
 
 		el.classList.toggle('open', isOpen);
 	}

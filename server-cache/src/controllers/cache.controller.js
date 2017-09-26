@@ -8,7 +8,6 @@ const logger_1 = require("../../../shared/logger");
 const oanda_1 = require("../../../shared/brokers/oanda");
 const CacheMap_1 = require("../../../shared/classes/cache/CacheMap");
 const cache_datalayer_1 = require("./cache.datalayer");
-const constants_1 = require("../../../shared/constants/constants");
 // export default class Cache {
 //
 // 	public static READ_COUNT_DEFAULT = 500;
@@ -275,6 +274,7 @@ exports.cacheController = {
             symbol.favorite = oanda_1.default.FAVORITE_SYMBOLS.indexOf(symbol.name) > -1;
         });
         this.symbols = symbolList;
+        this._updateRedis(this.symbols);
         await cache_datalayer_1.dataLayer.setModels(symbolList.map(symbol => symbol.name));
         logger_1.log.info('Cache', 'Symbol list loaded');
     },
@@ -294,16 +294,6 @@ exports.cacheController = {
         await cache_datalayer_1.dataLayer.setModels(this.symbols.map(_symbol => _symbol.name));
         logger_1.log.info('Cache', 'Reset complete');
     },
-    async getCached(key, fields) {
-        return new Promise((resolve, reject) => {
-            redis.client.get(key, function (err, reply) {
-                if (err)
-                    reject(err);
-                else
-                    resolve(JSON.parse(reply));
-            });
-        });
-    },
     startBroadcastInterval(io) {
         this._tickIntervalTimer = setInterval(() => {
             if (!Object.getOwnPropertyNames(this._tickBuffer).length)
@@ -312,19 +302,23 @@ exports.cacheController = {
             this._tickBuffer = {};
         }, 200);
     },
+    _updateRedis(symbols) {
+        symbols.forEach(symbol => redis.client.set(`symbol-${symbol.name}`, JSON.stringify(symbol)));
+    },
     _onTickReceive(tick) {
         if (!this._tickBuffer[tick.instrument])
             this._tickBuffer[tick.instrument] = [];
+        let symbolObj = this.symbols.find(symbol => symbol.name === tick.instrument);
+        symbolObj.bid = tick.bid;
+        symbolObj.ask = tick.ask;
+        symbolObj.lastTick = tick.time;
+        this._updateRedis([symbolObj]);
         this._tickBuffer[tick.instrument].push([tick.time, tick.bid, tick.ask]);
     },
     async _initBrokerApi() {
         await this.destroyBrokerApi();
         this._brokerApi = new oanda_1.default(config.broker.account);
-        this._brokerApi.on('error', (error) => {
-            if (error.code === constants_1.BROKER_HEARTBEAT_TIMEOUT) {
-                this._initBrokerApi().catch(console.error);
-            }
-        });
+        this._brokerApi.on('stream-timeout', () => { this._initBrokerApi().catch(console.error); });
         await this._brokerApi.init();
         await this.loadAvailableSymbols();
         await this.openTickStream();

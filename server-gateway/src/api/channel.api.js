@@ -1,7 +1,6 @@
 "use strict";
 const express_1 = require("express");
 const httpProxy = require("http-proxy");
-const request = require("request-promise");
 const channel_controller_1 = require("../controllers/channel.controller");
 const config = require('../../../tradejs.config');
 const router = express_1.Router();
@@ -12,24 +11,26 @@ proxy.on('error', function (err, req, res) {
 /**
  * Single
  */
-router.get('/:id', function (req, res, next) {
-    console.log(req.query);
+router.get('/:id', async (req, res, next) => {
+    try {
+        res.send(await channel_controller_1.channelController.findById(req.user, req.params.id));
+    }
+    catch (error) {
+        console.error(error);
+        next(error);
+    }
 });
 /**
  * List
  */
 router.get('/', async (req, res, next) => {
-    // Get user main channel
-    const channels = await request({
-        uri: config.server.channel.apiUrl + '/channel/',
-        method: 'GET',
-        headers: { '_id': req.user.id },
-        qs: {
-            user: req.query.user || req.user.id
-        },
-        json: true
-    });
-    res.send(channels);
+    try {
+        res.send(await channel_controller_1.channelController.findByUserId(req.user, req.query.user || req.user.id));
+    }
+    catch (error) {
+        console.error(error);
+        next(error);
+    }
 });
 /**
  * Follow
@@ -53,14 +54,26 @@ router.post('/', function (req, res, next) {
 /**
  * Update
  */
-router.put('/', function (req, res, next) {
-    channel_controller_1.channelController.create(req.user.id, req.body);
+router.put('/:id', async (req, res, next) => {
+    try {
+        res.send(await channel_controller_1.channelController.update(req.user, req.params.id, req.body));
+    }
+    catch (error) {
+        console.error(error);
+        next(error);
+    }
 });
 /**
  * Delete
  */
-router.delete('/', function (req, res, next) {
-    channel_controller_1.channelController.create(req.user.id, req.body);
+router.delete('/:id', async (req, res, next) => {
+    try {
+        res.send(await channel_controller_1.channelController.remove(req.user, req.params.id));
+    }
+    catch (error) {
+        console.error(error);
+        next(error);
+    }
 });
 module.exports = router;
 //# sourceMappingURL=channel.api.js.map

@@ -12,6 +12,11 @@ export class OrderService {
 
 	@Output() public orders$: BehaviorSubject<Array<OrderModel>> = new BehaviorSubject([]);
 
+	private _audio = {
+		fail: new Audio('sounds/fail.mp3'),
+		success: new Audio('sounds/success.mp3'),
+	};
+
 	constructor(private _constantsService: ConstantsService,
 				private _cacheService: CacheService,
 				private _userService: UserService,
@@ -43,19 +48,27 @@ export class OrderService {
 		const subscription = this.http.post('/order', options).map(res => console.log(res.json()) || this.createModel(res.json()));
 
 		subscription.subscribe((order: OrderModel) => {
-			this.orders$.getValue().push(order);
 
-			let file = options.side === this._constantsService.constants.ORDER_SIDE_BUY ? 'sounds/3.mp3' : 'sounds/2.mp3';
-			let audio = new Audio(file);
-			audio.play();
+			// Push order onto stack
+			this.orders$.getValue().push(order);
+			this._userService.model.set({balance: order.get('balance')});
+			this.calculateAccountStatus();
+
+			// Play success sound
+			this._audio.success.play();
+
+			// Show conformation box
 			this._alertService.success('Order set');
 		},  (error) => {
-			let audio = new Audio('sounds/fail.mp3');
-			audio.play();
+			console.log(error);
 
+			// Play fail sound
+			this._audio.fail.play();
+
+			// Try parsing information about failure
 			try {
 				error = JSON.parse(error);
-				this._alertService.error(error.error.error.message);
+				this._alertService.error(error.error.message);
 			} catch (error) {
 				this._alertService.error('Unknown error occurred');
 			}
@@ -76,7 +89,7 @@ export class OrderService {
 		const subscription = symbolOptions$.subscribe((options: any) => {
 			this.updateModel(model, options);
 
-			this._calculateAccountStatus()
+			this.calculateAccountStatus()
 		});
 
 		model.subscription.push(subscription);
@@ -104,7 +117,7 @@ export class OrderService {
 		return this.http.delete('/order/' + id);
 	}
 
-	private _calculateAccountStatus() {
+	calculateAccountStatus() {
 		const orders = this.orders$.getValue();
 
 		this._userService.accountStatus$.next({
