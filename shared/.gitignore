@@ -1,0 +1,9 @@
+node_modules
+*.js
+*.map
+
+engine/cmake-build-debug
+engine/CMakeFiles
+!engine/post-module.js
+!engine/pre-module.js
+!engine/StockTrading.js

@@ -63,7 +63,7 @@
                         <p><span class="followers">{{options.followersCount}}</span> followers</p>
                         <p><span class="followers">{{options.copiersCount}}</span> copiers</p>
                     </div>
-                    <div>
+                    <div *ngIf="options.user_id !== selfId">
                         <button *ngIf="!options.iCopy" (click)="channelService.toggleCopy(model, true)" class="btn btn-sm btn-success pull-right">Copy</button>
                         <button *ngIf="options.iCopy" (click)="channelService.toggleCopy(model, false)" class="btn btn-sm btn-danger pull-right">UnCopy</button>
                         <button *ngIf="!options.iFollow" (click)="channelService.toggleFollow(model, true)" class="btn btn-sm btn-success pull-right">Follow</button>
@@ -92,7 +92,7 @@
                         <p><span class="followers">{{options.followersCount}}</span> followers</p>
                         <p><span class="followers">{{options.copiersCount}}</span> copiers</p>
                     </div>
-                    <div>
+                    <div *ngIf="options.user_id !== selfId">
                         <button *ngIf="!options.iCopy" (click)="channelService.toggleCopy(model, true)" class="btn btn-sm btn-success pull-right">Copy</button>
                         <button *ngIf="options.iCopy" (click)="channelService.toggleCopy(model, false)" class="btn btn-sm btn-danger pull-right">UnCopy</button>
                         <button *ngIf="!options.iFollow" (click)="channelService.toggleFollow(model, true)" class="btn btn-sm btn-success pull-right">Follow</button>

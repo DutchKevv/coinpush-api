@@ -2876,7 +2876,9 @@ exports.CHANNEL_TYPE_MAIN = 0, exports.CHANNEL_TYPE_CUSTOM = 1,
  * REDIS
  */
 exports.REDIS_USER_PREFIX = 'user_';
+
 //# sourceMappingURL=constants.js.map
+
 
 /***/ }),
 /* 45 */
@@ -3818,6 +3820,14 @@ exports.decodePayloadAsBinary = function (data, binaryType, callback) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const events_1 = __webpack_require__(169);
 const merge = __webpack_require__(779);
@@ -3843,8 +3853,10 @@ class Base extends events_1.EventEmitter {
     get options() {
         return this._options;
     }
-    async init() {
-        this.initialized = true;
+    init() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.initialized = true;
+        });
     }
     get(key) {
         return typeof key === 'undefined' ? this._options : this._options[key];
@@ -3883,7 +3895,9 @@ Base.isWin = /^win/.test(process.platform);
 Base.isElectron = process && (process.env.ELECTRON || process.versions['electron']);
 Base.isNode = !!process;
 exports.Base = Base;
+
 //# sourceMappingURL=Base.js.map
+
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9)))
 
 /***/ }),
@@ -21563,7 +21577,9 @@ InstrumentModel.DEFAULTS = {
     }
 };
 exports.InstrumentModel = InstrumentModel;
+
 //# sourceMappingURL=InstrumentModel.js.map
+
 
 /***/ }),
 /* 105 */
@@ -22716,7 +22732,9 @@ class BaseModel extends Base_1.Base {
     }
 }
 exports.BaseModel = BaseModel;
+
 //# sourceMappingURL=BaseModel.js.map
+
 
 /***/ }),
 /* 147 */
@@ -32007,6 +32025,7 @@ let UserOverviewComponent = class UserOverviewComponent {
         this.channelService = channelService;
         this.userService = userService;
         this.users$ = new __WEBPACK_IMPORTED_MODULE_3_rxjs_BehaviorSubject__["BehaviorSubject"]([]);
+        this.selfId = this.userService.model.get('user_id');
     }
     ngOnInit() {
         return this.userService.getOverview().subscribe((users) => this.users$.next(users.reverse()));
@@ -54972,7 +54991,9 @@ class SystemState {
     }
 }
 exports.SystemState = SystemState;
+
 //# sourceMappingURL=SystemState.js.map
+
 
 /***/ }),
 /* 793 */
@@ -55592,7 +55613,9 @@ class Mapper {
 Mapper.MODE_PERSISTENT = 0;
 Mapper.MODE_MEMORY = 1;
 exports.default = Mapper;
+
 //# sourceMappingURL=CacheMap.js.map
+
 
 /***/ }),
 /* 813 */
@@ -55667,7 +55690,9 @@ function mergeRanges(ranges) {
     return stack;
 }
 exports.mergeRanges = mergeRanges;
+
 //# sourceMappingURL=util.date.js.map
+
 
 /***/ }),
 /* 814 */
@@ -55835,7 +55860,9 @@ OrderModel.DEFAULTS = {
     profitPerc: 0
 };
 exports.OrderModel = OrderModel;
+
 //# sourceMappingURL=OrderModel.js.map
+
 
 /***/ }),
 /* 825 */
@@ -55865,7 +55892,7 @@ module.exports = "<div class=\"simpleHeader\">\n    <img src=\"http://localhost/
 /* 829 */
 /***/ (function(module, exports) {
 
-module.exports = "<ul class=\"filter-options\">\n    <li class=\"form-group\">\n        <label for=\"exampleSelect1\">PEOPLE FROM</label>\n        <select class=\"form-control\" id=\"exampleSelect1\">\n            <option>1</option>\n            <option>2</option>\n            <option>3</option>\n            <option>4</option>\n            <option>5</option>\n        </select>\n    </li>\n    <li class=\"form-group\">\n        <label for=\"whoInvested\">WHO INVESTED IN</label>\n        <select class=\"form-control\" id=\"whoInvested\">\n            <option>1</option>\n            <option>2</option>\n            <option>3</option>\n            <option>4</option>\n            <option>5</option>\n        </select>\n    </li>\n    <li class=\"form-group\">\n        <label for=\"gainedMin\">GAINED AT LEAST</label>\n        <select class=\"form-control\" id=\"gainedMin\">\n            <option>1</option>\n            <option>2</option>\n            <option>3</option>\n            <option>4</option>\n            <option>5</option>\n        </select>\n    </li>\n    <li class=\"form-group\">\n        <label for=\"duringTime\">DURING THE</label>\n        <select class=\"form-control\" id=\"duringTime\">\n            <option>1</option>\n            <option>2</option>\n            <option>3</option>\n            <option>4</option>\n            <option>5</option>\n        </select>\n    </li>\n    <li class=\"form-group\">\n        <button class=\"btn btn-sm btn-success\">Go !</button>\n    </li>\n</ul>\n\n<div class=\"scroll-container\">\n    <h2 class=\"editors-choices-header\">Editors' Choice</h2>\n\n    <section class=\"editor-choices\">\n        <div *ngFor=\"let model of users$ | async\" class=\"card clearfix\" id=\"{{model.options._id}}\">\n            <ng-container *ngIf=\"model.options$ | async as options\">\n                <header [style.background]=\"'url(' + options.profileImg + ')'\">\n                    <a [routerLink]=\"['/main/user/profile/', options.user_id]\" [routerLinkActive]=\"['active']\"></a>\n                </header>\n                <main>\n                    <h4><a>{{model.options.name}}</a></h4>\n                    <h3 class=\"roi\">114.2 %</h3>\n                    <h4 style=\"color: #b7b7b7;\"><span>{{options.transactions}}</span> transactions</h4>\n                </main>\n                <footer>\n                    <div>\n                        <p><span class=\"followers\">{{options.followersCount}}</span> followers</p>\n                        <p><span class=\"followers\">{{options.copiersCount}}</span> copiers</p>\n                    </div>\n                    <div>\n                        <button *ngIf=\"!options.iCopy\" (click)=\"channelService.toggleCopy(model, true)\" class=\"btn btn-sm btn-success pull-right\">Copy</button>\n                        <button *ngIf=\"options.iCopy\" (click)=\"channelService.toggleCopy(model, false)\" class=\"btn btn-sm btn-danger pull-right\">UnCopy</button>\n                        <button *ngIf=\"!options.iFollow\" (click)=\"channelService.toggleFollow(model, true)\" class=\"btn btn-sm btn-success pull-right\">Follow</button>\n                        <button *ngIf=\"options.iFollow\" (click)=\"channelService.toggleFollow(model, false)\" class=\"btn btn-sm btn-danger pull-right\">UnFollow</button>\n                    </div>\n                </footer>\n            </ng-container>\n        </div>\n    </section>\n\n    <h2 class=\"editors-choices-header\">Top Investors</h2>\n\n    <section class=\"editor-choices\">\n        <div *ngFor=\"let model of users$ | async\" class=\"card clearfix\">\n            <ng-container *ngIf=\"model.options$ | async as options\">\n                <header [style.background]=\"'url(' + model.options.profileImg + ')'\">\n                    <a [routerLink]=\"['/main/user/profile/', options.user_id]\" [routerLinkActive]=\"['active']\"></a>\n                </header>\n                <main>\n                    <h4><a>{{model.options.name}}</a></h4>\n                    <h3 class=\"roi\">114.2 %</h3>\n                    <h4 style=\"color: #b7b7b7;\"><span>{{model.options.transactions}}</span> transactions</h4>\n                </main>\n                <footer>\n                    <div>\n                        <p><span class=\"followers\">{{options.followersCount}}</span> followers</p>\n                        <p><span class=\"followers\">{{options.copiersCount}}</span> copiers</p>\n                    </div>\n                    <div>\n                        <button *ngIf=\"!options.iCopy\" (click)=\"channelService.toggleCopy(model, true)\" class=\"btn btn-sm btn-success pull-right\">Copy</button>\n                        <button *ngIf=\"options.iCopy\" (click)=\"channelService.toggleCopy(model, false)\" class=\"btn btn-sm btn-danger pull-right\">UnCopy</button>\n                        <button *ngIf=\"!options.iFollow\" (click)=\"channelService.toggleFollow(model, true)\" class=\"btn btn-sm btn-success pull-right\">Follow</button>\n                        <button *ngIf=\"options.iFollow\" (click)=\"channelService.toggleFollow(model, false)\" class=\"btn btn-sm btn-danger pull-right\">UnFollow</button>\n                    </div>\n                </footer>\n            </ng-container>\n        </div>\n    </section>\n</div>"
+module.exports = "<ul class=\"filter-options\">\n    <li class=\"form-group\">\n        <label for=\"exampleSelect1\">PEOPLE FROM</label>\n        <select class=\"form-control\" id=\"exampleSelect1\">\n            <option>1</option>\n            <option>2</option>\n            <option>3</option>\n            <option>4</option>\n            <option>5</option>\n        </select>\n    </li>\n    <li class=\"form-group\">\n        <label for=\"whoInvested\">WHO INVESTED IN</label>\n        <select class=\"form-control\" id=\"whoInvested\">\n            <option>1</option>\n            <option>2</option>\n            <option>3</option>\n            <option>4</option>\n            <option>5</option>\n        </select>\n    </li>\n    <li class=\"form-group\">\n        <label for=\"gainedMin\">GAINED AT LEAST</label>\n        <select class=\"form-control\" id=\"gainedMin\">\n            <option>1</option>\n            <option>2</option>\n            <option>3</option>\n            <option>4</option>\n            <option>5</option>\n        </select>\n    </li>\n    <li class=\"form-group\">\n        <label for=\"duringTime\">DURING THE</label>\n        <select class=\"form-control\" id=\"duringTime\">\n            <option>1</option>\n            <option>2</option>\n            <option>3</option>\n            <option>4</option>\n            <option>5</option>\n        </select>\n    </li>\n    <li class=\"form-group\">\n        <button class=\"btn btn-sm btn-success\">Go !</button>\n    </li>\n</ul>\n\n<div class=\"scroll-container\">\n    <h2 class=\"editors-choices-header\">Editors' Choice</h2>\n\n    <section class=\"editor-choices\">\n        <div *ngFor=\"let model of users$ | async\" class=\"card clearfix\" id=\"{{model.options._id}}\">\n            <ng-container *ngIf=\"model.options$ | async as options\">\n                <header [style.background]=\"'url(' + options.profileImg + ')'\">\n                    <a [routerLink]=\"['/main/user/profile/', options.user_id]\" [routerLinkActive]=\"['active']\"></a>\n                </header>\n                <main>\n                    <h4><a>{{model.options.name}}</a></h4>\n                    <h3 class=\"roi\">114.2 %</h3>\n                    <h4 style=\"color: #b7b7b7;\"><span>{{options.transactions}}</span> transactions</h4>\n                </main>\n                <footer>\n                    <div>\n                        <p><span class=\"followers\">{{options.followersCount}}</span> followers</p>\n                        <p><span class=\"followers\">{{options.copiersCount}}</span> copiers</p>\n                    </div>\n                    <div *ngIf=\"options.user_id !== selfId\">\n                        <button *ngIf=\"!options.iCopy\" (click)=\"channelService.toggleCopy(model, true)\" class=\"btn btn-sm btn-success pull-right\">Copy</button>\n                        <button *ngIf=\"options.iCopy\" (click)=\"channelService.toggleCopy(model, false)\" class=\"btn btn-sm btn-danger pull-right\">UnCopy</button>\n                        <button *ngIf=\"!options.iFollow\" (click)=\"channelService.toggleFollow(model, true)\" class=\"btn btn-sm btn-success pull-right\">Follow</button>\n                        <button *ngIf=\"options.iFollow\" (click)=\"channelService.toggleFollow(model, false)\" class=\"btn btn-sm btn-danger pull-right\">UnFollow</button>\n                    </div>\n                </footer>\n            </ng-container>\n        </div>\n    </section>\n\n    <h2 class=\"editors-choices-header\">Top Investors</h2>\n\n    <section class=\"editor-choices\">\n        <div *ngFor=\"let model of users$ | async\" class=\"card clearfix\">\n            <ng-container *ngIf=\"model.options$ | async as options\">\n                <header [style.background]=\"'url(' + model.options.profileImg + ')'\">\n                    <a [routerLink]=\"['/main/user/profile/', options.user_id]\" [routerLinkActive]=\"['active']\"></a>\n                </header>\n                <main>\n                    <h4><a>{{model.options.name}}</a></h4>\n                    <h3 class=\"roi\">114.2 %</h3>\n                    <h4 style=\"color: #b7b7b7;\"><span>{{model.options.transactions}}</span> transactions</h4>\n                </main>\n                <footer>\n                    <div>\n                        <p><span class=\"followers\">{{options.followersCount}}</span> followers</p>\n                        <p><span class=\"followers\">{{options.copiersCount}}</span> copiers</p>\n                    </div>\n                    <div *ngIf=\"options.user_id !== selfId\">\n                        <button *ngIf=\"!options.iCopy\" (click)=\"channelService.toggleCopy(model, true)\" class=\"btn btn-sm btn-success pull-right\">Copy</button>\n                        <button *ngIf=\"options.iCopy\" (click)=\"channelService.toggleCopy(model, false)\" class=\"btn btn-sm btn-danger pull-right\">UnCopy</button>\n                        <button *ngIf=\"!options.iFollow\" (click)=\"channelService.toggleFollow(model, true)\" class=\"btn btn-sm btn-success pull-right\">Follow</button>\n                        <button *ngIf=\"options.iFollow\" (click)=\"channelService.toggleFollow(model, false)\" class=\"btn btn-sm btn-danger pull-right\">UnFollow</button>\n                    </div>\n                </footer>\n            </ng-container>\n        </div>\n    </section>\n</div>"
 
 /***/ }),
 /* 830 */

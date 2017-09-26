@@ -3,11 +3,7 @@ require('source-map-support').install({handleUncaughtExceptions: true});
 import * as http from 'http';
 import {json, urlencoded} from 'body-parser';
 import * as path from 'path';
-import * as freePort from 'freeport';
 import * as express from 'express';
-import * as io from 'socket.io';
-import * as proxy from 'express-http-proxy';
-// import * as colors from '../shared/node_modules/colors';
 
 import IPC from './classes/ipc/IPC';
 import AccountController from './controllers/AccountController';
@@ -261,17 +257,7 @@ export default class App extends Base {
 			});
 		});
 	}
-
-	private _getFreePort() {
-		return new Promise((resolve, reject) => {
-			freePort(function (err, port) {
-				if (err) reject(err);
-				resolve(port);
-			});
-		});
-
-	}
-
+	
 	private _setTimezone(timeZone) {
 		return new Promise((resolve, reject) => {
 			process.env.TZ = timeZone || DEFAULT_TIMEZONE;

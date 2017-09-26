@@ -22,6 +22,7 @@ declare let $: any;
 export class UserOverviewComponent implements OnInit, OnDestroy, AfterViewChecked {
 
 	@Output() public users$: BehaviorSubject<any[]> = new BehaviorSubject([]);
+	public selfId = this.userService.model.get('user_id');
 
 	private _moveInterval;
 
