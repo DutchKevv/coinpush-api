@@ -15,6 +15,8 @@ export const authenticateController = {
 
 		reqUser.id = user._id;
 
-		return Object.assign(user, await channelController.findByUserId(reqUser, user._id));
+		const channel = await channelController.findByUserId(reqUser, user._id);
+
+		return Object.assign(user, channel);
 	}
 };

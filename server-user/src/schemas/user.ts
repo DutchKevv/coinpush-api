@@ -83,34 +83,32 @@ const UserSchema = new Schema({
 });
 
 // authenticate input against database
-UserSchema.statics.authenticate = function (email, password) {
+UserSchema.statics.authenticate = async function (email, password) {
 
-	return User.findOne({email: email}).then(user => {
+	const user = await User.findOne({email: email}, {balance: 1, password: 1});
 
-		return new Promise((resolve, reject) => {
+	if (!user)
+		return false;
 
-			if (!user)
+	return new Promise((resolve, reject) => {
+
+		bcrypt.compare(password, user.password, (err, result) => {
+			if (err)
+				return reject(err);
+
+			if (result !== true)
 				return resolve(false);
 
-			bcrypt.compare(password, user.password, (err, result) => {
-				if (err)
-					return reject(err);
-
-				if (result !== true)
-					return resolve(false);
-
-				resolve({
-					_id: user._id,
-					username: user.username,
-					token: jwt.sign({sub: user._id}, config.token.secret)
-				});
+			resolve({
+				_id: user._id,
+				balance: user.balance,
+				token: jwt.sign({sub: user._id}, config.token.secret)
 			});
-
 		});
 	});
 };
 
-UserSchema.statics.toggleFollow = async function(from, to) {
+UserSchema.statics.toggleFollow = async function (from, to) {
 	const user = await this.findById(from, {following: 1});
 	const isFollowing = !!(user && user.following && user.following.indexOf(to) > -1);
 

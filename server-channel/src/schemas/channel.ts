@@ -12,7 +12,8 @@ export const ChannelSchema = new Schema({
 	},
 	name: {
 		type: String,
-		required: true
+		required: true,
+		unique: true
 	},
 	profileImg: {
 		type: String,
