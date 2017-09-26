@@ -24,5 +24,4 @@ class SyncModel extends EventEmitter {
     }
 }
 exports.SyncModel = SyncModel;
-
 //# sourceMappingURL=SyncModel.js.map

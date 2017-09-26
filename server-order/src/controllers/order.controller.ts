@@ -4,7 +4,7 @@ import * as redis from '../modules/redis';
 import {Order} from '../schemas/order';
 import {
 	BROKER_ERROR_INVALID_ARGUMENT, BROKER_ERROR_MARKET_CLOSED, BROKER_ERROR_UNKNOWN, BROKER_OANDA_ERROR_INVALID_ARGUMENT,
-	BROKER_OANDA_ERROR_MARKET_CLOSED, REDIS_USER_PREFIX, USER_FETCH_TYPE_BROKER_DETAILS
+	BROKER_OANDA_ERROR_MARKET_CLOSED, REDIS_USER_PREFIX
 } from '../../../shared/constants/constants';
 import OandaApi from '../../../shared/brokers/oanda/index';
 
@@ -26,8 +26,6 @@ export const orderController = {
 
 	async create(params) {
 		try {
-			// Get user that created order
-			const user = await this._getUser(params.user);
 
 			// Create a new broker class
 			// TODO : Refactor
@@ -118,22 +116,6 @@ export const orderController = {
 					});
 			}
 		}
-	},
-
-	async _getUser(userId) {
-		try {
-			return await this.getCached(userId);
-		} catch (error) {
-			console.error(error);
-		}
-
-		return await request({
-			uri: url.resolve(config.server.social.apiUrl, 'social/user/' + userId),
-			qs: {
-				type: USER_FETCH_TYPE_BROKER_DETAILS
-			},
-			json: true
-		});
 	},
 
 	async getCached(userId, fields) {

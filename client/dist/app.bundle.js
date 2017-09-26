@@ -21631,9 +21631,7 @@ InstrumentModel.DEFAULTS = {
     }
 };
 exports.InstrumentModel = InstrumentModel;
-
 //# sourceMappingURL=InstrumentModel.js.map
-
 
 /***/ }),
 /* 106 */
@@ -22718,9 +22716,7 @@ class BaseModel extends Base_1.Base {
     }
 }
 exports.BaseModel = BaseModel;
-
 //# sourceMappingURL=BaseModel.js.map
-
 
 /***/ }),
 /* 147 */
@@ -54976,9 +54972,7 @@ class SystemState {
     }
 }
 exports.SystemState = SystemState;
-
 //# sourceMappingURL=SystemState.js.map
-
 
 /***/ }),
 /* 793 */
@@ -55431,6 +55425,14 @@ var _a, _b, _c, _d;
 
 "use strict";
 
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs = __webpack_require__(138);
 const path = __webpack_require__(138);
@@ -55447,15 +55449,17 @@ class Mapper {
     get mode() {
         return this._mode;
     }
-    async init() {
-        if (this.options.path) {
-            this._mode = Mapper.MODE_PERSISTENT;
-            this._pathFile = path.join(this.options.path, 'database-mapper.json');
-            await this._loadFromFile();
-        }
-        else {
-            this._mode = Mapper.MODE_MEMORY;
-        }
+    init() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (this.options.path) {
+                this._mode = Mapper.MODE_PERSISTENT;
+                this._pathFile = path.join(this.options.path, 'database-mapper.json');
+                yield this._loadFromFile();
+            }
+            else {
+                this._mode = Mapper.MODE_MEMORY;
+            }
+        });
     }
     update(symbol, timeFrame, from, until, count) {
         let map = this.map, ranges = this.findByParams(symbol, timeFrame, true);
@@ -55831,9 +55835,7 @@ OrderModel.DEFAULTS = {
     profitPerc: 0
 };
 exports.OrderModel = OrderModel;
-
 //# sourceMappingURL=OrderModel.js.map
-
 
 /***/ }),
 /* 825 */

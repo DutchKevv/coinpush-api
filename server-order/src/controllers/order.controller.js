@@ -1,7 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const url = require("url");
-const request = require("request-promise");
 const redis = require("../modules/redis");
 const order_1 = require("../schemas/order");
 const constants_1 = require("../../../shared/constants/constants");
@@ -18,8 +16,6 @@ exports.orderController = {
     },
     async create(params) {
         try {
-            // Get user that created order
-            const user = await this._getUser(params.user);
             // Create a new broker class
             // TODO : Refactor
             const broker = new index_1.default({
@@ -96,21 +92,6 @@ exports.orderController = {
                     });
             }
         }
-    },
-    async _getUser(userId) {
-        try {
-            return await this.getCached(userId);
-        }
-        catch (error) {
-            console.error(error);
-        }
-        return await request({
-            uri: url.resolve(config.server.social.apiUrl, 'social/user/' + userId),
-            qs: {
-                type: constants_1.USER_FETCH_TYPE_BROKER_DETAILS
-            },
-            json: true
-        });
     },
     async getCached(userId, fields) {
         return new Promise((resolve, reject) => {

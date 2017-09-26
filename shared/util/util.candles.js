@@ -6,5 +6,4 @@ exports.isForwardDirection = (candles) => {
     }
     return null;
 };
-
 //# sourceMappingURL=util.candles.js.map

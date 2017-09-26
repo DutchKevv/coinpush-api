@@ -25,5 +25,4 @@ class BaseModel extends Base_1.Base {
     }
 }
 exports.BaseModel = BaseModel;
-
 //# sourceMappingURL=BaseModel.js.map
