@@ -19,7 +19,8 @@ export const ChannelSchema = new Schema({
 		default: ''
 	},
 	description: {
-		type: String
+		type: String,
+		default: ''
 	},
 	transactions: {
 		type: Number,
