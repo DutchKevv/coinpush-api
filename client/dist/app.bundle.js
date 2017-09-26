@@ -10,9 +10,7 @@ webpackJsonp([0],[
 /* 8 */,
 /* 9 */,
 /* 10 */,
-/* 11 */,
-/* 12 */,
-/* 13 */
+/* 11 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -21,7 +19,7 @@ webpackJsonp([0],[
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__models_user_model__ = __webpack_require__(142);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_http__ = __webpack_require__(21);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__alert_service__ = __webpack_require__(41);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__shared_constants_constants__ = __webpack_require__(54);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__shared_constants_constants__ = __webpack_require__(44);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__shared_constants_constants___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__shared_constants_constants__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__startup_service__ = __webpack_require__(361);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_BehaviorSubject__ = __webpack_require__(22);
@@ -158,6 +156,8 @@ var _a, _b, _c, _d, _e;
 
 
 /***/ }),
+/* 12 */,
+/* 13 */,
 /* 14 */,
 /* 15 */,
 /* 16 */,
@@ -263,7 +263,7 @@ var SocketService_1, _a;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_platform_browser__ = __webpack_require__(69);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_platform_browser__ = __webpack_require__(68);
 
 /**
  * @license Angular v4.4.0-RC.0
@@ -2461,12 +2461,12 @@ var VERSION = new __WEBPACK_IMPORTED_MODULE_1__angular_core__["_16" /* Version *
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_lodash__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__socket_service__ = __webpack_require__(20);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs__ = __webpack_require__(132);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs__ = __webpack_require__(131);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__models_indicator__ = __webpack_require__(362);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_dialog_dialog_component__ = __webpack_require__(56);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_dialog_dialog_component__ = __webpack_require__(55);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__modal_service__ = __webpack_require__(79);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__shared_models_InstrumentModel__ = __webpack_require__(105);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__shared_models_InstrumentModel__ = __webpack_require__(104);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__shared_models_InstrumentModel___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__shared_models_InstrumentModel__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_rxjs_Subject__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_rxjs_Subject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8_rxjs_Subject__);
@@ -2835,16 +2835,61 @@ var _a;
 /* 42 */,
 /* 43 */,
 /* 44 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * SYSTEM
+ */
+exports.SYSTEM_STATE_BOOTING = -1, exports.SYSTEM_STATE_OK = 0, exports.SYSTEM_STATE_WARNING = 1, exports.SYSTEM_STATE_ERROR = 2, exports.SYSTEM_STATE_CODE_OK = 0, exports.SYSTEM_STATE_CODE_LOGIN = 1, exports.SYSTEM_STATE_CODE_BAD_BROKER_CONNECTION = 2, exports.SYSTEM_STATE_CODE_NO_BROKER_CONNECTION = 3, exports.SYSTEM_STATE_CODE_BAD_SERVER_CONNECTION = 4, exports.SYSTEM_STATE_CODE_NO_SERVER_CONNECTION = 5, 
+/**
+ * ORDER
+ */
+exports.ORDER_SIDE_BUY = 0, exports.ORDER_SIDE_SELL = 1, exports.ORDER_TYPE_NONE = 0, exports.ORDER_TYPE_MARKET = 1, exports.ORDER_TYPE_LIMIT = 2, exports.ORDER_TYPE_STOP = 3, exports.ORDER_TYPE_IF_TOUCHED = 4, 
+/**
+ * Broker - General
+ */
+exports.BROKER_GENERAL_TYPE_NONE = 0, exports.BROKER_GENERAL_TYPE_OANDA = 1, 
+/**
+ * Broker - TradeJS
+ */
+exports.BROKER_ERROR_UNKNOWN = 0, exports.BROKER_ERROR_INVALID_ARGUMENT = 1, exports.BROKER_ERROR_MARKET_CLOSED = 2, exports.BROKER_ERROR_UNAUTHORIZED = 3, exports.BROKER_ERROR_DISCONNECT = 4, exports.BROKER_ERROR_PARSE = 5, exports.BROKER_HEARTBEAT_TIMEOUT = 6, exports.BROKER_ERROR_HTTP = 7, exports.BROKER_ERROR_NOT_ENOUGH_FUNDS = 8, 
+/**
+ * Broker - OANDA
+ */
+exports.BROKER_OANDA_ERROR_INVALID_ARGUMENT = 1, exports.BROKER_OANDA_ERROR_MARKET_CLOSED = 24, 
+/**
+ * Leverage
+ */
+exports.LEVERAGE_TYPE_1 = 1, exports.LEVERAGE_TYPE_10 = 10, exports.LEVERAGE_TYPE_20 = 20, exports.LEVERAGE_TYPE_25 = 25, exports.LEVERAGE_TYPE_50 = 50, exports.LEVERAGE_TYPE_100 = 100, 
+/**
+ * USER
+ */
+exports.USER_FETCH_TYPE_SLIM = 0, exports.USER_FETCH_TYPE_FULL = 1, exports.USER_FETCH_TYPE_PROFILE_SETTINGS = 2, exports.USER_FETCH_TYPE_ACCOUNT_DETAILS = 3, 
+/**
+ * CHANNEL
+ */
+exports.CHANNEL_TYPE_MAIN = 0, exports.CHANNEL_TYPE_CUSTOM = 1, 
+/**
+ * REDIS
+ */
+exports.REDIS_USER_PREFIX = 'user_';
+//# sourceMappingURL=constants.js.map
+
+/***/ }),
+/* 45 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CacheService; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs__ = __webpack_require__(132);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs__ = __webpack_require__(131);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_rxjs__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__shared_classes_cache_CacheMap__ = __webpack_require__(812);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__shared_classes_cache_CacheMap___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__shared_classes_cache_CacheMap__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__shared_classes_Base__ = __webpack_require__(53);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__shared_classes_Base__ = __webpack_require__(54);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__shared_classes_Base___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__shared_classes_Base__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_socket_io_client__ = __webpack_require__(343);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_socket_io_client___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_socket_io_client__);
@@ -2980,13 +3025,13 @@ var _a, _b, _c;
 
 
 /***/ }),
-/* 45 */,
 /* 46 */,
 /* 47 */,
 /* 48 */,
 /* 49 */,
 /* 50 */,
-/* 51 */
+/* 51 */,
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -3155,7 +3200,7 @@ Emitter.prototype.hasListeners = function(event){
 
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {/**
@@ -3768,7 +3813,7 @@ exports.decodePayloadAsBinary = function (data, binaryType, callback) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ }),
-/* 53 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3842,80 +3887,7 @@ exports.Base = Base;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9)))
 
 /***/ }),
-/* 54 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * SYSTEM
- */
-exports.SYSTEM_STATE_BOOTING = -1, exports.SYSTEM_STATE_OK = 0, exports.SYSTEM_STATE_WARNING = 1, exports.SYSTEM_STATE_ERROR = 2, exports.SYSTEM_STATE_CODE_OK = 0, exports.SYSTEM_STATE_CODE_LOGIN = 1, exports.SYSTEM_STATE_CODE_BAD_BROKER_CONNECTION = 2, exports.SYSTEM_STATE_CODE_NO_BROKER_CONNECTION = 3, exports.SYSTEM_STATE_CODE_BAD_SERVER_CONNECTION = 4, exports.SYSTEM_STATE_CODE_NO_SERVER_CONNECTION = 5, 
-/**
- * ORDER
- */
-exports.ORDER_SIDE_BUY = 0, exports.ORDER_SIDE_SELL = 1, exports.ORDER_TYPE_NONE = 0, exports.ORDER_TYPE_MARKET = 1, exports.ORDER_TYPE_LIMIT = 2, exports.ORDER_TYPE_STOP = 3, exports.ORDER_TYPE_IF_TOUCHED = 4, 
-/**
- * Broker - General
- */
-exports.BROKER_GENERAL_TYPE_NONE = 0, exports.BROKER_GENERAL_TYPE_OANDA = 1, 
-/**
- * Broker - TradeJS
- */
-exports.BROKER_ERROR_UNKNOWN = 0, exports.BROKER_ERROR_INVALID_ARGUMENT = 1, exports.BROKER_ERROR_MARKET_CLOSED = 2, exports.BROKER_ERROR_UNAUTHORIZED = 3, exports.BROKER_ERROR_DISCONNECT = 4, exports.BROKER_ERROR_PARSE = 5, exports.BROKER_HEARTBEAT_TIMEOUT = 6, exports.BROKER_ERROR_HTTP = 7, exports.BROKER_ERROR_NOT_ENOUGH_FUNDS = 8, 
-/**
- * Broker - OANDA
- */
-exports.BROKER_OANDA_ERROR_INVALID_ARGUMENT = 1, exports.BROKER_OANDA_ERROR_MARKET_CLOSED = 24, 
-/**
- * Leverage
- */
-exports.LEVERAGE_TYPE_1 = 1, exports.LEVERAGE_TYPE_10 = 10, exports.LEVERAGE_TYPE_20 = 20, exports.LEVERAGE_TYPE_25 = 25, exports.LEVERAGE_TYPE_50 = 50, exports.LEVERAGE_TYPE_100 = 100, 
-/**
- * USER
- */
-exports.USER_FETCH_TYPE_SLIM = 0, exports.USER_FETCH_TYPE_FULL = 1, exports.USER_FETCH_TYPE_PROFILE_SETTINGS = 2, exports.USER_FETCH_TYPE_ACCOUNT_DETAILS = 3, 
-/**
- * CHANNEL
- */
-exports.CHANNEL_TYPE_MAIN = 0, exports.CHANNEL_TYPE_CUSTOM = 1, 
-/**
- * REDIS
- */
-exports.REDIS_USER_PREFIX = 'user_';
-//# sourceMappingURL=constants.js.map
-
-/***/ }),
 /* 55 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ConstantsService; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__shared_constants_constants__ = __webpack_require__(54);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__shared_constants_constants___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__shared_constants_constants__);
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-
-
-let ConstantsService = class ConstantsService {
-    constructor() {
-        this.constants = __WEBPACK_IMPORTED_MODULE_1__shared_constants_constants__;
-    }
-};
-ConstantsService = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */])()
-], ConstantsService);
-
-
-
-/***/ }),
-/* 56 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3973,30 +3945,30 @@ var _a;
 
 
 /***/ }),
-/* 57 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "images/_/_/assets/vendor/css/jstree/default/40px.png";
 
 /***/ }),
-/* 58 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "images/_/_/assets/vendor/css/jstree/default-dark/40px.png";
 
 /***/ }),
-/* 59 */
+/* 58 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ChannelService; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(21);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_catch__ = __webpack_require__(137);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_catch__ = __webpack_require__(136);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_catch___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_catch__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__ = __webpack_require__(100);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_observable_throw__ = __webpack_require__(135);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_observable_throw__ = __webpack_require__(134);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_observable_throw___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_rxjs_add_observable_throw__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__models_channel_model__ = __webpack_require__(80);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__alert_service__ = __webpack_require__(41);
@@ -4100,6 +4072,7 @@ var _a, _b;
 
 
 /***/ }),
+/* 59 */,
 /* 60 */,
 /* 61 */,
 /* 62 */,
@@ -4115,15 +4088,14 @@ var _a, _b;
 /* 72 */,
 /* 73 */,
 /* 74 */,
-/* 75 */,
-/* 76 */
+/* 75 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LoginComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__(28);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_authenticate_service__ = __webpack_require__(104);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_authenticate_service__ = __webpack_require__(141);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_alert_service__ = __webpack_require__(41);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -4177,17 +4149,17 @@ var _a, _b, _c, _d;
 
 
 /***/ }),
-/* 77 */
+/* 76 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SystemService; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__socket_service__ = __webpack_require__(20);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__constants_service__ = __webpack_require__(55);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__constants_service__ = __webpack_require__(77);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__shared_models_SystemState__ = __webpack_require__(792);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__shared_models_SystemState___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__shared_models_SystemState__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__user_service__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__user_service__ = __webpack_require__(11);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -4238,6 +4210,34 @@ SystemService = __decorate([
 ], SystemService);
 
 var _a, _b, _c;
+
+
+/***/ }),
+/* 77 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ConstantsService; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__shared_constants_constants__ = __webpack_require__(44);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__shared_constants_constants___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__shared_constants_constants__);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
+
+let ConstantsService = class ConstantsService {
+    constructor() {
+        this.constants = __WEBPACK_IMPORTED_MODULE_1__shared_constants_constants__;
+    }
+};
+ConstantsService = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */])()
+], ConstantsService);
+
 
 
 /***/ }),
@@ -21330,7 +21330,7 @@ var _a, _b, _c;
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(45)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(46)(module)))
 
 /***/ }),
 /* 79 */
@@ -21374,9 +21374,9 @@ ModalService = __decorate([
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__shared_classes_Base__ = __webpack_require__(53);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__shared_classes_Base__ = __webpack_require__(54);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__shared_classes_Base___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__shared_classes_Base__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__shared_constants_constants__ = __webpack_require__(54);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__shared_constants_constants__ = __webpack_require__(44);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__shared_constants_constants___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__shared_constants_constants__);
 
 
@@ -21475,74 +21475,6 @@ module.exports = function(a, b){
 
 /***/ }),
 /* 104 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AuthenticationService; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(21);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__ = __webpack_require__(100);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_router__ = __webpack_require__(28);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__user_service__ = __webpack_require__(13);
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-
-
-
-let AuthenticationService = class AuthenticationService {
-    constructor(router, http, _userService) {
-        this.router = router;
-        this.http = http;
-        this._userService = _userService;
-    }
-    init() { }
-    getToken() {
-        return localStorage.getItem('currentUser');
-    }
-    removeCurrentUser() {
-        localStorage.removeItem('currentUser');
-    }
-    login(email, password) {
-        return this.authenticateAndLoadUserData(email, password);
-    }
-    authenticateAndLoadUserData(email, password, token) {
-        return this.http.post('/authenticate', { email, password, token })
-            .map((response) => {
-            // login successful if there's a jwt token in the response
-            let user = response.json();
-            if (user && user.token) {
-                // store user details and jwt token in local storage to keep user logged in between page refreshes
-                localStorage.setItem('currentUser', JSON.stringify(user));
-            }
-            this._userService.model.set(user);
-            return user;
-        });
-    }
-    logout() {
-        this.removeCurrentUser();
-        this.router.navigate(['/login']);
-    }
-};
-AuthenticationService = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */])(),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_router__["c" /* Router */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["c" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["c" /* Http */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_4__user_service__["a" /* UserService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__user_service__["a" /* UserService */]) === "function" && _c || Object])
-], AuthenticationService);
-
-var _a, _b, _c;
-
-
-/***/ }),
-/* 105 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21634,19 +21566,19 @@ exports.InstrumentModel = InstrumentModel;
 //# sourceMappingURL=InstrumentModel.js.map
 
 /***/ }),
-/* 106 */
+/* 105 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return OrderService; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(21);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__constants_service__ = __webpack_require__(55);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__constants_service__ = __webpack_require__(77);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__shared_models_OrderModel__ = __webpack_require__(824);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__shared_models_OrderModel___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__shared_models_OrderModel__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__cache_service__ = __webpack_require__(44);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__cache_service__ = __webpack_require__(45);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__alert_service__ = __webpack_require__(41);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__user_service__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__user_service__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_rxjs_BehaviorSubject__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_rxjs_BehaviorSubject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_rxjs_BehaviorSubject__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -21770,6 +21702,7 @@ var _a, _b, _c, _d, _e, _f;
 
 
 /***/ }),
+/* 106 */,
 /* 107 */,
 /* 108 */,
 /* 109 */,
@@ -21801,8 +21734,7 @@ var _a, _b, _c, _d, _e, _f;
 /* 135 */,
 /* 136 */,
 /* 137 */,
-/* 138 */,
-/* 139 */
+/* 138 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -21811,7 +21743,7 @@ var _a, _b, _c, _d, _e, _f;
  */
 
 var debug = __webpack_require__(8)('socket.io-parser');
-var Emitter = __webpack_require__(51);
+var Emitter = __webpack_require__(52);
 var hasBin = __webpack_require__(345);
 var binary = __webpack_require__(760);
 var isBuf = __webpack_require__(346);
@@ -22208,7 +22140,7 @@ function error() {
 
 
 /***/ }),
-/* 140 */
+/* 139 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {// browser shim for xmlhttprequest module
@@ -22252,15 +22184,15 @@ module.exports = function (opts) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ }),
-/* 141 */
+/* 140 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * Module dependencies.
  */
 
-var parser = __webpack_require__(52);
-var Emitter = __webpack_require__(51);
+var parser = __webpack_require__(53);
+var Emitter = __webpack_require__(52);
 
 /**
  * Module exports.
@@ -22415,13 +22347,81 @@ Transport.prototype.onClose = function () {
 
 
 /***/ }),
+/* 141 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AuthenticationService; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__ = __webpack_require__(100);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_router__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__user_service__ = __webpack_require__(11);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+let AuthenticationService = class AuthenticationService {
+    constructor(router, http, _userService) {
+        this.router = router;
+        this.http = http;
+        this._userService = _userService;
+    }
+    init() { }
+    getToken() {
+        return localStorage.getItem('currentUser');
+    }
+    removeCurrentUser() {
+        localStorage.removeItem('currentUser');
+    }
+    login(email, password) {
+        return this.authenticateAndLoadUserData(email, password);
+    }
+    authenticateAndLoadUserData(email, password, token) {
+        return this.http.post('/authenticate', { email, password, token })
+            .map((response) => {
+            // login successful if there's a jwt token in the response
+            let user = response.json();
+            if (user && user.token) {
+                // store user details and jwt token in local storage to keep user logged in between page refreshes
+                localStorage.setItem('currentUser', JSON.stringify(user));
+            }
+            this._userService.model.set(user);
+            return user;
+        });
+    }
+    logout() {
+        this.removeCurrentUser();
+        this.router.navigate(['/login']);
+    }
+};
+AuthenticationService = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */])(),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_router__["c" /* Router */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["c" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["c" /* Http */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_4__user_service__["a" /* UserService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__user_service__["a" /* UserService */]) === "function" && _c || Object])
+], AuthenticationService);
+
+var _a, _b, _c;
+
+
+/***/ }),
 /* 142 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__shared_classes_Base__ = __webpack_require__(53);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__shared_classes_Base__ = __webpack_require__(54);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__shared_classes_Base___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__shared_classes_Base__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__shared_constants_constants__ = __webpack_require__(54);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__shared_constants_constants__ = __webpack_require__(44);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__shared_constants_constants___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__shared_constants_constants__);
 
 
@@ -22699,7 +22699,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const Base_1 = __webpack_require__(53);
+const Base_1 = __webpack_require__(54);
 class BaseModel extends Base_1.Base {
     init() {
         const _super = name => super[name];
@@ -28712,7 +28712,7 @@ exports.BaseModel = BaseModel;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_socket_service__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_modal_service__ = __webpack_require__(79);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__dialog_dialog_component__ = __webpack_require__(56);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__dialog_dialog_component__ = __webpack_require__(55);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -29087,7 +29087,7 @@ FileTreeComponent = __decorate([
 
 var _a, _b, _c, _d, _e;
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(12)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(13)))
 
 /***/ }),
 /* 149 */
@@ -29307,7 +29307,7 @@ JSEditorComponent = __decorate([
 
 var _a, _b, _c, _d, _e, _f;
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(12)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(13)))
 
 /***/ }),
 /* 153 */,
@@ -29509,7 +29509,7 @@ var _a, _b, _c, _d, _e, _f;
  */
 
 var url = __webpack_require__(758);
-var parser = __webpack_require__(139);
+var parser = __webpack_require__(138);
 var Manager = __webpack_require__(347);
 var debug = __webpack_require__(8)('socket.io-client');
 
@@ -29744,8 +29744,8 @@ function isBuf(obj) {
 
 var eio = __webpack_require__(762);
 var Socket = __webpack_require__(352);
-var Emitter = __webpack_require__(51);
-var parser = __webpack_require__(139);
+var Emitter = __webpack_require__(52);
+var parser = __webpack_require__(138);
 var on = __webpack_require__(353);
 var bind = __webpack_require__(354);
 var debug = __webpack_require__(8)('socket.io-client:manager');
@@ -30320,7 +30320,7 @@ Manager.prototype.onreconnect = function () {
  * Module dependencies
  */
 
-var XMLHttpRequest = __webpack_require__(140);
+var XMLHttpRequest = __webpack_require__(139);
 var XHR = __webpack_require__(766);
 var JSONP = __webpack_require__(773);
 var websocket = __webpack_require__(774);
@@ -30380,9 +30380,9 @@ function polling (opts) {
  * Module dependencies.
  */
 
-var Transport = __webpack_require__(141);
+var Transport = __webpack_require__(140);
 var parseqs = __webpack_require__(102);
-var parser = __webpack_require__(52);
+var parser = __webpack_require__(53);
 var inherit = __webpack_require__(103);
 var yeast = __webpack_require__(350);
 var debug = __webpack_require__(8)('engine.io-client:polling');
@@ -30398,7 +30398,7 @@ module.exports = Polling;
  */
 
 var hasXHR2 = (function () {
-  var XMLHttpRequest = __webpack_require__(140);
+  var XMLHttpRequest = __webpack_require__(139);
   var xhr = new XMLHttpRequest({ xdomain: false });
   return null != xhr.responseType;
 })();
@@ -30722,8 +30722,8 @@ module.exports = function(arr, obj){
  * Module dependencies.
  */
 
-var parser = __webpack_require__(139);
-var Emitter = __webpack_require__(51);
+var parser = __webpack_require__(138);
+var Emitter = __webpack_require__(52);
 var toArray = __webpack_require__(777);
 var on = __webpack_require__(353);
 var bind = __webpack_require__(354);
@@ -31718,7 +31718,7 @@ exports.ObjectUnsubscribedError = ObjectUnsubscribedError;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(21);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__models_user_model__ = __webpack_require__(142);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__shared_constants_constants__ = __webpack_require__(54);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__shared_constants_constants__ = __webpack_require__(44);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__shared_constants_constants___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__shared_constants_constants__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -31781,13 +31781,13 @@ class IndicatorModel {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PageMainComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_authenticate_service__ = __webpack_require__(104);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_authenticate_service__ = __webpack_require__(141);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_http__ = __webpack_require__(21);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_Subject__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_Subject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_Subject__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__services_cache_service__ = __webpack_require__(44);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__services_user_service__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__services_order_service__ = __webpack_require__(106);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__services_cache_service__ = __webpack_require__(45);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__services_user_service__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__services_order_service__ = __webpack_require__(105);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -31927,7 +31927,7 @@ var _a;
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return RegisterComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__(28);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_user_service__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_user_service__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_alert_service__ = __webpack_require__(41);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -31983,10 +31983,10 @@ var _a, _b, _c;
 /* WEBPACK VAR INJECTION */(function($) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return UserOverviewComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_instruments_service__ = __webpack_require__(24);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_user_service__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_user_service__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_BehaviorSubject__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_BehaviorSubject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_BehaviorSubject__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__services_channel_service__ = __webpack_require__(59);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__services_channel_service__ = __webpack_require__(58);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -32043,7 +32043,7 @@ UserOverviewComponent = __decorate([
 
 var _a, _b, _c, _d;
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(12)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(13)))
 
 /***/ }),
 /* 367 */
@@ -32228,10 +32228,10 @@ var _a, _b;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_BehaviorSubject__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_BehaviorSubject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_rxjs_BehaviorSubject__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_order_service__ = __webpack_require__(106);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_constants_service__ = __webpack_require__(55);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__services_user_service__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__shared_models_InstrumentModel__ = __webpack_require__(105);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_order_service__ = __webpack_require__(105);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_constants_service__ = __webpack_require__(77);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__services_user_service__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__shared_models_InstrumentModel__ = __webpack_require__(104);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__shared_models_InstrumentModel___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__shared_models_InstrumentModel__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -32485,23 +32485,23 @@ var _a, _b, _c, _d;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash__ = __webpack_require__(78);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_lodash__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__dialog_dialog_component__ = __webpack_require__(56);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__dialog_dialog_component__ = __webpack_require__(55);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_instruments_service__ = __webpack_require__(24);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ngx_cookie__ = __webpack_require__(50);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ngx_cookie__ = __webpack_require__(51);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__directives_dialoganchor_directive__ = __webpack_require__(149);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__shared_models_InstrumentModel__ = __webpack_require__(105);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__shared_models_InstrumentModel__ = __webpack_require__(104);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__shared_models_InstrumentModel___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__shared_models_InstrumentModel__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_interactjs__ = __webpack_require__(147);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_interactjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_interactjs__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_rxjs_BehaviorSubject__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_rxjs_BehaviorSubject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8_rxjs_BehaviorSubject__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__services_cache_service__ = __webpack_require__(44);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__shared_classes_Base__ = __webpack_require__(53);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__services_cache_service__ = __webpack_require__(45);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__shared_classes_Base__ = __webpack_require__(54);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__shared_classes_Base___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_10__shared_classes_Base__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11_moment__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_11_moment__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__services_order_service__ = __webpack_require__(106);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__services_constants_service__ = __webpack_require__(55);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__services_order_service__ = __webpack_require__(105);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__services_constants_service__ = __webpack_require__(77);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -33250,7 +33250,7 @@ ChartBoxComponent = ChartBoxComponent_1 = __decorate([
 
 var ChartBoxComponent_1, _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(12)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(13)))
 
 /***/ }),
 /* 372 */
@@ -33404,10 +33404,10 @@ var _a, _b, _c, _d;
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ProfileComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__(28);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_user_service__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_user_service__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_BehaviorSubject__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_BehaviorSubject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_BehaviorSubject__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__services_channel_service__ = __webpack_require__(59);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__services_channel_service__ = __webpack_require__(58);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__models_channel_model__ = __webpack_require__(80);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -33506,10 +33506,10 @@ PageSubUserComponent = __decorate([
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SettingsComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_user_service__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_user_service__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_http__ = __webpack_require__(21);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_forms__ = __webpack_require__(40);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__shared_constants_constants__ = __webpack_require__(54);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__shared_constants_constants__ = __webpack_require__(44);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__shared_constants_constants___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__shared_constants_constants__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -33629,7 +33629,7 @@ var _a, _b, _c, _d, _e, _f, _g;
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SocialFeedComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_user_service__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_user_service__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_http__ = __webpack_require__(21);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_forms__ = __webpack_require__(40);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -33689,10 +33689,10 @@ var _a, _b, _c, _d, _e;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_http__ = __webpack_require__(21);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__models_channel_model__ = __webpack_require__(80);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__angular_router__ = __webpack_require__(28);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__shared_constants_constants__ = __webpack_require__(54);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__shared_constants_constants__ = __webpack_require__(44);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__shared_constants_constants___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__shared_constants_constants__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__services_channel_service__ = __webpack_require__(59);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__services_user_service__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__services_channel_service__ = __webpack_require__(58);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__services_user_service__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__services_modal_service__ = __webpack_require__(79);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__channel_details_modal_channel_details_modal_component__ = __webpack_require__(378);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -33803,7 +33803,7 @@ var _a, _b, _c, _d, _e, _f, _g, _h, _j;
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ChannelDetailsModalComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__models_channel_model__ = __webpack_require__(80);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_channel_service__ = __webpack_require__(59);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_channel_service__ = __webpack_require__(58);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -34260,7 +34260,7 @@ Object(__WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_dynamic__["a" /* pl
 "use strict";
 /* unused harmony export startupServiceFactory */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppModule; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__ = __webpack_require__(69);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__ = __webpack_require__(68);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_header_playground_header_playground_component__ = __webpack_require__(757);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_header_editor_header_editor_component__ = __webpack_require__(797);
@@ -34268,7 +34268,7 @@ Object(__WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_dynamic__["a" /* pl
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_file_tree_file_tree_component__ = __webpack_require__(148);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_jseditor_jseditor_component__ = __webpack_require__(152);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__services_socket_service__ = __webpack_require__(20);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_ngx_cookie__ = __webpack_require__(50);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_ngx_cookie__ = __webpack_require__(51);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__angular_forms__ = __webpack_require__(40);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__app_component__ = __webpack_require__(811);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__app_routing__ = __webpack_require__(823);
@@ -34276,11 +34276,11 @@ Object(__WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_dynamic__["a" /* pl
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__components_intrument_list_instrument_list_component__ = __webpack_require__(853);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__components_chart_overview_chart_overview_component__ = __webpack_require__(370);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__guards_auth_guard__ = __webpack_require__(364);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__services_user_service__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__components_login_login_component__ = __webpack_require__(76);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__services_system_service__ = __webpack_require__(77);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__services_constants_service__ = __webpack_require__(55);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__components_dialog_dialog_component__ = __webpack_require__(56);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__services_user_service__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__components_login_login_component__ = __webpack_require__(75);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__services_system_service__ = __webpack_require__(76);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__services_constants_service__ = __webpack_require__(77);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__components_dialog_dialog_component__ = __webpack_require__(55);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__components_modal_modal_component__ = __webpack_require__(856);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__directives_dialoganchor_directive__ = __webpack_require__(149);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__directives_modalanchor_directive__ = __webpack_require__(859);
@@ -34290,7 +34290,7 @@ Object(__WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_dynamic__["a" /* pl
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_27__components_chart_box_chart_box_component__ = __webpack_require__(371);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_28__components_backtest_settings_backtest_settings_component__ = __webpack_require__(861);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_29__components_backtest_report_backtest_report_component__ = __webpack_require__(864);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_30__services_cache_service__ = __webpack_require__(44);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_30__services_cache_service__ = __webpack_require__(45);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_31__components_backtest_backtest_component__ = __webpack_require__(372);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_32__components_core_list_core_list_component__ = __webpack_require__(868);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_33__components_page_main_page_main_component__ = __webpack_require__(363);
@@ -34298,14 +34298,14 @@ Object(__WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_dynamic__["a" /* pl
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_35__components_page_editor_page_editor_component__ = __webpack_require__(874);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_36__components_header_social_header_social_component__ = __webpack_require__(877);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_37__services_social_service__ = __webpack_require__(880);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_38__services_authenticate_service__ = __webpack_require__(104);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_38__services_authenticate_service__ = __webpack_require__(141);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_39__services_http_service__ = __webpack_require__(881);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_40__services_alert_service__ = __webpack_require__(41);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_41__components_alert_alert_component__ = __webpack_require__(883);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_42__components_register_register_component__ = __webpack_require__(365);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_43__angular_http__ = __webpack_require__(21);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_44__components_user_overview_user_overview_component__ = __webpack_require__(366);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_45__services_order_service__ = __webpack_require__(106);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_45__services_order_service__ = __webpack_require__(105);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_46__components_channel_overview_channel_overview_component__ = __webpack_require__(367);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_47__services_trading_channel_service__ = __webpack_require__(368);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_48__components_portfolio_portfolio_component__ = __webpack_require__(369);
@@ -34316,7 +34316,7 @@ Object(__WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_dynamic__["a" /* pl
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_53__components_social_feed_social_feed_component__ = __webpack_require__(376);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_54__components_channel_row_channel_row_component__ = __webpack_require__(886);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_55__components_profile_channel_overview_profile_channel_overview_component__ = __webpack_require__(377);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_56__services_channel_service__ = __webpack_require__(59);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_56__services_channel_service__ = __webpack_require__(58);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_57__components_channel_details_modal_channel_details_modal_component__ = __webpack_require__(378);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_58__components_comment_box_comment_box_component__ = __webpack_require__(889);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -34483,10 +34483,10 @@ AppModule = __decorate([
 /* WEBPACK VAR INJECTION */(function($) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return HeaderPlaygroundComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_socket_service__ = __webpack_require__(20);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__login_login_component__ = __webpack_require__(76);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_user_service__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__services_system_service__ = __webpack_require__(77);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__dialog_dialog_component__ = __webpack_require__(56);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__login_login_component__ = __webpack_require__(75);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_user_service__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__services_system_service__ = __webpack_require__(76);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__dialog_dialog_component__ = __webpack_require__(55);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__services_instruments_service__ = __webpack_require__(24);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -34567,7 +34567,7 @@ HeaderPlaygroundComponent = __decorate([
 
 var _a, _b, _c, _d, _e, _f;
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(12)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(13)))
 
 /***/ }),
 /* 758 */
@@ -34842,7 +34842,7 @@ module.exports = __webpack_require__(764);
  * @api public
  *
  */
-module.exports.parser = __webpack_require__(52);
+module.exports.parser = __webpack_require__(53);
 
 
 /***/ }),
@@ -34854,10 +34854,10 @@ module.exports.parser = __webpack_require__(52);
  */
 
 var transports = __webpack_require__(348);
-var Emitter = __webpack_require__(51);
+var Emitter = __webpack_require__(52);
 var debug = __webpack_require__(8)('engine.io-client:socket');
 var index = __webpack_require__(351);
-var parser = __webpack_require__(52);
+var parser = __webpack_require__(53);
 var parseuri = __webpack_require__(344);
 var parsejson = __webpack_require__(776);
 var parseqs = __webpack_require__(102);
@@ -34993,9 +34993,9 @@ Socket.protocol = parser.protocol; // this is an int
  */
 
 Socket.Socket = Socket;
-Socket.Transport = __webpack_require__(141);
+Socket.Transport = __webpack_require__(140);
 Socket.transports = __webpack_require__(348);
-Socket.parser = __webpack_require__(52);
+Socket.parser = __webpack_require__(53);
 
 /**
  * Creates transport of the given type.
@@ -35627,9 +35627,9 @@ try {
  * Module requirements.
  */
 
-var XMLHttpRequest = __webpack_require__(140);
+var XMLHttpRequest = __webpack_require__(139);
 var Polling = __webpack_require__(349);
-var Emitter = __webpack_require__(51);
+var Emitter = __webpack_require__(52);
 var inherit = __webpack_require__(103);
 var debug = __webpack_require__(8)('engine.io-client:polling-xhr');
 
@@ -36392,7 +36392,7 @@ function noop() {}
 
 }(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(45)(module), __webpack_require__(4)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(46)(module), __webpack_require__(4)))
 
 /***/ }),
 /* 771 */
@@ -36816,8 +36816,8 @@ JSONPPolling.prototype.doWrite = function (data, fn) {
  * Module dependencies.
  */
 
-var Transport = __webpack_require__(141);
-var parser = __webpack_require__(52);
+var Transport = __webpack_require__(140);
+var parser = __webpack_require__(53);
 var parseqs = __webpack_require__(102);
 var inherit = __webpack_require__(103);
 var yeast = __webpack_require__(350);
@@ -54937,7 +54937,7 @@ exports.SubjectSubscription = SubjectSubscription;
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(45)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(46)(module)))
 
 /***/ }),
 /* 790 */
@@ -55006,9 +55006,9 @@ module.exports = ".dropup,\n.dropdown {\n  position: relative; }\n\n.dropdown-to
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return HeaderEditorComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_socket_service__ = __webpack_require__(20);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__login_login_component__ = __webpack_require__(76);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_user_service__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__services_system_service__ = __webpack_require__(77);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__login_login_component__ = __webpack_require__(75);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_user_service__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__services_system_service__ = __webpack_require__(76);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__models_indicator__ = __webpack_require__(362);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_lodash__ = __webpack_require__(78);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_lodash__);
@@ -55114,7 +55114,7 @@ module.exports = ":host {\n  background: #000;\n  contain: layout;\n  width: 100
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function($) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return FooterComponent; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_ngx_cookie__ = __webpack_require__(50);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_ngx_cookie__ = __webpack_require__(51);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_lodash__ = __webpack_require__(78);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_lodash__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_interactjs__ = __webpack_require__(147);
@@ -55124,7 +55124,7 @@ module.exports = ":host {\n  background: #000;\n  contain: layout;\n  width: 100
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_moment__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_moment__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__services_instruments_service__ = __webpack_require__(24);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__services_user_service__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__services_user_service__ = __webpack_require__(11);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -55262,7 +55262,7 @@ FooterComponent = __decorate([
 
 var _a, _b, _c, _d, _e, _f, _g, _h;
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(12)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(13)))
 
 /***/ }),
 /* 801 */
@@ -55305,7 +55305,7 @@ exports = module.exports = __webpack_require__(101)(undefined);
 
 
 // module
-exports.push([module.i, "/* jsTree default theme */\n.jstree-node,\n.jstree-children,\n.jstree-container-ul {\n  display: block;\n  margin: 0;\n  padding: 0;\n  list-style-type: none;\n  list-style-image: none;\n}\n.jstree-node {\n  white-space: nowrap;\n}\n.jstree-anchor {\n  display: inline-block;\n  color: black;\n  white-space: nowrap;\n  padding: 0 4px 0 1px;\n  margin: 0;\n  vertical-align: top;\n}\n.jstree-anchor:focus {\n  outline: 0;\n}\n.jstree-anchor,\n.jstree-anchor:link,\n.jstree-anchor:visited,\n.jstree-anchor:hover,\n.jstree-anchor:active {\n  text-decoration: none;\n  color: inherit;\n}\n.jstree-icon {\n  display: inline-block;\n  text-decoration: none;\n  margin: 0;\n  padding: 0;\n  vertical-align: top;\n  text-align: center;\n}\n.jstree-icon:empty {\n  display: inline-block;\n  text-decoration: none;\n  margin: 0;\n  padding: 0;\n  vertical-align: top;\n  text-align: center;\n}\n.jstree-ocl {\n  cursor: pointer;\n}\n.jstree-leaf > .jstree-ocl {\n  cursor: default;\n}\n.jstree .jstree-open > .jstree-children {\n  display: block;\n}\n.jstree .jstree-closed > .jstree-children,\n.jstree .jstree-leaf > .jstree-children {\n  display: none;\n}\n.jstree-anchor > .jstree-themeicon {\n  margin-right: 2px;\n}\n.jstree-no-icons .jstree-themeicon,\n.jstree-anchor > .jstree-themeicon-hidden {\n  display: none;\n}\n.jstree-hidden,\n.jstree-node.jstree-hidden {\n  display: none;\n}\n.jstree-rtl .jstree-anchor {\n  padding: 0 1px 0 4px;\n}\n.jstree-rtl .jstree-anchor > .jstree-themeicon {\n  margin-left: 2px;\n  margin-right: 0;\n}\n.jstree-rtl .jstree-node {\n  margin-left: 0;\n}\n.jstree-rtl .jstree-container-ul > .jstree-node {\n  margin-right: 0;\n}\n.jstree-wholerow-ul {\n  position: relative;\n  display: inline-block;\n  min-width: 100%;\n}\n.jstree-wholerow-ul .jstree-leaf > .jstree-ocl {\n  cursor: pointer;\n}\n.jstree-wholerow-ul .jstree-anchor,\n.jstree-wholerow-ul .jstree-icon {\n  position: relative;\n}\n.jstree-wholerow-ul .jstree-wholerow {\n  width: 100%;\n  cursor: pointer;\n  position: absolute;\n  left: 0;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\n.jstree-contextmenu .jstree-anchor {\n  -webkit-user-select: none;\n  /* disable selection/Copy of UIWebView */\n  -webkit-touch-callout: none;\n  /* disable the IOS popup when long-press on a link */\n}\n.vakata-context {\n  display: none;\n}\n.vakata-context,\n.vakata-context ul {\n  margin: 0;\n  padding: 2px;\n  position: absolute;\n  background: #f5f5f5;\n  border: 1px solid #979797;\n  box-shadow: 2px 2px 2px #999999;\n}\n.vakata-context ul {\n  list-style: none;\n  left: 100%;\n  margin-top: -2.7em;\n  margin-left: -4px;\n}\n.vakata-context .vakata-context-right ul {\n  left: auto;\n  right: 100%;\n  margin-left: auto;\n  margin-right: -4px;\n}\n.vakata-context li {\n  list-style: none;\n}\n.vakata-context li > a {\n  display: block;\n  padding: 0 2em 0 2em;\n  text-decoration: none;\n  width: auto;\n  color: black;\n  white-space: nowrap;\n  line-height: 2.4em;\n  text-shadow: 1px 1px 0 white;\n  border-radius: 1px;\n}\n.vakata-context li > a:hover {\n  position: relative;\n  background-color: #e8eff7;\n  box-shadow: 0 0 2px #0a6aa1;\n}\n.vakata-context li > a.vakata-context-parent {\n  background-image: url(\"data:image/gif;base64,R0lGODlhCwAHAIAAACgoKP///yH5BAEAAAEALAAAAAALAAcAAAIORI4JlrqN1oMSnmmZDQUAOw==\");\n  background-position: right center;\n  background-repeat: no-repeat;\n}\n.vakata-context li > a:focus {\n  outline: 0;\n}\n.vakata-context .vakata-context-hover > a {\n  position: relative;\n  background-color: #e8eff7;\n  box-shadow: 0 0 2px #0a6aa1;\n}\n.vakata-context .vakata-context-separator > a,\n.vakata-context .vakata-context-separator > a:hover {\n  background: white;\n  border: 0;\n  border-top: 1px solid #e2e3e3;\n  height: 1px;\n  min-height: 1px;\n  max-height: 1px;\n  padding: 0;\n  margin: 0 0 0 2.4em;\n  border-left: 1px solid #e0e0e0;\n  text-shadow: 0 0 0 transparent;\n  box-shadow: 0 0 0 transparent;\n  border-radius: 0;\n}\n.vakata-context .vakata-contextmenu-disabled a,\n.vakata-context .vakata-contextmenu-disabled a:hover {\n  color: silver;\n  background-color: transparent;\n  border: 0;\n  box-shadow: 0 0 0;\n}\n.vakata-context li > a > i {\n  text-decoration: none;\n  display: inline-block;\n  width: 2.4em;\n  height: 2.4em;\n  background: transparent;\n  margin: 0 0 0 -2em;\n  vertical-align: top;\n  text-align: center;\n  line-height: 2.4em;\n}\n.vakata-context li > a > i:empty {\n  width: 2.4em;\n  line-height: 2.4em;\n}\n.vakata-context li > a .vakata-contextmenu-sep {\n  display: inline-block;\n  width: 1px;\n  height: 2.4em;\n  background: white;\n  margin: 0 0.5em 0 0;\n  border-left: 1px solid #e2e3e3;\n}\n.vakata-context .vakata-contextmenu-shortcut {\n  font-size: 0.8em;\n  color: silver;\n  opacity: 0.5;\n  display: none;\n}\n.vakata-context-rtl ul {\n  left: auto;\n  right: 100%;\n  margin-left: auto;\n  margin-right: -4px;\n}\n.vakata-context-rtl li > a.vakata-context-parent {\n  background-image: url(\"data:image/gif;base64,R0lGODlhCwAHAIAAACgoKP///yH5BAEAAAEALAAAAAALAAcAAAINjI+AC7rWHIsPtmoxLAA7\");\n  background-position: left center;\n  background-repeat: no-repeat;\n}\n.vakata-context-rtl .vakata-context-separator > a {\n  margin: 0 2.4em 0 0;\n  border-left: 0;\n  border-right: 1px solid #e2e3e3;\n}\n.vakata-context-rtl .vakata-context-left ul {\n  right: auto;\n  left: 100%;\n  margin-left: -4px;\n  margin-right: auto;\n}\n.vakata-context-rtl li > a > i {\n  margin: 0 -2em 0 0;\n}\n.vakata-context-rtl li > a .vakata-contextmenu-sep {\n  margin: 0 0 0 0.5em;\n  border-left-color: white;\n  background: #e2e3e3;\n}\n#jstree-marker {\n  position: absolute;\n  top: 0;\n  left: 0;\n  margin: -5px 0 0 0;\n  padding: 0;\n  border-right: 0;\n  border-top: 5px solid transparent;\n  border-bottom: 5px solid transparent;\n  border-left: 5px solid;\n  width: 0;\n  height: 0;\n  font-size: 0;\n  line-height: 0;\n}\n#jstree-dnd {\n  line-height: 16px;\n  margin: 0;\n  padding: 4px;\n}\n#jstree-dnd .jstree-icon,\n#jstree-dnd .jstree-copy {\n  display: inline-block;\n  text-decoration: none;\n  margin: 0 2px 0 0;\n  padding: 0;\n  width: 16px;\n  height: 16px;\n}\n#jstree-dnd .jstree-ok {\n  background: green;\n}\n#jstree-dnd .jstree-er {\n  background: red;\n}\n#jstree-dnd .jstree-copy {\n  margin: 0 2px 0 2px;\n}\n.jstree-default .jstree-node,\n.jstree-default .jstree-icon {\n  background-repeat: no-repeat;\n  background-color: transparent;\n}\n.jstree-default .jstree-anchor,\n.jstree-default .jstree-animated,\n.jstree-default .jstree-wholerow {\n  transition: background-color 0.15s, box-shadow 0.15s;\n}\n.jstree-default .jstree-hovered {\n  background: #e7f4f9;\n  border-radius: 2px;\n  box-shadow: inset 0 0 1px #cccccc;\n}\n.jstree-default .jstree-context {\n  background: #e7f4f9;\n  border-radius: 2px;\n  box-shadow: inset 0 0 1px #cccccc;\n}\n.jstree-default .jstree-clicked {\n  background: #beebff;\n  border-radius: 2px;\n  box-shadow: inset 0 0 1px #999999;\n}\n.jstree-default .jstree-no-icons .jstree-anchor > .jstree-themeicon {\n  display: none;\n}\n.jstree-default .jstree-disabled {\n  background: transparent;\n  color: #666666;\n}\n.jstree-default .jstree-disabled.jstree-hovered {\n  background: transparent;\n  box-shadow: none;\n}\n.jstree-default .jstree-disabled.jstree-clicked {\n  background: #efefef;\n}\n.jstree-default .jstree-disabled > .jstree-icon {\n  opacity: 0.8;\n  filter: url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='jstree-grayscale'><feColorMatrix type='matrix' values='0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0'/></filter></svg>#jstree-grayscale\");\n  /* Firefox 10+ */\n  filter: gray;\n  /* IE6-9 */\n  -webkit-filter: grayscale(100%);\n  /* Chrome 19+ & Safari 6+ */\n}\n.jstree-default .jstree-search {\n  font-style: italic;\n  color: #8b0000;\n  font-weight: bold;\n}\n.jstree-default .jstree-no-checkboxes .jstree-checkbox {\n  display: none !important;\n}\n.jstree-default.jstree-checkbox-no-clicked .jstree-clicked {\n  background: transparent;\n  box-shadow: none;\n}\n.jstree-default.jstree-checkbox-no-clicked .jstree-clicked.jstree-hovered {\n  background: #e7f4f9;\n}\n.jstree-default.jstree-checkbox-no-clicked > .jstree-wholerow-ul .jstree-wholerow-clicked {\n  background: transparent;\n}\n.jstree-default.jstree-checkbox-no-clicked > .jstree-wholerow-ul .jstree-wholerow-clicked.jstree-wholerow-hovered {\n  background: #e7f4f9;\n}\n.jstree-default > .jstree-striped {\n  min-width: 100%;\n  display: inline-block;\n  background: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAkCAMAAAB/qqA+AAAABlBMVEUAAAAAAAClZ7nPAAAAAnRSTlMNAMM9s3UAAAAXSURBVHjajcEBAQAAAIKg/H/aCQZ70AUBjAATb6YPDgAAAABJRU5ErkJggg==\") left top repeat;\n}\n.jstree-default > .jstree-wholerow-ul .jstree-hovered,\n.jstree-default > .jstree-wholerow-ul .jstree-clicked {\n  background: transparent;\n  box-shadow: none;\n  border-radius: 0;\n}\n.jstree-default .jstree-wholerow {\n  -moz-box-sizing: border-box;\n  -webkit-box-sizing: border-box;\n  box-sizing: border-box;\n}\n.jstree-default .jstree-wholerow-hovered {\n  background: #e7f4f9;\n}\n.jstree-default .jstree-wholerow-clicked {\n  background: #beebff;\n  background: -webkit-linear-gradient(top, #beebff 0%, #a8e4ff 100%);\n  background: linear-gradient(to bottom, #beebff 0%, #a8e4ff 100%);\n}\n.jstree-default .jstree-node {\n  min-height: 24px;\n  line-height: 24px;\n  margin-left: 24px;\n  min-width: 24px;\n}\n.jstree-default .jstree-anchor {\n  line-height: 24px;\n  height: 24px;\n}\n.jstree-default .jstree-icon {\n  width: 24px;\n  height: 24px;\n  line-height: 24px;\n}\n.jstree-default .jstree-icon:empty {\n  width: 24px;\n  height: 24px;\n  line-height: 24px;\n}\n.jstree-default.jstree-rtl .jstree-node {\n  margin-right: 24px;\n}\n.jstree-default .jstree-wholerow {\n  height: 24px;\n}\n.jstree-default .jstree-node,\n.jstree-default .jstree-icon {\n  background-image: url(" + __webpack_require__(25) + ");\n}\n.jstree-default .jstree-node {\n  background-position: -292px -4px;\n  background-repeat: repeat-y;\n}\n.jstree-default .jstree-last {\n  background: transparent;\n}\n.jstree-default .jstree-open > .jstree-ocl {\n  background-position: -132px -4px;\n}\n.jstree-default .jstree-closed > .jstree-ocl {\n  background-position: -100px -4px;\n}\n.jstree-default .jstree-leaf > .jstree-ocl {\n  background-position: -68px -4px;\n}\n.jstree-default .jstree-themeicon {\n  background-position: -260px -4px;\n}\n.jstree-default > .jstree-no-dots .jstree-node,\n.jstree-default > .jstree-no-dots .jstree-leaf > .jstree-ocl {\n  background: transparent;\n}\n.jstree-default > .jstree-no-dots .jstree-open > .jstree-ocl {\n  background-position: -36px -4px;\n}\n.jstree-default > .jstree-no-dots .jstree-closed > .jstree-ocl {\n  background-position: -4px -4px;\n}\n.jstree-default .jstree-disabled {\n  background: transparent;\n}\n.jstree-default .jstree-disabled.jstree-hovered {\n  background: transparent;\n}\n.jstree-default .jstree-disabled.jstree-clicked {\n  background: #efefef;\n}\n.jstree-default .jstree-checkbox {\n  background-position: -164px -4px;\n}\n.jstree-default .jstree-checkbox:hover {\n  background-position: -164px -36px;\n}\n.jstree-default.jstree-checkbox-selection .jstree-clicked > .jstree-checkbox,\n.jstree-default .jstree-checked > .jstree-checkbox {\n  background-position: -228px -4px;\n}\n.jstree-default.jstree-checkbox-selection .jstree-clicked > .jstree-checkbox:hover,\n.jstree-default .jstree-checked > .jstree-checkbox:hover {\n  background-position: -228px -36px;\n}\n.jstree-default .jstree-anchor > .jstree-undetermined {\n  background-position: -196px -4px;\n}\n.jstree-default .jstree-anchor > .jstree-undetermined:hover {\n  background-position: -196px -36px;\n}\n.jstree-default .jstree-checkbox-disabled {\n  opacity: 0.8;\n  filter: url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='jstree-grayscale'><feColorMatrix type='matrix' values='0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0'/></filter></svg>#jstree-grayscale\");\n  /* Firefox 10+ */\n  filter: gray;\n  /* IE6-9 */\n  -webkit-filter: grayscale(100%);\n  /* Chrome 19+ & Safari 6+ */\n}\n.jstree-default > .jstree-striped {\n  background-size: auto 48px;\n}\n.jstree-default.jstree-rtl .jstree-node {\n  background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAACAQMAAAB49I5GAAAABlBMVEUAAAAdHRvEkCwcAAAAAXRSTlMAQObYZgAAAAxJREFUCNdjAAMOBgAAGAAJMwQHdQAAAABJRU5ErkJggg==\");\n  background-position: 100% 1px;\n  background-repeat: repeat-y;\n}\n.jstree-default.jstree-rtl .jstree-last {\n  background: transparent;\n}\n.jstree-default.jstree-rtl .jstree-open > .jstree-ocl {\n  background-position: -132px -36px;\n}\n.jstree-default.jstree-rtl .jstree-closed > .jstree-ocl {\n  background-position: -100px -36px;\n}\n.jstree-default.jstree-rtl .jstree-leaf > .jstree-ocl {\n  background-position: -68px -36px;\n}\n.jstree-default.jstree-rtl > .jstree-no-dots .jstree-node,\n.jstree-default.jstree-rtl > .jstree-no-dots .jstree-leaf > .jstree-ocl {\n  background: transparent;\n}\n.jstree-default.jstree-rtl > .jstree-no-dots .jstree-open > .jstree-ocl {\n  background-position: -36px -36px;\n}\n.jstree-default.jstree-rtl > .jstree-no-dots .jstree-closed > .jstree-ocl {\n  background-position: -4px -36px;\n}\n.jstree-default .jstree-themeicon-custom {\n  background-color: transparent;\n  background-image: none;\n  background-position: 0 0;\n}\n.jstree-default > .jstree-container-ul .jstree-loading > .jstree-ocl {\n  background: url(" + __webpack_require__(150) + ") center center no-repeat;\n}\n.jstree-default .jstree-file {\n  background: url(" + __webpack_require__(25) + ") -100px -68px no-repeat;\n}\n.jstree-default .jstree-folder {\n  background: url(" + __webpack_require__(25) + ") -260px -4px no-repeat;\n}\n.jstree-default > .jstree-container-ul > .jstree-node {\n  margin-left: 0;\n  margin-right: 0;\n}\n#jstree-dnd.jstree-default {\n  line-height: 24px;\n  padding: 0 4px;\n}\n#jstree-dnd.jstree-default .jstree-ok,\n#jstree-dnd.jstree-default .jstree-er {\n  background-image: url(" + __webpack_require__(25) + ");\n  background-repeat: no-repeat;\n  background-color: transparent;\n}\n#jstree-dnd.jstree-default i {\n  background: transparent;\n  width: 24px;\n  height: 24px;\n  line-height: 24px;\n}\n#jstree-dnd.jstree-default .jstree-ok {\n  background-position: -4px -68px;\n}\n#jstree-dnd.jstree-default .jstree-er {\n  background-position: -36px -68px;\n}\n.jstree-default .jstree-ellipsis {\n  overflow: hidden;\n}\n.jstree-default .jstree-ellipsis .jstree-anchor {\n  width: calc(100% - 29px);\n  text-overflow: ellipsis;\n  overflow: hidden;\n}\n.jstree-default .jstree-ellipsis.jstree-no-icons .jstree-anchor {\n  width: calc(100% - 5px);\n}\n.jstree-default.jstree-rtl .jstree-node {\n  background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAACAQMAAAB49I5GAAAABlBMVEUAAAAdHRvEkCwcAAAAAXRSTlMAQObYZgAAAAxJREFUCNdjAAMOBgAAGAAJMwQHdQAAAABJRU5ErkJggg==\");\n}\n.jstree-default.jstree-rtl .jstree-last {\n  background: transparent;\n}\n.jstree-default-small .jstree-node {\n  min-height: 18px;\n  line-height: 18px;\n  margin-left: 18px;\n  min-width: 18px;\n}\n.jstree-default-small .jstree-anchor {\n  line-height: 18px;\n  height: 18px;\n}\n.jstree-default-small .jstree-icon {\n  width: 18px;\n  height: 18px;\n  line-height: 18px;\n}\n.jstree-default-small .jstree-icon:empty {\n  width: 18px;\n  height: 18px;\n  line-height: 18px;\n}\n.jstree-default-small.jstree-rtl .jstree-node {\n  margin-right: 18px;\n}\n.jstree-default-small .jstree-wholerow {\n  height: 18px;\n}\n.jstree-default-small .jstree-node,\n.jstree-default-small .jstree-icon {\n  background-image: url(" + __webpack_require__(25) + ");\n}\n.jstree-default-small .jstree-node {\n  background-position: -295px -7px;\n  background-repeat: repeat-y;\n}\n.jstree-default-small .jstree-last {\n  background: transparent;\n}\n.jstree-default-small .jstree-open > .jstree-ocl {\n  background-position: -135px -7px;\n}\n.jstree-default-small .jstree-closed > .jstree-ocl {\n  background-position: -103px -7px;\n}\n.jstree-default-small .jstree-leaf > .jstree-ocl {\n  background-position: -71px -7px;\n}\n.jstree-default-small .jstree-themeicon {\n  background-position: -263px -7px;\n}\n.jstree-default-small > .jstree-no-dots .jstree-node,\n.jstree-default-small > .jstree-no-dots .jstree-leaf > .jstree-ocl {\n  background: transparent;\n}\n.jstree-default-small > .jstree-no-dots .jstree-open > .jstree-ocl {\n  background-position: -39px -7px;\n}\n.jstree-default-small > .jstree-no-dots .jstree-closed > .jstree-ocl {\n  background-position: -7px -7px;\n}\n.jstree-default-small .jstree-disabled {\n  background: transparent;\n}\n.jstree-default-small .jstree-disabled.jstree-hovered {\n  background: transparent;\n}\n.jstree-default-small .jstree-disabled.jstree-clicked {\n  background: #efefef;\n}\n.jstree-default-small .jstree-checkbox {\n  background-position: -167px -7px;\n}\n.jstree-default-small .jstree-checkbox:hover {\n  background-position: -167px -39px;\n}\n.jstree-default-small.jstree-checkbox-selection .jstree-clicked > .jstree-checkbox,\n.jstree-default-small .jstree-checked > .jstree-checkbox {\n  background-position: -231px -7px;\n}\n.jstree-default-small.jstree-checkbox-selection .jstree-clicked > .jstree-checkbox:hover,\n.jstree-default-small .jstree-checked > .jstree-checkbox:hover {\n  background-position: -231px -39px;\n}\n.jstree-default-small .jstree-anchor > .jstree-undetermined {\n  background-position: -199px -7px;\n}\n.jstree-default-small .jstree-anchor > .jstree-undetermined:hover {\n  background-position: -199px -39px;\n}\n.jstree-default-small .jstree-checkbox-disabled {\n  opacity: 0.8;\n  filter: url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='jstree-grayscale'><feColorMatrix type='matrix' values='0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0'/></filter></svg>#jstree-grayscale\");\n  /* Firefox 10+ */\n  filter: gray;\n  /* IE6-9 */\n  -webkit-filter: grayscale(100%);\n  /* Chrome 19+ & Safari 6+ */\n}\n.jstree-default-small > .jstree-striped {\n  background-size: auto 36px;\n}\n.jstree-default-small.jstree-rtl .jstree-node {\n  background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAACAQMAAAB49I5GAAAABlBMVEUAAAAdHRvEkCwcAAAAAXRSTlMAQObYZgAAAAxJREFUCNdjAAMOBgAAGAAJMwQHdQAAAABJRU5ErkJggg==\");\n  background-position: 100% 1px;\n  background-repeat: repeat-y;\n}\n.jstree-default-small.jstree-rtl .jstree-last {\n  background: transparent;\n}\n.jstree-default-small.jstree-rtl .jstree-open > .jstree-ocl {\n  background-position: -135px -39px;\n}\n.jstree-default-small.jstree-rtl .jstree-closed > .jstree-ocl {\n  background-position: -103px -39px;\n}\n.jstree-default-small.jstree-rtl .jstree-leaf > .jstree-ocl {\n  background-position: -71px -39px;\n}\n.jstree-default-small.jstree-rtl > .jstree-no-dots .jstree-node,\n.jstree-default-small.jstree-rtl > .jstree-no-dots .jstree-leaf > .jstree-ocl {\n  background: transparent;\n}\n.jstree-default-small.jstree-rtl > .jstree-no-dots .jstree-open > .jstree-ocl {\n  background-position: -39px -39px;\n}\n.jstree-default-small.jstree-rtl > .jstree-no-dots .jstree-closed > .jstree-ocl {\n  background-position: -7px -39px;\n}\n.jstree-default-small .jstree-themeicon-custom {\n  background-color: transparent;\n  background-image: none;\n  background-position: 0 0;\n}\n.jstree-default-small > .jstree-container-ul .jstree-loading > .jstree-ocl {\n  background: url(" + __webpack_require__(150) + ") center center no-repeat;\n}\n.jstree-default-small .jstree-file {\n  background: url(" + __webpack_require__(25) + ") -103px -71px no-repeat;\n}\n.jstree-default-small .jstree-folder {\n  background: url(" + __webpack_require__(25) + ") -263px -7px no-repeat;\n}\n.jstree-default-small > .jstree-container-ul > .jstree-node {\n  margin-left: 0;\n  margin-right: 0;\n}\n#jstree-dnd.jstree-default-small {\n  line-height: 18px;\n  padding: 0 4px;\n}\n#jstree-dnd.jstree-default-small .jstree-ok,\n#jstree-dnd.jstree-default-small .jstree-er {\n  background-image: url(" + __webpack_require__(25) + ");\n  background-repeat: no-repeat;\n  background-color: transparent;\n}\n#jstree-dnd.jstree-default-small i {\n  background: transparent;\n  width: 18px;\n  height: 18px;\n  line-height: 18px;\n}\n#jstree-dnd.jstree-default-small .jstree-ok {\n  background-position: -7px -71px;\n}\n#jstree-dnd.jstree-default-small .jstree-er {\n  background-position: -39px -71px;\n}\n.jstree-default-small .jstree-ellipsis {\n  overflow: hidden;\n}\n.jstree-default-small .jstree-ellipsis .jstree-anchor {\n  width: calc(100% - 23px);\n  text-overflow: ellipsis;\n  overflow: hidden;\n}\n.jstree-default-small .jstree-ellipsis.jstree-no-icons .jstree-anchor {\n  width: calc(100% - 5px);\n}\n.jstree-default-small.jstree-rtl .jstree-node {\n  background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAACAQMAAABv1h6PAAAABlBMVEUAAAAdHRvEkCwcAAAAAXRSTlMAQObYZgAAAAxJREFUCNdjAAMHBgAAiABBI4gz9AAAAABJRU5ErkJggg==\");\n}\n.jstree-default-small.jstree-rtl .jstree-last {\n  background: transparent;\n}\n.jstree-default-large .jstree-node {\n  min-height: 32px;\n  line-height: 32px;\n  margin-left: 32px;\n  min-width: 32px;\n}\n.jstree-default-large .jstree-anchor {\n  line-height: 32px;\n  height: 32px;\n}\n.jstree-default-large .jstree-icon {\n  width: 32px;\n  height: 32px;\n  line-height: 32px;\n}\n.jstree-default-large .jstree-icon:empty {\n  width: 32px;\n  height: 32px;\n  line-height: 32px;\n}\n.jstree-default-large.jstree-rtl .jstree-node {\n  margin-right: 32px;\n}\n.jstree-default-large .jstree-wholerow {\n  height: 32px;\n}\n.jstree-default-large .jstree-node,\n.jstree-default-large .jstree-icon {\n  background-image: url(" + __webpack_require__(25) + ");\n}\n.jstree-default-large .jstree-node {\n  background-position: -288px 0px;\n  background-repeat: repeat-y;\n}\n.jstree-default-large .jstree-last {\n  background: transparent;\n}\n.jstree-default-large .jstree-open > .jstree-ocl {\n  background-position: -128px 0px;\n}\n.jstree-default-large .jstree-closed > .jstree-ocl {\n  background-position: -96px 0px;\n}\n.jstree-default-large .jstree-leaf > .jstree-ocl {\n  background-position: -64px 0px;\n}\n.jstree-default-large .jstree-themeicon {\n  background-position: -256px 0px;\n}\n.jstree-default-large > .jstree-no-dots .jstree-node,\n.jstree-default-large > .jstree-no-dots .jstree-leaf > .jstree-ocl {\n  background: transparent;\n}\n.jstree-default-large > .jstree-no-dots .jstree-open > .jstree-ocl {\n  background-position: -32px 0px;\n}\n.jstree-default-large > .jstree-no-dots .jstree-closed > .jstree-ocl {\n  background-position: 0px 0px;\n}\n.jstree-default-large .jstree-disabled {\n  background: transparent;\n}\n.jstree-default-large .jstree-disabled.jstree-hovered {\n  background: transparent;\n}\n.jstree-default-large .jstree-disabled.jstree-clicked {\n  background: #efefef;\n}\n.jstree-default-large .jstree-checkbox {\n  background-position: -160px 0px;\n}\n.jstree-default-large .jstree-checkbox:hover {\n  background-position: -160px -32px;\n}\n.jstree-default-large.jstree-checkbox-selection .jstree-clicked > .jstree-checkbox,\n.jstree-default-large .jstree-checked > .jstree-checkbox {\n  background-position: -224px 0px;\n}\n.jstree-default-large.jstree-checkbox-selection .jstree-clicked > .jstree-checkbox:hover,\n.jstree-default-large .jstree-checked > .jstree-checkbox:hover {\n  background-position: -224px -32px;\n}\n.jstree-default-large .jstree-anchor > .jstree-undetermined {\n  background-position: -192px 0px;\n}\n.jstree-default-large .jstree-anchor > .jstree-undetermined:hover {\n  background-position: -192px -32px;\n}\n.jstree-default-large .jstree-checkbox-disabled {\n  opacity: 0.8;\n  filter: url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='jstree-grayscale'><feColorMatrix type='matrix' values='0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0'/></filter></svg>#jstree-grayscale\");\n  /* Firefox 10+ */\n  filter: gray;\n  /* IE6-9 */\n  -webkit-filter: grayscale(100%);\n  /* Chrome 19+ & Safari 6+ */\n}\n.jstree-default-large > .jstree-striped {\n  background-size: auto 64px;\n}\n.jstree-default-large.jstree-rtl .jstree-node {\n  background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAACAQMAAAB49I5GAAAABlBMVEUAAAAdHRvEkCwcAAAAAXRSTlMAQObYZgAAAAxJREFUCNdjAAMOBgAAGAAJMwQHdQAAAABJRU5ErkJggg==\");\n  background-position: 100% 1px;\n  background-repeat: repeat-y;\n}\n.jstree-default-large.jstree-rtl .jstree-last {\n  background: transparent;\n}\n.jstree-default-large.jstree-rtl .jstree-open > .jstree-ocl {\n  background-position: -128px -32px;\n}\n.jstree-default-large.jstree-rtl .jstree-closed > .jstree-ocl {\n  background-position: -96px -32px;\n}\n.jstree-default-large.jstree-rtl .jstree-leaf > .jstree-ocl {\n  background-position: -64px -32px;\n}\n.jstree-default-large.jstree-rtl > .jstree-no-dots .jstree-node,\n.jstree-default-large.jstree-rtl > .jstree-no-dots .jstree-leaf > .jstree-ocl {\n  background: transparent;\n}\n.jstree-default-large.jstree-rtl > .jstree-no-dots .jstree-open > .jstree-ocl {\n  background-position: -32px -32px;\n}\n.jstree-default-large.jstree-rtl > .jstree-no-dots .jstree-closed > .jstree-ocl {\n  background-position: 0px -32px;\n}\n.jstree-default-large .jstree-themeicon-custom {\n  background-color: transparent;\n  background-image: none;\n  background-position: 0 0;\n}\n.jstree-default-large > .jstree-container-ul .jstree-loading > .jstree-ocl {\n  background: url(" + __webpack_require__(150) + ") center center no-repeat;\n}\n.jstree-default-large .jstree-file {\n  background: url(" + __webpack_require__(25) + ") -96px -64px no-repeat;\n}\n.jstree-default-large .jstree-folder {\n  background: url(" + __webpack_require__(25) + ") -256px 0px no-repeat;\n}\n.jstree-default-large > .jstree-container-ul > .jstree-node {\n  margin-left: 0;\n  margin-right: 0;\n}\n#jstree-dnd.jstree-default-large {\n  line-height: 32px;\n  padding: 0 4px;\n}\n#jstree-dnd.jstree-default-large .jstree-ok,\n#jstree-dnd.jstree-default-large .jstree-er {\n  background-image: url(" + __webpack_require__(25) + ");\n  background-repeat: no-repeat;\n  background-color: transparent;\n}\n#jstree-dnd.jstree-default-large i {\n  background: transparent;\n  width: 32px;\n  height: 32px;\n  line-height: 32px;\n}\n#jstree-dnd.jstree-default-large .jstree-ok {\n  background-position: 0px -64px;\n}\n#jstree-dnd.jstree-default-large .jstree-er {\n  background-position: -32px -64px;\n}\n.jstree-default-large .jstree-ellipsis {\n  overflow: hidden;\n}\n.jstree-default-large .jstree-ellipsis .jstree-anchor {\n  width: calc(100% - 37px);\n  text-overflow: ellipsis;\n  overflow: hidden;\n}\n.jstree-default-large .jstree-ellipsis.jstree-no-icons .jstree-anchor {\n  width: calc(100% - 5px);\n}\n.jstree-default-large.jstree-rtl .jstree-node {\n  background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAACAQMAAAAD0EyKAAAABlBMVEUAAAAdHRvEkCwcAAAAAXRSTlMAQObYZgAAAAxJREFUCNdjgIIGBgABCgCBvVLXcAAAAABJRU5ErkJggg==\");\n}\n.jstree-default-large.jstree-rtl .jstree-last {\n  background: transparent;\n}\n@media (max-width: 768px) {\n  #jstree-dnd.jstree-dnd-responsive {\n    line-height: 40px;\n    font-weight: bold;\n    font-size: 1.1em;\n    text-shadow: 1px 1px white;\n  }\n  #jstree-dnd.jstree-dnd-responsive > i {\n    background: transparent;\n    width: 40px;\n    height: 40px;\n  }\n  #jstree-dnd.jstree-dnd-responsive > .jstree-ok {\n    background-image: url(" + __webpack_require__(57) + ");\n    background-position: 0 -200px;\n    background-size: 120px 240px;\n  }\n  #jstree-dnd.jstree-dnd-responsive > .jstree-er {\n    background-image: url(" + __webpack_require__(57) + ");\n    background-position: -40px -200px;\n    background-size: 120px 240px;\n  }\n  #jstree-marker.jstree-dnd-responsive {\n    border-left-width: 10px;\n    border-top-width: 10px;\n    border-bottom-width: 10px;\n    margin-top: -10px;\n  }\n}\n@media (max-width: 768px) {\n  .jstree-default-responsive {\n    /*\n\t.jstree-open > .jstree-ocl,\n\t.jstree-closed > .jstree-ocl { border-radius:20px; background-color:white; }\n\t*/\n  }\n  .jstree-default-responsive .jstree-icon {\n    background-image: url(" + __webpack_require__(57) + ");\n  }\n  .jstree-default-responsive .jstree-node,\n  .jstree-default-responsive .jstree-leaf > .jstree-ocl {\n    background: transparent;\n  }\n  .jstree-default-responsive .jstree-node {\n    min-height: 40px;\n    line-height: 40px;\n    margin-left: 40px;\n    min-width: 40px;\n    white-space: nowrap;\n  }\n  .jstree-default-responsive .jstree-anchor {\n    line-height: 40px;\n    height: 40px;\n  }\n  .jstree-default-responsive .jstree-icon,\n  .jstree-default-responsive .jstree-icon:empty {\n    width: 40px;\n    height: 40px;\n    line-height: 40px;\n  }\n  .jstree-default-responsive > .jstree-container-ul > .jstree-node {\n    margin-left: 0;\n  }\n  .jstree-default-responsive.jstree-rtl .jstree-node {\n    margin-left: 0;\n    margin-right: 40px;\n    background: transparent;\n  }\n  .jstree-default-responsive.jstree-rtl .jstree-container-ul > .jstree-node {\n    margin-right: 0;\n  }\n  .jstree-default-responsive .jstree-ocl,\n  .jstree-default-responsive .jstree-themeicon,\n  .jstree-default-responsive .jstree-checkbox {\n    background-size: 120px 240px;\n  }\n  .jstree-default-responsive .jstree-leaf > .jstree-ocl,\n  .jstree-default-responsive.jstree-rtl .jstree-leaf > .jstree-ocl {\n    background: transparent;\n  }\n  .jstree-default-responsive .jstree-open > .jstree-ocl {\n    background-position: 0 0px !important;\n  }\n  .jstree-default-responsive .jstree-closed > .jstree-ocl {\n    background-position: 0 -40px !important;\n  }\n  .jstree-default-responsive.jstree-rtl .jstree-closed > .jstree-ocl {\n    background-position: -40px 0px !important;\n  }\n  .jstree-default-responsive .jstree-themeicon {\n    background-position: -40px -40px;\n  }\n  .jstree-default-responsive .jstree-checkbox,\n  .jstree-default-responsive .jstree-checkbox:hover {\n    background-position: -40px -80px;\n  }\n  .jstree-default-responsive.jstree-checkbox-selection .jstree-clicked > .jstree-checkbox,\n  .jstree-default-responsive.jstree-checkbox-selection .jstree-clicked > .jstree-checkbox:hover,\n  .jstree-default-responsive .jstree-checked > .jstree-checkbox,\n  .jstree-default-responsive .jstree-checked > .jstree-checkbox:hover {\n    background-position: 0 -80px;\n  }\n  .jstree-default-responsive .jstree-anchor > .jstree-undetermined,\n  .jstree-default-responsive .jstree-anchor > .jstree-undetermined:hover {\n    background-position: 0 -120px;\n  }\n  .jstree-default-responsive .jstree-anchor {\n    font-weight: bold;\n    font-size: 1.1em;\n    text-shadow: 1px 1px white;\n  }\n  .jstree-default-responsive > .jstree-striped {\n    background: transparent;\n  }\n  .jstree-default-responsive .jstree-wholerow {\n    border-top: 1px solid rgba(255, 255, 255, 0.7);\n    border-bottom: 1px solid rgba(64, 64, 64, 0.2);\n    background: #ebebeb;\n    height: 40px;\n  }\n  .jstree-default-responsive .jstree-wholerow-hovered {\n    background: #e7f4f9;\n  }\n  .jstree-default-responsive .jstree-wholerow-clicked {\n    background: #beebff;\n  }\n  .jstree-default-responsive .jstree-children .jstree-last > .jstree-wholerow {\n    box-shadow: inset 0 -6px 3px -5px #666666;\n  }\n  .jstree-default-responsive .jstree-children .jstree-open > .jstree-wholerow {\n    box-shadow: inset 0 6px 3px -5px #666666;\n    border-top: 0;\n  }\n  .jstree-default-responsive .jstree-children .jstree-open + .jstree-open {\n    box-shadow: none;\n  }\n  .jstree-default-responsive .jstree-node,\n  .jstree-default-responsive .jstree-icon,\n  .jstree-default-responsive .jstree-node > .jstree-ocl,\n  .jstree-default-responsive .jstree-themeicon,\n  .jstree-default-responsive .jstree-checkbox {\n    background-image: url(" + __webpack_require__(57) + ");\n    background-size: 120px 240px;\n  }\n  .jstree-default-responsive .jstree-node {\n    background-position: -80px 0;\n    background-repeat: repeat-y;\n  }\n  .jstree-default-responsive .jstree-last {\n    background: transparent;\n  }\n  .jstree-default-responsive .jstree-leaf > .jstree-ocl {\n    background-position: -40px -120px;\n  }\n  .jstree-default-responsive .jstree-last > .jstree-ocl {\n    background-position: -40px -160px;\n  }\n  .jstree-default-responsive .jstree-themeicon-custom {\n    background-color: transparent;\n    background-image: none;\n    background-position: 0 0;\n  }\n  .jstree-default-responsive .jstree-file {\n    background: url(" + __webpack_require__(57) + ") 0 -160px no-repeat;\n    background-size: 120px 240px;\n  }\n  .jstree-default-responsive .jstree-folder {\n    background: url(" + __webpack_require__(57) + ") -40px -40px no-repeat;\n    background-size: 120px 240px;\n  }\n  .jstree-default-responsive > .jstree-container-ul > .jstree-node {\n    margin-left: 0;\n    margin-right: 0;\n  }\n}\n", ""]);
+exports.push([module.i, "/* jsTree default theme */\n.jstree-node,\n.jstree-children,\n.jstree-container-ul {\n  display: block;\n  margin: 0;\n  padding: 0;\n  list-style-type: none;\n  list-style-image: none;\n}\n.jstree-node {\n  white-space: nowrap;\n}\n.jstree-anchor {\n  display: inline-block;\n  color: black;\n  white-space: nowrap;\n  padding: 0 4px 0 1px;\n  margin: 0;\n  vertical-align: top;\n}\n.jstree-anchor:focus {\n  outline: 0;\n}\n.jstree-anchor,\n.jstree-anchor:link,\n.jstree-anchor:visited,\n.jstree-anchor:hover,\n.jstree-anchor:active {\n  text-decoration: none;\n  color: inherit;\n}\n.jstree-icon {\n  display: inline-block;\n  text-decoration: none;\n  margin: 0;\n  padding: 0;\n  vertical-align: top;\n  text-align: center;\n}\n.jstree-icon:empty {\n  display: inline-block;\n  text-decoration: none;\n  margin: 0;\n  padding: 0;\n  vertical-align: top;\n  text-align: center;\n}\n.jstree-ocl {\n  cursor: pointer;\n}\n.jstree-leaf > .jstree-ocl {\n  cursor: default;\n}\n.jstree .jstree-open > .jstree-children {\n  display: block;\n}\n.jstree .jstree-closed > .jstree-children,\n.jstree .jstree-leaf > .jstree-children {\n  display: none;\n}\n.jstree-anchor > .jstree-themeicon {\n  margin-right: 2px;\n}\n.jstree-no-icons .jstree-themeicon,\n.jstree-anchor > .jstree-themeicon-hidden {\n  display: none;\n}\n.jstree-hidden,\n.jstree-node.jstree-hidden {\n  display: none;\n}\n.jstree-rtl .jstree-anchor {\n  padding: 0 1px 0 4px;\n}\n.jstree-rtl .jstree-anchor > .jstree-themeicon {\n  margin-left: 2px;\n  margin-right: 0;\n}\n.jstree-rtl .jstree-node {\n  margin-left: 0;\n}\n.jstree-rtl .jstree-container-ul > .jstree-node {\n  margin-right: 0;\n}\n.jstree-wholerow-ul {\n  position: relative;\n  display: inline-block;\n  min-width: 100%;\n}\n.jstree-wholerow-ul .jstree-leaf > .jstree-ocl {\n  cursor: pointer;\n}\n.jstree-wholerow-ul .jstree-anchor,\n.jstree-wholerow-ul .jstree-icon {\n  position: relative;\n}\n.jstree-wholerow-ul .jstree-wholerow {\n  width: 100%;\n  cursor: pointer;\n  position: absolute;\n  left: 0;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\n.jstree-contextmenu .jstree-anchor {\n  -webkit-user-select: none;\n  /* disable selection/Copy of UIWebView */\n  -webkit-touch-callout: none;\n  /* disable the IOS popup when long-press on a link */\n}\n.vakata-context {\n  display: none;\n}\n.vakata-context,\n.vakata-context ul {\n  margin: 0;\n  padding: 2px;\n  position: absolute;\n  background: #f5f5f5;\n  border: 1px solid #979797;\n  box-shadow: 2px 2px 2px #999999;\n}\n.vakata-context ul {\n  list-style: none;\n  left: 100%;\n  margin-top: -2.7em;\n  margin-left: -4px;\n}\n.vakata-context .vakata-context-right ul {\n  left: auto;\n  right: 100%;\n  margin-left: auto;\n  margin-right: -4px;\n}\n.vakata-context li {\n  list-style: none;\n}\n.vakata-context li > a {\n  display: block;\n  padding: 0 2em 0 2em;\n  text-decoration: none;\n  width: auto;\n  color: black;\n  white-space: nowrap;\n  line-height: 2.4em;\n  text-shadow: 1px 1px 0 white;\n  border-radius: 1px;\n}\n.vakata-context li > a:hover {\n  position: relative;\n  background-color: #e8eff7;\n  box-shadow: 0 0 2px #0a6aa1;\n}\n.vakata-context li > a.vakata-context-parent {\n  background-image: url(\"data:image/gif;base64,R0lGODlhCwAHAIAAACgoKP///yH5BAEAAAEALAAAAAALAAcAAAIORI4JlrqN1oMSnmmZDQUAOw==\");\n  background-position: right center;\n  background-repeat: no-repeat;\n}\n.vakata-context li > a:focus {\n  outline: 0;\n}\n.vakata-context .vakata-context-hover > a {\n  position: relative;\n  background-color: #e8eff7;\n  box-shadow: 0 0 2px #0a6aa1;\n}\n.vakata-context .vakata-context-separator > a,\n.vakata-context .vakata-context-separator > a:hover {\n  background: white;\n  border: 0;\n  border-top: 1px solid #e2e3e3;\n  height: 1px;\n  min-height: 1px;\n  max-height: 1px;\n  padding: 0;\n  margin: 0 0 0 2.4em;\n  border-left: 1px solid #e0e0e0;\n  text-shadow: 0 0 0 transparent;\n  box-shadow: 0 0 0 transparent;\n  border-radius: 0;\n}\n.vakata-context .vakata-contextmenu-disabled a,\n.vakata-context .vakata-contextmenu-disabled a:hover {\n  color: silver;\n  background-color: transparent;\n  border: 0;\n  box-shadow: 0 0 0;\n}\n.vakata-context li > a > i {\n  text-decoration: none;\n  display: inline-block;\n  width: 2.4em;\n  height: 2.4em;\n  background: transparent;\n  margin: 0 0 0 -2em;\n  vertical-align: top;\n  text-align: center;\n  line-height: 2.4em;\n}\n.vakata-context li > a > i:empty {\n  width: 2.4em;\n  line-height: 2.4em;\n}\n.vakata-context li > a .vakata-contextmenu-sep {\n  display: inline-block;\n  width: 1px;\n  height: 2.4em;\n  background: white;\n  margin: 0 0.5em 0 0;\n  border-left: 1px solid #e2e3e3;\n}\n.vakata-context .vakata-contextmenu-shortcut {\n  font-size: 0.8em;\n  color: silver;\n  opacity: 0.5;\n  display: none;\n}\n.vakata-context-rtl ul {\n  left: auto;\n  right: 100%;\n  margin-left: auto;\n  margin-right: -4px;\n}\n.vakata-context-rtl li > a.vakata-context-parent {\n  background-image: url(\"data:image/gif;base64,R0lGODlhCwAHAIAAACgoKP///yH5BAEAAAEALAAAAAALAAcAAAINjI+AC7rWHIsPtmoxLAA7\");\n  background-position: left center;\n  background-repeat: no-repeat;\n}\n.vakata-context-rtl .vakata-context-separator > a {\n  margin: 0 2.4em 0 0;\n  border-left: 0;\n  border-right: 1px solid #e2e3e3;\n}\n.vakata-context-rtl .vakata-context-left ul {\n  right: auto;\n  left: 100%;\n  margin-left: -4px;\n  margin-right: auto;\n}\n.vakata-context-rtl li > a > i {\n  margin: 0 -2em 0 0;\n}\n.vakata-context-rtl li > a .vakata-contextmenu-sep {\n  margin: 0 0 0 0.5em;\n  border-left-color: white;\n  background: #e2e3e3;\n}\n#jstree-marker {\n  position: absolute;\n  top: 0;\n  left: 0;\n  margin: -5px 0 0 0;\n  padding: 0;\n  border-right: 0;\n  border-top: 5px solid transparent;\n  border-bottom: 5px solid transparent;\n  border-left: 5px solid;\n  width: 0;\n  height: 0;\n  font-size: 0;\n  line-height: 0;\n}\n#jstree-dnd {\n  line-height: 16px;\n  margin: 0;\n  padding: 4px;\n}\n#jstree-dnd .jstree-icon,\n#jstree-dnd .jstree-copy {\n  display: inline-block;\n  text-decoration: none;\n  margin: 0 2px 0 0;\n  padding: 0;\n  width: 16px;\n  height: 16px;\n}\n#jstree-dnd .jstree-ok {\n  background: green;\n}\n#jstree-dnd .jstree-er {\n  background: red;\n}\n#jstree-dnd .jstree-copy {\n  margin: 0 2px 0 2px;\n}\n.jstree-default .jstree-node,\n.jstree-default .jstree-icon {\n  background-repeat: no-repeat;\n  background-color: transparent;\n}\n.jstree-default .jstree-anchor,\n.jstree-default .jstree-animated,\n.jstree-default .jstree-wholerow {\n  transition: background-color 0.15s, box-shadow 0.15s;\n}\n.jstree-default .jstree-hovered {\n  background: #e7f4f9;\n  border-radius: 2px;\n  box-shadow: inset 0 0 1px #cccccc;\n}\n.jstree-default .jstree-context {\n  background: #e7f4f9;\n  border-radius: 2px;\n  box-shadow: inset 0 0 1px #cccccc;\n}\n.jstree-default .jstree-clicked {\n  background: #beebff;\n  border-radius: 2px;\n  box-shadow: inset 0 0 1px #999999;\n}\n.jstree-default .jstree-no-icons .jstree-anchor > .jstree-themeicon {\n  display: none;\n}\n.jstree-default .jstree-disabled {\n  background: transparent;\n  color: #666666;\n}\n.jstree-default .jstree-disabled.jstree-hovered {\n  background: transparent;\n  box-shadow: none;\n}\n.jstree-default .jstree-disabled.jstree-clicked {\n  background: #efefef;\n}\n.jstree-default .jstree-disabled > .jstree-icon {\n  opacity: 0.8;\n  filter: url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='jstree-grayscale'><feColorMatrix type='matrix' values='0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0'/></filter></svg>#jstree-grayscale\");\n  /* Firefox 10+ */\n  filter: gray;\n  /* IE6-9 */\n  -webkit-filter: grayscale(100%);\n  /* Chrome 19+ & Safari 6+ */\n}\n.jstree-default .jstree-search {\n  font-style: italic;\n  color: #8b0000;\n  font-weight: bold;\n}\n.jstree-default .jstree-no-checkboxes .jstree-checkbox {\n  display: none !important;\n}\n.jstree-default.jstree-checkbox-no-clicked .jstree-clicked {\n  background: transparent;\n  box-shadow: none;\n}\n.jstree-default.jstree-checkbox-no-clicked .jstree-clicked.jstree-hovered {\n  background: #e7f4f9;\n}\n.jstree-default.jstree-checkbox-no-clicked > .jstree-wholerow-ul .jstree-wholerow-clicked {\n  background: transparent;\n}\n.jstree-default.jstree-checkbox-no-clicked > .jstree-wholerow-ul .jstree-wholerow-clicked.jstree-wholerow-hovered {\n  background: #e7f4f9;\n}\n.jstree-default > .jstree-striped {\n  min-width: 100%;\n  display: inline-block;\n  background: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAkCAMAAAB/qqA+AAAABlBMVEUAAAAAAAClZ7nPAAAAAnRSTlMNAMM9s3UAAAAXSURBVHjajcEBAQAAAIKg/H/aCQZ70AUBjAATb6YPDgAAAABJRU5ErkJggg==\") left top repeat;\n}\n.jstree-default > .jstree-wholerow-ul .jstree-hovered,\n.jstree-default > .jstree-wholerow-ul .jstree-clicked {\n  background: transparent;\n  box-shadow: none;\n  border-radius: 0;\n}\n.jstree-default .jstree-wholerow {\n  -moz-box-sizing: border-box;\n  -webkit-box-sizing: border-box;\n  box-sizing: border-box;\n}\n.jstree-default .jstree-wholerow-hovered {\n  background: #e7f4f9;\n}\n.jstree-default .jstree-wholerow-clicked {\n  background: #beebff;\n  background: -webkit-linear-gradient(top, #beebff 0%, #a8e4ff 100%);\n  background: linear-gradient(to bottom, #beebff 0%, #a8e4ff 100%);\n}\n.jstree-default .jstree-node {\n  min-height: 24px;\n  line-height: 24px;\n  margin-left: 24px;\n  min-width: 24px;\n}\n.jstree-default .jstree-anchor {\n  line-height: 24px;\n  height: 24px;\n}\n.jstree-default .jstree-icon {\n  width: 24px;\n  height: 24px;\n  line-height: 24px;\n}\n.jstree-default .jstree-icon:empty {\n  width: 24px;\n  height: 24px;\n  line-height: 24px;\n}\n.jstree-default.jstree-rtl .jstree-node {\n  margin-right: 24px;\n}\n.jstree-default .jstree-wholerow {\n  height: 24px;\n}\n.jstree-default .jstree-node,\n.jstree-default .jstree-icon {\n  background-image: url(" + __webpack_require__(25) + ");\n}\n.jstree-default .jstree-node {\n  background-position: -292px -4px;\n  background-repeat: repeat-y;\n}\n.jstree-default .jstree-last {\n  background: transparent;\n}\n.jstree-default .jstree-open > .jstree-ocl {\n  background-position: -132px -4px;\n}\n.jstree-default .jstree-closed > .jstree-ocl {\n  background-position: -100px -4px;\n}\n.jstree-default .jstree-leaf > .jstree-ocl {\n  background-position: -68px -4px;\n}\n.jstree-default .jstree-themeicon {\n  background-position: -260px -4px;\n}\n.jstree-default > .jstree-no-dots .jstree-node,\n.jstree-default > .jstree-no-dots .jstree-leaf > .jstree-ocl {\n  background: transparent;\n}\n.jstree-default > .jstree-no-dots .jstree-open > .jstree-ocl {\n  background-position: -36px -4px;\n}\n.jstree-default > .jstree-no-dots .jstree-closed > .jstree-ocl {\n  background-position: -4px -4px;\n}\n.jstree-default .jstree-disabled {\n  background: transparent;\n}\n.jstree-default .jstree-disabled.jstree-hovered {\n  background: transparent;\n}\n.jstree-default .jstree-disabled.jstree-clicked {\n  background: #efefef;\n}\n.jstree-default .jstree-checkbox {\n  background-position: -164px -4px;\n}\n.jstree-default .jstree-checkbox:hover {\n  background-position: -164px -36px;\n}\n.jstree-default.jstree-checkbox-selection .jstree-clicked > .jstree-checkbox,\n.jstree-default .jstree-checked > .jstree-checkbox {\n  background-position: -228px -4px;\n}\n.jstree-default.jstree-checkbox-selection .jstree-clicked > .jstree-checkbox:hover,\n.jstree-default .jstree-checked > .jstree-checkbox:hover {\n  background-position: -228px -36px;\n}\n.jstree-default .jstree-anchor > .jstree-undetermined {\n  background-position: -196px -4px;\n}\n.jstree-default .jstree-anchor > .jstree-undetermined:hover {\n  background-position: -196px -36px;\n}\n.jstree-default .jstree-checkbox-disabled {\n  opacity: 0.8;\n  filter: url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='jstree-grayscale'><feColorMatrix type='matrix' values='0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0'/></filter></svg>#jstree-grayscale\");\n  /* Firefox 10+ */\n  filter: gray;\n  /* IE6-9 */\n  -webkit-filter: grayscale(100%);\n  /* Chrome 19+ & Safari 6+ */\n}\n.jstree-default > .jstree-striped {\n  background-size: auto 48px;\n}\n.jstree-default.jstree-rtl .jstree-node {\n  background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAACAQMAAAB49I5GAAAABlBMVEUAAAAdHRvEkCwcAAAAAXRSTlMAQObYZgAAAAxJREFUCNdjAAMOBgAAGAAJMwQHdQAAAABJRU5ErkJggg==\");\n  background-position: 100% 1px;\n  background-repeat: repeat-y;\n}\n.jstree-default.jstree-rtl .jstree-last {\n  background: transparent;\n}\n.jstree-default.jstree-rtl .jstree-open > .jstree-ocl {\n  background-position: -132px -36px;\n}\n.jstree-default.jstree-rtl .jstree-closed > .jstree-ocl {\n  background-position: -100px -36px;\n}\n.jstree-default.jstree-rtl .jstree-leaf > .jstree-ocl {\n  background-position: -68px -36px;\n}\n.jstree-default.jstree-rtl > .jstree-no-dots .jstree-node,\n.jstree-default.jstree-rtl > .jstree-no-dots .jstree-leaf > .jstree-ocl {\n  background: transparent;\n}\n.jstree-default.jstree-rtl > .jstree-no-dots .jstree-open > .jstree-ocl {\n  background-position: -36px -36px;\n}\n.jstree-default.jstree-rtl > .jstree-no-dots .jstree-closed > .jstree-ocl {\n  background-position: -4px -36px;\n}\n.jstree-default .jstree-themeicon-custom {\n  background-color: transparent;\n  background-image: none;\n  background-position: 0 0;\n}\n.jstree-default > .jstree-container-ul .jstree-loading > .jstree-ocl {\n  background: url(" + __webpack_require__(150) + ") center center no-repeat;\n}\n.jstree-default .jstree-file {\n  background: url(" + __webpack_require__(25) + ") -100px -68px no-repeat;\n}\n.jstree-default .jstree-folder {\n  background: url(" + __webpack_require__(25) + ") -260px -4px no-repeat;\n}\n.jstree-default > .jstree-container-ul > .jstree-node {\n  margin-left: 0;\n  margin-right: 0;\n}\n#jstree-dnd.jstree-default {\n  line-height: 24px;\n  padding: 0 4px;\n}\n#jstree-dnd.jstree-default .jstree-ok,\n#jstree-dnd.jstree-default .jstree-er {\n  background-image: url(" + __webpack_require__(25) + ");\n  background-repeat: no-repeat;\n  background-color: transparent;\n}\n#jstree-dnd.jstree-default i {\n  background: transparent;\n  width: 24px;\n  height: 24px;\n  line-height: 24px;\n}\n#jstree-dnd.jstree-default .jstree-ok {\n  background-position: -4px -68px;\n}\n#jstree-dnd.jstree-default .jstree-er {\n  background-position: -36px -68px;\n}\n.jstree-default .jstree-ellipsis {\n  overflow: hidden;\n}\n.jstree-default .jstree-ellipsis .jstree-anchor {\n  width: calc(100% - 29px);\n  text-overflow: ellipsis;\n  overflow: hidden;\n}\n.jstree-default .jstree-ellipsis.jstree-no-icons .jstree-anchor {\n  width: calc(100% - 5px);\n}\n.jstree-default.jstree-rtl .jstree-node {\n  background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAACAQMAAAB49I5GAAAABlBMVEUAAAAdHRvEkCwcAAAAAXRSTlMAQObYZgAAAAxJREFUCNdjAAMOBgAAGAAJMwQHdQAAAABJRU5ErkJggg==\");\n}\n.jstree-default.jstree-rtl .jstree-last {\n  background: transparent;\n}\n.jstree-default-small .jstree-node {\n  min-height: 18px;\n  line-height: 18px;\n  margin-left: 18px;\n  min-width: 18px;\n}\n.jstree-default-small .jstree-anchor {\n  line-height: 18px;\n  height: 18px;\n}\n.jstree-default-small .jstree-icon {\n  width: 18px;\n  height: 18px;\n  line-height: 18px;\n}\n.jstree-default-small .jstree-icon:empty {\n  width: 18px;\n  height: 18px;\n  line-height: 18px;\n}\n.jstree-default-small.jstree-rtl .jstree-node {\n  margin-right: 18px;\n}\n.jstree-default-small .jstree-wholerow {\n  height: 18px;\n}\n.jstree-default-small .jstree-node,\n.jstree-default-small .jstree-icon {\n  background-image: url(" + __webpack_require__(25) + ");\n}\n.jstree-default-small .jstree-node {\n  background-position: -295px -7px;\n  background-repeat: repeat-y;\n}\n.jstree-default-small .jstree-last {\n  background: transparent;\n}\n.jstree-default-small .jstree-open > .jstree-ocl {\n  background-position: -135px -7px;\n}\n.jstree-default-small .jstree-closed > .jstree-ocl {\n  background-position: -103px -7px;\n}\n.jstree-default-small .jstree-leaf > .jstree-ocl {\n  background-position: -71px -7px;\n}\n.jstree-default-small .jstree-themeicon {\n  background-position: -263px -7px;\n}\n.jstree-default-small > .jstree-no-dots .jstree-node,\n.jstree-default-small > .jstree-no-dots .jstree-leaf > .jstree-ocl {\n  background: transparent;\n}\n.jstree-default-small > .jstree-no-dots .jstree-open > .jstree-ocl {\n  background-position: -39px -7px;\n}\n.jstree-default-small > .jstree-no-dots .jstree-closed > .jstree-ocl {\n  background-position: -7px -7px;\n}\n.jstree-default-small .jstree-disabled {\n  background: transparent;\n}\n.jstree-default-small .jstree-disabled.jstree-hovered {\n  background: transparent;\n}\n.jstree-default-small .jstree-disabled.jstree-clicked {\n  background: #efefef;\n}\n.jstree-default-small .jstree-checkbox {\n  background-position: -167px -7px;\n}\n.jstree-default-small .jstree-checkbox:hover {\n  background-position: -167px -39px;\n}\n.jstree-default-small.jstree-checkbox-selection .jstree-clicked > .jstree-checkbox,\n.jstree-default-small .jstree-checked > .jstree-checkbox {\n  background-position: -231px -7px;\n}\n.jstree-default-small.jstree-checkbox-selection .jstree-clicked > .jstree-checkbox:hover,\n.jstree-default-small .jstree-checked > .jstree-checkbox:hover {\n  background-position: -231px -39px;\n}\n.jstree-default-small .jstree-anchor > .jstree-undetermined {\n  background-position: -199px -7px;\n}\n.jstree-default-small .jstree-anchor > .jstree-undetermined:hover {\n  background-position: -199px -39px;\n}\n.jstree-default-small .jstree-checkbox-disabled {\n  opacity: 0.8;\n  filter: url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='jstree-grayscale'><feColorMatrix type='matrix' values='0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0'/></filter></svg>#jstree-grayscale\");\n  /* Firefox 10+ */\n  filter: gray;\n  /* IE6-9 */\n  -webkit-filter: grayscale(100%);\n  /* Chrome 19+ & Safari 6+ */\n}\n.jstree-default-small > .jstree-striped {\n  background-size: auto 36px;\n}\n.jstree-default-small.jstree-rtl .jstree-node {\n  background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAACAQMAAAB49I5GAAAABlBMVEUAAAAdHRvEkCwcAAAAAXRSTlMAQObYZgAAAAxJREFUCNdjAAMOBgAAGAAJMwQHdQAAAABJRU5ErkJggg==\");\n  background-position: 100% 1px;\n  background-repeat: repeat-y;\n}\n.jstree-default-small.jstree-rtl .jstree-last {\n  background: transparent;\n}\n.jstree-default-small.jstree-rtl .jstree-open > .jstree-ocl {\n  background-position: -135px -39px;\n}\n.jstree-default-small.jstree-rtl .jstree-closed > .jstree-ocl {\n  background-position: -103px -39px;\n}\n.jstree-default-small.jstree-rtl .jstree-leaf > .jstree-ocl {\n  background-position: -71px -39px;\n}\n.jstree-default-small.jstree-rtl > .jstree-no-dots .jstree-node,\n.jstree-default-small.jstree-rtl > .jstree-no-dots .jstree-leaf > .jstree-ocl {\n  background: transparent;\n}\n.jstree-default-small.jstree-rtl > .jstree-no-dots .jstree-open > .jstree-ocl {\n  background-position: -39px -39px;\n}\n.jstree-default-small.jstree-rtl > .jstree-no-dots .jstree-closed > .jstree-ocl {\n  background-position: -7px -39px;\n}\n.jstree-default-small .jstree-themeicon-custom {\n  background-color: transparent;\n  background-image: none;\n  background-position: 0 0;\n}\n.jstree-default-small > .jstree-container-ul .jstree-loading > .jstree-ocl {\n  background: url(" + __webpack_require__(150) + ") center center no-repeat;\n}\n.jstree-default-small .jstree-file {\n  background: url(" + __webpack_require__(25) + ") -103px -71px no-repeat;\n}\n.jstree-default-small .jstree-folder {\n  background: url(" + __webpack_require__(25) + ") -263px -7px no-repeat;\n}\n.jstree-default-small > .jstree-container-ul > .jstree-node {\n  margin-left: 0;\n  margin-right: 0;\n}\n#jstree-dnd.jstree-default-small {\n  line-height: 18px;\n  padding: 0 4px;\n}\n#jstree-dnd.jstree-default-small .jstree-ok,\n#jstree-dnd.jstree-default-small .jstree-er {\n  background-image: url(" + __webpack_require__(25) + ");\n  background-repeat: no-repeat;\n  background-color: transparent;\n}\n#jstree-dnd.jstree-default-small i {\n  background: transparent;\n  width: 18px;\n  height: 18px;\n  line-height: 18px;\n}\n#jstree-dnd.jstree-default-small .jstree-ok {\n  background-position: -7px -71px;\n}\n#jstree-dnd.jstree-default-small .jstree-er {\n  background-position: -39px -71px;\n}\n.jstree-default-small .jstree-ellipsis {\n  overflow: hidden;\n}\n.jstree-default-small .jstree-ellipsis .jstree-anchor {\n  width: calc(100% - 23px);\n  text-overflow: ellipsis;\n  overflow: hidden;\n}\n.jstree-default-small .jstree-ellipsis.jstree-no-icons .jstree-anchor {\n  width: calc(100% - 5px);\n}\n.jstree-default-small.jstree-rtl .jstree-node {\n  background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAACAQMAAABv1h6PAAAABlBMVEUAAAAdHRvEkCwcAAAAAXRSTlMAQObYZgAAAAxJREFUCNdjAAMHBgAAiABBI4gz9AAAAABJRU5ErkJggg==\");\n}\n.jstree-default-small.jstree-rtl .jstree-last {\n  background: transparent;\n}\n.jstree-default-large .jstree-node {\n  min-height: 32px;\n  line-height: 32px;\n  margin-left: 32px;\n  min-width: 32px;\n}\n.jstree-default-large .jstree-anchor {\n  line-height: 32px;\n  height: 32px;\n}\n.jstree-default-large .jstree-icon {\n  width: 32px;\n  height: 32px;\n  line-height: 32px;\n}\n.jstree-default-large .jstree-icon:empty {\n  width: 32px;\n  height: 32px;\n  line-height: 32px;\n}\n.jstree-default-large.jstree-rtl .jstree-node {\n  margin-right: 32px;\n}\n.jstree-default-large .jstree-wholerow {\n  height: 32px;\n}\n.jstree-default-large .jstree-node,\n.jstree-default-large .jstree-icon {\n  background-image: url(" + __webpack_require__(25) + ");\n}\n.jstree-default-large .jstree-node {\n  background-position: -288px 0px;\n  background-repeat: repeat-y;\n}\n.jstree-default-large .jstree-last {\n  background: transparent;\n}\n.jstree-default-large .jstree-open > .jstree-ocl {\n  background-position: -128px 0px;\n}\n.jstree-default-large .jstree-closed > .jstree-ocl {\n  background-position: -96px 0px;\n}\n.jstree-default-large .jstree-leaf > .jstree-ocl {\n  background-position: -64px 0px;\n}\n.jstree-default-large .jstree-themeicon {\n  background-position: -256px 0px;\n}\n.jstree-default-large > .jstree-no-dots .jstree-node,\n.jstree-default-large > .jstree-no-dots .jstree-leaf > .jstree-ocl {\n  background: transparent;\n}\n.jstree-default-large > .jstree-no-dots .jstree-open > .jstree-ocl {\n  background-position: -32px 0px;\n}\n.jstree-default-large > .jstree-no-dots .jstree-closed > .jstree-ocl {\n  background-position: 0px 0px;\n}\n.jstree-default-large .jstree-disabled {\n  background: transparent;\n}\n.jstree-default-large .jstree-disabled.jstree-hovered {\n  background: transparent;\n}\n.jstree-default-large .jstree-disabled.jstree-clicked {\n  background: #efefef;\n}\n.jstree-default-large .jstree-checkbox {\n  background-position: -160px 0px;\n}\n.jstree-default-large .jstree-checkbox:hover {\n  background-position: -160px -32px;\n}\n.jstree-default-large.jstree-checkbox-selection .jstree-clicked > .jstree-checkbox,\n.jstree-default-large .jstree-checked > .jstree-checkbox {\n  background-position: -224px 0px;\n}\n.jstree-default-large.jstree-checkbox-selection .jstree-clicked > .jstree-checkbox:hover,\n.jstree-default-large .jstree-checked > .jstree-checkbox:hover {\n  background-position: -224px -32px;\n}\n.jstree-default-large .jstree-anchor > .jstree-undetermined {\n  background-position: -192px 0px;\n}\n.jstree-default-large .jstree-anchor > .jstree-undetermined:hover {\n  background-position: -192px -32px;\n}\n.jstree-default-large .jstree-checkbox-disabled {\n  opacity: 0.8;\n  filter: url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='jstree-grayscale'><feColorMatrix type='matrix' values='0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0'/></filter></svg>#jstree-grayscale\");\n  /* Firefox 10+ */\n  filter: gray;\n  /* IE6-9 */\n  -webkit-filter: grayscale(100%);\n  /* Chrome 19+ & Safari 6+ */\n}\n.jstree-default-large > .jstree-striped {\n  background-size: auto 64px;\n}\n.jstree-default-large.jstree-rtl .jstree-node {\n  background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAACAQMAAAB49I5GAAAABlBMVEUAAAAdHRvEkCwcAAAAAXRSTlMAQObYZgAAAAxJREFUCNdjAAMOBgAAGAAJMwQHdQAAAABJRU5ErkJggg==\");\n  background-position: 100% 1px;\n  background-repeat: repeat-y;\n}\n.jstree-default-large.jstree-rtl .jstree-last {\n  background: transparent;\n}\n.jstree-default-large.jstree-rtl .jstree-open > .jstree-ocl {\n  background-position: -128px -32px;\n}\n.jstree-default-large.jstree-rtl .jstree-closed > .jstree-ocl {\n  background-position: -96px -32px;\n}\n.jstree-default-large.jstree-rtl .jstree-leaf > .jstree-ocl {\n  background-position: -64px -32px;\n}\n.jstree-default-large.jstree-rtl > .jstree-no-dots .jstree-node,\n.jstree-default-large.jstree-rtl > .jstree-no-dots .jstree-leaf > .jstree-ocl {\n  background: transparent;\n}\n.jstree-default-large.jstree-rtl > .jstree-no-dots .jstree-open > .jstree-ocl {\n  background-position: -32px -32px;\n}\n.jstree-default-large.jstree-rtl > .jstree-no-dots .jstree-closed > .jstree-ocl {\n  background-position: 0px -32px;\n}\n.jstree-default-large .jstree-themeicon-custom {\n  background-color: transparent;\n  background-image: none;\n  background-position: 0 0;\n}\n.jstree-default-large > .jstree-container-ul .jstree-loading > .jstree-ocl {\n  background: url(" + __webpack_require__(150) + ") center center no-repeat;\n}\n.jstree-default-large .jstree-file {\n  background: url(" + __webpack_require__(25) + ") -96px -64px no-repeat;\n}\n.jstree-default-large .jstree-folder {\n  background: url(" + __webpack_require__(25) + ") -256px 0px no-repeat;\n}\n.jstree-default-large > .jstree-container-ul > .jstree-node {\n  margin-left: 0;\n  margin-right: 0;\n}\n#jstree-dnd.jstree-default-large {\n  line-height: 32px;\n  padding: 0 4px;\n}\n#jstree-dnd.jstree-default-large .jstree-ok,\n#jstree-dnd.jstree-default-large .jstree-er {\n  background-image: url(" + __webpack_require__(25) + ");\n  background-repeat: no-repeat;\n  background-color: transparent;\n}\n#jstree-dnd.jstree-default-large i {\n  background: transparent;\n  width: 32px;\n  height: 32px;\n  line-height: 32px;\n}\n#jstree-dnd.jstree-default-large .jstree-ok {\n  background-position: 0px -64px;\n}\n#jstree-dnd.jstree-default-large .jstree-er {\n  background-position: -32px -64px;\n}\n.jstree-default-large .jstree-ellipsis {\n  overflow: hidden;\n}\n.jstree-default-large .jstree-ellipsis .jstree-anchor {\n  width: calc(100% - 37px);\n  text-overflow: ellipsis;\n  overflow: hidden;\n}\n.jstree-default-large .jstree-ellipsis.jstree-no-icons .jstree-anchor {\n  width: calc(100% - 5px);\n}\n.jstree-default-large.jstree-rtl .jstree-node {\n  background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAACAQMAAAAD0EyKAAAABlBMVEUAAAAdHRvEkCwcAAAAAXRSTlMAQObYZgAAAAxJREFUCNdjgIIGBgABCgCBvVLXcAAAAABJRU5ErkJggg==\");\n}\n.jstree-default-large.jstree-rtl .jstree-last {\n  background: transparent;\n}\n@media (max-width: 768px) {\n  #jstree-dnd.jstree-dnd-responsive {\n    line-height: 40px;\n    font-weight: bold;\n    font-size: 1.1em;\n    text-shadow: 1px 1px white;\n  }\n  #jstree-dnd.jstree-dnd-responsive > i {\n    background: transparent;\n    width: 40px;\n    height: 40px;\n  }\n  #jstree-dnd.jstree-dnd-responsive > .jstree-ok {\n    background-image: url(" + __webpack_require__(56) + ");\n    background-position: 0 -200px;\n    background-size: 120px 240px;\n  }\n  #jstree-dnd.jstree-dnd-responsive > .jstree-er {\n    background-image: url(" + __webpack_require__(56) + ");\n    background-position: -40px -200px;\n    background-size: 120px 240px;\n  }\n  #jstree-marker.jstree-dnd-responsive {\n    border-left-width: 10px;\n    border-top-width: 10px;\n    border-bottom-width: 10px;\n    margin-top: -10px;\n  }\n}\n@media (max-width: 768px) {\n  .jstree-default-responsive {\n    /*\n\t.jstree-open > .jstree-ocl,\n\t.jstree-closed > .jstree-ocl { border-radius:20px; background-color:white; }\n\t*/\n  }\n  .jstree-default-responsive .jstree-icon {\n    background-image: url(" + __webpack_require__(56) + ");\n  }\n  .jstree-default-responsive .jstree-node,\n  .jstree-default-responsive .jstree-leaf > .jstree-ocl {\n    background: transparent;\n  }\n  .jstree-default-responsive .jstree-node {\n    min-height: 40px;\n    line-height: 40px;\n    margin-left: 40px;\n    min-width: 40px;\n    white-space: nowrap;\n  }\n  .jstree-default-responsive .jstree-anchor {\n    line-height: 40px;\n    height: 40px;\n  }\n  .jstree-default-responsive .jstree-icon,\n  .jstree-default-responsive .jstree-icon:empty {\n    width: 40px;\n    height: 40px;\n    line-height: 40px;\n  }\n  .jstree-default-responsive > .jstree-container-ul > .jstree-node {\n    margin-left: 0;\n  }\n  .jstree-default-responsive.jstree-rtl .jstree-node {\n    margin-left: 0;\n    margin-right: 40px;\n    background: transparent;\n  }\n  .jstree-default-responsive.jstree-rtl .jstree-container-ul > .jstree-node {\n    margin-right: 0;\n  }\n  .jstree-default-responsive .jstree-ocl,\n  .jstree-default-responsive .jstree-themeicon,\n  .jstree-default-responsive .jstree-checkbox {\n    background-size: 120px 240px;\n  }\n  .jstree-default-responsive .jstree-leaf > .jstree-ocl,\n  .jstree-default-responsive.jstree-rtl .jstree-leaf > .jstree-ocl {\n    background: transparent;\n  }\n  .jstree-default-responsive .jstree-open > .jstree-ocl {\n    background-position: 0 0px !important;\n  }\n  .jstree-default-responsive .jstree-closed > .jstree-ocl {\n    background-position: 0 -40px !important;\n  }\n  .jstree-default-responsive.jstree-rtl .jstree-closed > .jstree-ocl {\n    background-position: -40px 0px !important;\n  }\n  .jstree-default-responsive .jstree-themeicon {\n    background-position: -40px -40px;\n  }\n  .jstree-default-responsive .jstree-checkbox,\n  .jstree-default-responsive .jstree-checkbox:hover {\n    background-position: -40px -80px;\n  }\n  .jstree-default-responsive.jstree-checkbox-selection .jstree-clicked > .jstree-checkbox,\n  .jstree-default-responsive.jstree-checkbox-selection .jstree-clicked > .jstree-checkbox:hover,\n  .jstree-default-responsive .jstree-checked > .jstree-checkbox,\n  .jstree-default-responsive .jstree-checked > .jstree-checkbox:hover {\n    background-position: 0 -80px;\n  }\n  .jstree-default-responsive .jstree-anchor > .jstree-undetermined,\n  .jstree-default-responsive .jstree-anchor > .jstree-undetermined:hover {\n    background-position: 0 -120px;\n  }\n  .jstree-default-responsive .jstree-anchor {\n    font-weight: bold;\n    font-size: 1.1em;\n    text-shadow: 1px 1px white;\n  }\n  .jstree-default-responsive > .jstree-striped {\n    background: transparent;\n  }\n  .jstree-default-responsive .jstree-wholerow {\n    border-top: 1px solid rgba(255, 255, 255, 0.7);\n    border-bottom: 1px solid rgba(64, 64, 64, 0.2);\n    background: #ebebeb;\n    height: 40px;\n  }\n  .jstree-default-responsive .jstree-wholerow-hovered {\n    background: #e7f4f9;\n  }\n  .jstree-default-responsive .jstree-wholerow-clicked {\n    background: #beebff;\n  }\n  .jstree-default-responsive .jstree-children .jstree-last > .jstree-wholerow {\n    box-shadow: inset 0 -6px 3px -5px #666666;\n  }\n  .jstree-default-responsive .jstree-children .jstree-open > .jstree-wholerow {\n    box-shadow: inset 0 6px 3px -5px #666666;\n    border-top: 0;\n  }\n  .jstree-default-responsive .jstree-children .jstree-open + .jstree-open {\n    box-shadow: none;\n  }\n  .jstree-default-responsive .jstree-node,\n  .jstree-default-responsive .jstree-icon,\n  .jstree-default-responsive .jstree-node > .jstree-ocl,\n  .jstree-default-responsive .jstree-themeicon,\n  .jstree-default-responsive .jstree-checkbox {\n    background-image: url(" + __webpack_require__(56) + ");\n    background-size: 120px 240px;\n  }\n  .jstree-default-responsive .jstree-node {\n    background-position: -80px 0;\n    background-repeat: repeat-y;\n  }\n  .jstree-default-responsive .jstree-last {\n    background: transparent;\n  }\n  .jstree-default-responsive .jstree-leaf > .jstree-ocl {\n    background-position: -40px -120px;\n  }\n  .jstree-default-responsive .jstree-last > .jstree-ocl {\n    background-position: -40px -160px;\n  }\n  .jstree-default-responsive .jstree-themeicon-custom {\n    background-color: transparent;\n    background-image: none;\n    background-position: 0 0;\n  }\n  .jstree-default-responsive .jstree-file {\n    background: url(" + __webpack_require__(56) + ") 0 -160px no-repeat;\n    background-size: 120px 240px;\n  }\n  .jstree-default-responsive .jstree-folder {\n    background: url(" + __webpack_require__(56) + ") -40px -40px no-repeat;\n    background-size: 120px 240px;\n  }\n  .jstree-default-responsive > .jstree-container-ul > .jstree-node {\n    margin-left: 0;\n    margin-right: 0;\n  }\n}\n", ""]);
 
 // exports
 
@@ -55333,7 +55333,7 @@ exports = module.exports = __webpack_require__(101)(undefined);
 
 
 // module
-exports.push([module.i, "/* jsTree default dark theme */\n.jstree-node,\n.jstree-children,\n.jstree-container-ul {\n  display: block;\n  margin: 0;\n  padding: 0;\n  list-style-type: none;\n  list-style-image: none;\n}\n.jstree-node {\n  white-space: nowrap;\n}\n.jstree-anchor {\n  display: inline-block;\n  color: black;\n  white-space: nowrap;\n  padding: 0 4px 0 1px;\n  margin: 0;\n  vertical-align: top;\n}\n.jstree-anchor:focus {\n  outline: 0;\n}\n.jstree-anchor,\n.jstree-anchor:link,\n.jstree-anchor:visited,\n.jstree-anchor:hover,\n.jstree-anchor:active {\n  text-decoration: none;\n  color: inherit;\n}\n.jstree-icon {\n  display: inline-block;\n  text-decoration: none;\n  margin: 0;\n  padding: 0;\n  vertical-align: top;\n  text-align: center;\n}\n.jstree-icon:empty {\n  display: inline-block;\n  text-decoration: none;\n  margin: 0;\n  padding: 0;\n  vertical-align: top;\n  text-align: center;\n}\n.jstree-ocl {\n  cursor: pointer;\n}\n.jstree-leaf > .jstree-ocl {\n  cursor: default;\n}\n.jstree .jstree-open > .jstree-children {\n  display: block;\n}\n.jstree .jstree-closed > .jstree-children,\n.jstree .jstree-leaf > .jstree-children {\n  display: none;\n}\n.jstree-anchor > .jstree-themeicon {\n  margin-right: 2px;\n}\n.jstree-no-icons .jstree-themeicon,\n.jstree-anchor > .jstree-themeicon-hidden {\n  display: none;\n}\n.jstree-hidden,\n.jstree-node.jstree-hidden {\n  display: none;\n}\n.jstree-rtl .jstree-anchor {\n  padding: 0 1px 0 4px;\n}\n.jstree-rtl .jstree-anchor > .jstree-themeicon {\n  margin-left: 2px;\n  margin-right: 0;\n}\n.jstree-rtl .jstree-node {\n  margin-left: 0;\n}\n.jstree-rtl .jstree-container-ul > .jstree-node {\n  margin-right: 0;\n}\n.jstree-wholerow-ul {\n  position: relative;\n  display: inline-block;\n  min-width: 100%;\n}\n.jstree-wholerow-ul .jstree-leaf > .jstree-ocl {\n  cursor: pointer;\n}\n.jstree-wholerow-ul .jstree-anchor,\n.jstree-wholerow-ul .jstree-icon {\n  position: relative;\n}\n.jstree-wholerow-ul .jstree-wholerow {\n  width: 100%;\n  cursor: pointer;\n  position: absolute;\n  left: 0;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\n.jstree-contextmenu .jstree-anchor {\n  -webkit-user-select: none;\n  /* disable selection/Copy of UIWebView */\n  -webkit-touch-callout: none;\n  /* disable the IOS popup when long-press on a link */\n}\n.vakata-context {\n  display: none;\n}\n.vakata-context,\n.vakata-context ul {\n  margin: 0;\n  padding: 2px;\n  position: absolute;\n  background: #f5f5f5;\n  border: 1px solid #979797;\n  box-shadow: 2px 2px 2px #999999;\n}\n.vakata-context ul {\n  list-style: none;\n  left: 100%;\n  margin-top: -2.7em;\n  margin-left: -4px;\n}\n.vakata-context .vakata-context-right ul {\n  left: auto;\n  right: 100%;\n  margin-left: auto;\n  margin-right: -4px;\n}\n.vakata-context li {\n  list-style: none;\n}\n.vakata-context li > a {\n  display: block;\n  padding: 0 2em 0 2em;\n  text-decoration: none;\n  width: auto;\n  color: black;\n  white-space: nowrap;\n  line-height: 2.4em;\n  text-shadow: 1px 1px 0 white;\n  border-radius: 1px;\n}\n.vakata-context li > a:hover {\n  position: relative;\n  background-color: #e8eff7;\n  box-shadow: 0 0 2px #0a6aa1;\n}\n.vakata-context li > a.vakata-context-parent {\n  background-image: url(\"data:image/gif;base64,R0lGODlhCwAHAIAAACgoKP///yH5BAEAAAEALAAAAAALAAcAAAIORI4JlrqN1oMSnmmZDQUAOw==\");\n  background-position: right center;\n  background-repeat: no-repeat;\n}\n.vakata-context li > a:focus {\n  outline: 0;\n}\n.vakata-context .vakata-context-hover > a {\n  position: relative;\n  background-color: #e8eff7;\n  box-shadow: 0 0 2px #0a6aa1;\n}\n.vakata-context .vakata-context-separator > a,\n.vakata-context .vakata-context-separator > a:hover {\n  background: white;\n  border: 0;\n  border-top: 1px solid #e2e3e3;\n  height: 1px;\n  min-height: 1px;\n  max-height: 1px;\n  padding: 0;\n  margin: 0 0 0 2.4em;\n  border-left: 1px solid #e0e0e0;\n  text-shadow: 0 0 0 transparent;\n  box-shadow: 0 0 0 transparent;\n  border-radius: 0;\n}\n.vakata-context .vakata-contextmenu-disabled a,\n.vakata-context .vakata-contextmenu-disabled a:hover {\n  color: silver;\n  background-color: transparent;\n  border: 0;\n  box-shadow: 0 0 0;\n}\n.vakata-context li > a > i {\n  text-decoration: none;\n  display: inline-block;\n  width: 2.4em;\n  height: 2.4em;\n  background: transparent;\n  margin: 0 0 0 -2em;\n  vertical-align: top;\n  text-align: center;\n  line-height: 2.4em;\n}\n.vakata-context li > a > i:empty {\n  width: 2.4em;\n  line-height: 2.4em;\n}\n.vakata-context li > a .vakata-contextmenu-sep {\n  display: inline-block;\n  width: 1px;\n  height: 2.4em;\n  background: white;\n  margin: 0 0.5em 0 0;\n  border-left: 1px solid #e2e3e3;\n}\n.vakata-context .vakata-contextmenu-shortcut {\n  font-size: 0.8em;\n  color: silver;\n  opacity: 0.5;\n  display: none;\n}\n.vakata-context-rtl ul {\n  left: auto;\n  right: 100%;\n  margin-left: auto;\n  margin-right: -4px;\n}\n.vakata-context-rtl li > a.vakata-context-parent {\n  background-image: url(\"data:image/gif;base64,R0lGODlhCwAHAIAAACgoKP///yH5BAEAAAEALAAAAAALAAcAAAINjI+AC7rWHIsPtmoxLAA7\");\n  background-position: left center;\n  background-repeat: no-repeat;\n}\n.vakata-context-rtl .vakata-context-separator > a {\n  margin: 0 2.4em 0 0;\n  border-left: 0;\n  border-right: 1px solid #e2e3e3;\n}\n.vakata-context-rtl .vakata-context-left ul {\n  right: auto;\n  left: 100%;\n  margin-left: -4px;\n  margin-right: auto;\n}\n.vakata-context-rtl li > a > i {\n  margin: 0 -2em 0 0;\n}\n.vakata-context-rtl li > a .vakata-contextmenu-sep {\n  margin: 0 0 0 0.5em;\n  border-left-color: white;\n  background: #e2e3e3;\n}\n#jstree-marker {\n  position: absolute;\n  top: 0;\n  left: 0;\n  margin: -5px 0 0 0;\n  padding: 0;\n  border-right: 0;\n  border-top: 5px solid transparent;\n  border-bottom: 5px solid transparent;\n  border-left: 5px solid;\n  width: 0;\n  height: 0;\n  font-size: 0;\n  line-height: 0;\n}\n#jstree-dnd {\n  line-height: 16px;\n  margin: 0;\n  padding: 4px;\n}\n#jstree-dnd .jstree-icon,\n#jstree-dnd .jstree-copy {\n  display: inline-block;\n  text-decoration: none;\n  margin: 0 2px 0 0;\n  padding: 0;\n  width: 16px;\n  height: 16px;\n}\n#jstree-dnd .jstree-ok {\n  background: green;\n}\n#jstree-dnd .jstree-er {\n  background: red;\n}\n#jstree-dnd .jstree-copy {\n  margin: 0 2px 0 2px;\n}\n.jstree-default-dark .jstree-node,\n.jstree-default-dark .jstree-icon {\n  background-repeat: no-repeat;\n  background-color: transparent;\n}\n.jstree-default-dark .jstree-anchor,\n.jstree-default-dark .jstree-animated,\n.jstree-default-dark .jstree-wholerow {\n  transition: background-color 0.15s, box-shadow 0.15s;\n}\n.jstree-default-dark .jstree-hovered {\n  background: #555555;\n  border-radius: 2px;\n  box-shadow: inset 0 0 1px #555555;\n}\n.jstree-default-dark .jstree-context {\n  background: #555555;\n  border-radius: 2px;\n  box-shadow: inset 0 0 1px #555555;\n}\n.jstree-default-dark .jstree-clicked {\n  background: #5fa2db;\n  border-radius: 2px;\n  box-shadow: inset 0 0 1px #666666;\n}\n.jstree-default-dark .jstree-no-icons .jstree-anchor > .jstree-themeicon {\n  display: none;\n}\n.jstree-default-dark .jstree-disabled {\n  background: transparent;\n  color: #666666;\n}\n.jstree-default-dark .jstree-disabled.jstree-hovered {\n  background: transparent;\n  box-shadow: none;\n}\n.jstree-default-dark .jstree-disabled.jstree-clicked {\n  background: #333333;\n}\n.jstree-default-dark .jstree-disabled > .jstree-icon {\n  opacity: 0.8;\n  filter: url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='jstree-grayscale'><feColorMatrix type='matrix' values='0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0'/></filter></svg>#jstree-grayscale\");\n  /* Firefox 10+ */\n  filter: gray;\n  /* IE6-9 */\n  -webkit-filter: grayscale(100%);\n  /* Chrome 19+ & Safari 6+ */\n}\n.jstree-default-dark .jstree-search {\n  font-style: italic;\n  color: #ffffff;\n  font-weight: bold;\n}\n.jstree-default-dark .jstree-no-checkboxes .jstree-checkbox {\n  display: none !important;\n}\n.jstree-default-dark.jstree-checkbox-no-clicked .jstree-clicked {\n  background: transparent;\n  box-shadow: none;\n}\n.jstree-default-dark.jstree-checkbox-no-clicked .jstree-clicked.jstree-hovered {\n  background: #555555;\n}\n.jstree-default-dark.jstree-checkbox-no-clicked > .jstree-wholerow-ul .jstree-wholerow-clicked {\n  background: transparent;\n}\n.jstree-default-dark.jstree-checkbox-no-clicked > .jstree-wholerow-ul .jstree-wholerow-clicked.jstree-wholerow-hovered {\n  background: #555555;\n}\n.jstree-default-dark > .jstree-striped {\n  min-width: 100%;\n  display: inline-block;\n  background: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAkCAMAAAB/qqA+AAAABlBMVEUAAAAAAAClZ7nPAAAAAnRSTlMNAMM9s3UAAAAXSURBVHjajcEBAQAAAIKg/H/aCQZ70AUBjAATb6YPDgAAAABJRU5ErkJggg==\") left top repeat;\n}\n.jstree-default-dark > .jstree-wholerow-ul .jstree-hovered,\n.jstree-default-dark > .jstree-wholerow-ul .jstree-clicked {\n  background: transparent;\n  box-shadow: none;\n  border-radius: 0;\n}\n.jstree-default-dark .jstree-wholerow {\n  -moz-box-sizing: border-box;\n  -webkit-box-sizing: border-box;\n  box-sizing: border-box;\n}\n.jstree-default-dark .jstree-wholerow-hovered {\n  background: #555555;\n}\n.jstree-default-dark .jstree-wholerow-clicked {\n  background: #5fa2db;\n  background: -webkit-linear-gradient(top, #5fa2db 0%, #5fa2db 100%);\n  background: linear-gradient(to bottom, #5fa2db 0%, #5fa2db 100%);\n}\n.jstree-default-dark .jstree-node {\n  min-height: 24px;\n  line-height: 24px;\n  margin-left: 24px;\n  min-width: 24px;\n}\n.jstree-default-dark .jstree-anchor {\n  line-height: 24px;\n  height: 24px;\n}\n.jstree-default-dark .jstree-icon {\n  width: 24px;\n  height: 24px;\n  line-height: 24px;\n}\n.jstree-default-dark .jstree-icon:empty {\n  width: 24px;\n  height: 24px;\n  line-height: 24px;\n}\n.jstree-default-dark.jstree-rtl .jstree-node {\n  margin-right: 24px;\n}\n.jstree-default-dark .jstree-wholerow {\n  height: 24px;\n}\n.jstree-default-dark .jstree-node,\n.jstree-default-dark .jstree-icon {\n  background-image: url(" + __webpack_require__(26) + ");\n}\n.jstree-default-dark .jstree-node {\n  background-position: -292px -4px;\n  background-repeat: repeat-y;\n}\n.jstree-default-dark .jstree-last {\n  background: transparent;\n}\n.jstree-default-dark .jstree-open > .jstree-ocl {\n  background-position: -132px -4px;\n}\n.jstree-default-dark .jstree-closed > .jstree-ocl {\n  background-position: -100px -4px;\n}\n.jstree-default-dark .jstree-leaf > .jstree-ocl {\n  background-position: -68px -4px;\n}\n.jstree-default-dark .jstree-themeicon {\n  background-position: -260px -4px;\n}\n.jstree-default-dark > .jstree-no-dots .jstree-node,\n.jstree-default-dark > .jstree-no-dots .jstree-leaf > .jstree-ocl {\n  background: transparent;\n}\n.jstree-default-dark > .jstree-no-dots .jstree-open > .jstree-ocl {\n  background-position: -36px -4px;\n}\n.jstree-default-dark > .jstree-no-dots .jstree-closed > .jstree-ocl {\n  background-position: -4px -4px;\n}\n.jstree-default-dark .jstree-disabled {\n  background: transparent;\n}\n.jstree-default-dark .jstree-disabled.jstree-hovered {\n  background: transparent;\n}\n.jstree-default-dark .jstree-disabled.jstree-clicked {\n  background: #efefef;\n}\n.jstree-default-dark .jstree-checkbox {\n  background-position: -164px -4px;\n}\n.jstree-default-dark .jstree-checkbox:hover {\n  background-position: -164px -36px;\n}\n.jstree-default-dark.jstree-checkbox-selection .jstree-clicked > .jstree-checkbox,\n.jstree-default-dark .jstree-checked > .jstree-checkbox {\n  background-position: -228px -4px;\n}\n.jstree-default-dark.jstree-checkbox-selection .jstree-clicked > .jstree-checkbox:hover,\n.jstree-default-dark .jstree-checked > .jstree-checkbox:hover {\n  background-position: -228px -36px;\n}\n.jstree-default-dark .jstree-anchor > .jstree-undetermined {\n  background-position: -196px -4px;\n}\n.jstree-default-dark .jstree-anchor > .jstree-undetermined:hover {\n  background-position: -196px -36px;\n}\n.jstree-default-dark .jstree-checkbox-disabled {\n  opacity: 0.8;\n  filter: url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='jstree-grayscale'><feColorMatrix type='matrix' values='0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0'/></filter></svg>#jstree-grayscale\");\n  /* Firefox 10+ */\n  filter: gray;\n  /* IE6-9 */\n  -webkit-filter: grayscale(100%);\n  /* Chrome 19+ & Safari 6+ */\n}\n.jstree-default-dark > .jstree-striped {\n  background-size: auto 48px;\n}\n.jstree-default-dark.jstree-rtl .jstree-node {\n  background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAACAQMAAAB49I5GAAAABlBMVEUAAAAdHRvEkCwcAAAAAXRSTlMAQObYZgAAAAxJREFUCNdjAAMOBgAAGAAJMwQHdQAAAABJRU5ErkJggg==\");\n  background-position: 100% 1px;\n  background-repeat: repeat-y;\n}\n.jstree-default-dark.jstree-rtl .jstree-last {\n  background: transparent;\n}\n.jstree-default-dark.jstree-rtl .jstree-open > .jstree-ocl {\n  background-position: -132px -36px;\n}\n.jstree-default-dark.jstree-rtl .jstree-closed > .jstree-ocl {\n  background-position: -100px -36px;\n}\n.jstree-default-dark.jstree-rtl .jstree-leaf > .jstree-ocl {\n  background-position: -68px -36px;\n}\n.jstree-default-dark.jstree-rtl > .jstree-no-dots .jstree-node,\n.jstree-default-dark.jstree-rtl > .jstree-no-dots .jstree-leaf > .jstree-ocl {\n  background: transparent;\n}\n.jstree-default-dark.jstree-rtl > .jstree-no-dots .jstree-open > .jstree-ocl {\n  background-position: -36px -36px;\n}\n.jstree-default-dark.jstree-rtl > .jstree-no-dots .jstree-closed > .jstree-ocl {\n  background-position: -4px -36px;\n}\n.jstree-default-dark .jstree-themeicon-custom {\n  background-color: transparent;\n  background-image: none;\n  background-position: 0 0;\n}\n.jstree-default-dark > .jstree-container-ul .jstree-loading > .jstree-ocl {\n  background: url(" + __webpack_require__(151) + ") center center no-repeat;\n}\n.jstree-default-dark .jstree-file {\n  background: url(" + __webpack_require__(26) + ") -100px -68px no-repeat;\n}\n.jstree-default-dark .jstree-folder {\n  background: url(" + __webpack_require__(26) + ") -260px -4px no-repeat;\n}\n.jstree-default-dark > .jstree-container-ul > .jstree-node {\n  margin-left: 0;\n  margin-right: 0;\n}\n#jstree-dnd.jstree-default-dark {\n  line-height: 24px;\n  padding: 0 4px;\n}\n#jstree-dnd.jstree-default-dark .jstree-ok,\n#jstree-dnd.jstree-default-dark .jstree-er {\n  background-image: url(" + __webpack_require__(26) + ");\n  background-repeat: no-repeat;\n  background-color: transparent;\n}\n#jstree-dnd.jstree-default-dark i {\n  background: transparent;\n  width: 24px;\n  height: 24px;\n  line-height: 24px;\n}\n#jstree-dnd.jstree-default-dark .jstree-ok {\n  background-position: -4px -68px;\n}\n#jstree-dnd.jstree-default-dark .jstree-er {\n  background-position: -36px -68px;\n}\n.jstree-default-dark .jstree-ellipsis {\n  overflow: hidden;\n}\n.jstree-default-dark .jstree-ellipsis .jstree-anchor {\n  width: calc(100% - 29px);\n  text-overflow: ellipsis;\n  overflow: hidden;\n}\n.jstree-default-dark .jstree-ellipsis.jstree-no-icons .jstree-anchor {\n  width: calc(100% - 5px);\n}\n.jstree-default-dark.jstree-rtl .jstree-node {\n  background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAACAQMAAAB49I5GAAAABlBMVEUAAAAdHRvEkCwcAAAAAXRSTlMAQObYZgAAAAxJREFUCNdjAAMOBgAAGAAJMwQHdQAAAABJRU5ErkJggg==\");\n}\n.jstree-default-dark.jstree-rtl .jstree-last {\n  background: transparent;\n}\n.jstree-default-dark-small .jstree-node {\n  min-height: 18px;\n  line-height: 18px;\n  margin-left: 18px;\n  min-width: 18px;\n}\n.jstree-default-dark-small .jstree-anchor {\n  line-height: 18px;\n  height: 18px;\n}\n.jstree-default-dark-small .jstree-icon {\n  width: 18px;\n  height: 18px;\n  line-height: 18px;\n}\n.jstree-default-dark-small .jstree-icon:empty {\n  width: 18px;\n  height: 18px;\n  line-height: 18px;\n}\n.jstree-default-dark-small.jstree-rtl .jstree-node {\n  margin-right: 18px;\n}\n.jstree-default-dark-small .jstree-wholerow {\n  height: 18px;\n}\n.jstree-default-dark-small .jstree-node,\n.jstree-default-dark-small .jstree-icon {\n  background-image: url(" + __webpack_require__(26) + ");\n}\n.jstree-default-dark-small .jstree-node {\n  background-position: -295px -7px;\n  background-repeat: repeat-y;\n}\n.jstree-default-dark-small .jstree-last {\n  background: transparent;\n}\n.jstree-default-dark-small .jstree-open > .jstree-ocl {\n  background-position: -135px -7px;\n}\n.jstree-default-dark-small .jstree-closed > .jstree-ocl {\n  background-position: -103px -7px;\n}\n.jstree-default-dark-small .jstree-leaf > .jstree-ocl {\n  background-position: -71px -7px;\n}\n.jstree-default-dark-small .jstree-themeicon {\n  background-position: -263px -7px;\n}\n.jstree-default-dark-small > .jstree-no-dots .jstree-node,\n.jstree-default-dark-small > .jstree-no-dots .jstree-leaf > .jstree-ocl {\n  background: transparent;\n}\n.jstree-default-dark-small > .jstree-no-dots .jstree-open > .jstree-ocl {\n  background-position: -39px -7px;\n}\n.jstree-default-dark-small > .jstree-no-dots .jstree-closed > .jstree-ocl {\n  background-position: -7px -7px;\n}\n.jstree-default-dark-small .jstree-disabled {\n  background: transparent;\n}\n.jstree-default-dark-small .jstree-disabled.jstree-hovered {\n  background: transparent;\n}\n.jstree-default-dark-small .jstree-disabled.jstree-clicked {\n  background: #efefef;\n}\n.jstree-default-dark-small .jstree-checkbox {\n  background-position: -167px -7px;\n}\n.jstree-default-dark-small .jstree-checkbox:hover {\n  background-position: -167px -39px;\n}\n.jstree-default-dark-small.jstree-checkbox-selection .jstree-clicked > .jstree-checkbox,\n.jstree-default-dark-small .jstree-checked > .jstree-checkbox {\n  background-position: -231px -7px;\n}\n.jstree-default-dark-small.jstree-checkbox-selection .jstree-clicked > .jstree-checkbox:hover,\n.jstree-default-dark-small .jstree-checked > .jstree-checkbox:hover {\n  background-position: -231px -39px;\n}\n.jstree-default-dark-small .jstree-anchor > .jstree-undetermined {\n  background-position: -199px -7px;\n}\n.jstree-default-dark-small .jstree-anchor > .jstree-undetermined:hover {\n  background-position: -199px -39px;\n}\n.jstree-default-dark-small .jstree-checkbox-disabled {\n  opacity: 0.8;\n  filter: url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='jstree-grayscale'><feColorMatrix type='matrix' values='0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0'/></filter></svg>#jstree-grayscale\");\n  /* Firefox 10+ */\n  filter: gray;\n  /* IE6-9 */\n  -webkit-filter: grayscale(100%);\n  /* Chrome 19+ & Safari 6+ */\n}\n.jstree-default-dark-small > .jstree-striped {\n  background-size: auto 36px;\n}\n.jstree-default-dark-small.jstree-rtl .jstree-node {\n  background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAACAQMAAAB49I5GAAAABlBMVEUAAAAdHRvEkCwcAAAAAXRSTlMAQObYZgAAAAxJREFUCNdjAAMOBgAAGAAJMwQHdQAAAABJRU5ErkJggg==\");\n  background-position: 100% 1px;\n  background-repeat: repeat-y;\n}\n.jstree-default-dark-small.jstree-rtl .jstree-last {\n  background: transparent;\n}\n.jstree-default-dark-small.jstree-rtl .jstree-open > .jstree-ocl {\n  background-position: -135px -39px;\n}\n.jstree-default-dark-small.jstree-rtl .jstree-closed > .jstree-ocl {\n  background-position: -103px -39px;\n}\n.jstree-default-dark-small.jstree-rtl .jstree-leaf > .jstree-ocl {\n  background-position: -71px -39px;\n}\n.jstree-default-dark-small.jstree-rtl > .jstree-no-dots .jstree-node,\n.jstree-default-dark-small.jstree-rtl > .jstree-no-dots .jstree-leaf > .jstree-ocl {\n  background: transparent;\n}\n.jstree-default-dark-small.jstree-rtl > .jstree-no-dots .jstree-open > .jstree-ocl {\n  background-position: -39px -39px;\n}\n.jstree-default-dark-small.jstree-rtl > .jstree-no-dots .jstree-closed > .jstree-ocl {\n  background-position: -7px -39px;\n}\n.jstree-default-dark-small .jstree-themeicon-custom {\n  background-color: transparent;\n  background-image: none;\n  background-position: 0 0;\n}\n.jstree-default-dark-small > .jstree-container-ul .jstree-loading > .jstree-ocl {\n  background: url(" + __webpack_require__(151) + ") center center no-repeat;\n}\n.jstree-default-dark-small .jstree-file {\n  background: url(" + __webpack_require__(26) + ") -103px -71px no-repeat;\n}\n.jstree-default-dark-small .jstree-folder {\n  background: url(" + __webpack_require__(26) + ") -263px -7px no-repeat;\n}\n.jstree-default-dark-small > .jstree-container-ul > .jstree-node {\n  margin-left: 0;\n  margin-right: 0;\n}\n#jstree-dnd.jstree-default-dark-small {\n  line-height: 18px;\n  padding: 0 4px;\n}\n#jstree-dnd.jstree-default-dark-small .jstree-ok,\n#jstree-dnd.jstree-default-dark-small .jstree-er {\n  background-image: url(" + __webpack_require__(26) + ");\n  background-repeat: no-repeat;\n  background-color: transparent;\n}\n#jstree-dnd.jstree-default-dark-small i {\n  background: transparent;\n  width: 18px;\n  height: 18px;\n  line-height: 18px;\n}\n#jstree-dnd.jstree-default-dark-small .jstree-ok {\n  background-position: -7px -71px;\n}\n#jstree-dnd.jstree-default-dark-small .jstree-er {\n  background-position: -39px -71px;\n}\n.jstree-default-dark-small .jstree-ellipsis {\n  overflow: hidden;\n}\n.jstree-default-dark-small .jstree-ellipsis .jstree-anchor {\n  width: calc(100% - 23px);\n  text-overflow: ellipsis;\n  overflow: hidden;\n}\n.jstree-default-dark-small .jstree-ellipsis.jstree-no-icons .jstree-anchor {\n  width: calc(100% - 5px);\n}\n.jstree-default-dark-small.jstree-rtl .jstree-node {\n  background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAACAQMAAABv1h6PAAAABlBMVEUAAAAdHRvEkCwcAAAAAXRSTlMAQObYZgAAAAxJREFUCNdjAAMHBgAAiABBI4gz9AAAAABJRU5ErkJggg==\");\n}\n.jstree-default-dark-small.jstree-rtl .jstree-last {\n  background: transparent;\n}\n.jstree-default-dark-large .jstree-node {\n  min-height: 32px;\n  line-height: 32px;\n  margin-left: 32px;\n  min-width: 32px;\n}\n.jstree-default-dark-large .jstree-anchor {\n  line-height: 32px;\n  height: 32px;\n}\n.jstree-default-dark-large .jstree-icon {\n  width: 32px;\n  height: 32px;\n  line-height: 32px;\n}\n.jstree-default-dark-large .jstree-icon:empty {\n  width: 32px;\n  height: 32px;\n  line-height: 32px;\n}\n.jstree-default-dark-large.jstree-rtl .jstree-node {\n  margin-right: 32px;\n}\n.jstree-default-dark-large .jstree-wholerow {\n  height: 32px;\n}\n.jstree-default-dark-large .jstree-node,\n.jstree-default-dark-large .jstree-icon {\n  background-image: url(" + __webpack_require__(26) + ");\n}\n.jstree-default-dark-large .jstree-node {\n  background-position: -288px 0px;\n  background-repeat: repeat-y;\n}\n.jstree-default-dark-large .jstree-last {\n  background: transparent;\n}\n.jstree-default-dark-large .jstree-open > .jstree-ocl {\n  background-position: -128px 0px;\n}\n.jstree-default-dark-large .jstree-closed > .jstree-ocl {\n  background-position: -96px 0px;\n}\n.jstree-default-dark-large .jstree-leaf > .jstree-ocl {\n  background-position: -64px 0px;\n}\n.jstree-default-dark-large .jstree-themeicon {\n  background-position: -256px 0px;\n}\n.jstree-default-dark-large > .jstree-no-dots .jstree-node,\n.jstree-default-dark-large > .jstree-no-dots .jstree-leaf > .jstree-ocl {\n  background: transparent;\n}\n.jstree-default-dark-large > .jstree-no-dots .jstree-open > .jstree-ocl {\n  background-position: -32px 0px;\n}\n.jstree-default-dark-large > .jstree-no-dots .jstree-closed > .jstree-ocl {\n  background-position: 0px 0px;\n}\n.jstree-default-dark-large .jstree-disabled {\n  background: transparent;\n}\n.jstree-default-dark-large .jstree-disabled.jstree-hovered {\n  background: transparent;\n}\n.jstree-default-dark-large .jstree-disabled.jstree-clicked {\n  background: #efefef;\n}\n.jstree-default-dark-large .jstree-checkbox {\n  background-position: -160px 0px;\n}\n.jstree-default-dark-large .jstree-checkbox:hover {\n  background-position: -160px -32px;\n}\n.jstree-default-dark-large.jstree-checkbox-selection .jstree-clicked > .jstree-checkbox,\n.jstree-default-dark-large .jstree-checked > .jstree-checkbox {\n  background-position: -224px 0px;\n}\n.jstree-default-dark-large.jstree-checkbox-selection .jstree-clicked > .jstree-checkbox:hover,\n.jstree-default-dark-large .jstree-checked > .jstree-checkbox:hover {\n  background-position: -224px -32px;\n}\n.jstree-default-dark-large .jstree-anchor > .jstree-undetermined {\n  background-position: -192px 0px;\n}\n.jstree-default-dark-large .jstree-anchor > .jstree-undetermined:hover {\n  background-position: -192px -32px;\n}\n.jstree-default-dark-large .jstree-checkbox-disabled {\n  opacity: 0.8;\n  filter: url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='jstree-grayscale'><feColorMatrix type='matrix' values='0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0'/></filter></svg>#jstree-grayscale\");\n  /* Firefox 10+ */\n  filter: gray;\n  /* IE6-9 */\n  -webkit-filter: grayscale(100%);\n  /* Chrome 19+ & Safari 6+ */\n}\n.jstree-default-dark-large > .jstree-striped {\n  background-size: auto 64px;\n}\n.jstree-default-dark-large.jstree-rtl .jstree-node {\n  background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAACAQMAAAB49I5GAAAABlBMVEUAAAAdHRvEkCwcAAAAAXRSTlMAQObYZgAAAAxJREFUCNdjAAMOBgAAGAAJMwQHdQAAAABJRU5ErkJggg==\");\n  background-position: 100% 1px;\n  background-repeat: repeat-y;\n}\n.jstree-default-dark-large.jstree-rtl .jstree-last {\n  background: transparent;\n}\n.jstree-default-dark-large.jstree-rtl .jstree-open > .jstree-ocl {\n  background-position: -128px -32px;\n}\n.jstree-default-dark-large.jstree-rtl .jstree-closed > .jstree-ocl {\n  background-position: -96px -32px;\n}\n.jstree-default-dark-large.jstree-rtl .jstree-leaf > .jstree-ocl {\n  background-position: -64px -32px;\n}\n.jstree-default-dark-large.jstree-rtl > .jstree-no-dots .jstree-node,\n.jstree-default-dark-large.jstree-rtl > .jstree-no-dots .jstree-leaf > .jstree-ocl {\n  background: transparent;\n}\n.jstree-default-dark-large.jstree-rtl > .jstree-no-dots .jstree-open > .jstree-ocl {\n  background-position: -32px -32px;\n}\n.jstree-default-dark-large.jstree-rtl > .jstree-no-dots .jstree-closed > .jstree-ocl {\n  background-position: 0px -32px;\n}\n.jstree-default-dark-large .jstree-themeicon-custom {\n  background-color: transparent;\n  background-image: none;\n  background-position: 0 0;\n}\n.jstree-default-dark-large > .jstree-container-ul .jstree-loading > .jstree-ocl {\n  background: url(" + __webpack_require__(151) + ") center center no-repeat;\n}\n.jstree-default-dark-large .jstree-file {\n  background: url(" + __webpack_require__(26) + ") -96px -64px no-repeat;\n}\n.jstree-default-dark-large .jstree-folder {\n  background: url(" + __webpack_require__(26) + ") -256px 0px no-repeat;\n}\n.jstree-default-dark-large > .jstree-container-ul > .jstree-node {\n  margin-left: 0;\n  margin-right: 0;\n}\n#jstree-dnd.jstree-default-dark-large {\n  line-height: 32px;\n  padding: 0 4px;\n}\n#jstree-dnd.jstree-default-dark-large .jstree-ok,\n#jstree-dnd.jstree-default-dark-large .jstree-er {\n  background-image: url(" + __webpack_require__(26) + ");\n  background-repeat: no-repeat;\n  background-color: transparent;\n}\n#jstree-dnd.jstree-default-dark-large i {\n  background: transparent;\n  width: 32px;\n  height: 32px;\n  line-height: 32px;\n}\n#jstree-dnd.jstree-default-dark-large .jstree-ok {\n  background-position: 0px -64px;\n}\n#jstree-dnd.jstree-default-dark-large .jstree-er {\n  background-position: -32px -64px;\n}\n.jstree-default-dark-large .jstree-ellipsis {\n  overflow: hidden;\n}\n.jstree-default-dark-large .jstree-ellipsis .jstree-anchor {\n  width: calc(100% - 37px);\n  text-overflow: ellipsis;\n  overflow: hidden;\n}\n.jstree-default-dark-large .jstree-ellipsis.jstree-no-icons .jstree-anchor {\n  width: calc(100% - 5px);\n}\n.jstree-default-dark-large.jstree-rtl .jstree-node {\n  background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAACAQMAAAAD0EyKAAAABlBMVEUAAAAdHRvEkCwcAAAAAXRSTlMAQObYZgAAAAxJREFUCNdjgIIGBgABCgCBvVLXcAAAAABJRU5ErkJggg==\");\n}\n.jstree-default-dark-large.jstree-rtl .jstree-last {\n  background: transparent;\n}\n@media (max-width: 768px) {\n  #jstree-dnd.jstree-dnd-responsive {\n    line-height: 40px;\n    font-weight: bold;\n    font-size: 1.1em;\n    text-shadow: 1px 1px white;\n  }\n  #jstree-dnd.jstree-dnd-responsive > i {\n    background: transparent;\n    width: 40px;\n    height: 40px;\n  }\n  #jstree-dnd.jstree-dnd-responsive > .jstree-ok {\n    background-image: url(" + __webpack_require__(58) + ");\n    background-position: 0 -200px;\n    background-size: 120px 240px;\n  }\n  #jstree-dnd.jstree-dnd-responsive > .jstree-er {\n    background-image: url(" + __webpack_require__(58) + ");\n    background-position: -40px -200px;\n    background-size: 120px 240px;\n  }\n  #jstree-marker.jstree-dnd-responsive {\n    border-left-width: 10px;\n    border-top-width: 10px;\n    border-bottom-width: 10px;\n    margin-top: -10px;\n  }\n}\n@media (max-width: 768px) {\n  .jstree-default-dark-responsive {\n    /*\n\t.jstree-open > .jstree-ocl,\n\t.jstree-closed > .jstree-ocl { border-radius:20px; background-color:white; }\n\t*/\n  }\n  .jstree-default-dark-responsive .jstree-icon {\n    background-image: url(" + __webpack_require__(58) + ");\n  }\n  .jstree-default-dark-responsive .jstree-node,\n  .jstree-default-dark-responsive .jstree-leaf > .jstree-ocl {\n    background: transparent;\n  }\n  .jstree-default-dark-responsive .jstree-node {\n    min-height: 40px;\n    line-height: 40px;\n    margin-left: 40px;\n    min-width: 40px;\n    white-space: nowrap;\n  }\n  .jstree-default-dark-responsive .jstree-anchor {\n    line-height: 40px;\n    height: 40px;\n  }\n  .jstree-default-dark-responsive .jstree-icon,\n  .jstree-default-dark-responsive .jstree-icon:empty {\n    width: 40px;\n    height: 40px;\n    line-height: 40px;\n  }\n  .jstree-default-dark-responsive > .jstree-container-ul > .jstree-node {\n    margin-left: 0;\n  }\n  .jstree-default-dark-responsive.jstree-rtl .jstree-node {\n    margin-left: 0;\n    margin-right: 40px;\n    background: transparent;\n  }\n  .jstree-default-dark-responsive.jstree-rtl .jstree-container-ul > .jstree-node {\n    margin-right: 0;\n  }\n  .jstree-default-dark-responsive .jstree-ocl,\n  .jstree-default-dark-responsive .jstree-themeicon,\n  .jstree-default-dark-responsive .jstree-checkbox {\n    background-size: 120px 240px;\n  }\n  .jstree-default-dark-responsive .jstree-leaf > .jstree-ocl,\n  .jstree-default-dark-responsive.jstree-rtl .jstree-leaf > .jstree-ocl {\n    background: transparent;\n  }\n  .jstree-default-dark-responsive .jstree-open > .jstree-ocl {\n    background-position: 0 0px !important;\n  }\n  .jstree-default-dark-responsive .jstree-closed > .jstree-ocl {\n    background-position: 0 -40px !important;\n  }\n  .jstree-default-dark-responsive.jstree-rtl .jstree-closed > .jstree-ocl {\n    background-position: -40px 0px !important;\n  }\n  .jstree-default-dark-responsive .jstree-themeicon {\n    background-position: -40px -40px;\n  }\n  .jstree-default-dark-responsive .jstree-checkbox,\n  .jstree-default-dark-responsive .jstree-checkbox:hover {\n    background-position: -40px -80px;\n  }\n  .jstree-default-dark-responsive.jstree-checkbox-selection .jstree-clicked > .jstree-checkbox,\n  .jstree-default-dark-responsive.jstree-checkbox-selection .jstree-clicked > .jstree-checkbox:hover,\n  .jstree-default-dark-responsive .jstree-checked > .jstree-checkbox,\n  .jstree-default-dark-responsive .jstree-checked > .jstree-checkbox:hover {\n    background-position: 0 -80px;\n  }\n  .jstree-default-dark-responsive .jstree-anchor > .jstree-undetermined,\n  .jstree-default-dark-responsive .jstree-anchor > .jstree-undetermined:hover {\n    background-position: 0 -120px;\n  }\n  .jstree-default-dark-responsive .jstree-anchor {\n    font-weight: bold;\n    font-size: 1.1em;\n    text-shadow: 1px 1px white;\n  }\n  .jstree-default-dark-responsive > .jstree-striped {\n    background: transparent;\n  }\n  .jstree-default-dark-responsive .jstree-wholerow {\n    border-top: 1px solid #666666;\n    border-bottom: 1px solid #000000;\n    background: #333333;\n    height: 40px;\n  }\n  .jstree-default-dark-responsive .jstree-wholerow-hovered {\n    background: #555555;\n  }\n  .jstree-default-dark-responsive .jstree-wholerow-clicked {\n    background: #5fa2db;\n  }\n  .jstree-default-dark-responsive .jstree-children .jstree-last > .jstree-wholerow {\n    box-shadow: inset 0 -6px 3px -5px #111111;\n  }\n  .jstree-default-dark-responsive .jstree-children .jstree-open > .jstree-wholerow {\n    box-shadow: inset 0 6px 3px -5px #111111;\n    border-top: 0;\n  }\n  .jstree-default-dark-responsive .jstree-children .jstree-open + .jstree-open {\n    box-shadow: none;\n  }\n  .jstree-default-dark-responsive .jstree-node,\n  .jstree-default-dark-responsive .jstree-icon,\n  .jstree-default-dark-responsive .jstree-node > .jstree-ocl,\n  .jstree-default-dark-responsive .jstree-themeicon,\n  .jstree-default-dark-responsive .jstree-checkbox {\n    background-image: url(" + __webpack_require__(58) + ");\n    background-size: 120px 240px;\n  }\n  .jstree-default-dark-responsive .jstree-node {\n    background-position: -80px 0;\n    background-repeat: repeat-y;\n  }\n  .jstree-default-dark-responsive .jstree-last {\n    background: transparent;\n  }\n  .jstree-default-dark-responsive .jstree-leaf > .jstree-ocl {\n    background-position: -40px -120px;\n  }\n  .jstree-default-dark-responsive .jstree-last > .jstree-ocl {\n    background-position: -40px -160px;\n  }\n  .jstree-default-dark-responsive .jstree-themeicon-custom {\n    background-color: transparent;\n    background-image: none;\n    background-position: 0 0;\n  }\n  .jstree-default-dark-responsive .jstree-file {\n    background: url(" + __webpack_require__(58) + ") 0 -160px no-repeat;\n    background-size: 120px 240px;\n  }\n  .jstree-default-dark-responsive .jstree-folder {\n    background: url(" + __webpack_require__(58) + ") -40px -40px no-repeat;\n    background-size: 120px 240px;\n  }\n  .jstree-default-dark-responsive > .jstree-container-ul > .jstree-node {\n    margin-left: 0;\n    margin-right: 0;\n  }\n}\n.jstree-default-dark {\n  background: #333;\n}\n.jstree-default-dark .jstree-anchor {\n  color: #999;\n  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);\n}\n.jstree-default-dark .jstree-clicked,\n.jstree-default-dark .jstree-checked {\n  color: white;\n}\n.jstree-default-dark .jstree-hovered {\n  color: white;\n}\n#jstree-marker.jstree-default-dark {\n  border-left-color: #999;\n  background: transparent;\n}\n.jstree-default-dark .jstree-anchor > .jstree-icon {\n  opacity: 0.75;\n}\n.jstree-default-dark .jstree-clicked > .jstree-icon,\n.jstree-default-dark .jstree-hovered > .jstree-icon,\n.jstree-default-dark .jstree-checked > .jstree-icon {\n  opacity: 1;\n}\n.jstree-default-dark.jstree-rtl .jstree-node {\n  background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAACAQMAAAB49I5GAAAABlBMVEUAAACZmZl+9SADAAAAAXRSTlMAQObYZgAAAAxJREFUCNdjAAMOBgAAGAAJMwQHdQAAAABJRU5ErkJggg==\");\n}\n.jstree-default-dark.jstree-rtl .jstree-last {\n  background: transparent;\n}\n.jstree-default-dark-small.jstree-rtl .jstree-node {\n  background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAACAQMAAABv1h6PAAAABlBMVEUAAACZmZl+9SADAAAAAXRSTlMAQObYZgAAAAxJREFUCNdjAAMHBgAAiABBI4gz9AAAAABJRU5ErkJggg==\");\n}\n.jstree-default-dark-small.jstree-rtl .jstree-last {\n  background: transparent;\n}\n.jstree-default-dark-large.jstree-rtl .jstree-node {\n  background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAACAQMAAAAD0EyKAAAABlBMVEUAAACZmZl+9SADAAAAAXRSTlMAQObYZgAAAAxJREFUCNdjgIIGBgABCgCBvVLXcAAAAABJRU5ErkJggg==\");\n}\n.jstree-default-dark-large.jstree-rtl .jstree-last {\n  background: transparent;\n}\n", ""]);
+exports.push([module.i, "/* jsTree default dark theme */\n.jstree-node,\n.jstree-children,\n.jstree-container-ul {\n  display: block;\n  margin: 0;\n  padding: 0;\n  list-style-type: none;\n  list-style-image: none;\n}\n.jstree-node {\n  white-space: nowrap;\n}\n.jstree-anchor {\n  display: inline-block;\n  color: black;\n  white-space: nowrap;\n  padding: 0 4px 0 1px;\n  margin: 0;\n  vertical-align: top;\n}\n.jstree-anchor:focus {\n  outline: 0;\n}\n.jstree-anchor,\n.jstree-anchor:link,\n.jstree-anchor:visited,\n.jstree-anchor:hover,\n.jstree-anchor:active {\n  text-decoration: none;\n  color: inherit;\n}\n.jstree-icon {\n  display: inline-block;\n  text-decoration: none;\n  margin: 0;\n  padding: 0;\n  vertical-align: top;\n  text-align: center;\n}\n.jstree-icon:empty {\n  display: inline-block;\n  text-decoration: none;\n  margin: 0;\n  padding: 0;\n  vertical-align: top;\n  text-align: center;\n}\n.jstree-ocl {\n  cursor: pointer;\n}\n.jstree-leaf > .jstree-ocl {\n  cursor: default;\n}\n.jstree .jstree-open > .jstree-children {\n  display: block;\n}\n.jstree .jstree-closed > .jstree-children,\n.jstree .jstree-leaf > .jstree-children {\n  display: none;\n}\n.jstree-anchor > .jstree-themeicon {\n  margin-right: 2px;\n}\n.jstree-no-icons .jstree-themeicon,\n.jstree-anchor > .jstree-themeicon-hidden {\n  display: none;\n}\n.jstree-hidden,\n.jstree-node.jstree-hidden {\n  display: none;\n}\n.jstree-rtl .jstree-anchor {\n  padding: 0 1px 0 4px;\n}\n.jstree-rtl .jstree-anchor > .jstree-themeicon {\n  margin-left: 2px;\n  margin-right: 0;\n}\n.jstree-rtl .jstree-node {\n  margin-left: 0;\n}\n.jstree-rtl .jstree-container-ul > .jstree-node {\n  margin-right: 0;\n}\n.jstree-wholerow-ul {\n  position: relative;\n  display: inline-block;\n  min-width: 100%;\n}\n.jstree-wholerow-ul .jstree-leaf > .jstree-ocl {\n  cursor: pointer;\n}\n.jstree-wholerow-ul .jstree-anchor,\n.jstree-wholerow-ul .jstree-icon {\n  position: relative;\n}\n.jstree-wholerow-ul .jstree-wholerow {\n  width: 100%;\n  cursor: pointer;\n  position: absolute;\n  left: 0;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\n.jstree-contextmenu .jstree-anchor {\n  -webkit-user-select: none;\n  /* disable selection/Copy of UIWebView */\n  -webkit-touch-callout: none;\n  /* disable the IOS popup when long-press on a link */\n}\n.vakata-context {\n  display: none;\n}\n.vakata-context,\n.vakata-context ul {\n  margin: 0;\n  padding: 2px;\n  position: absolute;\n  background: #f5f5f5;\n  border: 1px solid #979797;\n  box-shadow: 2px 2px 2px #999999;\n}\n.vakata-context ul {\n  list-style: none;\n  left: 100%;\n  margin-top: -2.7em;\n  margin-left: -4px;\n}\n.vakata-context .vakata-context-right ul {\n  left: auto;\n  right: 100%;\n  margin-left: auto;\n  margin-right: -4px;\n}\n.vakata-context li {\n  list-style: none;\n}\n.vakata-context li > a {\n  display: block;\n  padding: 0 2em 0 2em;\n  text-decoration: none;\n  width: auto;\n  color: black;\n  white-space: nowrap;\n  line-height: 2.4em;\n  text-shadow: 1px 1px 0 white;\n  border-radius: 1px;\n}\n.vakata-context li > a:hover {\n  position: relative;\n  background-color: #e8eff7;\n  box-shadow: 0 0 2px #0a6aa1;\n}\n.vakata-context li > a.vakata-context-parent {\n  background-image: url(\"data:image/gif;base64,R0lGODlhCwAHAIAAACgoKP///yH5BAEAAAEALAAAAAALAAcAAAIORI4JlrqN1oMSnmmZDQUAOw==\");\n  background-position: right center;\n  background-repeat: no-repeat;\n}\n.vakata-context li > a:focus {\n  outline: 0;\n}\n.vakata-context .vakata-context-hover > a {\n  position: relative;\n  background-color: #e8eff7;\n  box-shadow: 0 0 2px #0a6aa1;\n}\n.vakata-context .vakata-context-separator > a,\n.vakata-context .vakata-context-separator > a:hover {\n  background: white;\n  border: 0;\n  border-top: 1px solid #e2e3e3;\n  height: 1px;\n  min-height: 1px;\n  max-height: 1px;\n  padding: 0;\n  margin: 0 0 0 2.4em;\n  border-left: 1px solid #e0e0e0;\n  text-shadow: 0 0 0 transparent;\n  box-shadow: 0 0 0 transparent;\n  border-radius: 0;\n}\n.vakata-context .vakata-contextmenu-disabled a,\n.vakata-context .vakata-contextmenu-disabled a:hover {\n  color: silver;\n  background-color: transparent;\n  border: 0;\n  box-shadow: 0 0 0;\n}\n.vakata-context li > a > i {\n  text-decoration: none;\n  display: inline-block;\n  width: 2.4em;\n  height: 2.4em;\n  background: transparent;\n  margin: 0 0 0 -2em;\n  vertical-align: top;\n  text-align: center;\n  line-height: 2.4em;\n}\n.vakata-context li > a > i:empty {\n  width: 2.4em;\n  line-height: 2.4em;\n}\n.vakata-context li > a .vakata-contextmenu-sep {\n  display: inline-block;\n  width: 1px;\n  height: 2.4em;\n  background: white;\n  margin: 0 0.5em 0 0;\n  border-left: 1px solid #e2e3e3;\n}\n.vakata-context .vakata-contextmenu-shortcut {\n  font-size: 0.8em;\n  color: silver;\n  opacity: 0.5;\n  display: none;\n}\n.vakata-context-rtl ul {\n  left: auto;\n  right: 100%;\n  margin-left: auto;\n  margin-right: -4px;\n}\n.vakata-context-rtl li > a.vakata-context-parent {\n  background-image: url(\"data:image/gif;base64,R0lGODlhCwAHAIAAACgoKP///yH5BAEAAAEALAAAAAALAAcAAAINjI+AC7rWHIsPtmoxLAA7\");\n  background-position: left center;\n  background-repeat: no-repeat;\n}\n.vakata-context-rtl .vakata-context-separator > a {\n  margin: 0 2.4em 0 0;\n  border-left: 0;\n  border-right: 1px solid #e2e3e3;\n}\n.vakata-context-rtl .vakata-context-left ul {\n  right: auto;\n  left: 100%;\n  margin-left: -4px;\n  margin-right: auto;\n}\n.vakata-context-rtl li > a > i {\n  margin: 0 -2em 0 0;\n}\n.vakata-context-rtl li > a .vakata-contextmenu-sep {\n  margin: 0 0 0 0.5em;\n  border-left-color: white;\n  background: #e2e3e3;\n}\n#jstree-marker {\n  position: absolute;\n  top: 0;\n  left: 0;\n  margin: -5px 0 0 0;\n  padding: 0;\n  border-right: 0;\n  border-top: 5px solid transparent;\n  border-bottom: 5px solid transparent;\n  border-left: 5px solid;\n  width: 0;\n  height: 0;\n  font-size: 0;\n  line-height: 0;\n}\n#jstree-dnd {\n  line-height: 16px;\n  margin: 0;\n  padding: 4px;\n}\n#jstree-dnd .jstree-icon,\n#jstree-dnd .jstree-copy {\n  display: inline-block;\n  text-decoration: none;\n  margin: 0 2px 0 0;\n  padding: 0;\n  width: 16px;\n  height: 16px;\n}\n#jstree-dnd .jstree-ok {\n  background: green;\n}\n#jstree-dnd .jstree-er {\n  background: red;\n}\n#jstree-dnd .jstree-copy {\n  margin: 0 2px 0 2px;\n}\n.jstree-default-dark .jstree-node,\n.jstree-default-dark .jstree-icon {\n  background-repeat: no-repeat;\n  background-color: transparent;\n}\n.jstree-default-dark .jstree-anchor,\n.jstree-default-dark .jstree-animated,\n.jstree-default-dark .jstree-wholerow {\n  transition: background-color 0.15s, box-shadow 0.15s;\n}\n.jstree-default-dark .jstree-hovered {\n  background: #555555;\n  border-radius: 2px;\n  box-shadow: inset 0 0 1px #555555;\n}\n.jstree-default-dark .jstree-context {\n  background: #555555;\n  border-radius: 2px;\n  box-shadow: inset 0 0 1px #555555;\n}\n.jstree-default-dark .jstree-clicked {\n  background: #5fa2db;\n  border-radius: 2px;\n  box-shadow: inset 0 0 1px #666666;\n}\n.jstree-default-dark .jstree-no-icons .jstree-anchor > .jstree-themeicon {\n  display: none;\n}\n.jstree-default-dark .jstree-disabled {\n  background: transparent;\n  color: #666666;\n}\n.jstree-default-dark .jstree-disabled.jstree-hovered {\n  background: transparent;\n  box-shadow: none;\n}\n.jstree-default-dark .jstree-disabled.jstree-clicked {\n  background: #333333;\n}\n.jstree-default-dark .jstree-disabled > .jstree-icon {\n  opacity: 0.8;\n  filter: url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='jstree-grayscale'><feColorMatrix type='matrix' values='0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0'/></filter></svg>#jstree-grayscale\");\n  /* Firefox 10+ */\n  filter: gray;\n  /* IE6-9 */\n  -webkit-filter: grayscale(100%);\n  /* Chrome 19+ & Safari 6+ */\n}\n.jstree-default-dark .jstree-search {\n  font-style: italic;\n  color: #ffffff;\n  font-weight: bold;\n}\n.jstree-default-dark .jstree-no-checkboxes .jstree-checkbox {\n  display: none !important;\n}\n.jstree-default-dark.jstree-checkbox-no-clicked .jstree-clicked {\n  background: transparent;\n  box-shadow: none;\n}\n.jstree-default-dark.jstree-checkbox-no-clicked .jstree-clicked.jstree-hovered {\n  background: #555555;\n}\n.jstree-default-dark.jstree-checkbox-no-clicked > .jstree-wholerow-ul .jstree-wholerow-clicked {\n  background: transparent;\n}\n.jstree-default-dark.jstree-checkbox-no-clicked > .jstree-wholerow-ul .jstree-wholerow-clicked.jstree-wholerow-hovered {\n  background: #555555;\n}\n.jstree-default-dark > .jstree-striped {\n  min-width: 100%;\n  display: inline-block;\n  background: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAkCAMAAAB/qqA+AAAABlBMVEUAAAAAAAClZ7nPAAAAAnRSTlMNAMM9s3UAAAAXSURBVHjajcEBAQAAAIKg/H/aCQZ70AUBjAATb6YPDgAAAABJRU5ErkJggg==\") left top repeat;\n}\n.jstree-default-dark > .jstree-wholerow-ul .jstree-hovered,\n.jstree-default-dark > .jstree-wholerow-ul .jstree-clicked {\n  background: transparent;\n  box-shadow: none;\n  border-radius: 0;\n}\n.jstree-default-dark .jstree-wholerow {\n  -moz-box-sizing: border-box;\n  -webkit-box-sizing: border-box;\n  box-sizing: border-box;\n}\n.jstree-default-dark .jstree-wholerow-hovered {\n  background: #555555;\n}\n.jstree-default-dark .jstree-wholerow-clicked {\n  background: #5fa2db;\n  background: -webkit-linear-gradient(top, #5fa2db 0%, #5fa2db 100%);\n  background: linear-gradient(to bottom, #5fa2db 0%, #5fa2db 100%);\n}\n.jstree-default-dark .jstree-node {\n  min-height: 24px;\n  line-height: 24px;\n  margin-left: 24px;\n  min-width: 24px;\n}\n.jstree-default-dark .jstree-anchor {\n  line-height: 24px;\n  height: 24px;\n}\n.jstree-default-dark .jstree-icon {\n  width: 24px;\n  height: 24px;\n  line-height: 24px;\n}\n.jstree-default-dark .jstree-icon:empty {\n  width: 24px;\n  height: 24px;\n  line-height: 24px;\n}\n.jstree-default-dark.jstree-rtl .jstree-node {\n  margin-right: 24px;\n}\n.jstree-default-dark .jstree-wholerow {\n  height: 24px;\n}\n.jstree-default-dark .jstree-node,\n.jstree-default-dark .jstree-icon {\n  background-image: url(" + __webpack_require__(26) + ");\n}\n.jstree-default-dark .jstree-node {\n  background-position: -292px -4px;\n  background-repeat: repeat-y;\n}\n.jstree-default-dark .jstree-last {\n  background: transparent;\n}\n.jstree-default-dark .jstree-open > .jstree-ocl {\n  background-position: -132px -4px;\n}\n.jstree-default-dark .jstree-closed > .jstree-ocl {\n  background-position: -100px -4px;\n}\n.jstree-default-dark .jstree-leaf > .jstree-ocl {\n  background-position: -68px -4px;\n}\n.jstree-default-dark .jstree-themeicon {\n  background-position: -260px -4px;\n}\n.jstree-default-dark > .jstree-no-dots .jstree-node,\n.jstree-default-dark > .jstree-no-dots .jstree-leaf > .jstree-ocl {\n  background: transparent;\n}\n.jstree-default-dark > .jstree-no-dots .jstree-open > .jstree-ocl {\n  background-position: -36px -4px;\n}\n.jstree-default-dark > .jstree-no-dots .jstree-closed > .jstree-ocl {\n  background-position: -4px -4px;\n}\n.jstree-default-dark .jstree-disabled {\n  background: transparent;\n}\n.jstree-default-dark .jstree-disabled.jstree-hovered {\n  background: transparent;\n}\n.jstree-default-dark .jstree-disabled.jstree-clicked {\n  background: #efefef;\n}\n.jstree-default-dark .jstree-checkbox {\n  background-position: -164px -4px;\n}\n.jstree-default-dark .jstree-checkbox:hover {\n  background-position: -164px -36px;\n}\n.jstree-default-dark.jstree-checkbox-selection .jstree-clicked > .jstree-checkbox,\n.jstree-default-dark .jstree-checked > .jstree-checkbox {\n  background-position: -228px -4px;\n}\n.jstree-default-dark.jstree-checkbox-selection .jstree-clicked > .jstree-checkbox:hover,\n.jstree-default-dark .jstree-checked > .jstree-checkbox:hover {\n  background-position: -228px -36px;\n}\n.jstree-default-dark .jstree-anchor > .jstree-undetermined {\n  background-position: -196px -4px;\n}\n.jstree-default-dark .jstree-anchor > .jstree-undetermined:hover {\n  background-position: -196px -36px;\n}\n.jstree-default-dark .jstree-checkbox-disabled {\n  opacity: 0.8;\n  filter: url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='jstree-grayscale'><feColorMatrix type='matrix' values='0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0'/></filter></svg>#jstree-grayscale\");\n  /* Firefox 10+ */\n  filter: gray;\n  /* IE6-9 */\n  -webkit-filter: grayscale(100%);\n  /* Chrome 19+ & Safari 6+ */\n}\n.jstree-default-dark > .jstree-striped {\n  background-size: auto 48px;\n}\n.jstree-default-dark.jstree-rtl .jstree-node {\n  background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAACAQMAAAB49I5GAAAABlBMVEUAAAAdHRvEkCwcAAAAAXRSTlMAQObYZgAAAAxJREFUCNdjAAMOBgAAGAAJMwQHdQAAAABJRU5ErkJggg==\");\n  background-position: 100% 1px;\n  background-repeat: repeat-y;\n}\n.jstree-default-dark.jstree-rtl .jstree-last {\n  background: transparent;\n}\n.jstree-default-dark.jstree-rtl .jstree-open > .jstree-ocl {\n  background-position: -132px -36px;\n}\n.jstree-default-dark.jstree-rtl .jstree-closed > .jstree-ocl {\n  background-position: -100px -36px;\n}\n.jstree-default-dark.jstree-rtl .jstree-leaf > .jstree-ocl {\n  background-position: -68px -36px;\n}\n.jstree-default-dark.jstree-rtl > .jstree-no-dots .jstree-node,\n.jstree-default-dark.jstree-rtl > .jstree-no-dots .jstree-leaf > .jstree-ocl {\n  background: transparent;\n}\n.jstree-default-dark.jstree-rtl > .jstree-no-dots .jstree-open > .jstree-ocl {\n  background-position: -36px -36px;\n}\n.jstree-default-dark.jstree-rtl > .jstree-no-dots .jstree-closed > .jstree-ocl {\n  background-position: -4px -36px;\n}\n.jstree-default-dark .jstree-themeicon-custom {\n  background-color: transparent;\n  background-image: none;\n  background-position: 0 0;\n}\n.jstree-default-dark > .jstree-container-ul .jstree-loading > .jstree-ocl {\n  background: url(" + __webpack_require__(151) + ") center center no-repeat;\n}\n.jstree-default-dark .jstree-file {\n  background: url(" + __webpack_require__(26) + ") -100px -68px no-repeat;\n}\n.jstree-default-dark .jstree-folder {\n  background: url(" + __webpack_require__(26) + ") -260px -4px no-repeat;\n}\n.jstree-default-dark > .jstree-container-ul > .jstree-node {\n  margin-left: 0;\n  margin-right: 0;\n}\n#jstree-dnd.jstree-default-dark {\n  line-height: 24px;\n  padding: 0 4px;\n}\n#jstree-dnd.jstree-default-dark .jstree-ok,\n#jstree-dnd.jstree-default-dark .jstree-er {\n  background-image: url(" + __webpack_require__(26) + ");\n  background-repeat: no-repeat;\n  background-color: transparent;\n}\n#jstree-dnd.jstree-default-dark i {\n  background: transparent;\n  width: 24px;\n  height: 24px;\n  line-height: 24px;\n}\n#jstree-dnd.jstree-default-dark .jstree-ok {\n  background-position: -4px -68px;\n}\n#jstree-dnd.jstree-default-dark .jstree-er {\n  background-position: -36px -68px;\n}\n.jstree-default-dark .jstree-ellipsis {\n  overflow: hidden;\n}\n.jstree-default-dark .jstree-ellipsis .jstree-anchor {\n  width: calc(100% - 29px);\n  text-overflow: ellipsis;\n  overflow: hidden;\n}\n.jstree-default-dark .jstree-ellipsis.jstree-no-icons .jstree-anchor {\n  width: calc(100% - 5px);\n}\n.jstree-default-dark.jstree-rtl .jstree-node {\n  background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAACAQMAAAB49I5GAAAABlBMVEUAAAAdHRvEkCwcAAAAAXRSTlMAQObYZgAAAAxJREFUCNdjAAMOBgAAGAAJMwQHdQAAAABJRU5ErkJggg==\");\n}\n.jstree-default-dark.jstree-rtl .jstree-last {\n  background: transparent;\n}\n.jstree-default-dark-small .jstree-node {\n  min-height: 18px;\n  line-height: 18px;\n  margin-left: 18px;\n  min-width: 18px;\n}\n.jstree-default-dark-small .jstree-anchor {\n  line-height: 18px;\n  height: 18px;\n}\n.jstree-default-dark-small .jstree-icon {\n  width: 18px;\n  height: 18px;\n  line-height: 18px;\n}\n.jstree-default-dark-small .jstree-icon:empty {\n  width: 18px;\n  height: 18px;\n  line-height: 18px;\n}\n.jstree-default-dark-small.jstree-rtl .jstree-node {\n  margin-right: 18px;\n}\n.jstree-default-dark-small .jstree-wholerow {\n  height: 18px;\n}\n.jstree-default-dark-small .jstree-node,\n.jstree-default-dark-small .jstree-icon {\n  background-image: url(" + __webpack_require__(26) + ");\n}\n.jstree-default-dark-small .jstree-node {\n  background-position: -295px -7px;\n  background-repeat: repeat-y;\n}\n.jstree-default-dark-small .jstree-last {\n  background: transparent;\n}\n.jstree-default-dark-small .jstree-open > .jstree-ocl {\n  background-position: -135px -7px;\n}\n.jstree-default-dark-small .jstree-closed > .jstree-ocl {\n  background-position: -103px -7px;\n}\n.jstree-default-dark-small .jstree-leaf > .jstree-ocl {\n  background-position: -71px -7px;\n}\n.jstree-default-dark-small .jstree-themeicon {\n  background-position: -263px -7px;\n}\n.jstree-default-dark-small > .jstree-no-dots .jstree-node,\n.jstree-default-dark-small > .jstree-no-dots .jstree-leaf > .jstree-ocl {\n  background: transparent;\n}\n.jstree-default-dark-small > .jstree-no-dots .jstree-open > .jstree-ocl {\n  background-position: -39px -7px;\n}\n.jstree-default-dark-small > .jstree-no-dots .jstree-closed > .jstree-ocl {\n  background-position: -7px -7px;\n}\n.jstree-default-dark-small .jstree-disabled {\n  background: transparent;\n}\n.jstree-default-dark-small .jstree-disabled.jstree-hovered {\n  background: transparent;\n}\n.jstree-default-dark-small .jstree-disabled.jstree-clicked {\n  background: #efefef;\n}\n.jstree-default-dark-small .jstree-checkbox {\n  background-position: -167px -7px;\n}\n.jstree-default-dark-small .jstree-checkbox:hover {\n  background-position: -167px -39px;\n}\n.jstree-default-dark-small.jstree-checkbox-selection .jstree-clicked > .jstree-checkbox,\n.jstree-default-dark-small .jstree-checked > .jstree-checkbox {\n  background-position: -231px -7px;\n}\n.jstree-default-dark-small.jstree-checkbox-selection .jstree-clicked > .jstree-checkbox:hover,\n.jstree-default-dark-small .jstree-checked > .jstree-checkbox:hover {\n  background-position: -231px -39px;\n}\n.jstree-default-dark-small .jstree-anchor > .jstree-undetermined {\n  background-position: -199px -7px;\n}\n.jstree-default-dark-small .jstree-anchor > .jstree-undetermined:hover {\n  background-position: -199px -39px;\n}\n.jstree-default-dark-small .jstree-checkbox-disabled {\n  opacity: 0.8;\n  filter: url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='jstree-grayscale'><feColorMatrix type='matrix' values='0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0'/></filter></svg>#jstree-grayscale\");\n  /* Firefox 10+ */\n  filter: gray;\n  /* IE6-9 */\n  -webkit-filter: grayscale(100%);\n  /* Chrome 19+ & Safari 6+ */\n}\n.jstree-default-dark-small > .jstree-striped {\n  background-size: auto 36px;\n}\n.jstree-default-dark-small.jstree-rtl .jstree-node {\n  background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAACAQMAAAB49I5GAAAABlBMVEUAAAAdHRvEkCwcAAAAAXRSTlMAQObYZgAAAAxJREFUCNdjAAMOBgAAGAAJMwQHdQAAAABJRU5ErkJggg==\");\n  background-position: 100% 1px;\n  background-repeat: repeat-y;\n}\n.jstree-default-dark-small.jstree-rtl .jstree-last {\n  background: transparent;\n}\n.jstree-default-dark-small.jstree-rtl .jstree-open > .jstree-ocl {\n  background-position: -135px -39px;\n}\n.jstree-default-dark-small.jstree-rtl .jstree-closed > .jstree-ocl {\n  background-position: -103px -39px;\n}\n.jstree-default-dark-small.jstree-rtl .jstree-leaf > .jstree-ocl {\n  background-position: -71px -39px;\n}\n.jstree-default-dark-small.jstree-rtl > .jstree-no-dots .jstree-node,\n.jstree-default-dark-small.jstree-rtl > .jstree-no-dots .jstree-leaf > .jstree-ocl {\n  background: transparent;\n}\n.jstree-default-dark-small.jstree-rtl > .jstree-no-dots .jstree-open > .jstree-ocl {\n  background-position: -39px -39px;\n}\n.jstree-default-dark-small.jstree-rtl > .jstree-no-dots .jstree-closed > .jstree-ocl {\n  background-position: -7px -39px;\n}\n.jstree-default-dark-small .jstree-themeicon-custom {\n  background-color: transparent;\n  background-image: none;\n  background-position: 0 0;\n}\n.jstree-default-dark-small > .jstree-container-ul .jstree-loading > .jstree-ocl {\n  background: url(" + __webpack_require__(151) + ") center center no-repeat;\n}\n.jstree-default-dark-small .jstree-file {\n  background: url(" + __webpack_require__(26) + ") -103px -71px no-repeat;\n}\n.jstree-default-dark-small .jstree-folder {\n  background: url(" + __webpack_require__(26) + ") -263px -7px no-repeat;\n}\n.jstree-default-dark-small > .jstree-container-ul > .jstree-node {\n  margin-left: 0;\n  margin-right: 0;\n}\n#jstree-dnd.jstree-default-dark-small {\n  line-height: 18px;\n  padding: 0 4px;\n}\n#jstree-dnd.jstree-default-dark-small .jstree-ok,\n#jstree-dnd.jstree-default-dark-small .jstree-er {\n  background-image: url(" + __webpack_require__(26) + ");\n  background-repeat: no-repeat;\n  background-color: transparent;\n}\n#jstree-dnd.jstree-default-dark-small i {\n  background: transparent;\n  width: 18px;\n  height: 18px;\n  line-height: 18px;\n}\n#jstree-dnd.jstree-default-dark-small .jstree-ok {\n  background-position: -7px -71px;\n}\n#jstree-dnd.jstree-default-dark-small .jstree-er {\n  background-position: -39px -71px;\n}\n.jstree-default-dark-small .jstree-ellipsis {\n  overflow: hidden;\n}\n.jstree-default-dark-small .jstree-ellipsis .jstree-anchor {\n  width: calc(100% - 23px);\n  text-overflow: ellipsis;\n  overflow: hidden;\n}\n.jstree-default-dark-small .jstree-ellipsis.jstree-no-icons .jstree-anchor {\n  width: calc(100% - 5px);\n}\n.jstree-default-dark-small.jstree-rtl .jstree-node {\n  background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAACAQMAAABv1h6PAAAABlBMVEUAAAAdHRvEkCwcAAAAAXRSTlMAQObYZgAAAAxJREFUCNdjAAMHBgAAiABBI4gz9AAAAABJRU5ErkJggg==\");\n}\n.jstree-default-dark-small.jstree-rtl .jstree-last {\n  background: transparent;\n}\n.jstree-default-dark-large .jstree-node {\n  min-height: 32px;\n  line-height: 32px;\n  margin-left: 32px;\n  min-width: 32px;\n}\n.jstree-default-dark-large .jstree-anchor {\n  line-height: 32px;\n  height: 32px;\n}\n.jstree-default-dark-large .jstree-icon {\n  width: 32px;\n  height: 32px;\n  line-height: 32px;\n}\n.jstree-default-dark-large .jstree-icon:empty {\n  width: 32px;\n  height: 32px;\n  line-height: 32px;\n}\n.jstree-default-dark-large.jstree-rtl .jstree-node {\n  margin-right: 32px;\n}\n.jstree-default-dark-large .jstree-wholerow {\n  height: 32px;\n}\n.jstree-default-dark-large .jstree-node,\n.jstree-default-dark-large .jstree-icon {\n  background-image: url(" + __webpack_require__(26) + ");\n}\n.jstree-default-dark-large .jstree-node {\n  background-position: -288px 0px;\n  background-repeat: repeat-y;\n}\n.jstree-default-dark-large .jstree-last {\n  background: transparent;\n}\n.jstree-default-dark-large .jstree-open > .jstree-ocl {\n  background-position: -128px 0px;\n}\n.jstree-default-dark-large .jstree-closed > .jstree-ocl {\n  background-position: -96px 0px;\n}\n.jstree-default-dark-large .jstree-leaf > .jstree-ocl {\n  background-position: -64px 0px;\n}\n.jstree-default-dark-large .jstree-themeicon {\n  background-position: -256px 0px;\n}\n.jstree-default-dark-large > .jstree-no-dots .jstree-node,\n.jstree-default-dark-large > .jstree-no-dots .jstree-leaf > .jstree-ocl {\n  background: transparent;\n}\n.jstree-default-dark-large > .jstree-no-dots .jstree-open > .jstree-ocl {\n  background-position: -32px 0px;\n}\n.jstree-default-dark-large > .jstree-no-dots .jstree-closed > .jstree-ocl {\n  background-position: 0px 0px;\n}\n.jstree-default-dark-large .jstree-disabled {\n  background: transparent;\n}\n.jstree-default-dark-large .jstree-disabled.jstree-hovered {\n  background: transparent;\n}\n.jstree-default-dark-large .jstree-disabled.jstree-clicked {\n  background: #efefef;\n}\n.jstree-default-dark-large .jstree-checkbox {\n  background-position: -160px 0px;\n}\n.jstree-default-dark-large .jstree-checkbox:hover {\n  background-position: -160px -32px;\n}\n.jstree-default-dark-large.jstree-checkbox-selection .jstree-clicked > .jstree-checkbox,\n.jstree-default-dark-large .jstree-checked > .jstree-checkbox {\n  background-position: -224px 0px;\n}\n.jstree-default-dark-large.jstree-checkbox-selection .jstree-clicked > .jstree-checkbox:hover,\n.jstree-default-dark-large .jstree-checked > .jstree-checkbox:hover {\n  background-position: -224px -32px;\n}\n.jstree-default-dark-large .jstree-anchor > .jstree-undetermined {\n  background-position: -192px 0px;\n}\n.jstree-default-dark-large .jstree-anchor > .jstree-undetermined:hover {\n  background-position: -192px -32px;\n}\n.jstree-default-dark-large .jstree-checkbox-disabled {\n  opacity: 0.8;\n  filter: url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='jstree-grayscale'><feColorMatrix type='matrix' values='0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0'/></filter></svg>#jstree-grayscale\");\n  /* Firefox 10+ */\n  filter: gray;\n  /* IE6-9 */\n  -webkit-filter: grayscale(100%);\n  /* Chrome 19+ & Safari 6+ */\n}\n.jstree-default-dark-large > .jstree-striped {\n  background-size: auto 64px;\n}\n.jstree-default-dark-large.jstree-rtl .jstree-node {\n  background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAACAQMAAAB49I5GAAAABlBMVEUAAAAdHRvEkCwcAAAAAXRSTlMAQObYZgAAAAxJREFUCNdjAAMOBgAAGAAJMwQHdQAAAABJRU5ErkJggg==\");\n  background-position: 100% 1px;\n  background-repeat: repeat-y;\n}\n.jstree-default-dark-large.jstree-rtl .jstree-last {\n  background: transparent;\n}\n.jstree-default-dark-large.jstree-rtl .jstree-open > .jstree-ocl {\n  background-position: -128px -32px;\n}\n.jstree-default-dark-large.jstree-rtl .jstree-closed > .jstree-ocl {\n  background-position: -96px -32px;\n}\n.jstree-default-dark-large.jstree-rtl .jstree-leaf > .jstree-ocl {\n  background-position: -64px -32px;\n}\n.jstree-default-dark-large.jstree-rtl > .jstree-no-dots .jstree-node,\n.jstree-default-dark-large.jstree-rtl > .jstree-no-dots .jstree-leaf > .jstree-ocl {\n  background: transparent;\n}\n.jstree-default-dark-large.jstree-rtl > .jstree-no-dots .jstree-open > .jstree-ocl {\n  background-position: -32px -32px;\n}\n.jstree-default-dark-large.jstree-rtl > .jstree-no-dots .jstree-closed > .jstree-ocl {\n  background-position: 0px -32px;\n}\n.jstree-default-dark-large .jstree-themeicon-custom {\n  background-color: transparent;\n  background-image: none;\n  background-position: 0 0;\n}\n.jstree-default-dark-large > .jstree-container-ul .jstree-loading > .jstree-ocl {\n  background: url(" + __webpack_require__(151) + ") center center no-repeat;\n}\n.jstree-default-dark-large .jstree-file {\n  background: url(" + __webpack_require__(26) + ") -96px -64px no-repeat;\n}\n.jstree-default-dark-large .jstree-folder {\n  background: url(" + __webpack_require__(26) + ") -256px 0px no-repeat;\n}\n.jstree-default-dark-large > .jstree-container-ul > .jstree-node {\n  margin-left: 0;\n  margin-right: 0;\n}\n#jstree-dnd.jstree-default-dark-large {\n  line-height: 32px;\n  padding: 0 4px;\n}\n#jstree-dnd.jstree-default-dark-large .jstree-ok,\n#jstree-dnd.jstree-default-dark-large .jstree-er {\n  background-image: url(" + __webpack_require__(26) + ");\n  background-repeat: no-repeat;\n  background-color: transparent;\n}\n#jstree-dnd.jstree-default-dark-large i {\n  background: transparent;\n  width: 32px;\n  height: 32px;\n  line-height: 32px;\n}\n#jstree-dnd.jstree-default-dark-large .jstree-ok {\n  background-position: 0px -64px;\n}\n#jstree-dnd.jstree-default-dark-large .jstree-er {\n  background-position: -32px -64px;\n}\n.jstree-default-dark-large .jstree-ellipsis {\n  overflow: hidden;\n}\n.jstree-default-dark-large .jstree-ellipsis .jstree-anchor {\n  width: calc(100% - 37px);\n  text-overflow: ellipsis;\n  overflow: hidden;\n}\n.jstree-default-dark-large .jstree-ellipsis.jstree-no-icons .jstree-anchor {\n  width: calc(100% - 5px);\n}\n.jstree-default-dark-large.jstree-rtl .jstree-node {\n  background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAACAQMAAAAD0EyKAAAABlBMVEUAAAAdHRvEkCwcAAAAAXRSTlMAQObYZgAAAAxJREFUCNdjgIIGBgABCgCBvVLXcAAAAABJRU5ErkJggg==\");\n}\n.jstree-default-dark-large.jstree-rtl .jstree-last {\n  background: transparent;\n}\n@media (max-width: 768px) {\n  #jstree-dnd.jstree-dnd-responsive {\n    line-height: 40px;\n    font-weight: bold;\n    font-size: 1.1em;\n    text-shadow: 1px 1px white;\n  }\n  #jstree-dnd.jstree-dnd-responsive > i {\n    background: transparent;\n    width: 40px;\n    height: 40px;\n  }\n  #jstree-dnd.jstree-dnd-responsive > .jstree-ok {\n    background-image: url(" + __webpack_require__(57) + ");\n    background-position: 0 -200px;\n    background-size: 120px 240px;\n  }\n  #jstree-dnd.jstree-dnd-responsive > .jstree-er {\n    background-image: url(" + __webpack_require__(57) + ");\n    background-position: -40px -200px;\n    background-size: 120px 240px;\n  }\n  #jstree-marker.jstree-dnd-responsive {\n    border-left-width: 10px;\n    border-top-width: 10px;\n    border-bottom-width: 10px;\n    margin-top: -10px;\n  }\n}\n@media (max-width: 768px) {\n  .jstree-default-dark-responsive {\n    /*\n\t.jstree-open > .jstree-ocl,\n\t.jstree-closed > .jstree-ocl { border-radius:20px; background-color:white; }\n\t*/\n  }\n  .jstree-default-dark-responsive .jstree-icon {\n    background-image: url(" + __webpack_require__(57) + ");\n  }\n  .jstree-default-dark-responsive .jstree-node,\n  .jstree-default-dark-responsive .jstree-leaf > .jstree-ocl {\n    background: transparent;\n  }\n  .jstree-default-dark-responsive .jstree-node {\n    min-height: 40px;\n    line-height: 40px;\n    margin-left: 40px;\n    min-width: 40px;\n    white-space: nowrap;\n  }\n  .jstree-default-dark-responsive .jstree-anchor {\n    line-height: 40px;\n    height: 40px;\n  }\n  .jstree-default-dark-responsive .jstree-icon,\n  .jstree-default-dark-responsive .jstree-icon:empty {\n    width: 40px;\n    height: 40px;\n    line-height: 40px;\n  }\n  .jstree-default-dark-responsive > .jstree-container-ul > .jstree-node {\n    margin-left: 0;\n  }\n  .jstree-default-dark-responsive.jstree-rtl .jstree-node {\n    margin-left: 0;\n    margin-right: 40px;\n    background: transparent;\n  }\n  .jstree-default-dark-responsive.jstree-rtl .jstree-container-ul > .jstree-node {\n    margin-right: 0;\n  }\n  .jstree-default-dark-responsive .jstree-ocl,\n  .jstree-default-dark-responsive .jstree-themeicon,\n  .jstree-default-dark-responsive .jstree-checkbox {\n    background-size: 120px 240px;\n  }\n  .jstree-default-dark-responsive .jstree-leaf > .jstree-ocl,\n  .jstree-default-dark-responsive.jstree-rtl .jstree-leaf > .jstree-ocl {\n    background: transparent;\n  }\n  .jstree-default-dark-responsive .jstree-open > .jstree-ocl {\n    background-position: 0 0px !important;\n  }\n  .jstree-default-dark-responsive .jstree-closed > .jstree-ocl {\n    background-position: 0 -40px !important;\n  }\n  .jstree-default-dark-responsive.jstree-rtl .jstree-closed > .jstree-ocl {\n    background-position: -40px 0px !important;\n  }\n  .jstree-default-dark-responsive .jstree-themeicon {\n    background-position: -40px -40px;\n  }\n  .jstree-default-dark-responsive .jstree-checkbox,\n  .jstree-default-dark-responsive .jstree-checkbox:hover {\n    background-position: -40px -80px;\n  }\n  .jstree-default-dark-responsive.jstree-checkbox-selection .jstree-clicked > .jstree-checkbox,\n  .jstree-default-dark-responsive.jstree-checkbox-selection .jstree-clicked > .jstree-checkbox:hover,\n  .jstree-default-dark-responsive .jstree-checked > .jstree-checkbox,\n  .jstree-default-dark-responsive .jstree-checked > .jstree-checkbox:hover {\n    background-position: 0 -80px;\n  }\n  .jstree-default-dark-responsive .jstree-anchor > .jstree-undetermined,\n  .jstree-default-dark-responsive .jstree-anchor > .jstree-undetermined:hover {\n    background-position: 0 -120px;\n  }\n  .jstree-default-dark-responsive .jstree-anchor {\n    font-weight: bold;\n    font-size: 1.1em;\n    text-shadow: 1px 1px white;\n  }\n  .jstree-default-dark-responsive > .jstree-striped {\n    background: transparent;\n  }\n  .jstree-default-dark-responsive .jstree-wholerow {\n    border-top: 1px solid #666666;\n    border-bottom: 1px solid #000000;\n    background: #333333;\n    height: 40px;\n  }\n  .jstree-default-dark-responsive .jstree-wholerow-hovered {\n    background: #555555;\n  }\n  .jstree-default-dark-responsive .jstree-wholerow-clicked {\n    background: #5fa2db;\n  }\n  .jstree-default-dark-responsive .jstree-children .jstree-last > .jstree-wholerow {\n    box-shadow: inset 0 -6px 3px -5px #111111;\n  }\n  .jstree-default-dark-responsive .jstree-children .jstree-open > .jstree-wholerow {\n    box-shadow: inset 0 6px 3px -5px #111111;\n    border-top: 0;\n  }\n  .jstree-default-dark-responsive .jstree-children .jstree-open + .jstree-open {\n    box-shadow: none;\n  }\n  .jstree-default-dark-responsive .jstree-node,\n  .jstree-default-dark-responsive .jstree-icon,\n  .jstree-default-dark-responsive .jstree-node > .jstree-ocl,\n  .jstree-default-dark-responsive .jstree-themeicon,\n  .jstree-default-dark-responsive .jstree-checkbox {\n    background-image: url(" + __webpack_require__(57) + ");\n    background-size: 120px 240px;\n  }\n  .jstree-default-dark-responsive .jstree-node {\n    background-position: -80px 0;\n    background-repeat: repeat-y;\n  }\n  .jstree-default-dark-responsive .jstree-last {\n    background: transparent;\n  }\n  .jstree-default-dark-responsive .jstree-leaf > .jstree-ocl {\n    background-position: -40px -120px;\n  }\n  .jstree-default-dark-responsive .jstree-last > .jstree-ocl {\n    background-position: -40px -160px;\n  }\n  .jstree-default-dark-responsive .jstree-themeicon-custom {\n    background-color: transparent;\n    background-image: none;\n    background-position: 0 0;\n  }\n  .jstree-default-dark-responsive .jstree-file {\n    background: url(" + __webpack_require__(57) + ") 0 -160px no-repeat;\n    background-size: 120px 240px;\n  }\n  .jstree-default-dark-responsive .jstree-folder {\n    background: url(" + __webpack_require__(57) + ") -40px -40px no-repeat;\n    background-size: 120px 240px;\n  }\n  .jstree-default-dark-responsive > .jstree-container-ul > .jstree-node {\n    margin-left: 0;\n    margin-right: 0;\n  }\n}\n.jstree-default-dark {\n  background: #333;\n}\n.jstree-default-dark .jstree-anchor {\n  color: #999;\n  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);\n}\n.jstree-default-dark .jstree-clicked,\n.jstree-default-dark .jstree-checked {\n  color: white;\n}\n.jstree-default-dark .jstree-hovered {\n  color: white;\n}\n#jstree-marker.jstree-default-dark {\n  border-left-color: #999;\n  background: transparent;\n}\n.jstree-default-dark .jstree-anchor > .jstree-icon {\n  opacity: 0.75;\n}\n.jstree-default-dark .jstree-clicked > .jstree-icon,\n.jstree-default-dark .jstree-hovered > .jstree-icon,\n.jstree-default-dark .jstree-checked > .jstree-icon {\n  opacity: 1;\n}\n.jstree-default-dark.jstree-rtl .jstree-node {\n  background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAACAQMAAAB49I5GAAAABlBMVEUAAACZmZl+9SADAAAAAXRSTlMAQObYZgAAAAxJREFUCNdjAAMOBgAAGAAJMwQHdQAAAABJRU5ErkJggg==\");\n}\n.jstree-default-dark.jstree-rtl .jstree-last {\n  background: transparent;\n}\n.jstree-default-dark-small.jstree-rtl .jstree-node {\n  background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAACAQMAAABv1h6PAAAABlBMVEUAAACZmZl+9SADAAAAAXRSTlMAQObYZgAAAAxJREFUCNdjAAMHBgAAiABBI4gz9AAAAABJRU5ErkJggg==\");\n}\n.jstree-default-dark-small.jstree-rtl .jstree-last {\n  background: transparent;\n}\n.jstree-default-dark-large.jstree-rtl .jstree-node {\n  background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAACAQMAAAAD0EyKAAAABlBMVEUAAACZmZl+9SADAAAAAXRSTlMAQObYZgAAAAxJREFUCNdjgIIGBgABCgCBvVLXcAAAAABJRU5ErkJggg==\");\n}\n.jstree-default-dark-large.jstree-rtl .jstree-last {\n  background: transparent;\n}\n", ""]);
 
 // exports
 
@@ -55364,9 +55364,9 @@ module.exports = ":host {\n  height: 100%;\n  width: 100%;\n  background: #42424
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_socket_service__ = __webpack_require__(20);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_system_service__ = __webpack_require__(77);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_cache_service__ = __webpack_require__(44);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__services_user_service__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_system_service__ = __webpack_require__(76);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_cache_service__ = __webpack_require__(45);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__services_user_service__ = __webpack_require__(11);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -55434,8 +55434,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const fs = __webpack_require__(138);
-const path = __webpack_require__(138);
+const fs = __webpack_require__(137);
+const path = __webpack_require__(137);
 const util_date_1 = __webpack_require__(813);
 class Mapper {
     constructor(options = {}) {
@@ -55745,7 +55745,7 @@ module.exports = "data:image/svg+xml;base64,bW9kdWxlLmV4cG9ydHMgPSBfX3dlYnBhY2tf
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_router__ = __webpack_require__(28);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_login_login_component__ = __webpack_require__(76);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_login_login_component__ = __webpack_require__(75);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_page_main_page_main_component__ = __webpack_require__(363);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__guards_auth_guard__ = __webpack_require__(364);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_register_register_component__ = __webpack_require__(365);
@@ -55878,7 +55878,7 @@ module.exports = "a, p, li, span, h1, h2, h3, h4, h5, h6, td, th, label {\n  col
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__shared_classes_Base__ = __webpack_require__(53);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__shared_classes_Base__ = __webpack_require__(54);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__shared_classes_Base___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__shared_classes_Base__);
 
 class TradingChannelModel extends __WEBPACK_IMPORTED_MODULE_0__shared_classes_Base__["Base"] {
@@ -56034,9 +56034,9 @@ module.exports = ".container {\n  position: relative;\n  margin-left: auto;\n  m
 /* WEBPACK VAR INJECTION */(function($) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return SearchFilter; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return InstrumentListComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ngx_cookie__ = __webpack_require__(50);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ngx_cookie__ = __webpack_require__(51);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_instruments_service__ = __webpack_require__(24);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_cache_service__ = __webpack_require__(44);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_cache_service__ = __webpack_require__(45);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -56176,7 +56176,7 @@ InstrumentListComponent = __decorate([
 
 var _a, _b, _c, _d, _e, _f, _g;
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(12)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(13)))
 
 /***/ }),
 /* 854 */
@@ -56318,7 +56318,7 @@ ModalAnchorDirective = __decorate([
 
 var _a, _b, _c;
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(12)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(13)))
 
 /***/ }),
 /* 860 */
@@ -56442,10 +56442,10 @@ var _a, _b, _c, _d;
 "use strict";
 /* WEBPACK VAR INJECTION */(function($) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return BacktestSettingsComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ngx_cookie__ = __webpack_require__(50);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ngx_cookie__ = __webpack_require__(51);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_forms__ = __webpack_require__(40);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_socket_service__ = __webpack_require__(20);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__services_cache_service__ = __webpack_require__(44);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__services_cache_service__ = __webpack_require__(45);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__services_instruments_service__ = __webpack_require__(24);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__shared_models_BaseModel__ = __webpack_require__(146);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__shared_models_BaseModel___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__shared_models_BaseModel__);
@@ -56596,7 +56596,7 @@ BacktestSettingsComponent = __decorate([
 
 var _a, _b, _c, _d, _e, _f, _g, _h;
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(12)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(13)))
 
 /***/ }),
 /* 862 */
@@ -56617,7 +56617,7 @@ module.exports = ".input-group {\n  position: relative;\n  display: flex;\n  wid
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return BacktestReportComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__shared_models_InstrumentModel__ = __webpack_require__(105);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__shared_models_InstrumentModel__ = __webpack_require__(104);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__shared_models_InstrumentModel___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__shared_models_InstrumentModel__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_lodash__ = __webpack_require__(78);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_lodash__);
@@ -63929,7 +63929,7 @@ CoreListComponent = __decorate([
 
 var _a, _b, _c, _d;
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(12)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(13)))
 
 /***/ }),
 /* 869 */
@@ -64088,10 +64088,10 @@ module.exports = ":host {\n  display: grid;\n  grid-template-areas: \"header hea
 /* WEBPACK VAR INJECTION */(function($) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return HeaderSocialComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_socket_service__ = __webpack_require__(20);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__login_login_component__ = __webpack_require__(76);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_user_service__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__services_system_service__ = __webpack_require__(77);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__dialog_dialog_component__ = __webpack_require__(56);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__login_login_component__ = __webpack_require__(75);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_user_service__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__services_system_service__ = __webpack_require__(76);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__dialog_dialog_component__ = __webpack_require__(55);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__services_instruments_service__ = __webpack_require__(24);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -64171,7 +64171,7 @@ HeaderSocialComponent = __decorate([
 
 var _a, _b, _c, _d, _e, _f;
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(12)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(13)))
 
 /***/ }),
 /* 878 */
@@ -64241,11 +64241,11 @@ var _a, _b, _c;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__app_config__ = __webpack_require__(882);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_catch__ = __webpack_require__(137);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_catch__ = __webpack_require__(136);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_catch___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_catch__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_map__ = __webpack_require__(100);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_map__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_throw__ = __webpack_require__(135);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_throw__ = __webpack_require__(134);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_throw___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_throw__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -64403,9 +64403,9 @@ module.exports = "<ng-container *ngIf=\"message$ | async as message\">\n    <div
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ChannelRowComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_user_service__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_user_service__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__models_channel_model__ = __webpack_require__(80);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_channel_service__ = __webpack_require__(59);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_channel_service__ = __webpack_require__(58);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -64476,7 +64476,7 @@ module.exports = "a, p, li, span, h1, h2, h3, h4, h5, h6, td, th, label {\n  col
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CommentBoxComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_user_service__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_user_service__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_http__ = __webpack_require__(21);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_forms__ = __webpack_require__(40);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
