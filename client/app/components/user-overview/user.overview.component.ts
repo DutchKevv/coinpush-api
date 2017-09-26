@@ -11,6 +11,8 @@ import {ChannelService} from '../../services/channel.service';
 
 declare let $: any;
 
+const shuffleArray = (arr) => arr.sort(() => (Math.random() - 0.5));
+
 @Component({
 	selector: 'app-user-overview',
 	templateUrl: './user.overview.component.html',
@@ -21,7 +23,10 @@ declare let $: any;
 
 export class UserOverviewComponent implements OnInit, OnDestroy, AfterViewChecked {
 
-	@Output() public users$: BehaviorSubject<any[]> = new BehaviorSubject([]);
+	@Output() public newest$: BehaviorSubject<any[]> = new BehaviorSubject([]);
+	@Output() public editorChoice$: BehaviorSubject<any[]> = new BehaviorSubject([]);
+	@Output() public topInvestors$: BehaviorSubject<any[]> = new BehaviorSubject([]);
+
 	public selfId = this.userService.model.get('user_id');
 
 	private _moveInterval;
@@ -32,7 +37,11 @@ export class UserOverviewComponent implements OnInit, OnDestroy, AfterViewChecke
 	}
 
 	ngOnInit() {
-		return this.userService.getOverview().subscribe((users: Array<UserModel>) => this.users$.next(users.reverse()));
+		this.userService.getOverview().subscribe((users: Array<UserModel>) => {
+			this.newest$.next(users.slice());
+			this.editorChoice$.next(users.slice().reverse());
+			this.topInvestors$.next(shuffleArray(users.slice()));
+		});
 	}
 
 	ngAfterViewChecked() {

@@ -29,7 +29,11 @@ module.exports = {
 		}
 
 		process.exit();
+	},
+
+	async addFakeFollowersAndCopiers(min = 0, max = 10) {
+
 	}
 };
 
-module.exports.addFakeUsers(100).then(() => process.exit(0)).catch(console.error);
+module.exports.addFakeUsers(50).then(() => process.exit(0)).catch(console.error);

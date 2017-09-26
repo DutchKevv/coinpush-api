@@ -139,6 +139,11 @@ app.use((req, res, next) => {
 app.get('/', (req, res) => proxy.web(req, res, {target: config.server.fe.apiUrl}));
 
 /**
+ * images
+ */
+app.get('/images/*', (req, res) => proxy.web(req, res, {target: config.server.fe.apiUrl}));
+
+/**
  * authenticate
  */
 app.use('/authenticate', require('./api/authenticate.api'));
@@ -147,11 +152,6 @@ app.use('/authenticate', require('./api/authenticate.api'));
  * upload
  */
 app.use('/upload', require('./api/upload.api'));
-
-/**
- * image
- */
-app.get('/images/*', (req, res) => proxy.web(req, res, {target: config.server.fe.apiUrl}));
 
 /**
  * user
@@ -172,40 +172,7 @@ app.use('/order', require('./api/order.api'));
 /**
  * SEARCH
  */
-app.get('/search', (req, res, next) => {
-	next();
-});
-
-app.get('/search/:text', async (req, res) => {
-	const text = req.params.text;
-	const returnObj = {
-		users: [],
-		channels: [],
-		symbols: []
-	};
-
-	try {
-		const userRequest = request({
-			uri: 'http://localhost:3002/social/search/' + text,
-			headers: {
-				'_id': req.user.sub
-			},
-			json: false
-		});
-
-		const results = await Promise.all([userRequest]);
-		returnObj.users = results[0];
-		returnObj.channels = results[1];
-		returnObj.symbols = results[2];
-	} catch (error) {
-		console.error(error);
-
-		res.status(500).send(error);
-		return;
-	}
-
-	res.send(returnObj);
-});
+app.use('/search', require('./api/search.api'));
 
 function errorHandler (err, req, res, next) {
 	if (res.headersSent) {

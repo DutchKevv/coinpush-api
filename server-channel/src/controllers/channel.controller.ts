@@ -45,38 +45,44 @@ export const channelController = {
 		return channels;
 	},
 
-	async findMany(reqUser, params: {limit?: number, sort?: number} = {}): Promise<any> {
+	async findMany(reqUser, params: {limit?: any, sort?: number, text?: string} = {}): Promise<any> {
 
-		const results = await Channel.aggregate([
-			{
-				$project: {
-					followersCount: {$size: '$followers'},
-					copiersCount: {$size: '$copiers'},
-					followers: 1,
-					copiers: 1,
-					user_id: 1,
-					profileImg: 1,
-					name: 1,
-					transactions: 1,
-					description: 1
-				}
-			},
-			{
-				$limit: params.limit || 20
-			},
-			{
-				$sort: {
-					_id: params.sort || -1
-				}
+		const aggregate = [];
+
+		// search
+		if (params.text)
+			aggregate.push({$match: {name: new RegExp('.*' + params.text + '.*', 'i')}});
+
+		// project
+		aggregate.push({
+			$project: {
+				followersCount: {$size: '$followers'},
+				copiersCount: {$size: '$copiers'},
+				followers: 1,
+				copiers: 1,
+				user_id: 1,
+				profileImg: 1,
+				name: 1,
+				transactions: 1,
+				description: 1
 			}
-		]);
-
-		const channels = results.map(channel => {
-			// TODO: MOVE EMPTY PROFILEIMG URL REDIRECT TO GATEWAY API
-			Channel.normalize(reqUser, channel);
-
-			return channel;
 		});
+
+		// limit
+		aggregate.push({
+			$limit: parseInt(params.limit, 10) || 20
+		});
+
+		// sort
+		aggregate.push({
+			$sort: {
+				_id: params.sort || -1
+			}
+		});
+
+		const channels = await Channel.aggregate(aggregate);
+
+		channels.map(channel => Channel.normalize(reqUser, channel));
 
 		return channels
 	},

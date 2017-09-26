@@ -39,10 +39,6 @@ export class UserService {
 		return this._http.get('/user/' + id, {params: {type: type}}).map((res: Response) => new UserModel(res.json()));
 	}
 
-	getList() {
-		return this._http.get('/user').map((res: Response) => res.json());
-	}
-
 	getOverview() {
 		return this._http.get('/user-overview').map((res: Response) => res.json().editorChoice.map(user => new UserModel(user)));
 	}
@@ -52,10 +48,11 @@ export class UserService {
 	}
 
 	update(changes, toServer = true) {
+		console.log('CHANGES!');
 		this.model.set(changes);
 
 		if (toServer) {
-			return this._http.put('/user/' + this.model.get('_id'), changes).subscribe(() => {
+			return this._http.put('/user/' + this.model.get('user_id'), changes).subscribe(() => {
 				this.storeLocalStoreUser();
 				this._alertService.success('Settings saved');
 			}, error => {
@@ -64,66 +61,67 @@ export class UserService {
 			});
 		}
 		else {
+			this.storeLocalStoreUser();
 			this._alertService.success('Settings saved');
 		}
 	}
 
-	toggleFollow(model: UserModel, state: boolean) {
-
-		const subscription = this._http.post('/user/' + model.get('_id') + '/follow', null).map(res => res.json());
-
-		subscription.subscribe(result => {
-			let text;
-
-			if (result.state) {
-				model.set({
-					iFollow: !!state,
-					followersCount: ++model.options.followersCount
-				});
-				text = `You are now following ${model.options.username} !`;
-			} else {
-				text = `Unsigned from ${model.options.username}`;
-				model.set({
-					iFollow: !!state,
-					followersCount: --model.options.followersCount
-				});
-			}
-			this._alertService.success(text);
-		}, (error) => {
-			console.error(error);
-			this._alertService.error(`An error occurred when following ${model.options.username}...`);
-		});
-
-		return subscription;
-	}
-
-	toggleCopy(model: UserModel, state: boolean) {
-		const subscription = this._http.post('/user/' + model.get('_id') + '/copy', '').map(res => res.json());
-
-		subscription.subscribe(result => {
-			let text;
-
-			if (result.state) {
-				model.set({
-					iCopy: !!state,
-					copiersCount: ++model.options.followersCount
-				});
-				text = `You are now following ${model.options.username} !`;
-			} else {
-				text = `Unsigned from ${model.options.username}`;
-				model.set({
-					iCopy: !!state,
-					copiersCount: --model.options.followersCount
-				});
-			}
-			this._alertService.success(text);
-		}, (error) => {
-			console.error(error);
-			this._alertService.error(`An error occurred when following ${model.options.username}...`);
-		});
-
-		return subscription;
-	}
+	// toggleFollow(model: UserModel, state: boolean) {
+	//
+	// 	const subscription = this._http.post('/user/' + model.get('_id') + '/follow', null).map(res => res.json());
+	//
+	// 	subscription.subscribe(result => {
+	// 		let text;
+	//
+	// 		if (result.state) {
+	// 			model.set({
+	// 				iFollow: !!state,
+	// 				followersCount: ++model.options.followersCount
+	// 			});
+	// 			text = `You are now following ${model.options.username} !`;
+	// 		} else {
+	// 			text = `Unsigned from ${model.options.username}`;
+	// 			model.set({
+	// 				iFollow: !!state,
+	// 				followersCount: --model.options.followersCount
+	// 			});
+	// 		}
+	// 		this._alertService.success(text);
+	// 	}, (error) => {
+	// 		console.error(error);
+	// 		this._alertService.error(`An error occurred when following ${model.options.username}...`);
+	// 	});
+	//
+	// 	return subscription;
+	// }
+	//
+	// toggleCopy(model: UserModel, state: boolean) {
+	// 	const subscription = this._http.post('/user/' + model.get('_id') + '/copy', '').map(res => res.json());
+	//
+	// 	subscription.subscribe(result => {
+	// 		let text;
+	//
+	// 		if (result.state) {
+	// 			model.set({
+	// 				iCopy: !!state,
+	// 				copiersCount: ++model.options.followersCount
+	// 			});
+	// 			text = `You are now following ${model.options.username} !`;
+	// 		} else {
+	// 			text = `Unsigned from ${model.options.username}`;
+	// 			model.set({
+	// 				iCopy: !!state,
+	// 				copiersCount: --model.options.followersCount
+	// 			});
+	// 		}
+	// 		this._alertService.success(text);
+	// 	}, (error) => {
+	// 		console.error(error);
+	// 		this._alertService.error(`An error occurred when following ${model.options.username}...`);
+	// 	});
+	//
+	// 	return subscription;
+	// }
 
 	loadLocalStorageUser() {
 		return JSON.parse(localStorage.getItem('currentUser'));

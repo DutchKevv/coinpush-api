@@ -7,14 +7,14 @@ const config = require('../../../tradejs.config');
 
 export const userController = {
 
-	async find(reqUser: {id: string}, userId: string, params: any = {}): Promise<any> {
+	async find(reqUser: { id: string }, userId: string, params: any = {}): Promise<any> {
 
 		const results = await Promise.all([
 			this._getUser(reqUser, userId, params.type),
 			channelController.findByUserId(reqUser, userId),
 		]);
 
-		return Object.assign({}, results[0] || {}, results[1].user[0] || {});
+		return Object.assign({}, results[0] || {}, results[1] || {});
 	},
 
 	async findMany(reqUserId: string, params): Promise<Array<any>> {
@@ -29,7 +29,7 @@ export const userController = {
 		}
 	},
 
-	async create(reqUser, params): Promise<{user: any, channel: any}> {
+	async create(reqUser, params): Promise<{ user: any, channel: any }> {
 		let user, channel;
 
 		try {
@@ -38,13 +38,18 @@ export const userController = {
 				uri: config.server.user.apiUrl + '/user',
 				headers: {'_id': reqUser.id},
 				method: 'POST',
-				body: params,
+				body: {
+					email: params.email,
+					password: params.password,
+					country: params.country
+				},
 				json: true
 			});
 
 			// create channel
 			channel = await channelController.create({id: user._id}, {
 				name: params.username,
+				description: params.description,
 				type: CHANNEL_TYPE_MAIN,
 				profileImg: params.profileImg
 			});
@@ -63,14 +68,17 @@ export const userController = {
 		}
 	},
 
-	update(reqUser, params) {
-		return request({
-			uri: config.server.user.apiUrl + '/user/' + reqUser.id,
-			headers: {'_id': reqUser.id},
-			method: 'PUT',
-			body: params,
-			json: true
-		});
+	async update(reqUser, userId, params): Promise<void> {
+		await Promise.all([
+			request({
+				uri: config.server.user.apiUrl + '/user/' + userId,
+				headers: {'_id': reqUser.id},
+				method: 'PUT',
+				body: params,
+				json: true
+			}),
+			channelController.updateByUserId(reqUser, userId, params)
+		]);
 	},
 
 	updateBalance(reqUser, params) {

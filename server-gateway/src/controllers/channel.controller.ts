@@ -15,8 +15,8 @@ export const channelController = {
 		});
 	},
 
-	findByUserId(reqUser, userId): Promise<any> {
-		return request({
+	async findByUserId(reqUser, userId): Promise<any> {
+		const result = await request({
 			uri: config.server.channel.apiUrl + '/channel/',
 			headers: {'_id': reqUser.id},
 			qs: {
@@ -24,6 +24,13 @@ export const channelController = {
 			},
 			json: true
 		});
+
+		console.log('2222222', userId);
+
+		if (result && result.user && result.user[0])
+			return result.user[0];
+
+		return undefined;
 	},
 
 	findMany(reqUser, params): Promise<Array<any>> {
@@ -34,7 +41,7 @@ export const channelController = {
 		});
 	},
 
-	create(reqUser, params: { name: string, type: number, profileImg?: string }) {
+	create(reqUser, params: { name: string, type: number, description?: string, profileImg?: string }) {
 
 		return request({
 			uri: config.server.channel.apiUrl + '/channel/',

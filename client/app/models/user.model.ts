@@ -3,7 +3,6 @@ import {LEVERAGE_TYPE_1} from '../../../shared/constants/constants';
 
 export class UserModel extends Base {
 	public static readonly DEFAULTS: any = {
-		id: 0,
 		username: '',
 		following: false,
 		followers: 0,

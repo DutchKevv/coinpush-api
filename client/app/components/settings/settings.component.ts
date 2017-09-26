@@ -33,7 +33,7 @@ export class SettingsComponent implements OnInit {
 		this.model = this._userService.model;
 
 		this.form = this._formBuilder.group({
-			username: this._userService.model.get('username'),
+			name: this._userService.model.get('name'),
 			email: this._userService.model.get('email'),
 			description: this._userService.model.get('description'),
 			country: this._userService.model.get('country'),
@@ -45,7 +45,7 @@ export class SettingsComponent implements OnInit {
 			console.log(user.options);
 
 			this.form.setValue({
-				username: user.options.username,
+				name: user.options.name,
 				email: user.options.email,
 				country: user.options.country,
 				description: user.options.description,

@@ -45,10 +45,10 @@
 </ul>
 
 <div class="scroll-container">
-    <h2 class="editors-choices-header">Editors' Choice</h2>
+    <h2 class="item-row-header">Newest members</h2>
 
-    <section class="editor-choices">
-        <div *ngFor="let model of users$ | async" class="card clearfix" id="{{model.options._id}}">
+    <section class="item-row">
+        <div *ngFor="let model of newest$ | async" class="card clearfix">
             <ng-container *ngIf="model.options$ | async as options">
                 <header [style.background]="'url(' + options.profileImg + ')'">
                     <a [routerLink]="['/main/user/profile/', options.user_id]" [routerLinkActive]="['active']"></a>
@@ -74,10 +74,39 @@
         </div>
     </section>
 
-    <h2 class="editors-choices-header">Top Investors</h2>
+    <h2 class="item-row-header">Editors' Choice</h2>
 
-    <section class="editor-choices">
-        <div *ngFor="let model of users$ | async" class="card clearfix">
+    <section class="item-row">
+        <div *ngFor="let model of editorChoice$ | async" class="card clearfix">
+            <ng-container *ngIf="model.options$ | async as options">
+                <header [style.background]="'url(' + options.profileImg + ')'">
+                    <a [routerLink]="['/main/user/profile/', options.user_id]" [routerLinkActive]="['active']"></a>
+                </header>
+                <main>
+                    <h4><a>{{model.options.name}}</a></h4>
+                    <h3 class="roi">114.2 %</h3>
+                    <h4 style="color: #b7b7b7;"><span>{{options.transactions}}</span> transactions</h4>
+                </main>
+                <footer>
+                    <div>
+                        <p><span class="followers">{{options.followersCount}}</span> followers</p>
+                        <p><span class="followers">{{options.copiersCount}}</span> copiers</p>
+                    </div>
+                    <div *ngIf="options.user_id !== selfId">
+                        <button *ngIf="!options.iCopy" (click)="channelService.toggleCopy(model, true)" class="btn btn-sm btn-success pull-right">Copy</button>
+                        <button *ngIf="options.iCopy" (click)="channelService.toggleCopy(model, false)" class="btn btn-sm btn-danger pull-right">UnCopy</button>
+                        <button *ngIf="!options.iFollow" (click)="channelService.toggleFollow(model, true)" class="btn btn-sm btn-success pull-right">Follow</button>
+                        <button *ngIf="options.iFollow" (click)="channelService.toggleFollow(model, false)" class="btn btn-sm btn-danger pull-right">UnFollow</button>
+                    </div>
+                </footer>
+            </ng-container>
+        </div>
+    </section>
+
+    <h2 class="item-row-header">Top Investors</h2>
+
+    <section class="item-row">
+        <div *ngFor="let model of topInvestors$ | async" class="card clearfix">
             <ng-container *ngIf="model.options$ | async as options">
                 <header [style.background]="'url(' + model.options.profileImg + ')'">
                     <a [routerLink]="['/main/user/profile/', options.user_id]" [routerLinkActive]="['active']"></a>

@@ -56,8 +56,8 @@ export class PageMainComponent implements OnInit, AfterViewInit {
 		this.toggleDropdownVisibility(true);
 		this.searchResults$.next(currentResult);
 
-		this._http.get('/search/' + value, {params: {limit: 5}}).map(res => res.json()).subscribe((result: any) => {
-			currentResult.users = JSON.parse(result.users);
+		this._http.get('/search/', {params: {limit: 5, text: value}}).map(res => res.json()).subscribe((result: any) => {
+			currentResult.users = result.users;
 			this.searchResults$.next(currentResult);
 		});
 	}

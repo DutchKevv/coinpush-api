@@ -69,7 +69,7 @@ router.post('/', async (req, res, next) => {
  */
 router.put('/:id', async (req, res, next) => {
 	try {
-		res.send(await userController.update(req.user, req.body));
+		res.send(await userController.update(req.user, req.params.id, req.body));
 	} catch (error) {
 		console.error(error);
 		next(error);

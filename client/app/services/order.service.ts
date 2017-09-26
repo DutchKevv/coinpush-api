@@ -30,6 +30,8 @@ export class OrderService {
 		}, () => {
 			this._alertService.error('Could not load order list');
 		})
+
+		this.calculateAccountStatus();
 	}
 
 	public get (id) {

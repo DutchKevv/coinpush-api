@@ -64,7 +64,7 @@
     bottom: 0;
 }
 
-.editors-choices-header {
+.item-row-header {
     border-bottom: 1px solid white;
     color: #ddd;
     position: relative;
@@ -81,7 +81,7 @@
     }
 }
 
-.editor-choices {
+.item-row {
     display: flex;
     overflow-x: auto;
     margin: 20px 0;
@@ -101,7 +101,7 @@
     header {
         width: 100%;
         height: 150px;
-        background-position: top !important;
+        background-position: 0 -50px !important;
         background-size: cover !important;
 
         a {

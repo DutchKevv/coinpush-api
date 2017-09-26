@@ -19,7 +19,7 @@ export class ChannelService {
 	}
 
 	getByUserId(userId: string): Observable<ChannelModel> {
-		return this._http.get('/channel/', {params: {user: userId}}).map(res => new ChannelModel(res.json().user[0]));
+		return this._http.get('/channel/', {params: {user: userId}}).map(res => new ChannelModel(res.json()));
 	}
 
 	create(model: ChannelModel): Observable<ChannelModel> {

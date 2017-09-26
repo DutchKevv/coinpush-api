@@ -58,9 +58,6 @@ let UserService = class UserService {
     get(id, type = __WEBPACK_IMPORTED_MODULE_4__shared_constants_constants__["USER_FETCH_TYPE_SLIM"]) {
         return this._http.get('/user/' + id, { params: { type: type } }).map((res) => new __WEBPACK_IMPORTED_MODULE_1__models_user_model__["a" /* UserModel */](res.json()));
     }
-    getList() {
-        return this._http.get('/user').map((res) => res.json());
-    }
     getOverview() {
         return this._http.get('/user-overview').map((res) => res.json().editorChoice.map(user => new __WEBPACK_IMPORTED_MODULE_1__models_user_model__["a" /* UserModel */](user)));
     }
@@ -68,9 +65,10 @@ let UserService = class UserService {
         return this._http.post('/user', user).map((res) => res.json());
     }
     update(changes, toServer = true) {
+        console.log('CHANGES!');
         this.model.set(changes);
         if (toServer) {
-            return this._http.put('/user/' + this.model.get('_id'), changes).subscribe(() => {
+            return this._http.put('/user/' + this.model.get('user_id'), changes).subscribe(() => {
                 this.storeLocalStoreUser();
                 this._alertService.success('Settings saved');
             }, error => {
@@ -79,59 +77,66 @@ let UserService = class UserService {
             });
         }
         else {
+            this.storeLocalStoreUser();
             this._alertService.success('Settings saved');
         }
     }
-    toggleFollow(model, state) {
-        const subscription = this._http.post('/user/' + model.get('_id') + '/follow', null).map(res => res.json());
-        subscription.subscribe(result => {
-            let text;
-            if (result.state) {
-                model.set({
-                    iFollow: !!state,
-                    followersCount: ++model.options.followersCount
-                });
-                text = `You are now following ${model.options.username} !`;
-            }
-            else {
-                text = `Unsigned from ${model.options.username}`;
-                model.set({
-                    iFollow: !!state,
-                    followersCount: --model.options.followersCount
-                });
-            }
-            this._alertService.success(text);
-        }, (error) => {
-            console.error(error);
-            this._alertService.error(`An error occurred when following ${model.options.username}...`);
-        });
-        return subscription;
-    }
-    toggleCopy(model, state) {
-        const subscription = this._http.post('/user/' + model.get('_id') + '/copy', '').map(res => res.json());
-        subscription.subscribe(result => {
-            let text;
-            if (result.state) {
-                model.set({
-                    iCopy: !!state,
-                    copiersCount: ++model.options.followersCount
-                });
-                text = `You are now following ${model.options.username} !`;
-            }
-            else {
-                text = `Unsigned from ${model.options.username}`;
-                model.set({
-                    iCopy: !!state,
-                    copiersCount: --model.options.followersCount
-                });
-            }
-            this._alertService.success(text);
-        }, (error) => {
-            console.error(error);
-            this._alertService.error(`An error occurred when following ${model.options.username}...`);
-        });
-        return subscription;
-    }
+    // toggleFollow(model: UserModel, state: boolean) {
+    //
+    // 	const subscription = this._http.post('/user/' + model.get('_id') + '/follow', null).map(res => res.json());
+    //
+    // 	subscription.subscribe(result => {
+    // 		let text;
+    //
+    // 		if (result.state) {
+    // 			model.set({
+    // 				iFollow: !!state,
+    // 				followersCount: ++model.options.followersCount
+    // 			});
+    // 			text = `You are now following ${model.options.username} !`;
+    // 		} else {
+    // 			text = `Unsigned from ${model.options.username}`;
+    // 			model.set({
+    // 				iFollow: !!state,
+    // 				followersCount: --model.options.followersCount
+    // 			});
+    // 		}
+    // 		this._alertService.success(text);
+    // 	}, (error) => {
+    // 		console.error(error);
+    // 		this._alertService.error(`An error occurred when following ${model.options.username}...`);
+    // 	});
+    //
+    // 	return subscription;
+    // }
+    //
+    // toggleCopy(model: UserModel, state: boolean) {
+    // 	const subscription = this._http.post('/user/' + model.get('_id') + '/copy', '').map(res => res.json());
+    //
+    // 	subscription.subscribe(result => {
+    // 		let text;
+    //
+    // 		if (result.state) {
+    // 			model.set({
+    // 				iCopy: !!state,
+    // 				copiersCount: ++model.options.followersCount
+    // 			});
+    // 			text = `You are now following ${model.options.username} !`;
+    // 		} else {
+    // 			text = `Unsigned from ${model.options.username}`;
+    // 			model.set({
+    // 				iCopy: !!state,
+    // 				copiersCount: --model.options.followersCount
+    // 			});
+    // 		}
+    // 		this._alertService.success(text);
+    // 	}, (error) => {
+    // 		console.error(error);
+    // 		this._alertService.error(`An error occurred when following ${model.options.username}...`);
+    // 	});
+    //
+    // 	return subscription;
+    // }
     loadLocalStorageUser() {
         return JSON.parse(localStorage.getItem('currentUser'));
     }
@@ -2876,9 +2881,7 @@ exports.CHANNEL_TYPE_MAIN = 0, exports.CHANNEL_TYPE_CUSTOM = 1,
  * REDIS
  */
 exports.REDIS_USER_PREFIX = 'user_';
-
 //# sourceMappingURL=constants.js.map
-
 
 /***/ }),
 /* 45 */
@@ -3820,14 +3823,6 @@ exports.decodePayloadAsBinary = function (data, binaryType, callback) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const events_1 = __webpack_require__(169);
 const merge = __webpack_require__(779);
@@ -3853,10 +3848,8 @@ class Base extends events_1.EventEmitter {
     get options() {
         return this._options;
     }
-    init() {
-        return __awaiter(this, void 0, void 0, function* () {
-            this.initialized = true;
-        });
+    async init() {
+        this.initialized = true;
     }
     get(key) {
         return typeof key === 'undefined' ? this._options : this._options[key];
@@ -3895,9 +3888,7 @@ Base.isWin = /^win/.test(process.platform);
 Base.isElectron = process && (process.env.ELECTRON || process.versions['electron']);
 Base.isNode = !!process;
 exports.Base = Base;
-
 //# sourceMappingURL=Base.js.map
-
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9)))
 
 /***/ }),
@@ -4011,7 +4002,7 @@ let ChannelService = class ChannelService {
         return this._http.get('/channel/' + channelId).map(res => new __WEBPACK_IMPORTED_MODULE_5__models_channel_model__["a" /* ChannelModel */](res.json().user[0]));
     }
     getByUserId(userId) {
-        return this._http.get('/channel/', { params: { user: userId } }).map(res => new __WEBPACK_IMPORTED_MODULE_5__models_channel_model__["a" /* ChannelModel */](res.json().user[0]));
+        return this._http.get('/channel/', { params: { user: userId } }).map(res => new __WEBPACK_IMPORTED_MODULE_5__models_channel_model__["a" /* ChannelModel */](res.json()));
     }
     create(model) {
         return this._http.post('/channel', {
@@ -21633,6 +21624,7 @@ let OrderService = class OrderService {
         }, () => {
             this._alertService.error('Could not load order list');
         });
+        this.calculateAccountStatus();
     }
     get(id) {
         return this.http.get('/order/' + id).map(res => res.json());
@@ -22409,11 +22401,12 @@ let AuthenticationService = class AuthenticationService {
             .map((response) => {
             // login successful if there's a jwt token in the response
             let user = response.json();
+            console.log('asafdasfasasfasfdsadfsafsadfadsasfd', user);
             if (user && user.token) {
                 // store user details and jwt token in local storage to keep user logged in between page refreshes
                 localStorage.setItem('currentUser', JSON.stringify(user));
+                this._userService.model.set(user);
             }
-            this._userService.model.set(user);
             return user;
         });
     }
@@ -22446,7 +22439,6 @@ class UserModel extends __WEBPACK_IMPORTED_MODULE_0__shared_classes_Base__["Base
 /* harmony export (immutable) */ __webpack_exports__["a"] = UserModel;
 
 UserModel.DEFAULTS = {
-    id: 0,
     username: '',
     following: false,
     followers: 0,
@@ -31757,7 +31749,10 @@ let StartupService = class StartupService {
         this.loggedInUser = new __WEBPACK_IMPORTED_MODULE_2__models_user_model__["a" /* UserModel */](JSON.parse(localStorage.getItem('currentUser') || '{}'));
     }
     load() {
-        return this._http.get('/user/' + this.loggedInUser.get('_id') || '', { params: { type: __WEBPACK_IMPORTED_MODULE_3__shared_constants_constants__["USER_FETCH_TYPE_ACCOUNT_DETAILS"] } })
+        const userId = this.loggedInUser.get('user_id');
+        if (!userId)
+            return Promise.resolve(null);
+        return this._http.get('/user/' + userId || '', { params: { type: __WEBPACK_IMPORTED_MODULE_3__shared_constants_constants__["USER_FETCH_TYPE_ACCOUNT_DETAILS"] } })
             .map((res) => {
             this.loggedInUser.set(res.json());
         })
@@ -31852,8 +31847,8 @@ let PageMainComponent = class PageMainComponent {
         };
         this.toggleDropdownVisibility(true);
         this.searchResults$.next(currentResult);
-        this._http.get('/search/' + value, { params: { limit: 5 } }).map(res => res.json()).subscribe((result) => {
-            currentResult.users = JSON.parse(result.users);
+        this._http.get('/search/', { params: { limit: 5, text: value } }).map(res => res.json()).subscribe((result) => {
+            currentResult.users = result.users;
             this.searchResults$.next(currentResult);
         });
     }
@@ -32019,16 +32014,23 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+const shuffleArray = (arr) => arr.sort(() => (Math.random() - 0.5));
 let UserOverviewComponent = class UserOverviewComponent {
     constructor(instrumentsService, channelService, userService) {
         this.instrumentsService = instrumentsService;
         this.channelService = channelService;
         this.userService = userService;
-        this.users$ = new __WEBPACK_IMPORTED_MODULE_3_rxjs_BehaviorSubject__["BehaviorSubject"]([]);
+        this.newest$ = new __WEBPACK_IMPORTED_MODULE_3_rxjs_BehaviorSubject__["BehaviorSubject"]([]);
+        this.editorChoice$ = new __WEBPACK_IMPORTED_MODULE_3_rxjs_BehaviorSubject__["BehaviorSubject"]([]);
+        this.topInvestors$ = new __WEBPACK_IMPORTED_MODULE_3_rxjs_BehaviorSubject__["BehaviorSubject"]([]);
         this.selfId = this.userService.model.get('user_id');
     }
     ngOnInit() {
-        return this.userService.getOverview().subscribe((users) => this.users$.next(users.reverse()));
+        this.userService.getOverview().subscribe((users) => {
+            this.newest$.next(users.slice());
+            this.editorChoice$.next(users.slice().reverse());
+            this.topInvestors$.next(shuffleArray(users.slice()));
+        });
     }
     ngAfterViewChecked() {
         this.setMoveInterval();
@@ -32048,7 +32050,15 @@ let UserOverviewComponent = class UserOverviewComponent {
 __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["U" /* Output */])(),
     __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3_rxjs_BehaviorSubject__["BehaviorSubject"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3_rxjs_BehaviorSubject__["BehaviorSubject"]) === "function" && _a || Object)
-], UserOverviewComponent.prototype, "users$", void 0);
+], UserOverviewComponent.prototype, "newest$", void 0);
+__decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["U" /* Output */])(),
+    __metadata("design:type", typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3_rxjs_BehaviorSubject__["BehaviorSubject"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3_rxjs_BehaviorSubject__["BehaviorSubject"]) === "function" && _b || Object)
+], UserOverviewComponent.prototype, "editorChoice$", void 0);
+__decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["U" /* Output */])(),
+    __metadata("design:type", typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3_rxjs_BehaviorSubject__["BehaviorSubject"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3_rxjs_BehaviorSubject__["BehaviorSubject"]) === "function" && _c || Object)
+], UserOverviewComponent.prototype, "topInvestors$", void 0);
 UserOverviewComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* Component */])({
         selector: 'app-user-overview',
@@ -32057,10 +32067,10 @@ UserOverviewComponent = __decorate([
         encapsulation: __WEBPACK_IMPORTED_MODULE_0__angular_core__["_20" /* ViewEncapsulation */].Native,
         changeDetection: __WEBPACK_IMPORTED_MODULE_0__angular_core__["k" /* ChangeDetectionStrategy */].OnPush
     }),
-    __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__services_instruments_service__["a" /* InstrumentsService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__services_instruments_service__["a" /* InstrumentsService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_4__services_channel_service__["a" /* ChannelService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__services_channel_service__["a" /* ChannelService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_2__services_user_service__["a" /* UserService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__services_user_service__["a" /* UserService */]) === "function" && _d || Object])
+    __metadata("design:paramtypes", [typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_1__services_instruments_service__["a" /* InstrumentsService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__services_instruments_service__["a" /* InstrumentsService */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_4__services_channel_service__["a" /* ChannelService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__services_channel_service__["a" /* ChannelService */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_2__services_user_service__["a" /* UserService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__services_user_service__["a" /* UserService */]) === "function" && _f || Object])
 ], UserOverviewComponent);
 
-var _a, _b, _c, _d;
+var _a, _b, _c, _d, _e, _f;
 
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(13)))
 
@@ -33455,7 +33465,7 @@ let ProfileComponent = class ProfileComponent {
         this.userId = this._route.params['_value'].id;
         this._sub = this._route.params.subscribe(params => {
             this.userId = params['id'];
-            this.isSelf = this.userId === this.userService.model.get('_id');
+            this.isSelf = this.userId === this.userService.model.get('user_id');
             this.channelService.getByUserId(this.userId).subscribe((channel) => {
                 this.channelId = channel.get('_id');
                 this.user$.next(channel);
@@ -33553,7 +33563,7 @@ let SettingsComponent = class SettingsComponent {
     ngOnInit() {
         this.model = this._userService.model;
         this.form = this._formBuilder.group({
-            username: this._userService.model.get('username'),
+            name: this._userService.model.get('name'),
             email: this._userService.model.get('email'),
             description: this._userService.model.get('description'),
             country: this._userService.model.get('country'),
@@ -33563,7 +33573,7 @@ let SettingsComponent = class SettingsComponent {
         this._userService.get(this._userService.model.get('user_id'), __WEBPACK_IMPORTED_MODULE_4__shared_constants_constants__["USER_FETCH_TYPE_PROFILE_SETTINGS"]).subscribe((user) => {
             console.log(user.options);
             this.form.setValue({
-                username: user.options.username,
+                name: user.options.name,
                 email: user.options.email,
                 country: user.options.country,
                 description: user.options.description,
@@ -33750,7 +33760,7 @@ let ProfileChannelOverviewComponent = class ProfileChannelOverviewComponent {
     ngOnInit() {
         this._sub = this._route.parent.params.subscribe(params => {
             this._id = params.id;
-            this.isSelf = this._userService.model.get('_id') === this._id;
+            this.isSelf = this._userService.model.get('user_id') === this._id;
             this.loadChannels();
         });
     }
@@ -55690,9 +55700,7 @@ function mergeRanges(ranges) {
     return stack;
 }
 exports.mergeRanges = mergeRanges;
-
 //# sourceMappingURL=util.date.js.map
-
 
 /***/ }),
 /* 814 */
@@ -55868,7 +55876,7 @@ exports.OrderModel = OrderModel;
 /* 825 */
 /***/ (function(module, exports) {
 
-module.exports = "<nav class=\"nav-main\">\n    <a [routerLink]=\"['/main/user/profile/', userService.model.get('_id')]\" [routerLinkActive]=\"['active']\" class=\"profile\">\n        <img class=\"logo\" width=\"70\" height=\"70\" src=\"{{(userService.model.options$ | async).profileImg}}\">\n        <h4>{{userService.model.options.name}}</h4>\n    </a>\n\n    <a [routerLink]=\"['/main/channels']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-upload\"></i>\n        <span>Watchlist</span>\n    </a>\n    <a [routerLink]=\"['/main/portfolio']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-handshake-o\"></i>\n        <span>Portfolio</span>\n    </a>\n    <a [routerLink]=\"['/main/news']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-newspaper-o\"></i>\n        <span>News feed</span>\n    </a>\n    <a [routerLink]=\"['/main/user']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-users\"></i>\n        <span>Users</span>\n    </a>\n    <a [routerLink]=\"['/main/charts']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-bar-chart\"></i>\n        <span>Charts</span>\n    </a>\n    <a [routerLink]=\"['/main/backtest']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-flash\"></i>\n        <span>Backtest</span>\n    </a>\n    <a [routerLink]=\"['/main/editor']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-code\"></i>\n        <span>Editor</span>\n    </a>\n    <a [routerLink]=\"['/main/settings']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-gears\"></i>\n        <span>Settings</span>\n    </a>\n    <a (click)=\"logout()\">\n        <i class=\"fa fa-sign-out\"></i>\n        <span>Logout</span>\n    </a>\n</nav>\n\n<main class=\"main-container\">\n    <header>\n        <div class=\"account-details\" *ngIf=\"userService.accountStatus$ | async as status\">\n            <div>\n                <h3>{{status.available | currency : 'EUR':true}}</h3>\n                <span>available</span>\n            </div>\n            <div>\n                <h3>{{status.equity | currency : 'EUR':true}}</h3>\n                <span>equlity</span>\n            </div>\n            <div>\n                <h3>{{status.openMargin | currency : 'EUR':true}}</h3>\n                <span>O. margin</span>\n            </div>\n            <div>\n                <h3 [ngClass]=\"{'positive': status.profit > 0, 'negative': status.profit < 0}\">{{status.profit | currency : 'EUR':true}}</h3>\n                <span>profit</span>\n            </div>\n            <div class=\"header-search\">\n                <input (keyup)=\"onSearchKeyUp($event)\" placeholder=\"Markets / Channels / People\" #input>\n                <div class=\"search-drop-down\" *ngIf=\"(searchResults$ | async) as result\" (click)=\"onClickDropdownItem()\" #dropdown>\n                    <a *ngFor=\"let symbol of result.symbols\">\n                        <img src=\"/images/default/symbol/spx500-70x70.png\">\n                        <span>{{symbol.name}}</span>\n                    </a>\n                    <a *ngFor=\"let user of result.users\" [routerLink]=\"['/main/user/profile/' + user._id]\">\n                        <img src=\"{{user.profileImg}}\">\n                        <span>{{user.name}}</span>\n                    </a>\n                </div>\n            </div>\n        </div>\n    </header>\n    <router-outlet></router-outlet>\n</main>\n"
+module.exports = "<nav class=\"nav-main\">\n    <a [routerLink]=\"['/main/user/profile/', userService.model.get('user_id')]\" [routerLinkActive]=\"['active']\" class=\"profile\">\n        <img class=\"logo\" width=\"70\" height=\"70\" src=\"{{(userService.model.options$ | async).profileImg}}\">\n        <h4>{{userService.model.options.name}}</h4>\n    </a>\n\n    <a [routerLink]=\"['/main/channels']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-upload\"></i>\n        <span>Watchlist</span>\n    </a>\n    <a [routerLink]=\"['/main/portfolio']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-handshake-o\"></i>\n        <span>Portfolio</span>\n    </a>\n    <a [routerLink]=\"['/main/news']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-newspaper-o\"></i>\n        <span>News feed</span>\n    </a>\n    <a [routerLink]=\"['/main/user']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-users\"></i>\n        <span>Users</span>\n    </a>\n    <a [routerLink]=\"['/main/charts']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-bar-chart\"></i>\n        <span>Charts</span>\n    </a>\n    <a [routerLink]=\"['/main/backtest']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-flash\"></i>\n        <span>Backtest</span>\n    </a>\n    <a [routerLink]=\"['/main/editor']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-code\"></i>\n        <span>Editor</span>\n    </a>\n    <a [routerLink]=\"['/main/settings']\" [routerLinkActive]=\"['active']\">\n        <i class=\"fa fa-gears\"></i>\n        <span>Settings</span>\n    </a>\n    <a (click)=\"logout()\">\n        <i class=\"fa fa-sign-out\"></i>\n        <span>Logout</span>\n    </a>\n</nav>\n\n<main class=\"main-container\">\n    <header>\n        <div class=\"account-details\" *ngIf=\"userService.accountStatus$ | async as status\">\n            <div>\n                <h3>{{status.available | currency : 'EUR':true}}</h3>\n                <span>available</span>\n            </div>\n            <div>\n                <h3>{{status.equity | currency : 'EUR':true}}</h3>\n                <span>equlity</span>\n            </div>\n            <div>\n                <h3>{{status.openMargin | currency : 'EUR':true}}</h3>\n                <span>O. margin</span>\n            </div>\n            <div>\n                <h3 [ngClass]=\"{'positive': status.profit > 0, 'negative': status.profit < 0}\">{{status.profit | currency : 'EUR':true}}</h3>\n                <span>profit</span>\n            </div>\n            <div class=\"header-search\">\n                <input (keyup)=\"onSearchKeyUp($event)\" placeholder=\"Markets / Channels / People\" #input>\n                <div class=\"search-drop-down\" *ngIf=\"(searchResults$ | async) as result\" (click)=\"onClickDropdownItem()\" #dropdown>\n                    <a *ngFor=\"let symbol of result.symbols\">\n                        <img src=\"/images/default/symbol/spx500-70x70.png\">\n                        <span>{{symbol.name}}</span>\n                    </a>\n                    <a *ngFor=\"let user of result.users\" [routerLink]=\"['/main/user/profile/' + user.user_id]\">\n                        <img src=\"{{user.profileImg}}\">\n                        <span>{{user.name}}</span>\n                    </a>\n                </div>\n            </div>\n        </div>\n    </header>\n    <router-outlet></router-outlet>\n</main>\n"
 
 /***/ }),
 /* 826 */
@@ -55892,13 +55900,13 @@ module.exports = "<div class=\"simpleHeader\">\n    <img src=\"http://localhost/
 /* 829 */
 /***/ (function(module, exports) {
 
-module.exports = "<ul class=\"filter-options\">\n    <li class=\"form-group\">\n        <label for=\"exampleSelect1\">PEOPLE FROM</label>\n        <select class=\"form-control\" id=\"exampleSelect1\">\n            <option>1</option>\n            <option>2</option>\n            <option>3</option>\n            <option>4</option>\n            <option>5</option>\n        </select>\n    </li>\n    <li class=\"form-group\">\n        <label for=\"whoInvested\">WHO INVESTED IN</label>\n        <select class=\"form-control\" id=\"whoInvested\">\n            <option>1</option>\n            <option>2</option>\n            <option>3</option>\n            <option>4</option>\n            <option>5</option>\n        </select>\n    </li>\n    <li class=\"form-group\">\n        <label for=\"gainedMin\">GAINED AT LEAST</label>\n        <select class=\"form-control\" id=\"gainedMin\">\n            <option>1</option>\n            <option>2</option>\n            <option>3</option>\n            <option>4</option>\n            <option>5</option>\n        </select>\n    </li>\n    <li class=\"form-group\">\n        <label for=\"duringTime\">DURING THE</label>\n        <select class=\"form-control\" id=\"duringTime\">\n            <option>1</option>\n            <option>2</option>\n            <option>3</option>\n            <option>4</option>\n            <option>5</option>\n        </select>\n    </li>\n    <li class=\"form-group\">\n        <button class=\"btn btn-sm btn-success\">Go !</button>\n    </li>\n</ul>\n\n<div class=\"scroll-container\">\n    <h2 class=\"editors-choices-header\">Editors' Choice</h2>\n\n    <section class=\"editor-choices\">\n        <div *ngFor=\"let model of users$ | async\" class=\"card clearfix\" id=\"{{model.options._id}}\">\n            <ng-container *ngIf=\"model.options$ | async as options\">\n                <header [style.background]=\"'url(' + options.profileImg + ')'\">\n                    <a [routerLink]=\"['/main/user/profile/', options.user_id]\" [routerLinkActive]=\"['active']\"></a>\n                </header>\n                <main>\n                    <h4><a>{{model.options.name}}</a></h4>\n                    <h3 class=\"roi\">114.2 %</h3>\n                    <h4 style=\"color: #b7b7b7;\"><span>{{options.transactions}}</span> transactions</h4>\n                </main>\n                <footer>\n                    <div>\n                        <p><span class=\"followers\">{{options.followersCount}}</span> followers</p>\n                        <p><span class=\"followers\">{{options.copiersCount}}</span> copiers</p>\n                    </div>\n                    <div *ngIf=\"options.user_id !== selfId\">\n                        <button *ngIf=\"!options.iCopy\" (click)=\"channelService.toggleCopy(model, true)\" class=\"btn btn-sm btn-success pull-right\">Copy</button>\n                        <button *ngIf=\"options.iCopy\" (click)=\"channelService.toggleCopy(model, false)\" class=\"btn btn-sm btn-danger pull-right\">UnCopy</button>\n                        <button *ngIf=\"!options.iFollow\" (click)=\"channelService.toggleFollow(model, true)\" class=\"btn btn-sm btn-success pull-right\">Follow</button>\n                        <button *ngIf=\"options.iFollow\" (click)=\"channelService.toggleFollow(model, false)\" class=\"btn btn-sm btn-danger pull-right\">UnFollow</button>\n                    </div>\n                </footer>\n            </ng-container>\n        </div>\n    </section>\n\n    <h2 class=\"editors-choices-header\">Top Investors</h2>\n\n    <section class=\"editor-choices\">\n        <div *ngFor=\"let model of users$ | async\" class=\"card clearfix\">\n            <ng-container *ngIf=\"model.options$ | async as options\">\n                <header [style.background]=\"'url(' + model.options.profileImg + ')'\">\n                    <a [routerLink]=\"['/main/user/profile/', options.user_id]\" [routerLinkActive]=\"['active']\"></a>\n                </header>\n                <main>\n                    <h4><a>{{model.options.name}}</a></h4>\n                    <h3 class=\"roi\">114.2 %</h3>\n                    <h4 style=\"color: #b7b7b7;\"><span>{{model.options.transactions}}</span> transactions</h4>\n                </main>\n                <footer>\n                    <div>\n                        <p><span class=\"followers\">{{options.followersCount}}</span> followers</p>\n                        <p><span class=\"followers\">{{options.copiersCount}}</span> copiers</p>\n                    </div>\n                    <div *ngIf=\"options.user_id !== selfId\">\n                        <button *ngIf=\"!options.iCopy\" (click)=\"channelService.toggleCopy(model, true)\" class=\"btn btn-sm btn-success pull-right\">Copy</button>\n                        <button *ngIf=\"options.iCopy\" (click)=\"channelService.toggleCopy(model, false)\" class=\"btn btn-sm btn-danger pull-right\">UnCopy</button>\n                        <button *ngIf=\"!options.iFollow\" (click)=\"channelService.toggleFollow(model, true)\" class=\"btn btn-sm btn-success pull-right\">Follow</button>\n                        <button *ngIf=\"options.iFollow\" (click)=\"channelService.toggleFollow(model, false)\" class=\"btn btn-sm btn-danger pull-right\">UnFollow</button>\n                    </div>\n                </footer>\n            </ng-container>\n        </div>\n    </section>\n</div>"
+module.exports = "<ul class=\"filter-options\">\n    <li class=\"form-group\">\n        <label for=\"exampleSelect1\">PEOPLE FROM</label>\n        <select class=\"form-control\" id=\"exampleSelect1\">\n            <option>1</option>\n            <option>2</option>\n            <option>3</option>\n            <option>4</option>\n            <option>5</option>\n        </select>\n    </li>\n    <li class=\"form-group\">\n        <label for=\"whoInvested\">WHO INVESTED IN</label>\n        <select class=\"form-control\" id=\"whoInvested\">\n            <option>1</option>\n            <option>2</option>\n            <option>3</option>\n            <option>4</option>\n            <option>5</option>\n        </select>\n    </li>\n    <li class=\"form-group\">\n        <label for=\"gainedMin\">GAINED AT LEAST</label>\n        <select class=\"form-control\" id=\"gainedMin\">\n            <option>1</option>\n            <option>2</option>\n            <option>3</option>\n            <option>4</option>\n            <option>5</option>\n        </select>\n    </li>\n    <li class=\"form-group\">\n        <label for=\"duringTime\">DURING THE</label>\n        <select class=\"form-control\" id=\"duringTime\">\n            <option>1</option>\n            <option>2</option>\n            <option>3</option>\n            <option>4</option>\n            <option>5</option>\n        </select>\n    </li>\n    <li class=\"form-group\">\n        <button class=\"btn btn-sm btn-success\">Go !</button>\n    </li>\n</ul>\n\n<div class=\"scroll-container\">\n    <h2 class=\"item-row-header\">Newest members</h2>\n\n    <section class=\"item-row\">\n        <div *ngFor=\"let model of newest$ | async\" class=\"card clearfix\">\n            <ng-container *ngIf=\"model.options$ | async as options\">\n                <header [style.background]=\"'url(' + options.profileImg + ')'\">\n                    <a [routerLink]=\"['/main/user/profile/', options.user_id]\" [routerLinkActive]=\"['active']\"></a>\n                </header>\n                <main>\n                    <h4><a>{{model.options.name}}</a></h4>\n                    <h3 class=\"roi\">114.2 %</h3>\n                    <h4 style=\"color: #b7b7b7;\"><span>{{options.transactions}}</span> transactions</h4>\n                </main>\n                <footer>\n                    <div>\n                        <p><span class=\"followers\">{{options.followersCount}}</span> followers</p>\n                        <p><span class=\"followers\">{{options.copiersCount}}</span> copiers</p>\n                    </div>\n                    <div *ngIf=\"options.user_id !== selfId\">\n                        <button *ngIf=\"!options.iCopy\" (click)=\"channelService.toggleCopy(model, true)\" class=\"btn btn-sm btn-success pull-right\">Copy</button>\n                        <button *ngIf=\"options.iCopy\" (click)=\"channelService.toggleCopy(model, false)\" class=\"btn btn-sm btn-danger pull-right\">UnCopy</button>\n                        <button *ngIf=\"!options.iFollow\" (click)=\"channelService.toggleFollow(model, true)\" class=\"btn btn-sm btn-success pull-right\">Follow</button>\n                        <button *ngIf=\"options.iFollow\" (click)=\"channelService.toggleFollow(model, false)\" class=\"btn btn-sm btn-danger pull-right\">UnFollow</button>\n                    </div>\n                </footer>\n            </ng-container>\n        </div>\n    </section>\n\n    <h2 class=\"item-row-header\">Editors' Choice</h2>\n\n    <section class=\"item-row\">\n        <div *ngFor=\"let model of editorChoice$ | async\" class=\"card clearfix\">\n            <ng-container *ngIf=\"model.options$ | async as options\">\n                <header [style.background]=\"'url(' + options.profileImg + ')'\">\n                    <a [routerLink]=\"['/main/user/profile/', options.user_id]\" [routerLinkActive]=\"['active']\"></a>\n                </header>\n                <main>\n                    <h4><a>{{model.options.name}}</a></h4>\n                    <h3 class=\"roi\">114.2 %</h3>\n                    <h4 style=\"color: #b7b7b7;\"><span>{{options.transactions}}</span> transactions</h4>\n                </main>\n                <footer>\n                    <div>\n                        <p><span class=\"followers\">{{options.followersCount}}</span> followers</p>\n                        <p><span class=\"followers\">{{options.copiersCount}}</span> copiers</p>\n                    </div>\n                    <div *ngIf=\"options.user_id !== selfId\">\n                        <button *ngIf=\"!options.iCopy\" (click)=\"channelService.toggleCopy(model, true)\" class=\"btn btn-sm btn-success pull-right\">Copy</button>\n                        <button *ngIf=\"options.iCopy\" (click)=\"channelService.toggleCopy(model, false)\" class=\"btn btn-sm btn-danger pull-right\">UnCopy</button>\n                        <button *ngIf=\"!options.iFollow\" (click)=\"channelService.toggleFollow(model, true)\" class=\"btn btn-sm btn-success pull-right\">Follow</button>\n                        <button *ngIf=\"options.iFollow\" (click)=\"channelService.toggleFollow(model, false)\" class=\"btn btn-sm btn-danger pull-right\">UnFollow</button>\n                    </div>\n                </footer>\n            </ng-container>\n        </div>\n    </section>\n\n    <h2 class=\"item-row-header\">Top Investors</h2>\n\n    <section class=\"item-row\">\n        <div *ngFor=\"let model of topInvestors$ | async\" class=\"card clearfix\">\n            <ng-container *ngIf=\"model.options$ | async as options\">\n                <header [style.background]=\"'url(' + model.options.profileImg + ')'\">\n                    <a [routerLink]=\"['/main/user/profile/', options.user_id]\" [routerLinkActive]=\"['active']\"></a>\n                </header>\n                <main>\n                    <h4><a>{{model.options.name}}</a></h4>\n                    <h3 class=\"roi\">114.2 %</h3>\n                    <h4 style=\"color: #b7b7b7;\"><span>{{model.options.transactions}}</span> transactions</h4>\n                </main>\n                <footer>\n                    <div>\n                        <p><span class=\"followers\">{{options.followersCount}}</span> followers</p>\n                        <p><span class=\"followers\">{{options.copiersCount}}</span> copiers</p>\n                    </div>\n                    <div *ngIf=\"options.user_id !== selfId\">\n                        <button *ngIf=\"!options.iCopy\" (click)=\"channelService.toggleCopy(model, true)\" class=\"btn btn-sm btn-success pull-right\">Copy</button>\n                        <button *ngIf=\"options.iCopy\" (click)=\"channelService.toggleCopy(model, false)\" class=\"btn btn-sm btn-danger pull-right\">UnCopy</button>\n                        <button *ngIf=\"!options.iFollow\" (click)=\"channelService.toggleFollow(model, true)\" class=\"btn btn-sm btn-success pull-right\">Follow</button>\n                        <button *ngIf=\"options.iFollow\" (click)=\"channelService.toggleFollow(model, false)\" class=\"btn btn-sm btn-danger pull-right\">UnFollow</button>\n                    </div>\n                </footer>\n            </ng-container>\n        </div>\n    </section>\n</div>"
 
 /***/ }),
 /* 830 */
 /***/ (function(module, exports) {
 
-module.exports = "a, p, li, span, h1, h2, h3, h4, h5, h6, td, th, label {\n  color: #fff;\n  margin: 0;\n  -webkit-user-select: none;\n  user-select: none; }\n\nbutton {\n  color: #000;\n  cursor: pointer; }\n\ninput,\ntextarea {\n  box-sizing: border-box; }\n\nul {\n  list-style: none;\n  margin: 0;\n  padding: 0; }\n\na {\n  cursor: pointer;\n  text-decoration: none; }\n  a:hover, a:visited {\n    text-decoration: none; }\n\ntable {\n  border-collapse: collapse;\n  border-spacing: 0; }\n\ntd {\n  padding: 0; }\n\nsup,\nsub {\n  margin-left: 4px;\n  font-size: 12px; }\n\n.btn {\n  display: inline-block;\n  font-weight: normal;\n  line-height: 1.25;\n  text-align: center;\n  white-space: nowrap;\n  vertical-align: middle;\n  user-select: none;\n  border: 1px solid transparent;\n  padding: 0.5rem 1rem;\n  font-size: 1rem;\n  border-radius: 0.25rem;\n  transition: all 0.2s ease-in-out; }\n  .btn:focus, .btn:hover {\n    text-decoration: none; }\n  .btn:focus, .btn.focus {\n    outline: 0;\n    box-shadow: 0 0 0 2px rgba(2, 117, 216, 0.25); }\n  .btn.disabled, .btn:disabled {\n    cursor: not-allowed;\n    opacity: .65; }\n  .btn:active, .btn.active {\n    background-image: none; }\n\na.btn.disabled,\nfieldset[disabled] a.btn {\n  pointer-events: none; }\n\n.btn-primary {\n  color: #fff;\n  background-color: #0275d8;\n  border-color: #0275d8; }\n  .btn-primary:hover {\n    color: #fff;\n    background-color: #025aa5;\n    border-color: #01549b; }\n  .btn-primary:focus, .btn-primary.focus {\n    box-shadow: 0 0 0 2px rgba(2, 117, 216, 0.5); }\n  .btn-primary.disabled, .btn-primary:disabled {\n    background-color: #0275d8;\n    border-color: #0275d8; }\n  .btn-primary:active, .btn-primary.active,\n  .show > .btn-primary.dropdown-toggle {\n    color: #fff;\n    background-color: #025aa5;\n    background-image: none;\n    border-color: #01549b; }\n\n.btn-secondary {\n  color: #292b2c;\n  background-color: #fff;\n  border-color: #ccc; }\n  .btn-secondary:hover {\n    color: #292b2c;\n    background-color: #e6e6e6;\n    border-color: #adadad; }\n  .btn-secondary:focus, .btn-secondary.focus {\n    box-shadow: 0 0 0 2px rgba(204, 204, 204, 0.5); }\n  .btn-secondary.disabled, .btn-secondary:disabled {\n    background-color: #fff;\n    border-color: #ccc; }\n  .btn-secondary:active, .btn-secondary.active,\n  .show > .btn-secondary.dropdown-toggle {\n    color: #292b2c;\n    background-color: #e6e6e6;\n    background-image: none;\n    border-color: #adadad; }\n\n.btn-info {\n  color: #fff;\n  background-color: #5bc0de;\n  border-color: #5bc0de; }\n  .btn-info:hover {\n    color: #fff;\n    background-color: #31b0d5;\n    border-color: #2aabd2; }\n  .btn-info:focus, .btn-info.focus {\n    box-shadow: 0 0 0 2px rgba(91, 192, 222, 0.5); }\n  .btn-info.disabled, .btn-info:disabled {\n    background-color: #5bc0de;\n    border-color: #5bc0de; }\n  .btn-info:active, .btn-info.active,\n  .show > .btn-info.dropdown-toggle {\n    color: #fff;\n    background-color: #31b0d5;\n    background-image: none;\n    border-color: #2aabd2; }\n\n.btn-success {\n  color: #fff;\n  background-color: #5cb85c;\n  border-color: #5cb85c; }\n  .btn-success:hover {\n    color: #fff;\n    background-color: #449d44;\n    border-color: #419641; }\n  .btn-success:focus, .btn-success.focus {\n    box-shadow: 0 0 0 2px rgba(92, 184, 92, 0.5); }\n  .btn-success.disabled, .btn-success:disabled {\n    background-color: #5cb85c;\n    border-color: #5cb85c; }\n  .btn-success:active, .btn-success.active,\n  .show > .btn-success.dropdown-toggle {\n    color: #fff;\n    background-color: #449d44;\n    background-image: none;\n    border-color: #419641; }\n\n.btn-warning {\n  color: #fff;\n  background-color: #f0ad4e;\n  border-color: #f0ad4e; }\n  .btn-warning:hover {\n    color: #fff;\n    background-color: #ec971f;\n    border-color: #eb9316; }\n  .btn-warning:focus, .btn-warning.focus {\n    box-shadow: 0 0 0 2px rgba(240, 173, 78, 0.5); }\n  .btn-warning.disabled, .btn-warning:disabled {\n    background-color: #f0ad4e;\n    border-color: #f0ad4e; }\n  .btn-warning:active, .btn-warning.active,\n  .show > .btn-warning.dropdown-toggle {\n    color: #fff;\n    background-color: #ec971f;\n    background-image: none;\n    border-color: #eb9316; }\n\n.btn-danger {\n  color: #fff;\n  background-color: #d9534f;\n  border-color: #d9534f; }\n  .btn-danger:hover {\n    color: #fff;\n    background-color: #c9302c;\n    border-color: #c12e2a; }\n  .btn-danger:focus, .btn-danger.focus {\n    box-shadow: 0 0 0 2px rgba(217, 83, 79, 0.5); }\n  .btn-danger.disabled, .btn-danger:disabled {\n    background-color: #d9534f;\n    border-color: #d9534f; }\n  .btn-danger:active, .btn-danger.active,\n  .show > .btn-danger.dropdown-toggle {\n    color: #fff;\n    background-color: #c9302c;\n    background-image: none;\n    border-color: #c12e2a; }\n\n.btn-outline-primary {\n  color: #0275d8;\n  background-image: none;\n  background-color: transparent;\n  border-color: #0275d8; }\n  .btn-outline-primary:hover {\n    color: #fff;\n    background-color: #0275d8;\n    border-color: #0275d8; }\n  .btn-outline-primary:focus, .btn-outline-primary.focus {\n    box-shadow: 0 0 0 2px rgba(2, 117, 216, 0.5); }\n  .btn-outline-primary.disabled, .btn-outline-primary:disabled {\n    color: #0275d8;\n    background-color: transparent; }\n  .btn-outline-primary:active, .btn-outline-primary.active,\n  .show > .btn-outline-primary.dropdown-toggle {\n    color: #fff;\n    background-color: #0275d8;\n    border-color: #0275d8; }\n\n.btn-outline-secondary {\n  color: #ccc;\n  background-image: none;\n  background-color: transparent;\n  border-color: #ccc; }\n  .btn-outline-secondary:hover {\n    color: #fff;\n    background-color: #ccc;\n    border-color: #ccc; }\n  .btn-outline-secondary:focus, .btn-outline-secondary.focus {\n    box-shadow: 0 0 0 2px rgba(204, 204, 204, 0.5); }\n  .btn-outline-secondary.disabled, .btn-outline-secondary:disabled {\n    color: #ccc;\n    background-color: transparent; }\n  .btn-outline-secondary:active, .btn-outline-secondary.active,\n  .show > .btn-outline-secondary.dropdown-toggle {\n    color: #fff;\n    background-color: #ccc;\n    border-color: #ccc; }\n\n.btn-outline-info {\n  color: #5bc0de;\n  background-image: none;\n  background-color: transparent;\n  border-color: #5bc0de; }\n  .btn-outline-info:hover {\n    color: #fff;\n    background-color: #5bc0de;\n    border-color: #5bc0de; }\n  .btn-outline-info:focus, .btn-outline-info.focus {\n    box-shadow: 0 0 0 2px rgba(91, 192, 222, 0.5); }\n  .btn-outline-info.disabled, .btn-outline-info:disabled {\n    color: #5bc0de;\n    background-color: transparent; }\n  .btn-outline-info:active, .btn-outline-info.active,\n  .show > .btn-outline-info.dropdown-toggle {\n    color: #fff;\n    background-color: #5bc0de;\n    border-color: #5bc0de; }\n\n.btn-outline-success {\n  color: #5cb85c;\n  background-image: none;\n  background-color: transparent;\n  border-color: #5cb85c; }\n  .btn-outline-success:hover {\n    color: #fff;\n    background-color: #5cb85c;\n    border-color: #5cb85c; }\n  .btn-outline-success:focus, .btn-outline-success.focus {\n    box-shadow: 0 0 0 2px rgba(92, 184, 92, 0.5); }\n  .btn-outline-success.disabled, .btn-outline-success:disabled {\n    color: #5cb85c;\n    background-color: transparent; }\n  .btn-outline-success:active, .btn-outline-success.active,\n  .show > .btn-outline-success.dropdown-toggle {\n    color: #fff;\n    background-color: #5cb85c;\n    border-color: #5cb85c; }\n\n.btn-outline-warning {\n  color: #f0ad4e;\n  background-image: none;\n  background-color: transparent;\n  border-color: #f0ad4e; }\n  .btn-outline-warning:hover {\n    color: #fff;\n    background-color: #f0ad4e;\n    border-color: #f0ad4e; }\n  .btn-outline-warning:focus, .btn-outline-warning.focus {\n    box-shadow: 0 0 0 2px rgba(240, 173, 78, 0.5); }\n  .btn-outline-warning.disabled, .btn-outline-warning:disabled {\n    color: #f0ad4e;\n    background-color: transparent; }\n  .btn-outline-warning:active, .btn-outline-warning.active,\n  .show > .btn-outline-warning.dropdown-toggle {\n    color: #fff;\n    background-color: #f0ad4e;\n    border-color: #f0ad4e; }\n\n.btn-outline-danger {\n  color: #d9534f;\n  background-image: none;\n  background-color: transparent;\n  border-color: #d9534f; }\n  .btn-outline-danger:hover {\n    color: #fff;\n    background-color: #d9534f;\n    border-color: #d9534f; }\n  .btn-outline-danger:focus, .btn-outline-danger.focus {\n    box-shadow: 0 0 0 2px rgba(217, 83, 79, 0.5); }\n  .btn-outline-danger.disabled, .btn-outline-danger:disabled {\n    color: #d9534f;\n    background-color: transparent; }\n  .btn-outline-danger:active, .btn-outline-danger.active,\n  .show > .btn-outline-danger.dropdown-toggle {\n    color: #fff;\n    background-color: #d9534f;\n    border-color: #d9534f; }\n\n.btn-link {\n  font-weight: normal;\n  color: #0275d8;\n  border-radius: 0; }\n  .btn-link, .btn-link:active, .btn-link.active, .btn-link:disabled {\n    background-color: transparent; }\n  .btn-link, .btn-link:focus, .btn-link:active {\n    border-color: transparent; }\n  .btn-link:hover {\n    border-color: transparent; }\n  .btn-link:focus, .btn-link:hover {\n    color: #014c8c;\n    text-decoration: underline;\n    background-color: transparent; }\n  .btn-link:disabled {\n    color: #636c72; }\n    .btn-link:disabled:focus, .btn-link:disabled:hover {\n      text-decoration: none; }\n\n.btn-lg {\n  padding: 0.75rem 1.5rem;\n  font-size: 1.25rem;\n  border-radius: 0.3rem; }\n\n.btn-sm {\n  padding: 0.25rem 0.5rem;\n  font-size: 0.875rem;\n  border-radius: 0.2rem; }\n\n.btn-block {\n  display: block;\n  width: 100%; }\n\n.btn-block + .btn-block {\n  margin-top: 0.5rem; }\n\ninput[type=\"submit\"].btn-block,\ninput[type=\"reset\"].btn-block,\ninput[type=\"button\"].btn-block {\n  width: 100%; }\n\n.clearfix::after {\n  display: block;\n  content: \"\";\n  clear: both; }\n\n::-webkit-input-placeholder {\n  /* WebKit, Blink, Edge */\n  color: #909; }\n\n:host {\n  background-color: #424242;\n  height: 100%;\n  width: 100%;\n  padding: 20px;\n  box-sizing: border-box;\n  display: block; }\n\n.filter-options {\n  background: #424242;\n  display: flex;\n  justify-content: space-between;\n  flex-direction: row;\n  align-items: center; }\n  .filter-options li {\n    width: 25%;\n    padding-left: 20px;\n    margin-bottom: 0; }\n    .filter-options li:first-child {\n      padding-left: 0; }\n  .filter-options label {\n    display: block;\n    color: #e8e8e8;\n    font-size: 12px;\n    margin-bottom: 6px; }\n  .filter-options button {\n    margin-top: 18px; }\n  .filter-options select {\n    height: 30px !important;\n    background-color: #888;\n    color: #dddddd; }\n\n.scroll-container {\n  overflow-y: auto;\n  position: absolute;\n  top: 80px;\n  left: 0;\n  right: 0;\n  bottom: 0; }\n\n.editors-choices-header {\n  border-bottom: 1px solid white;\n  color: #ddd;\n  position: relative;\n  margin: 20px;\n  padding-bottom: 5px; }\n  .editors-choices-header:after {\n    display: block;\n    width: 100%;\n    content: \"\";\n    border-bottom: 1px solid #e0e0e0;\n    position: absolute;\n    bottom: 0; }\n\n.editor-choices {\n  display: flex;\n  overflow-x: auto;\n  margin: 20px 0;\n  padding-bottom: 20px; }\n\n.card {\n  border-bottom: 1px solid #8c8a8a;\n  border-left: 1px solid #8c8a8a;\n  contain: layout;\n  background: #000;\n  display: block;\n  width: 300px;\n  min-width: 300px;\n  margin: 0 20px; }\n  .card header {\n    width: 100%;\n    height: 150px;\n    background-position: top !important;\n    background-size: cover !important; }\n    .card header a {\n      display: block;\n      width: 100%;\n      height: 100%;\n      cursor: pointer; }\n  .card main {\n    border-bottom: 1px solid grey;\n    padding: 10px; }\n  .card footer {\n    display: flex;\n    justify-content: space-between;\n    padding: 10px; }\n    .card footer p {\n      color: #b7b7b7; }\n    .card footer button {\n      margin-left: 20px;\n      margin-top: 6px; }\n  .card .roi {\n    color: #6eaf0f; }\n  .card .followers {\n    font-weight: bold; }\n  .card::after {\n    display: block;\n    content: \"\";\n    clear: both; }\n"
+module.exports = "a, p, li, span, h1, h2, h3, h4, h5, h6, td, th, label {\n  color: #fff;\n  margin: 0;\n  -webkit-user-select: none;\n  user-select: none; }\n\nbutton {\n  color: #000;\n  cursor: pointer; }\n\ninput,\ntextarea {\n  box-sizing: border-box; }\n\nul {\n  list-style: none;\n  margin: 0;\n  padding: 0; }\n\na {\n  cursor: pointer;\n  text-decoration: none; }\n  a:hover, a:visited {\n    text-decoration: none; }\n\ntable {\n  border-collapse: collapse;\n  border-spacing: 0; }\n\ntd {\n  padding: 0; }\n\nsup,\nsub {\n  margin-left: 4px;\n  font-size: 12px; }\n\n.btn {\n  display: inline-block;\n  font-weight: normal;\n  line-height: 1.25;\n  text-align: center;\n  white-space: nowrap;\n  vertical-align: middle;\n  user-select: none;\n  border: 1px solid transparent;\n  padding: 0.5rem 1rem;\n  font-size: 1rem;\n  border-radius: 0.25rem;\n  transition: all 0.2s ease-in-out; }\n  .btn:focus, .btn:hover {\n    text-decoration: none; }\n  .btn:focus, .btn.focus {\n    outline: 0;\n    box-shadow: 0 0 0 2px rgba(2, 117, 216, 0.25); }\n  .btn.disabled, .btn:disabled {\n    cursor: not-allowed;\n    opacity: .65; }\n  .btn:active, .btn.active {\n    background-image: none; }\n\na.btn.disabled,\nfieldset[disabled] a.btn {\n  pointer-events: none; }\n\n.btn-primary {\n  color: #fff;\n  background-color: #0275d8;\n  border-color: #0275d8; }\n  .btn-primary:hover {\n    color: #fff;\n    background-color: #025aa5;\n    border-color: #01549b; }\n  .btn-primary:focus, .btn-primary.focus {\n    box-shadow: 0 0 0 2px rgba(2, 117, 216, 0.5); }\n  .btn-primary.disabled, .btn-primary:disabled {\n    background-color: #0275d8;\n    border-color: #0275d8; }\n  .btn-primary:active, .btn-primary.active,\n  .show > .btn-primary.dropdown-toggle {\n    color: #fff;\n    background-color: #025aa5;\n    background-image: none;\n    border-color: #01549b; }\n\n.btn-secondary {\n  color: #292b2c;\n  background-color: #fff;\n  border-color: #ccc; }\n  .btn-secondary:hover {\n    color: #292b2c;\n    background-color: #e6e6e6;\n    border-color: #adadad; }\n  .btn-secondary:focus, .btn-secondary.focus {\n    box-shadow: 0 0 0 2px rgba(204, 204, 204, 0.5); }\n  .btn-secondary.disabled, .btn-secondary:disabled {\n    background-color: #fff;\n    border-color: #ccc; }\n  .btn-secondary:active, .btn-secondary.active,\n  .show > .btn-secondary.dropdown-toggle {\n    color: #292b2c;\n    background-color: #e6e6e6;\n    background-image: none;\n    border-color: #adadad; }\n\n.btn-info {\n  color: #fff;\n  background-color: #5bc0de;\n  border-color: #5bc0de; }\n  .btn-info:hover {\n    color: #fff;\n    background-color: #31b0d5;\n    border-color: #2aabd2; }\n  .btn-info:focus, .btn-info.focus {\n    box-shadow: 0 0 0 2px rgba(91, 192, 222, 0.5); }\n  .btn-info.disabled, .btn-info:disabled {\n    background-color: #5bc0de;\n    border-color: #5bc0de; }\n  .btn-info:active, .btn-info.active,\n  .show > .btn-info.dropdown-toggle {\n    color: #fff;\n    background-color: #31b0d5;\n    background-image: none;\n    border-color: #2aabd2; }\n\n.btn-success {\n  color: #fff;\n  background-color: #5cb85c;\n  border-color: #5cb85c; }\n  .btn-success:hover {\n    color: #fff;\n    background-color: #449d44;\n    border-color: #419641; }\n  .btn-success:focus, .btn-success.focus {\n    box-shadow: 0 0 0 2px rgba(92, 184, 92, 0.5); }\n  .btn-success.disabled, .btn-success:disabled {\n    background-color: #5cb85c;\n    border-color: #5cb85c; }\n  .btn-success:active, .btn-success.active,\n  .show > .btn-success.dropdown-toggle {\n    color: #fff;\n    background-color: #449d44;\n    background-image: none;\n    border-color: #419641; }\n\n.btn-warning {\n  color: #fff;\n  background-color: #f0ad4e;\n  border-color: #f0ad4e; }\n  .btn-warning:hover {\n    color: #fff;\n    background-color: #ec971f;\n    border-color: #eb9316; }\n  .btn-warning:focus, .btn-warning.focus {\n    box-shadow: 0 0 0 2px rgba(240, 173, 78, 0.5); }\n  .btn-warning.disabled, .btn-warning:disabled {\n    background-color: #f0ad4e;\n    border-color: #f0ad4e; }\n  .btn-warning:active, .btn-warning.active,\n  .show > .btn-warning.dropdown-toggle {\n    color: #fff;\n    background-color: #ec971f;\n    background-image: none;\n    border-color: #eb9316; }\n\n.btn-danger {\n  color: #fff;\n  background-color: #d9534f;\n  border-color: #d9534f; }\n  .btn-danger:hover {\n    color: #fff;\n    background-color: #c9302c;\n    border-color: #c12e2a; }\n  .btn-danger:focus, .btn-danger.focus {\n    box-shadow: 0 0 0 2px rgba(217, 83, 79, 0.5); }\n  .btn-danger.disabled, .btn-danger:disabled {\n    background-color: #d9534f;\n    border-color: #d9534f; }\n  .btn-danger:active, .btn-danger.active,\n  .show > .btn-danger.dropdown-toggle {\n    color: #fff;\n    background-color: #c9302c;\n    background-image: none;\n    border-color: #c12e2a; }\n\n.btn-outline-primary {\n  color: #0275d8;\n  background-image: none;\n  background-color: transparent;\n  border-color: #0275d8; }\n  .btn-outline-primary:hover {\n    color: #fff;\n    background-color: #0275d8;\n    border-color: #0275d8; }\n  .btn-outline-primary:focus, .btn-outline-primary.focus {\n    box-shadow: 0 0 0 2px rgba(2, 117, 216, 0.5); }\n  .btn-outline-primary.disabled, .btn-outline-primary:disabled {\n    color: #0275d8;\n    background-color: transparent; }\n  .btn-outline-primary:active, .btn-outline-primary.active,\n  .show > .btn-outline-primary.dropdown-toggle {\n    color: #fff;\n    background-color: #0275d8;\n    border-color: #0275d8; }\n\n.btn-outline-secondary {\n  color: #ccc;\n  background-image: none;\n  background-color: transparent;\n  border-color: #ccc; }\n  .btn-outline-secondary:hover {\n    color: #fff;\n    background-color: #ccc;\n    border-color: #ccc; }\n  .btn-outline-secondary:focus, .btn-outline-secondary.focus {\n    box-shadow: 0 0 0 2px rgba(204, 204, 204, 0.5); }\n  .btn-outline-secondary.disabled, .btn-outline-secondary:disabled {\n    color: #ccc;\n    background-color: transparent; }\n  .btn-outline-secondary:active, .btn-outline-secondary.active,\n  .show > .btn-outline-secondary.dropdown-toggle {\n    color: #fff;\n    background-color: #ccc;\n    border-color: #ccc; }\n\n.btn-outline-info {\n  color: #5bc0de;\n  background-image: none;\n  background-color: transparent;\n  border-color: #5bc0de; }\n  .btn-outline-info:hover {\n    color: #fff;\n    background-color: #5bc0de;\n    border-color: #5bc0de; }\n  .btn-outline-info:focus, .btn-outline-info.focus {\n    box-shadow: 0 0 0 2px rgba(91, 192, 222, 0.5); }\n  .btn-outline-info.disabled, .btn-outline-info:disabled {\n    color: #5bc0de;\n    background-color: transparent; }\n  .btn-outline-info:active, .btn-outline-info.active,\n  .show > .btn-outline-info.dropdown-toggle {\n    color: #fff;\n    background-color: #5bc0de;\n    border-color: #5bc0de; }\n\n.btn-outline-success {\n  color: #5cb85c;\n  background-image: none;\n  background-color: transparent;\n  border-color: #5cb85c; }\n  .btn-outline-success:hover {\n    color: #fff;\n    background-color: #5cb85c;\n    border-color: #5cb85c; }\n  .btn-outline-success:focus, .btn-outline-success.focus {\n    box-shadow: 0 0 0 2px rgba(92, 184, 92, 0.5); }\n  .btn-outline-success.disabled, .btn-outline-success:disabled {\n    color: #5cb85c;\n    background-color: transparent; }\n  .btn-outline-success:active, .btn-outline-success.active,\n  .show > .btn-outline-success.dropdown-toggle {\n    color: #fff;\n    background-color: #5cb85c;\n    border-color: #5cb85c; }\n\n.btn-outline-warning {\n  color: #f0ad4e;\n  background-image: none;\n  background-color: transparent;\n  border-color: #f0ad4e; }\n  .btn-outline-warning:hover {\n    color: #fff;\n    background-color: #f0ad4e;\n    border-color: #f0ad4e; }\n  .btn-outline-warning:focus, .btn-outline-warning.focus {\n    box-shadow: 0 0 0 2px rgba(240, 173, 78, 0.5); }\n  .btn-outline-warning.disabled, .btn-outline-warning:disabled {\n    color: #f0ad4e;\n    background-color: transparent; }\n  .btn-outline-warning:active, .btn-outline-warning.active,\n  .show > .btn-outline-warning.dropdown-toggle {\n    color: #fff;\n    background-color: #f0ad4e;\n    border-color: #f0ad4e; }\n\n.btn-outline-danger {\n  color: #d9534f;\n  background-image: none;\n  background-color: transparent;\n  border-color: #d9534f; }\n  .btn-outline-danger:hover {\n    color: #fff;\n    background-color: #d9534f;\n    border-color: #d9534f; }\n  .btn-outline-danger:focus, .btn-outline-danger.focus {\n    box-shadow: 0 0 0 2px rgba(217, 83, 79, 0.5); }\n  .btn-outline-danger.disabled, .btn-outline-danger:disabled {\n    color: #d9534f;\n    background-color: transparent; }\n  .btn-outline-danger:active, .btn-outline-danger.active,\n  .show > .btn-outline-danger.dropdown-toggle {\n    color: #fff;\n    background-color: #d9534f;\n    border-color: #d9534f; }\n\n.btn-link {\n  font-weight: normal;\n  color: #0275d8;\n  border-radius: 0; }\n  .btn-link, .btn-link:active, .btn-link.active, .btn-link:disabled {\n    background-color: transparent; }\n  .btn-link, .btn-link:focus, .btn-link:active {\n    border-color: transparent; }\n  .btn-link:hover {\n    border-color: transparent; }\n  .btn-link:focus, .btn-link:hover {\n    color: #014c8c;\n    text-decoration: underline;\n    background-color: transparent; }\n  .btn-link:disabled {\n    color: #636c72; }\n    .btn-link:disabled:focus, .btn-link:disabled:hover {\n      text-decoration: none; }\n\n.btn-lg {\n  padding: 0.75rem 1.5rem;\n  font-size: 1.25rem;\n  border-radius: 0.3rem; }\n\n.btn-sm {\n  padding: 0.25rem 0.5rem;\n  font-size: 0.875rem;\n  border-radius: 0.2rem; }\n\n.btn-block {\n  display: block;\n  width: 100%; }\n\n.btn-block + .btn-block {\n  margin-top: 0.5rem; }\n\ninput[type=\"submit\"].btn-block,\ninput[type=\"reset\"].btn-block,\ninput[type=\"button\"].btn-block {\n  width: 100%; }\n\n.clearfix::after {\n  display: block;\n  content: \"\";\n  clear: both; }\n\n::-webkit-input-placeholder {\n  /* WebKit, Blink, Edge */\n  color: #909; }\n\n:host {\n  background-color: #424242;\n  height: 100%;\n  width: 100%;\n  padding: 20px;\n  box-sizing: border-box;\n  display: block; }\n\n.filter-options {\n  background: #424242;\n  display: flex;\n  justify-content: space-between;\n  flex-direction: row;\n  align-items: center; }\n  .filter-options li {\n    width: 25%;\n    padding-left: 20px;\n    margin-bottom: 0; }\n    .filter-options li:first-child {\n      padding-left: 0; }\n  .filter-options label {\n    display: block;\n    color: #e8e8e8;\n    font-size: 12px;\n    margin-bottom: 6px; }\n  .filter-options button {\n    margin-top: 18px; }\n  .filter-options select {\n    height: 30px !important;\n    background-color: #888;\n    color: #dddddd; }\n\n.scroll-container {\n  overflow-y: auto;\n  position: absolute;\n  top: 80px;\n  left: 0;\n  right: 0;\n  bottom: 0; }\n\n.item-row-header {\n  border-bottom: 1px solid white;\n  color: #ddd;\n  position: relative;\n  margin: 20px;\n  padding-bottom: 5px; }\n  .item-row-header:after {\n    display: block;\n    width: 100%;\n    content: \"\";\n    border-bottom: 1px solid #e0e0e0;\n    position: absolute;\n    bottom: 0; }\n\n.item-row {\n  display: flex;\n  overflow-x: auto;\n  margin: 20px 0;\n  padding-bottom: 20px; }\n\n.card {\n  border-bottom: 1px solid #8c8a8a;\n  border-left: 1px solid #8c8a8a;\n  contain: layout;\n  background: #000;\n  display: block;\n  width: 300px;\n  min-width: 300px;\n  margin: 0 20px; }\n  .card header {\n    width: 100%;\n    height: 150px;\n    background-position: 0 -50px !important;\n    background-size: cover !important; }\n    .card header a {\n      display: block;\n      width: 100%;\n      height: 100%;\n      cursor: pointer; }\n  .card main {\n    border-bottom: 1px solid grey;\n    padding: 10px; }\n  .card footer {\n    display: flex;\n    justify-content: space-between;\n    padding: 10px; }\n    .card footer p {\n      color: #b7b7b7; }\n    .card footer button {\n      margin-left: 20px;\n      margin-top: 6px; }\n  .card .roi {\n    color: #6eaf0f; }\n  .card .followers {\n    font-weight: bold; }\n  .card::after {\n    display: block;\n    content: \"\";\n    clear: both; }\n"
 
 /***/ }),
 /* 831 */
@@ -56015,7 +56023,7 @@ module.exports = "a, p, li, span, h1, h2, h3, h4, h5, h6, td, th, label {\n  col
 /* 846 */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"scroll-container\" xmlns=\"http://www.w3.org/1999/html\">\n    <form (change)=\"onChange($event.target)\" [formGroup]=\"form\">\n\n        <!-- Profile -->\n        <h2 class=\"headline-header\">Profile</h2>\n        <div class=\"form-box-row\">\n            <div class=\"form-box-column\">\n                <div class=\"form-box\">\n                    <label for=\"country\">Country</label>\n                    <select id=\"country\">\n                        <option value=\"m\">Male</option>\n                        <option value=\"m\">Female</option>\n                    </select>\n                </div>\n                <div class=\"form-box\">\n                    <label for=\"gender\">Gender</label>\n                    <select id=\"gender\">\n                        <option value=\"m\">Male</option>\n                        <option value=\"m\">Female</option>\n                    </select>\n                </div>\n            </div>\n            <div class=\"form-box-column profile-image-box\">\n                <div class=\"form-box\" class=\"profileImg\">\n                    <!-- File input for upload without using the plugin. -->\n                    <input accept=\".jpg,.jpeg,.png,.gif,.bmp\" (change)=\"onChangeFileInput($event)\" id=\"uploadProfileImg\" type=\"file\"class=\"uploadInput\" #uploadBtn/>\n                    <label for=\"uploadProfileImg\" class=\"uploadInputBtn\" [ngStyle]=\"{'background-image': 'url(' + model?.options.profileImg + ')'}\" #uploadImageHolder></label>\n                    <div class=\"saveOptions hidden\" #saveOptions>\n                        <span>save?</span> <a (click)=\"saveProfileImg()\">Yes</a><a (click)=\"resetProfileImg()\">No</a>\n                    </div>\n                </div>\n            </div>\n        </div>\n\n        <div class=\"form-box\">\n            <label for=\"description\">About you</label>\n            <textarea id=\"description\" formControlName=\"description\"></textarea>\n        </div>\n\n        <!-- Privacy -->\n        <h2 class=\"headline-header\">Privacy</h2>\n        <div class=\"form-box form-box-radio\">\n            <label>People can find me through search</label>\n            <div class=\"form-radio-options\">\n                <input type=\"radio\" name=\"findable\" value=\"1\" checked><span>Yes (default)</span><br>\n                <input type=\"radio\" name=\"findable\" value=\"0\"><span>No</span><br>\n            </div>\n        </div>\n\n        <!-- Account -->\n        <h2 class=\"headline-header\">Account</h2>\n\n        <div class=\"form-box\">\n            <label for=\"username\">Balance</label>\n            <input type=\"number\" id=\"balance\" formControlName=\"balance\"  autocomplete=\"off\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n        </div>\n\n        <div class=\"form-box\">\n            <label for=\"username\">Leverage</label>\n            <select id=\"leverage\" formControlName=\"leverage\">\n                <option value=\"1\">1:1</option>\n                <option value=\"10\">1:10</option>\n                <option value=\"20\">1:20</option>\n                <option value=\"25\">1:25</option>\n                <option value=\"50\">1:50</option>\n                <option value=\"100\">1:100</option>\n            </select>\n        </div>\n\n        <div class=\"form-box\">\n            <label for=\"username\">Username</label>\n            <input id=\"username\" formControlName=\"username\"  autocomplete=\"off\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n        </div>\n\n        <div class=\"form-box\">\n            <label for=\"email\">Email</label>\n            <input id=\"email\" formControlName=\"email\" autocomplete=\"off\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n        </div>\n        <div class=\"form-box\">\n            <button class=\"btn btn-sm btn-danger\">Remove account</button>\n        </div>\n    </form>\n</div>"
+module.exports = "<div class=\"scroll-container\" xmlns=\"http://www.w3.org/1999/html\">\n    <form (change)=\"onChange($event.target)\" [formGroup]=\"form\">\n\n        <!-- Profile -->\n        <h2 class=\"headline-header\">Profile</h2>\n        <div class=\"form-box-row\">\n            <div class=\"form-box-column\">\n                <div class=\"form-box\">\n                    <label for=\"country\">Country</label>\n                    <select id=\"country\">\n                        <option value=\"m\">Male</option>\n                        <option value=\"m\">Female</option>\n                    </select>\n                </div>\n                <div class=\"form-box\">\n                    <label for=\"gender\">Gender</label>\n                    <select id=\"gender\">\n                        <option value=\"m\">Male</option>\n                        <option value=\"m\">Female</option>\n                    </select>\n                </div>\n            </div>\n            <div class=\"form-box-column profile-image-box\">\n                <div class=\"form-box\" class=\"profileImg\">\n                    <!-- File input for upload without using the plugin. -->\n                    <input accept=\".jpg,.jpeg,.png,.gif,.bmp\" (change)=\"onChangeFileInput($event)\" id=\"uploadProfileImg\" type=\"file\"class=\"uploadInput\" #uploadBtn/>\n                    <label for=\"uploadProfileImg\" class=\"uploadInputBtn\" [ngStyle]=\"{'background-image': 'url(' + model?.options.profileImg + ')'}\" #uploadImageHolder></label>\n                    <div class=\"saveOptions hidden\" #saveOptions>\n                        <span>save?</span> <a (click)=\"saveProfileImg()\">Yes</a><a (click)=\"resetProfileImg()\">No</a>\n                    </div>\n                </div>\n            </div>\n        </div>\n\n        <div class=\"form-box\">\n            <label for=\"description\">About you</label>\n            <textarea id=\"description\" formControlName=\"description\"></textarea>\n        </div>\n\n        <!-- Privacy -->\n        <h2 class=\"headline-header\">Privacy</h2>\n        <div class=\"form-box form-box-radio\">\n            <label>People can find me through search</label>\n            <div class=\"form-radio-options\">\n                <input type=\"radio\" name=\"findable\" value=\"1\" checked><span>Yes (default)</span><br>\n                <input type=\"radio\" name=\"findable\" value=\"0\"><span>No</span><br>\n            </div>\n        </div>\n\n        <!-- Account -->\n        <h2 class=\"headline-header\">Account</h2>\n\n        <div class=\"form-box\">\n            <label for=\"username\">Balance</label>\n            <input type=\"number\" id=\"balance\" formControlName=\"balance\"  autocomplete=\"off\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n        </div>\n\n        <div class=\"form-box\">\n            <label for=\"username\">Leverage</label>\n            <select id=\"leverage\" formControlName=\"leverage\">\n                <option value=\"1\">1:1</option>\n                <option value=\"10\">1:10</option>\n                <option value=\"20\">1:20</option>\n                <option value=\"25\">1:25</option>\n                <option value=\"50\">1:50</option>\n                <option value=\"100\">1:100</option>\n            </select>\n        </div>\n\n        <div class=\"form-box\">\n            <label for=\"username\">Username</label>\n            <input id=\"name\" formControlName=\"name\"  autocomplete=\"off\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n        </div>\n\n        <div class=\"form-box\">\n            <label for=\"email\">Email</label>\n            <input id=\"email\" formControlName=\"email\" autocomplete=\"off\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n        </div>\n        <div class=\"form-box\">\n            <button class=\"btn btn-sm btn-danger\">Remove account</button>\n        </div>\n    </form>\n</div>"
 
 /***/ }),
 /* 847 */

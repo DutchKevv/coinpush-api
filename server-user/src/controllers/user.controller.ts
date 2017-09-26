@@ -92,29 +92,14 @@ export const userController = {
 
 		let userData = {
 			email: params.email,
-			username: params.username,
 			password: params.password,
-			passwordConf: params.passwordConf,
-			profileImg: params.profileImg,
-			description: params.description,
 			country: params.country
 		};
 
-		if (!userData.email || !userData.username || !userData.password || !userData.passwordConf)
+		if (!userData.email || !userData.password)
 			throw 'Missing attributes';
 
-		// use schema.create to insert data into the db
-		const user = await User.create(userData);
-
-		client.publish('user-created', JSON.stringify({
-			_id: user._id,
-			username: user.username
-		}), (error) => {
-			if (error)
-				console.log('REDIS ERROR: ', error);
-		});
-
-		return user;
+		return User.create(userData);
 	},
 
 	async getCached(key) {

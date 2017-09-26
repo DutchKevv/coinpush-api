@@ -37,7 +37,7 @@ export class ProfileComponent implements OnInit {
 
 		this._sub = this._route.params.subscribe(params => {
 			this.userId = params['id'];
-			this.isSelf = this.userId === this.userService.model.get('_id');
+			this.isSelf = this.userId === this.userService.model.get('user_id');
 
 			this.channelService.getByUserId(this.userId).subscribe((channel: ChannelModel) => {
 				this.channelId = channel.get('_id');

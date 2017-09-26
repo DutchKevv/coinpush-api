@@ -12,8 +12,13 @@ export class StartupService {
 	}
 
 	load(): Promise<any> {
+		const userId = this.loggedInUser.get('user_id');
 
-		return this._http.get('/user/' + this.loggedInUser.get('_id') || '', {params: {type: USER_FETCH_TYPE_ACCOUNT_DETAILS}})
+		if (!userId)
+			return Promise.resolve(null);
+
+
+		return this._http.get('/user/' + userId || '', {params: {type: USER_FETCH_TYPE_ACCOUNT_DETAILS}})
 			.map((res) => {
 				this.loggedInUser.set(res.json());
 			})

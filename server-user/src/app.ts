@@ -46,4 +46,3 @@ app.use((req: any, res, next) => {
 app.use('/user', require('./api/user.api'));
 app.use('/wallet', require('./api/wallet.api'));
 app.use('/authenticate', require('./api/authenticate.api'));
-app.use('/search', require('./api/search.api'));
