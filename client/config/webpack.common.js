@@ -6,8 +6,8 @@ const
 
 module.exports = {
     entry: {
-        "vendor": "./vendor",
-        "app": "./main",
+        "vendor": "./src/vendor",
+        "app": "./src/main",
         // "editor": "./editor"
     },
     output: {
@@ -19,7 +19,7 @@ module.exports = {
     },
     module: {
         noParse: [
-            path.join(__dirname, '..', 'assets', 'vendor')
+            path.join(__dirname, '..', 'src', 'assets', 'vendor')
         ],
         loaders: [
             { //this rule will only be used for any vendors
@@ -82,15 +82,15 @@ module.exports = {
         ]
     },
     plugins: [
-        new CleanWebpackPlugin([path.join(__dirname, '..', 'dist', '*.*')], {}),
+        // new CleanWebpackPlugin([path.join(__dirname, '..', 'dist', '*.*')], {root: path.resolve(__dirname , '..'), verbose: true}),
 
         new CopyWebpackPlugin([
-            {from: './assets', to: 'assets'},
-            {from: path.join(__dirname, '..', 'index.html'), to: 'index.html'},
+            {from: './src/assets', to: 'assets'},
+            {from: './src/index.html', to: 'index.html'},
             {from: './../shared/engine/dist', to: 'engine'},
-            {from: './favicon.ico', to: 'favicon.ico'},
-            {from: './sounds', to: 'sounds'},
-            {from: './data', to: 'data'}
+            {from: './src/favicon.ico', to: 'favicon.ico'},
+            {from: './src/sounds', to: 'sounds'},
+            {from: './src/data', to: 'data'}
             // {from: './../shared/engine/engine.data', to: 'engine.data'}
         ]),
 // new ngToolsWebpack.AotPlugin({
