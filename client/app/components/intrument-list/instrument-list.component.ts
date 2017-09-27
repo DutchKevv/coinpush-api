@@ -1,8 +1,6 @@
 import {
-	Component, OnInit, OnDestroy, ElementRef, Pipe, PipeTransform, ChangeDetectionStrategy,
-	ChangeDetectorRef, NgZone, ViewEncapsulation, ViewChild, AfterViewInit
+	Component, OnInit, OnDestroy, ElementRef, Pipe, PipeTransform, ChangeDetectionStrategy, NgZone, ViewEncapsulation, ViewChild
 } from '@angular/core';
-import {CookieService} from 'ngx-cookie';
 
 import {InstrumentsService} from '../../services/instruments.service';
 import {CacheService, CacheSymbol} from '../../services/cache.service';
@@ -43,7 +41,6 @@ export class InstrumentListComponent implements OnDestroy, OnInit {
 
 	constructor(public cacheService: CacheService,
 				public instrumentService: InstrumentsService,
-				private _cookieService: CookieService,
 				private _elementRef: ElementRef,
 				private _zone: NgZone) {
 	}
@@ -126,19 +123,6 @@ export class InstrumentListComponent implements OnDestroy, OnInit {
 			});
 		});
 	}
-
-	private _restoreHeightFromCookie() {
-		let storedHeight = this._cookieService.get('footer-resize-height');
-
-		if (storedHeight) {
-			this._elementRef.nativeElement.style.height = storedHeight;
-		}
-	}
-
-	private _storeHeightInCookie() {
-		this._cookieService.put('home-left-aside-resize-height', parseInt(this._elementRef.nativeElement.style.height, 10).toString() || '0');
-	}
-
 
 	ngOnDestroy() {
 	}

@@ -2,16 +2,14 @@ import {
 	Component, OnInit, AfterViewInit, ElementRef, Output, ChangeDetectionStrategy, NgZone,
 	Pipe, PipeTransform, ViewEncapsulation, ChangeDetectorRef
 } from '@angular/core';
-import {CookieService}                from 'ngx-cookie';
-import {FormBuilder, FormGroup}        from '@angular/forms';
-import {IMultiSelectOption, IMultiSelectSettings}   from 'angular-2-dropdown-multiselect';
-import {SocketService}              from '../../services/socket.service';
-import {CacheService}                from '../../services/cache.service';
-import {IBacktestSettings}            from '../../../../shared/interfaces/BacktestSettings';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {IMultiSelectOption, IMultiSelectSettings} from 'angular-2-dropdown-multiselect';
+import {SocketService} from '../../services/socket.service';
+import {CacheService} from '../../services/cache.service';
+import {IBacktestSettings} from '../../../../shared/interfaces/BacktestSettings';
 import {InstrumentsService} from '../../services/instruments.service';
-import {InstrumentModel} from '../../../../shared/models/InstrumentModel';
-import {BaseModel} from '../../../../shared/models/BaseModel';
 import * as moment from 'moment';
+import {BaseModel} from '../../models/base.model';
 
 declare let $: any;
 
@@ -78,7 +76,6 @@ export class BacktestSettingsComponent implements OnInit, AfterViewInit {
 	constructor(public instrumentsService: InstrumentsService,
 				private _zone: NgZone,
 				private _ref: ChangeDetectorRef,
-				private _cookieService: CookieService,
 				private _cacheService: CacheService,
 				private formBuilder: FormBuilder,
 				private _socketService: SocketService,
@@ -153,7 +150,7 @@ export class BacktestSettingsComponent implements OnInit, AfterViewInit {
 			})
 		);
 
-		this._cookieService.put('backtest-settings', settings);
+		localStorage.setItem('backtest-settings', JSON.stringify(settings));
 	}
 
 	private _onReceiveRunnableList(runnableList) {
@@ -162,7 +159,7 @@ export class BacktestSettingsComponent implements OnInit, AfterViewInit {
 
 	private _getCookie(): IBacktestSettings {
 		try {
-			return JSON.parse(this._cookieService.get('backtest-settings'));
+			return JSON.parse(localStorage.getItem('backtest-settings'));
 		} catch (err) {
 			return {};
 		}

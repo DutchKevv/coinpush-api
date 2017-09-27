@@ -1,11 +1,11 @@
 import {Injectable, Output} from '@angular/core';
 import {Http} from '@angular/http';
 import {ConstantsService} from './constants.service';
-import {OrderModel} from '../../../shared/models/OrderModel';
 import {CacheService} from './cache.service';
 import {AlertService} from './alert.service';
 import {UserService} from './user.service';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {OrderModel} from '../models/order.model';
 
 @Injectable()
 export class OrderService {

@@ -1,7 +1,7 @@
-import {Base} from '../../../shared/classes/Base';
+import {BaseModel} from './base.model';
 import {LEVERAGE_TYPE_1} from '../../../shared/constants/constants';
 
-export class UserModel extends Base {
+export class UserModel extends BaseModel {
 	public static readonly DEFAULTS: any = {
 		username: '',
 		following: false,

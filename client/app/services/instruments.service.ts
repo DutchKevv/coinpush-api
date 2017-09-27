@@ -3,12 +3,11 @@ import {Injectable, Output, EventEmitter, NgZone, ChangeDetectorRef} from '@angu
 import {InstrumentSettings} from '../../../shared/interfaces/InstrumentSettings';
 import {SocketService} from './socket.service';
 import {BehaviorSubject} from 'rxjs';
-import {SystemState} from '../../../shared/models/SystemState';
 import {IndicatorModel} from '../models/indicator';
 import {DialogComponent} from '../components/dialog/dialog.component';
 import {ModalService} from './modal.service';
-import {InstrumentModel} from '../../../shared/models/InstrumentModel';
 import {Subject} from 'rxjs/Subject';
+import {InstrumentModel} from '../models/instrument.model';
 
 declare let Module: any;
 
@@ -56,12 +55,6 @@ export class InstrumentsService {
 				instrument.set(status);
 
 			this.changed$.next()
-		});
-
-		this._socketService.socket.on('system:state', (systemState: SystemState) => {
-			if (!systemState.booting && systemState.connected) {
-				this._loadRunningInstruments();
-			}
 		});
 	}
 
@@ -304,17 +297,6 @@ export class InstrumentsService {
 
 				resolve();
 			});
-		});
-	}
-
-	private _loadRunningInstruments() {
-		this._socketService.send('instrument:list', {}, (err, list: InstrumentSettings[]) => {
-			if (err)
-				return console.error(err);
-
-			this.add(list.map((instrumentSettings: InstrumentSettings) => new InstrumentModel(instrumentSettings)));
-			// if (this._instruments.length)
-			// 	this.setFocus(this._instruments[this._instruments.length - 1]);
 		});
 	}
 }

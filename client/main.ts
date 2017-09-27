@@ -1,5 +1,9 @@
 import {AppModule} from './app/app.module';
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
+
+// import { platformBrowser } from '@angular/platform-browser';
+// import { MainModuleNgFactory } from './modules/main.module.ngfactory';
+
 import {environment} from './environments/environment';
 import {enableProdMode} from '@angular/core';
 
@@ -13,5 +17,6 @@ if (process.env.ENV === 'production') {
 }
 
 platformBrowserDynamic().bootstrapModule(AppModule);
+// platformBrowser().bootstrapModuleFactory(MainModuleNgFactory);
 
 export default {};

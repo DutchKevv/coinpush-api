@@ -2,7 +2,7 @@ import {
 	Component, AfterViewInit, Input, OnInit, PipeTransform, Pipe, ElementRef, ViewEncapsulation, OnChanges,
 	ChangeDetectionStrategy, Output, ViewChild, ChangeDetectorRef
 } from '@angular/core';
-import {InstrumentModel} from '../../../../shared/models/InstrumentModel';
+import {InstrumentModel} from '../../models/instrument.model';
 import {InstrumentsService} from '../../services/instruments.service';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
@@ -32,9 +32,7 @@ export class BacktestComponent implements AfterViewInit, OnInit, OnChanges {
 
 	public activeGroupId = null;
 
-	constructor(private _elementRef: ElementRef,
-				private _ref: ChangeDetectorRef,
-				public instrumentService: InstrumentsService) {}
+	constructor(public instrumentService: InstrumentsService) {}
 
 	ngOnInit() {
 

@@ -18,6 +18,10 @@ export class ChannelService {
 		return this._http.get('/channel/' + channelId).map(res => new ChannelModel(res.json().user[0]));
 	}
 
+	getMany(): Promise<any> {
+		return this._http.get('/channel/').map(res => new ChannelModel(res.json().user)).toPromise();
+	}
+
 	getByUserId(userId: string): Observable<ChannelModel> {
 		return this._http.get('/channel/', {params: {user: userId}}).map(res => new ChannelModel(res.json()));
 	}

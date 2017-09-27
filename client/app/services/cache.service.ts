@@ -1,13 +1,10 @@
 import {Injectable, NgZone, Output} from '@angular/core';
-import {SocketService} from './socket.service';
 import {BehaviorSubject} from 'rxjs';
-import CacheMap from '../../../shared/classes/cache/CacheMap';
-import {SystemState} from '../../../shared/models/SystemState';
-import {Base} from '../../../shared/classes/Base';
 import * as io from 'socket.io-client';
 import {Subject} from 'rxjs/Subject';
+import {BaseModel} from '../models/base.model';
 
-export class CacheSymbol extends Base {
+export class CacheSymbol extends BaseModel {
 	public price$: Subject<any> = new Subject();
 
 	public tick(ticks) {
@@ -31,14 +28,12 @@ export class CacheService {
 	@Output() public symbolList$: BehaviorSubject<Array<CacheSymbol>> = new BehaviorSubject([]);
 	@Output() public changed$: Subject<any> = new Subject();
 
-	private _mapper: CacheMap;
 	private _socket: any;
 
 	constructor(private _zone: NgZone) {
 	}
 
 	public init(): void {
-		this._mapper = new CacheMap();
 		this._connect();
 
 		this._socket.on('ticks', ticks => {

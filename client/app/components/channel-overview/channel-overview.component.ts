@@ -1,12 +1,11 @@
-import {CookieService} from 'ngx-cookie';
 import {debounce} from 'lodash';
 import {
-	Component, ElementRef, OnInit, OnDestroy, ChangeDetectionStrategy, NgZone,
+	Component, OnInit, OnDestroy, ChangeDetectionStrategy,
 	AfterViewChecked, ViewEncapsulation, Output
 } from '@angular/core';
 import {InstrumentsService} from '../../services/instruments.service';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {TradingChannelService} from '../../services/trading.channel.service';
+import {ChannelService} from '../../services/channel.service';
 
 declare let $: any;
 
@@ -23,11 +22,11 @@ export class ChannelOverviewComponent implements OnInit, OnDestroy, AfterViewChe
 	@Output() public channels$: BehaviorSubject<any[]> = new BehaviorSubject([]);
 
 	constructor(public instrumentsService: InstrumentsService,
-				private _tradingChannelService: TradingChannelService) {
+				private _channelService: ChannelService) {
 	}
 
 	ngOnInit() {
-		this._tradingChannelService.getList().then((list) => {
+		this._channelService.getMany().then((list) => {
 			this.channels$.next(list)
 		});
 	}

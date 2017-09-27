@@ -2,10 +2,9 @@ import {
 	Component, AfterViewInit, ElementRef, Input, OnInit, ChangeDetectionStrategy,
 	OnDestroy, ViewEncapsulation, AfterViewChecked, NgZone, ViewChild
 } from '@angular/core';
-import {InstrumentModel} from '../../../../shared/models/InstrumentModel';
+import {InstrumentModel} from '../../models/instrument.model';
 const CanvasJS = require('../../../assets/vendor/js/canvasjs/canvasjs.min');
 import {minBy, maxBy} from 'lodash';
-import * as moment from 'moment';
 
 declare let Module: any;
 

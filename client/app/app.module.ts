@@ -2,14 +2,9 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {APP_INITIALIZER, NgModule} from '@angular/core';
 
-
-import {HeaderPlaygroundComponent}  from './components/header-playground/header-playground.component';
-import {HeaderEditorComponent}  from './components/header-editor/header-editor.component';
-import {FooterComponent}  from './components/footer/footer.component';
 import {FileTreeComponent}  from './components/file-tree/file-tree.component';
 import {JSEditorComponent}  from './components/jseditor/jseditor.component';
 import {SocketService} from './services/socket.service';
-import {CookieModule} from 'ngx-cookie';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 import {AppComponent} from './app.component';
@@ -21,7 +16,6 @@ import {ChartOverviewComponent} from './components/chart-overview/chart-overview
 import {AuthGuard} from './guards/auth.guard';
 import {UserService} from './services/user.service';
 import {LoginComponent} from './components/login/login.component';
-import {SystemService} from './services/system.service';
 import {ConstantsService} from './services/constants.service';
 import {DialogComponent} from './components/dialog/dialog.component';
 import {ModalComponent} from './components/modal/modal.component';
@@ -39,7 +33,6 @@ import {CoreListComponent} from './components/core-list/core-list.component';
 import {PageMainComponent} from './components/page-main/page.main.component';
 import {PagePlaygroundComponent} from './components/page-playground/page.playground.component';
 import {PageEditorComponent} from './components/page-editor/page.editor.component';
-import {HeaderSocialComponent} from './components/header-social/header-social.component';
 import {SocialService} from './services/social.service';
 import {AuthenticationService} from './services/authenticate.service';
 import {customHttpProvider} from './services/http.service';
@@ -50,7 +43,6 @@ import {HttpModule} from '@angular/http';
 import {UserOverviewComponent} from './components/user-overview/user.overview.component';
 import {OrderService} from './services/order.service';
 import {ChannelOverviewComponent} from './components/channel-overview/channel-overview.component';
-import {TradingChannelService} from './services/trading.channel.service';
 import {GroupByPipe, PortfolioComponent} from './components/portfolio/portfolio.component';
 import {ProfileComponent} from './components/profile/profile.component';
 import {PageSubUserComponent} from './components/page-sub-user/page.sub.user.component';
@@ -79,11 +71,7 @@ export function startupServiceFactory(startupService: StartupService): Function 
 		DialogComponent,
 		PageEditorComponent,
 		FileTreeComponent,
-		FooterComponent,
 		GroupIdsPipe,
-		HeaderPlaygroundComponent,
-		HeaderEditorComponent,
-		HeaderSocialComponent,
 		PagePlaygroundComponent,
 		InstrumentListComponent,
 		JSEditorComponent,
@@ -111,7 +99,6 @@ export function startupServiceFactory(startupService: StartupService): Function 
 	],
 	imports: [
 		BrowserModule,
-		CookieModule.forRoot(),
 		routing,
 		FormsModule,
 		ReactiveFormsModule,
@@ -124,12 +111,10 @@ export function startupServiceFactory(startupService: StartupService): Function 
 		AlertService,
 		AuthenticationService,
 		UserService,
-		TradingChannelService,
 		StartupService,
 		ChannelService,
 
 		{provide: OrderService, useClass: OrderService},
-		{provide: SystemService, useClass: SystemService},
 		{provide: ConstantsService, useClass: ConstantsService},
 		{provide: SocketService, useClass: SocketService},
 		{provide: ModalService, useClass: ModalService},

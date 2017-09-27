@@ -1,7 +1,7 @@
-import {Base} from '../../../shared/classes/Base';
 import {CHANNEL_TYPE_CUSTOM} from '../../../shared/constants/constants';
+import {BaseModel} from './base.model';
 
-export class ChannelModel extends Base {
+export class ChannelModel extends BaseModel {
 	public static readonly DEFAULTS: any = {
 		_id: null,
 		user_id: null,

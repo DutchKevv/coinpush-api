@@ -9,7 +9,6 @@ import '@angular/forms';
 import '@angular/router';
 import '@angular/platform-browser-dynamic';
 import 'angular-2-dropdown-multiselect';
-import 'ngx-cookie';
 
 /**
  * Helper tools

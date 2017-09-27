@@ -54,7 +54,7 @@
     "instances": 1
   },
   {
-    "script": "npm run build-old-server && server/bootstrapper.js",
+    "script": "server/bootstrapper.js",
     "name": "old-api",
     "exec_mode": "fork",
     "env_production" : {

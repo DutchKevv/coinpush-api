@@ -2,7 +2,7 @@ import {
 	Component, AfterViewInit, Input, OnInit, ElementRef, ViewEncapsulation, NgZone,
 	ChangeDetectionStrategy, ViewChild,
 } from '@angular/core';
-import {InstrumentModel} from '../../../../shared/models/InstrumentModel';
+import {InstrumentModel} from '../../models/instrument.model';
 import {InstrumentsService} from '../../services/instruments.service';
 
 declare let $: any;

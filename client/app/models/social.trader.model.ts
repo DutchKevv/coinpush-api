@@ -1,6 +1,6 @@
-import {Base} from '../../../shared/classes/Base';
+import {BaseModel} from './base.model';
 
-export class TradingChannelModel extends Base {
+export class TradingChannelModel extends BaseModel {
 	public static readonly DEFAULTS: any = {
 		id: -1,
 		username: '',

@@ -1,16 +1,13 @@
 import {debounce} from 'lodash';
 import {
-	Component, OnInit, OnDestroy, ChangeDetectionStrategy,
-	AfterViewChecked, ViewEncapsulation, Output, Pipe, PipeTransform, ChangeDetectorRef, NgZone, ViewChild
+	Component, OnInit, OnDestroy, ViewEncapsulation, Pipe, PipeTransform
 } from '@angular/core';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {OrderService} from '../../services/order.service';
 import {ConstantsService} from '../../services/constants.service';
-import {CacheService} from '../../services/cache.service';
-import {OrderModel} from '../../../../shared/models/OrderModel';
 import {UserService} from '../../services/user.service';
-import {InstrumentModel} from '../../../../shared/models/InstrumentModel';
-import {ChartBoxComponent} from '../chart-box/chart-box.component';
+import {InstrumentModel} from '../../models/instrument.model';
+import {OrderModel} from '../../models/order.model';
 
 declare let $: any;
 

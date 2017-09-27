@@ -1,9 +1,6 @@
-import {ConstantsService} from './services/constants.service';
 import {Component, ChangeDetectionStrategy, ViewEncapsulation, AfterViewInit, OnInit} from '@angular/core';
 import {SocketService}  from './services/socket.service';
-import {SystemService}  from './services/system.service';
 import {CacheService} from './services/cache.service';
-import {AuthenticationService} from './services/authenticate.service';
 import {UserService} from './services/user.service';
 
 declare let Module: any;
@@ -27,13 +24,10 @@ export class AppComponent implements OnInit, AfterViewInit {
 
 	constructor(private _cacheService: CacheService,
 				private _userService: UserService,
-				private _socketService: SocketService,
-				private _systemService: SystemService) {
+				private _socketService: SocketService) {
 
 		this._socketService.init();
-		this._systemService.init();
 		this._userService.init();
-
 		this._cacheService.init();
 		this._cacheService.loadSymbolList();
 	}

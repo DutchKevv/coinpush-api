@@ -1,27 +1,23 @@
 import {forEach, random, throttle} from 'lodash';
 import {
 	Component, OnDestroy, ElementRef, Input, ViewChild,
-	OnInit, AfterViewInit, ChangeDetectionStrategy, ViewEncapsulation, ContentChild, NgZone, Output, EventEmitter,
-	ChangeDetectorRef, SimpleChanges, OnChanges
+	OnInit, AfterViewInit, ViewEncapsulation, NgZone, Output, SimpleChanges, OnChanges
 } from '@angular/core';
 
 import {DialogComponent} from '../dialog/dialog.component';
-import {IndicatorModel} from '../../models/indicator';
 import {InstrumentsService} from '../../services/instruments.service';
-import {CookieService} from 'ngx-cookie';
 import {DialogAnchorDirective} from '../../directives/dialoganchor.directive';
-import {InstrumentModel} from '../../../../shared/models/InstrumentModel';
+import {InstrumentModel} from '../../models/instrument.model';
 import * as interact from 'interactjs';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {CacheService} from '../../services/cache.service';
-import {Base} from '../../../../shared/classes/Base';
 import {IOrder} from '../../../../server/modules/order/OrderManager';
 import * as moment from 'moment';
 import {OrderService} from '../../services/order.service';
 import {ConstantsService} from '../../services/constants.service';
+import {BaseModel} from '../../models/base.model';
 
 declare let $: any;
-declare let getEventListeners: any;
 
 @Component({
 	selector: 'chart-box',
@@ -109,7 +105,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 				public constantsService: ConstantsService,
 				private _zone: NgZone,
 				private _cacheService: CacheService,
-				private _cookieService: CookieService,
 				private _elementRef: ElementRef,
 				private _orderService: OrderService) {
 	}
@@ -641,7 +636,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	}
 
 	public setStyles(styles?: { x?: any, y?: any, z?: any, w?: any, h?: any }, redraw = false): void {
-		let diffs = Base.getObjectDiff(styles, this.getStyles()),
+		let diffs = BaseModel.getObjectDiff(styles, this.getStyles()),
 			obj: any = {};
 
 		if (!diffs.length)
@@ -687,11 +682,11 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 	public storeStyles() {
 		if (this.model.options.id)
-			this._cookieService.putObject(`instrument-${this.model.options.id}-p`, this.getStyles())
+			localStorage.setItem(`instrument-${this.model.options.id}-p`, JSON.stringify(this.getStyles()));
 	}
 
 	public _restoreStyles(styles?: { x?: any, y?: any, z?: any, w?: any, h?: any }): void {
-		styles = styles || <any>this._cookieService.getObject(`instrument-${this.model.options.id}-p`);
+		styles = styles || <any>JSON.parse(localStorage.getItem(`instrument-${this.model.options.id}-p`));
 
 		if (styles) {
 			this.toggleViewState('windowed');
