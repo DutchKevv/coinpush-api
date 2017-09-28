@@ -27,7 +27,7 @@
     "start-redis": "redis-server --maxmemory 10mb --maxmemory-policy allkeys-lru",
 
     "install-all": "npm run install-server && npm run install-client",
-    "build-all": "npm run install-all-server && npm run install-client",
+    "build-all": "npm run build-server && npm run build-client",
 
     "install-client": "cd ./client && npm i",
     "install-server": "npm run install-gateway && npm run install-cache && npm run install-user && npm run install-order && npm run install-old-server && npm run install-channel && npm run install-shared  && npm run install-broker",
@@ -40,6 +40,7 @@
     "install-shared": "cd ./shared && npm i",
     "install-user": "cd ./server-user && npm i",
 
+    "build-client": "cd ./client && npm run build",
     "build-server": "npm run build-gateway && npm run build-cache && npm run build-user && npm run build-order && npm run build-old-server && npm run build-channel && npm run build-shared && npm run build-broker",
     "build-broker": "cd ./server-broker && npm run build",
     "build-cache": "cd ./server-cache && npm run build",

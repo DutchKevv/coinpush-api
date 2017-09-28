@@ -3,9 +3,9 @@
      "allowJs": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "lib": ["es2017", "dom"],
+    "lib": ["es2015", "es2016", "es2017", "dom"],
     "sourceMap": true,
-    "target": "es2015",
+    "target": "es5",
     "outDir": "./dist",
     "module": "es6",
     "moduleResolution": "node",
@@ -13,7 +13,7 @@
       "../shared/node_modules/@types",
       "node_modules/@types"
     ],
-    "include": ["app/**/*.ts"],
+    "include": ["src/app/**/*.ts"],
     "exclude": [
       "server",
       "shared",

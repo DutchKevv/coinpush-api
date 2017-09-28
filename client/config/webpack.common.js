@@ -24,15 +24,16 @@ module.exports = {
         loaders: [
             { //this rule will only be used for any vendors
                 test: /\.css$/,
-                loaders: ['to-string-loader', 'css-loader']
-                // include: [/node_modules/]
+                loaders: ['to-string-loader', 'css-loader'],
+                // exclude: [/node_modules/]
             },
             {
                 test: /\.scss$/,
-                // exclude: /node_modules/,
-                loader: 'raw-loader!sass-loader'
+                loader: 'raw-loader!sass-loader',
+                // exclude: [/node_modules/]
             },
-            // { test: /\.ts$/, loader: '@ngtools/webpack' },
+            // { test: /\.
+            // ts$/, loader: '@ngtools/webpack' },
             {
                 test: /\.ts/,
                 loaders: ['awesome-typescript-loader', 'angular2-template-loader'],

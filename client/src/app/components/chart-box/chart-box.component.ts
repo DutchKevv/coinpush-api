@@ -59,7 +59,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 	private minimized = false;
 
-	private _model;
 	private _offset = 0;
 	private _scrollOffset = -1;
 	private _scrollSpeedStep = 6;
@@ -72,6 +71,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	private _onScrollTooltipTimeout = null;
 	private _oCanvasMouseMoveFunc = null;
 	private _mouseActive = true;
+	private _changeSupsribtion;
 
 	public static readonly DEFAULT_CHUNK_LENGTH = 1000;
 	public static readonly VIEW_STATE_WINDOWED = 1;
@@ -131,7 +131,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 			});
 		}
 
-		this.model.changed$.subscribe(changes => {
+		this._changeSupsribtion = this.model.changed$.subscribe(changes => {
 			let dirty = false;
 
 			Object.keys(changes).forEach(change => {
@@ -242,8 +242,9 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	}
 
 	public toggleTimeFrame() {
+		this.loading$.next(true);
 		this._fetchCandles();
-		this._fetchIndicators(ChartBoxComponent.DEFAULT_CHUNK_LENGTH, this._offset);
+		// this._fetchIndicators(ChartBoxComponent.DEFAULT_CHUNK_LENGTH, this._offset);
 	}
 
 	private _createChart() {
@@ -861,7 +862,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 	private _destroyChart() {
 		this._candlesRef.nativeElement.removeEventListener('mousewheel', <any>this._onScrollBounced);
-		console.log('destroy!!');
 
 		if (this._chart)
 			this._chart.destroy();

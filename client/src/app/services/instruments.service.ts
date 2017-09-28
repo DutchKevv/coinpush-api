@@ -34,10 +34,10 @@ export class InstrumentsService {
 	public init(): void {
 		// Create groups by groupId to show in backtest overview
 		this.instruments$.subscribe(instruments => {
-			this.groupIds$.next([...<any>new Set(
-					instruments.filter(val => val.options.type === 'backtest' && val.options.groupId !== null
-				)
-				.map(val => val.options.groupId))]);
+			const unique = Array.from(new Set(instruments.filter(val => val.options.type === 'backtest' && val.options.groupId !== null)))
+				.map((val: any) => val.options.groupId);
+
+			this.groupIds$.next(unique);
 		});
 
 		this._socketService.socket.on('instrument:created', (instrumentSettings: InstrumentSettings) => {

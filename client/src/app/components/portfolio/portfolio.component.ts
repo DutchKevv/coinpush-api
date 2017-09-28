@@ -1,6 +1,6 @@
 import {debounce} from 'lodash';
 import {
-	Component, OnInit, OnDestroy, ViewEncapsulation, Pipe, PipeTransform
+	Component, OnInit, OnDestroy, ViewEncapsulation, Pipe, PipeTransform, ChangeDetectionStrategy, ElementRef
 } from '@angular/core';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {OrderService} from '../../services/order.service';
@@ -55,8 +55,8 @@ export class GroupByPipe implements PipeTransform {
 	selector: 'app-portfolio',
 	templateUrl: './portfolio.component.html',
 	styleUrls: ['./portfolio.component.scss'],
-	encapsulation: ViewEncapsulation.Native
-	// changeDetection: ChangeDetectionStrategy.OnPush
+	encapsulation: ViewEncapsulation.Native,
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class PortfolioComponent implements OnInit, OnDestroy {
@@ -68,10 +68,14 @@ export class PortfolioComponent implements OnInit, OnDestroy {
 
 	constructor(public constantsService: ConstantsService,
 				public userService: UserService,
-				public orderService: OrderService) {
+				public orderService: OrderService,
+				private _elementRef: ElementRef) {
 	}
 
 	ngOnInit() {
+		console.log(this._elementRef.nativeElement.shadowRoot.querySelectorAll('.dropdown'));
+		$(this._elementRef.nativeElement.shadowRoot.querySelectorAll('.dropdown')).dropdown2();
+
 		this._ordersSubscription = this.orderService.orders$.subscribe((list: Array<OrderModel>) => {
 			const grouped = this._groupBy(list, 'symbol');
 
@@ -89,14 +93,25 @@ export class PortfolioComponent implements OnInit, OnDestroy {
 
 	public toggleRow(el, symbol: string): void {
 
-		let isOpen = !el.classList.contains('open');
+		let isOpen = !el.classList.contains('open'),
+			currentOpen = this.activeSymbol$.getValue();
 
-		this.activeSymbol$.next(new InstrumentModel({
-			symbol: symbol,
-			timeFrame: 'M15'
-		}));
+		if (isOpen && (!currentOpen || currentOpen.get('symbol') !== symbol)) {
+			this.activeSymbol$.next(null);
+
+			setTimeout(() => {
+				this.activeSymbol$.next(new InstrumentModel({
+					symbol: symbol,
+					timeFrame: 'M15'
+				}));
+			}, 0);
+		}
 
 		el.classList.toggle('open', isOpen);
+	}
+
+	addIndicator(name: string) {
+
 	}
 
 	placeOrder(event, side, model) {

@@ -190,8 +190,6 @@ export default class App extends Base {
 
 			this._io = require('socket.io')(this._http, { path: '/api' }).listen(this._http);
 
-			this._httpApi.use(express.static(process.env.NODE_ENV === 'production' ? PATH_PUBLIC_PROD : PATH_PUBLIC_DEV));
-
 			this._httpApi.use(function(req, res, next) {
 				res.header('Access-Control-Allow-Origin', '*');
 				res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
@@ -201,14 +199,6 @@ export default class App extends Base {
 
 			this._httpApi.use(json());
 			this._httpApi.use(urlencoded({extended: true}));
-
-			// Index root
-			this._httpApi.get('/', (req, res) => {
-				res.sendFile(path.join(__dirname, '../client/dist/index.html'));
-			});
-
-			// Authentication routes
-			this._httpApi.use('/', require('./api/http/auth')(this));
 
 			// Application routes (WebSockets)
 			this._io.on('connection', socket => {
