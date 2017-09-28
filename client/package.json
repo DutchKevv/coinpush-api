@@ -15,7 +15,7 @@
   ],
   "scripts": {
     "start": "webpack-dev-server --port 4200 --config ./config/webpack.dev.js",
-    "build": "webpack --config config/webpack.prod.js  --progress --profile --colors"
+    "build": "node --max_old_space_size=8192 ./node_modules/.bin/webpack --config config/webpack.prod.js  --progress --profile --colors"
   },
   "dependencies": {
     "@angular/common": "4.4.3",
