@@ -24,7 +24,7 @@
                     <div [ngClass]="{'positive': position.PLPerc > 0, 'negative': position.PLPerc < 0}">{{position.PLPerc}}%</div>
                     <div>
                         <button [ngClass]="{'positive': position.symbolHandle.options.bidDirection === 'up', 'negative': position.symbolHandle.options.bidDirection === 'down'}"
-                                (click)="placeOrder($event, constantsService.constants.ORDER_SIDE_BUY, model)" class="btn btn-sm">
+                                (click)="placeOrder($event, constantsService.constants.ORDER_SIDE_BUY, position.symbolHandle.options.name)" class="btn btn-sm">
                             <span>B</span>
                             <span>{{position.symbolHandle.options.bid}}</span>
                         </button>

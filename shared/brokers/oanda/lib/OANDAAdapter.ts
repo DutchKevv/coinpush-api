@@ -110,7 +110,8 @@ OandaAdapter.prototype._onEventsResponse = function (body, statusCode) {
 OandaAdapter.prototype._onEventsData = function (data) {
 	// Single chunks sometimes contain more than one event. Each always end with /r/n. Whole chunk therefore not JSON parsable, so must split.
 	// Also, an event may be split accross data chunks, so must buffer.
-	data.split(/\r\n/).forEach(line => {
+	// console.log(data.toString());
+	data.toString().split(/\r\n/).forEach(line => {
 		let update;
 		if (line) {
 			this._eventsBuffer.push(line);

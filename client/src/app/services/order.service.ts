@@ -51,10 +51,14 @@ export class OrderService {
 
 		subscription.subscribe((order: OrderModel) => {
 
-			// Push order onto stack
-			this.orders$.getValue().push(order);
+			// Update account
 			this._userService.model.set({balance: order.get('balance')});
 			this.calculateAccountStatus();
+
+			// Push order onto stack
+			const orders = Array.from(this.orders$.getValue());
+			orders.push(order);
+			this.orders$.next(orders);
 
 			// Play success sound
 			this._audio.success.play();

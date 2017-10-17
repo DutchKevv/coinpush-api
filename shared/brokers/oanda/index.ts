@@ -61,10 +61,12 @@ export default class OandaApi extends Base {
 		})
 	}
 
-	public subscribeEventStream() {
-		this._client.subscribeEvents(function (event) {
-			console.log(event);
-		}, this);
+	public subscribeEventStream(callback: Function) {
+		this._client.subscribeEvents(event => callback(event));
+	}
+
+	public unsubscribeEventStream(listener: Function) {
+		this._client.unsubscribeEvents(listener);
 	}
 
 	public subscribePriceStream(instruments: Array<string>): void {

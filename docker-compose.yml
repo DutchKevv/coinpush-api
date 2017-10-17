@@ -1,0 +1,63 @@
+version: '2'
+
+services:
+  gateway:
+    build:
+      context: .
+      dockerfile: server-gateway/Dockerfile
+    ports:
+      - "3100:3100"
+
+#  client:
+#    build:
+#      context: .
+#      dockerfile: client/Dockerfile
+#    ports:
+#      - "4200:4200"
+#
+#  cache:
+#    build:
+#      context: .
+#      dockerfile: server-cache/Dockerfile
+#    ports:
+#      - "3001:3001"
+#
+#  user:
+#    build:
+#      context: .
+#      dockerfile: server-user/Dockerfile
+#    ports:
+#     - "3008:3008"
+#
+#  channel:
+#    build:
+#      context: .
+#      dockerfile: server-channel/Dockerfile
+#    ports:
+#     - "3007:3007"
+#
+#  order:
+#    build:
+#      context: .
+#      dockerfile: server-order/Dockerfile
+#    ports:
+#      - "3005:3005"
+#
+#  broker:
+#    build:
+#      context: .
+#      dockerfile: server-broker/Dockerfile
+#    ports:
+#      - "3006:3006"
+#
+#  old:
+#    build:
+#      context: .
+#      dockerfile: server/Dockerfile
+#    ports:
+#      - "3000:3000"
+#
+#  database:
+#    image: mongo
+#    ports:
+#      - "27017:27017"

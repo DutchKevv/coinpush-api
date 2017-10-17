@@ -5,10 +5,10 @@
 @import '~bootstrap/scss/utilities/_clearfix';
 
 :host {
-	contain: layout;
+	display: block;
 	position: relative;
-	width: 300px;
-	height: 100%;
+	width: 100%;
+	height: calc(50% - 20px);
 	overflow: auto;
 	background: $background-light;
 }
@@ -29,7 +29,6 @@
 }
 
 table {
-	table-layout: fixed;
 	height: 100%;
 	overflow: hidden;
 	width: 100%;
@@ -58,20 +57,20 @@ table {
 
 	th,
 	td {
+		width: 33%;
 		padding-left: 5px;
-		min-width: 72px;
-		max-width: 72px;
+		//min-width: 72px;
+		//max-width: 72px;
 		color: $font-color-light;
 
 		&:nth-child(1) {
-			min-width: 90px;
-			max-width: 90px;
+			//min-width: 90px;
+			//max-width: 90px;
 			padding: 8px 4px 8px 8px;
 		}
 	}
 
 	tbody {
-		display: block;
 		height: calc(100% - 37px);
 		overflow-y: scroll;
 		overflow-x: hidden;

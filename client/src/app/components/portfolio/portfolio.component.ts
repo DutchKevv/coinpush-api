@@ -46,6 +46,7 @@ function setRowValues(rows) {
 @Pipe({name: 'groupBy'})
 export class GroupByPipe implements PipeTransform {
 	transform(value: Array<any>, field: string): Array<any> {
+		console.log('gorup!!!!!!!!!');
 		return groupBy(value, field);
 	}
 }
@@ -73,10 +74,10 @@ export class PortfolioComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
-		console.log(this._elementRef.nativeElement.shadowRoot.querySelectorAll('.dropdown'));
 		$(this._elementRef.nativeElement.shadowRoot.querySelectorAll('.dropdown')).dropdown2();
 
 		this._ordersSubscription = this.orderService.orders$.subscribe((list: Array<OrderModel>) => {
+
 			const grouped = this._groupBy(list, 'symbol');
 
 			this.totalAllocated = (<any>grouped).reduce((sum, group: any) => {
@@ -114,11 +115,11 @@ export class PortfolioComponent implements OnInit, OnDestroy {
 
 	}
 
-	placeOrder(event, side, model) {
+	placeOrder(event, side, symbol) {
 		event.preventDefault();
 		event.stopPropagation();
 
-		this.orderService.create({symbol: model.options.symbol, side, amount: 1});
+		this.orderService.create({symbol, side, amount: 1});
 	}
 
 	async closeOrder(event, model) {

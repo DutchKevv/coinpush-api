@@ -5,6 +5,7 @@ import * as helmet from 'helmet';
 import * as morgan from 'morgan';
 import * as mongoose from 'mongoose';
 import OandaApi from '../../shared/brokers/oanda/index';
+import {orderController} from './controllers/order.controller';
 
 const config = require('../../tradejs.config');
 const app = express();
@@ -26,8 +27,7 @@ db.once('open', function () {
 /**
  * Broker API
  */
-const brokerAPI = global['brokerAPI'] = new OandaApi(config.broker.account);
-brokerAPI.init();
+orderController.init();
 
 app.use(morgan('dev'));
 app.use(helmet());
