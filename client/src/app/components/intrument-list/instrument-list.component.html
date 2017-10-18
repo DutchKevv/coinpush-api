@@ -1,17 +1,74 @@
-<!--<div #elementsContainer class="elementsContainer"></div>-->
+<div class="filter-list">
+	<h4>Popular</h4>
+	<a class="active">All</a>
+	<a>All popular</a>
+	<a>Risers and fallers</a>
+	<a>My favorites</a>
+	<h4>Resources</h4>
+	<a>All resources</a>
+	<a>Popular resources</a>
+	<h4>Indices</h4>
+	<a>All indices</a>
+	<a>Popular indices</a>
+	<h4>Crypto</h4>
+	<a>All crypto</a>
+	<a>Popular crypto</a>
+	<h4>Forex</h4>
+	<a>All forex</a>
+	<a>Popular forex</a>
+</div>
 
-<table>
-	<thead>
-	<tr>
-		<th>Instrument</th>
-		<th>Bid</th>
-		<th>Ask</th>
-	</tr>
-	<tr>
-		<th colspan="3">
-			<input class="search-instrument-list" type="text" placeholder="Search..." (keyup)="search($event.target.value)">
-		</th>
-	</tr>
-	</thead>
-	<tbody #elementsContainer></tbody>
-</table>
+<div class="instrument-list">
+	<div>
+		<table class="table-header">
+			<thead>
+			<tr>
+				<th>Instrument</th>
+				<th>Diff</th>
+				<th>Bid</th>
+				<th>Ask</th>
+				<th></th>
+			</tr>
+			</thead>
+		</table>
+	</div>
+
+	<div style="overflow-y: scroll">
+		<table class="table-content">
+			<tbody>
+			<tr *ngFor="let symbol of cacheService.symbolList$ | async"
+				[ngClass]="{'active': activeSymbol === symbol}"
+				(click)="setActiveSymbol(symbol)">
+
+				<ng-container *ngIf="symbol.options$ | async as options">
+					<td>{{symbol.options.name}}</td>
+					<td>0%</td>
+					<td>
+						<button [ngClass]="{'positive': options.bidDirection === 'up', 'negative': options.bidDirection === 'down'}"
+								(click)="placeOrder($event, constantsService.constants.ORDER_SIDE_BUY, options.name)" class="btn btn-sm">
+							<span>B</span>
+							<span>{{options.bid || 0}}</span>
+						</button>
+					</td>
+					<td>
+						<button [ngClass]="{'positive': options.askDirection === 'up', 'negative': options.askDirection === 'down'}"
+								(click)="placeOrder($event, constantsService.constants.ORDER_SIDE_BUY, options.name)" class="btn btn-sm">
+							<span>S</span>
+							<span>{{options.ask || 0}}</span>
+						</button>
+					</td>
+					<!--<td class="font-color-{{options.bidDirection}}">{{options.bid}}</td>-->
+					<!--<td class="font-color-{{options.askDirection}}">{{options.ask}}</td>-->
+					<td>
+						<i class="fa fa-star"></i>
+						<i class="fa fa-bell"></i>
+						<i class="fa fa-info-circle"></i>
+					</td>
+				</ng-container>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+
+</div>
+

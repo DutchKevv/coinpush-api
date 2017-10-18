@@ -11,7 +11,7 @@ import {AppComponent} from './app.component';
 import {routing} from './app.routing';
 
 import {MultiselectDropdownModule} from 'angular-2-dropdown-multiselect';
-import {InstrumentListComponent, SearchFilter} from './components/intrument-list/instrument-list.component';
+import {InstrumentListComponent} from './components/intrument-list/instrument-list.component';
 import {ChartOverviewComponent} from './components/chart-overview/chart-overview.component';
 import {AuthGuard} from './guards/auth.guard';
 import {UserService} from './services/user.service';
@@ -77,7 +77,6 @@ export function startupServiceFactory(startupService: StartupService): Function 
 		ModalComponent,
 		ModalAnchorDirective,
 		ResizableDirective,
-		SearchFilter,
 		PageMainComponent,
 		ChannelOverviewComponent,
 		AlertComponent,

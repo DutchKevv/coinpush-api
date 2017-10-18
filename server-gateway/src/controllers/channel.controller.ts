@@ -1,7 +1,4 @@
-import * as url from 'url';
 import * as request from 'request-promise';
-import * as redis from '../modules/redis';
-import {CHANNEL_TYPE_MAIN} from '../../../shared/constants/constants';
 
 const config = require('../../../tradejs.config');
 

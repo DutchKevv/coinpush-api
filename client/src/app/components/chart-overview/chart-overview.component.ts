@@ -5,6 +5,9 @@ import {
 
 import {InstrumentsService} from '../../services/instruments.service';
 import {ChartBoxComponent} from '../chart-box/chart-box.component';
+import {BehaviorSubject} from "rxjs/BehaviorSubject";
+import {SymbolModel} from "../../models/symbol.model";
+import {InstrumentModel} from "../../models/instrument.model";
 
 declare let $: any;
 
@@ -21,16 +24,30 @@ export class ChartOverviewComponent implements OnInit {
 	@ViewChildren(ChartBoxComponent) charts: QueryList<ChartBoxComponent>;
 	@ViewChild('container') container;
 
+	public activeSymbol$: BehaviorSubject<SymbolModel> = new BehaviorSubject(null);
+
 	constructor(public instrumentsService: InstrumentsService,
 				private _zone: NgZone,
 				private _elementRef: ElementRef) {
 	}
 
-	ngOnInit() {
-		this.instrumentsService.instruments$.subscribe(() => this.setFocusToHighestIndex());
+	ngOnInit(): void {
+		// this.instrumentsService.instruments$.subscribe(() => this.setFocusToHighestIndex());
 	}
 
-	tileWindows() {
+	onSymbolChange(symbolModel: SymbolModel): void {
+		if (symbolModel === null) {
+			this.activeSymbol$.next(null);
+			return;
+		}
+
+
+		this.activeSymbol$.next(new InstrumentModel({
+			symbol: symbolModel.get('name')
+		}))
+	}
+
+	/*tileWindows() {
 		this._zone.runOutsideAngular(() => {
 
 			let containerW = this.container.nativeElement.clientWidth,
@@ -58,9 +75,9 @@ export class ChartOverviewComponent implements OnInit {
 				}
 			});
 		});
-	}
+	}*/
 
-	setFocusToHighestIndex(): void {
+	/*setFocusToHighestIndex(): void {
 		if (!this.charts)
 			return;
 
@@ -73,9 +90,9 @@ export class ChartOverviewComponent implements OnInit {
 		});
 
 		// this.toggleFocused(ref);
-	}
+	}*/
 
-	private _getTileSize(width, height, number) {
+	/*private _getTileSize(width, height, number) {
 		let area = height * width,
 			elementArea = Math.round(area / number);
 
@@ -100,5 +117,5 @@ export class ChartOverviewComponent implements OnInit {
 		// and low.
 		sideLength = height;
 		return sideLength;
-	}
+	}*/
 }

@@ -6,6 +6,7 @@ const config = require('../../../tradejs.config');
 export const authenticateController = {
 
 	async login(reqUser, email: string, password: string, token?) {
+
 		const user = await request({
 			uri: config.server.user.apiUrl + '/authenticate',
 			method: 'POST',

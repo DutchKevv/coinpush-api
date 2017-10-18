@@ -106,7 +106,7 @@ export class OrderService {
 	public updateModel(orderModel, symbolOptions) {
 		const openValue = (orderModel.options.amount * orderModel.options.openPrice);
 		const value = orderModel.options.amount * symbolOptions.ask;
-		const PL = value - openValue;
+		const PL = (value - openValue) * orderModel.options.amount;
 
 		orderModel.set({
 			value: value,

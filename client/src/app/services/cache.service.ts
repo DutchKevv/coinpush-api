@@ -8,6 +8,7 @@ export class CacheSymbol extends BaseModel {
 	public price$: Subject<any> = new Subject();
 
 	public tick(ticks) {
+
 		ticks.forEach(tick => {
 			this.set({
 				direction: this.options.bid > tick[1] ? 'down' : 'up',

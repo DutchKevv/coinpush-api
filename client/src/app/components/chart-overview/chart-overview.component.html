@@ -1,17 +1,121 @@
-<instrument-list></instrument-list>
+<instrument-list (activeSymbolChange)="onSymbolChange($event)"></instrument-list>
 
-<div class="charts-container" #container>
-    <chart-box *ngFor="let model of instrumentsService.instruments$ | async"
-               [ngClass]="{focused: model.options.focus}"
-               [model]="model"
-               [showBox]="true"
+<div class="chart-header">
+    <h4>{{(activeSymbol$ | async)?.options.symbol}}</h4>
+    <ul class="header-buttons">
+        <li>
+            <button (click)="activeSymbol$.getValue() && activeSymbol$.getValue().setZoom(-1)"
+                    [ngClass]="{'active': (activeSymbol$ | async)?.options.zoom === 1}"
+                    [disabled]="!activeSymbol$.getValue()"
+                    type="button"
+                    class="text-dark button-zoom-out btn-menu"
+                    aria-expanded="false">
+                <i class="fa fa-search-minus">
+                </i>
+            </button>
+        </li>
+
+        <li>
+            <button (click)="activeSymbol$.getValue() && activeSymbol$.getValue().setZoom(1)"
+                    [ngClass]="{'active': (activeSymbol$ | async)?.options.zoom === 10}"
+                    type="button"
+                    class="text-dark btn-menu button-zoom-in"
+                    aria-expanded="false">
+                <i class="fa fa-search-plus"></i>
+            </button>
+        </li>
+        <li>
+            <button (click)="activeSymbol$.getValue() && activeSymbol$.getValue().set({graphType: 'ohlc'})"
+                    [disabled]="!activeSymbol$.getValue()"
+                    type="button"
+                    class="text-dark button-ohlc btn-menu"
+                    [ngClass]="{'active': (activeSymbol$ | async)?.options.graphType === 'ohlc'}"
+                    aria-expanded="false">
+                <i class="fa fa-line-chart"></i>
+            </button>
+        </li>
+        <li>
+            <button (click)="activeSymbol$.getValue() && activeSymbol$.getValue().set({graphType: 'candlestick'})"
+                    [ngClass]="{'active': (activeSymbol$ | async)?.options.graphType === 'candlestick'}"
+                    type="button"
+                    class="text-dark button-candlestick btn-menu"
+                    aria-expanded="false">
+                <i class="fa fa-bar-chart"></i>
+            </button>
+        </li>
+        <li class="dropdown">
+            <button type="button"
+                    class="dropdown-toggle btn-menu"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false">
+                <!--<ng-container *ngIf="model !== null">-->
+                <span>{{(activeSymbol$ | async)?.options.timeFrame}}</span>
+                <!--</ng-container>-->
+                <ng-container *ngIf="!activeSymbol$.getValue()"><span>M15</span></ng-container>
+            </button>
+
+            <ul class="dropdown-menu">
+                <li><a (click)="activeSymbol$.getValue() && activeSymbol$.getValue().set({timeFrame: 'M1'})">M1</a></li>
+                <li><a (click)="activeSymbol$.getValue() && activeSymbol$.getValue().set({timeFrame: 'M5'})">M5</a></li>
+                <li><a (click)="activeSymbol$.getValue() && activeSymbol$.getValue().set({timeFrame: 'M15'})">M15</a></li>
+                <li><a (click)="activeSymbol$.getValue() && activeSymbol$.getValue().set({timeFrame: 'M30'})">M30</a></li>
+                <li><a (click)="activeSymbol$.getValue() && activeSymbol$.getValue().set({timeFrame: 'H1'})">H1</a></li>
+                <li><a (click)="activeSymbol$.getValue() && activeSymbol$.getValue().set({timeFrame: 'H4'})">H4</a></li>
+                <li><a (click)="activeSymbol$.getValue() && activeSymbol$.getValue().set({timeFrame: 'D1'})">D</a></li>
+                <li><a (click)="activeSymbol$.getValue() && activeSymbol$.getValue().set({timeFrame: 'W1'})">W</a></li>
+            </ul>
+        </li>
+        <li class="dropdown">
+            <button type="button"
+                    [disabled]="!activeSymbol$.getValue()"
+                    class="dropdown-toggle btn-menu"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false">
+                <span>Indicator</span>
+            </button>
+
+            <ul class="dropdown-menu">
+                <li class="dropdown-submenu">
+                    <a tabindex="-1" href="#">Indicators</a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-header">Custom</li>
+
+                        <li role="separator" class="divider"></li>
+                        <li class="dropdown-header">Default</li>
+
+                        <li><a (click)="addIndicator('MA')">MA</a></li>
+
+                        <li class="dropdown-submenu pull-left">
+                            <a href="#">Even More..</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">3rd level</a></li>
+                                <li><a href="#">3rd level</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li><a href="#">Another action</a></li>
+                <li><a href="#">Something else here</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="#">Separated link</a></li>
+            </ul>
+        </li>
+    </ul>
+    <!--</ng-container>-->
+</div>
+
+<div class="chart-container">
+    <chart-box *ngIf="activeSymbol$ | async as instrumentModel"
+               [model]="instrumentModel"
+               [showBox]="false"
                [quickBuy]="true"
                class="chart-absolute"
-               (click)="instrumentsService.setFocus(model)">
+               (click)="instrumentsService.setFocus(instrumentModel)">
     </chart-box>
 
     <div *ngIf="instrumentsService.instruments.length === 0" class="chart-no-charts">
         <p>No charts, click on any instrument in the left panel to open up a new chart.</p>
     </div>
-    <i class="fa fa-table" (click)="tileWindows()"></i>
 </div>

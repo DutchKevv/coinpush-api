@@ -54,7 +54,7 @@
 
                     <div class="order-table-sub-row" *ngFor="let model of position.items">
                         <ng-container *ngIf="(model.options$ | async) as options">
-                            <div>{{model.options.side === constantsService.constants.ORDER_SIDE_BUY ? 'Sell' : 'Buy'}}</div>
+                            <div>{{model.options.side === constantsService.constants.ORDER_SIDE_BUY ? 'Buy' : 'Sell'}}</div>
                             <div>{{model.options.amount}}</div>
                             <div>
                                 <span>{{model.options.amount}}</span>

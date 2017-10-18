@@ -868,6 +868,8 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	}
 
 	async ngOnDestroy() {
+		this._changeSupsribtion.unsubscribe();
 		this._destroyChart();
+		this._data = null;
 	}
 }

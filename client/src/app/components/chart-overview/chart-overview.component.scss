@@ -1,20 +1,146 @@
 @import '../../style/variables/variables';
+@import '../../style/components/dropdown';
 
 :host {
+    display: flex;
+    flex-flow: column;
     height: 100%;
-    width: 100%;
 }
 
 .active {
     background: $general-active;
 }
 
-.charts-container {
-    position: relative;
+instrument-list {
+    height: 50%;
+}
+
+.chart-header {
+    background: $background-light3;
+    height: 34px;
+    display: flex;
+    justify-content: space-between;
+    padding-left: 10px;
+
+    > * {
+        line-height: 32px;
+    }
+
+    > ul {
+        display: flex;
+    }
+
+    .header-buttons {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+
+        display: flex;
+
+        @media screen and (min-width: 768px) {
+            &:first-child {
+                width: 280px;
+            }
+        }
+
+        > li {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .button-editor {
+            // margin-right: 225px;
+
+            @media screen and (max-width: 768px) {
+                margin-right: 0;
+            }
+        }
+
+        button {
+            padding: 6px 15px;
+            margin: 0 10px;
+            font-size: 18px;
+            cursor: pointer;
+
+            i.fa {
+                line-height: 20px;
+                display: block;
+            }
+
+            @media screen and (max-width: 768px) {
+                font-size: 16px;
+
+                i.fa {
+                    line-height: 25px;
+                }
+            }
+
+            &.dropdown-toggle {
+                span {
+                    padding-right: 15px;
+                    line-height: 20px;
+                }
+
+                &:after {
+                    float: right;
+                    margin-top: 7px;
+                }
+            }
+        }
+    }
+
+    //.dropdown-toggle:not([disabled]):hover + .dropdown-menu {
+    //	display: block;
+    //}
+
+    .dropdown-menu {
+        margin: 0;
+
+        a:hover {
+            background: white;
+            color: $font-color-dark;
+        }
+    }
+
+    .btn-menu {
+        background: #878787 linear-gradient(180deg, #6a6a6a, #000);
+        color: #fff;
+        text-decoration: none;
+        min-width: 30px;
+        text-align: center;
+        margin-right: 5px;
+        border: none;
+        border-radius: 0;
+
+        &:hover,
+        &.active {
+            background: #878787 linear-gradient(180deg, #000, #6a6a6a);
+        }
+
+        &[disabled] {
+            background: #6f6f6f;
+
+            &:hover {
+                cursor: not-allowed;
+            }
+        }
+
+        &:focus {
+            outline: none;
+        }
+    }
+}
+
+.chart-container {
+    height: 50%;
+}
+
+chart-box {
+    position: static;
     height: 100%;
     width: 100%;
     display: block;
-    overflow: hidden;
+    border: none
 }
 
 .chart-no-charts {
@@ -24,24 +150,5 @@
     p {
         font-size: 20px;
         color: $font-color-light-gray;
-    }
-}
-
-.fa-table {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    z-index: 1000000;
-    background: black;
-    color: $font-color-light;
-    padding: 4px 10px;
-    border-top: 1px solid $border-color-grey;
-    border-left: 1px solid $border-color-grey;
-    border-radius: 4px 0 0 0;
-    cursor: pointer;
-    line-height: 16px;
-
-    &:hover {
-        color: $general-active;
     }
 }
