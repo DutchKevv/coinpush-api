@@ -1,7 +1,7 @@
 <instrument-list (activeSymbolChange)="onSymbolChange($event)"></instrument-list>
 
 <div class="chart-header">
-    <h4>{{(activeSymbol$ | async)?.options.symbol}}</h4>
+    <h4>{{(activeSymbol$ | async)?.options.name}}</h4>
     <ul class="header-buttons">
         <li>
             <button (click)="activeSymbol$.getValue() && activeSymbol$.getValue().setZoom(-1)"
@@ -107,15 +107,10 @@
 </div>
 
 <div class="chart-container">
-    <chart-box *ngIf="activeSymbol$ | async as instrumentModel"
-               [model]="instrumentModel"
+    <chart-box *ngIf="activeSymbol$ | async as symbolModel"
+               [symbolModel]="symbolModel"
                [showBox]="false"
                [quickBuy]="true"
-               class="chart-absolute"
-               (click)="instrumentsService.setFocus(instrumentModel)">
+               class="chart-absolute">
     </chart-box>
-
-    <div *ngIf="instrumentsService.instruments.length === 0" class="chart-no-charts">
-        <p>No charts, click on any instrument in the left panel to open up a new chart.</p>
-    </div>
 </div>

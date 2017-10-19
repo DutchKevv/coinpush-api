@@ -34,12 +34,7 @@ app.use(function (req, res, next) {
  * Add 'user' variable to request, holding userID
  */
 app.use((req: any, res, next) => {
-	let userId = req.headers['_id'];
-
-	// if (!userId)
-	// 	res.status(400).send('Invalid request: _id header is missing');
-
-	req.user = {id: userId};
+	req.user = {id: req.headers['_id']};
 	next();
 });
 

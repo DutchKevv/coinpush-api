@@ -23,13 +23,14 @@ export default class Mapper {
 	}
 
 	constructor(private options: any = {}) {
+		this.init();
 	}
 
-	public async init() {
+	public init() {
 		if (this.options.path) {
 			this._mode = Mapper.MODE_PERSISTENT;
 			this._pathFile = path.join(this.options.path, 'database-mapper.json');
-			await this._loadFromFile();
+			this._loadFromFile();
 		} else {
 			this._mode = Mapper.MODE_MEMORY;
 		}
@@ -191,27 +192,9 @@ export default class Mapper {
 	}
 
 	private _loadFromFile() {
+		if (!fs.existsSync(this._pathFile))
+			return;
 
-		return new Promise((resolve, reject) => {
-
-			fs.exists(this._pathFile, (result) => {
-
-				if (result) {
-
-					fs.readFile(this._pathFile, (err, content) => {
-
-						try {
-							this._map = JSON.parse(content.toString());
-						} catch (error) {
-							console.warn('Cache: mapping file corrupted');
-						}
-
-						resolve();
-					});
-				} else {
-					resolve();
-				}
-			});
-		});
+		this._map = JSON.parse(fs.readFileSync(this._pathFile).toString());
 	}
 }

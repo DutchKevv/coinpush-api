@@ -1,12 +1,10 @@
 import {Component, AfterViewInit, Output, OnInit, ElementRef, ViewEncapsulation, ViewChild} from '@angular/core';
-import {SocialService} from '../../services/social.service';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {AuthenticationService} from '../../services/authenticate.service';
 import {Http} from '@angular/http';
 import {Subject} from 'rxjs/Subject';
-import {CacheService, CacheSymbol} from '../../services/cache.service';
+import {CacheService} from '../../services/cache.service';
 import {UserService} from '../../services/user.service';
-import {OrderService} from '../../services/order.service';
+import {SymbolModel} from "../../models/symbol.model";
 
 @Component({
 	selector: 'page-main',
@@ -15,7 +13,7 @@ import {OrderService} from '../../services/order.service';
 	// encapsulation: ViewEncapsulation.Native
 })
 
-export class PageMainComponent implements OnInit, AfterViewInit {
+export class PageMainComponent {
 
 	@Output() public searchResults$: Subject<any> = new Subject();
 	@ViewChild('input') public input;
@@ -24,15 +22,7 @@ export class PageMainComponent implements OnInit, AfterViewInit {
 	constructor(public userService: UserService,
 				private _http: Http,
 				private _cacheService: CacheService,
-				private _orderService: OrderService,
 				private _authenticationService: AuthenticationService) {
-	}
-
-	ngOnInit(): void {
-		this._orderService.init();
-	}
-
-	ngAfterViewInit(): void {
 	}
 
 	public onSearchKeyUp(event): void {
@@ -43,9 +33,9 @@ export class PageMainComponent implements OnInit, AfterViewInit {
 			return;
 		}
 
-		const symbols = this._cacheService.getByText(value).map((symbol: CacheSymbol) => ({
+		const symbols = this._cacheService.getByText(value).slice(0, 5).map((symbol: SymbolModel) => ({
 			name: symbol.options.name
-		})).slice(0, 5);
+		}));
 
 		const currentResult = {
 			users: [],

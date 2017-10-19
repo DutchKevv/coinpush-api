@@ -24,20 +24,6 @@ const server = app.listen(config.server.gateway.port, () => {
 });
 
 /**
- * websocket
- */
-server.on('upgrade', (req, socket, head) => {
-	switch (parse(req.url).pathname) {
-		case '/api/':
-			proxy.ws(req, socket, head, {target: config.server.oldApi.apiUrl});
-			break;
-		case '/candles/':
-			proxy.ws(req, socket, head, {target: config.server.cache.apiUrl});
-			break;
-	}
-});
-
-/**
  * proxy
  */
 const proxy = global['proxyHandler'] = httpProxy.createProxyServer({});
@@ -99,15 +85,32 @@ app.use(expressJwt({
 
 		return null;
 	}
-}).unless(function (req) {
+}).unless((req) => {
 	return (
 		(/\.(gif|jpg|jpeg|tiff|png)$/i).test(req.originalUrl) ||
 		req.originalUrl === '/' ||
 		req.originalUrl.indexOf('/sounds/') > -1 ||
-		(req.originalUrl === '/authenticate' && (req.method === 'POST' || req.method === 'OPTIONS')) ||
+		(req.originalUrl === '/authenticate' && ((req.method === 'POST' || req.method === 'OPTIONS') && !req.headers.authorization)) ||
 		(req.originalUrl === '/user' && (req.method === 'POST' || req.method === 'OPTIONS'))
 	);
 }));
+
+
+/**
+ * websocket
+ */
+server.on('upgrade', (req, socket, head) => {
+	console.log('URL RUL RUL', req.url);
+
+	switch (parse(req.url).pathname) {
+		case '/api/':
+			proxy.ws(req, socket, head, {target: config.server.oldApi.apiUrl});
+			break;
+		case '/candles/':
+			proxy.ws(req, socket, head, {target: config.server.cache.apiUrl});
+			break;
+	}
+});
 
 /**
  * error - unauthorized
@@ -126,7 +129,7 @@ app.use((err, req, res, next) => {
  */
 app.use((req, res, next) => {
 	if (req.user)
-		req.user.id = req.headers._id = req.user.sub;
+		req.headers._id = req.user.id;
 	else
 		req.user = {};
 
@@ -139,7 +142,7 @@ app.use((req, res, next) => {
 app.get('/', (req, res) => proxy.web(req, res, {target: config.server.fe.apiUrl}));
 
 /**
- * images
+ * imagese
  */
 app.get('/images/*', (req, res) => proxy.web(req, res, {target: config.server.fe.apiUrl}));
 

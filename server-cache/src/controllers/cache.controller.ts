@@ -28,11 +28,9 @@ export const cacheController = {
 	_tickIntervalTimer: null,
 	_brokerApi: null,
 
-	async init() {
-		await dataMapper.init();
-		await this._initBrokerApi();
+	init(brokerApi: OandaApi) {
+		this._brokerApi = brokerApi;
 	},
-
 
 	async find(params: { symbol: string, timeFrame: string, from: number, until: number, count: number }) {
 		let symbol = params.symbol,
@@ -182,28 +180,6 @@ export const cacheController = {
 		return this._fetchQueue;
 	},
 
-	async loadAvailableSymbols(): Promise<void> {
-		let symbolList = await this._brokerApi.getSymbols();
-
-		let currentPrices = await this._brokerApi.getCurrentPrices(symbolList.map(symbol => symbol.name));
-
-		symbolList.forEach(symbol => {
-			let price = currentPrices.find(priceObj => priceObj.instrument === symbol.name);
-
-			symbol.bid = price.bid;
-			symbol.ask = price.ask;
-			symbol.favorite = OandaApi.FAVORITE_SYMBOLS.indexOf(symbol.name) > -1;
-		});
-
-		this.symbols = symbolList;
-
-		this._updateRedis(this.symbols);
-
-		await dataLayer.setModels(symbolList.map(symbol => symbol.name));
-
-		log.info('Cache', 'Symbol list loaded');
-	},
-
 	async openTickStream(): Promise<any> {
 		this._brokerApi.removeAllListeners('tick');
 
@@ -254,17 +230,6 @@ export const cacheController = {
 		this._updateRedis([symbolObj]);
 
 		this._tickBuffer[tick.instrument].push([tick.time, tick.bid, tick.ask]);
-	},
-
-	async _initBrokerApi() {
-		await this.destroyBrokerApi();
-
-		this._brokerApi = new OandaApi(config.broker.account);
-		this._brokerApi.on('stream-timeout', () => {this._initBrokerApi().catch(console.error)});
-
-		await this._brokerApi.init();
-		await this.loadAvailableSymbols();
-		await this.openTickStream();
 	},
 
 	async destroyBrokerApi(): Promise<boolean> {

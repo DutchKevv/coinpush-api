@@ -72,12 +72,16 @@ ChannelSchema.statics.normalize = function(user, doc) {
 };
 
 ChannelSchema.statics.setICopy = function(user, doc) {
-	doc.iFollow = doc.followers.map(f => f.toString()).indexOf(user.id) > -1;
+	if (doc.followers)
+		doc.iFollow = doc.followers.map(f => f.toString()).indexOf(user.id) > -1;
+
 	return this;
 };
 
 ChannelSchema.statics.setIFollow = function(user, doc) {
-	doc.iCopy = doc.copiers.map(c => c.toString()).indexOf(user.id) > -1;
+	if (doc.copiers)
+		doc.iCopy = doc.copiers.map(c => c.toString()).indexOf(user.id) > -1;
+
 	return this;
 };
 

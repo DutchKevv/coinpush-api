@@ -28,13 +28,13 @@ export class Base extends EventEmitter {
 		return this._options;
 	}
 
-	constructor(options?: any) {
+	constructor(options: any = {}) {
 		super();
 
 		this.__setInitialOptions(new.target, options);
 	}
 
-	public async init(): Promise<any> {
+	public init(): void {
 		this.initialized = true;
 	}
 

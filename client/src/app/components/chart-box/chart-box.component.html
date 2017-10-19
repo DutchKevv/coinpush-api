@@ -3,7 +3,7 @@
 	 (onBeforeResize)="pinToCorner($event)"
 	 (onAfterResize)="unpinFromCorner()"
 >
-	<ng-container *ngIf="showBox && model.options$ | async as options">
+	<ng-container *ngIf="showBox && instrumentModel.options$ | async as options">
 		<h5 class="chart-title">{{options.symbol}} - {{options.timeFrame}} - {{options.type}} #{{options.groupId}}</h5>
 
 		<button (click)="!$event.stopPropagation() && toggleViewState(false)"
@@ -34,7 +34,7 @@
 <div dialogAnchor></div>
 
 <div style="height: 100%;">
-	<div *ngIf="quickBuy && model.options.type === 'live'" class="quickOrderContainer">
+	<div *ngIf="quickBuy && instrumentModel.options.type === 'live'" class="quickOrderContainer">
 		<a (click)="placeOrder($event, constantsService.constants.ORDER_SIDE_BUY)" class="buyButton">
 			<p>BUY</p>
 			<input type="number" value="1" #buyAmount>

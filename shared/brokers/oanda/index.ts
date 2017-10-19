@@ -19,8 +19,8 @@ export default class OandaApi extends Base {
 
 	private _client = null;
 
-	public async init() {
-		await super.init();
+	public init() {
+		super.init();
 
 		this._client = new Adapter({
 			// 'live', 'practice' or 'sandbox'

@@ -111,11 +111,13 @@ export class BacktestSettingsComponent implements OnInit, AfterViewInit {
 			this._ref.markForCheck();
 		});
 
-		this._cacheService.symbolList$.subscribe(symbolList => {
-			this.multiSelectOptions = symbolList.map(symbol => ({id: symbol.options.name, name: symbol.options.name}));
-			this.model.set({symbols: selectedSymbols});
-			this._ref.markForCheck();
-		});
+		this.multiSelectOptions = this._cacheService.symbols.map(symbol => ({
+			id: symbol.options.name,
+			name: symbol.options.name
+		}));
+		this.model.set({symbols: selectedSymbols});
+		this._ref.markForCheck();
+
 	}
 
 	ngAfterViewInit() {

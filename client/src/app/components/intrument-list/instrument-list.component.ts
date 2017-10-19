@@ -1,7 +1,13 @@
-import {Component, ChangeDetectionStrategy, ViewEncapsulation, Output, EventEmitter, OnInit} from '@angular/core';
-import {CacheService, CacheSymbol} from '../../services/cache.service';
+import {
+	Component, ChangeDetectionStrategy, ViewEncapsulation, Output, EventEmitter, OnInit,
+	OnDestroy
+} from '@angular/core';
+import {CacheService} from '../../services/cache.service';
 import {ConstantsService} from "../../services/constants.service";
 import {OrderService} from "../../services/order.service";
+import {SymbolModel} from "../../models/symbol.model";
+import {BehaviorSubject} from "rxjs/BehaviorSubject";
+import {SYMBOL_CAT_TYPE_FOREX, SYMBOL_CAT_TYPE_RESOURCE} from "../../../../../shared/constants/constants";
 
 
 @Component({
@@ -11,21 +17,50 @@ import {OrderService} from "../../services/order.service";
 	encapsulation: ViewEncapsulation.Native,
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InstrumentListComponent implements OnInit {
+export class InstrumentListComponent implements OnInit, OnDestroy {
 
-	@Output() activeSymbolChange = new EventEmitter<CacheSymbol>();
+	@Output() activeSymbolChange = new EventEmitter<SymbolModel>();
 
-	public activeSymbol: CacheSymbol;
+	public activeSymbol: SymbolModel;
+	public activeFilter: string = 'all';
+	public symbols$: BehaviorSubject<Array<SymbolModel>> = new BehaviorSubject([]);
+
+	private _symbolsSub;
 
 	constructor(public cacheService: CacheService,
 				public constantsService: ConstantsService,
 				private _orderService: OrderService) {}
 
 	ngOnInit() {
-		this.setActiveSymbol(this.cacheService.symbolList$.getValue()[0]);
+		// TODO: Sub not necessary, should be complete on page load
+		this.toggleFilter(this.activeFilter);
 	}
 
-	setActiveSymbol(symbol: CacheSymbol) {
+	toggleFilter(filter: string) {
+		this.activeFilter = filter;
+
+		switch (filter) {
+			case 'all':
+				this.symbols$.next(this.cacheService.symbols);
+				break;
+			case 'all popular':
+				this.symbols$.next(this.cacheService.symbols);
+				break;
+			case 'forex':
+				this.symbols$.next(this.cacheService.symbols.filter(s => s.get('type') === SYMBOL_CAT_TYPE_FOREX));
+				break;
+			case 'forex pop':
+				this.symbols$.next(this.cacheService.symbols.filter(s => s.get('type') === SYMBOL_CAT_TYPE_FOREX));
+				break;
+			case 'resources':
+				this.symbols$.next(this.cacheService.symbols.filter(s => s.get('type') === SYMBOL_CAT_TYPE_RESOURCE));
+				break;
+		}
+
+		this.setActiveSymbol(this.symbols$.getValue()[0]);
+	}
+
+	setActiveSymbol(symbol: SymbolModel) {
 		this.activeSymbolChange.next(symbol);
 		this.activeSymbol = symbol;
 	}
@@ -35,5 +70,10 @@ export class InstrumentListComponent implements OnInit {
 		event.stopPropagation();
 
 		this._orderService.create({symbol, side, amount: 1});
+	}
+
+	ngOnDestroy() {
+		if (this._symbolsSub)
+			this._symbolsSub.unsubscribe();
 	}
 }

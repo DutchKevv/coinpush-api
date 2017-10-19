@@ -24,16 +24,6 @@ export class OrderService {
 				private http: Http) {
 	}
 
-	init() {
-		this.getList().subscribe((list: Array<OrderModel>) => {
-			this.orders$.next(list);
-		}, () => {
-			this._alertService.error('Could not load order list');
-		})
-
-		this.calculateAccountStatus();
-	}
-
 	public get (id) {
 		return this.http.get('/order/' + id).map(res => res.json());
 	}
@@ -123,7 +113,7 @@ export class OrderService {
 		return this.http.delete('/order/' + id);
 	}
 
-	calculateAccountStatus() {
+	public calculateAccountStatus() {
 		const orders = this.orders$.getValue();
 
 		this._userService.accountStatus$.next({
@@ -132,6 +122,24 @@ export class OrderService {
 			openMargin: 0,
 			profit: orders.reduce((sum: number, order: OrderModel) => sum + order.get('PL'), 0),
 		});
+	}
+
+	public load(unload = true) {
+		if (unload)
+			this.unload();
+
+		this.getList().subscribe((list: Array<OrderModel>) => {
+			this.orders$.next(list);
+		}, (error) => {
+			console.error(error);
+			this._alertService.error('Could not load order list');
+		});
+
+		this.calculateAccountStatus();
+	}
+
+	public unload() {
+		this.orders$.next([]);
 	}
 }
 

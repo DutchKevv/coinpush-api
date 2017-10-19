@@ -3,7 +3,7 @@ import {UserModel} from '../models/user.model';
 import {Http, Response} from '@angular/http';
 import {AlertService} from './alert.service';
 import {USER_FETCH_TYPE_SLIM} from '../../../../shared/constants/constants';
-import {StartupService} from './startup.service';
+// import {StartupService} from './startup.service';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
 export interface IAccountStatus {
@@ -16,7 +16,7 @@ export interface IAccountStatus {
 @Injectable()
 export class UserService {
 
-	@Output() model: UserModel;
+	@Output() model: UserModel = new UserModel();
 
 	@Output() public accountStatus$: BehaviorSubject<IAccountStatus> = new BehaviorSubject({
 		available: 0,
@@ -26,13 +26,8 @@ export class UserService {
 	});
 
 	constructor(private _http: Http,
-				private _alertService: AlertService,
-				private _startupService: StartupService) {
+				private _alertService: AlertService) {
 
-	}
-
-	init() {
-		this.model = this._startupService.loggedInUser;
 	}
 
 	get(id: string, type = USER_FETCH_TYPE_SLIM) {

@@ -28,7 +28,7 @@ export class InstrumentsService {
 	constructor(private _zone: NgZone,
 				private _modalService: ModalService,
 				private _socketService: SocketService) {
-		this.init();
+		// this.init();
 	}
 
 	public init(): void {

@@ -1,30 +1,36 @@
 import {Injectable} from '@angular/core';
-import {Http} from '@angular/http';
-import {UserModel} from '../models/user.model';
 import {USER_FETCH_TYPE_ACCOUNT_DETAILS} from '../../../../shared/constants/constants';
+import {AuthenticationService} from "./authenticate.service";
+// import {CacheService} from "./cache.service";
+// import {OrderService} from "./order.service";
+// import {AuthenticationService} from "./authenticate.service";
 
 @Injectable()
 export class StartupService {
 
-	public loggedInUser: UserModel = new UserModel(JSON.parse(localStorage.getItem('currentUser') || '{}'));
-
-	constructor(private _http: Http) {
+	constructor(
+				// private _cacheService: CacheService,
+				// private _orderService: OrderService
+				private _authenticationService: AuthenticationService
+	) {
 	}
 
-	load(): Promise<any> {
-		const userId = this.loggedInUser.get('user_id');
+	public async load() {
+		this._authenticationService.authenticate();
 
-		if (!userId)
-			return Promise.resolve(null);
+		await this.loadAppData();
+	}
 
+	public async loadStaticData(): Promise<any> {
+			return Promise.resolve({});
+	}
 
-		return this._http.get('/user/' + userId || '', {params: {type: USER_FETCH_TYPE_ACCOUNT_DETAILS}})
-			.map((res) => {
-				this.loggedInUser.set(res.json());
-			})
-			.toPromise()
-			.catch((err: any) => {
-				return Promise.resolve(null);
-			});
+	public async loadAppData() {
+		// await this._cacheService.load();
+		// await this._orderService.load();
+	}
+
+	public unloadAppData() {
+
 	}
 }

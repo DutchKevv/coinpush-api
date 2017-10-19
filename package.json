@@ -23,7 +23,7 @@
     "NodeJS"
   ],
   "scripts": {
-    "start": "pm2 start process.json",
+    "start": "pm2 start process.json && pm2 monit",
     "start-redis": "redis-server --maxmemory 10mb --maxmemory-policy allkeys-lru",
     "install-all": "npm run install-server && npm run install-client",
     "build-all": "npm run build-server && npm run build-client",

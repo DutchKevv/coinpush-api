@@ -5,18 +5,24 @@ const config = require('../../../tradejs.config');
 
 export const authenticateController = {
 
-	async login(reqUser, email: string, password: string, token?) {
+	async authenticate(reqUser, params: {email?: string, password?: string, token?: string}): Promise<any> {
+
+		params['fields'] = {balance: 1};
 
 		const user = await request({
 			uri: config.server.user.apiUrl + '/authenticate',
+			headers: {
+				_id: reqUser.id
+			},
 			method: 'POST',
-			body: {email, password, token},
+			body: params,
 			json: true
 		});
 
-		reqUser.id = user._id;
+		if (!user || !user.token)
+			return null;
 
-		const channel = await channelController.findByUserId(reqUser, user._id);
+		const channel = await channelController.findByUserId({id: user._id}, user._id, ['name', 'profileImg']);
 
 		return Object.assign(user, channel);
 	}

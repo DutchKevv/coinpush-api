@@ -182,7 +182,7 @@
         <!--</ng-container>-->
     </div>
     <div class="chart-container">
-        <chart-box *ngIf="activeSymbol$ | async as model" [model]="model" [showBox]="false"></chart-box>
+        <chart-box *ngIf="activeSymbol$ | async as model" [instrumentModel]="model" [showBox]="false"></chart-box>
     </div>
 </div>
 

@@ -11,11 +11,11 @@ import {InstrumentModel} from '../../models/instrument.model';
 import * as interact from 'interactjs';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {CacheService} from '../../services/cache.service';
-// import {IOrder} from '../../../../../server/modules/order/OrderManager';
 import * as moment from 'moment';
 import {OrderService} from '../../services/order.service';
 import {ConstantsService} from '../../services/constants.service';
 import {BaseModel} from '../../models/base.model';
+import {SymbolModel} from "../../models/symbol.model";
 
 declare let $: any;
 
@@ -33,7 +33,8 @@ declare let $: any;
 
 export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
 
-	@Input() model: InstrumentModel;
+	@Input() instrumentModel: InstrumentModel;
+	@Input() symbolModel: SymbolModel;
 
 	@Input() showBox: Boolean = false;
 	@Input() quickBuy: Boolean = false;
@@ -114,24 +115,33 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	}
 
 	ngOnInit() {
+		if (!this.instrumentModel) {
+			if (!this.symbolModel)
+				throw new Error('symbol or instrument model missing')
+
+			this.instrumentModel = new InstrumentModel({
+				symbol: this.symbolModel.options.name
+			})
+		}
+
 		this.$el = $(this._elementRef.nativeElement);
 		this._onScrollBounced = throttle(this._onScroll.bind(this), 33);
 
 		this._restoreStyles();
 		this._fetchCandles();
 
-		if (this.model.options.id) {
+		if (this.instrumentModel.options.id) {
 			this._fetchIndicators(ChartBoxComponent.DEFAULT_CHUNK_LENGTH, this._offset);
 		} else {
-			let subscription = this.model.changed$.subscribe(() => {
-				if (this.model.options.id) {
+			let subscription = this.instrumentModel.changed$.subscribe(() => {
+				if (this.instrumentModel.options.id) {
 					subscription.unsubscribe();
 					this._fetchIndicators(ChartBoxComponent.DEFAULT_CHUNK_LENGTH, this._offset);
 				}
 			});
 		}
 
-		this._changeSupsribtion = this.model.changed$.subscribe(changes => {
+		this._changeSupsribtion = this.instrumentModel.changed$.subscribe(changes => {
 			let dirty = false;
 
 			Object.keys(changes).forEach(change => {
@@ -177,7 +187,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 			return;
 
 		const amount = parseFloat(event.currentTarget.querySelector('input').value);
-		this._orderService.create({symbol: this.model.options.symbol, side, amount});
+		this._orderService.create({symbol: this.instrumentModel.options.symbol, side, amount});
 	}
 
 	ngAfterViewInit() {
@@ -190,7 +200,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		if (!this._chart)
 			return;
 
-		this._chart.options.data[0].type = this.model.options.graphType;
+		this._chart.options.data[0].type = this.instrumentModel.options.graphType;
 	}
 
 	public pinToCorner(event): void {
@@ -310,7 +320,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 				},
 				data: [
 					{
-						type: this.model.options.graphType,
+						type: this.instrumentModel.options.graphType,
 						connectNullData: false,
 						// fillOpacity: 0,
 						// risingColor: '#000000',
@@ -424,9 +434,9 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		this._zone.runOutsideAngular(async () => {
 			try {
 				let data: any = ChartBoxComponent._prepareData(await this._cacheService.read({
-					symbol: this.model.options.symbol,
-					timeFrame: this.model.options.timeFrame,
-					until: this.model.options.type === 'backtest' && this.model.options.status.progress < 1 ? this.model.options.from : this.model.options.until,
+					symbol: this.instrumentModel.options.symbol,
+					timeFrame: this.instrumentModel.options.timeFrame,
+					until: this.instrumentModel.options.type === 'backtest' && this.instrumentModel.options.status.progress < 1 ? this.instrumentModel.options.from : this.instrumentModel.options.until,
 					count: ChartBoxComponent.DEFAULT_CHUNK_LENGTH,
 					offset: this._offset
 				}));
@@ -464,10 +474,10 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 			try {
 				let data;
 
-				if (this.model.options.type === 'backtest' && this.model.options.status.progress < 1)
-					data = await this.instrumentsService.fetch(this.model, count, offset, undefined, this.model.options.from);
+				if (this.instrumentModel.options.type === 'backtest' && this.instrumentModel.options.status.progress < 1)
+					data = await this.instrumentsService.fetch(this.instrumentModel, count, offset, undefined, this.instrumentModel.options.from);
 				else
-					data = await this.instrumentsService.fetch(this.model, count, offset);
+					data = await this.instrumentsService.fetch(this.instrumentModel, count, offset);
 
 
 				if (!data.indicators.length)
@@ -492,7 +502,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		//
 		this._zone.runOutsideAngular(() => {
 
-			this.model.options.indicators.forEach(indicator => {
+			this.instrumentModel.options.indicators.forEach(indicator => {
 				indicator.buffers.forEach(drawBuffer => {
 					// New series
 					let series = null; // this._chart.get(unique);
@@ -534,7 +544,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		});
 	}
 
-	private _updateOrders(orders: any[] = this.model.options.orders) {
+	private _updateOrders(orders: any[] = this.instrumentModel.options.orders) {
 		this._zone.runOutsideAngular(() => {
 
 			orders.forEach((order: any) => {
@@ -607,7 +617,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 	private _calculateViewableBars(checkParent = true) {
 		let el = this._elementRef.nativeElement,
-			barW = 3 * this.model.options.zoom;
+			barW = 3 * this.instrumentModel.options.zoom;
 
 		return Math.floor(el.clientWidth / barW);
 	}
@@ -682,12 +692,12 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	}
 
 	public storeStyles() {
-		if (this.model.options.id)
-			localStorage.setItem(`instrument-${this.model.options.id}-p`, JSON.stringify(this.getStyles()));
+		if (this.instrumentModel.options.id)
+			localStorage.setItem(`instrument-${this.instrumentModel.options.id}-p`, JSON.stringify(this.getStyles()));
 	}
 
 	public _restoreStyles(styles?: { x?: any, y?: any, z?: any, w?: any, h?: any }): void {
-		styles = styles || <any>JSON.parse(localStorage.getItem(`instrument-${this.model.options.id}-p`));
+		styles = styles || <any>JSON.parse(localStorage.getItem(`instrument-${this.instrumentModel.options.id}-p`));
 
 		if (styles) {
 			this.toggleViewState('windowed');
@@ -871,5 +881,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		this._changeSupsribtion.unsubscribe();
 		this._destroyChart();
 		this._data = null;
+		this.$el = null;
 	}
 }

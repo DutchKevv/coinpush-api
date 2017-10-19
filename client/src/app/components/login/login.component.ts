@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {Router, ActivatedRoute} from '@angular/router';
 import {AuthenticationService} from '../../services/authenticate.service';
 import {AlertService} from '../../services/alert.service';
 
@@ -13,11 +13,11 @@ export class LoginComponent implements OnInit {
 	loading = false;
 	returnUrl: string;
 
-	constructor(
-		private route: ActivatedRoute,
-		private router: Router,
-		private authenticationService: AuthenticationService,
-		private alertService: AlertService) { }
+	constructor(private route: ActivatedRoute,
+				private router: Router,
+				private authenticationService: AuthenticationService,
+				private alertService: AlertService) {
+	}
 
 	ngOnInit() {
 		// reset login status
@@ -27,18 +27,15 @@ export class LoginComponent implements OnInit {
 		this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
 	}
 
-	login(e) {
+	async login(e) {
+		this.loading = true;
 		e.preventDefault();
 
-		this.loading = true;
-		this.authenticationService.login(this.model.email, this.model.password)
-			.subscribe(
-				data => {
-					this.router.navigate([this.returnUrl]);
-				},
-				error => {
-					this.alertService.error(error);
-					this.loading = false;
-				});
+		const result = await this.authenticationService.authenticate(this.model.email, this.model.password);
+		if (result)
+			return this.router.navigate([this.returnUrl]);
+
+		this.alertService.error('Invalid username / password');
+		this.loading = false;
 	}
 }

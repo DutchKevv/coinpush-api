@@ -1,5 +1,4 @@
 import {Router} from 'express';
-import * as httpProxy from 'http-proxy';
 import {authenticateController} from '../controllers/authenticate.controller';
 const config = require('../../../tradejs.config');
 const router = Router();
@@ -9,9 +8,11 @@ const router = Router();
  */
 router.post('/', async (req, res, next) => {
 	try {
-		res.send(await authenticateController.login(req.user, req.body.email, req.body.password, req.body.token));
+		res.send(await authenticateController.authenticate(req.user, req.body));
 	} catch (error) {
-		console.error(error);
+		if (error && error.statusCode === 401)
+			return res.send(401);
+
 		next(error);
 	}
 });

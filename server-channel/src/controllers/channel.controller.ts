@@ -33,12 +33,13 @@ export const channelController = {
 		return channel;
 	},
 
-	async findByUserId(reqUser, userId: string, type?: number, fields?: any): Promise<Array<any>> {
+	async findByUserId(reqUser, userId: string, fields: Array<string> = [], type?: number): Promise<Array<any>> {
 		const opt = {user_id: userId};
+
 		if (typeof type === 'number')
 			opt['type'] = type;
 
-		let channels = await Channel.find(opt, fields).lean();
+		let channels = await Channel.find(opt, fields.reduce((obj, f) => {obj[f] = 1; return obj}, {})).lean();
 
 		channels = channels.map(channel => Channel.normalize(reqUser, channel));
 

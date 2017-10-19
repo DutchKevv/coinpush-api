@@ -1,21 +1,21 @@
 <div class="filter-list">
 	<h4>Popular</h4>
-	<a class="active">All</a>
-	<a>All popular</a>
-	<a>Risers and fallers</a>
-	<a>My favorites</a>
+	<a [ngClass]="{active: activeFilter === 'all'}" (click)="toggleFilter('all')">All</a>
+	<a [ngClass]="{active: activeFilter === 'all popular'}" (click)="toggleFilter('all popular')">All popular</a>
+	<a [ngClass]="{active: activeFilter === 'rise and fall'}" (click)="toggleFilter('rise and fall')">Risers and fallers</a>
+	<a [ngClass]="{active: activeFilter === 'fav'}" (click)="toggleFilter('fav')">My favorites</a>
 	<h4>Resources</h4>
-	<a>All resources</a>
-	<a>Popular resources</a>
+	<a [ngClass]="{active: activeFilter === 'resources'}" (click)="toggleFilter('resources')">All resources</a>
+	<a [ngClass]="{active: activeFilter === 'resources pop'}" (click)="toggleFilter('resources pop')">Popular resources</a>
 	<h4>Indices</h4>
-	<a>All indices</a>
-	<a>Popular indices</a>
+	<a [ngClass]="{active: activeFilter === 'all2'}" (click)="toggleFilter('all2')">All indices</a>
+	<a [ngClass]="{active: activeFilter === 'all2'}" (click)="toggleFilter('all2')">Popular indices</a>
 	<h4>Crypto</h4>
-	<a>All crypto</a>
-	<a>Popular crypto</a>
+	<a [ngClass]="{active: activeFilter === 'all2'}" (click)="toggleFilter('all2')">All crypto</a>
+	<a [ngClass]="{active: activeFilter === 'all2'}" (click)="toggleFilter('all2')">Popular crypto</a>
 	<h4>Forex</h4>
-	<a>All forex</a>
-	<a>Popular forex</a>
+	<a [ngClass]="{active: activeFilter === 'forex'}" (click)="toggleFilter('forex')">All forex</a>
+	<a [ngClass]="{active: activeFilter === 'forex pop'}" (click)="toggleFilter('forex pop')">Popular forex</a>
 </div>
 
 <div class="instrument-list">
@@ -27,6 +27,7 @@
 				<th>Diff</th>
 				<th>Bid</th>
 				<th>Ask</th>
+				<th>H / L</th>
 				<th></th>
 			</tr>
 			</thead>
@@ -36,7 +37,7 @@
 	<div style="overflow-y: scroll">
 		<table class="table-content">
 			<tbody>
-			<tr *ngFor="let symbol of cacheService.symbolList$ | async"
+			<tr *ngFor="let symbol of symbols$ | async"
 				[ngClass]="{'active': activeSymbol === symbol}"
 				(click)="setActiveSymbol(symbol)">
 
@@ -57,6 +58,8 @@
 							<span>{{options.ask || 0}}</span>
 						</button>
 					</td>
+					<td *ngIf="options.halted">Market closed</td>
+					<td *ngIf="!options.halted">0 / 0</td>
 					<!--<td class="font-color-{{options.bidDirection}}">{{options.bid}}</td>-->
 					<!--<td class="font-color-{{options.askDirection}}">{{options.ask}}</td>-->
 					<td>

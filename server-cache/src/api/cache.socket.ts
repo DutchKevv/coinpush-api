@@ -13,6 +13,11 @@ module.exports = (socket) => {
 	});
 
 	socket.on('symbol:list', async (params, cb: Function) => {
-		cb(null, cacheController.symbols);
+		try {
+			cb(null, cacheController.symbols);
+		} catch (error) {
+			console.error(error);
+			cb(error);
+		}
 	});
 };

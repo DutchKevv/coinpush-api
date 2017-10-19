@@ -2,55 +2,21 @@ import {Injectable, NgZone, Output} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import * as io from 'socket.io-client';
 import {Subject} from 'rxjs/Subject';
-import {BaseModel} from '../models/base.model';
-
-export class CacheSymbol extends BaseModel {
-	public price$: Subject<any> = new Subject();
-
-	public tick(ticks) {
-
-		ticks.forEach(tick => {
-			this.set({
-				direction: this.options.bid > tick[1] ? 'down' : 'up',
-				bidDirection: this.options.bid > tick[1] ? 'down' : 'up',
-				bid: tick[1],
-				askDirection: this.options.ask > tick[2] ? 'down' : 'up',
-				ask: tick[2]
-			}, false, true);
-		});
-
-		this.price$.next(true);
-	}
-}
+import {SymbolModel} from "../models/symbol.model";
+import {AuthenticationService} from "./authenticate.service";
+import {UserService} from "./user.service";
 
 @Injectable()
 export class CacheService {
 
-	@Output() public symbolList$: BehaviorSubject<Array<CacheSymbol>> = new BehaviorSubject([]);
-	@Output() public changed$: Subject<any> = new Subject();
+	@Output() public changed$: BehaviorSubject<any> = new BehaviorSubject([]);
+	@Output() public symbols: Array<SymbolModel> = [];
 
 	private _socket: any;
 
 	constructor(private _zone: NgZone) {
 	}
 
-	public init(): void {
-		this._connect();
-
-		this._socket.on('ticks', ticks => {
-
-			this._zone.runOutsideAngular(() => {
-				for (let _symbol in ticks) {
-					let symbol = this.getBySymbol(_symbol);
-
-					if (symbol)
-						symbol.tick(ticks[_symbol]);
-				}
-
-				this.changed$.next(Object.keys(ticks));
-			});
-		});
-	}
 
 	public read(params) {
 		return new Promise((resolve, reject) => {
@@ -65,47 +31,83 @@ export class CacheService {
 		})
 	}
 
+	public toggleFavorite(symbol: SymbolModel) {
+
+	}
+
+	public toggleAlarm(symbol: SymbolModel) {
+
+	}
+
+	public load(unload = true) {
+		return new Promise((resolve, reject) => {
+
+			if (unload)
+				this.unload();
+
+			this._connect();
+
+			this._socket.emit('symbol:list', {}, (err, symbols) => {
+				if (err)
+					return reject(err);
+
+				this._updateSymbols(symbols);
+
+				resolve();
+			});
+
+			this._socket.on('ticks', ticks => {
+
+				for (let _symbol in ticks) {
+					let symbol = this.getBySymbol(_symbol);
+
+					if (symbol)
+						symbol.tick(ticks[_symbol]);
+				}
+
+				this.changed$.next(Object.keys(ticks));
+			});
+		});
+
+	}
+
+	public unload() {
+		this._disconnect();
+		// this.symbolList$.next([]);
+	}
+
 	private _connect() {
-		this._zone.runOutsideAngular(() => {
+
+		// this._zone.runOutsideAngular(() => {
 			this._socket = io('/', {
 				'reconnectionAttempts': 10, // avoid having user reconnect manually in order to prevent dead clients after a server restart
 				'timeout': 10000, // before connect_error and connect_timeout are emitted.
 				'transports': ['websocket'],
 				path: '/candles'
 			});
-		});
+		// });
 	}
 
-	public loadSymbolList() {
-		// Create symbol class for each symbol
+	private _disconnect() {
+		// this._socket.destroy();
+	}
 
-		let cacheSymbols = window['symbols'].map(symbol => {
-			return new CacheSymbol({
-				direction: 'up',
-				name: symbol.name,
-				bidDirection: 'up',
-				bid: symbol.bid,
-				ask: symbol.ask,
-				askDirection: 'up',
-				favorite: symbol.favorite
-			});
-		});
+	private _updateSymbols(symbols) {
 
-		this._socket.emit('symbol:list', {}, (err, symbolList) => {
-			if (err)
-				return console.error(err);
+		const models = symbols.map(symbol => new SymbolModel({
+			// direction: 'up',
+			// name: symbol.name,
+			// bidDirection: 'up',
+			// bid: symbol.bid,
+			// ask: symbol.ask,
+			// askDirection: 'up',
+			// favorite: symbol.favorite,
+			...symbol
+		}));
 
-			symbolList.forEach(symbol => {
-				const cSymbol = cacheSymbols.find(cs => cs.options.name === symbol.name);
+		this.symbols = models;
 
-				cSymbol.set({
-					bid: symbol.bid,
-					ask: symbol.ask
-				});
-			});
-		});
-
-		this.symbolList$.next(cacheSymbols);
+		// this.symbolList$.next(models);
 	}
 
 	public add(model) {
@@ -113,12 +115,12 @@ export class CacheService {
 	}
 
 	public getBySymbol(symbol: string) {
-		return this.symbolList$.getValue().find(_symbol => _symbol.options.name === symbol)
+		return this.symbols.find(_symbol => _symbol.options.name === symbol)
 	}
 
 	public getByText(text: string) {
 		text = text.trim().toLowerCase();
 		const regex = new RegExp(text, 'i');
-		return this.symbolList$.getValue().filter(symbol => symbol.options.name.toLowerCase().indexOf(text) > -1);
+		return this.symbols.filter(symbol => symbol.options.name.toLowerCase().indexOf(text) > -1);
 	}
 }

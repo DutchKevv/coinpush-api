@@ -1,7 +1,7 @@
 import {
 	Component, OnInit, ElementRef, QueryList, ViewChildren, ChangeDetectionStrategy, ViewEncapsulation, NgZone,
 	ViewChild
-}  from '@angular/core';
+} from '@angular/core';
 
 import {InstrumentsService} from '../../services/instruments.service';
 import {ChartBoxComponent} from '../chart-box/chart-box.component';
@@ -26,9 +26,7 @@ export class ChartOverviewComponent implements OnInit {
 
 	public activeSymbol$: BehaviorSubject<SymbolModel> = new BehaviorSubject(null);
 
-	constructor(public instrumentsService: InstrumentsService,
-				private _zone: NgZone,
-				private _elementRef: ElementRef) {
+	constructor(public instrumentsService: InstrumentsService) {
 	}
 
 	ngOnInit(): void {
@@ -36,15 +34,15 @@ export class ChartOverviewComponent implements OnInit {
 	}
 
 	onSymbolChange(symbolModel: SymbolModel): void {
-		if (symbolModel === null) {
-			this.activeSymbol$.next(null);
-			return;
-		}
+		this.activeSymbol$.next(null);
+		// if (symbolModel === null) {
+		//
+		// 	return;
+		// }
+		setTimeout(() => {
+			this.activeSymbol$.next(symbolModel)
+		}, 0);
 
-
-		this.activeSymbol$.next(new InstrumentModel({
-			symbol: symbolModel.get('name')
-		}))
 	}
 
 	/*tileWindows() {

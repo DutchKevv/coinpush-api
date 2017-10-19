@@ -2,10 +2,7 @@ import {Schema, Types, model} from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import {isEmail} from 'validator';
 import {join} from 'path';
-import * as jwt from 'jsonwebtoken';
 import {BROKER_GENERAL_TYPE_OANDA, LEVERAGE_TYPE_1} from '../../../shared/constants/constants';
-
-const config = require('../../../tradejs.config');
 
 const UserSchema = new Schema({
 	email: {
@@ -83,27 +80,23 @@ const UserSchema = new Schema({
 });
 
 // authenticate input against database
-UserSchema.statics.authenticate = async function (email, password) {
+UserSchema.statics.authenticate = async (params: {email?: string, password?: string, fields?: any}) => {
 
-	const user = await User.findOne({email: email}, {balance: 1, password: 1});
+	const user = await User.findOne({email: params.email}, {password: 1, ...params.fields || {}}).lean();
 
 	if (!user)
-		return false;
+		return null;
 
 	return new Promise((resolve, reject) => {
 
-		bcrypt.compare(password, user.password, (err, result) => {
+		bcrypt.compare(params.password, user.password, (err, result) => {
 			if (err)
 				return reject(err);
 
 			if (result !== true)
-				return resolve(false);
+				return resolve(null);
 
-			resolve({
-				_id: user._id,
-				balance: user.balance,
-				token: jwt.sign({sub: user._id}, config.token.secret)
-			});
+			resolve(user);
 		});
 	});
 };

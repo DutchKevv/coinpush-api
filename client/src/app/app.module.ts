@@ -2,8 +2,8 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {APP_INITIALIZER, NgModule} from '@angular/core';
 
-import {FileTreeComponent}  from './components/file-tree/file-tree.component';
-import {JSEditorComponent}  from './components/jseditor/jseditor.component';
+import {FileTreeComponent} from './components/file-tree/file-tree.component';
+import {JSEditorComponent} from './components/jseditor/jseditor.component';
 import {SocketService} from './services/socket.service';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
@@ -44,7 +44,7 @@ import {GroupByPipe, PortfolioComponent} from './components/portfolio/portfolio.
 import {ProfileComponent} from './components/profile/profile.component';
 import {PageSubUserComponent} from './components/page-sub-user/page.sub.user.component';
 import {SettingsComponent} from './components/settings/settings.component';
-import {StartupService} from './services/startup.service';
+// import {StartupService} from './services/startup.service';
 import {SocialFeedComponent} from './components/social-feed/social.feed.component';
 import {ChannelRowComponent} from './components/channel-row/channel.row.component';
 import {ProfileChannelOverviewComponent} from './components/profile-channel-overview/profile.channel.overview.component';
@@ -52,9 +52,11 @@ import {ChannelService} from './services/channel.service';
 import {ChannelDetailsModalComponent} from './components/channel-details-modal/channel.details.modal.component';
 import {CommentBoxComponent} from './components/comment-box/comment-box.component';
 
-export function startupServiceFactory(startupService: StartupService): Function {
-	return () => startupService.load();
-}
+// export function startupServiceFactory(startupService: StartupService): Function {
+// 	return () => {
+// 		return startupService.load()
+// 	}
+// }
 
 @NgModule({
 	declarations: [
@@ -104,7 +106,7 @@ export function startupServiceFactory(startupService: StartupService): Function 
 		AlertService,
 		AuthenticationService,
 		UserService,
-		StartupService,
+		// StartupService,
 		ChannelService,
 
 		{provide: OrderService, useClass: OrderService},
@@ -114,12 +116,12 @@ export function startupServiceFactory(startupService: StartupService): Function 
 		{provide: InstrumentsService, useClass: InstrumentsService},
 		{provide: CacheService, useClass: CacheService},
 		{provide: SocialService, useClass: SocialService},
-		{
-			provide: APP_INITIALIZER,
-			useFactory: startupServiceFactory,
-			deps: [StartupService],
-			multi: true
-		}
+		// {
+		// 	provide: APP_INITIALIZER,
+		//  useFactory: startupServiceFactory,
+		// 	deps: [StartupService],
+		// 	multi: true
+		// }
 	],
 	bootstrap: [
 		AppComponent

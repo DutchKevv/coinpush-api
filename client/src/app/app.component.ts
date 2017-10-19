@@ -1,7 +1,9 @@
-import {Component, ChangeDetectionStrategy, ViewEncapsulation, AfterViewInit, OnInit} from '@angular/core';
-import {SocketService}  from './services/socket.service';
-import {CacheService} from './services/cache.service';
-import {UserService} from './services/user.service';
+import {Component, ChangeDetectionStrategy, ViewEncapsulation, AfterViewInit, OnInit, Output} from '@angular/core';
+import {AuthenticationService} from "./services/authenticate.service";
+import {SocketService} from "./services/socket.service";
+import {CacheService} from "./services/cache.service";
+import {OrderService} from "./services/order.service";
+import {BehaviorSubject} from "rxjs/BehaviorSubject";
 
 declare let Module: any;
 
@@ -9,8 +11,8 @@ declare let Module: any;
 	selector: 'app',
 	template: `
 		<div modalAnchor></div>
-        <app-alert></app-alert>
-		<router-outlet></router-outlet>
+		<app-alert></app-alert>
+		<router-outlet *ngIf="(ready$ | async) === true"></router-outlet>
 	`,
 	styleUrls: [
 		'./app.component.scss',
@@ -20,23 +22,34 @@ declare let Module: any;
 	encapsulation: ViewEncapsulation.None
 })
 
-export class AppComponent implements OnInit, AfterViewInit {
+export class AppComponent implements OnInit {
 
-	constructor(private _cacheService: CacheService,
-				private _userService: UserService,
-				private _socketService: SocketService) {
+	@Output() public ready$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
-		this._socketService.init();
-		this._userService.init();
-		this._cacheService.init();
-		this._cacheService.loadSymbolList();
+	constructor(public authenticationService: AuthenticationService,
+				private _socketService: SocketService,
+				private _cacheService: CacheService,
+				private _orderService: OrderService
+	) {
+
 	}
 
 	ngOnInit() {
-
+		this.authenticationService.loggedIn$.subscribe(async state => {
+			if (state) {
+				await this.loadAppData();
+				this.ready$.next(true);
+			}
+		});
 	}
 
-	ngAfterViewInit() {
+	public async loadAppData() {
+		this._socketService.connect();
+		await this._cacheService.load();
+		await this._orderService.load();
+	}
 
+	public async unloadAppData() {
+		// this._socketService.disconnect();
 	}
 }

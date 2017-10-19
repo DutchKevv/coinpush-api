@@ -10,7 +10,7 @@ export class SocketService {
 
 	constructor(private _zone: NgZone) {}
 
-	init() {
+	public connect() {
 		this._zone.runOutsideAngular(() => {
 			this.socket = io('/', {
 				'reconnectionAttempts': 10, // avoid having user reconnect manually in order to prevent dead clients after a server restart
@@ -18,6 +18,12 @@ export class SocketService {
 				'transports': ['websocket'],
 				path: '/api'
 			});
+		});
+	}
+
+	public disconnect() {
+		this._zone.runOutsideAngular(() => {
+			this.socket.disconnect();
 		});
 	}
 

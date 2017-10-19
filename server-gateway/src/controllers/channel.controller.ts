@@ -12,12 +12,13 @@ export const channelController = {
 		});
 	},
 
-	async findByUserId(reqUser, userId): Promise<any> {
+	async findByUserId(reqUser: {id: string}, userId: string, fields?: Array<string>): Promise<any> {
 		const result = await request({
 			uri: config.server.channel.apiUrl + '/channel/',
 			headers: {'_id': reqUser.id},
 			qs: {
-				user: userId
+				user: userId,
+				fields: fields
 			},
 			json: true
 		});
