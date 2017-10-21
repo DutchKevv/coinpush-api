@@ -47,12 +47,16 @@ table {
 	&.table-content {
 		tr {
 			border-bottom: 1px solid $border-color-grey;
-
+			font-size: 14px;
 			&.active,
 			&:hover {
 				background: #6f748e;
 				cursor: pointer;
 			}
+		}
+
+		td {
+			padding-left: 10px;
 		}
 	}
 
@@ -61,12 +65,12 @@ table {
 		padding: 4px;
 
 		&:last-child {
-			width: 80px;
+			width: 90px;
 
 			i {
 				color: $font-color-light;
 				margin-right: 10px;
-				font-size: 14px;
+				font-size: 16px;
 
 				&.active,
 				&:hover {

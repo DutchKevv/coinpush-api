@@ -9,7 +9,7 @@ export const userController = {
 
 	getAllowedFields: ['_id', 'username', 'profileImg', 'country', 'followers', 'following', 'membershipStartDate', 'description', 'balance'],
 
-	async find(reqUser, userId, type: number = USER_FETCH_TYPE_SLIM, forceReload = false) {
+	async find(reqUser, userId, type: number = USER_FETCH_TYPE_SLIM, fields: Array<string> = []) {
 		if (!userId)
 			throw new Error('user id is required');
 
@@ -26,7 +26,7 @@ export const userController = {
 				break;
 			case USER_FETCH_TYPE_SLIM:
 			default:
-				fieldsArr = ['country'];
+				fieldsArr = fields;
 				break;
 		}
 

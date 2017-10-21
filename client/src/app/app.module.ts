@@ -1,6 +1,6 @@
 // Lib
 import {BrowserModule} from '@angular/platform-browser';
-import {APP_INITIALIZER, NgModule} from '@angular/core';
+import {NgModule} from '@angular/core';
 
 import {FileTreeComponent} from './components/file-tree/file-tree.component';
 import {JSEditorComponent} from './components/jseditor/jseditor.component';
@@ -30,7 +30,6 @@ import {BacktestReportComponent} from './components/backtest-report/backtest-rep
 import {CacheService} from './services/cache.service';
 import {BacktestComponent, GroupIdsPipe} from './components/backtest/backtest.component';
 import {PageMainComponent} from './components/page-main/page.main.component';
-import {SocialService} from './services/social.service';
 import {AuthenticationService} from './services/authenticate.service';
 import {customHttpProvider} from './services/http.service';
 import {AlertService} from './services/alert.service';
@@ -44,19 +43,13 @@ import {GroupByPipe, PortfolioComponent} from './components/portfolio/portfolio.
 import {ProfileComponent} from './components/profile/profile.component';
 import {PageSubUserComponent} from './components/page-sub-user/page.sub.user.component';
 import {SettingsComponent} from './components/settings/settings.component';
-// import {StartupService} from './services/startup.service';
 import {SocialFeedComponent} from './components/social-feed/social.feed.component';
 import {ChannelRowComponent} from './components/channel-row/channel.row.component';
 import {ProfileChannelOverviewComponent} from './components/profile-channel-overview/profile.channel.overview.component';
 import {ChannelService} from './services/channel.service';
 import {ChannelDetailsModalComponent} from './components/channel-details-modal/channel.details.modal.component';
 import {CommentBoxComponent} from './components/comment-box/comment-box.component';
-
-// export function startupServiceFactory(startupService: StartupService): Function {
-// 	return () => {
-// 		return startupService.load()
-// 	}
-// }
+import {CommentService} from "./services/comment.service";
 
 @NgModule({
 	declarations: [
@@ -106,22 +99,15 @@ import {CommentBoxComponent} from './components/comment-box/comment-box.componen
 		AlertService,
 		AuthenticationService,
 		UserService,
-		// StartupService,
 		ChannelService,
+		CommentService,
 
 		{provide: OrderService, useClass: OrderService},
 		{provide: ConstantsService, useClass: ConstantsService},
 		{provide: SocketService, useClass: SocketService},
 		{provide: ModalService, useClass: ModalService},
 		{provide: InstrumentsService, useClass: InstrumentsService},
-		{provide: CacheService, useClass: CacheService},
-		{provide: SocialService, useClass: SocialService},
-		// {
-		// 	provide: APP_INITIALIZER,
-		//  useFactory: startupServiceFactory,
-		// 	deps: [StartupService],
-		// 	multi: true
-		// }
+		{provide: CacheService, useClass: CacheService}
 	],
 	bootstrap: [
 		AppComponent

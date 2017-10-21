@@ -5,6 +5,7 @@ import {AlertService} from './alert.service';
 import {USER_FETCH_TYPE_SLIM} from '../../../../shared/constants/constants';
 // import {StartupService} from './startup.service';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {SymbolModel} from "../models/symbol.model";
 
 export interface IAccountStatus {
 	available: number,
@@ -43,7 +44,6 @@ export class UserService {
 	}
 
 	update(changes, toServer = true) {
-		console.log('CHANGES!');
 		this.model.set(changes);
 
 		if (toServer) {
@@ -59,6 +59,17 @@ export class UserService {
 			this.storeLocalStoreUser();
 			this._alertService.success('Settings saved');
 		}
+	}
+
+	toggleFavoriteSymbol(symbol: SymbolModel) {
+		this._http.post('/favorite', {symbol: symbol.get('name')})
+			.map((res: Response) => res.json())
+			.subscribe(result => {
+				if (result.state)
+					this.model.options.favorites.push(symbol.get('name'));
+				else
+					this.model.options.favorites.splice(this.model.options.favorites.indexOf(symbol.get('name')), 1);
+			})
 	}
 
 	// toggleFollow(model: UserModel, state: boolean) {

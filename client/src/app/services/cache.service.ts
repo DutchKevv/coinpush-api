@@ -1,4 +1,4 @@
-import {Injectable, NgZone, Output} from '@angular/core';
+import {EventEmitter, Injectable, NgZone, Output} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import * as io from 'socket.io-client';
 import {Subject} from 'rxjs/Subject';
@@ -9,7 +9,7 @@ import {UserService} from "./user.service";
 @Injectable()
 export class CacheService {
 
-	@Output() public changed$: BehaviorSubject<any> = new BehaviorSubject([]);
+	@Output() public changed$: EventEmitter<any[]> = new EventEmitter();
 	@Output() public symbols: Array<SymbolModel> = [];
 
 	private _socket: any;
@@ -29,10 +29,6 @@ export class CacheService {
 				resolve(arr);
 			});
 		})
-	}
-
-	public toggleFavorite(symbol: SymbolModel) {
-
 	}
 
 	public toggleAlarm(symbol: SymbolModel) {

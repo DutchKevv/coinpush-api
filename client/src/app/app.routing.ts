@@ -27,17 +27,22 @@ const routes: Routes = [
 			{path: 'channels', component: ChannelOverviewComponent},
 			{path: 'portfolio', component: PortfolioComponent},
 			{
-				path: 'user', component: PageSubUserComponent, children: [
+				path: 'user', component: PageSubUserComponent, children:
+				[
 					{path: '', redirectTo: 'overview', pathMatch: 'full'},
 					{path: 'overview', component: UserOverviewComponent},
-					{path: 'profile/:id', component: ProfileComponent, children: [
-						{path: '', redirectTo: 'feed', pathMatch: 'full'},
-						{path: 'feed', component: SocialFeedComponent},
-						{path: 'channels', component: ProfileChannelOverviewComponent},
-					]}
+					{
+						path: ':id', component: ProfileComponent, children:
+						[
+							{path: '', redirectTo: 'feed', pathMatch: 'full'},
+							{path: 'feed', component: SocialFeedComponent},
+							{path: 'channels', component: ProfileChannelOverviewComponent},
+						]
+					}
 				]
 			},
 			{path: 'charts', component: ChartOverviewComponent},
+			{path: 'charts/:id', component: ChartOverviewComponent},
 			{path: 'backtest', component: BacktestComponent},
 			{path: 'editor', component: JSEditorComponent},
 			{path: 'settings', component: SettingsComponent},

@@ -5,6 +5,9 @@ import {join} from 'path';
 import {BROKER_GENERAL_TYPE_OANDA, LEVERAGE_TYPE_1} from '../../../shared/constants/constants';
 
 const UserSchema = new Schema({
+	c_id: {
+		type: Schema.Types.ObjectId,
+	},
 	email: {
 		type: String,
 		unique: true,
@@ -35,6 +38,11 @@ const UserSchema = new Schema({
 		type: String,
 		required: false,
 		trim: true
+	},
+	favorites: {
+		type: [String],
+		required: false,
+		default: []
 	},
 	// TODO
 	copying: {
@@ -80,9 +88,12 @@ const UserSchema = new Schema({
 });
 
 // authenticate input against database
-UserSchema.statics.authenticate = async (params: {email?: string, password?: string, fields?: any}) => {
+UserSchema.statics.authenticate = async (params: {email?: string, password?: string}, fields = []) => {
 
-	const user = await User.findOne({email: params.email}, {password: 1, ...params.fields || {}}).lean();
+	let fieldsObj = {password: 1};
+	fields.forEach(field => fieldsObj[field] = 1);
+
+	const user = await User.findOne({email: params.email}, {password: 1, ...fieldsObj || {}}).lean();
 
 	if (!user)
 		return null;
@@ -96,6 +107,7 @@ UserSchema.statics.authenticate = async (params: {email?: string, password?: str
 			if (result !== true)
 				return resolve(null);
 
+			delete user.password;
 			resolve(user);
 		});
 	});
@@ -116,6 +128,19 @@ UserSchema.statics.toggleFollow = async function (from, to) {
 			User.update({_id: to}, {$addToSet: {followers: Types.ObjectId(from)}})
 		]).then(() => ({state: !isFollowing}));
 	}
+};
+
+UserSchema.statics.toggleFavorite = async function (userId: string, symbol: string): Promise<boolean> {
+	const user = await this.findById(userId, {favorites: 1});
+
+	if (!user)
+		return;
+
+	const isFavorite = user.favorites.includes(symbol);
+
+	await user.update(isFavorite ? {$pull: {favorites: symbol}} : {$addToSet: {favorites: symbol}});
+
+	return !isFavorite;
 };
 
 // hashing a password before saving it to the database

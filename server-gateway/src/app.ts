@@ -142,9 +142,14 @@ app.use((req, res, next) => {
 app.get('/', (req, res) => proxy.web(req, res, {target: config.server.fe.apiUrl}));
 
 /**
- * imagese
+ * image
  */
 app.get('/images/*', (req, res) => proxy.web(req, res, {target: config.server.fe.apiUrl}));
+
+/**
+ * favorite
+ */
+app.use('/favorite', (req, res) => proxy.web(req, res, {target: config.server.user.apiUrl + '/favorite'}));
 
 /**
  * authenticate
@@ -171,6 +176,12 @@ app.use('/channel', require('./api/channel.api'));
  * order
  */
 app.use('/order', require('./api/order.api'));
+
+/**
+ * comment
+ */
+app.use('/comment', require('./api/comment.api'));
+app.use('/comment/*', require('./api/comment.api'));
 
 /**
  * SEARCH

@@ -1,27 +1,220 @@
 @import '../../style/variables/variables';
 @import '../../style/helpers/normalize';
 
-main {
-    padding: 20px;
-    background: $background-light2;
-    height: 100%;
-
-    .scroll-container {
-        overflow-y: auto;
-        position: absolute;
-        top: 80px;
-        left: 0;
-        right: 0;
-        bottom: 0;
-    }
-
-    dl,
-    dt,
-    dd {
-        color: $font-color-light;
-    }
+.g-username {
+	color: $font-color-link !important;
 }
 
-body {
-    background: #fafafa;
+.g-bold {
+	font-weight: bold;
+}
+
+:host {
+	padding: 20px;
+	height: 100%;
+	width: 500px;
+	margin: 0 auto;
+
+	.scroll-container {
+		overflow-y: auto;
+		position: absolute;
+		top: 80px;
+		left: 0;
+		right: 0;
+		bottom: 0;
+	}
+
+	dl,
+	dt,
+	dd {
+		color: $font-color-light;
+	}
+}
+
+app-comment-box {
+	display: block;
+	margin-bottom: 20px;
+}
+
+.comment-container {
+	background: white;
+	margin-bottom: 20px;
+	border-radius: 5px;
+	width: 500px;
+	box-sizing: border-box;
+	font-size: 12px;
+	transition: all 1s;
+
+	&.fade-in {
+		animation: fadeIn 2s; /* IE 10+, Fx 29+ */
+	}
+
+	header,
+	main,
+	footer {
+		i {
+			margin-right: 5px;
+		}
+	}
+
+	main,
+	footer {
+		border-top: 1px solid $border-color-light;
+	}
+
+	header {
+		display: flex;
+		padding: 5px;
+
+		div {
+			a {
+				display: block;
+				margin-bottom: 2px;
+			}
+
+			span {
+				font-size: 10px;
+			}
+		}
+
+		img {
+			width: 30px;
+			height: 30px;
+			background: black;
+			margin-right: 10px;
+		}
+
+		a {
+
+			span {
+				display: block;
+
+				&:last-child {
+					float: right;
+				}
+			}
+		}
+	}
+
+	main {
+		padding-top: 20px;
+		padding-bottom: 20px;
+		padding-left: 10px;
+	}
+
+	footer {
+		padding-top: 0;
+
+		.parent-buttons {
+			padding: 8px 10px;
+
+			a {
+				margin-right: 5px;
+			}
+
+			i {
+				margin-left: 5px;
+			}
+		}
+
+		.child-row {
+			background: #ececec;
+			border-bottom: 1px solid #fff;
+			padding: 5px;
+			//border-bottom: 1px solid $border-color-light;
+			display: flex;
+
+			.g-username {
+				padding-right: 5px;
+			}
+
+			.child-content {
+				span, a {
+					line-height: 25px;
+					display: block;
+				}
+			}
+
+			.child-buttons {
+				margin-top: 2px;
+			}
+		}
+
+		img {
+			height: 25px;
+			width: 25px;
+			margin-right: 10px;
+			border: 1px solid grey;
+			border-radius: 50%;
+		}
+
+		.comment-input {
+
+			input {
+				margin-top: 2px;
+				width: 100%;
+				border-radius: 4px;
+				border: 1px solid grey;
+				padding: 6px 10px;
+			}
+		}
+
+		a {
+			//margin-right: 10px;
+			color: black;
+
+			&.active,
+			&:hover {
+				//color: red;
+
+				span {
+					color: red;
+				}
+
+				//color: $general-active;
+			}
+
+		}
+	}
+
+	p,
+	span {
+		color: black;
+	}
+}
+
+@-webkit-keyframes fadeIn {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+@-moz-keyframes fadeIn {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+@-o-keyframes fadeIn {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+@keyframes fadeIn {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
 }

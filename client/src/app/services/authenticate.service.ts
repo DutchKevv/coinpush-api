@@ -1,4 +1,4 @@
-import {Injectable, Output} from '@angular/core';
+import {EventEmitter, Injectable, Output} from '@angular/core';
 import {Http, Response} from '@angular/http';
 import 'rxjs/add/operator/map'
 import {Router} from '@angular/router';
@@ -11,15 +11,11 @@ import {BehaviorSubject} from "rxjs/BehaviorSubject";
 @Injectable()
 export class AuthenticationService {
 
-	@Output() public loggedIn$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+	@Output() public loggedIn$: EventEmitter<boolean> = new EventEmitter(false);
 
 	constructor(private _router: Router,
 				private _userService: UserService,
-				private _cacheService: CacheService,
-				private _orderService: OrderService,
-				private _socketService: SocketService,
 				private _http: Http) {
-		this.authenticate();
 	}
 
 	getStoredUser(): any {
@@ -56,43 +52,37 @@ export class AuthenticationService {
 	async authenticate(email?: string, password?: string, token?: string, profile = true): Promise<boolean> {
 		if (!email && !password && !token) {
 			token = this.getStoredToken();
-			if (!token)
+			if (!token) {
+				this.loggedIn$.emit(false);
 				return false;
+			}
 		}
 
 		try {
 			const user = await this._http.post('/authenticate', {
-				email,
-				password,
-				token,
-				profile
-			}).map((r: Response) => r.json()).toPromise();
+					email,
+					password,
+					token,
+					profile
+				})
+				.map((r: Response) => r.json())
+				.toPromise();
 
-			if (!user || !user.token)
+			if (!user || !user.token) {
+				this.loggedIn$.emit(false);
 				return false;
+			}
 
 			this.updateStoredUser(user);
 
 			this._userService.model.set(user);
 
-			// await this.loadAppData();
-
-			this.loggedIn$.next(true);
+			this.loggedIn$.emit(true);
 
 			return true;
 		} catch (error) {
 			return false;
 		}
-	}
-
-	public async loadAppData() {
-		this._socketService.connect();
-		await this._cacheService.load();
-		await this._orderService.load();
-	}
-
-	public async unloadAppData() {
-		// this._socketService.disconnect();
 	}
 
 	logout() {

@@ -3,7 +3,7 @@
 	<a [ngClass]="{active: activeFilter === 'all'}" (click)="toggleFilter('all')">All</a>
 	<a [ngClass]="{active: activeFilter === 'all popular'}" (click)="toggleFilter('all popular')">All popular</a>
 	<a [ngClass]="{active: activeFilter === 'rise and fall'}" (click)="toggleFilter('rise and fall')">Risers and fallers</a>
-	<a [ngClass]="{active: activeFilter === 'fav'}" (click)="toggleFilter('fav')">My favorites</a>
+	<a [ngClass]="{active: activeFilter === 'favorite'}" (click)="toggleFilter('favorite')">My favorites</a>
 	<h4>Resources</h4>
 	<a [ngClass]="{active: activeFilter === 'resources'}" (click)="toggleFilter('resources')">All resources</a>
 	<a [ngClass]="{active: activeFilter === 'resources pop'}" (click)="toggleFilter('resources pop')">Popular resources</a>
@@ -39,7 +39,8 @@
 			<tbody>
 			<tr *ngFor="let symbol of symbols$ | async"
 				[ngClass]="{'active': activeSymbol === symbol}"
-				(click)="setActiveSymbol(symbol)">
+				[attr.data-symbol]="symbol.options.name"
+				[routerLink]="['/main/charts', symbol.options.name]">
 
 				<ng-container *ngIf="symbol.options$ | async as options">
 					<td>{{symbol.options.name}}</td>
@@ -60,10 +61,10 @@
 					</td>
 					<td *ngIf="options.halted">Market closed</td>
 					<td *ngIf="!options.halted">0 / 0</td>
-					<!--<td class="font-color-{{options.bidDirection}}">{{options.bid}}</td>-->
-					<!--<td class="font-color-{{options.askDirection}}">{{options.ask}}</td>-->
 					<td>
-						<i class="fa fa-star"></i>
+						<i (click)="onClickToggleFavorite($event, symbol);"
+						   [ngClass]="{'active': userService.model.options.favorites.includes(symbol.options.name)}"
+						   class="fa fa-star"></i>
 						<i class="fa fa-bell"></i>
 						<i class="fa fa-info-circle"></i>
 					</td>

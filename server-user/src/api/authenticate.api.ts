@@ -6,7 +6,7 @@ const router = Router();
 
 router.post('/', async (req, res, next) => {
 	try {
-		const result = await authenticateController.authenticate(req.user, req.body);
+		const result = await authenticateController.authenticate(req.user, req.body, req.body.fields);
 
 		if (!result)
 			res.status(401);

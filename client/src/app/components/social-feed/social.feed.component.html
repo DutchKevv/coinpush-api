@@ -1,37 +1,51 @@
-<main>
+<app-comment-box [channelId]="channelId" (newMessage)="addMessage($event)"></app-comment-box>
 
-   <app-comment-box></app-comment-box>
+<div *ngFor="let comment of comments$ | async" class="comment-container fade-in">
+	<header>
+		<a [routerLink]="['/main/user/', comment.options.userId, 't=user']" [queryParams]="{ page: 99 }">
+			<img [attr.src]="comment.options.profileImg"/>
+		</a>
+		<div>
+			<a [routerLink]="['/main/user/', comment.options.userId]" class="g-username">
+				{{comment.options.username}}
+			</a>
+			<span>{{comment.options.created | date:'shortTime'}}</span>
+		</div>
+	</header>
+	<main>
+		<p>{{comment.options.content}}</p>
+	</main>
+	<footer>
+		<div class="parent-buttons">
+			<a (click)="commentService.toggleLike(comment)" [ngClass]="{active: (comment.options$ | async).iLike}">
+				<span>{{(comment.options$ | async).likeCount}} like(s)</span><i class="fa fa-thumbs-up"></i>
+			</a>
+			<a (click)="focusInput($event)">
+				{{(comment.options$ | async).childCount || 0}} comment(s)<i class="fa fa-comment"></i>
+			</a>
+		</div>
 
-    <!--<div class="box-container">-->
-        <!--<dl>-->
-            <!--<dt>Username:</dt>-->
-            <!--<dd>{{model.options.username}}</dd>-->
-            <!--<dt>Age:</dt>-->
-            <!--<dd>{{model.options.age}}</dd>-->
-            <!--<dt> Member since:</dt>-->
-            <!--<dd>Comment</dd>-->
-        <!--</dl>-->
-    <!--</div>-->
+		<div class="child-row" *ngFor="let child of comment.options.children">
+			<img [attr.src]="child.options.profileImg"/>
+			<div>
+				<a class="g-username"[routerLink]="['/main/user/', child.options.userId]">{{child.options.username}}</a>
+				<span>{{child.options.content}}</span>
+				<div class="child-buttons">
+					<a (click)="commentService.toggleLike(child)" [ngClass]="{active: (child.options$ | async).iLike}">
+						<span *ngIf="(child.options$ | async).iLike">I Like - </span>
+						<span *ngIf="!(child.options$ | async).iLike">like - </span>
+						<span *ngIf="(child.options$ | async).likeCount > 0">
+							<i class="fa fa-thumbs-o-up"></i>{{(child.options$ | async).likeCount}} -
+						</span>
+					</a>
+					<span>{{child.options.created | date:'shortTime'}}</span>
+				</div>
+			</div>
+		</div>
 
-    <!--<div class="box-container">-->
-        <!--<dl>-->
-            <!--<dt>Username:</dt>-->
-            <!--<dd>{{model.options.username}}</dd>-->
-            <!--<dt>Age:</dt>-->
-            <!--<dd>{{model.options.age}}</dd>-->
-            <!--<dt> Member since:</dt>-->
-            <!--<dd>Comment</dd>-->
-        <!--</dl>-->
-    <!--</div>-->
-
-    <!--<div class="box-container">-->
-        <!--<dl>-->
-            <!--<dt>Username:</dt>-->
-            <!--<dd>{{model.options.username}}</dd>-->
-            <!--<dt>Age:</dt>-->
-            <!--<dd>{{model.options.age}}</dd>-->
-            <!--<dt> Member since:</dt>-->
-            <!--<dd>Comment</dd>-->
-        <!--</dl>-->
-    <!--</div>-->
-</main>
+		<div class="child-row comment-input">
+			<img [attr.src]="userService.model.options.profileImg">
+			<input (keyup.enter)="respond($event, comment.options._id)" type="text" placeholder="Write a comment..."/>
+		</div>
+	</footer>
+</div>

@@ -44,6 +44,11 @@ module.exports = {
             apiUrl: 'http://localhost:3008',
             connectionString: 'mongodb://localhost:27017/tradejs-user'
         },
+		comment: {
+			port: 3009,
+			apiUrl: 'http://localhost:3009',
+			connectionString: 'mongodb://localhost:27017/tradejs-comment'
+		},
         fe: {
             port: 4200,
             apiUrl: 'http://localhost:4200'

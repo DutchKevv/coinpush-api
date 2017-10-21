@@ -8,7 +8,7 @@ const router = Router();
  */
 router.get('/:id', async (req, res, next) => {
 	try {
-		res.send(await channelController.findById(req.user, req.query));
+		res.send(await channelController.findById(req.user, req.params.id));
 	} catch (error) {
 		next(error);
 	}
@@ -21,7 +21,6 @@ router.get('/', async (req, res, next) => {
 	try {
 		const pList = [], result = {};
 
-		console.log('asdfasfd',  req.query.fields);
 		if (req.query.user)
 			pList.push(['user', channelController.findByUserId(req.user, req.query.user, req.query.fields)]);
 		else

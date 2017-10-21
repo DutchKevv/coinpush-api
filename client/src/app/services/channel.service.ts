@@ -14,15 +14,15 @@ export class ChannelService {
 
 	}
 
-	get(channelId: string): Observable<ChannelModel> {
-		return this._http.get('/channel/' + channelId).map(res => new ChannelModel(res.json().user[0]));
+	find(channelId: string): Observable<ChannelModel> {
+		return this._http.get('/channel/' + channelId).map(res => new ChannelModel(res.json()));
 	}
 
-	getMany(): Promise<any> {
-		return this._http.get('/channel/').map(res => new ChannelModel(res.json().user)).toPromise();
+	findMany(): Promise<any> {
+		return this._http.get('/channel/').map(res => new ChannelModel(res.json())).toPromise();
 	}
 
-	getByUserId(userId: string): Observable<ChannelModel> {
+	findByUserId(userId: string): Observable<ChannelModel> {
 		return this._http.get('/channel/', {params: {user: userId}}).map(res => new ChannelModel(res.json()));
 	}
 

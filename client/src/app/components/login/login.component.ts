@@ -16,20 +16,18 @@ export class LoginComponent implements OnInit {
 	constructor(private route: ActivatedRoute,
 				private router: Router,
 				private authenticationService: AuthenticationService,
-				private alertService: AlertService) {
-	}
+				private alertService: AlertService) {}
 
 	ngOnInit() {
-		// reset login status
-		this.authenticationService.logout();
 
 		// get return url from route parameters or default to '/'
 		this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
 	}
 
 	async login(e) {
-		this.loading = true;
 		e.preventDefault();
+
+		this.loading = true;
 
 		const result = await this.authenticationService.authenticate(this.model.email, this.model.password);
 		if (result)

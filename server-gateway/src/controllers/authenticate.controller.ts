@@ -7,7 +7,7 @@ export const authenticateController = {
 
 	async authenticate(reqUser, params: {email?: string, password?: string, token?: string}): Promise<any> {
 
-		params['fields'] = {balance: 1};
+		params['fields'] = ['balance', 'leverage', 'favorites'];
 
 		const user = await request({
 			uri: config.server.user.apiUrl + '/authenticate',

@@ -1,7 +1,11 @@
-import {ChangeDetectionStrategy, Component, ElementRef, Input, NgZone, OnInit, ViewEncapsulation} from '@angular/core';
-import {UserService} from '../../services/user.service';
-import {Http} from '@angular/http';
-import {FormBuilder} from '@angular/forms';
+import {
+	ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild,
+	ViewEncapsulation
+} from '@angular/core';
+import {CommentService} from "../../services/comment.service";
+import {Subject} from "rxjs/Subject";
+import {CommentModel} from "../../models/comment.model";
+import {UserService} from "../../services/user.service";
 
 @Component({
 	selector: 'app-comment-box',
@@ -11,29 +15,37 @@ import {FormBuilder} from '@angular/forms';
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class CommentBoxComponent implements OnInit {
-	@Input() model;
+export class CommentBoxComponent implements OnInit, OnDestroy {
 
-	form: any;
+	@Input() channelId: string;
+	@Output() public newMessage: EventEmitter<CommentModel> = new EventEmitter();
 
-	constructor(private _http: Http,
-				private _zone: NgZone,
-				private _elementRef: ElementRef,
-				private _formBuilder: FormBuilder,
-				private _userService: UserService) {
+	@ViewChild('content') private _contentRef: ElementRef;
 
 
+	constructor(private _commentService: CommentService, private _userService: UserService) {
 	}
 
 	ngOnInit() {
 
 	}
 
-	post() {
+	public async post(): Promise<void> {
+		const comment = await this._commentService.create(this.channelId, null, this._contentRef.nativeElement.value);
+
+		if (!comment)
+			return;
+
+		this._contentRef.nativeElement.value = '';
+		this.newMessage.emit(comment);
+	}
+
+
+	public clean() {
 
 	}
 
-	onChangeFileInput(event) {
+	ngOnDestroy() {
 
 	}
 }

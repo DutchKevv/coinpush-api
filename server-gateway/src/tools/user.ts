@@ -36,4 +36,4 @@ module.exports = {
 	}
 };
 
-module.exports.addFakeUsers(50).then(() => process.exit(0)).catch(console.error);
+module.exports.addFakeUsers(5).then(() => process.exit(0)).catch(console.error);

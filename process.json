@@ -54,6 +54,15 @@
     "instances": 1
   },
   {
+    "script": "server-comment/index.js",
+    "name": "comment-api",
+    "exec_mode": "fork",
+    "env_production" : {
+      "NODE_ENV": "production"
+    },
+    "instances": 1
+  },
+  {
     "script": "server/bootstrapper.js",
     "name": "old-api",
     "exec_mode": "fork",

@@ -26,7 +26,7 @@ export class ChannelOverviewComponent implements OnInit, OnDestroy, AfterViewChe
 	}
 
 	ngOnInit() {
-		this._channelService.getMany().then((list) => {
+		this._channelService.findMany().then((list) => {
 			this.channels$.next(list)
 		});
 	}

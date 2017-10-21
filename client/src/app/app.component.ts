@@ -12,6 +12,8 @@ declare let Module: any;
 	template: `
 		<div modalAnchor></div>
 		<app-alert></app-alert>
+		<!--<router-outlet></router-outlet>-->
+		<router-outlet *ngIf="!(authenticationService.loggedIn$ | async)"></router-outlet>
 		<router-outlet *ngIf="(ready$ | async) === true"></router-outlet>
 	`,
 	styleUrls: [
@@ -30,9 +32,7 @@ export class AppComponent implements OnInit {
 				private _socketService: SocketService,
 				private _cacheService: CacheService,
 				private _orderService: OrderService
-	) {
-
-	}
+	) {}
 
 	ngOnInit() {
 		this.authenticationService.loggedIn$.subscribe(async state => {
@@ -41,6 +41,8 @@ export class AppComponent implements OnInit {
 				this.ready$.next(true);
 			}
 		});
+
+		this.authenticationService.authenticate();
 	}
 
 	public async loadAppData() {

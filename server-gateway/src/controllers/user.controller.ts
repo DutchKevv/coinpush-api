@@ -54,6 +54,11 @@ export const userController = {
 				profileImg: params.profileImg
 			});
 
+			// update user with channel id
+			await this.update({id: user._id}, user._id, {
+				c_id: channel._id
+			});
+
 			return {user, channel};
 
 		} catch (error) {

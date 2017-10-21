@@ -6,6 +6,7 @@ import {AlertService} from './alert.service';
 import {UserService} from './user.service';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {OrderModel} from '../models/order.model';
+import {SymbolModel} from "../models/symbol.model";
 
 @Injectable()
 export class OrderService {
@@ -17,14 +18,15 @@ export class OrderService {
 		success: new Audio('sounds/success.mp3'),
 	};
 
-	constructor(private _constantsService: ConstantsService,
-				private _cacheService: CacheService,
+	constructor(private _cacheService: CacheService,
 				private _userService: UserService,
 				private _alertService: AlertService,
 				private http: Http) {
+
+		_cacheService.changed$.subscribe((symbols: Array<SymbolModel>) => this._onTick(symbols));
 	}
 
-	public get (id) {
+	public get(id) {
 		return this.http.get('/order/' + id).map(res => res.json());
 	}
 
@@ -36,59 +38,48 @@ export class OrderService {
 
 	}
 
-	public create(options) {
-		const subscription = this.http.post('/order', options).map(res => console.log(res.json()) || this.createModel(res.json()));
+	public create(options): void {
+		this.http.post('/order', options)
+			.map(res => console.log(res.json()) || this.createModel(res.json()))
+			.subscribe((order: OrderModel) => {
 
-		subscription.subscribe((order: OrderModel) => {
+				// Update account
+				this._userService.model.set({balance: order.get('balance')});
+				this.calculateAccountStatus();
 
-			// Update account
-			this._userService.model.set({balance: order.get('balance')});
-			this.calculateAccountStatus();
+				// Push order onto stack
+				const orders = Array.from(this.orders$.getValue());
+				orders.push(order);
+				this.orders$.next(orders);
 
-			// Push order onto stack
-			const orders = Array.from(this.orders$.getValue());
-			orders.push(order);
-			this.orders$.next(orders);
+				// Play success sound
+				this._audio.success.play();
 
-			// Play success sound
-			this._audio.success.play();
+				// Show conformation box
+				this._alertService.success('Order set');
+			}, (error) => {
+				console.log(error);
 
-			// Show conformation box
-			this._alertService.success('Order set');
-		},  (error) => {
-			console.log(error);
+				// Play fail sound
+				this._audio.fail.play();
 
-			// Play fail sound
-			this._audio.fail.play();
-
-			// Try parsing information about failure
-			try {
-				error = JSON.parse(error);
-				this._alertService.error(error.error.message);
-			} catch (error) {
-				this._alertService.error('Unknown error occurred');
-			}
-		});
-
-		return subscription;
+				// Try parsing information about failure
+				try {
+					error = JSON.parse(error);
+					this._alertService.error(error.error.message);
+				} catch (error) {
+					this._alertService.error('Unknown error occurred');
+				}
+			});
 	}
 
 	public createModel(data): OrderModel {
 		let model = new OrderModel(data),
-			symbol = this._cacheService.getBySymbol(model.options.symbol),
-			symbolOptions$ = symbol.options$;
+			symbol = this._cacheService.getBySymbol(model.options.symbol);
+
+		this.updateModel(model, symbol.options);
 
 		model.symbolHandle = symbol;
-
-		this.updateModel(model, symbolOptions$.getValue());
-
-		const subscription = symbolOptions$.subscribe((options: any) => {
-			this.updateModel(model, options);
-
-			this.calculateAccountStatus()
-		});
-
-		model.subscription.push(subscription);
 
 		return model;
 	}
@@ -102,7 +93,7 @@ export class OrderService {
 			value: value,
 			PL: parseFloat(PL.toFixed(2)),
 			PLPerc: parseFloat((((value / openValue) * 100) - 100).toFixed(2)),
-		}, false);
+		}, true, false);
 	}
 
 	public update(id, options) {
@@ -140,6 +131,21 @@ export class OrderService {
 
 	public unload() {
 		this.orders$.next([]);
+	}
+
+	private _onTick(symbols) {
+		symbols.forEach(symbol => {
+			const model = this._cacheService.symbols.find(m => m === symbol);
+
+			if (model)
+				this.orders$.getValue()
+					.filter((o: OrderModel) => o.options.symbol === symbol)
+					.forEach((o: OrderModel) => {
+						this.updateModel(o, model.options);
+					});
+		});
+
+		this.calculateAccountStatus()
 	}
 }
 

@@ -7,6 +7,7 @@ export class UserModel extends BaseModel {
 		following: false,
 		followers: 0,
 		balance: 0,
+		favorites: [],
 		leverage: LEVERAGE_TYPE_1,
 		iFollow: false,
 		iCopy: false,

@@ -1,5 +1,5 @@
 <nav class="nav-main">
-    <a [routerLink]="['/main/user/profile/', userService.model.get('user_id')]" [routerLinkActive]="['active']" class="profile">
+    <a [routerLink]="['/main/user/', userService.model.get('_id')]" [routerLinkActive]="['active']" class="profile">
         <img class="logo" width="70" height="70" src="{{(userService.model.options$ | async).profileImg}}">
         <h4>{{userService.model.options.name}}</h4>
     </a>
@@ -51,7 +51,7 @@
             </div>
             <div>
                 <h3>{{status.equity | currency : 'EUR':true}}</h3>
-                <span>equlity</span>
+                <span>equality</span>
             </div>
             <div>
                 <h3>{{status.openMargin | currency : 'EUR':true}}</h3>
@@ -64,11 +64,11 @@
             <div class="header-search">
                 <input (keyup)="onSearchKeyUp($event)" placeholder="Markets / Channels / People" #input>
                 <div class="search-drop-down" *ngIf="(searchResults$ | async) as result" (click)="onClickDropdownItem()" #dropdown>
-                    <a *ngFor="let symbol of result.symbols">
+                    <a *ngFor="let symbol of result.symbols" [routerLink]="['/main/charts', symbol.name]">
                         <img src="/images/default/symbol/spx500-70x70.png">
                         <span>{{symbol.name}}</span>
                     </a>
-                    <a *ngFor="let user of result.users" [routerLink]="['/main/user/profile/' + user.user_id]">
+                    <a *ngFor="let user of result.users" [routerLink]="['/main/user/', user._id]">
                         <img src="{{user.profileImg}}">
                         <span>{{user.name}}</span>
                     </a>

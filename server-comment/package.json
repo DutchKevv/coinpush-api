@@ -1,0 +1,24 @@
+{
+  "name": "tradejs-comment-server",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "tsc-watch --onSuccess \"node index.js\"",
+    "build": "tsc"
+  },
+  "author": "H.K.Brandsma",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.0",
+    "express": "^4.15.4",
+    "helmet": "^3.8.1",
+    "mongoose": "^4.11.11",
+    "morgan": "^1.8.2",
+    "redis": "^2.8.0",
+    "tsc-watch": "^1.0.8",
+    "typescript": "^2.5.2",
+    "validator": "^8.2.0"
+  }
+}
