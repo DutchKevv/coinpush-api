@@ -13,8 +13,8 @@ export class CommentService {
 
 	}
 
-	async create(channelId: string = null, parentId: string = null, content: string): Promise<CommentModel> {
-		const comment = await this._http.post('/comment', {channelId, parentId, content})
+	async create(channelId: string = null, userId = null, parentId: string = null, content: string): Promise<CommentModel> {
+		const comment = await this._http.post('/comment', {channelId, userId, parentId, content})
 			.map(res => res.json())
 			.toPromise();
 
@@ -24,8 +24,9 @@ export class CommentService {
 		const model = new CommentModel({
 			...comment,
 			content,
+			isNew: true,
 			created: new Date(),
-			parentId: parentId,
+			parentId,
 			username: this._userService.model.get('name'),
 			profileImg: this._userService.model.get('profileImg'),
 		});
@@ -35,6 +36,18 @@ export class CommentService {
 
 	async findByChannelId(channelId: string): Promise<Array<CommentModel>> {
 		const result = await this._http.get('/comment', {params: {channel: channelId}})
+			.map(res => res.json().map(r => {
+				const model = new CommentModel(r);
+				model.options.children = model.options.children.map(c => new CommentModel(c));
+				return model;
+			}))
+			.toPromise();
+
+		return result;
+	}
+
+	async findByUserId(userId: string): Promise<Array<CommentModel>> {
+		const result = await this._http.get('/comment', {params: {user: userId}})
 			.map(res => res.json().map(r => {
 				const model = new CommentModel(r);
 				model.options.children = model.options.children.map(c => new CommentModel(c));

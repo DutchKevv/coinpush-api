@@ -1,7 +1,20 @@
 import {Router} from 'express';
 import {authenticateController} from '../controllers/authenticate.controller';
-const config = require('../../../tradejs.config');
+import {userController} from "../controllers/user.controller";
+
 const router = Router();
+
+/**
+ * password reset request
+ */
+router.post('/request-password-reset', async (req, res, next) => {
+	try {
+		res.send(await authenticateController.requestPasswordReset(req.user, req.body.email));
+	} catch (error) {
+		next(error);
+	}
+});
+
 
 /**
  * login
@@ -10,9 +23,17 @@ router.post('/', async (req, res, next) => {
 	try {
 		res.send(await authenticateController.authenticate(req.user, req.body));
 	} catch (error) {
-		if (error && error.statusCode === 401)
-			return res.send(401);
+		next(error);
+	}
+});
 
+/**
+ * password update
+ */
+router.put('/', async (req, res, next) => {
+	try {
+		res.send(await userController.updatePassword(req.user, req.body.token, req.body.password));
+	} catch (error) {
 		next(error);
 	}
 });

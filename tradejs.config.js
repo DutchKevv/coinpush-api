@@ -10,7 +10,8 @@ module.exports = {
         'config': path.join(__dirname, '_config')
     },
     token: {
-        secret: 'BUTTERFLY1942'
+        secret: 'BUTTERFLY1942',
+		passwordResetSecret: 'BEAVER_COMMUNITY_12_1'
     },
     server: {
         gateway: {
@@ -49,6 +50,11 @@ module.exports = {
 			apiUrl: 'http://localhost:3009',
 			connectionString: 'mongodb://localhost:27017/tradejs-comment'
 		},
+		email: {
+			port: 3010,
+			apiUrl: 'http://localhost:3010',
+			connectionString: 'mongodb://localhost:27017/tradejs-email'
+		},
         fe: {
             port: 4200,
             apiUrl: 'http://localhost:4200'
@@ -79,6 +85,17 @@ module.exports = {
             'username': null,
             'token': '067331173f67faf3cef7e69263a3015a-fefb596cddfe98d2f24e9ca843c3c443',
             'accountId': '1218398'
+        }
+    },
+    email: {
+        account: {
+            noReply: {
+				service: 'Gmail',
+				auth: {
+					user: 'brandsma1987@gmail.com', // Your email id
+					pass: 'halo33221' // Your password
+				}
+            }
         }
     }
 };

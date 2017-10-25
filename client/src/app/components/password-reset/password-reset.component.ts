@@ -1,19 +1,22 @@
-import {ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
 import {AuthenticationService} from '../../services/authenticate.service';
 import {AlertService} from '../../services/alert.service';
 
 @Component({
-	styleUrls: ['./login.component.scss'],
-	templateUrl: 'login.component.html',
-	encapsulation: ViewEncapsulation.Native,
-	changeDetection: ChangeDetectionStrategy.OnPush
+	styleUrls: ['./password-reset.component.scss'],
+	templateUrl: 'password-reset.component.html',
+	encapsulation: ViewEncapsulation.Native
 })
 
-export class LoginComponent implements OnInit {
-	model: any = {};
-	loading = false;
-	returnUrl: string;
+export class PasswordResetComponent implements OnInit {
+
+	model: {
+		password: string;
+		passwordConf: string;
+	} = {password: '', passwordConf: ''};
+
+	loading: boolean = false;
 
 	constructor(private route: ActivatedRoute,
 				private router: Router,
@@ -22,18 +25,19 @@ export class LoginComponent implements OnInit {
 
 	ngOnInit() {
 		// get return url from route parameters or default to '/'
-		this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+
 	}
 
-	async login(e) {
+	async resetPassword(e) {
 		e.preventDefault();
 
 		this.loading = true;
 
-		const result = await this.authenticationService.authenticate(this.model.email, this.model.password);
+		const token = this.route.snapshot.queryParams['token'];
+		const result = await this.authenticationService.updatePassword(token, this.model.password);
 
 		if (result)
-			return this.router.navigate([this.returnUrl]);
+			return this.router.navigate(['/login']);
 
 		this.alertService.error('Invalid username / password');
 		this.loading = false;

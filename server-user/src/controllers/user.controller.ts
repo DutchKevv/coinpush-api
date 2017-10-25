@@ -1,15 +1,21 @@
+import * as jwt from 'jsonwebtoken';
+import * as bcrypt from 'bcrypt';
 import {Types, ObjectId} from 'mongoose';
 import {client} from '../modules/redis';
 import {User} from '../schemas/user';
 import {
+	G_ERROR_EXPIRED,
+	G_ERROR_USER_NOT_FOUND,
 	REDIS_USER_PREFIX, USER_FETCH_TYPE_ACCOUNT_DETAILS, USER_FETCH_TYPE_PROFILE_SETTINGS, USER_FETCH_TYPE_SLIM,
 } from '../../../shared/constants/constants';
+
+const RESET_PASSWORD_TOKEN_EXPIRE = 1000 * 60 * 60 * 24; // 24 hour
 
 export const userController = {
 
 	getAllowedFields: ['_id', 'username', 'profileImg', 'country', 'followers', 'following', 'membershipStartDate', 'description', 'balance'],
 
-	async find(reqUser, userId, type: number = USER_FETCH_TYPE_SLIM, fields: Array<string> = []) {
+	async find(reqUser, userId, type: number = USER_FETCH_TYPE_SLIM, fields: Array<string> = ['_id']) {
 		if (!userId)
 			throw new Error('user id is required');
 
@@ -69,35 +75,30 @@ export const userController = {
 		const fields = {};
 		(params.fields || this.getAllowedFields).filter(field => this.getAllowedFields.includes(field)).forEach(field => fields[field] = 1);
 
-		const data = await User.aggregate([
-			{
-				$project: {
-					...fields
-				}
-			},
-			{
-				$limit: limit
-			},
-			{
-				$sort: {
-					_id: sort
-				}
-			}
-		]);
+		const where:any = {};
+		if (params.email)
+			where.email = params.email;
 
-		return data;
+		return User.find(where, fields).sort({_id: sort}).limit(limit);
+	},
+
+	async findByEmail(reqUser, email: string, fields: Array<string> = []) {
+		let fieldsObj = {};
+		fields.forEach(field => fieldsObj[field] = 1);
+
+		return User.findOne({email}, fields);
 	},
 
 	async create(params) {
+		if (params.password)
+			params.password = bcrypt.hashSync(params.password, 10);
 
 		let userData = {
 			email: params.email,
+			name: params.name,
 			password: params.password,
 			country: params.country
 		};
-
-		if (!userData.email || !userData.password)
-			throw 'Missing attributes';
 
 		return User.create(userData);
 	},
@@ -114,14 +115,55 @@ export const userController = {
 	},
 
 	// TODO - Filter fields
-	async update(reqUser, userId, params) {
+	async update(reqUser, userId, params): Promise<void> {
+		if (params.password) {
+			await this.updatePassword(reqUser, undefined, params.password);
+			delete params.password;
+		}
 
-		// Update DB
 		const user = await User.findByIdAndUpdate(userId, params);
+
+		if (!user)
+			throw({code: G_ERROR_USER_NOT_FOUND});
 
 		// Update redis and other micro services
 		if (user)
-			client.publish('user-updated', JSON.stringify(user))
+			client.publish('user-updated', JSON.stringify(user));
+	},
+
+	// TODO - Filter fields
+	async updatePassword(reqUser, token, password): Promise<void> {
+		let user;
+
+		if (token)
+			user = await User.findOne({resetPasswordToken: token}, {resetPasswordExpires: 1});
+		else if (reqUser.id)
+			user = await User.findById(reqUser.id, {resetPasswordExpires: 1});
+
+		// Update redis and other micro services
+		if (!user)
+			throw({code: G_ERROR_USER_NOT_FOUND});
+
+		if (token && user.resetPasswordExpires < new Date())
+			throw({code: G_ERROR_EXPIRED});
+
+		user.password = bcrypt.hashSync(password, 10);
+		user.resetPasswordToken = undefined;
+		user.resetPasswordExpires = undefined;
+
+		await user.save();
+	},
+
+	async requestPasswordReset(reqUser, email: string): Promise<{_id: string, resetPasswordToken: string, resetPasswordExpires: number, name: string}> {
+		const token = bcrypt.genSaltSync(10);
+		const expires = Date.now() + RESET_PASSWORD_TOKEN_EXPIRE;
+
+		const user = await User.findOneAndUpdate({email}, {resetPasswordToken: token, resetPasswordExpires: expires}, {fields: {_id: 1, name: 1}});
+
+		if (!user)
+			throw({code: G_ERROR_USER_NOT_FOUND});
+
+		return {_id: user._id, resetPasswordToken: token, resetPasswordExpires: expires, name: user.name};
 	},
 
 	async remove(id) {

@@ -12,7 +12,7 @@ export class AlertComponent {
 	@Output() public message$: BehaviorSubject<any> = new BehaviorSubject(null);
 
 	private _timer;
-	private _timeout = 5000;
+	private _timeout = 7000;
 
 	constructor(private alertService: AlertService) { }
 
@@ -23,9 +23,7 @@ export class AlertComponent {
 
 			this.message$.next(message);
 
-			this._timer = setTimeout(() => {
-				this.message$.next(null);
-			}, this._timeout);
+			this._timer = setTimeout(() => this.message$.next(null), this._timeout);
 		} });
 	}
 }

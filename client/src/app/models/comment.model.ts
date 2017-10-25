@@ -8,7 +8,8 @@ export class CommentModel extends BaseModel {
 		content: '',
 		children: [],
 		iLike: false,
-		likeCount: 0
+		likeCount: 0,
+		isNew: false
 	}
 
 }

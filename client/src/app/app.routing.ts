@@ -15,11 +15,15 @@ import {PageSubUserComponent} from './components/page-sub-user/page.sub.user.com
 import {SettingsComponent} from './components/settings/settings.component';
 import {SocialFeedComponent} from './components/social-feed/social.feed.component';
 import {ProfileChannelOverviewComponent} from './components/profile-channel-overview/profile.channel.overview.component';
+import {PasswordResetComponent} from "./components/password-reset/password-reset.component";
+import {RequestPasswordResetComponent} from "./components/request-password-reset/request-password-reset.component";
 
 const routes: Routes = [
 	{path: '', redirectTo: 'main', pathMatch: 'full', canActivate: [AuthGuard]},
 	{path: 'login', component: LoginComponent},
 	{path: 'register', component: RegisterComponent},
+	{path: 'password-reset', component: PasswordResetComponent},
+	{path: 'request-password-reset', component: RequestPasswordResetComponent},
 	{
 		path: 'main', component: PageMainComponent, canActivate: [AuthGuard],
 		children: [

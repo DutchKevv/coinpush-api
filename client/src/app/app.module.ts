@@ -43,13 +43,16 @@ import {GroupByPipe, PortfolioComponent} from './components/portfolio/portfolio.
 import {ProfileComponent} from './components/profile/profile.component';
 import {PageSubUserComponent} from './components/page-sub-user/page.sub.user.component';
 import {SettingsComponent} from './components/settings/settings.component';
-import {SocialFeedComponent} from './components/social-feed/social.feed.component';
+import {ParseCommentContentPipe, SocialFeedComponent} from './components/social-feed/social.feed.component';
 import {ChannelRowComponent} from './components/channel-row/channel.row.component';
 import {ProfileChannelOverviewComponent} from './components/profile-channel-overview/profile.channel.overview.component';
 import {ChannelService} from './services/channel.service';
 import {ChannelDetailsModalComponent} from './components/channel-details-modal/channel.details.modal.component';
 import {CommentBoxComponent} from './components/comment-box/comment-box.component';
 import {CommentService} from "./services/comment.service";
+import {EmojiPickerModule} from 'ng-emoji-picker';
+import {PasswordResetComponent} from "./components/password-reset/password-reset.component";
+import {RequestPasswordResetComponent} from "./components/request-password-reset/request-password-reset.component";
 
 @NgModule({
 	declarations: [
@@ -63,11 +66,14 @@ import {CommentService} from "./services/comment.service";
 		DialogComponent,
 		FileTreeComponent,
 		GroupIdsPipe,
+		ParseCommentContentPipe,
 		InstrumentListComponent,
 		JSEditorComponent,
 		SocialFeedComponent,
 		ChannelRowComponent,
 		LoginComponent,
+		PasswordResetComponent,
+		RequestPasswordResetComponent,
 		RegisterComponent,
 		ModalComponent,
 		ModalAnchorDirective,
@@ -86,6 +92,7 @@ import {CommentService} from "./services/comment.service";
 		CommentBoxComponent
 	],
 	imports: [
+		EmojiPickerModule,
 		BrowserModule,
 		routing,
 		FormsModule,

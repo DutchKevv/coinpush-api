@@ -29,7 +29,7 @@
     "install-all": "npm run install-server && npm run install-client",
     "build-all": "npm run build-server && npm run build-client",
     "install-client": "cd ./client && npm i",
-    "install-server": "npm run install-gateway && npm run install-cache && npm run install-user && npm run install-order && npm run install-old-server && npm run install-channel && npm run install-shared  && npm run install-broker",
+    "install-server": "npm run install-gateway && npm run install-cache && npm run install-user && npm run install-order && npm run install-old-server && npm run install-channel && npm run install-shared && npm run install-broker && npm run install-email",
     "install-broker": "cd ./server-broker && npm i",
     "install-cache": "cd ./server-cache && npm i",
     "install-channel": "cd ./server-channel && npm i",
@@ -38,8 +38,9 @@
     "install-old-server": "cd ./server && npm i",
     "install-shared": "cd ./shared && npm i",
     "install-user": "cd ./server-user && npm i",
+    "install-email": "cd ./server-mail && npm i",
     "build-client": "cd ./client && npm run build",
-    "build-server": "npm run build-gateway && npm run build-cache && npm run build-user && npm run build-order && npm run build-old-server && npm run build-channel && npm run build-shared && npm run build-broker",
+    "build-server": "npm run build-gateway && npm run build-cache && npm run build-user && npm run build-order && npm run build-old-server && npm run build-channel && npm run build-shared && npm run build-broker && npm run build-email",
     "build-broker": "cd ./server-broker && npm run build",
     "build-cache": "cd ./server-cache && npm run build",
     "build-channel": "cd ./server-channel && npm run build",
@@ -48,6 +49,7 @@
     "build-old-server": "cd ./server && npm run build",
     "build-shared": "cd ./shared && npm run build",
     "build-user": "cd ./server-user && npm run build",
+    "build-email": "cd ./server-mail && npm run build",
     "run-client": "cd ./client && npm start"
   },
   "dependencies": {

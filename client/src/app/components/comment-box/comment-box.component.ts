@@ -18,6 +18,8 @@ import {UserService} from "../../services/user.service";
 export class CommentBoxComponent implements OnInit, OnDestroy {
 
 	@Input() channelId: string;
+	@Input() userId: string;
+
 	@Output() public newMessage: EventEmitter<CommentModel> = new EventEmitter();
 
 	@ViewChild('content') private _contentRef: ElementRef;
@@ -31,7 +33,12 @@ export class CommentBoxComponent implements OnInit, OnDestroy {
 	}
 
 	public async post(): Promise<void> {
-		const comment = await this._commentService.create(this.channelId, null, this._contentRef.nativeElement.value);
+		const value = this._contentRef.nativeElement.value.trim();
+
+		if (!value)
+			return;
+
+		const comment = await this._commentService.create(this.channelId, this.userId, null, value);
 
 		if (!comment)
 			return;

@@ -12,7 +12,6 @@ declare let Module: any;
 	template: `
 		<div modalAnchor></div>
 		<app-alert></app-alert>
-		<!--<router-outlet></router-outlet>-->
 		<router-outlet *ngIf="!(authenticationService.loggedIn$ | async)"></router-outlet>
 		<router-outlet *ngIf="(ready$ | async) === true"></router-outlet>
 	`,

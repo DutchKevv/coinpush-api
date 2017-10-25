@@ -17,8 +17,8 @@ export const userController = {
 		return Object.assign({}, results[0] || {}, results[1] || {});
 	},
 
-	async findMany(reqUserId: string, params): Promise<Array<any>> {
-		return request({uri: config.server.user.apiUrl + '/user/' + reqUserId, json: true})
+	async findMany(reqUser: {id: string}, params): Promise<Array<any>> {
+		return request({uri: config.server.user.apiUrl + '/user/' + reqUser.id, json: true})
 	},
 
 	async getBalance(reqUser, userId) {
@@ -39,6 +39,7 @@ export const userController = {
 				headers: {'_id': reqUser.id},
 				method: 'POST',
 				body: {
+					name: params.username,
 					email: params.email,
 					password: params.password,
 					country: params.country
@@ -74,7 +75,7 @@ export const userController = {
 	},
 
 	async update(reqUser, userId, params): Promise<void> {
-		await Promise.all([
+		const result = await Promise.all([
 			request({
 				uri: config.server.user.apiUrl + '/user/' + userId,
 				headers: {'_id': reqUser.id},
@@ -84,6 +85,21 @@ export const userController = {
 			}),
 			channelController.updateByUserId(reqUser, userId, params)
 		]);
+	},
+
+	async updatePassword(reqUser, token, password): Promise<void> {
+		const result = await request({
+			uri: config.server.user.apiUrl + '/user/password',
+			headers: {'_id': reqUser.id},
+			method: 'PUT',
+			body: {
+				token,
+				password
+			},
+			json: true
+		});
+
+		console.log('UDPATE ERSULT', result);
 	},
 
 	updateBalance(reqUser, params) {
@@ -138,6 +154,16 @@ export const userController = {
 		const result = await channelController.toggleCopy(reqUser.id, channel.user[0]._id);
 
 		return result;
+	},
+
+	async resetPassword(reqUser, userId?: string) {
+		return request({
+			uri: config.server.user.apiUrl + '/user/' + reqUser.id,
+			headers: {'_id': reqUser.id},
+			method: 'PUT',
+			body: {},
+			json: true
+		});
 	},
 
 	remove(reqUser, userId) {

@@ -1,8 +1,13 @@
 @import '../../style/variables/variables';
 @import '../../style/helpers/normalize';
 
-.g-username {
+.g-username,
+.g-link {
 	color: $font-color-link !important;
+
+	&:hover {
+		color: $font-color-link-hover !important;
+	}
 }
 
 .g-bold {
@@ -12,23 +17,39 @@
 :host {
 	padding: 20px;
 	height: 100%;
-	width: 500px;
+	width: 100%;
 	margin: 0 auto;
+	display: flex;
+	justify-content: space-between;
+	box-sizing: border-box;
 
-	.scroll-container {
-		overflow-y: auto;
-		position: absolute;
-		top: 80px;
-		left: 0;
-		right: 0;
-		bottom: 0;
+	p,
+	span,
+	a {
+		color: black;
+	}
+}
+
+.info-box {
+	background: white;
+	width: 200px;
+
+	header {
+		border-bottom: 1px solid grey;
+		padding: 10px;
 	}
 
-	dl,
-	dt,
-	dd {
-		color: $font-color-light;
+	main {
+		padding: 10px;
 	}
+}
+
+.feed {
+	width: 500px;
+}
+
+emoji-input{
+	width: 100%;
 }
 
 app-comment-box {
@@ -46,7 +67,7 @@ app-comment-box {
 	transition: all 1s;
 
 	&.fade-in {
-		animation: fadeIn 2s; /* IE 10+, Fx 29+ */
+		animation: fadeIn 1s; /* IE 10+, Fx 29+ */
 	}
 
 	header,
@@ -60,6 +81,12 @@ app-comment-box {
 	main,
 	footer {
 		border-top: 1px solid $border-color-light;
+
+		.child-row {
+			&.fade-in {
+				animation: fadeIn .5s; /* IE 10+, Fx 29+ */
+			}
+		}
 	}
 
 	header {
@@ -175,11 +202,6 @@ app-comment-box {
 			}
 
 		}
-	}
-
-	p,
-	span {
-		color: black;
 	}
 }
 

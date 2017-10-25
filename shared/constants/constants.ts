@@ -17,6 +17,13 @@ export const
 	SYSTEM_STATE_CODE_NO_SERVER_CONNECTION = 5,
 
 	/**
+	 * General errors
+	 */
+	G_ERROR_UNKNOWN = 0,
+	G_ERROR_EXPIRED = 1,
+	G_ERROR_USER_NOT_FOUND = 100,
+
+	/**
 	 * ORDER
 	 */
 	ORDER_SIDE_BUY = 0,

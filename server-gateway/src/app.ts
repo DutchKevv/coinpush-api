@@ -2,15 +2,13 @@ import {parse} from 'url';
 
 const path = require('path');
 const express = require('express');
-const http = require('http');
 const httpProxy = require('http-proxy');
 const expressJwt = require('express-jwt');
 const config = require('../../tradejs.config');
 const app = express();
 const morgan = require('morgan');
 const helmet = require('helmet');
-const request = require('request-promise');
-const {raw, urlencoded, json} = require('body-parser');
+const {json} = require('body-parser');
 const PATH_PUBLIC_PROD = path.join(__dirname, '../../client/dist');
 const PATH_PUBLIC_DEV = path.join(__dirname, '../../client/dist');
 const PATH_IMAGES_PROD = path.join(__dirname, '../../images');
@@ -65,7 +63,6 @@ app.use(bodyParserJsonMiddleware());
 
 app.use(morgan('dev'));
 app.use(helmet());
-// app.use(urlencoded({extended: false}));
 
 app.use(express.static(process.env.NODE_ENV === 'production' ? PATH_PUBLIC_PROD : PATH_PUBLIC_DEV));
 app.use(express.static(process.env.NODE_ENV === 'production' ? PATH_IMAGES_PROD : PATH_IMAGES_DEV));
@@ -90,7 +87,8 @@ app.use(expressJwt({
 		(/\.(gif|jpg|jpeg|tiff|png)$/i).test(req.originalUrl) ||
 		req.originalUrl === '/' ||
 		req.originalUrl.indexOf('/sounds/') > -1 ||
-		(req.originalUrl === '/authenticate' && ((req.method === 'POST' || req.method === 'OPTIONS') && !req.headers.authorization)) ||
+		(req.originalUrl === '/authenticate' && (['POST', 'PUT', 'OPTIONS'].includes(req.method) && !req.headers.authorization)) ||
+		req.originalUrl === '/authenticate/request-password-reset' ||
 		(req.originalUrl === '/user' && (req.method === 'POST' || req.method === 'OPTIONS'))
 	);
 }));
@@ -100,8 +98,6 @@ app.use(expressJwt({
  * websocket
  */
 server.on('upgrade', (req, socket, head) => {
-	console.log('URL RUL RUL', req.url);
-
 	switch (parse(req.url).pathname) {
 		case '/api/':
 			proxy.ws(req, socket, head, {target: config.server.oldApi.apiUrl});
@@ -184,15 +180,24 @@ app.use('/comment', require('./api/comment.api'));
 app.use('/comment/*', require('./api/comment.api'));
 
 /**
- * SEARCH
+ * search
  */
 app.use('/search', require('./api/search.api'));
 
-function errorHandler (err, req, res, next) {
-	if (res.headersSent) {
-		return next(err)
-	}
-	res.status(500).send({ error: err });
-}
+/**
+ * error handling
+ */
+app.use((error, req, res, next) => {
+	if (res.headersSent)
+		return next(error);
 
-app.use(errorHandler);
+	if (error) {
+		if (error.statusCode === 401)
+			return res.send(401);
+
+		if (error.message)
+			console.error(error.message);
+	}
+
+	res.status(500).send({error});
+});

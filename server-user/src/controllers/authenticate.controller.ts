@@ -18,9 +18,7 @@ export const authenticateController = {
 			user = await User.authenticate(params);
 
 		if (user)
-			user.token = jwt.sign({id: user._id}, config.token.secret);
-
-		console.log('user user user', user);
+			user.token = jwt.sign({id: user._id, cid: user.c_id}, config.token.secret);
 
 		return user;
 	}

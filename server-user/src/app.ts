@@ -23,9 +23,8 @@ app.use(morgan('dev'));
 app.use(helmet());
 app.use(json());
 app.use(urlencoded({extended: false}));
-app.use(function (req, res, next) {
+app.use((req, res, next) => {
 	res.header('Access-Control-Allow-Origin', '*');
-	res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
 	res.header('Access-Control-Allow-Headers', '_id, Authorization, Origin, X-Requested-With, Content-Type, Accept');
 	next();
 });
@@ -42,3 +41,21 @@ app.use('/user', require('./api/user.api'));
 app.use('/wallet', require('./api/wallet.api'));
 app.use('/favorite', require('./api/favorite.api'));
 app.use('/authenticate', require('./api/authenticate.api'));
+
+/**
+ * error handling
+ */
+app.use((error, req, res, next) => {
+	if (res.headersSent)
+		return next(error);
+
+	if (error && error.statusCode === 401)
+		return res.send(401);
+
+	if (error.error)
+		return res.status(500).send(error.error);
+
+	console.error(error);
+
+	res.status(500).send(error);
+});

@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, OnInit, Output, ViewEncapsulation} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, Route, Router} from '@angular/router';
 import {UserService} from '../../services/user.service';
 import {AlertService} from '../../services/alert.service';
 import {UserModel} from '../../models/user.model';
@@ -18,14 +18,15 @@ import {Subject} from "rxjs/Subject";
 
 export class ProfileComponent implements OnInit {
 
-	@Output() public user$: Subject<ChannelModel> = new Subject();
+	@Output() public user$: BehaviorSubject<ChannelModel> = new BehaviorSubject(null);
 
-	public channelId: string;
+	public userId: string;
 	public isSelf: boolean;
 
 	private _sub: any;
 
 	constructor(public channelService: ChannelService,
+				public router: Router,
 				public userService: UserService,
 				private _route: ActivatedRoute) {
 	}
@@ -41,10 +42,10 @@ export class ProfileComponent implements OnInit {
 		this._sub = this._route.params.subscribe(params => {
 
 			const type = params['t'];
-			this.channelId = params['id'];
-			this.isSelf = this.channelId === this.userService.model.get('_id');
+			this.userId = params['id'];
+			this.isSelf = this.userId === this.userService.model.get('user_id');
 
-			this.channelService.find(this.channelId).subscribe((channel: ChannelModel) => {
+			this.channelService.findByUserId(this.userId).subscribe((channel: ChannelModel) => {
 				// this.channelId = channel.get('_id');
 				this.user$.next(channel);
 			});

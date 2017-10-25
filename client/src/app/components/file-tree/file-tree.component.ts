@@ -4,7 +4,7 @@ declare let $: any;
 
 import {
 	Component, AfterViewInit, OnDestroy, ElementRef, ViewEncapsulation, ViewChild, Output, EventEmitter,
-	NgZone
+	NgZone, ChangeDetectionStrategy
 } from '@angular/core';
 import {SocketService}  from '../../services/socket.service';
 import {ModalService} from '../../services/modal.service';
@@ -23,7 +23,8 @@ let speed = 200;
 		'./file-tree.component.scss'
 	],
 	encapsulation: ViewEncapsulation.Native,
-	entryComponents: [DialogComponent]
+	entryComponents: [DialogComponent],
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class FileTreeComponent implements AfterViewInit, OnDestroy {

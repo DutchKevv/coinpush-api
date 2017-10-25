@@ -7,6 +7,7 @@ import {OrderService} from "./order.service";
 import {CacheService} from "./cache.service";
 import {SocketService} from "./socket.service";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
+import {AlertService} from "./alert.service";
 
 @Injectable()
 export class AuthenticationService {
@@ -15,6 +16,7 @@ export class AuthenticationService {
 
 	constructor(private _router: Router,
 				private _userService: UserService,
+				private _alertService: AlertService,
 				private _http: Http) {
 	}
 
@@ -47,6 +49,28 @@ export class AuthenticationService {
 		const user = this.getStoredUser();
 
 		return user && user.token;
+	}
+
+	public async requestPasswordReset(email: string) {
+		const result = await this._http.post('/authenticate/request-password-reset', {email}).toPromise();
+
+		if (result.status === 200)
+			this._alertService.success(`Email send to: ${email}`);
+		else
+			this._alertService.error(`An error occured`);
+
+		return result;
+	}
+
+	public async updatePassword(token: string, password: string) {
+		const result = await this._http.put('/authenticate', {token, password}).toPromise();
+
+		if (result.status === 200)
+			this._alertService.success('Your password has been reset');
+		else
+			this._alertService.error('An error occurred...');
+
+		return result.status === 200;
 	}
 
 	async authenticate(email?: string, password?: string, token?: string, profile = true): Promise<boolean> {

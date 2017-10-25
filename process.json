@@ -63,6 +63,15 @@
     "instances": 1
   },
   {
+    "script": "server-email/index.js",
+    "name": "email-api",
+    "exec_mode": "fork",
+    "env_production" : {
+      "NODE_ENV": "production"
+    },
+    "instances": 1
+  },
+  {
     "script": "server/bootstrapper.js",
     "name": "old-api",
     "exec_mode": "fork",

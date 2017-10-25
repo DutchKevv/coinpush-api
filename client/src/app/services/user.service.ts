@@ -31,7 +31,7 @@ export class UserService {
 
 	}
 
-	get(id: string, type = USER_FETCH_TYPE_SLIM) {
+	find(id: string, type = USER_FETCH_TYPE_SLIM) {
 		return this._http.get('/user/' + id, {params: {type: type}}).map((res: Response) => new UserModel(res.json()));
 	}
 
@@ -71,63 +71,6 @@ export class UserService {
 					this.model.options.favorites.splice(this.model.options.favorites.indexOf(symbol.get('name')), 1);
 			})
 	}
-
-	// toggleFollow(model: UserModel, state: boolean) {
-	//
-	// 	const subscription = this._http.post('/user/' + model.get('_id') + '/follow', null).map(res => res.json());
-	//
-	// 	subscription.subscribe(result => {
-	// 		let text;
-	//
-	// 		if (result.state) {
-	// 			model.set({
-	// 				iFollow: !!state,
-	// 				followersCount: ++model.options.followersCount
-	// 			});
-	// 			text = `You are now following ${model.options.username} !`;
-	// 		} else {
-	// 			text = `Unsigned from ${model.options.username}`;
-	// 			model.set({
-	// 				iFollow: !!state,
-	// 				followersCount: --model.options.followersCount
-	// 			});
-	// 		}
-	// 		this._alertService.success(text);
-	// 	}, (error) => {
-	// 		console.error(error);
-	// 		this._alertService.error(`An error occurred when following ${model.options.username}...`);
-	// 	});
-	//
-	// 	return subscription;
-	// }
-	//
-	// toggleCopy(model: UserModel, state: boolean) {
-	// 	const subscription = this._http.post('/user/' + model.get('_id') + '/copy', '').map(res => res.json());
-	//
-	// 	subscription.subscribe(result => {
-	// 		let text;
-	//
-	// 		if (result.state) {
-	// 			model.set({
-	// 				iCopy: !!state,
-	// 				copiersCount: ++model.options.followersCount
-	// 			});
-	// 			text = `You are now following ${model.options.username} !`;
-	// 		} else {
-	// 			text = `Unsigned from ${model.options.username}`;
-	// 			model.set({
-	// 				iCopy: !!state,
-	// 				copiersCount: --model.options.followersCount
-	// 			});
-	// 		}
-	// 		this._alertService.success(text);
-	// 	}, (error) => {
-	// 		console.error(error);
-	// 		this._alertService.error(`An error occurred when following ${model.options.username}...`);
-	// 	});
-	//
-	// 	return subscription;
-	// }
 
 	loadLocalStorageUser() {
 		return JSON.parse(localStorage.getItem('currentUser'));

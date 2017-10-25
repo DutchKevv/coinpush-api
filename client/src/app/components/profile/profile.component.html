@@ -18,13 +18,13 @@
                 </div>
             </div>
             <nav class="nav">
-                <a [routerLink]="['/main/user/', channelId, 'feed']" [routerLinkActive]="['active']"><i class="fa fa-comments-o"></i>Feed</a>
-                <a [routerLink]="['/main/user/', channelId, 'channels']" [routerLinkActive]="['active']"><i class="fa fa-exchange"></i>Channels</a>
-                <a [routerLink]="['/main/user/', channelId, 'statistics']" [routerLinkActive]="['active']"><i class="fa fa-bar-chart"></i>Stats</a>
-                <a [routerLink]="['/main/user/', channelId, 'chart']" [routerLinkActive]="['active']"><i class="fa fa-area-chart"></i>Chart</a>
+                <a [routerLink]="['/main/user/', userId, 'feed']" [routerLinkActive]="['active']"><i class="fa fa-comments-o"></i>Feed</a>
+                <a [routerLink]="['/main/user/', userId, 'channels']" [routerLinkActive]="['active']"><i class="fa fa-exchange"></i>Channels</a>
+                <a [routerLink]="['/main/user/', userId, 'statistics']" [routerLinkActive]="['active']"><i class="fa fa-bar-chart"></i>Stats</a>
+                <a [routerLink]="['/main/user/', userId, 'chart']" [routerLinkActive]="['active']"><i class="fa fa-area-chart"></i>Chart</a>
             </nav>
         </header>
-
+        <!--<app-social-feed *ngIf="router.url.includes('/feed')" [model]="user"></app-social-feed>-->
         <router-outlet></router-outlet>
     </ng-container>
 </ng-container>

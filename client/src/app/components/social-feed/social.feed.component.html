@@ -1,51 +1,82 @@
-<app-comment-box [channelId]="channelId" (newMessage)="addMessage($event)"></app-comment-box>
+<div>
+	<div class="info-box">
+		<header>Info</header>
+		<main>
+			<p>Followers: 0</p>
+			<p>Following: 0</p>
+		</main>
+	</div>
+</div>
 
-<div *ngFor="let comment of comments$ | async" class="comment-container fade-in">
-	<header>
-		<a [routerLink]="['/main/user/', comment.options.userId, 't=user']" [queryParams]="{ page: 99 }">
-			<img [attr.src]="comment.options.profileImg"/>
-		</a>
-		<div>
-			<a [routerLink]="['/main/user/', comment.options.userId]" class="g-username">
-				{{comment.options.username}}
-			</a>
-			<span>{{comment.options.created | date:'shortTime'}}</span>
-		</div>
-	</header>
-	<main>
-		<p>{{comment.options.content}}</p>
-	</main>
-	<footer>
-		<div class="parent-buttons">
-			<a (click)="commentService.toggleLike(comment)" [ngClass]="{active: (comment.options$ | async).iLike}">
-				<span>{{(comment.options$ | async).likeCount}} like(s)</span><i class="fa fa-thumbs-up"></i>
-			</a>
-			<a (click)="focusInput($event)">
-				{{(comment.options$ | async).childCount || 0}} comment(s)<i class="fa fa-comment"></i>
-			</a>
-		</div>
+<div class="feed">
+	<app-comment-box [channelId]="channelId" (newMessage)="addMessage($event)"></app-comment-box>
 
-		<div class="child-row" *ngFor="let child of comment.options.children">
-			<img [attr.src]="child.options.profileImg"/>
+	<div *ngFor="let comment of comments$ | async" class="comment-container fade-in"
+		 [ngClass]="{'fade-in': comment.options.isNew}">
+		<header>
+			<a [routerLink]="['/main/user/', comment.options.userId]">
+				<img [attr.src]="comment.options.profileImg"/>
+			</a>
 			<div>
-				<a class="g-username"[routerLink]="['/main/user/', child.options.userId]">{{child.options.username}}</a>
-				<span>{{child.options.content}}</span>
-				<div class="child-buttons">
-					<a (click)="commentService.toggleLike(child)" [ngClass]="{active: (child.options$ | async).iLike}">
-						<span *ngIf="(child.options$ | async).iLike">I Like - </span>
-						<span *ngIf="!(child.options$ | async).iLike">like - </span>
-						<span *ngIf="(child.options$ | async).likeCount > 0">
+				<a [routerLink]="['/main/user/', comment.options.userId]" class="g-username">
+					{{comment.options.username}}
+				</a>
+				<span>{{comment.options.created | date:'shortTime'}}</span>
+			</div>
+			<a>:</a>
+		</header>
+		<main>
+			<p [innerHtml]="comment.options.content | parseCommentContent"></p>
+		</main>
+		<footer>
+			<div class="parent-buttons">
+				<a (click)="commentService.toggleLike(comment)" [ngClass]="{active: (comment.options$ | async).iLike}">
+					<span *ngIf="(comment.options$ | async).iLike">I Like - </span>
+					<span *ngIf="!(comment.options$ | async).iLike">like - </span>
+					<span *ngIf="(comment.options$ | async).likeCount > 0">
+					<i class="fa fa-thumbs-o-up"></i>{{(comment.options$ | async).likeCount}} -
+				</span>
+				</a>
+				<a (click)="focusInput($event)">
+					{{(comment.options$ | async).childCount || 0}} comment(s)<i class="fa fa-comment"></i>
+				</a>
+			</div>
+
+			<div class="child-row fade-in" *ngFor="let child of comment.options.children">
+				<img [attr.src]="child.options.profileImg"/>
+				<div>
+					<a class="g-username" [routerLink]="['/main/user/', child.options.userId]">{{child.options.username}}</a>
+					<span [innerHtml]="child.options.content | parseCommentContent"></span>
+					<div class="child-buttons">
+						<a (click)="commentService.toggleLike(child)"
+						   [ngClass]="{active: (child.options$ | async).iLike}">
+							<span *ngIf="(child.options$ | async).iLike">I Like - </span>
+							<span *ngIf="!(child.options$ | async).iLike">like - </span>
+							<span *ngIf="(child.options$ | async).likeCount > 0">
 							<i class="fa fa-thumbs-o-up"></i>{{(child.options$ | async).likeCount}} -
 						</span>
-					</a>
-					<span>{{child.options.created | date:'shortTime'}}</span>
+						</a>
+						<span>{{child.options.created | date:'shortTime'}}</span>
+					</div>
 				</div>
 			</div>
-		</div>
 
-		<div class="child-row comment-input">
-			<img [attr.src]="userService.model.options.profileImg">
-			<input (keyup.enter)="respond($event, comment.options._id)" type="text" placeholder="Write a comment..."/>
-		</div>
-	</footer>
+			<div class="child-row comment-input">
+				<img [attr.src]="userService.model.options.profileImg">
+				<emoji-input (keyup.enter)="respond($event, comment.options._id)" [popupAnchor]="'bottom'"
+							 placeholder="Write a comment..."></emoji-input>
+				<!--<input (keyup.enter)="respond($event, comment.options._id)" type="text" placeholder="Write a comment..."/>-->
+			</div>
+		</footer>
+	</div>
+</div>
+
+<div>
+	<div class="info-box">
+		<header>Info</header>
+		<main>
+			<p>Followers: 0</p>
+			<p>Following: 0</p>
+		</main>
+	</div>
 </div>

@@ -11,9 +11,15 @@ const UserSchema = new Schema({
 	email: {
 		type: String,
 		unique: true,
-		required: 'Email address is required',
+		required: true,
 		validate: [isEmail, 'invalid email'],
 		lowercase: true,
+		trim: true
+	},
+	name: {
+		type: String,
+		unique: true,
+		required: true,
 		trim: true
 	},
 	balance: {
@@ -84,6 +90,12 @@ const UserSchema = new Schema({
 		type: Boolean,
 		required: false,
 		default: true
+	},
+	resetPasswordToken: {
+		type: String,
+	},
+	resetPasswordExpires: {
+		type: Date,
 	}
 });
 
@@ -93,7 +105,7 @@ UserSchema.statics.authenticate = async (params: {email?: string, password?: str
 	let fieldsObj = {password: 1};
 	fields.forEach(field => fieldsObj[field] = 1);
 
-	const user = await User.findOne({email: params.email}, {password: 1, ...fieldsObj || {}}).lean();
+	const user = await User.findOne({email: params.email}, {password: 1, c_id: 1, ...fieldsObj || {}}).lean();
 
 	if (!user)
 		return null;
@@ -142,17 +154,5 @@ UserSchema.statics.toggleFavorite = async function (userId: string, symbol: stri
 
 	return !isFavorite;
 };
-
-// hashing a password before saving it to the database
-UserSchema.pre('save', function (next) {
-	const user = this;
-	bcrypt.hash(user.password, 10, function (err, hash) {
-		if (err) {
-			return next(err);
-		}
-		user.password = hash;
-		next();
-	})
-});
 
 export const User = model('User', UserSchema);

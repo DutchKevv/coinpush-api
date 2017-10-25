@@ -8,9 +8,8 @@ const router = Router();
  */
 router.get('/:id', async (req: any, res, next) => {
 	try {
-		res.send(await userController.find(req.user, req.params.id, parseInt(req.query.type, 10)));
+		res.send(await userController.find(req.user, req.params.id, parseInt(req.query.type, 10), req.query.fields));
 	} catch (error) {
-		console.error(error);
 		next(error);
 	}
 });
@@ -22,7 +21,6 @@ router.get('/', async (req: any, res, next) => {
 	try {
 		res.send(await userController.findMany(req.user, req.query));
 	} catch (error) {
-		console.error(error);
 		next(error);
 	}
 });
@@ -30,23 +28,33 @@ router.get('/', async (req: any, res, next) => {
 /**
  * create
  */
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
 	try {
 		res.send(await userController.create(req.body));
 	} catch (error) {
-		res.status(500).send(error);
+		next(error);
+	}
+});
+
+/**
+ * update password
+ */
+router.put('/password', async (req: any, res, next) => {
+	try {
+		res.send(await userController.updatePassword(req.user, req.body.token, req.body.password));
+	} catch (error) {
+		next(error);
 	}
 });
 
 /**
  * update
  */
-router.put('/:id', async (req: any, res) => {
+router.put('/:id', async (req: any, res, next) => {
 	try {
 		res.send(await userController.update(req.user, req.params.id, req.body));
 	} catch (error) {
-		console.log(error);
-		res.status(500).send(error);
+		next(error);
 	}
 });
 
@@ -57,7 +65,6 @@ router.delete('/:id', async (req: any, res, next) => {
 	try {
 		res.send(await userController.remove(req.params.id));
 	} catch (error) {
-		console.log(error);
 		next(error)
 	}
 });

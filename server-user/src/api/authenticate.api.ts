@@ -1,8 +1,16 @@
 import {Router} from 'express';
-import {User} from '../schemas/user';
 import {authenticateController} from '../controllers/authenticate.controller';
+import {userController} from "../controllers/user.controller";
 
 const router = Router();
+
+router.post('/request-password-reset', async (req, res, next) => {
+	try {
+		res.send(await userController.requestPasswordReset(req.user, req.body.email));
+	} catch (error) {
+		next(error);
+	}
+});
 
 router.post('/', async (req, res, next) => {
 	try {
@@ -13,7 +21,6 @@ router.post('/', async (req, res, next) => {
 
 		res.send(result);
 	} catch (error) {
-		console.error(error);
 		next(error)
 	}
 });

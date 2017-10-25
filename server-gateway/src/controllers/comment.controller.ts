@@ -28,6 +28,31 @@ export const commentController = {
 		return result;
 	},
 
+	async findByUserId(reqUser: {id: string}, userId: string, fields?: Array<string>): Promise<any> {
+		const user = await request({
+			uri: config.server.user.apiUrl + '/user/' + userId,
+			headers: {'_id': reqUser.id},
+			qs: {
+				fields: ['c_id']
+			},
+			json: true
+		});
+
+		console.log('safsfd', user)
+
+		const result = await request({
+			uri: config.server.comment.apiUrl + '/comment/',
+			headers: {'_id': reqUser.id},
+			qs: {
+				channel: user.c_id,
+				fields: fields
+			},
+			json: true
+		});
+
+		return result;
+	},
+
 	findMany(reqUser, params): Promise<Array<any>> {
 		return request({
 			uri: config.server.comment.apiUrl + '/channel',
