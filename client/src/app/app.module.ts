@@ -41,7 +41,6 @@ import {OrderService} from './services/order.service';
 import {ChannelOverviewComponent} from './components/channel-overview/channel-overview.component';
 import {GroupByPipe, PortfolioComponent} from './components/portfolio/portfolio.component';
 import {ProfileComponent} from './components/profile/profile.component';
-import {PageSubUserComponent} from './components/page-sub-user/page.sub.user.component';
 import {SettingsComponent} from './components/settings/settings.component';
 import {ParseCommentContentPipe, SocialFeedComponent} from './components/social-feed/social.feed.component';
 import {ChannelRowComponent} from './components/channel-row/channel.row.component';
@@ -87,7 +86,6 @@ import {BootstrapService} from "./services/bootstrap.service";
 		GroupByPipe,
 		ProfileComponent,
 		ProfileChannelOverviewComponent,
-		PageSubUserComponent,
 		SettingsComponent,
 		ChannelDetailsModalComponent,
 		CommentBoxComponent

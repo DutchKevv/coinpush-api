@@ -11,6 +11,7 @@ import {Subject} from "rxjs/Subject";
 import {CommentModel} from "../../models/comment.model";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {ProfileComponent} from "../profile/profile.component";
+import { UserModel } from '../../models/user.model';
 
 function linkify(inputText) {
 	var replacedText, replacePattern1, replacePattern2, replacePattern3;
@@ -47,10 +48,9 @@ export class ParseCommentContentPipe implements PipeTransform {
 })
 export class SocialFeedComponent implements OnInit {
 
-	@Input() model;
 	@Output() comments$: BehaviorSubject<Array<CommentModel>> = new BehaviorSubject([]);
 
-
+	user: any = new UserModel;
 	channelId: string;
 
 	constructor(private _route: ActivatedRoute,
@@ -61,6 +61,8 @@ export class SocialFeedComponent implements OnInit {
 
 	async ngOnInit() {
 		this.parent.user$.subscribe(async (user) => {
+			this.user = user;
+			console.log('asfdasdf', user);
 			this.channelId = user.options._id;
 
 			this.comments$.next(await this.commentService.findByChannelId(this.channelId));

@@ -2,8 +2,29 @@
 	<div class="info-box">
 		<header>Info</header>
 		<main>
-			<p>Followers: 0</p>
-			<p>Following: 0</p>
+			<p>Followers: {{(user.options$ | async).followersCount}}</p>
+			<p>Copiers: {{(user.options$ | async).copiersCount}}</p>
+		</main>
+	</div>
+
+	<div class="info-box">
+		<header>Visitors</header>
+		<main>
+			blabla
+		</main>
+	</div>
+
+	<div class="info-box">
+		<header>Copiers</header>
+		<main>
+			blabla
+		</main>
+	</div>
+
+	<div class="info-box">
+		<header>Followers</header>
+		<main>
+			blabla
 		</main>
 	</div>
 </div>
@@ -77,6 +98,13 @@
 		<main>
 			<p>Followers: 0</p>
 			<p>Following: 0</p>
+		</main>
+	</div>
+
+	<div class="info-box">
+		<header>Visitors</header>
+		<main>
+			blabla
 		</main>
 	</div>
 </div>

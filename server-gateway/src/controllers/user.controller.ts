@@ -60,6 +60,24 @@ export const userController = {
 				c_id: channel._id
 			});
 
+			// create user on email server
+			await request({
+				uri: config.server.email.apiUrl + '/user',
+				headers: {'_id': reqUser.id},
+				method: 'POST',
+				body: {
+					user
+				}
+			});
+
+			// send newMember on email server
+			await request({
+				uri: config.server.email.apiUrl + '/mail/new-member',
+				headers: {'_id': reqUser.id},
+				method: 'POST',
+				body: user
+			});
+
 			return {user, channel};
 
 		} catch (error) {

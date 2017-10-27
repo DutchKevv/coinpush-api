@@ -15,7 +15,8 @@ module.exports = {
     },
     server: {
         gateway: {
-            port: 3100
+            port: 3100,
+            apiUrl: 'http://localhost:3100'
         },
         oldApi: {
             port: 3000,

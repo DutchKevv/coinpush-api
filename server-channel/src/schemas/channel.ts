@@ -43,9 +43,17 @@ export const ChannelSchema = new Schema({
 		type: [Schema.Types.ObjectId],
 		default: []
 	},
+	followersCount: {
+		type: Number,
+		default: 0
+	},
 	copiers: {
 		type: [Schema.Types.ObjectId],
 		default: []
+	},
+	copiersCount: {
+		type: Number,
+		default: 0
 	},
 	public: {
 		type: Boolean,

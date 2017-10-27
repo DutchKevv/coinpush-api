@@ -10,6 +10,33 @@ const templates = {
 
 export const emailController = {
 
+	async newMember(reqUser, user: any) {
+
+		return new Promise((resolve, reject) => {
+
+			const HTML = `
+		Hi there ${user.name} <br /><br />
+		
+		Welcome to <a href="http://149.210.227.14:3100">TradeJS</a><br /><br />
+		`;
+
+			const mailOptions = {
+				from: config.email.account.noReply.auth.user, // sender address
+				to: [user.email],
+				subject: `Hi there ${user.name} - TradeJS`,
+				html: HTML // You can choose to send an HTML body instead
+			};
+
+			transporter.sendMail(mailOptions, (error, info) => {
+				if (error)
+					return reject(error);
+
+				console.log('Email sent: ' + info.response);
+				resolve();
+			});
+		})
+	},
+
 	async requestPasswordReset(reqUser, user: any) {
 
 		return new Promise((resolve, reject) => {
@@ -25,7 +52,6 @@ Click on <a href="${url}">this link</a> to reset your password. This link is val
 				from: config.email.account.noReply.auth.user, // sender address
 				to: [user.email],
 				subject: 'Password reset',
-				// text: text
 				html: HTML // You can choose to send an HTML body instead
 			};
 

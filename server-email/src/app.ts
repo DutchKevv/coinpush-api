@@ -20,7 +20,8 @@ app.use((req, res, next) => {
 	next();
 });
 
-app.post('/*', require('./api/email.api'));
+app.use('/mail', require('./api/email.api'));
+app.use('/user', require('./api/user.api'));
 
 app.use((error, req, res, next) => {
 	console.error(error);

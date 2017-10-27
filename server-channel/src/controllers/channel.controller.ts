@@ -125,9 +125,9 @@ export const channelController = {
 		const isFollowing = channel.followers && channel.followers.indexOf(reqUser.id) > -1;
 
 		if (isFollowing)
-			await channel.update({$pull: {followers: reqUser.id}});
+			await channel.update({$pull: {followers: reqUser.id}, $inc: {followersCount: -1}});
 		else
-			await channel.update({$addToSet: {followers: reqUser.id}});
+			await channel.update({$addToSet: {followers: reqUser.id}, $inc: {followersCount: 1}});
 
 		return {state: !isFollowing};
 	},
@@ -147,9 +147,9 @@ export const channelController = {
 		const isCopying = channel.copiers && channel.copiers.indexOf(reqUser.id) > -1;
 		console.log('isCopying isCopying isCopying isCopying', isCopying, channel);
 		if (isCopying)
-			await channel.update({$pull: {copiers: Types.ObjectId(reqUser.id)}});
+			await channel.update({$pull: {copiers: reqUser.id}, $inc: {copiersCount: -1}});
 		else
-			await channel.update({$addToSet: {copiers: Types.ObjectId(reqUser.id)}});
+			await channel.update({$addToSet: {copiers: reqUser.id}, $inc: {copiersCount: 1}});
 
 		return {state: !isCopying};
 	},

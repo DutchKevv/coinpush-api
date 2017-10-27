@@ -1,12 +1,12 @@
-import {Injectable, Output} from '@angular/core';
-import {Http} from '@angular/http';
-import {ConstantsService} from './constants.service';
-import {CacheService} from './cache.service';
-import {AlertService} from './alert.service';
-import {UserService} from './user.service';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {OrderModel} from '../models/order.model';
-import {SymbolModel} from "../models/symbol.model";
+import { Injectable, Output } from '@angular/core';
+import { Http } from '@angular/http';
+import { ConstantsService } from './constants.service';
+import { CacheService } from './cache.service';
+import { AlertService } from './alert.service';
+import { UserService } from './user.service';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { OrderModel } from '../models/order.model';
+import { SymbolModel } from "../models/symbol.model";
 
 @Injectable()
 export class OrderService {
@@ -19,9 +19,9 @@ export class OrderService {
 	};
 
 	constructor(private _cacheService: CacheService,
-				private _userService: UserService,
-				private _alertService: AlertService,
-				private http: Http) {
+		private _userService: UserService,
+		private _alertService: AlertService,
+		private http: Http) {
 
 		_cacheService.changed$.subscribe((symbols: Array<SymbolModel>) => this._onTick(symbols));
 	}
@@ -44,7 +44,7 @@ export class OrderService {
 			.subscribe((order: OrderModel) => {
 
 				// Update account
-				this._userService.model.set({balance: order.get('balance')});
+				this._userService.model.set({ balance: order.get('balance') });
 				this.calculateAccountStatus();
 
 				// Push order onto stack
@@ -77,9 +77,12 @@ export class OrderService {
 		let model = new OrderModel(data),
 			symbol = this._cacheService.getBySymbol(model.options.symbol);
 
-		this.updateModel(model, symbol.options);
-
-		model.symbolHandle = symbol;
+		if (symbol) {
+			this.updateModel(model, symbol.options);
+			model.symbolHandle = symbol;
+		} else {
+			console.warn(`No symbol [${model.get('symbol')}] found belonging to order [${model.get('_id')}]`)
+		}
 
 		return model;
 	}

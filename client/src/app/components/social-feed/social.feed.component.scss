@@ -31,16 +31,24 @@
 }
 
 .info-box {
-	background: white;
-	width: 200px;
+	background: $background-light;
+	width: 230px;
+	border: 1px solid $border-color-grey;
+	margin-bottom: 30px;
 
 	header {
 		border-bottom: 1px solid grey;
 		padding: 10px;
+		color: $font-color-light;
 	}
 
 	main {
 		padding: 10px;
+
+		p {
+			color: $font-color-light;
+			line-height: 26px;
+		}
 	}
 }
 
