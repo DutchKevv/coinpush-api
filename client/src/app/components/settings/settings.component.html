@@ -8,8 +8,7 @@
                 <div class="form-box">
                     <label for="country">Country</label>
                     <select id="country">
-                        <option value="m">Male</option>
-                        <option value="m">Female</option>
+                        <option *ngFor="let country of countries" [attr.value]="country.code" [innerHTML]="country.name"></option>
                     </select>
                 </div>
                 <div class="form-box">
@@ -70,15 +69,15 @@
         <div class="form-box form-box-radio">
             <label>Comment like</label>
             <div class="form-radio-options">
-                <input type="radio" name="emailOnCopier" value="1" checked><span>Yes (default)</span><br>
-                <input type="radio" name="emailOnCopier" value="0"><span>No</span><br>
+                <input type="radio" name="emailOnLike" value="1" checked><span>Yes (default)</span><br>
+                <input type="radio" name="emailOnLike" value="0"><span>No</span><br>
             </div>
         </div>
         <div class="form-box form-box-radio">
             <label>Comment reaction</label>
             <div class="form-radio-options">
-                <input type="radio" name="emailOnCopier" value="1" checked><span>Yes (default)</span><br>
-                <input type="radio" name="emailOnCopier" value="0"><span>No</span><br>
+                <input type="radio" name="emailOnReaction" value="1" checked><span>Yes (default)</span><br>
+                <input type="radio" name="emailOnReaction" value="0"><span>No</span><br>
             </div>
         </div>
         <div class="form-box form-box-radio">

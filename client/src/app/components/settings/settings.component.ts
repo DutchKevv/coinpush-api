@@ -18,6 +18,7 @@ declare let $: any;
 })
 
 export class SettingsComponent implements OnInit, OnDestroy {
+
 	model: any;
 	form: any;
 
@@ -25,6 +26,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
 	@ViewChild('uploadBtn') uploadBtn: ElementRef;
 	@ViewChild('uploadImageHolder') uploadImageHolder: ElementRef;
 	@ViewChild('saveOptions') saveOptions: ElementRef;
+
+	countries = window['countries'];
 
 	constructor(private _http: Http,
 				private _formBuilder: FormBuilder,
