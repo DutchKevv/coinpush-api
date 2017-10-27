@@ -1,11 +1,11 @@
-import {Types, ObjectId} from 'mongoose';
 import {User} from '../schemas/user';
+import {IReqUser} from "../../../shared/interfaces/IReqUser.interface";
 
 export const favoriteController = {
 
-	async toggle(reqUser: {id: string}, symbol: string): Promise<{state: boolean}> {
+	async toggle(reqUser: IReqUser, symbol: string): Promise<{state: boolean}> {
 
-		const state = await User.toggleFavorite(reqUser.id, symbol);
+		const state = await (<any>User).toggleFavorite(reqUser.id, symbol);
 
 		return {state};
 	}

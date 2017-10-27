@@ -4,7 +4,7 @@ import {userController} from "../controllers/user.controller";
 
 const router = Router();
 
-router.post('/request-password-reset', async (req, res, next) => {
+router.post('/request-password-reset', async (req: any, res, next) => {
 	try {
 		res.send(await userController.requestPasswordReset(req.user, req.body.email));
 	} catch (error) {
@@ -12,7 +12,7 @@ router.post('/request-password-reset', async (req, res, next) => {
 	}
 });
 
-router.post('/', async (req, res, next) => {
+router.post('/', async (req: any, res, next) => {
 	try {
 		const result = await authenticateController.authenticate(req.user, req.body, req.body.fields);
 

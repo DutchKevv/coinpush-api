@@ -68,7 +68,7 @@
                         <img src="/images/default/symbol/spx500-70x70.png">
                         <span>{{symbol.name}}</span>
                     </a>
-                    <a *ngFor="let user of result.users" [routerLink]="['/main/user/', user._id]">
+                    <a *ngFor="let user of result.users" [routerLink]="['/main/user/', user.user_id]">
                         <img src="{{user.profileImg}}">
                         <span>{{user.name}}</span>
                     </a>

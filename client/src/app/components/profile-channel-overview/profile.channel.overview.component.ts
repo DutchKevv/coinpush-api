@@ -42,7 +42,7 @@ export class ProfileChannelOverviewComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this._sub = this._route.parent.params.subscribe(params => {
-			this._id = params.id;
+			this._id = params['id'];
 			this.isSelf = this._userService.model.get('user_id') === this._id;
 
 			this.loadChannels();

@@ -27,11 +27,11 @@ export class BacktestSettingsModel extends BaseModel {
 		currency: 'euro'
 	};
 
-	public static parseUnixToString(date: number): string {
+	public static parseUnixToString(date: number | string): string {
 		if (typeof date === 'number')
 			return moment(date).format('YYYY-MM-DD');
 
-		return date;
+		return <string>date;
 	}
 
 	public static parseDateStringToUnix(date: string) {
@@ -131,7 +131,7 @@ export class BacktestSettingsComponent implements OnInit, AfterViewInit {
 			until: BacktestSettingsModel.parseDateStringToUnix(this.model.options.until),
 		});
 
-		let options = data.symbols.map(symbol => {
+		let options = (<any>data).symbols.map(symbol => {
 			return Object.assign({}, data, {
 				type: 'backtest',
 				symbol: symbol

@@ -12,7 +12,7 @@ const router = Router();
 /**
  * single
  */
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', async (req: any, res, next) => {
 	try {
 		if (req.query.type === 'broker')
 			res.send(await orderController.findByBrokerId(req.user, req.params.id));
@@ -26,7 +26,7 @@ router.get('/:id', async (req, res, next) => {
 /**
  * list
  */
-router.get('/', async (req, res) => {
+router.get('/', async (req: any, res) => {
 	try {
 		if (req.query.broker)
 			res.send(await orderController.findOpenOnBroker(req.user));
@@ -40,7 +40,7 @@ router.get('/', async (req, res) => {
 /**
  * create
  */
-router.post('/', async (req, res, next) => {
+router.post('/', async (req: any, res, next) => {
 
 	let params = <any>{
 		amount: req.body.amount,

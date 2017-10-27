@@ -1,12 +1,14 @@
-import {Types, ObjectId} from 'mongoose';
+import {Types} from 'mongoose';
 import {client} from '../modules/redis';
 import {User} from '../schemas/user';
+import {IUser} from "../../../shared/interfaces/IUser.interface";
+import {IReqUser} from "../../../shared/interfaces/IReqUser.interface";
 
 export const walletController = {
 
-	async updateBalance(reqUser, walletId, params: { amount: number }): Promise<{balance: number}> {
+	async updateBalance(reqUser: IReqUser, walletId: string, params: {amount: number}): Promise<{balance: number}> {
 
-		const user = await User.findByIdAndUpdate(Types.ObjectId(reqUser.id), {$inc: {balance: params.amount}});
+		const user = <IUser>await User.findByIdAndUpdate(Types.ObjectId(reqUser.id), {$inc: {balance: params.amount}}).lean();
 
 		if (user)
 			return {balance: user.balance};

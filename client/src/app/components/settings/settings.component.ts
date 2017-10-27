@@ -27,7 +27,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 	@ViewChild('uploadImageHolder') uploadImageHolder: ElementRef;
 	@ViewChild('saveOptions') saveOptions: ElementRef;
 
-	countries = window['countries'];
+	countries = window['COUNTRIES'];
 
 	constructor(private _http: Http,
 				private _formBuilder: FormBuilder,

@@ -3,6 +3,7 @@ import * as bcrypt from 'bcrypt';
 import {isEmail} from 'validator';
 import {join} from 'path';
 import {BROKER_GENERAL_TYPE_OANDA, LEVERAGE_TYPE_1} from '../../../shared/constants/constants';
+import {IUser} from "../../../shared/interfaces/IUser.interface";
 
 const UserSchema = new Schema({
 	c_id: {
@@ -21,6 +22,10 @@ const UserSchema = new Schema({
 		unique: true,
 		required: true,
 		trim: true
+	},
+	gender: {
+		type: Number,
+		default: 0
 	},
 	balance: {
 		type: Number,
@@ -100,12 +105,12 @@ const UserSchema = new Schema({
 });
 
 // authenticate input against database
-UserSchema.statics.authenticate = async (params: {email?: string, password?: string}, fields = []) => {
+UserSchema.statics.authenticate = async (params: IUser, fields = []) => {
 
 	let fieldsObj = {password: 1};
 	fields.forEach(field => fieldsObj[field] = 1);
 
-	const user = await User.findOne({email: params.email}, {password: 1, c_id: 1, ...fieldsObj || {}}).lean();
+	const user = <IUser>(await User.findOne({email: params.email}, {password: 1, c_id: 1, ...fieldsObj || {}}).lean());
 
 	if (!user)
 		return null;

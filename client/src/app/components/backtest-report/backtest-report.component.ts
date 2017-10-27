@@ -80,8 +80,8 @@ export class BacktestReportComponent implements AfterViewInit, OnInit, OnDestroy
 			// Update orders
 			arr.push(...this._prepareData(data));
 
-			this._chart.options.axisY.minimum = Math.floor(minBy(arr, 'y').y * 0.99);
-			this._chart.options.axisY.maximum = Math.ceil(maxBy(arr, 'y').y * 1.01);
+			this._chart.options.axisY.minimum = Math.floor((<any>minBy(arr, 'y')).y * 0.99);
+			this._chart.options.axisY.maximum = Math.ceil((<any>maxBy(arr, 'y')).y * 1.01);
 
 			this._chart.render();
 		});

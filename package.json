@@ -53,8 +53,5 @@
     "build-user": "cd ./server-user && npm run build",
     "build-email": "cd ./server-email && npm run build",
     "run-client": "cd ./client && npm start"
-  },
-  "dependencies": {
-    "faker": "^4.1.0"
   }
 }

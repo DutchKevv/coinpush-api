@@ -7,7 +7,7 @@
             <div class="form-box-column">
                 <div class="form-box">
                     <label for="country">Country</label>
-                    <select id="country">
+                    <select id="country" formControlName="country">
                         <option *ngFor="let country of countries" [attr.value]="country.code" [innerHTML]="country.name"></option>
                     </select>
                 </div>

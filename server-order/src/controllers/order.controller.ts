@@ -1,14 +1,13 @@
-import * as url from 'url';
-import * as request from 'request-promise';
 import * as redis from '../modules/redis';
 import {Order} from '../schemas/order';
 import {
 	BROKER_ERROR_INVALID_ARGUMENT, BROKER_ERROR_MARKET_CLOSED, BROKER_ERROR_UNKNOWN,
 	BROKER_OANDA_ERROR_INVALID_ARGUMENT,
-	BROKER_OANDA_ERROR_MARKET_CLOSED, BROKER_OANDA_ERROR_TRADE_NOT_FOUND, REDIS_USER_PREFIX
+	BROKER_OANDA_ERROR_MARKET_CLOSED, BROKER_OANDA_ERROR_TRADE_NOT_FOUND
 } from '../../../shared/constants/constants';
 import OandaApi from '../../../shared/brokers/oanda/index';
 import {Status} from "../schemas/status";
+import {IReqUser} from "../../../shared/interfaces/IReqUser.interface";
 
 const config = require('../../../tradejs.config');
 
@@ -16,50 +15,39 @@ export const orderController = {
 
 	_brokerAPI: new OandaApi(config.broker.account),
 
-	async init() {
+	async init(sync: boolean = true) {
 		this._brokerAPI.init();
 
 		this._brokerAPI.subscribeEventStream(event => this._onBrokerEvent(event).catch(console.error));
 
-		await this.syncOrders();
+		if (sync)
+			await this.syncOrders();
 	},
 
-	find(reqUser) {
+	find(reqUser: IReqUser) {
 
 	},
 
-	findById(reqUser, id: string) {
+	findById(reqUser: IReqUser, id: string) {
 		return Order.findById(id);
 	},
 
-	findByBrokerId(reqUser, brokerId: string) {
+	findByBrokerId(reqUser: IReqUser, brokerId: string) {
 		return Order.findOne({b_id: brokerId});
 	},
 
-	findOpenOnBroker(reqUser) {
+	findOpenOnBroker(reqUser: IReqUser) {
 		return this._brokerAPI.getOpenOrders();
 	},
 
-	async findByUserId(reqUser, userId: string, closed = false) {
+	async findByUserId(reqUser: IReqUser, userId: string, closed = false) {
 		return Order.find({user: userId, closed}).limit(50);
 	},
 
 	async create(params) {
 		try {
-
-			// Create a new broker class
-			// TODO : Refactor
-			const broker = new OandaApi({
-				// accountId: user.brokerAccountId,
-				// token: user.brokerToken
-				accountId: config.broker.account.accountId,
-				token: config.broker.account.token
-			});
-
-			await broker.init();
-
 			// Place order and merge result
-			Object.assign(params, await broker.placeOrder(params));
+			Object.assign(params, await this._brokerAPI.placeOrder(params));
 
 			// Create order model from result
 			const order = await Order.create(params);
@@ -92,7 +80,7 @@ export const orderController = {
 		}
 	},
 
-	async update(reqUser, orderId: string, brokerId: number, params: any) {
+	async update(reqUser: IReqUser, orderId: string, brokerId: number, params: any) {
 		let result;
 
 		if (orderId)
@@ -103,15 +91,29 @@ export const orderController = {
 		console.log('update result', result);
 	},
 
-	async close(reqUser, orderId) {
+	async close(reqUser: IReqUser, orderId?: string, brokerId?: number) {
 		let order;
 
-		try {
+		// find order
+		if (orderId)
 			order = await this.findById(reqUser, orderId);
+		else if(brokerId)
+			order = await this.findByBrokerId(reqUser, brokerId);
+		else
+			throw new Error('Close order - orderId or brokerId is required');
 
-			const result = await this._brokerAPI.closeOrder(order.b_id);
+		try {
+			const result = await this._brokerAPI.closeOrder(order ? order.b_id : brokerId);
 
-			redis.client.publish('order-closed', JSON.stringify({id: orderId}));
+			console.log('CLOSE ORDER RESULT', result, order);
+
+			if (!order)
+				return false;
+
+			order.closed = true;
+			await order.save();
+
+			redis.client.publish('order-closed', JSON.stringify(Object.assign(order, result)));
 
 			return true;
 		} catch (error) {
@@ -146,17 +148,6 @@ export const orderController = {
 
 	async closeByBrokerId(reqUser, brokerId) {
 
-	},
-
-	async getCached(userId, fields) {
-		return new Promise((resolve, reject) => {
-			redis.client.get(REDIS_USER_PREFIX + userId, function (err, reply) {
-				if (err)
-					reject(err);
-				else
-					resolve(JSON.parse(reply))
-			});
-		});
 	},
 
 	async syncOrders() {
@@ -196,14 +187,13 @@ export const orderController = {
 	},
 
 	async _onBrokerEvent(event, updateLastSync = true) {
-		console.log('EVENTSDF', event.transaction);
 		// handle action
 		if (event.transaction) {
 			let transaction = event.transaction;
 
 			switch (transaction.type) {
 				case 'TRADE_CLOSE':
-					await this.update({}, null, transaction.tradeId, {
+					const result = await this.update({}, null, transaction.tradeId, {
 						closed: true,
 						profit: transaction.pl,
 						interest: transaction.interest,
@@ -215,7 +205,7 @@ export const orderController = {
 					break;
 				case 'DAILY_INTEREST':
 					console.log('interest', transaction);
-					await this.update({}, event.id, {interest: transaction.interest});
+					await this.update({}, event.id, null, {interest: transaction.interest});
 					break;
 				default:
 					throw({code: 9999, message: 'unknown order broker event type'});

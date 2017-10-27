@@ -19,7 +19,7 @@ router.get('/', async (req: any, res, next) => {
 /**
  * toggle
  */
-router.post('/', async (req, res, next) => {
+router.post('/', async (req: any, res, next) => {
 	try {
 		res.send(await favoriteController.toggle(req.user, req.body.symbol));
 	} catch (error) {

@@ -32,6 +32,7 @@
     "@ngtools/webpack": "1.7.4",
     "@types/ace": "0.0.35",
     "@types/jquery": "3.2.15",
+    "@types/lodash": "^4.14.80",
     "@types/node": "8.0.47",
     "angular-2-dropdown-multiselect": "^1.6.0",
     "angular2-template-loader": "0.6.2",

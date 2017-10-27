@@ -1,4 +1,4 @@
-import {Stream} from 'stream';
+import {Stream, PassThrough} from 'stream';
 import * as querystring from 'querystring';
 import * as constants from '../../../constants/constants';
 import * as Events from './Events';
@@ -304,7 +304,7 @@ OandaAdapter.prototype._candlesJsonStringToArray = function (chunk) {
 };
 
 OandaAdapter.prototype.getCandles = function (symbol, start, end, granularity, count, callback) {
-	let readableStream = new Stream.PassThrough();
+	let readableStream = new PassThrough();
 
 	this._sendRESTRequest({
 		method: 'GET',
@@ -370,6 +370,7 @@ OandaAdapter.prototype.getOpenPositions = function (accountId, callback) {
 	});
 };
 OandaAdapter.prototype.getOpenTrades = function (accountId, callback) {
+
 	this._sendRESTRequest({
 		method: 'GET',
 		path: '/v1/accounts/' + accountId + '/trades'

@@ -1,20 +1,28 @@
 import * as express from 'express';
+import * as mongoose from 'mongoose';
 import * as helmet from 'helmet';
 import * as morgan from 'morgan';
-import * as mongoose from 'mongoose';
 import {json, urlencoded} from 'body-parser';
+import {client} from './modules/redis';
 
 const config = require('../../tradejs.config');
 const app = express();
 app.listen(config.server.user.port, () => console.log(`\n User service started on      : 127.0.0.1:${config.server.channel.port}`));
 
 mongoose.set('debug', true);
-mongoose.Promise = global.Promise;
 mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
 mongoose.connection.once('open', function () {
 	console.log('DB connected');
 });
 mongoose.connect(config.server.user.connectionString);
+
+/**
+ * redis events
+ */
+client.on('order-closed', (order) => {
+	console.log('ORDER RECEIVED!!!!', JSON.parse(order));
+});
+
 
 /**
  * Express

@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "allowJs": true,
     "declaration": false,
     "experimentalDecorators": true,
     "lib": ["es6", "es7"],
@@ -8,22 +7,6 @@
     "moduleResolution": "node",
     "sourceMap": true,
     "rootDir": "./",
-    "target": "es2017",
-    "skipLibCheck": true,
-    "types": [
-      "node"
-    ],
-    "typeRoots": [
-      "../shared/node_modules/@types",
-      "node_modules/@types"
-    ],
-    "pretty": true
-  },
-  "include": [
-    "./**/*.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "shared"
-  ]
+    "target": "es2017"
+  }
 }

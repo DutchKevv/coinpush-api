@@ -51,6 +51,8 @@ export const orderController = {
 			json: true
 		});
 
+		console.log('ORDER ORDER', order);
+
 		const updateResult = await userController.updateBalance(reqUser, {amount: -(order.openPrice * order.amount)});
 		order.balance = updateResult.balance;
 
@@ -95,7 +97,7 @@ export const orderController = {
 
 		try {
 			// Get user MAIN channel
-			const copiers = (await request({
+			const user = (await request({
 				uri: config.server.channel.apiUrl + '/channel/',
 				method: 'GET',
 				headers: {'_id': order.user},
@@ -105,9 +107,11 @@ export const orderController = {
 					type: CHANNEL_TYPE_MAIN
 				},
 				json: true
-			})).user[0].copiers;
+			})).user[0];
 
-			copiers.forEach(copier => {
+			console.log('user', user);
+
+			user.copiers.forEach(copier => {
 				this.create({id: copier}, order, false).catch(console.error);
 			});
 		} catch (error) {

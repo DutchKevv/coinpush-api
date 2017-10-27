@@ -2,7 +2,10 @@
     <li class="form-group">
         <label for="filterCountry">PEOPLE FROM</label>
         <select class="form-control" id="filterCountry">
-            <option *ngFor="let country of countries" [attr.value]="country.code">{{country.name}}</option>
+            <option value="">Everywhere</option>
+            <optgroup>
+                <option *ngFor="let country of countries" [attr.value]="country.code">{{country.name}}</option>
+            </optgroup>
         </select>
     </li>
     <li class="form-group">

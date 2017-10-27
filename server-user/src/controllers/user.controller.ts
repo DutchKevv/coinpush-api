@@ -1,6 +1,5 @@
-import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
-import {Types, ObjectId} from 'mongoose';
+import {Types} from 'mongoose';
 import {client} from '../modules/redis';
 import {User} from '../schemas/user';
 import {
@@ -8,6 +7,8 @@ import {
 	G_ERROR_USER_NOT_FOUND,
 	REDIS_USER_PREFIX, USER_FETCH_TYPE_ACCOUNT_DETAILS, USER_FETCH_TYPE_PROFILE_SETTINGS, USER_FETCH_TYPE_SLIM,
 } from '../../../shared/constants/constants';
+import {IReqUser} from "../../../shared/interfaces/IReqUser.interface";
+import {IUser} from "../../../shared/interfaces/IUser.interface";
 
 const RESET_PASSWORD_TOKEN_EXPIRE = 1000 * 60 * 60 * 24; // 24 hour
 
@@ -132,7 +133,7 @@ export const userController = {
 	},
 
 	// TODO - Filter fields
-	async updatePassword(reqUser, token, password): Promise<void> {
+	async updatePassword(reqUser: IReqUser, token, password): Promise<void> {
 		let user;
 
 		if (token)
@@ -158,12 +159,12 @@ export const userController = {
 		const token = bcrypt.genSaltSync(10);
 		const expires = Date.now() + RESET_PASSWORD_TOKEN_EXPIRE;
 
-		const user = await User.findOneAndUpdate({email}, {resetPasswordToken: token, resetPasswordExpires: expires}, {fields: {_id: 1, name: 1}});
+		const user = <IUser>await User.findOneAndUpdate({email}, {resetPasswordToken: token, resetPasswordExpires: expires}, {fields: {_id: 1, name: 1}}).lean();
 
 		if (!user)
 			throw({code: G_ERROR_USER_NOT_FOUND});
 
-		return {_id: user._id, resetPasswordToken: token, resetPasswordExpires: expires, name: user.name};
+		return {_id: user._id, resetPasswordToken: token, resetPasswordExpires: expires, name: user.username};
 	},
 
 	async remove(id) {

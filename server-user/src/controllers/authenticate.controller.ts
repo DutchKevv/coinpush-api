@@ -1,6 +1,7 @@
 import * as jwt from 'jsonwebtoken';
-import {Types, ObjectId} from 'mongoose';
+import mongoose = require('mongoose');
 import {User} from '../schemas/user';
+import {IUser} from "../../../shared/interfaces/IUser.interface";
 
 const config = require('../../../tradejs.config');
 
@@ -13,9 +14,9 @@ export const authenticateController = {
 		fields.forEach(field => fieldsObj[field] = 1);
 
 		if (reqUser.id)
-			user = await User.findById(reqUser.id, fieldsObj).lean();
+			user = <IUser>await (<any>User).findById(reqUser.id, fieldsObj).lean();
 		else
-			user = await User.authenticate(params);
+			user = <IUser>await (<any>User).authenticate(params);
 
 		if (user)
 			user.token = jwt.sign({id: user._id, cid: user.c_id}, config.token.secret);

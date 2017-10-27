@@ -1,6 +1,5 @@
 import {InstrumentSettings} 		from '../../../../shared/interfaces/InstrumentSettings';
 import {BaseModel} 					from './base.model';
-import {isEqual, reduce, omit} 		from 'lodash';
 
 export class InstrumentModel extends BaseModel {
 
