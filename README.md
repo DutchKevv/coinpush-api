@@ -25,7 +25,13 @@ git clone https://github.com/DutchKevv/TradeJS.git
 cd TradeJS
 npm run install-all
 ```
+
+## Building
+```
+npm run build-all
+```
 ## Running (remember, alpha)
+pm2 is required as global package (to install run: npm i -g pm2)
 ```
 npm start
 ```
