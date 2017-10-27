@@ -61,6 +61,28 @@ export default class OandaApi extends Base {
 		})
 	}
 
+	public getTransactionHistory(minId: number): Promise<any> {
+		return new Promise((resolve, reject) => {
+			this._client.getTransactionHistory(this.options.accountId, minId, (err, transactions) => {
+				if (err)
+					return reject(err);
+
+				resolve(transactions.reverse());
+			})
+		});
+	}
+
+	public getOpenOrders(): Promise<any> {
+		return new Promise((resolve, reject) => {
+			this._client.getOpenTrades(this.options.accountId, (err, orders) => {
+				if (err)
+					return reject(err);
+
+				resolve(orders);
+			})
+		});
+	}
+
 	public subscribeEventStream(callback: Function) {
 		this._client.subscribeEvents(event => callback(event));
 	}
@@ -209,11 +231,11 @@ export default class OandaApi extends Base {
 			this._client.createOrder(this.options.accountId, _options, (err, result) => {
 				if (err)
 					return reject(err);
-				
+
 				resolve({
 					openTime: result.time,
 					openPrice: result.price,
-					b_id: result.tradeOpened.id || result.tradesClosed[0].id
+					b_id: result.tradeOpened.id
 				})
 			});
 		});
@@ -225,11 +247,7 @@ export default class OandaApi extends Base {
 				if (err)
 					return reject(err);
 
-				resolve({
-					openTime: result.time,
-					openPrice: result.price,
-					b_id: result.tradeOpened.id || result.tradesClosed[0].id
-				})
+				resolve(result);
 			});
 		});
 	}

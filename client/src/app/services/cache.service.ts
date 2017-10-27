@@ -1,10 +1,6 @@
 import {EventEmitter, Injectable, NgZone, Output} from '@angular/core';
-import {BehaviorSubject} from 'rxjs';
 import * as io from 'socket.io-client';
-import {Subject} from 'rxjs/Subject';
 import {SymbolModel} from "../models/symbol.model";
-import {AuthenticationService} from "./authenticate.service";
-import {UserService} from "./user.service";
 
 @Injectable()
 export class CacheService {

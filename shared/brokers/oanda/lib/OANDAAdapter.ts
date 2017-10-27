@@ -335,6 +335,25 @@ OandaAdapter.prototype.getCandles = function (symbol, start, end, granularity, c
 
 	return readableStream
 };
+
+OandaAdapter.prototype.getTransactionHistory = function (accountId, minId, callback) {
+	this._sendRESTRequest({
+		method: 'GET',
+		path: '/v1/accounts/' + accountId + '/transactions?' + querystring.stringify(JSON.parse(JSON.stringify({
+			minId: minId
+		})))
+	}, function (err, body) {
+		if (err)
+			return callback(err);
+		if (body && body.transactions) {
+			callback(null, body.transactions);
+		}
+		else {
+			callback('Unexpected response for transactions');
+		}
+	});
+};
+
 OandaAdapter.prototype.getOpenPositions = function (accountId, callback) {
 	this._sendRESTRequest({
 		method: 'GET',
@@ -398,13 +417,14 @@ OandaAdapter.prototype.closeOrder = function (accountId, tradeId, callback) {
 	this._sendRESTRequest({
 		method: 'DELETE',
 		path: '/v1/accounts/' + accountId + '/trades/' + tradeId
-	}, function (body) {
-		if (body) {
-			callback(null, body);
-		}
-		else {
-			callback('Unexpected response for open positions');
-		}
+	}, function (err, body) {
+		if (err)
+			return callback(err);
+
+		if (body)
+			return callback(null, body);
+
+		callback('Unexpected response for close order');
 	});
 };
 OandaAdapter.prototype._sendRESTRequest = function (request, callback, onData) {

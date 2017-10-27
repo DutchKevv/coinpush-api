@@ -7,8 +7,27 @@ const config = require('../../../tradejs.config');
 
 export const orderController = {
 
-	find(params): Promise<Array<any>> {
-		return Promise.resolve([]);
+	async find(reqUser, orderId: string): Promise<Array<any>> {
+		const order = await request({
+			uri: config.server.order.apiUrl + '/order/' + orderId,
+			headers: {'_id': reqUser.id},
+			json: true
+		});
+
+		return order;
+	},
+
+	async findByBrokerId(reqUser, brokerId): Promise<Array<any>> {
+		const order = await request({
+			uri: config.server.order.apiUrl + '/order/' + brokerId,
+			headers: {'_id': reqUser.id},
+			qs: {
+				type: 'broker'
+			},
+			json: true
+		});
+
+		return order;
 	},
 
 	async create(reqUser: {id: string}, params, triggerCopy = true) {
@@ -43,6 +62,33 @@ export const orderController = {
 
 	update(userId, params) {
 
+	},
+
+	async close(reqUser, orderId: string) {
+		const result = await request({
+			uri: config.server.order.apiUrl + '/order/' + orderId,
+			method: 'delete',
+			headers: {'_id': reqUser.id},
+			json: true
+		});
+
+		return result;
+	},
+
+	async getAllOpen(reqUser): Promise<Array<any>> {
+		const orders = await request({
+			uri: config.server.order.apiUrl + '/order/',
+			method: 'GET',
+			headers: {'_id': reqUser.id},
+			qs: {
+				broker: true
+			},
+			json: true
+		});
+
+		console.log('open', orders);
+
+		return orders;
 	},
 
 	async _copyOrder(order): Promise<Boolean> {

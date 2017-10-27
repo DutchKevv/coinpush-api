@@ -27,7 +27,7 @@ db.once('open', function () {
 /**
  * Broker API
  */
-orderController.init();
+orderController.init().catch(console.error);
 
 app.use(morgan('dev'));
 app.use(helmet());

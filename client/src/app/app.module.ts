@@ -53,6 +53,7 @@ import {CommentService} from "./services/comment.service";
 import {EmojiPickerModule} from 'ng-emoji-picker';
 import {PasswordResetComponent} from "./components/password-reset/password-reset.component";
 import {RequestPasswordResetComponent} from "./components/request-password-reset/request-password-reset.component";
+import {BootstrapService} from "./services/bootstrap.service";
 
 @NgModule({
 	declarations: [
@@ -108,6 +109,7 @@ import {RequestPasswordResetComponent} from "./components/request-password-reset
 		UserService,
 		ChannelService,
 		CommentService,
+		BootstrapService,
 
 		{provide: OrderService, useClass: OrderService},
 		{provide: ConstantsService, useClass: ConstantsService},

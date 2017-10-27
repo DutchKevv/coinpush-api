@@ -9,22 +9,37 @@ import {orderController} from '../controllers/order.controller';
 
 const router = Router();
 
+/**
+ * single
+ */
 router.get('/:id', async (req, res, next) => {
 	try {
-		res.send(await orderController.findById(req.user, req.user.id));
+		if (req.query.type === 'broker')
+			res.send(await orderController.findByBrokerId(req.user, req.params.id));
+		else
+			res.send(await orderController.findById(req.user, req.params.id));
 	} catch (error) {
 		next(error);
 	}
 });
 
+/**
+ * list
+ */
 router.get('/', async (req, res) => {
 	try {
-		res.send(await orderController.findByUserId(req.user, req.user.id));
+		if (req.query.broker)
+			res.send(await orderController.findOpenOnBroker(req.user));
+		else
+			res.send(await orderController.findByUserId(req.user, req.user.id));
 	} catch (error) {
 		res.status(500).send(error);
 	}
 });
 
+/**
+ * create
+ */
 router.post('/', async (req, res, next) => {
 
 	let params = <any>{
@@ -64,6 +79,9 @@ router.post('/', async (req, res, next) => {
 	}
 });
 
+/**
+ * update
+ */
 router.put('/:id', function (req: any, res, next) {
 
 	Order.unFollow(req.user.id, req.params.id, error => {
@@ -74,6 +92,9 @@ router.put('/:id', function (req: any, res, next) {
 	});
 });
 
+/**
+ * remove
+ */
 router.delete('/:id', async (req: any, res, next) => {
 	try {
 		res.send(await orderController.close(req.user, req.params.id))

@@ -87,6 +87,7 @@ app.use(expressJwt({
 		(/\.(gif|jpg|jpeg|tiff|png)$/i).test(req.originalUrl) ||
 		req.originalUrl === '/' ||
 		req.originalUrl.indexOf('/sounds/') > -1 ||
+		req.originalUrl.indexOf('/data/') > -1 ||
 		(req.originalUrl === '/authenticate' && (['POST', 'PUT', 'OPTIONS'].includes(req.method) && !req.headers.authorization)) ||
 		req.originalUrl === '/authenticate/request-password-reset' ||
 		(req.originalUrl === '/user' && (req.method === 'POST' || req.method === 'OPTIONS'))

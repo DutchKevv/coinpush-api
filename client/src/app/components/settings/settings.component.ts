@@ -1,6 +1,8 @@
-import {ChangeDetectionStrategy, Component, ElementRef, NgZone, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {
+	ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild,
+	ViewEncapsulation
+} from '@angular/core';
 import {UserService} from '../../services/user.service';
-import {AlertService} from '../../services/alert.service';
 import {Http} from '@angular/http';
 import {FormBuilder} from '@angular/forms';
 import {USER_FETCH_TYPE_PROFILE_SETTINGS} from '../../../../../shared/constants/constants';
@@ -15,7 +17,7 @@ declare let $: any;
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class SettingsComponent implements OnInit {
+export class SettingsComponent implements OnInit, OnDestroy {
 	model: any;
 	form: any;
 
@@ -29,6 +31,7 @@ export class SettingsComponent implements OnInit {
 				private _userService: UserService) {
 	}
 
+	// TODO: Gets called twice!
 	ngOnInit() {
 		this.model = this._userService.model;
 
@@ -107,5 +110,9 @@ export class SettingsComponent implements OnInit {
 
 	onChange(event) {
 		console.log(event);
+	}
+
+	ngOnDestroy() {
+
 	}
 }

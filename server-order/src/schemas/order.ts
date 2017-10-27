@@ -70,6 +70,14 @@ const OrderSchema = new Schema({
 	magic: {
 		type: Number
 	},
+	interest: {
+		type: Number,
+		default: 0
+	},
+	closed: {
+		type: Boolean,
+		default: false
+	}
 });
 
 // authenticate input against database

@@ -72,7 +72,9 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	private _onScrollTooltipTimeout = null;
 	private _oCanvasMouseMoveFunc = null;
 	private _mouseActive = true;
-	private _changeSupsribtion;
+	private _changeSubscription;
+	private _priceSubscription;
+	private _orderSubscription;
 
 	public static readonly DEFAULT_CHUNK_LENGTH = 1000;
 	public static readonly VIEW_STATE_WINDOWED = 1;
@@ -115,13 +117,17 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	}
 
 	ngOnInit() {
-		if (!this.instrumentModel) {
-			if (!this.symbolModel)
-				throw new Error('symbol or instrument model missing')
+		if (!this.symbolModel && !this.instrumentModel)
+			throw new Error('symbol or instrument model required');
 
+		if (this.instrumentModel) {
+			if (!this.symbolModel)
+				this.symbolModel = this._cacheService.getBySymbol(this.instrumentModel.options.symbol);
+
+		} else {
 			this.instrumentModel = new InstrumentModel({
 				symbol: this.symbolModel.options.name
-			})
+			});
 		}
 
 		this.$el = $(this._elementRef.nativeElement);
@@ -129,6 +135,12 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 		this._restoreStyles();
 		this._fetchCandles();
+
+		// Listen for price change
+		this._priceSubscription = this.symbolModel.options$.subscribe((options) => this._onPriceChange(options));
+
+		// Listen for orders change
+		this._orderSubscription = this._orderService.orders$.subscribe((options) => this._updateOrders(options));
 
 		if (this.instrumentModel.options.id) {
 			this._fetchIndicators(ChartBoxComponent.DEFAULT_CHUNK_LENGTH, this._offset);
@@ -141,7 +153,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 			});
 		}
 
-		this._changeSupsribtion = this.instrumentModel.changed$.subscribe(changes => {
+		this._changeSubscription = this.instrumentModel.changed$.subscribe(changes => {
 			let dirty = false;
 
 			Object.keys(changes).forEach(change => {
@@ -165,7 +177,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 					case 'focus':
 						if (changes.focus === true) {
 							this.toggleViewState(true);
-							this.putOnTop();
 						}
 						break;
 					case 'orders':
@@ -191,9 +202,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	}
 
 	ngAfterViewInit() {
-		this.putOnTop();
-		this._bindResize();
-		this._bindDrag();
+
 	}
 
 	public changeGraphType() {
@@ -203,38 +212,10 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		this._chart.options.data[0].type = this.instrumentModel.options.graphType;
 	}
 
-	public pinToCorner(event): void {
-		if (!this._chart)
-			return;
-
-		let el = this._chart.container.firstElementChild,
-			edges = event.interaction.prepared.edges;
-
-		// el.style.position = 'absolute';
-
-		// if (edges.right || edges.left) {
-		// 	el.style.left = 'auto';
-		// 	el.style.right = '0px';
-		// }
-	}
-
-	public unpinFromCorner(reflow = true): void {
-		if (!this._chart)
-			return;
-
-		// this._chart.container.firstElementChild.style.position = 'static';
-
-		if (reflow)
-			this.reflow();
-	}
-
 	public reflow() {
 		if (!this._chart)
 			return;
-		console.log('reflow');
-		// this._chart.options.height = this._candlesRef.nativeElement.parentNode.clientHeight * 0.7;
-		// this._candlesRef.nativeElement.style.height = (this._candlesRef.nativeElement.parentNode.clientHeight * 0.7) + 'px';
-		// this._volumeRef.nativeElement.style.height = (this._candlesRef.nativeElement.parentNode.clientHeight * 0.3) + 'px';
+
 		this._chartVolume.options.height = this._volumeRef.nativeElement.clientHeight;
 		this._chartVolume.options.width = this._volumeRef.nativeElement.clientWidth;
 		this._chart.options.height = this._candlesRef.nativeElement.clientHeight;
@@ -300,9 +281,9 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 						color: '#d2d2d5'
 					}],
 					tickThickness: 0.5,
-					lineThickness: 0.5,
-					labelMinWidth: 40,
-					labelMaxWidth: 40
+					lineThickness: 1.5,
+					labelMinWidth: 50,
+					labelMaxWidth: 50
 				},
 				axisX: {
 					includeZero: false,
@@ -376,9 +357,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 					gridDashType: 'dash',
 					gridColor: '#787D73',
 					gridThickness: 0.5,
-					tickThickness: 0,
-					labelMinWidth: 40,
-					labelMaxWidth: 40
+					tickThickness: 0
 				},
 				data: [
 					{
@@ -425,8 +404,8 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 			this._chart.options.axisX.viewportMinimum = data.length - offset - viewable;
 			this._chartVolume.options.axisX.viewportMinimum = data.length - offset - viewable;
-			this._chart.options.axisX.viewportMaximum = data.length - offset - 1;
-			this._chartVolume.options.axisX.viewportMaximum = data.length - offset - 1;
+			this._chart.options.axisX.viewportMaximum = data.length - offset + 2;
+			this._chartVolume.options.axisX.viewportMaximum = data.length - offset + 2;
 		});
 	}
 
@@ -545,46 +524,47 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	}
 
 	private _updateOrders(orders: any[] = this.instrumentModel.options.orders) {
-		this._zone.runOutsideAngular(() => {
 
-			orders.forEach((order: any) => {
-				if (order.closeTime < this._chart.options.data[0].dataPoints[0].time)
-					return;
-
-				this._chart.options.data[1].dataPoints.push(...[
-						{
-							// label: moment(order.openTime).format('DD-MM hh:mm'),
-							// x: this._chart.options.data[0].dataPoints.find(point => point.time === order.openTime).x,
-							y: null,
-							lineColor: order.side === 'sell' ? '#ff00e1' : '#007fff',
-							color: order.profit > 0 ? '#01ff00' : 'red',
-							id: order.id,
-							profit: order.profit
-							// lineColor: 'red'
-						},
-						{
-							// label: moment(order.openTime).format('DD-MM hh:mm'),
-							x: this._chart.options.data[0].dataPoints.findIndex(point => point.time === order.openTime),
-							y: order.openBid,
-							lineColor: order.side === 'sell' ? '#ff00e1' : '#007fff',
-							color: order.profit > 0 ? '#01ff00' : 'red',
-							id: order.id,
-							profit: order.profit
-						},
-						{
-							// label: moment(order.closeTime).format('DD-MM hh:mm'),
-							x: this._chart.options.data[0].dataPoints.findIndex(point => point.time === order.closeTime),
-							y: order.closeBid,
-							id: order.id,
-							profit: order.profit,
-							// lineColor: order.type === 'sell' ? '#ff00e1' : '#007fff',
-							color: order.profit > 0 ? '#01ff00' : 'red'
-							// lineColor: 'red'
-						}
-					]
-				);
-			});
-		});
+		// this._zone.runOutsideAngular(() => {
+		//
+		// 	orders.forEach((order: any) => {
+		// 		if (order.closeTime < this._chart.options.data[0].dataPoints[0].time)
+		// 			return;
+		//
+		// 		this._chart.options.data[1].dataPoints.push(...[
+		// 				{
+		// 					// label: moment(order.openTime).format('DD-MM hh:mm'),
+		// 					// x: this._chart.options.data[0].dataPoints.find(point => point.time === order.openTime).x,
+		// 					y: null,
+		// 					lineColor: order.side === 'sell' ? '#ff00e1' : '#007fff',
+		// 					color: order.profit > 0 ? '#01ff00' : 'red',
+		// 					id: order.id,
+		// 					profit: order.profit
+		// 					// lineColor: 'red'
+		// 				},
+		// 				{
+		// 					// label: moment(order.openTime).format('DD-MM hh:mm'),
+		// 					x: this._chart.options.data[0].dataPoints.findIndex(point => point.time === order.openTime),
+		// 					y: order.openBid,
+		// 					lineColor: order.side === 'sell' ? '#ff00e1' : '#007fff',
+		// 					color: order.profit > 0 ? '#01ff00' : 'red',
+		// 					id: order.id,
+		// 					profit: order.profit
+		// 				},
+		// 				{
+		// 					// label: moment(order.closeTime).format('DD-MM hh:mm'),
+		// 					x: this._chart.options.data[0].dataPoints.findIndex(point => point.time === order.closeTime),
+		// 					y: order.closeBid,
+		// 					id: order.id,
+		// 					profit: order.profit,
+		// 					// lineColor: order.type === 'sell' ? '#ff00e1' : '#007fff',
+		// 					color: order.profit > 0 ? '#01ff00' : 'red'
+		// 					// lineColor: 'red'
+		// 				}
+		// 			]
+		// 		);
+		// 	});
+		// });
 	}
 
 	/*
@@ -620,20 +600,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 			barW = 3 * this.instrumentModel.options.zoom;
 
 		return Math.floor(el.clientWidth / barW);
-	}
-
-	public putOnTop() {
-		let selfIndex = parseInt(this.$el.css('z-index'), 10) || 1,
-			highestIndex = selfIndex;
-
-		this.$el.siblings().each((key, el) => {
-			let zIndex = parseInt(el.style.zIndex, 10) || 1;
-
-			if (zIndex > highestIndex)
-				highestIndex = zIndex;
-		});
-
-		this.$el.css('z-index', selfIndex <= highestIndex ? highestIndex + 1 : highestIndex);
 	}
 
 	public getStyles(): any {
@@ -750,6 +716,17 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		// this._ref.markForCheck();
 	}
 
+	private _onPriceChange(options: any) {
+		const lastCandle = this._data.candles[this._data.candles.length -1];
+
+		if (!lastCandle)
+			return;
+		
+		lastCandle.y[2] = options.ask;
+		this._updateCurrentPricePlot();
+		this.render();
+	}
+
 	private _onScroll(event: MouseWheelEvent): boolean {
 		event.stopPropagation();
 		event.preventDefault();
@@ -779,97 +756,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		return false;
 	}
 
-	private _bindDrag() {
-
-		this._zone.runOutsideAngular(() => {
-
-			interact(this._dragHandle.nativeElement)
-				.draggable({
-
-					allowFrom: this._dragHandle.nativeElement,
-
-					// enable inertial throwing
-					inertia: true,
-
-					// keep the element within the area of it's parent
-					restrict: {
-						restriction: this._elementRef.nativeElement.parentNode,
-						endOnly: true,
-						elementRect: {top: 0, left: 0, bottom: 1, right: 1}
-					},
-
-					// call this function on every dragmove event
-					onmove: (event) => {
-						event.preventDefault();
-
-						this._zone.runOutsideAngular(() => {
-
-							let target = this._elementRef.nativeElement;
-
-							let // keep the dragged position in the data-x/data-y attributes
-								x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
-								y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-
-							// translate the element
-							target.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
-
-							// update the posiion attributes
-							target.setAttribute('data-x', x);
-							target.setAttribute('data-y', y);
-						});
-					},
-					onend: () => this.storeStyles(),
-				});
-		});
-	}
-
-	private _bindResize() {
-		interact(this._elementRef.nativeElement)
-			.resizable({
-				preserveAspectRatio: false,
-				edges: {left: true, right: true, bottom: true, top: false},
-				min: 100,
-				restrict: {
-					restriction: 'parent'
-				},
-				onstart: (event) => this.pinToCorner(event),
-				onmove: (event) => {
-					event.preventDefault();
-					event.stopPropagation();
-
-					if (event.rect.height < 100 || event.rect.width < 300)
-						return;
-
-					let target = event.target,
-						x = (parseFloat(target.getAttribute('data-x')) || 0),
-						y = (parseFloat(target.getAttribute('data-y')) || 0);
-
-					if (event.rect.height < 100 || event.rect.width < 300)
-						return;
-
-
-					// update the element's style
-					target.style.width = event.rect.width + 'px';
-					target.style.height = event.rect.height + 'px';
-
-					// translate when resizing from top or left edges
-					x += event.deltaRect.left;
-					y += event.deltaRect.top;
-
-					target.style.webkitTransform = target.style.transform =
-						'translate(' + x + 'px,' + y + 'px)';
-
-					target.setAttribute('data-x', x);
-					target.setAttribute('data-y', y);
-				},
-				onend: () => {
-					this.unpinFromCorner();
-					this.render();
-					this.storeStyles();
-				}
-			});
-	}
-
 	private _destroyChart() {
 		this._candlesRef.nativeElement.removeEventListener('mousewheel', <any>this._onScrollBounced);
 
@@ -878,7 +764,9 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	}
 
 	async ngOnDestroy() {
-		this._changeSupsribtion.unsubscribe();
+		this._changeSubscription.unsubscribe();
+		this._priceSubscription.unsubscribe();
+		this._orderSubscription.unsubscribe();
 		this._destroyChart();
 		this._data = null;
 		this.$el = null;

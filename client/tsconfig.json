@@ -12,14 +12,14 @@
     "typeRoots": [
       "../shared/node_modules/@types",
       "node_modules/@types"
-    ],
-    "include": ["src/app/**/*.ts"],
-    "exclude": [
-      "server",
-      "shared",
-      "node_modules"
     ]
   },
+  "include": ["src/app/**/*.ts"],
+  "exclude": [
+    "server",
+    "shared",
+    "node_modules"
+  ],
   "angularCompilerOptions": {
     "genDir": "aot",
     "skipMetadataEmit" : true

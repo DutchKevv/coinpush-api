@@ -100,8 +100,12 @@ export class OrderService {
 		return this.http.put('/order/' + id, options);
 	}
 
-	public remove(id) {
-		return this.http.delete('/order/' + id);
+	public async remove(id) {
+		await this.http.delete('/order/' + id).toPromise();
+
+		this.orders$.next(this.orders$.getValue().filter(o => o.options._id !== id));
+		this.calculateAccountStatus();
+		this._alertService.success('Order closed');
 	}
 
 	public calculateAccountStatus() {

@@ -11,14 +11,14 @@ export class SocketService {
 	constructor(private _zone: NgZone) {}
 
 	public connect() {
-		this._zone.runOutsideAngular(() => {
+		// this._zone.runOutsideAngular(() => {
 			this.socket = io('/', {
 				'reconnectionAttempts': 10, // avoid having user reconnect manually in order to prevent dead clients after a server restart
 				'timeout': 10000, // before connect_error and connect_timeout are emitted.
 				'transports': ['websocket'],
 				path: '/api'
 			});
-		});
+		// });
 	}
 
 	public disconnect() {

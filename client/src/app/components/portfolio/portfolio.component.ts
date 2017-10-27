@@ -74,6 +74,8 @@ export class PortfolioComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
+		// Chart box header dropdown (indicators)
+		// TODO: Chart-box should handle header
 		$(this._elementRef.nativeElement.shadowRoot.querySelectorAll('.dropdown')).dropdown2();
 
 		this._ordersSubscription = this.orderService.orders$.subscribe((list: Array<OrderModel>) => {

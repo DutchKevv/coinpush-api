@@ -1,12 +1,8 @@
 <ul class="filter-options">
     <li class="form-group">
-        <label for="exampleSelect1">PEOPLE FROM</label>
-        <select class="form-control" id="exampleSelect1">
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
+        <label for="filterCountry">PEOPLE FROM</label>
+        <select class="form-control" id="filterCountry">
+            <option *ngFor="let country of countries" [attr.value]="country.code">{{country.name}}</option>
         </select>
     </li>
     <li class="form-group">

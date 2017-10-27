@@ -83,15 +83,15 @@ module.exports = {
         ]
     },
     plugins: [
-        // new CleanWebpackPlugin([path.join(__dirname, '..', 'dist', '*.*')], {root: path.resolve(__dirname , '..'), verbose: true}),
+        new CleanWebpackPlugin([path.join(__dirname, '..', 'dist', '*.*')], {root: path.resolve(__dirname , '..'), verbose: true}),
 
         new CopyWebpackPlugin([
             {from: './src/assets', to: 'assets'},
             {from: './src/index.html', to: 'index.html'},
-            {from: './../shared/engine/dist', to: 'engine'},
             {from: './src/favicon.ico', to: 'favicon.ico'},
             {from: './src/sounds', to: 'sounds'},
-            {from: './src/data', to: 'data'}
+            {from: './../shared/data', to: 'data'},
+			// {from: './../shared/engine/dist', to: 'engine'},
             // {from: './../shared/engine/engine.data', to: 'engine.data'}
         ]),
 // new ngToolsWebpack.AotPlugin({

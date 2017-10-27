@@ -19,21 +19,17 @@ Can be run as
 - Standalone server running elastic in the cloud (with a custom client)
 
 ## Installation
-Switch to NodeJS 7.10.0
+Switch to NodeJS 8.8.1
 ```
-npm install tradejs
+git clone https://github.com/DutchKevv/TradeJS.git
+cd TradeJS
+npm run install-all
 ```
 ## Running (remember, alpha)
-Make sure you have a **practise** account on Oanda (https://www.oanda.com/).
-
-###### index.js
-```js
-const TradeJS = require('tradejs').default;
-const app = new TradeJS();
-
-app.init().catch(console.log);
 ```
-Go to localhost:3000 in chrome (only newest versions of chrome are supported)
+npm start
+```
+Go to localhost:3100 in chrome (only newest versions of chrome are supported cause of shadow DOM)
 
  ## Dashboard
  ![Alt text](doc/screenshot/charts.png?raw=true "Title")

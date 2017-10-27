@@ -27,6 +27,7 @@ export class UserOverviewComponent implements OnInit, OnDestroy, AfterViewChecke
 	@Output() public editorChoice$: BehaviorSubject<any[]> = new BehaviorSubject([]);
 	@Output() public topInvestors$: BehaviorSubject<any[]> = new BehaviorSubject([]);
 
+	public countries: any[] = window['COUNTRIES'];
 	public selfId = this.userService.model.get('_id');
 
 	private _moveInterval;
