@@ -43,7 +43,7 @@ export class Base extends EventEmitter {
 	}
 
 	public set(obj: any, triggerChange = true, triggerOptions = true) {
-		let diff = omit(obj, (v, k) => { return this.options[k] === v; });
+		let diff = omit(obj, (v, k) => { return <any>(this.options[k] === v); });
 
 		this._options = merge(this._options, obj);
 
