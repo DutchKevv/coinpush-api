@@ -2,7 +2,7 @@ import {EventEmitter}   from 'events';
 import * as merge       from 'deepmerge';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Subject} 		from 'rxjs/Subject';
-import {isEqual, reduce, omit} 		from 'lodash';
+import {isEqual, reduce, omitBy} 		from 'lodash';
 
 export class Base extends EventEmitter {
 
@@ -43,7 +43,7 @@ export class Base extends EventEmitter {
 	}
 
 	public set(obj: any, triggerChange = true, triggerOptions = true) {
-		let diff = omit(obj, (v, k) => this.options[k] === v);
+		let diff = omitBy(obj, (v, k) => this.options[k] === v);
 
 		this._options = merge(this._options, obj);
 
