@@ -7,6 +7,7 @@ import {Http} from '@angular/http';
 import {FormBuilder} from '@angular/forms';
 import {USER_FETCH_TYPE_PROFILE_SETTINGS} from '../../../../../shared/constants/constants';
 import {UserModel} from '../../models/user.model';
+import { AuthenticationService } from '../../services/authenticate.service';
 
 declare let $: any;
 
@@ -31,6 +32,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
 	constructor(private _http: Http,
 				private _formBuilder: FormBuilder,
+				private _authenticationService: AuthenticationService,
 				private _userService: UserService) {
 	}
 
@@ -43,6 +45,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 			email: this._userService.model.get('email'),
 			description: this._userService.model.get('description'),
 			country: this._userService.model.get('country'),
+			gender: this._userService.model.get('gender'),
 			balance: this._userService.model.get('balance'),
 			leverage: this._userService.model.get('leverage'),
 		});
@@ -56,7 +59,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
 				country: user.options.country,
 				description: user.options.description,
 				balance: this._userService.model.get('balance'),
-				leverage: this._userService.model.get('leverage')
+				leverage: this._userService.model.get('leverage'),
+				gender: user.options.gender,
 			}, {onlySelf: true});
 
 			this.form.valueChanges.subscribe(data => {
@@ -113,6 +117,14 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
 	onChange(event) {
 		console.log(event);
+	}
+
+	async onClickRemoveAccount(event) {
+		event.preventDefault();
+		event.stopPropagation();
+
+		const result = await this._userService.remove();
+		this._authenticationService.logout();
 	}
 
 	ngOnDestroy() {

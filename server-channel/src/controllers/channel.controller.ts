@@ -25,21 +25,33 @@ client.on('message', async (channel, message) => {
 
 export const channelController = {
 
+	_defaultFields: {
+		user_id: 1,
+		profileImg: 1,
+		name: 1,
+		transactions: 1,
+		description: 1
+	},
+
 	async findById(reqUser: {id: string}, id: string): Promise<any> {
-		const channel = await Channel.findById(id).lean();
+		const channel = await Channel.findById(id, this._defaultFields).lean();
 
 		Channel.normalize(reqUser, channel);
 
 		return channel;
 	},
 
-	async findByUserId(reqUser, userId: string, fields: Array<string> = [], type?: number): Promise<Array<any>> {
+	async findByUserId(reqUser, userId: string, fields?: Array<string>, type?: number): Promise<Array<any>> {
 		const opt = {user_id: userId};
+		let fieldsObj = this._defaultFields;
 
 		if (typeof type === 'number')
 			opt['type'] = type;
 
-		let channels = await Channel.find(opt, fields.reduce((obj, f) => {obj[f] = 1; return obj}, {})).lean();
+		if (fields)
+			fieldsObj = fields.reduce((obj, f) => {obj[f] = 1; return obj}, {});
+
+		let channels = await Channel.find(opt, fieldsObj).lean();
 
 		channels = channels.map(channel => Channel.normalize(reqUser, channel));
 
@@ -59,8 +71,6 @@ export const channelController = {
 			$project: {
 				followersCount: {$size: '$followers'},
 				copiersCount: {$size: '$copiers'},
-				followers: 1,
-				copiers: 1,
 				user_id: 1,
 				profileImg: 1,
 				name: 1,
@@ -154,7 +164,11 @@ export const channelController = {
 		return {state: !isCopying};
 	},
 
-	delete(userId: string, id: string): Promise<any> {
-		return Channel.deleteOne({_id: Types.ObjectId(id), user_id: Types.ObjectId(userId)});
+	removeById(reqUser, id: string): Promise<any> {
+		return Channel.remove({_id: id});
+	},
+
+	removeByUserId(reqUser, userId: string) {
+		return Channel.remove({user_id: userId});
 	}
 };

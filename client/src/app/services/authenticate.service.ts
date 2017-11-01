@@ -77,7 +77,7 @@ export class AuthenticationService {
 		if (!email && !password && !token) {
 			token = this.getStoredToken();
 			if (!token) {
-				this.loggedIn$.emit(false);
+				this.logout();
 				return false;
 			}
 		}
@@ -93,7 +93,7 @@ export class AuthenticationService {
 				.toPromise();
 
 			if (!user || !user.token) {
-				this.loggedIn$.emit(false);
+				this.logout();
 				return false;
 			}
 
@@ -105,12 +105,20 @@ export class AuthenticationService {
 
 			return true;
 		} catch (error) {
+			this.logout();
 			return false;
 		}
 	}
 
-	logout() {
+	logout(): void {
 		this.removeStoredUser();
-		this._router.navigate(['/login']);
+		this.loggedIn$.emit(false);
+
+		// Stay on register page
+		if (window.location.hash.startsWith('#/register')) {
+				
+		} else {
+			this._router.navigate(['/login']);
+		}
 	}
 }

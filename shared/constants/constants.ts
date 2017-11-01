@@ -21,6 +21,7 @@ export const
 	 */
 	G_ERROR_UNKNOWN = 0,
 	G_ERROR_EXPIRED = 1,
+	G_ERROR_DUPLICATE = 2,
 	G_ERROR_USER_NOT_FOUND = 100,
 
 	/**

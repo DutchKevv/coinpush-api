@@ -79,4 +79,13 @@ export class UserService {
 	storeLocalStoreUser() {
 		localStorage.setItem('currentUser', JSON.stringify(this.model.options));
 	}
+
+	async remove() {
+		try {
+			await this._http.delete('/user/' + this.model.options.user_id).toPromise();
+			return true;
+		} catch (error) {
+			console.error(error);
+		}
+	}
 }

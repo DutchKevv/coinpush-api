@@ -45,3 +45,4 @@ app.use((req: any, res, next) => {
 
 app.use('/channel', require('./api/channel.api'));
 app.use('/search', require('./api/search.api'));
+app.use('/user', require('./api/user.api'));

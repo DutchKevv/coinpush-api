@@ -20,6 +20,7 @@
     "jsonwebtoken": "^8.0.0",
     "minimist": "^1.2.0",
     "mongoose": "^4.12.4",
+    "mongoose-beautiful-unique-validation": "^7.0.0",
     "morgan": "^1.8.2",
     "nodemailer": "^4.3.1",
     "tsc-watch": "^1.0.8",

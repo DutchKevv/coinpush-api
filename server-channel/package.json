@@ -17,6 +17,7 @@
     "jsonwebtoken": "^8.0.0",
     "minimist": "^1.2.0",
     "mongoose": "^4.11.11",
+    "mongoose-beautiful-unique-validation": "^7.0.0",
     "morgan": "^1.8.2",
     "redis": "^2.8.0",
     "request": "^2.81.0",

@@ -2,7 +2,6 @@ import {Router} from 'express';
 import * as httpProxy from 'http-proxy';
 import {userController} from '../controllers/user.controller';
 
-const config = require('../../../tradejs.config');
 const router = Router();
 
 /**
@@ -10,7 +9,7 @@ const router = Router();
  */
 router.get('/:id', async (req, res, next) => {
 	try {
-		res.send(await userController.find(req.user, req.params.id, req.query));
+		res.send(await userController.findById(req.user, req.params.id, req.query));
 	} catch (error) {
 		next(error);
 	}
@@ -70,5 +69,18 @@ router.put('/:id', async (req, res, next) => {
 		next(error);
 	}
 });
+
+/**
+ * delete
+ */
+router.delete('/:id', async (req, res, next) => {
+	try {
+		console.log('user user', req.user, req.params.id);
+		res.send(await userController.remove(req.user, req.params.id));
+	} catch (error) {
+		next(error);
+	}
+});
+
 
 export = router;

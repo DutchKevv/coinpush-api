@@ -1,7 +1,8 @@
-import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, EventEmitter, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import {UserService} from '../../services/user.service';
-import {AlertService} from '../../services/alert.service';
+import { UserService } from '../../services/user.service';
+import { AlertService } from '../../services/alert.service';
+import { G_ERROR_DUPLICATE } from '../../../../../shared/constants/constants';
 
 @Component({
 	styleUrls: ['./register.component.scss'],
@@ -11,8 +12,10 @@ import {AlertService} from '../../services/alert.service';
 })
 
 export class RegisterComponent {
+
+	@Output() public loading$: EventEmitter<boolean> = new EventEmitter;
+
 	model: any = {};
-	loading = false;
 
 	constructor(
 		private router: Router,
@@ -20,16 +23,34 @@ export class RegisterComponent {
 		private alertService: AlertService) { }
 
 	register() {
-		this.loading = true;
+		this.loading$.emit(true);
+
 		this.userService.create(this.model)
 			.subscribe(
-				data => {
-					this.alertService.success('Registration successful', true);
-					this.router.navigate(['/login']);
-				},
-				error => {
-					this.alertService.error(error);
-					this.loading = false;
-				});
+			data => {
+				this.alertService.success('Registration successful', true);
+				this.router.navigate(['/login']);
+			},
+			responseError => {
+				this.loading$.emit(false);
+
+				try {
+					const error = JSON.parse(responseError);
+					if (error.code) {
+						switch (error.code) {
+							case G_ERROR_DUPLICATE:
+								if (error.field === 'email')
+									this.alertService.error(`Email already used`);
+								if (error.field === 'name')
+									this.alertService.error(`Username already used`);
+
+								break;
+						}
+					}
+				} catch (error) {
+					this.alertService.error('Unknown error occured');
+					console.error(error);
+				}
+			});
 	}
 }

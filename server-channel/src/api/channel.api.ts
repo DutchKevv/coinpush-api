@@ -98,7 +98,7 @@ router.put('/:id?', async (req, res, next) => {
  */
 router.delete('/:id', async (req, res, next) => {
 	try {
-		res.send(await channelController.delete(req.user.id, req.params.id));
+		res.send(await channelController.removeById(req.user, req.params.id));
 	} catch (error) {
 		console.error(error);
 		next(error);

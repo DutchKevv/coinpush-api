@@ -13,9 +13,10 @@
                 </div>
                 <div class="form-box">
                     <label for="gender">Gender</label>
-                    <select id="gender">
-                        <option value="m">Male</option>
-                        <option value="m">Female</option>
+                    <select id="gender" formControlName="gender">
+                        <option value="1">Male</option>
+                        <option value="2">Female</option>
+                        <option value="3">Highly confused</option>
                     </select>
                 </div>
             </div>
@@ -130,7 +131,7 @@
             <input id="email" formControlName="email" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
         </div>
         <div class="form-box">
-            <button class="btn btn-sm btn-danger">Remove account</button>
+            <button class="btn btn-sm btn-danger" (click)="onClickRemoveAccount($event)">Remove account</button>
         </div>
     </form>
 </div>

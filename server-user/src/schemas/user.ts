@@ -4,6 +4,7 @@ import {isEmail} from 'validator';
 import {join} from 'path';
 import {BROKER_GENERAL_TYPE_OANDA, LEVERAGE_TYPE_1} from '../../../shared/constants/constants';
 import {IUser} from "../../../shared/interfaces/IUser.interface";
+import * as beautifyUnique from 'mongoose-beautiful-unique-validation';
 
 const UserSchema = new Schema({
 	c_id: {
@@ -103,6 +104,9 @@ const UserSchema = new Schema({
 		type: Date,
 	}
 });
+
+// Enable beautifying on this schema 
+UserSchema.plugin(beautifyUnique);
 
 // authenticate input against database
 UserSchema.statics.authenticate = async (params: IUser, fields = []) => {

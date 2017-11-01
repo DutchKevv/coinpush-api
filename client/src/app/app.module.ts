@@ -49,7 +49,6 @@ import {ChannelService} from './services/channel.service';
 import {ChannelDetailsModalComponent} from './components/channel-details-modal/channel.details.modal.component';
 import {CommentBoxComponent} from './components/comment-box/comment-box.component';
 import {CommentService} from "./services/comment.service";
-import {EmojiPickerModule} from 'ng-emoji-picker';
 import {PasswordResetComponent} from "./components/password-reset/password-reset.component";
 import {RequestPasswordResetComponent} from "./components/request-password-reset/request-password-reset.component";
 import {BootstrapService} from "./services/bootstrap.service";
@@ -91,7 +90,6 @@ import {BootstrapService} from "./services/bootstrap.service";
 		CommentBoxComponent
 	],
 	imports: [
-		EmojiPickerModule,
 		BrowserModule,
 		routing,
 		FormsModule,

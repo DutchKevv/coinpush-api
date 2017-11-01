@@ -93,30 +93,34 @@ ChannelSchema.statics.setIFollow = function(user, doc) {
 	return this;
 };
 
-
 /**
  * Transform image filename to full url
  * @param filename
  * @returns {any}
  */
-ChannelSchema.statics.normalizeProfileImg = function(doc) {
-	if (doc.profileImg) {
+ChannelSchema.statics.normalizeProfileImg = function (doc) {
+	
+		// default img
+		if (!doc.profileImg) {
+			if (doc.type === CHANNEL_TYPE_MAIN)
+				doc.profileImg = config.image.profileDefaultUrl;
+			else
+				doc.profileImg = config.image.channelDefaultUrl;
+	
+			return this;
+		}
+	
+		// external image
 		if (doc.profileImg.indexOf('http://') > -1 || doc.profileImg.indexOf('https://') > -1)
 			return;
-
+	
+		// user image
 		if (doc.type === CHANNEL_TYPE_MAIN)
 			doc.profileImg = join(config.image.profileBaseUrl, doc.profileImg);
+	
+		// channel image
 		else
 			doc.profileImg = join(config.image.channelBaseUrl, doc.profileImg);
-	}
-	else {
-		if (doc.type === CHANNEL_TYPE_MAIN)
-			doc.profileImg = config.image.profileDefaultUrl;
-		else
-			doc.profileImg = config.image.channelDefaultUrl;
-	}
-
-	return this;
-};
+	};
 
 export const Channel = model('Channel', ChannelSchema);

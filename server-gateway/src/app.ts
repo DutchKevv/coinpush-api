@@ -1,4 +1,4 @@
-import {parse} from 'url';
+import { parse } from 'url';
 
 const path = require('path');
 const express = require('express');
@@ -8,7 +8,7 @@ const config = require('../../tradejs.config');
 const app = express();
 const morgan = require('morgan');
 const helmet = require('helmet');
-const {json} = require('body-parser');
+const { json } = require('body-parser');
 const PATH_PUBLIC_PROD = path.join(__dirname, '../../client/dist');
 const PATH_PUBLIC_DEV = path.join(__dirname, '../../client/dist');
 const PATH_IMAGES_PROD = path.join(__dirname, '../../images');
@@ -26,7 +26,7 @@ const server = app.listen(config.server.gateway.port, () => {
  */
 const proxy = global['proxyHandler'] = httpProxy.createProxyServer({});
 
-proxy.on('proxyReq', function(proxyReq, req, res, options) {
+proxy.on('proxyReq', function (proxyReq, req, res, options) {
 	if (req.body) {
 		let bodyData = JSON.stringify(req.body);
 		// in case if content-type is application/x-www-form-urlencoded -> we need to change to application/json
@@ -101,10 +101,10 @@ app.use(expressJwt({
 server.on('upgrade', (req, socket, head) => {
 	switch (parse(req.url).pathname) {
 		case '/api/':
-			proxy.ws(req, socket, head, {target: config.server.oldApi.apiUrl});
+			proxy.ws(req, socket, head, { target: config.server.oldApi.apiUrl });
 			break;
 		case '/candles/':
-			proxy.ws(req, socket, head, {target: config.server.cache.apiUrl});
+			proxy.ws(req, socket, head, { target: config.server.cache.apiUrl });
 			break;
 	}
 });
@@ -136,17 +136,17 @@ app.use((req, res, next) => {
 /**
  * root (index.html)
  */
-app.get('/', (req, res) => proxy.web(req, res, {target: config.server.fe.apiUrl}));
+app.get('/', (req, res) => proxy.web(req, res, { target: config.server.fe.apiUrl }));
 
 /**
  * image
  */
-app.get('/images/*', (req, res) => proxy.web(req, res, {target: config.server.fe.apiUrl}));
+app.get('/images/*', (req, res) => proxy.web(req, res, { target: config.server.fe.apiUrl }));
 
 /**
  * favorite
  */
-app.use('/favorite', (req, res) => proxy.web(req, res, {target: config.server.user.apiUrl + '/favorite'}));
+app.use('/favorite', (req, res) => proxy.web(req, res, { target: config.server.user.apiUrl + '/favorite' }));
 
 /**
  * authenticate
@@ -192,13 +192,14 @@ app.use((error, req, res, next) => {
 	if (res.headersSent)
 		return next(error);
 
-	if (error) {
-		if (error.statusCode === 401)
-			return res.send(401);
+	if (error && error.statusCode) {
+		res.status(error.statusCode).send(error.error);
 
 		if (error.message)
 			console.error(error.message);
+
+		return;
 	}
 
-	res.status(500).send({error});
+	res.status(500).send({ error });
 });

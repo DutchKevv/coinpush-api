@@ -54,6 +54,8 @@ app.use('/authenticate', require('./api/authenticate.api'));
  * error handling
  */
 app.use((error, req, res, next) => {
+	console.error(error);
+	
 	if (res.headersSent)
 		return next(error);
 
@@ -62,8 +64,6 @@ app.use((error, req, res, next) => {
 
 	if (error.error)
 		return res.status(500).send(error.error);
-
-	console.error(error);
 
 	res.status(500).send(error);
 });

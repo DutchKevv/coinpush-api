@@ -3,9 +3,8 @@ import {LEVERAGE_TYPE_1} from '../../../../shared/constants/constants';
 
 export class UserModel extends BaseModel {
 	public static readonly DEFAULTS: any = {
-		username: '',
-		following: false,
-		followers: 0,
+		name: '',
+		gender: 0,
 		balance: 0,
 		favorites: [],
 		leverage: LEVERAGE_TYPE_1,

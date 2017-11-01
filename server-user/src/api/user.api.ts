@@ -1,5 +1,6 @@
-import {Router} from 'express';
-import {userController} from '../controllers/user.controller';
+import { Router } from 'express';
+import { userController } from '../controllers/user.controller';
+import { G_ERROR_DUPLICATE } from '../../../shared/constants/constants';
 
 const router = Router();
 
@@ -32,6 +33,13 @@ router.post('/', async (req, res, next) => {
 	try {
 		res.send(await userController.create(req.body));
 	} catch (error) {
+		if (error) {
+			if (error.name === 'ValidationError') {
+				res.status(409).send({ code: G_ERROR_DUPLICATE, field: Object.keys(error.errors)[0] });
+				return;
+			}
+		}
+
 		next(error);
 	}
 });
@@ -62,8 +70,9 @@ router.put('/:id', async (req: any, res, next) => {
  * delete
  */
 router.delete('/:id', async (req: any, res, next) => {
+	console.log('DELETE!!');
 	try {
-		res.send(await userController.remove(req.params.id));
+		res.send(await userController.remove(req.user, req.params.id));
 	} catch (error) {
 		next(error)
 	}

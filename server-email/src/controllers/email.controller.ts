@@ -1,4 +1,6 @@
 import * as nodeMailer from 'nodemailer';
+import { userController } from './user.controller';
+import { IUser } from '../../../shared/interfaces/IUser.interface';
 
 const config = require('../../../tradejs.config');
 
@@ -10,21 +12,18 @@ const templates = {
 
 export const emailController = {
 
-	async newMember(reqUser, user: any) {
+	async newMember(reqUser, params: { userId: string }): Promise<void> {
+		const user = <IUser>await userController.findById({ id: params.userId }, params.userId).lean();
 
-		return new Promise((resolve, reject) => {
+		await new Promise((resolve, reject) => {
 
-			const HTML = `
-		Hi there ${user.name} <br /><br />
-		
-		Welcome to <a href="http://149.210.227.14:3100">TradeJS</a><br /><br />
-		`;
+			const HTML = `Hi there ${user.name} <br /><br />Welcome to <a href="${config.domain.apiUrl}">TradeJS</a>`;
 
 			const mailOptions = {
 				from: config.email.account.noReply.auth.user, // sender address
 				to: [user.email],
 				subject: `Hi there ${user.name} - TradeJS`,
-				html: HTML // You can choose to send an HTML body instead
+				html: HTML
 			};
 
 			transporter.sendMail(mailOptions, (error, info) => {
@@ -34,14 +33,14 @@ export const emailController = {
 				console.log('Email sent: ' + info.response);
 				resolve();
 			});
-		})
+		});
 	},
 
 	async requestPasswordReset(reqUser, user: any) {
 
 		return new Promise((resolve, reject) => {
 
-			const url = `http://127.0.0.1:3100/#/password-reset?token=${user.resetPasswordToken}`;
+			const url = `${config.domain.apiUrl}/#/password-reset?token=${user.resetPasswordToken}`;
 			const HTML = `
 Hi there ${user.name} <br /><br />
 

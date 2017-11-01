@@ -51,7 +51,7 @@ export const authenticateController = {
 		user.email = email;
 
 		const result = await request({
-			uri: config.server.email.apiUrl + '/request-password-reset',
+			uri: config.server.email.apiUrl + '/mail/request-password-reset',
 			headers: {'_id': reqUser.id},
 			method: 'POST',
 			body: {user},

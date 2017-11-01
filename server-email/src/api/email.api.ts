@@ -16,4 +16,17 @@ router.post('/request-password-reset', async (req, res, next) => {
 	}
 });
 
+/**
+ * Password reset
+ */
+router.post('/new-member', async (req, res, next) => {
+	console.log(req.body);
+
+	try {
+		res.send(await emailController.newMember(req.user, req.body));
+	} catch (error) {
+		next(error);
+	}
+});
+
 export = router;

@@ -84,9 +84,7 @@
 
 			<div class="child-row comment-input">
 				<img [attr.src]="userService.model.options.profileImg">
-				<emoji-input (keyup.enter)="respond($event, comment.options._id)" [popupAnchor]="'bottom'"
-							 placeholder="Write a comment..."></emoji-input>
-				<!--<input (keyup.enter)="respond($event, comment.options._id)" type="text" placeholder="Write a comment..."/>-->
+				<input (keyup.enter)="respond($event, comment.options._id)" type="text" placeholder="Write a comment..."/>
 			</div>
 		</footer>
 	</div>

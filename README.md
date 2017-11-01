@@ -31,7 +31,8 @@ npm run install-all
 npm run build-all
 ```
 ## Running (remember, alpha)
-pm2 is required as global package (to install run: npm i -g pm2)
+1. mongodb needs to be installed (and running) https://docs.mongodb.com/manual/installation/
+2. pm2 is required as global package (to install, run: npm i -g pm2)
 ```
 npm start
 ```

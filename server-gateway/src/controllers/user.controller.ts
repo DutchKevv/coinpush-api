@@ -1,24 +1,35 @@
 import * as request from 'request-promise';
 import * as redis from '../modules/redis';
-import {CHANNEL_TYPE_MAIN, USER_FETCH_TYPE_ACCOUNT_DETAILS, USER_FETCH_TYPE_FULL} from '../../../shared/constants/constants';
-import {channelController} from './channel.controller';
+import { CHANNEL_TYPE_MAIN, USER_FETCH_TYPE_ACCOUNT_DETAILS, USER_FETCH_TYPE_FULL, USER_FETCH_TYPE_PROFILE_SETTINGS } from '../../../shared/constants/constants';
+import { channelController } from './channel.controller';
 
 const config = require('../../../tradejs.config');
 
 export const userController = {
 
-	async find(reqUser: { id: string }, userId: string, params: any = {}): Promise<any> {
-
-		const results = await Promise.all([
+	async findById(reqUser: { id: string }, userId: string, params: any = {}): Promise<any> {
+		const pList = [
 			this._getUser(reqUser, userId, params.type),
 			channelController.findByUserId(reqUser, userId),
-		]);
+		];
 
-		return Object.assign({}, results[0] || {}, results[1] || {});
+		if (params.type === USER_FETCH_TYPE_PROFILE_SETTINGS) {
+			pList.push(request({
+				uri: config.server.email.apiUrl + '/user/' + userId,
+				headers: { '_id': reqUser.id },
+				qs: {
+					type: params.type
+				}
+			}));
+		}
+
+		const results = await Promise.all(pList);
+
+		return Object.assign({}, results[0] || {}, results[1] || {}, results[2] || {});
 	},
 
-	async findMany(reqUser: {id: string}, params): Promise<Array<any>> {
-		return request({uri: config.server.user.apiUrl + '/user/' + reqUser.id, json: true})
+	async findMany(reqUser: { id: string }, params): Promise<Array<any>> {
+		return request({ uri: config.server.user.apiUrl + '/user/' + reqUser.id, json: true })
 	},
 
 	async getBalance(reqUser, userId) {
@@ -30,16 +41,16 @@ export const userController = {
 	},
 
 	async create(reqUser, params): Promise<{ user: any, channel: any }> {
-		let user, channel;
+		let user, channel, email;
 
 		try {
 			// create user
 			user = await request({
 				uri: config.server.user.apiUrl + '/user',
-				headers: {'_id': reqUser.id},
+				headers: { '_id': reqUser.id },
 				method: 'POST',
 				body: {
-					name: params.username,
+					name: params.name,
 					email: params.email,
 					password: params.password,
 					country: params.country
@@ -47,68 +58,99 @@ export const userController = {
 				json: true
 			});
 
-			// create channel
-			channel = await channelController.create({id: user._id}, {
-				name: params.username,
-				description: params.description,
-				type: CHANNEL_TYPE_MAIN,
-				profileImg: params.profileImg
-			});
-
-			// update user with channel id
-			await this.update({id: user._id}, user._id, {
-				c_id: channel._id
-			});
-
-			// create user on email server
-			await request({
-				uri: config.server.email.apiUrl + '/user',
-				headers: {'_id': reqUser.id},
+			// channel
+			channel = await request({
+				uri: config.server.channel.apiUrl + '/user',
+				headers: { '_id': user._id },
 				method: 'POST',
 				body: {
-					user
-				}
+					name: params.name,
+					profileImg: params.profileImg,
+					description: params.description,
+				},
+				json: true
 			});
 
-			// send newMember on email server
+			// // update user with channel id
+			// await this.update(reqUser, user._id, {
+			// 	c_id: channel._id
+			// });
+
+			// comment
+			// await request({
+			// 	uri: config.server.comment.apiUrl + '/user',
+			// 	headers: { '_id': user._id },
+			// 	method: 'POST',
+			// 	body: user,
+			// 	json: true
+			// });
+
+			// email
+			email = await request({
+				uri: config.server.email.apiUrl + '/user',
+				headers: { '_id': user._id },
+				method: 'POST',
+				body: user,
+				json: true
+			});
+
+			// send newMember email
 			await request({
 				uri: config.server.email.apiUrl + '/mail/new-member',
-				headers: {'_id': reqUser.id},
+				headers: { '_id': user._id },
 				method: 'POST',
-				body: user
+				body: {
+					userId: user._id
+				},
+				json: true
 			});
 
-			return {user, channel};
+			return { user, channel };
 
 		} catch (error) {
-			if (user && user._id)
-				this.remove(reqUser, user._id);
+			if (user && user._id) {
+				try {
+					await this.remove({id: user._id}, user._id)
+				} catch (error) {
+					console.error(error);
+				}
+			}
 
-			if (channel && channel._id)
-				channelController.remove(reqUser, channel._id);
-
-			console.error(error);
-			throw new Error(error);
+			throw error;
 		}
 	},
 
 	async update(reqUser, userId, params): Promise<void> {
-		const result = await Promise.all([
+		// TODO: security
+		if (reqUser.id !== userId)
+			throw ({ code: 0, message: 'Not allowed' });
+
+		const results = await Promise.all([
+			// user
 			request({
 				uri: config.server.user.apiUrl + '/user/' + userId,
-				headers: {'_id': reqUser.id},
+				headers: { '_id': reqUser.id },
 				method: 'PUT',
 				body: params,
 				json: true
 			}),
-			channelController.updateByUserId(reqUser, userId, params)
+			// channel
+			channelController.updateByUserId(reqUser, userId, params),
+			// email
+			request({
+				uri: config.server.email.apiUrl + '/user/' + userId,
+				headers: { '_id': reqUser.id },
+				method: 'PUT',
+				body: params,
+				json: true
+			})
 		]);
 	},
 
 	async updatePassword(reqUser, token, password): Promise<void> {
 		const result = await request({
 			uri: config.server.user.apiUrl + '/user/password',
-			headers: {'_id': reqUser.id},
+			headers: { '_id': reqUser.id },
 			method: 'PUT',
 			body: {
 				token,
@@ -123,7 +165,7 @@ export const userController = {
 	updateBalance(reqUser, params) {
 		return request({
 			uri: config.server.user.apiUrl + '/wallet/' + reqUser.id,
-			headers: {'_id': reqUser.id},
+			headers: { '_id': reqUser.id },
 			method: 'PUT',
 			body: params,
 			json: true
@@ -139,7 +181,7 @@ export const userController = {
 		const channel = await request({
 			uri: config.server.channel.apiUrl + '/channel/',
 			method: 'GET',
-			headers: {'_id': reqUser.id},
+			headers: { '_id': reqUser.id },
 			qs: {
 				user: toFollowId
 			},
@@ -161,7 +203,7 @@ export const userController = {
 		const channel = await request({
 			uri: config.server.channel.apiUrl + '/channel/',
 			method: 'GET',
-			headers: {'_id': reqUser.id},
+			headers: { '_id': reqUser.id },
 			qs: {
 				user: toFollowId
 			},
@@ -177,18 +219,47 @@ export const userController = {
 	async resetPassword(reqUser, userId?: string) {
 		return request({
 			uri: config.server.user.apiUrl + '/user/' + reqUser.id,
-			headers: {'_id': reqUser.id},
+			headers: { '_id': reqUser.id },
 			method: 'PUT',
 			body: {},
 			json: true
 		});
 	},
 
-	remove(reqUser, userId) {
+	async remove(reqUser, userId: string) {
+		let user, channel, email;
 
+		// user
+		user = await request({
+			uri: config.server.user.apiUrl + '/user/' + userId,
+			headers: { '_id': reqUser.id },
+			method: 'DELETE'
+		});
+		
+		// channel
+		try {
+			channel = await request({
+				uri: config.server.channel.apiUrl + '/user/' + userId,
+				headers: { '_id': reqUser.id },
+				method: 'DELETE'
+			});
+		} catch (error) {
+			console.error(error);
+		}
+
+		// email
+		try {
+			email = await request({
+				uri: config.server.email.apiUrl + '/user/' + userId,
+				headers: { '_id': reqUser.id },
+				method: 'DELETE'
+			});
+		} catch (error) {
+			console.error(error);
+		}
 	},
 
 	_getUser(reqUser, userId, type) {
-		return request({uri: config.server.user.apiUrl + '/user/' + userId, qs: {type}, headers: {_id: reqUser.id}, json: true})
+		return request({ uri: config.server.user.apiUrl + '/user/' + userId, qs: { type }, headers: { _id: reqUser.id }, json: true })
 	}
 };
