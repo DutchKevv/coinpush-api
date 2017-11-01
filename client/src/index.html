@@ -90,23 +90,12 @@
     </app>
 
     <script>
-		fetch('/data/countries.json')
-			.then(res => res.json())
-			.then((out) => {
-			    window.COUNTRIES = out;
-			})
-			.catch(err => { throw err });
-
-        Module = {
-            filePackagePrefixURL: '/engine/',
-            doNotCaptureKeyboard: true
-        };
+		// fetch('/data/countries.json')
+		// 	.then(res => res.json())
+		// 	.then((out) => {
+		// 	    window.COUNTRIES = out;
+		// 	})
+		// 	.catch(err => { throw err });
     </script>
-    <!--<script src="/engine/engine.js"></script>-->
-    <script>
-//        window.Module.custom.run({});
-    </script>
-    <script src="/vendor.bundle.js"></script>
-    <script src="/app.bundle.js"></script>
 </body>
 </html>

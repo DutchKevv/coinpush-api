@@ -1,8 +1,4 @@
-<div #draghandle
-	 class="chart-header"
-	 (onBeforeResize)="pinToCorner($event)"
-	 (onAfterResize)="unpinFromCorner()"
->
+<div class="chart-header">
 	<ng-container *ngIf="showBox && instrumentModel.options$ | async as options">
 		<h5 class="chart-title">{{options.symbol}} - {{options.timeFrame}} - {{options.type}} #{{options.groupId}}</h5>
 

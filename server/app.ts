@@ -188,7 +188,7 @@ export default class App extends Base {
 
 			this._http.listen(port);
 
-			this._io = require('socket.io')(this._http, { path: '/api' }).listen(this._http);
+			this._io = require('socket.io')(this._http, { path: '/ws/general/' }).listen(this._http);
 
 			this._httpApi.use(function(req, res, next) {
 				res.header('Access-Control-Allow-Origin', '*');

@@ -14,22 +14,26 @@ export class CustomHttp extends Http {
 	}
 
 	get(url: string, options?: RequestOptionsArgs): Observable<Response> {
-		return super.get(appConfig.apiUrl + url, this.addJwt(options)).catch(this.handleError);
+		return super.get(this._normalizeUrl(url), this.addJwt(options)).catch(this.handleError);
 	}
 
 	post(url: string, body: string, options?: RequestOptionsArgs): Observable<Response> {
-		return super.post(appConfig.apiUrl + url, body, this.addJwt(options)).catch(this.handleError);
+		return super.post(this._normalizeUrl(url), body, this.addJwt(options)).catch(this.handleError);
 	}
 
 	put(url: string, body: string, options?: RequestOptionsArgs): Observable<Response> {
-		return super.put(appConfig.apiUrl + url, body, this.addJwt(options)).catch(this.handleError);
+		return super.put(this._normalizeUrl(url), body, this.addJwt(options)).catch(this.handleError);
 	}
 
 	delete(url: string, options?: RequestOptionsArgs): Observable<Response> {
-		return super.delete(appConfig.apiUrl + url, this.addJwt(options)).catch(this.handleError);
+		return super.delete(this._normalizeUrl(url), this.addJwt(options)).catch(this.handleError);
 	}
 
-	// private helper methods
+	private _normalizeUrl(url: string) {
+		url = appConfig.apiUrl + url;
+		url = url.replace(/([^:]\/)\/+/g, "$1");
+		return url;
+	}
 
 	private addJwt(options?: RequestOptionsArgs): RequestOptionsArgs {
 		// ensure request options and headers are not null

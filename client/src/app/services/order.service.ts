@@ -14,8 +14,8 @@ export class OrderService {
 	@Output() public orders$: BehaviorSubject<Array<OrderModel>> = new BehaviorSubject([]);
 
 	private _audio = {
-		fail: new Audio('sounds/fail.mp3'),
-		success: new Audio('sounds/success.mp3'),
+		fail: new Audio('/assets/sounds/fail.mp3'),
+		success: new Audio('/assets/sounds/success.mp3'),
 	};
 
 	constructor(private _cacheService: CacheService,

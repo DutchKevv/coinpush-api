@@ -86,11 +86,10 @@ app.use(expressJwt({
 	return (
 		(/\.(gif|jpg|jpeg|tiff|png)$/i).test(req.originalUrl) ||
 		req.originalUrl === '/' ||
-		req.originalUrl.indexOf('/sounds/') > -1 ||
-		req.originalUrl.indexOf('/data/') > -1 ||
-		(req.originalUrl === '/authenticate' && (['POST', 'PUT', 'OPTIONS'].includes(req.method) && !req.headers.authorization)) ||
-		req.originalUrl === '/authenticate/request-password-reset' ||
-		(req.originalUrl === '/user' && (req.method === 'POST' || req.method === 'OPTIONS'))
+		// req.originalUrl.startsWith('/ws/') ||
+		(req.originalUrl === '/api/v1/authenticate' && (['POST', 'PUT', 'OPTIONS'].includes(req.method) && !req.headers.authorization)) ||
+		req.originalUrl === '/api/v1/authenticate/request-password-reset' ||
+		(req.originalUrl === '/api/v1/user' && (req.method === 'POST' || req.method === 'OPTIONS'))
 	);
 }));
 
@@ -100,10 +99,10 @@ app.use(expressJwt({
  */
 server.on('upgrade', (req, socket, head) => {
 	switch (parse(req.url).pathname) {
-		case '/api/':
+		case '/ws/general/':
 			proxy.ws(req, socket, head, { target: config.server.oldApi.apiUrl });
 			break;
-		case '/candles/':
+		case '/ws/candles/':
 			proxy.ws(req, socket, head, { target: config.server.cache.apiUrl });
 			break;
 	}
@@ -146,44 +145,44 @@ app.get('/images/*', (req, res) => proxy.web(req, res, { target: config.server.f
 /**
  * favorite
  */
-app.use('/favorite', (req, res) => proxy.web(req, res, { target: config.server.user.apiUrl + '/favorite' }));
+app.use('/api/v1/favorite', (req, res) => proxy.web(req, res, { target: config.server.user.apiUrl + '/favorite' }));
 
 /**
  * authenticate
  */
-app.use('/authenticate', require('./api/authenticate.api'));
+app.use('/api/v1/authenticate', require('./api/authenticate.api'));
 
 /**
  * upload
  */
-app.use('/upload', require('./api/upload.api'));
+app.use('/api/v1/upload', require('./api/upload.api'));
 
 /**
  * user
  */
-app.use('/user', require('./api/user.api'));
-app.use('/user-overview', require('./api/user.overview.api'));
+app.use('/api/v1/user', require('./api/user.api'));
+app.use('/api/v1/user-overview', require('./api/user.overview.api'));
 
 /**
  * channel
  */
-app.use('/channel', require('./api/channel.api'));
+app.use('/api/v1/channel', require('./api/channel.api'));
 
 /**
  * order
  */
-app.use('/order', require('./api/order.api'));
+app.use('/api/v1/order', require('./api/order.api'));
 
 /**
  * comment
  */
-app.use('/comment', require('./api/comment.api'));
-app.use('/comment/*', require('./api/comment.api'));
+app.use('/api/v1/comment', require('./api/comment.api'));
+app.use('/api/v1/comment/*', require('./api/comment.api'));
 
 /**
  * search
  */
-app.use('/search', require('./api/search.api'));
+app.use('/api/v1/search', require('./api/search.api'));
 
 /**
  * error handling

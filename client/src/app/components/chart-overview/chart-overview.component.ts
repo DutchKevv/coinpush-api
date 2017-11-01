@@ -3,11 +3,11 @@ import {
 	ViewChild
 } from '@angular/core';
 
-import {InstrumentsService} from '../../services/instruments.service';
-import {ChartBoxComponent} from '../chart-box/chart-box.component';
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
-import {SymbolModel} from "../../models/symbol.model";
-import {InstrumentModel} from "../../models/instrument.model";
+import { InstrumentsService } from '../../services/instruments.service';
+import { ChartBoxComponent } from '../chart-box/chart-box.component';
+import { BehaviorSubject } from "rxjs/BehaviorSubject";
+import { SymbolModel } from "../../models/symbol.model";
+import { InstrumentModel } from "../../models/instrument.model";
 
 declare let $: any;
 
@@ -42,6 +42,10 @@ export class ChartOverviewComponent implements OnInit {
 		setTimeout(() => {
 			this.activeSymbol$.next(symbolModel)
 		}, 0);
+
+	}
+
+	addIndicator(name: string) {
 
 	}
 

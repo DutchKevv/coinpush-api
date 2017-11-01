@@ -18,4 +18,11 @@ export class SymbolModel extends BaseModel {
 
 		this.price$.next(true);
 	}
+
+	/**
+	 * TEMP!! to fix AOT
+	 */ 
+	setZoom(step: Number) {
+
+	}
 }

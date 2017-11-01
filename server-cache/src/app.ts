@@ -14,7 +14,7 @@ const server = app.listen(config.server.cache.port, () => console.log(`\n Cache 
 /**
  * WebSocket
  */
-const io = require('socket.io')(server, { path: '/candles' }).listen(server);
+const io = require('socket.io')(server, { path: '/ws/candles' }).listen(server);
 io.on('connection', socket => require('./api/cache.socket')(socket));
 
 /**

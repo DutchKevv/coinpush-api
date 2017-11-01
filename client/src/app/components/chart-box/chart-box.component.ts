@@ -41,7 +41,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	@Output() loading$ = new BehaviorSubject(true);
 
 	@ViewChild(DialogAnchorDirective) private _dialogAnchor: DialogAnchorDirective;
-	@ViewChild('draghandle') private _dragHandle: ElementRef;
 	@ViewChild('candles') private _candlesRef: ElementRef;
 	@ViewChild('volume') private _volumeRef: ElementRef;
 

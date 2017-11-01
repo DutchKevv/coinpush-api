@@ -1,3 +1,0 @@
-<ng-container *ngIf="message$ | async as message">
-    <div [ngClass]="{ 'alert': message, 'alert-success': message.type === 'success', 'alert-danger': message.type === 'error' }">{{message.text}}</div>
-</ng-container>

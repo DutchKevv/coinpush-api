@@ -1,3 +1,3 @@
 export const appConfig = {
-	apiUrl: ''
+	apiUrl: '/api/v1/'
 };
