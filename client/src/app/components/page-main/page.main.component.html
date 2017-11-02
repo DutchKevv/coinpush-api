@@ -46,19 +46,19 @@
     <header>
         <div class="account-details" *ngIf="userService.accountStatus$ | async as status">
             <div>
-                <h3>{{status.available | currency : 'EUR':true}}</h3>
+                <h3>{{status.available | currency : 'EUR':'symbol'}}</h3>
                 <span>available</span>
             </div>
             <div>
-                <h3>{{status.equity | currency : 'EUR':true}}</h3>
+                <h3>{{status.equity | currency : 'EUR':'symbol'}}</h3>
                 <span>equality</span>
             </div>
             <div>
-                <h3>{{status.openMargin | currency : 'EUR':true}}</h3>
+                <h3>{{status.openMargin | currency : 'EUR':'symbol'}}</h3>
                 <span>O. margin</span>
             </div>
             <div>
-                <h3 [ngClass]="{'positive': status.profit > 0, 'negative': status.profit < 0}">{{status.profit | currency : 'EUR':true}}</h3>
+                <h3 [ngClass]="{'positive': status.profit > 0, 'negative': status.profit < 0}">{{status.profit | currency : 'EUR':'symbol'}}</h3>
                 <span>profit</span>
             </div>
             <div class="header-search">

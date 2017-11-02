@@ -25,7 +25,7 @@ export const authenticateController = {
 		if (!user || !user.token)
 			return null;
 
-		const channel = await channelController.findByUserId({id: user._id}, user._id, ['name', 'profileImg', 'user_id']);
+		const channel = await channelController.findByUserId({id: user._id}, user._id, {fields: ['name', 'profileImg', 'user_id']});
 
 		return Object.assign(user, channel);
 	},

@@ -102,6 +102,10 @@ const UserSchema = new Schema({
 	},
 	resetPasswordExpires: {
 		type: Date,
+	},
+	emailConfirmed: {
+		type: Boolean,
+		default: false
 	}
 });
 

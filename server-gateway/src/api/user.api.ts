@@ -9,6 +9,9 @@ const router = Router();
  */
 router.get('/:id', async (req, res, next) => {
 	try {
+		if (req.query.type)
+			req.query.type = parseInt(req.query.type, 10);
+
 		res.send(await userController.findById(req.user, req.params.id, req.query));
 	} catch (error) {
 		next(error);

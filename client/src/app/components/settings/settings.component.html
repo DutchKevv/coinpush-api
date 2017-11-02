@@ -14,6 +14,7 @@
                 <div class="form-box">
                     <label for="gender">Gender</label>
                     <select id="gender" formControlName="gender">
+                        <option value="0">Unknown</option>
                         <option value="1">Male</option>
                         <option value="2">Female</option>
                         <option value="3">Highly confused</option>
@@ -23,10 +24,14 @@
             <div class="form-box-column profile-image-box">
                 <div class="form-box" class="profileImg">
                     <!-- File input for upload without using the plugin. -->
-                    <input accept=".jpg,.jpeg,.png,.gif,.bmp" (change)="onChangeFileInput($event)" id="uploadProfileImg" type="file"class="uploadInput" #uploadBtn/>
-                    <label for="uploadProfileImg" class="uploadInputBtn" [ngStyle]="{'background-image': 'url(' + model?.options.profileImg + ')'}" #uploadImageHolder></label>
+                    <input accept=".jpg,.jpeg,.png,.gif,.bmp" (change)="onChangeFileInput($event)" id="uploadProfileImg" type="file" class="uploadInput"
+                        #uploadBtn/>
+                    <label for="uploadProfileImg" class="uploadInputBtn" [ngStyle]="{'background-image': 'url(' + model?.options.profileImg + ')'}"
+                        #uploadImageHolder></label>
                     <div class="saveOptions hidden" #saveOptions>
-                        <span>save?</span> <a (click)="saveProfileImg()">Yes</a><a (click)="resetProfileImg()">No</a>
+                        <span>save?</span>
+                        <a (click)="saveProfileImg()">Yes</a>
+                        <a (click)="resetProfileImg()">No</a>
                     </div>
                 </div>
             </div>
@@ -34,7 +39,7 @@
 
         <div class="form-box">
             <label for="description">About you</label>
-            <textarea id="description" formControlName="description"></textarea>
+            <textarea id="description" formControlName="description" placeholder="Come on.. Give a nice description"></textarea>
         </div>
 
         <!-- Privacy -->
@@ -42,52 +47,84 @@
         <div class="form-box form-box-radio">
             <label>Margin low</label>
             <div class="form-radio-options">
-                <input type="radio" name="emailOnMarginLow" value="1" checked><span>Yes (default)</span><br>
-                <input type="radio" name="emailOnMarginLow" value="0"><span>No</span><br>
+                <input formControlName="settings.lowMargin" type="radio" name="settings.lowMargin" [value]="1" >
+                <span>Yes</span>
+                <br>
+                <input formControlName="settings.lowMargin" type="radio" name="settings.lowMargin" [value]="0">
+                <span>No</span>
+                <br>
             </div>
         </div>
         <div class="form-box form-box-radio">
             <label>Order closed by broker through profit / loss</label>
             <div class="form-radio-options">
-                <input type="radio" name="emailOnOrderClose" value="1" checked><span>Yes (default)</span><br>
-                <input type="radio" name="emailOnOrderClose" value="0"><span>No</span><br>
+                <input formControlName="settings.orderClosedByMarket" type="radio" name="settings.orderClosedByMarket" [value]="1">
+                <span>Yes</span>
+                <br>
+                <input formControlName="settings.orderClosedByMarket" type="radio" name="settings.orderClosedByMarket" [value]="0">
+                <span>No</span>
+                <br>
             </div>
         </div>
         <div class="form-box form-box-radio">
             <label>User follows me</label>
             <div class="form-radio-options">
-                <input type="radio" name="emailOnFollower" value="1" checked><span>Yes (default)</span><br>
-                <input type="radio" name="emailOnFollower" value="0"><span>No</span><br>
+                <input formControlName="settings.userFollowsMe" type="radio" name="settings.userFollowsMe" [value]="1">
+                <span>Yes</span>
+                <br>
+                <input formControlName="settings.userFollowsMe" type="radio" name="settings.userFollowsMe" [value]="0">
+                <span>No</span>
+                <br>
             </div>
         </div>
         <div class="form-box form-box-radio">
             <label>User copies me</label>
             <div class="form-radio-options">
-                <input type="radio" name="emailOnCopier" value="1" checked><span>Yes (default)</span><br>
-                <input type="radio" name="emailOnCopier" value="0"><span>No</span><br>
+                <input formControlName="settings.userCopiesMe" type="radio" name="settings.userCopiesMe" [value]="1">
+                <span>Yes</span>
+                <br>
+                <input formControlName="settings.userCopiesMe" type="radio" name="settings.userCopiesMe" [value]="0">
+                <span>No</span>
+                <br>
             </div>
         </div>
         <div class="form-box form-box-radio">
             <label>Comment like</label>
             <div class="form-radio-options">
-                <input type="radio" name="emailOnLike" value="1" checked><span>Yes (default)</span><br>
-                <input type="radio" name="emailOnLike" value="0"><span>No</span><br>
+                <input formControlName="settings.like" type="radio" name="settings.like" [value]="1">
+                <span>Yes</span>
+                <br>
+                <input formControlName="settings.like" type="radio" name="settings.like" [value]="0">
+                <span>No</span>
+                <br>
             </div>
         </div>
         <div class="form-box form-box-radio">
             <label>Comment reaction</label>
             <div class="form-radio-options">
-                <input type="radio" name="emailOnReaction" value="1" checked><span>Yes (default)</span><br>
-                <input type="radio" name="emailOnReaction" value="0"><span>No</span><br>
+                <input formControlName="settings.comment" type="radio" name="settings.comment" [value]="1">
+                <span>Yes</span>
+                <br>
+                <input formControlName="settings.comment" type="radio" name="settings.comment" [value]="0">
+                <span>No</span>
+                <br>
             </div>
         </div>
         <div class="form-box form-box-radio">
             <label>Receive summary</label>
             <div class="form-radio-options">
-                <input type="radio" name="emailSummary" value="0" checked><span>Daily</span><br>
-                <input type="radio" name="emailSummary" value="1"><span>Weekly</span><br>
-                <input type="radio" name="emailSummary" value="2"><span>Monthly</span><br>
-                <input type="radio" name="emailSummary" value="3"><span>Never</span><br>
+                <input formControlName="settings.summary" type="radio" name="settings.summary" [value]="0">
+                <span>Daily</span>
+                <br>
+                <input formControlName="settings.summary" type="radio" name="settings.summary" [value]="1">
+                <span>Weekly</span>
+                <br>
+                <input formControlName="settings.summary" type="radio" name="settings.summary" [value]="2">
+                <span>Monthly</span>
+                <br>
+                <input formControlName="settings.summary" type="radio" name="settings.summary" [value]="3">
+                <span>Never</span>
+                <br>
             </div>
         </div>
 
@@ -96,8 +133,12 @@
         <div class="form-box form-box-radio">
             <label>People can find me through search</label>
             <div class="form-radio-options">
-                <input type="radio" name="findable" value="1" checked><span>Yes (default)</span><br>
-                <input type="radio" name="findable" value="0"><span>No</span><br>
+                <input type="radio" name="findable" [value]="1">
+                <span>Yes</span>
+                <br>
+                <input type="radio" name="findable" [value]="0">
+                <span>No</span>
+                <br>
             </div>
         </div>
 
@@ -106,7 +147,7 @@
 
         <div class="form-box">
             <label for="balance">Balance</label>
-            <input type="number" id="balance" formControlName="balance"  autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+            <input type="number" id="balance" formControlName="balance" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
         </div>
 
         <div class="form-box">
@@ -123,7 +164,7 @@
 
         <div class="form-box">
             <label for="name">Username</label>
-            <input id="name" formControlName="name"  autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+            <input id="name" formControlName="name" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
         </div>
 
         <div class="form-box">

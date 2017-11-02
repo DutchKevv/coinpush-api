@@ -1,7 +1,7 @@
 <ul class="filter-options">
     <li class="form-group">
         <label for="filterCountry">PEOPLE FROM</label>
-        <select class="form-control" id="filterCountry">
+        <select class="form-control" id="filterCountry" (change)="onChangeCountry($event.target.value)">
             <option value="">Everywhere</option>
             <optgroup>
                 <option *ngFor="let country of countries" [attr.value]="country.code">{{country.name}}</option>
@@ -10,12 +10,11 @@
     </li>
     <li class="form-group">
         <label for="whoInvested">WHO INVESTED IN</label>
-        <select class="form-control" id="whoInvested">
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
+        <select class="form-control" id="whoInvested" (change)="onChangeCountry($event.target.value)">
+            <option value="">Any</option>
+            <optgroup>
+                <option *ngFor="let symbol of symbols" [attr.value]="symbol.options.name">{{symbol.options.name}}</option>
+            </optgroup>
         </select>
     </li>
     <li class="form-group">
@@ -53,14 +52,19 @@
                     <a [routerLink]="['/main/user/', options.user_id]" [routerLinkActive]="['active']"></a>
                 </header>
                 <main>
-                    <h4><a>{{model.options.name}}</a></h4>
+                    <h4>
+                        <a>{{model.options.name}}</a>
+                    </h4>
                     <h3 class="roi">114.2 %</h3>
-                    <h4 style="color: #b7b7b7;"><span>{{options.transactions}}</span> transactions</h4>
+                    <h4 style="color: #b7b7b7;">
+                        <span>{{options.transactions}}</span> transactions</h4>
                 </main>
                 <footer>
                     <div>
-                        <p><span class="followers">{{options.followersCount}}</span> followers</p>
-                        <p><span class="followers">{{options.copiersCount}}</span> copiers</p>
+                        <p>
+                            <span class="followers">{{options.followersCount}}</span> followers</p>
+                        <p>
+                            <span class="followers">{{options.copiersCount}}</span> copiers</p>
                     </div>
                     <div *ngIf="options._id !== selfId">
                         <button *ngIf="!options.iCopy" (click)="channelService.toggleCopy(model, true)" class="btn btn-sm btn-success pull-right">Copy</button>
@@ -82,14 +86,19 @@
                     <a [routerLink]="['/main/user/', options.user_id]" [routerLinkActive]="['active']"></a>
                 </header>
                 <main>
-                    <h4><a>{{model.options.name}}</a></h4>
+                    <h4>
+                        <a>{{model.options.name}}</a>
+                    </h4>
                     <h3 class="roi">114.2 %</h3>
-                    <h4 style="color: #b7b7b7;"><span>{{options.transactions}}</span> transactions</h4>
+                    <h4 style="color: #b7b7b7;">
+                        <span>{{options.transactions}}</span> transactions</h4>
                 </main>
                 <footer>
                     <div>
-                        <p><span class="followers">{{options.followersCount}}</span> followers</p>
-                        <p><span class="followers">{{options.copiersCount}}</span> copiers</p>
+                        <p>
+                            <span class="followers">{{options.followersCount}}</span> followers</p>
+                        <p>
+                            <span class="followers">{{options.copiersCount}}</span> copiers</p>
                     </div>
                     <div *ngIf="options._id !== selfId">
                         <button *ngIf="!options.iCopy" (click)="channelService.toggleCopy(model, true)" class="btn btn-sm btn-success pull-right">Copy</button>
@@ -111,14 +120,19 @@
                     <a [routerLink]="['/main/user/', options.user_id]" [routerLinkActive]="['active']"></a>
                 </header>
                 <main>
-                    <h4><a>{{model.options.name}}</a></h4>
+                    <h4>
+                        <a>{{model.options.name}}</a>
+                    </h4>
                     <h3 class="roi">114.2 %</h3>
-                    <h4 style="color: #b7b7b7;"><span>{{model.options.transactions}}</span> transactions</h4>
+                    <h4 style="color: #b7b7b7;">
+                        <span>{{model.options.transactions}}</span> transactions</h4>
                 </main>
                 <footer>
                     <div>
-                        <p><span class="followers">{{options.followersCount}}</span> followers</p>
-                        <p><span class="followers">{{options.copiersCount}}</span> copiers</p>
+                        <p>
+                            <span class="followers">{{options.followersCount}}</span> followers</p>
+                        <p>
+                            <span class="followers">{{options.copiersCount}}</span> copiers</p>
                     </div>
                     <div *ngIf="options._id !== selfId">
                         <button *ngIf="!options.iCopy" (click)="channelService.toggleCopy(model, true)" class="btn btn-sm btn-success pull-right">Copy</button>

@@ -7,7 +7,8 @@
 @import '../../style/variables/variables';
 
 ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
-	color:    #909;
+	color:    #000;
+	font-style: italic;
 }
 
 
@@ -120,10 +121,6 @@ form {
 				margin-right: 20px;
 			}
 		}
-	}
-
-	.profileImg {
-
 	}
 }
 

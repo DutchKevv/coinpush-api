@@ -3,6 +3,9 @@ import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { AlertService } from '../../services/alert.service';
 import { G_ERROR_DUPLICATE } from '../../../../../shared/constants/constants';
+import countries from '../../../../../shared/data/countries';
+import { UserModel } from '../../models/user.model';
+
 
 @Component({
 	styleUrls: ['./register.component.scss'],
@@ -15,7 +18,9 @@ export class RegisterComponent {
 
 	@Output() public loading$: EventEmitter<boolean> = new EventEmitter;
 
-	model: any = {};
+	model: any = new UserModel;
+
+	countries = countries;
 
 	constructor(
 		private router: Router,
@@ -25,7 +30,7 @@ export class RegisterComponent {
 	register() {
 		this.loading$.emit(true);
 
-		this.userService.create(this.model)
+		this.userService.create(this.model.options)
 			.subscribe(
 			data => {
 				this.alertService.success('Registration successful', true);

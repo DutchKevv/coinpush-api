@@ -8,6 +8,7 @@ import {FormBuilder} from '@angular/forms';
 import {USER_FETCH_TYPE_PROFILE_SETTINGS} from '../../../../../shared/constants/constants';
 import {UserModel} from '../../models/user.model';
 import { AuthenticationService } from '../../services/authenticate.service';
+import countries from '../../../../../shared/data/countries';
 
 declare let $: any;
 
@@ -28,7 +29,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 	@ViewChild('uploadImageHolder') uploadImageHolder: ElementRef;
 	@ViewChild('saveOptions') saveOptions: ElementRef;
 
-	countries = window['COUNTRIES'];
+	countries = countries;
 
 	constructor(private _http: Http,
 				private _formBuilder: FormBuilder,
@@ -48,6 +49,13 @@ export class SettingsComponent implements OnInit, OnDestroy {
 			gender: this._userService.model.get('gender'),
 			balance: this._userService.model.get('balance'),
 			leverage: this._userService.model.get('leverage'),
+			'settings.lowMargin': 0,
+			'settings.orderClosedByMarket': 0,
+			'settings.userFollowsMe': 0,
+			'settings.userCopiesMe': 0,
+			'settings.like': 0,
+			'settings.comment': 0,
+			'settings.summary': 0,
 		});
 
 		this._userService.find(this._userService.model.get('user_id'), USER_FETCH_TYPE_PROFILE_SETTINGS).subscribe((user: UserModel) => {
@@ -61,6 +69,13 @@ export class SettingsComponent implements OnInit, OnDestroy {
 				balance: this._userService.model.get('balance'),
 				leverage: this._userService.model.get('leverage'),
 				gender: user.options.gender,
+				'settings.lowMargin': +user.options.settings.lowMargin,
+				'settings.orderClosedByMarket': +user.options.settings.orderClosedByMarket,
+				'settings.userFollowsMe': +user.options.settings.userFollowsMe,
+				'settings.userCopiesMe': +user.options.settings.userCopiesMe,
+				'settings.like': +user.options.settings.like,
+				'settings.comment': +user.options.settings.like,
+				'settings.summary': +user.options.settings.summary,
 			}, {onlySelf: true});
 
 			this.form.valueChanges.subscribe(data => {

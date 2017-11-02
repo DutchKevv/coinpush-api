@@ -15,7 +15,7 @@
     "NodeJS"
   ],
   "scripts": {
-    "start": "ng serve --proxy proxy.conf.json",
+    "start": "ng serve --aot --proxy proxy.conf.json",
     "build": "ng build --prod --env=prod --verbose > build.txt"
   },
   "dependencies": {

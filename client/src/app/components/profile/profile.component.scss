@@ -9,9 +9,31 @@
 
 header {
     .profile-details {
-        background: $background-light2;
         padding: 20px;
         display: flex;
+        background: url(/images/default/cover/cover.svg) center/cover; 
+        height: 75px;
+        position: relative;
+
+        .profileImg {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            margin-right: 20px;
+            position: absolute;
+            top: 70px;
+            background: white;
+            padding: 10px;
+            left: 30px;
+        }
+
+        .meta-data {
+            margin-left: 20px;
+        }
+
+        .profile-details-meta-container {
+            margin-left: 100px;
+        }
     }
 
     > nav {
@@ -40,11 +62,4 @@ header {
             }
         }
     }
-
-	.profileImg {
-		width: 70px;
-		height: 70px;
-		border-radius: 50%;
-		margin-right: 20px;
-	}
 }

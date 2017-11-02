@@ -29,7 +29,7 @@ export const userController = {
 				fieldsArr = ['country', 'balance', 'leverage'];
 				break;
 			case USER_FETCH_TYPE_PROFILE_SETTINGS:
-				fieldsArr = ['email', 'country', 'leverage', 'gender'];
+				fieldsArr = ['country', 'leverage', 'gender'];
 				break;
 			case USER_FETCH_TYPE_SLIM:
 			default:
@@ -97,14 +97,14 @@ export const userController = {
 	// TODO - Filter fields
 	async update(reqUser, userId, params): Promise<void> {
 		if (params.password) {
-			await this.updatePassword(reqUser, undefined, params.password);
+			// await this.updatePassword(reqUser, undefined, params.password);
 			delete params.password;
 		}
 
 		const user = await User.findByIdAndUpdate(userId, params);
 
 		if (!user)
-			throw ({ code: G_ERROR_USER_NOT_FOUND });
+			throw ({ code: G_ERROR_USER_NOT_FOUND, user: userId });
 
 		// Update redis and other micro services
 		if (user)
@@ -118,7 +118,7 @@ export const userController = {
 		if (token)
 			user = await User.findOne({ resetPasswordToken: token }, { resetPasswordExpires: 1 });
 		else if (reqUser.id)
-			user = await User.findById(reqUser.id, { resetPasswordExpires: 1 });
+			user = await User.findById(reqUser.id);
 
 		// Update redis and other micro services
 		if (!user)

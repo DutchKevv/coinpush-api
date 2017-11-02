@@ -19,6 +19,10 @@ export const ChannelSchema = new Schema({
 		type: String,
 		default: ''
 	},
+	coverImg: {
+		type: String,
+		default: ''
+	},
 	description: {
 		type: String,
 		default: ''
@@ -111,7 +115,7 @@ ChannelSchema.statics.normalizeProfileImg = function (doc) {
 		}
 	
 		// external image
-		if (doc.profileImg.indexOf('http://') > -1 || doc.profileImg.indexOf('https://') > -1)
+		if (doc.profileImg.startsWith('/') || doc.profileImg.startsWith('http://') || doc.profileImg.startsWith('https://'))
 			return;
 	
 		// user image

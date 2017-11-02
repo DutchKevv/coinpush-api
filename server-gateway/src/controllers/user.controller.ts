@@ -2,37 +2,44 @@ import * as request from 'request-promise';
 import * as redis from '../modules/redis';
 import { CHANNEL_TYPE_MAIN, USER_FETCH_TYPE_ACCOUNT_DETAILS, USER_FETCH_TYPE_FULL, USER_FETCH_TYPE_PROFILE_SETTINGS } from '../../../shared/constants/constants';
 import { channelController } from './channel.controller';
+import { emailController } from './email.controller';
+import { IReqUser } from '../../../shared/interfaces/IReqUser.interface';
+import { IUser } from '../../../shared/interfaces/IUser.interface';
 
 const config = require('../../../tradejs.config');
 
 export const userController = {
 
-	async findById(reqUser: { id: string }, userId: string, params: any = {}): Promise<any> {
+	async findById(reqUser: IReqUser, userId: string, options: { type?: number, fields?: Array<string> } = {}): Promise<any> {
+
+		console.log('asdfsdf', options);
+		
 		const pList = [
-			this._getUser(reqUser, userId, params.type),
-			channelController.findByUserId(reqUser, userId),
+			this._getUser(reqUser, userId, options.type),
+			channelController.findByUserId(reqUser, userId, options),
 		];
 
-		if (params.type === USER_FETCH_TYPE_PROFILE_SETTINGS) {
-			pList.push(request({
-				uri: config.server.email.apiUrl + '/user/' + userId,
-				headers: { '_id': reqUser.id },
-				qs: {
-					type: params.type
-				}
-			}));
-		}
+		if (options.type === USER_FETCH_TYPE_PROFILE_SETTINGS)
+			pList.push(emailController.findUserById(reqUser, userId, options));
 
 		const results = await Promise.all(pList);
+
+		console.log('asdff', results, );
+
+		// Remove channel _id & user_id cause it overwrites the user id's
+		if (results[1]) {
+			delete results[1]._id;
+			delete results[1].user_id;
+		}
 
 		return Object.assign({}, results[0] || {}, results[1] || {}, results[2] || {});
 	},
 
-	async findMany(reqUser: { id: string }, params): Promise<Array<any>> {
+	async findMany(reqUser: IReqUser, params): Promise<Array<any>> {
 		return request({ uri: config.server.user.apiUrl + '/user/' + reqUser.id, json: true })
 	},
 
-	async getBalance(reqUser, userId) {
+	async getBalance(reqUser: IReqUser, userId) {
 		const user = await this._getUser(reqUser, userId, USER_FETCH_TYPE_ACCOUNT_DETAILS);
 
 		if (user) {
@@ -40,7 +47,7 @@ export const userController = {
 		}
 	},
 
-	async create(reqUser, params): Promise<{ user: any, channel: any }> {
+	async create(reqUser: IReqUser, params: IUser): Promise<{ user: any, channel: any }> {
 		let user, channel, email;
 
 		try {
@@ -51,24 +58,32 @@ export const userController = {
 				method: 'POST',
 				body: {
 					name: params.name,
+					gender: params.gender,
 					email: params.email,
 					password: params.password,
-					country: params.country
+					country: params.country,
+					language: params.language
 				},
 				json: true
 			});
 
 			// channel
-			channel = await request({
-				uri: config.server.channel.apiUrl + '/user',
-				headers: { '_id': user._id },
-				method: 'POST',
-				body: {
-					name: params.name,
-					profileImg: params.profileImg,
-					description: params.description,
-				},
-				json: true
+			channel = channelController.addUser({ id: user._id }, {
+				_id: user._id,
+				name: user.name,
+				description: user.description
+			});
+
+			// update user c_id
+			// TODO : REMOVE FUCKING C_ID
+			await this.update({ id: user._id }, { c_id: channel._id });
+
+			// email
+			email = await emailController.addUser({ id: user._id }, {
+				_id: user._id,
+				name: user.name,
+				email: user.email,
+				language: user.language
 			});
 
 			// // update user with channel id
@@ -84,15 +99,6 @@ export const userController = {
 			// 	body: user,
 			// 	json: true
 			// });
-
-			// email
-			email = await request({
-				uri: config.server.email.apiUrl + '/user',
-				headers: { '_id': user._id },
-				method: 'POST',
-				body: user,
-				json: true
-			});
 
 			// send newMember email
 			await request({
@@ -110,7 +116,7 @@ export const userController = {
 		} catch (error) {
 			if (user && user._id) {
 				try {
-					await this.remove({id: user._id}, user._id)
+					await this.remove({ id: user._id }, user._id)
 				} catch (error) {
 					console.error(error);
 				}
@@ -120,7 +126,7 @@ export const userController = {
 		}
 	},
 
-	async update(reqUser, userId, params): Promise<void> {
+	async update(reqUser: IReqUser, userId, params): Promise<void> {
 		// TODO: security
 		if (reqUser.id !== userId)
 			throw ({ code: 0, message: 'Not allowed' });
@@ -147,7 +153,7 @@ export const userController = {
 		]);
 	},
 
-	async updatePassword(reqUser, token, password): Promise<void> {
+	async updatePassword(reqUser: IReqUser, token, password): Promise<void> {
 		const result = await request({
 			uri: config.server.user.apiUrl + '/user/password',
 			headers: { '_id': reqUser.id },
@@ -162,7 +168,7 @@ export const userController = {
 		console.log('UDPATE ERSULT', result);
 	},
 
-	updateBalance(reqUser, params) {
+	updateBalance(reqUser: IReqUser, params) {
 		return request({
 			uri: config.server.user.apiUrl + '/wallet/' + reqUser.id,
 			headers: { '_id': reqUser.id },
@@ -175,7 +181,7 @@ export const userController = {
 	/*
 		TODO: Not request main channel but let channel service find user main channel
 	 */
-	async toggleFollow(reqUser, toFollowId?: boolean) {
+	async toggleFollow(reqUser: IReqUser, toFollowId?: boolean) {
 
 		// Get user main channel
 		const channel = await request({
@@ -197,7 +203,7 @@ export const userController = {
 	/*
 		TODO: Not request main channel but let channel service find user main channel
 	 */
-	async toggleCopy(reqUser, toFollowId) {
+	async toggleCopy(reqUser: IReqUser, toFollowId) {
 
 		// Get user main channel
 		const channel = await request({
@@ -216,7 +222,7 @@ export const userController = {
 		return result;
 	},
 
-	async resetPassword(reqUser, userId?: string) {
+	async resetPassword(reqUser: IReqUser, userId?: string) {
 		return request({
 			uri: config.server.user.apiUrl + '/user/' + reqUser.id,
 			headers: { '_id': reqUser.id },
@@ -226,7 +232,7 @@ export const userController = {
 		});
 	},
 
-	async remove(reqUser, userId: string) {
+	async remove(reqUser: IReqUser, userId: string) {
 		let user, channel, email;
 
 		// user
@@ -235,7 +241,7 @@ export const userController = {
 			headers: { '_id': reqUser.id },
 			method: 'DELETE'
 		});
-		
+
 		// channel
 		try {
 			channel = await request({
@@ -259,7 +265,7 @@ export const userController = {
 		}
 	},
 
-	_getUser(reqUser, userId, type) {
+	_getUser(reqUser: IReqUser, userId, type) {
 		return request({ uri: config.server.user.apiUrl + '/user/' + userId, qs: { type }, headers: { _id: reqUser.id }, json: true })
 	}
 };

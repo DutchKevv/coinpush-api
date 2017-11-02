@@ -2,6 +2,7 @@ import {client} from '../modules/redis';
 import {Channel} from '../schemas/channel';
 import {Types} from 'mongoose';
 import {CHANNEL_TYPE_CUSTOM, CHANNEL_TYPE_MAIN} from '../../../shared/constants/constants';
+import { IReqUser } from '../../../shared/interfaces/IReqUser.interface';
 
 const config = require('../../../tradejs.config');
 
@@ -41,15 +42,15 @@ export const channelController = {
 		return channel;
 	},
 
-	async findByUserId(reqUser, userId: string, fields?: Array<string>, type?: number): Promise<Array<any>> {
+	async findByUserId(reqUser, userId: string, options: any = {}, type?: number): Promise<Array<any>> {
 		const opt = {user_id: userId};
 		let fieldsObj = this._defaultFields;
 
 		if (typeof type === 'number')
 			opt['type'] = type;
 
-		if (fields)
-			fieldsObj = fields.reduce((obj, f) => {obj[f] = 1; return obj}, {});
+		if (options.fields)
+			fieldsObj = options.fields.reduce((obj, f) => {obj[f] = 1; return obj}, {});
 
 		let channels = await Channel.find(opt, fieldsObj).lean();
 
@@ -71,6 +72,8 @@ export const channelController = {
 			$project: {
 				followersCount: {$size: '$followers'},
 				copiersCount: {$size: '$copiers'},
+				followers: 1,
+				copiers: 1,
 				user_id: 1,
 				profileImg: 1,
 				name: 1,
@@ -98,17 +101,18 @@ export const channelController = {
 		return channels
 	},
 
-	create(reqUser, options, type = CHANNEL_TYPE_CUSTOM): Promise<any> {
-		console.log('REU SUSDF USER US UER', options);
+	create(reqUser, params, type = CHANNEL_TYPE_CUSTOM, options: any = {}): Promise<any> {
 
-		return Channel.create({
-			user_id: reqUser.id,
-			name: options.name,
-			description: options.description,
-			public: options.public,
-			profileImg: options.profileImg,
+		const user = Channel.findOneAndUpdate({user_id: params.user_id, type}, {
+			user_id: params.user_id,
+			name: params.name,
+			description: params.description,
+			public: params.public,
+			profileImg: params.profileImg,
 			type
-		});
+		}, {upsert: true, new: true, setDefaultsOnInsert: true});
+
+		return user;
 	},
 
 	update(reqUser, channelId, params): Promise<any> {
@@ -168,7 +172,7 @@ export const channelController = {
 		return Channel.remove({_id: id});
 	},
 
-	removeByUserId(reqUser, userId: string) {
+	removeByUserId(reqUser: IReqUser, userId: string) {
 		return Channel.remove({user_id: userId});
 	}
 };

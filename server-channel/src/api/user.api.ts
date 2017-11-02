@@ -1,5 +1,5 @@
-import { Router } from 'express';
-import { userController } from '../controllers/user.controller';
+import {Router} from 'express';
+import {userController} from '../controllers/user.controller';
 import { G_ERROR_DUPLICATE } from '../../../shared/constants/constants';
 
 const router = Router();
@@ -9,7 +9,7 @@ const router = Router();
  */
 router.get('/:id', async (req: any, res, next) => {
 	try {
-		res.send(await userController.find(req.user, req.params.id, parseInt(req.query.type, 10), req.query.fields));
+		res.send(await userController.find(req.user, req.params.id));
 	} catch (error) {
 		next(error);
 	}
@@ -29,9 +29,9 @@ router.get('/', async (req: any, res, next) => {
 /**
  * create
  */
-router.post('/', async (req, res, next) => {
+router.post('/', async (req: any, res, next) => {
 	try {
-		res.send(await userController.create(req.body));
+		res.send(await userController.create(req.user, req.body, req.query));
 	} catch (error) {
 		if (error) {
 			if (error.name === 'ValidationError') {
@@ -39,19 +39,6 @@ router.post('/', async (req, res, next) => {
 				return;
 			}
 		}
-
-		next(error);
-	}
-});
-
-/**
- * update password
- */
-router.put('/password', async (req: any, res, next) => {
-	console.log('PASSWQORD');
-	try {
-		res.send(await userController.updatePassword(req.user, req.body.token, req.body.password));
-	} catch (error) {
 		next(error);
 	}
 });
@@ -71,9 +58,9 @@ router.put('/:id', async (req: any, res, next) => {
  * delete
  */
 router.delete('/:id', async (req: any, res, next) => {
-	console.log('DELETE!!');
 	try {
-		res.send(await userController.remove(req.user, req.params.id));
+		const result = await userController.remove(req.user, req.params.id);
+		res.send();
 	} catch (error) {
 		next(error)
 	}

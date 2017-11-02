@@ -21,8 +21,10 @@ router.get('/', async (req, res, next) => {
 	try {
 		const pList = [], result = {};
 
+		console.log('fuck off', req.query);
+
 		if (req.query.user)
-			pList.push(['user', channelController.findByUserId(req.user, req.query.user, req.query.fields)]);
+			pList.push(['user', channelController.findByUserId(req.user, req.query.user, req.query)]);
 		else
 			pList.push(['editorChoice', channelController.findMany(req.user)]);
 

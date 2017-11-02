@@ -8,6 +8,8 @@ import {UserService} from '../../services/user.service';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {UserModel} from '../../models/user.model';
 import {ChannelService} from '../../services/channel.service';
+import countries from '../../../../../shared/data/countries';
+import { CacheService } from '../../services/cache.service';
 
 declare let $: any;
 
@@ -27,12 +29,15 @@ export class UserOverviewComponent implements OnInit, OnDestroy, AfterViewChecke
 	@Output() public editorChoice$: BehaviorSubject<any[]> = new BehaviorSubject([]);
 	@Output() public topInvestors$: BehaviorSubject<any[]> = new BehaviorSubject([]);
 
-	public countries: any[] = window['COUNTRIES'];
+	public countries: any[] = countries;
+	public symbols: any[] = this._cacheService.symbols;
+	
 	public selfId = this.userService.model.get('_id');
 
 	private _moveInterval;
 
 	constructor(public instrumentsService: InstrumentsService,
+				private _cacheService: CacheService,
 				public channelService: ChannelService,
 				public userService: UserService) {
 	}
@@ -47,6 +52,10 @@ export class UserOverviewComponent implements OnInit, OnDestroy, AfterViewChecke
 
 	ngAfterViewChecked() {
 		this.setMoveInterval();
+	}
+
+	onChangeCountry(countryCode: string) {
+		alert(countryCode);
 	}
 
 	setMoveInterval() {

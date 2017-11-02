@@ -5,6 +5,7 @@ export class UserModel extends BaseModel {
 	public static readonly DEFAULTS: any = {
 		name: '',
 		gender: 0,
+		country: 'US',
 		balance: 0,
 		favorites: [],
 		leverage: LEVERAGE_TYPE_1,
