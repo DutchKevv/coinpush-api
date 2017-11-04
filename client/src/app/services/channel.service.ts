@@ -7,10 +7,14 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw';
 import {ChannelModel} from '../models/channel.model';
 import {AlertService} from './alert.service';
+import { UserService } from './user.service';
 
 @Injectable()
 export class ChannelService {
-	constructor(private _http: Http, private _alertService: AlertService) {
+	constructor(
+		private _http: Http, 
+		private _alertService: AlertService,
+		private _userService: UserService) {
 
 	}
 
@@ -22,8 +26,8 @@ export class ChannelService {
 		return this._http.get('/channel/').map(res => new ChannelModel(res.json())).toPromise();
 	}
 
-	findByUserId(userId: string): Observable<ChannelModel> {
-		return this._http.get('/channel/', {params: {user: userId}}).map(res => new ChannelModel(res.json()));
+	findByUserId(userId: string, options: any = {}): Observable<ChannelModel> {
+		return this._http.get('/channel/', {params: {...options, user: userId}}).map(res => new ChannelModel(res.json()));
 	}
 
 	create(model: ChannelModel): Observable<ChannelModel> {
@@ -46,17 +50,27 @@ export class ChannelService {
 			let text;
 
 			if (result.state) {
+				model.options.followers.push([{
+					_id: this._userService.model.get('user_id'),
+					name: this._userService.model.get('name'),
+					profileImg: this._userService.model.get('profileImg'),
+				}]);
 				model.set({
 					iFollow: !!state,
 					followersCount: ++model.options.followersCount
 				});
 				text = `Now following ${model.options.name}`;
 			} else {
-				text = `Stopped following ${model.options.name}`;
+				model.options.followers.remove([{
+					_id: this._userService.model.get('user_id'),
+					name: this._userService.model.get('name'),
+					profileImg: this._userService.model.get('profileImg'),
+				}]);
 				model.set({
 					iFollow: !!state,
 					followersCount: --model.options.followersCount
 				});
+				text = `Stopped following ${model.options.name}`;
 			}
 			this._alertService.success(text);
 		}, (error) => {

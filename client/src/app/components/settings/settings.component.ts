@@ -58,7 +58,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 			'settings.summary': 0,
 		});
 
-		this._userService.find(this._userService.model.get('user_id'), USER_FETCH_TYPE_PROFILE_SETTINGS).subscribe((user: UserModel) => {
+		this._userService.find(this._userService.model.get('user_id'), {type: USER_FETCH_TYPE_PROFILE_SETTINGS}).subscribe((user: UserModel) => {
 			console.log(user.options);
 
 			this.form.setValue({

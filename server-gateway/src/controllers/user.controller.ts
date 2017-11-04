@@ -10,10 +10,10 @@ const config = require('../../../tradejs.config');
 
 export const userController = {
 
-	async findById(reqUser: IReqUser, userId: string, options: { type?: number, fields?: Array<string> } = {}): Promise<any> {
+	async findById(reqUser: IReqUser, userId: string, options: any = {}): Promise<any> {
 
 		console.log('asdfsdf', options);
-		
+
 		const pList = [
 			this._getUser(reqUser, userId, options.type),
 			channelController.findByUserId(reqUser, userId, options),
@@ -67,16 +67,22 @@ export const userController = {
 				json: true
 			});
 
+			console.log('1');
+
 			// channel
-			channel = channelController.addUser({ id: user._id }, {
+			channel = await channelController.addUser({ id: user._id }, {
 				_id: user._id,
 				name: user.name,
 				description: user.description
 			});
 
+			console.log('2');
+
 			// update user c_id
 			// TODO : REMOVE FUCKING C_ID
-			await this.update({ id: user._id }, { c_id: channel._id });
+			// await this.update({ id: user._id }, user._id, { c_id: channel._id });
+
+			console.log('3');
 
 			// email
 			email = await emailController.addUser({ id: user._id }, {
@@ -86,6 +92,7 @@ export const userController = {
 				language: user.language
 			});
 
+			console.log('4');
 			// // update user with channel id
 			// await this.update(reqUser, user._id, {
 			// 	c_id: channel._id
@@ -111,6 +118,8 @@ export const userController = {
 				json: true
 			});
 
+			console.log('5');
+
 			return { user, channel };
 
 		} catch (error) {
@@ -126,7 +135,7 @@ export const userController = {
 		}
 	},
 
-	async update(reqUser: IReqUser, userId, params): Promise<void> {
+	async update(reqUser: IReqUser, userId: string, params: IUser): Promise<void> {
 		// TODO: security
 		if (reqUser.id !== userId)
 			throw ({ code: 0, message: 'Not allowed' });

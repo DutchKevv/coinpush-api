@@ -55,9 +55,12 @@ export const userController = {
 
 	// TODO - Filter fields
 	async update(reqUser, userId, params): Promise<void> {
-		const user = await User.findByIdAndUpdate(userId, params);
-
-		if (!user)
+		const user = await Promise.all([
+			User.findByIdAndUpdate(userId, params),
+			channelController.updateByUserId(reqUser, userId, params)
+		]);
+		
+		if (!user[0])
 			throw ({ code: G_ERROR_USER_NOT_FOUND });
 	},
 

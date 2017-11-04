@@ -28,7 +28,7 @@ router.get('/:id', async (req, res, next) => {
  */
 router.get('/', async (req, res, next) => {
 	try {
-		res.send(await channelController.findByUserId(req.user, req.query.user));
+		res.send(await channelController.findByUserId(req.user, req.query.user, req.query));
 	} catch (error) {
 		console.error(error);
 		next(error);

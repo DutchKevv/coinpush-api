@@ -4,11 +4,35 @@ import {channelController} from '../controllers/channel.controller';
 const router = Router();
 
 /**
+ * GET FOLLOWERS
+ */
+router.get('/:id/follow', async (req, res, next) => {
+	try {
+		res.send(await channelController.getFollowers(req.user, req.params.id, req.query));
+	} catch (error) {
+		console.error(error);
+		next(error);
+	}
+});
+
+/**
+ * GET COPIERS
+ */
+router.get('/:id/follow', async (req, res, next) => {
+	try {
+		res.send(await channelController.toggleFollow(req.user, req.params.id));
+	} catch (error) {
+		console.error(error);
+		next(error);
+	}
+});
+
+/**
  * GET SINGLE
  */
 router.get('/:id', async (req, res, next) => {
 	try {
-		res.send(await channelController.findById(req.user, req.params.id));
+		res.send(await channelController.findById(req.user, req.params.id, req.query));
 	} catch (error) {
 		next(error);
 	}

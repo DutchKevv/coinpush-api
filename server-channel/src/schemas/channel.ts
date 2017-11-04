@@ -1,14 +1,15 @@
-import {Schema, model, Types} from 'mongoose';
-import {join} from 'path';
-import {isEmail} from 'validator';
-import {CHANNEL_TYPE_MAIN} from '../../../shared/constants/constants';
+import { Schema, model, Types } from 'mongoose';
+import { join } from 'path';
+import { isEmail } from 'validator';
+import { CHANNEL_TYPE_MAIN } from '../../../shared/constants/constants';
 
 const config = require('../../../tradejs.config');
 
 export const ChannelSchema = new Schema({
 	user_id: {
 		type: Schema.Types.ObjectId,
-		required: true
+		required: true,
+		ref: 'User'
 	},
 	name: {
 		type: String,
@@ -43,22 +44,29 @@ export const ChannelSchema = new Schema({
 		type: Number,
 		default: 0
 	},
-	followers: {
-		type: [Schema.Types.ObjectId],
-		default: []
-	},
+	followers: [{
+		type: Schema.ObjectId,
+		default: [],
+		ref: 'User'
+	}],
 	followersCount: {
 		type: Number,
 		default: 0
 	},
-	copiers: {
-		type: [Schema.Types.ObjectId],
-		default: []
-	},
+	copiers: [{
+		type: Schema.ObjectId,
+		default: [],
+		ref: 'User'
+	}],
 	copiersCount: {
 		type: Number,
 		default: 0
 	},
+	visitors: [{
+		type: Schema.ObjectId,
+		default: [],
+		ref: 'User'
+	}],
 	public: {
 		type: Boolean,
 		default: true
@@ -73,7 +81,7 @@ export const ChannelSchema = new Schema({
 	}
 });
 
-ChannelSchema.statics.normalize = function(user, doc) {
+ChannelSchema.statics.normalize = function (user, doc) {
 	if (!doc)
 		return;
 
@@ -83,14 +91,14 @@ ChannelSchema.statics.normalize = function(user, doc) {
 	return doc
 };
 
-ChannelSchema.statics.setICopy = function(user, doc) {
+ChannelSchema.statics.setICopy = function (user, doc) {
 	if (doc.followers)
 		doc.iFollow = doc.followers.map(f => f.toString()).indexOf(user.id) > -1;
 
 	return this;
 };
 
-ChannelSchema.statics.setIFollow = function(user, doc) {
+ChannelSchema.statics.setIFollow = function (user, doc) {
 	if (doc.copiers)
 		doc.iCopy = doc.copiers.map(c => c.toString()).indexOf(user.id) > -1;
 
@@ -103,28 +111,37 @@ ChannelSchema.statics.setIFollow = function(user, doc) {
  * @returns {any}
  */
 ChannelSchema.statics.normalizeProfileImg = function (doc) {
-	
-		// default img
-		if (!doc.profileImg) {
-			if (doc.type === CHANNEL_TYPE_MAIN)
-				doc.profileImg = config.image.profileDefaultUrl;
-			else
-				doc.profileImg = config.image.channelDefaultUrl;
-	
-			return this;
-		}
-	
-		// external image
-		if (doc.profileImg.startsWith('/') || doc.profileImg.startsWith('http://') || doc.profileImg.startsWith('https://'))
-			return;
-	
-		// user image
+	console.log('doc doc doc doc', doc);
+
+	// copiers
+	if (doc.copiers && doc.copiers.length)
+		doc.copiers.forEach(copier => ChannelSchema.statics.normalizeProfileImg(copier));
+
+	// followers
+	if (doc.followers && doc.followers.length)
+		doc.followers.forEach(follower => ChannelSchema.statics.normalizeProfileImg(follower));
+
+	// default img
+	if (!doc.profileImg) {
 		if (doc.type === CHANNEL_TYPE_MAIN)
-			doc.profileImg = join(config.image.profileBaseUrl, doc.profileImg);
-	
-		// channel image
+			doc.profileImg = config.image.profileDefaultUrl;
 		else
-			doc.profileImg = join(config.image.channelBaseUrl, doc.profileImg);
-	};
+			doc.profileImg = config.image.channelDefaultUrl;
+
+		return;
+	}
+
+	// external image
+	if (doc.profileImg.startsWith('/') || doc.profileImg.startsWith('http://') || doc.profileImg.startsWith('https://'))
+		return;
+
+	// user image
+	if (doc.type === CHANNEL_TYPE_MAIN)
+		doc.profileImg = join(config.image.profileBaseUrl, doc.profileImg);
+
+	// channel image
+	else
+		doc.profileImg = join(config.image.channelBaseUrl, doc.profileImg);
+};
 
 export const Channel = model('Channel', ChannelSchema);

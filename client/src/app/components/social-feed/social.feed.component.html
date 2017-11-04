@@ -2,29 +2,39 @@
 	<div class="info-box">
 		<header>Info</header>
 		<main>
-			<p>Followers: {{(user.options$ | async).followersCount}}</p>
-			<p>Copiers: {{(user.options$ | async).copiersCount}}</p>
+			
 		</main>
 	</div>
 
-	<div class="info-box">
+	<div class="info-box info-box-user-list">
 		<header>Visitors</header>
 		<main>
-			blabla
+			<ul>
+			</ul>
 		</main>
 	</div>
 
-	<div class="info-box">
-		<header>Copiers</header>
+	<div class="info-box info-box-user-list">
+		<header>Copiers ({{(user.options$ | async).copiersCount}})</header>
 		<main>
-			blabla
+			<ul>
+				<li *ngFor="let copier of (user.options$ | async).copiers ">
+					<img src="{{copier.profileImg}}">
+					<span>{{copier.name}}</span>
+				</li>
+			</ul>
 		</main>
 	</div>
 
-	<div class="info-box">
-		<header>Followers</header>
+	<div class="info-box info-box-user-list">
+		<header>Followers ({{(user.options$ | async).followersCount}})</header>
 		<main>
-			blabla
+			<ul>
+				<li *ngFor="let follower of (user.options$ | async).followers ">
+					<img src="{{follower.profileImg}}">
+					<span>{{follower.name}}</span>
+				</li>
+			</ul>
 		</main>
 	</div>
 </div>
@@ -32,11 +42,10 @@
 <div class="feed">
 	<app-comment-box [channelId]="channelId" (newMessage)="addMessage($event)"></app-comment-box>
 
-	<div *ngFor="let comment of comments$ | async" class="comment-container fade-in"
-		 [ngClass]="{'fade-in': comment.options.isNew}">
+	<div *ngFor="let comment of comments$ | async" class="comment-container fade-in" [ngClass]="{'fade-in': comment.options.isNew}">
 		<header>
 			<a [routerLink]="['/main/user/', comment.options.userId]">
-				<img [attr.src]="comment.options.profileImg"/>
+				<img [attr.src]="comment.options.profileImg" />
 			</a>
 			<div>
 				<a [routerLink]="['/main/user/', comment.options.userId]" class="g-username">
@@ -55,27 +64,27 @@
 					<span *ngIf="(comment.options$ | async).iLike">I Like - </span>
 					<span *ngIf="!(comment.options$ | async).iLike">like - </span>
 					<span *ngIf="(comment.options$ | async).likeCount > 0">
-					<i class="fa fa-thumbs-o-up"></i>{{(comment.options$ | async).likeCount}} -
-				</span>
+						<i class="fa fa-thumbs-o-up"></i>{{(comment.options$ | async).likeCount}} -
+					</span>
 				</a>
 				<a (click)="focusInput($event)">
-					{{(comment.options$ | async).childCount || 0}} comment(s)<i class="fa fa-comment"></i>
+					{{(comment.options$ | async).childCount || 0}} comment(s)
+					<i class="fa fa-comment"></i>
 				</a>
 			</div>
 
 			<div class="child-row fade-in" *ngFor="let child of comment.options.children">
-				<img [attr.src]="child.options.profileImg"/>
+				<img [attr.src]="child.options.profileImg" />
 				<div>
 					<a class="g-username" [routerLink]="['/main/user/', child.options.userId]">{{child.options.username}}</a>
 					<span [innerHtml]="child.options.content | parseCommentContent"></span>
 					<div class="child-buttons">
-						<a (click)="commentService.toggleLike(child)"
-						   [ngClass]="{active: (child.options$ | async).iLike}">
+						<a (click)="commentService.toggleLike(child)" [ngClass]="{active: (child.options$ | async).iLike}">
 							<span *ngIf="(child.options$ | async).iLike">I Like - </span>
 							<span *ngIf="!(child.options$ | async).iLike">like - </span>
 							<span *ngIf="(child.options$ | async).likeCount > 0">
-							<i class="fa fa-thumbs-o-up"></i>{{(child.options$ | async).likeCount}} -
-						</span>
+								<i class="fa fa-thumbs-o-up"></i>{{(child.options$ | async).likeCount}} -
+							</span>
 						</a>
 						<span>{{child.options.created | date:'shortTime'}}</span>
 					</div>
@@ -84,7 +93,7 @@
 
 			<div class="child-row comment-input">
 				<img [attr.src]="userService.model.options.profileImg">
-				<input (keyup.enter)="respond($event, comment.options._id)" type="text" placeholder="Write a comment..."/>
+				<input (keyup.enter)="respond($event, comment.options._id)" type="text" placeholder="Write a comment..." />
 			</div>
 		</footer>
 	</div>

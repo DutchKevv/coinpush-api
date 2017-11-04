@@ -1,23 +1,31 @@
-import {forEach, random, throttle} from 'lodash';
+import { forEach, random, throttle } from 'lodash';
 import {
 	Component, OnDestroy, ElementRef, Input, ViewChild,
 	OnInit, AfterViewInit, ViewEncapsulation, NgZone, Output, SimpleChanges, OnChanges
 } from '@angular/core';
 
-import {DialogComponent} from '../dialog/dialog.component';
-import {InstrumentsService} from '../../services/instruments.service';
-import {DialogAnchorDirective} from '../../directives/dialoganchor.directive';
-import {InstrumentModel} from '../../models/instrument.model';
+import { DialogComponent } from '../dialog/dialog.component';
+import { InstrumentsService } from '../../services/instruments.service';
+import { DialogAnchorDirective } from '../../directives/dialoganchor.directive';
+import { InstrumentModel } from '../../models/instrument.model';
 import * as interact from 'interactjs';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {CacheService} from '../../services/cache.service';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { CacheService } from '../../services/cache.service';
 import * as moment from 'moment';
-import {OrderService} from '../../services/order.service';
-import {ConstantsService} from '../../services/constants.service';
-import {BaseModel} from '../../models/base.model';
-import {SymbolModel} from "../../models/symbol.model";
+import { OrderService } from '../../services/order.service';
+import { ConstantsService } from '../../services/constants.service';
+import { BaseModel } from '../../models/base.model';
+import { SymbolModel } from "../../models/symbol.model";
+
+const Highcharts = require('highcharts');
+const Highstock = require('highcharts/highstock');
+// import Highcharts from 'highcharts';
+// import Highstock from 'highcharts/highstock';
 
 declare let $: any;
+
+import {HighchartsDefaultTheme} from '../../style/highcharts/highstock.theme.default';
+import '../../style/highcharts/highstock.theme.dark';
 
 @Component({
 	selector: 'chart-box',
@@ -41,8 +49,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	@Output() loading$ = new BehaviorSubject(true);
 
 	@ViewChild(DialogAnchorDirective) private _dialogAnchor: DialogAnchorDirective;
-	@ViewChild('candles') private _candlesRef: ElementRef;
-	@ViewChild('volume') private _volumeRef: ElementRef;
+	@ViewChild('chart') private chartRef: ElementRef;
 
 	@Output() public viewState$: BehaviorSubject<any> = new BehaviorSubject('windowed');
 
@@ -92,8 +99,8 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 			let date = moment(data[i]).format('DD-MM hh:mm'),
 				c = i / rowLength;
 
-			candles[c] = {time: data[i], y: [data[i + 1], data[i + 3], data[i + 5], data[i + 7]]};
-			volume[c] = {label: date, y: data[i + 9]};
+			candles[c] = { time: data[i], y: [data[i + 1], data[i + 3], data[i + 5], data[i + 7]] };
+			volume[c] = { label: date, y: data[i + 9] };
 		}
 
 
@@ -104,11 +111,11 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	}
 
 	constructor(public instrumentsService: InstrumentsService,
-				public constantsService: ConstantsService,
-				private _zone: NgZone,
-				private _cacheService: CacheService,
-				private _elementRef: ElementRef,
-				private _orderService: OrderService) {
+		public constantsService: ConstantsService,
+		private _zone: NgZone,
+		private _cacheService: CacheService,
+		private _elementRef: ElementRef,
+		private _orderService: OrderService) {
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
@@ -116,6 +123,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	}
 
 	ngOnInit() {
+		console.log(Highcharts);
 		if (!this.symbolModel && !this.instrumentModel)
 			throw new Error('symbol or instrument model required');
 
@@ -188,6 +196,8 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 			if (dirty)
 				this.render();
 		});
+
+		this._createChart();
 	}
 
 	placeOrder(event, side: number) {
@@ -197,7 +207,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 			return;
 
 		const amount = parseFloat(event.currentTarget.querySelector('input').value);
-		this._orderService.create({symbol: this.instrumentModel.options.symbol, side, amount});
+		this._orderService.create({ symbol: this.instrumentModel.options.symbol, side, amount });
 	}
 
 	ngAfterViewInit() {
@@ -215,10 +225,10 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		if (!this._chart)
 			return;
 
-		this._chartVolume.options.height = this._volumeRef.nativeElement.clientHeight;
-		this._chartVolume.options.width = this._volumeRef.nativeElement.clientWidth;
-		this._chart.options.height = this._candlesRef.nativeElement.clientHeight;
-		this._chart.options.width = this._candlesRef.nativeElement.clientWidth;
+		// this._chartVolume.options.height = this._volumeRef.nativeElement.clientHeight;
+		// this._chartVolume.options.width = this._volumeRef.nativeElement.clientWidth;
+		this._chart.options.height = this.chartRef.nativeElement.clientHeight;
+		this._chart.options.width = this.chartRef.nativeElement.clientWidth;
 
 		this._updateViewPort();
 	}
@@ -228,7 +238,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 			return;
 
 		this._chart.render();
-		this._chartVolume.render();
+		// this._chartVolume.render();
 	}
 
 	public toggleTimeFrame() {
@@ -242,143 +252,267 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 			this._destroyChart();
 
-			let chartOptions = {
-				interactivityEnabled: true,
-				exportEnabled: false,
-				animationEnabled: false,
-				backgroundColor: '#000',
-				dataPointWidth: 2,
-				creditText: '',
-				toolTip: {
-					animationEnabled: false,
-					borderThickness: 0,
-					cornerRadius: 0
-				},
-				scales: {
-					xAxes: [{
-						display: false
-					}]
-				},
 
-				axisY2: {
-					includeZero: false,
-					// title: 'Prices',
-					// prefix: '$',
-					labelFontColor: '#fff',
-					labelFontSize: '12',
-					gridDashType: 'dash',
-					gridColor: '#787D73',
-					gridThickness: 0.5,
-					stripLines: [{
-						value: 0,
-						label: '',
-						labelPlacement: 'outside',
-						labelAlign: 'far',
-						labelBackgroundColor: '#959598',
-						labelFontColor: '#000',
-						thickness: 0.5,
-						color: '#d2d2d5'
+			// // split the data set into ohlc and volume
+			// var ohlc = [],
+			// 	volume = [],
+			// 	dataLength = data.length,
+			// 	// set the allowed units for data grouping
+			// 	groupingUnits = [[
+			// 		'week',                         // unit name
+			// 		[1]                             // allowed multiples
+			// 	], [
+			// 		'month',
+			// 		[1, 2, 3, 4, 6]
+			// 	]],
+
+			// 	i = 0;
+
+			// for (i; i < dataLength; i += 1) {
+			// 	ohlc.push([
+			// 		data[i][0], // the date
+			// 		data[i][1], // open
+			// 		data[i][2], // high
+			// 		data[i][3], // low
+			// 		data[i][4] // close
+			// 	]);
+
+			// 	volume.push([
+			// 		data[i][0], // the date
+			// 		data[i][5] // the volume
+			// 	]);
+			// }
+
+			$.getJSON('https://www.highcharts.com/samples/data/jsonp.php?filename=usdeur.json&callback=?', (data) => {
+			
+				// split the data set into ohlc and volume
+				var ohlc = [],
+					volume = [],
+					dataLength = data.length,
+					// set the allowed units for data grouping
+					groupingUnits = [[
+						'week',                         // unit name
+						[1]                             // allowed multiples
+					], [
+						'month',
+						[1, 2, 3, 4, 6]
+					]],
+
+					i = 0;
+
+				for (i; i < dataLength; i += 1) {
+					ohlc.push([
+						data[i][0], // the date
+						data[i][1], // open
+						data[i][2], // high
+						data[i][3], // low
+						data[i][4] // close
+					]);
+
+					volume.push([
+						data[i][0], // the date
+						data[i][5] // the volume
+					]);
+				}
+
+				// create the chart
+				this._chart = Highstock.chart(this.chartRef.nativeElement, {
+
+					rangeSelector: {
+						selected: 1
+					},
+
+					title: {
+						text: 'AAPL Historical'
+					},
+
+					yAxis: [{
+						labels: {
+							align: 'right',
+							x: -3
+						},
+						title: {
+							text: 'OHLC'
+						},
+						height: '60%',
+						lineWidth: 2,
+						resize: {
+							enabled: true
+						}
+					}, {
+						labels: {
+							align: 'right',
+							x: -3
+						},
+						title: {
+							text: 'Volume'
+						},
+						top: '65%',
+						height: '35%',
+						offset: 0,
+						lineWidth: 2
 					}],
-					tickThickness: 0.5,
-					lineThickness: 1.5,
-					labelMinWidth: 50,
-					labelMaxWidth: 50
-				},
-				axisX: {
-					includeZero: false,
-					labelFontColor: '#fff',
-					labelFontSize: '12',
-					gridDashType: 'dash',
-					gridColor: '#787D73',
-					gridThickness: 0.5,
-					tickThickness: 0,
-					valueFormatString: ' ',
-					labelFormatter: function(e){
-						return  ''
-					},
-					lineThickness: 1
-				},
-				data: [
-					{
-						type: this.instrumentModel.options.graphType,
-						connectNullData: false,
-						// fillOpacity: 0,
-						// risingColor: '#000000',
-						color: '#1381ff',
-						risingColor: '#17EFDA',
-						dataPoints: this._data.candles,
-						axisYType: 'secondary',
-						bevelEnabled: false,
-						thickness: 1
-					},
-					{
-						type: 'line',
-						connectNullData: false,
-						bevelEnabled: false,
-						markerType: 'triangle',
-						lineThickness: 1,
-						markerSize: 10,
-						dataPoints: [],
-						axisYType: 'secondary',
-						valueFormatString: ' ',
-						toolTipContent: '#{id}</br>Profit: {profit}'
-					}
-				]
-			};
 
-			this._chart = new window['CanvasJS'].Chart(this._candlesRef.nativeElement, chartOptions);
-			this._chartVolume = new window['CanvasJS'].Chart(this._volumeRef.nativeElement, {
-				exportEnabled: false,
-				animationEnabled: false,
-				backgroundColor: '#000',
-				dataPointWidth: 2,
-				creditText: '',
-				toolTip: {
-					animationEnabled: false,
-					borderThickness: 0,
-					cornerRadius: 0
-				},
-				axisX: {
-					includeZero: false,
-					labelFontColor: '#fff',
-					labelFontSize: '12',
-					gridDashType: 'dash',
-					gridColor: '#787D73',
-					gridThickness: 0.5,
-					tickThickness: 0
-				},
-				axisY2: {
-					includeZero: false,
-					// title: 'Prices',
-					// prefix: '$',
-					labelFontColor: '#fff',
-					labelFontSize: '12',
-					gridDashType: 'dash',
-					gridColor: '#787D73',
-					gridThickness: 0.5,
-					tickThickness: 0
-				},
-				data: [
-					{
+					tooltip: {
+						split: true
+					},
+
+					series: [{
+						type: 'candlestick',
+						name: 'AAPL',
+						data: ohlc,
+						dataGrouping: {
+							units: groupingUnits
+						}
+					}, {
 						type: 'column',
-						dataPoints: this._data.volume,
-						connectNullData: false,
-						bevelEnabled: false,
-						axisYType: 'secondary',
-						color: 'white'
-					}
-				]
+						name: 'Volume',
+						data: volume,
+						yAxis: 1,
+						dataGrouping: {
+							units: groupingUnits
+						}
+					}]
+				});
 			});
-			this._candlesRef.nativeElement.addEventListener('mousewheel', <any>this._onScrollBounced);
-			this._updateViewPort();
-			this._updateIndicators();
-			this._updateOrders();
 
-			this._oCanvasMouseMoveFunc = this._chart._mouseEventHandler;
-			this._chart._mouseEventHandler = event => {
-				if (this._mouseActive)
-					this._oCanvasMouseMoveFunc.call(this._chart, event);
-			};
+			// let chartOptions = {
+			// 	interactivityEnabled: true,
+			// 	exportEnabled: false,
+			// 	animationEnabled: false,
+			// 	backgroundColor: '#000',
+			// 	dataPointWidth: 2,
+			// 	creditText: '',
+			// 	toolTip: {
+			// 		animationEnabled: false,
+			// 		borderThickness: 0,
+			// 		cornerRadius: 0
+			// 	},
+			// 	scales: {
+			// 		xAxes: [{
+			// 			display: false
+			// 		}]
+			// 	},
+
+			// 	axisY2: {
+			// 		includeZero: false,
+			// 		// title: 'Prices',
+			// 		// prefix: '$',
+			// 		labelFontColor: '#fff',
+			// 		labelFontSize: '12',
+			// 		gridDashType: 'dash',
+			// 		gridColor: '#787D73',
+			// 		gridThickness: 0.5,
+			// 		stripLines: [{
+			// 			value: 0,
+			// 			label: '',
+			// 			labelPlacement: 'outside',
+			// 			labelAlign: 'far',
+			// 			labelBackgroundColor: '#959598',
+			// 			labelFontColor: '#000',
+			// 			thickness: 0.5,
+			// 			color: '#d2d2d5'
+			// 		}],
+			// 		tickThickness: 0.5,
+			// 		lineThickness: 1.5,
+			// 		labelMinWidth: 50,
+			// 		labelMaxWidth: 50
+			// 	},
+			// 	axisX: {
+			// 		includeZero: false,
+			// 		labelFontColor: '#fff',
+			// 		labelFontSize: '12',
+			// 		gridDashType: 'dash',
+			// 		gridColor: '#787D73',
+			// 		gridThickness: 0.5,
+			// 		tickThickness: 0,
+			// 		valueFormatString: ' ',
+			// 		labelFormatter: function(e){
+			// 			return  ''
+			// 		},
+			// 		lineThickness: 1
+			// 	},
+			// 	data: [
+			// 		{
+			// 			type: this.instrumentModel.options.graphType,
+			// 			connectNullData: false,
+			// 			// fillOpacity: 0,
+			// 			// risingColor: '#000000',
+			// 			color: '#1381ff',
+			// 			risingColor: '#17EFDA',
+			// 			dataPoints: this._data.candles,
+			// 			axisYType: 'secondary',
+			// 			bevelEnabled: false,
+			// 			thickness: 1
+			// 		},
+			// 		{
+			// 			type: 'line',
+			// 			connectNullData: false,
+			// 			bevelEnabled: false,
+			// 			markerType: 'triangle',
+			// 			lineThickness: 1,
+			// 			markerSize: 10,
+			// 			dataPoints: [],
+			// 			axisYType: 'secondary',
+			// 			valueFormatString: ' ',
+			// 			toolTipContent: '#{id}</br>Profit: {profit}'
+			// 		}
+			// 	]
+			// };
+
+			// this._chart = new window['CanvasJS'].Chart(this._candlesRef.nativeElement, chartOptions);
+			// this._chartVolume = new window['CanvasJS'].Chart(this._volumeRef.nativeElement, {
+			// 	exportEnabled: false,
+			// 	animationEnabled: false,
+			// 	backgroundColor: '#000',
+			// 	dataPointWidth: 2,
+			// 	creditText: '',
+			// 	toolTip: {
+			// 		animationEnabled: false,
+			// 		borderThickness: 0,
+			// 		cornerRadius: 0
+			// 	},
+			// 	axisX: {
+			// 		includeZero: false,
+			// 		labelFontColor: '#fff',
+			// 		labelFontSize: '12',
+			// 		gridDashType: 'dash',
+			// 		gridColor: '#787D73',
+			// 		gridThickness: 0.5,
+			// 		tickThickness: 0
+			// 	},
+			// 	axisY2: {
+			// 		includeZero: false,
+			// 		// title: 'Prices',
+			// 		// prefix: '$',
+			// 		labelFontColor: '#fff',
+			// 		labelFontSize: '12',
+			// 		gridDashType: 'dash',
+			// 		gridColor: '#787D73',
+			// 		gridThickness: 0.5,
+			// 		tickThickness: 0
+			// 	},
+			// 	data: [
+			// 		{
+			// 			type: 'column',
+			// 			dataPoints: this._data.volume,
+			// 			connectNullData: false,
+			// 			bevelEnabled: false,
+			// 			axisYType: 'secondary',
+			// 			color: 'white'
+			// 		}
+			// 	]
+			// });
+			// this._candlesRef.nativeElement.addEventListener('mousewheel', <any>this._onScrollBounced);
+			// this._updateViewPort();
+			// this._updateIndicators();
+			// this._updateOrders();
+
+			// this._oCanvasMouseMoveFunc = this._chart._mouseEventHandler;
+			// this._chart._mouseEventHandler = event => {
+			// 	if (this._mouseActive)
+			// 		this._oCanvasMouseMoveFunc.call(this._chart, event);
+			// };
 		});
 	}
 
@@ -401,10 +535,10 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 			this._scrollOffset = offset;
 
-			this._chart.options.axisX.viewportMinimum = data.length - offset - viewable;
-			this._chartVolume.options.axisX.viewportMinimum = data.length - offset - viewable;
-			this._chart.options.axisX.viewportMaximum = data.length - offset + 2;
-			this._chartVolume.options.axisX.viewportMaximum = data.length - offset + 2;
+			// this._chart.options.axisX.viewportMinimum = data.length - offset - viewable;
+			// this._chartVolume.options.axisX.viewportMinimum = data.length - offset - viewable;
+			// this._chart.options.axisX.viewportMaximum = data.length - offset + 2;
+			// this._chartVolume.options.axisX.viewportMaximum = data.length - offset + 2;
 		});
 	}
 
@@ -422,12 +556,12 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 				this._data.candles.push(...data.candles);
 				this._data.volume.push(...data.volume);
 
-				if (!this._chart)
-					this._createChart();
+				// if (!this._chart)
+				// 	this._createChart();
 
-				this._updateCurrentPricePlot();
-				this._updateViewPort();
-				this.render();
+				// this._updateCurrentPricePlot();
+				// this._updateViewPort();
+				// this.render();
 			} catch (error) {
 				this.loading$.next(false);
 				console.log('error error error', error);
@@ -442,8 +576,8 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 			if (!lastCandle)
 				return;
 
-			this._chart.options.axisY2.stripLines[0].value = lastCandle.y[2];
-			this._chart.options.axisY2.stripLines[0].label = lastCandle.y[2];
+			// this._chart.options.axisY2.stripLines[0].value = lastCandle.y[2];
+			// this._chart.options.axisY2.stripLines[0].label = lastCandle.y[2];
 		});
 	}
 
@@ -591,7 +725,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 			}
 		}
 
-		return {low, high};
+		return { low, high };
 	}
 
 	private _calculateViewableBars(checkParent = true) {
@@ -716,11 +850,11 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	}
 
 	private _onPriceChange(options: any) {
-		const lastCandle = this._data.candles[this._data.candles.length -1];
+		const lastCandle = this._data.candles[this._data.candles.length - 1];
 
 		if (!lastCandle)
 			return;
-		
+
 		lastCandle.y[2] = options.ask;
 		this._updateCurrentPricePlot();
 		this.render();
@@ -755,8 +889,25 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		return false;
 	}
 
+	private _prepareData(data: any) {
+		let length = data.length,
+			volume = new Array(length),
+			i = 0;
+
+		for (; i < length; i += 1)
+			volume[i] = [
+				data[i][0], // Date
+				data[i].pop() // Volume
+			];
+
+		return {
+			candles: data,
+			volume: volume
+		};
+	}
+
 	private _destroyChart() {
-		this._candlesRef.nativeElement.removeEventListener('mousewheel', <any>this._onScrollBounced);
+		this.chartRef.nativeElement.removeEventListener('mousewheel', <any>this._onScrollBounced);
 
 		if (this._chart)
 			this._chart.destroy();

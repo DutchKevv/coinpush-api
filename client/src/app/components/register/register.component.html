@@ -16,12 +16,11 @@
                 <input id="email" class="form-control" name="email" [(ngModel)]="model.options.email" #email="ngModel" required/>
                 <div *ngIf="f.submitted && !email.valid" class="help-block">Email is required</div>
             </div>
-            <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !country.valid }">
+            <div class="form-group">
                 <label for="country">Country</label>
                 <select class="form-control" id="country" [(ngModel)]="model.options.country" name="country">
                     <option *ngFor="let country of countries" [attr.value]="country.code" [innerHTML]="country.name"></option>
                 </select>
-                <div *ngIf="f.submitted && !country.valid" class="help-block">Email is required</div>
             </div>
             <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !password.valid }">
                 <label for="password">Password</label>

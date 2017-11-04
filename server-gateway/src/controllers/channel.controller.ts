@@ -64,11 +64,10 @@ export const channelController = {
 
 	updateByUserId(reqUser: IReqUser, userId, params) {
 		return request({
-			uri: config.server.channel.apiUrl + '/channel/',
+			uri: config.server.channel.apiUrl + '/user/' + userId,
 			method: 'PUT',
 			body: params,
 			headers: {'_id': reqUser.id},
-			qs: {user: userId},
 			json: true
 		});
 	},

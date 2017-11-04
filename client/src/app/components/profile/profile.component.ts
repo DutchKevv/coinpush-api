@@ -45,7 +45,7 @@ export class ProfileComponent implements OnInit {
 			this.userId = params['id'];
 			this.isSelf = this.userId === this.userService.model.get('user_id');
 
-			this.channelService.findByUserId(this.userId).subscribe((channel: ChannelModel) => {
+			this.channelService.findByUserId(this.userId, {followers: 5, copiers: 5}).subscribe((channel: ChannelModel) => {
 				// this.channelId = channel.get('_id');
 				this.user$.next(channel);
 			});

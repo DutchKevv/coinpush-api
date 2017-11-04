@@ -31,8 +31,8 @@ export class UserService {
 
 	}
 
-	find(id: string, type = USER_FETCH_TYPE_SLIM) {
-		return this._http.get('/user/' + id, {params: {type: type}}).map((res: Response) => new UserModel(res.json()));
+	find(id: string, options: any = {}) {
+		return this._http.get('/user/' + id, {params: options}).map((res: Response) => new UserModel(res.json()));
 	}
 
 	getOverview() {
