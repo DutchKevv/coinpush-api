@@ -16,6 +16,10 @@ else
         port: 3100
     };
 
+setInterval(() => {
+    console.log(domain, process.env.NODE_ENV);
+}, 1000);
+
 module.exports = {
     domain,
     system: {

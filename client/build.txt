@@ -8,9 +8,9 @@ Please run the following command to install a compatible version of TypeScript.
 
 To disable this warning run "ng set warnings.typescriptMismatch=false".
 
-Hash: [1m093b6e99d735f3942cfd[39m[22m
+Hash: [1m68de38024222920af330[39m[22m
 Version: webpack [1m3.8.1[39m[22m
-Time: [1m84047[39m[22mms
+Time: [1m87453[39m[22mms
                                                                [1mAsset[39m[22m       [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m           [1m[39m[22m       [1mChunk Names[39m[22m
                                   [1m[32massets/vendor/css/jstree/style.css[39m[22m    30.7 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
                         [1m[32mfontawesome-webfont.674f50d287a8c48dc19b.eot[39m[22m     166 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
@@ -22,33 +22,33 @@ Time: [1m84047[39m[22mms
                                [1m[32minline.447c42fb7cdd330bbae9.bundle.js[39m[22m    1.42 kB       [1m2[39m[22m  [1m[32m[emitted][39m[22m         inline
                               [1m[33mscripts.1d8ec9555dc3f6801e44.bundle.js[39m[22m     [1m[33m729 kB[39m[22m        [1m[39m[22m  [1m[32m[emitted][39m[22m  [1m[33m[big][39m[22m  
                                    [1m[32massets/custom/css/contextMenu.css[39m[22m    0 bytes        [1m[39m[22m  [1m[32m[emitted][39m[22m         
-                    [1m[32massets/custom/img/charts-overview-background.jpg[39m[22m    23.9 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
                     [1m[32massets/custom/img/charts-overview-background.png[39m[22m    8.43 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
+                    [1m[32massets/custom/img/charts-overview-background.jpg[39m[22m    23.9 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
                             [1m[32massets/custom/img/logo/TradeJS-large.png[39m[22m    71.8 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
-                           [1m[32massets/custom/img/logo/TradeJS-medium.png[39m[22m    71.8 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
                                    [1m[32massets/custom/js/backspace-fix.ts[39m[22m  650 bytes        [1m[39m[22m  [1m[32m[emitted][39m[22m         
-                                        [1m[32massets/custom/js/dropdown.ts[39m[22m  376 bytes        [1m[39m[22m  [1m[32m[emitted][39m[22m         
+                           [1m[32massets/custom/img/logo/TradeJS-medium.png[39m[22m    71.8 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
                                      [1m[32massets/custom/js/contextMenu.ts[39m[22m     2.3 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
-                                           [1m[32massets/sounds/success.mp3[39m[22m    24.2 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
-  [1m[32massets/vendor/css/bootstrap/fonts/glyphicons-halflings-regular.eot[39m[22m    20.1 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
+                                        [1m[32massets/custom/js/dropdown.ts[39m[22m  376 bytes        [1m[39m[22m  [1m[32m[emitted][39m[22m         
                                               [1m[32massets/sounds/fail.mp3[39m[22m     112 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
-             [1m[32massets/vendor/css/bootstrap/css/bootstrap.3.3.7.min.css[39m[22m     121 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
- [1m[32massets/vendor/css/bootstrap/fonts/glyphicons-halflings-regular.woff[39m[22m    23.4 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
-                                   [1m[32massets/vendor/css/jstree/32px.png[39m[22m    3.12 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
-[1m[32massets/vendor/css/bootstrap/fonts/glyphicons-halflings-regular.woff2[39m[22m      18 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
+  [1m[32massets/vendor/css/bootstrap/fonts/glyphicons-halflings-regular.eot[39m[22m    20.1 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
+                                           [1m[32massets/sounds/success.mp3[39m[22m    24.2 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
   [1m[32massets/vendor/css/bootstrap/fonts/glyphicons-halflings-regular.ttf[39m[22m    45.4 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
-                      [1m[32massets/vendor/css/jstree/default-dark/32px.png[39m[22m    1.56 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
+ [1m[32massets/vendor/css/bootstrap/fonts/glyphicons-halflings-regular.woff[39m[22m    23.4 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
+[1m[32massets/vendor/css/bootstrap/fonts/glyphicons-halflings-regular.woff2[39m[22m      18 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
+                                   [1m[32massets/vendor/css/jstree/32px.png[39m[22m    3.12 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
                                    [1m[32massets/vendor/css/jstree/40px.png[39m[22m    1.88 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
-  [1m[32massets/vendor/css/bootstrap/fonts/glyphicons-halflings-regular.svg[39m[22m     109 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
+                      [1m[32massets/vendor/css/jstree/default-dark/32px.png[39m[22m    1.56 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
                       [1m[32massets/vendor/css/jstree/default-dark/40px.png[39m[22m    5.72 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
-                 [1m[32massets/vendor/css/jstree/default-dark/style.min.css[39m[22m    29.7 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
+  [1m[32massets/vendor/css/bootstrap/fonts/glyphicons-halflings-regular.svg[39m[22m     109 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
                      [1m[32massets/vendor/css/jstree/default-dark/style.css[39m[22m    34.6 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
+                 [1m[32massets/vendor/css/jstree/default-dark/style.min.css[39m[22m    29.7 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
                   [1m[32massets/vendor/css/jstree/default-dark/throbber.gif[39m[22m    1.72 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
                            [1m[32massets/vendor/css/jstree/default/32px.png[39m[22m    3.12 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
                            [1m[32massets/vendor/css/jstree/default/40px.png[39m[22m    1.88 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
+             [1m[32massets/vendor/css/bootstrap/css/bootstrap.3.3.7.min.css[39m[22m     121 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
                           [1m[32massets/vendor/css/jstree/default/style.css[39m[22m    31.9 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
-                       [1m[32massets/vendor/css/jstree/default/throbber.gif[39m[22m    1.72 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
                       [1m[32massets/vendor/css/jstree/default/style.min.css[39m[22m    27.1 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
+                       [1m[32massets/vendor/css/jstree/default/throbber.gif[39m[22m    1.72 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
                        [1m[32massets/vendor/css/jstree/jstree.3.3.2.min.css[39m[22m    25.6 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
                         [1m[32mfontawesome-webfont.b06871f281fee6b241d6.ttf[39m[22m     166 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
                               [1m[32massets/vendor/css/jstree/style.min.css[39m[22m    26.2 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
@@ -63,7 +63,6 @@ Time: [1m84047[39m[22mms
                           [1m[32massets/vendor/js/ace/ext-language_tools.js[39m[22m    34.3 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
                                 [1m[32massets/vendor/js/ace/ext-modelist.js[39m[22m     3.7 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
                                   [1m[32massets/vendor/js/ace/ext-old_ie.js[39m[22m    11.8 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
-                                         [1m[33massets/vendor/js/ace/ace.js[39m[22m     [1m[33m493 kB[39m[22m        [1m[39m[22m  [1m[32m[emitted][39m[22m  [1m[33m[big][39m[22m  
                                [1m[32massets/vendor/js/ace/ext-searchbox.js[39m[22m    9.94 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
                            [1m[32massets/vendor/js/ace/ext-settings_menu.js[39m[22m    12.2 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
                               [1m[32massets/vendor/js/ace/ext-spellcheck.js[39m[22m    1.44 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
@@ -71,19 +70,20 @@ Time: [1m84047[39m[22mms
                         [1m[32massets/vendor/js/ace/ext-static_highlight.js[39m[22m    2.82 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
                                [1m[32massets/vendor/js/ace/ext-statusbar.js[39m[22m    1.09 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
                                 [1m[32massets/vendor/js/ace/ext-textarea.js[39m[22m    9.11 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
+                                         [1m[33massets/vendor/js/ace/ace.js[39m[22m     [1m[33m493 kB[39m[22m        [1m[39m[22m  [1m[32m[emitted][39m[22m  [1m[33m[big][39m[22m  
                                [1m[32massets/vendor/js/ace/ext-themelist.js[39m[22m    1.47 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
                               [1m[32massets/vendor/js/ace/ext-whitespace.js[39m[22m    2.57 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
                             [1m[32massets/vendor/js/ace/keybinding-emacs.js[39m[22m    24.4 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
                              [1m[32massets/vendor/js/ace/mode-javascript.js[39m[22m    18.1 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
-                              [1m[32massets/vendor/js/ace/keybinding-vim.js[39m[22m    96.8 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
                              [1m[32massets/vendor/js/ace/mode-typescript.js[39m[22m    20.2 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
                               [1m[32massets/vendor/js/ace/theme-ambiance.js[39m[22m    27.8 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
                  [1m[32massets/vendor/js/ace/theme-tomorrow_night_bright.js[39m[22m    3.49 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
-                        [1m[32massets/vendor/js/ace/theme-tomorrow_night.js[39m[22m    2.82 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
+                              [1m[32massets/vendor/js/ace/keybinding-vim.js[39m[22m    96.8 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
                               [1m[32massets/vendor/js/ace/theme-tomorrow.js[39m[22m    2.55 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
+                        [1m[32massets/vendor/js/ace/theme-tomorrow_night.js[39m[22m    2.82 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
                                  [1m[32massets/vendor/js/ace/worker-json.js[39m[22m    32.9 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
-                               [1m[32massets/vendor/js/ace/worker-coffee.js[39m[22m     191 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
                            [1m[32massets/vendor/js/ace/worker-javascript.js[39m[22m     164 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
+                               [1m[32massets/vendor/js/ace/worker-coffee.js[39m[22m     191 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
                                [1m[32massets/vendor/js/jquery/jquery.min.js[39m[22m    86.7 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
                            [1m[33massets/vendor/js/canvasjs/canvasjs.min.js[39m[22m     [1m[33m405 kB[39m[22m        [1m[39m[22m  [1m[32m[emitted][39m[22m  [1m[33m[big][39m[22m  
                                                          [1m[32mfavicon.ico[39m[22m    1.15 kB        [1m[39m[22m  [1m[32m[emitted][39m[22m         
@@ -773,18 +773,22 @@ Child [1msrc/app/components/backtest-settings/backtest-settings.component.html
                                                                                                                  [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
     [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/backtest-settings/backtest-settings.component.html[39m[22m  6.35 kB       [1m0[39m[22m  [1m[32m[39m[22m
     chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/backtest-settings/backtest-settings.component.html[39m[22m 3.86 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
-Child [1msrc/app/components/chart-box/chart-box.component.html[39m[22m:
-                                                                                                 [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
-    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/chart-box/chart-box.component.html[39m[22m  4.57 kB       [1m0[39m[22m  [1m[32m[39m[22m
-    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/chart-box/chart-box.component.html[39m[22m 2.09 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
 Child [1msrc/app/components/chart-overview/chart-overview.component.html[39m[22m:
                                                                                                            [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
     [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/chart-overview/chart-overview.component.html[39m[22m  8.26 kB       [1m0[39m[22m  [1m[32m[39m[22m
     chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/chart-overview/chart-overview.component.html[39m[22m 5.77 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
+Child [1msrc/app/components/chart-box/chart-box.component.html[39m[22m:
+                                                                                                 [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
+    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/chart-box/chart-box.component.html[39m[22m  4.57 kB       [1m0[39m[22m  [1m[32m[39m[22m
+    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/chart-box/chart-box.component.html[39m[22m 2.09 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
 Child [1msrc/app/components/dialog/dialog.component.html[39m[22m:
                                                                                            [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
     [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/dialog/dialog.component.html[39m[22m  7.08 kB       [1m0[39m[22m  [1m[32m[39m[22m
     chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/dialog/dialog.component.html[39m[22m 4.59 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
+Child [1msrc/app/components/file-tree/file-tree.component.html[39m[22m:
+                                                                                                 [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
+    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/file-tree/file-tree.component.html[39m[22m  2.62 kB       [1m0[39m[22m  [1m[32m[39m[22m
+    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/file-tree/file-tree.component.html[39m[22m 130 bytes[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
 Child [1msrc/app/components/intrument-list/instrument-list.component.html[39m[22m:
                                                                                                             [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
     [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/intrument-list/instrument-list.component.html[39m[22m  6.04 kB       [1m0[39m[22m  [1m[32m[39m[22m
@@ -793,18 +797,6 @@ Child [1msrc/app/components/jseditor/jseditor.component.html[39m[22m:
                                                                                                [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
     [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/jseditor/jseditor.component.html[39m[22m  2.67 kB       [1m0[39m[22m  [1m[32m[39m[22m
     chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/jseditor/jseditor.component.html[39m[22m 186 bytes[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
-Child [1msrc/app/components/file-tree/file-tree.component.html[39m[22m:
-                                                                                                 [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
-    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/file-tree/file-tree.component.html[39m[22m  2.62 kB       [1m0[39m[22m  [1m[32m[39m[22m
-    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/file-tree/file-tree.component.html[39m[22m 130 bytes[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
-Child [1msrc/app/components/login/login.component.html[39m[22m:
-                                                                                         [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
-    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/login/login.component.html[39m[22m  3.75 kB       [1m0[39m[22m  [1m[32m[39m[22m
-    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/login/login.component.html[39m[22m 1.26 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
-Child [1msrc/app/components/password-reset/password-reset.component.html[39m[22m:
-                                                                                                           [1mAsset[39m[22m    [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
-    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/password-reset/password-reset.component.html[39m[22m  3.6 kB       [1m0[39m[22m  [1m[32m[39m[22m
-    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/password-reset/password-reset.component.html[39m[22m 1.11 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
 Child [1msrc/app/components/social-feed/social.feed.component.html[39m[22m:
                                                                                                      [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
     [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/social-feed/social.feed.component.html[39m[22m  6.54 kB       [1m0[39m[22m  [1m[32m[39m[22m
@@ -813,22 +805,30 @@ Child [1msrc/app/components/channel-row/channel.row.component.html[39m[22m:
                                                                                                      [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
     [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/channel-row/channel.row.component.html[39m[22m  5.55 kB       [1m0[39m[22m  [1m[32m[39m[22m
     chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/channel-row/channel.row.component.html[39m[22m 3.07 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
-Child [1msrc/app/components/modal/modal.component.html[39m[22m:
+Child [1msrc/app/components/login/login.component.html[39m[22m:
                                                                                          [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
-    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/modal/modal.component.html[39m[22m  4.32 kB       [1m0[39m[22m  [1m[32m[39m[22m
-    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/modal/modal.component.html[39m[22m 1.83 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
+    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/login/login.component.html[39m[22m  3.75 kB       [1m0[39m[22m  [1m[32m[39m[22m
+    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/login/login.component.html[39m[22m 1.26 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
+Child [1msrc/app/components/password-reset/password-reset.component.html[39m[22m:
+                                                                                                           [1mAsset[39m[22m    [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
+    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/password-reset/password-reset.component.html[39m[22m  3.6 kB       [1m0[39m[22m  [1m[32m[39m[22m
+    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/password-reset/password-reset.component.html[39m[22m 1.11 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
 Child [1msrc/app/components/request-password-reset/request-password-reset.component.html[39m[22m:
                                                                                                                            [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
     [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/request-password-reset/request-password-reset.component.html[39m[22m  3.27 kB       [1m0[39m[22m  [1m[32m[39m[22m
     chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/request-password-reset/request-password-reset.component.html[39m[22m 788 bytes[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
-Child [1msrc/app/components/page-main/page.main.component.html[39m[22m:
-                                                                                                 [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
-    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/page-main/page.main.component.html[39m[22m  5.99 kB       [1m0[39m[22m  [1m[32m[39m[22m
-    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/page-main/page.main.component.html[39m[22m 3.51 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
 Child [1msrc/app/components/register/register.component.html[39m[22m:
                                                                                                [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
     [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/register/register.component.html[39m[22m  6.26 kB       [1m0[39m[22m  [1m[32m[39m[22m
     chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/register/register.component.html[39m[22m 3.77 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
+Child [1msrc/app/components/modal/modal.component.html[39m[22m:
+                                                                                         [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
+    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/modal/modal.component.html[39m[22m  4.32 kB       [1m0[39m[22m  [1m[32m[39m[22m
+    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/modal/modal.component.html[39m[22m 1.83 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
+Child [1msrc/app/components/page-main/page.main.component.html[39m[22m:
+                                                                                                 [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
+    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/page-main/page.main.component.html[39m[22m  5.99 kB       [1m0[39m[22m  [1m[32m[39m[22m
+    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/page-main/page.main.component.html[39m[22m 3.51 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
 Child [1msrc/app/components/channel-overview/channel-overview.component.html[39m[22m:
                                                                                                                [1mAsset[39m[22m    [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
     [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/channel-overview/channel-overview.component.html[39m[22m  8.3 kB       [1m0[39m[22m  [1m[32m[39m[22m
@@ -845,22 +845,22 @@ Child [1msrc/app/components/portfolio/portfolio.component.html[39m[22m:
                                                                                                  [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
     [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/portfolio/portfolio.component.html[39m[22m  13.9 kB       [1m0[39m[22m  [1m[32m[39m[22m
     chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/portfolio/portfolio.component.html[39m[22m 11.4 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
-Child [1msrc/app/components/channel-details-modal/channel.details.modal.component.html[39m[22m:
-                                                                                                                         [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
-    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/channel-details-modal/channel.details.modal.component.html[39m[22m  2.52 kB       [1m0[39m[22m  [1m[32m[39m[22m
-    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/channel-details-modal/channel.details.modal.component.html[39m[22m 34 bytes[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
 Child [1msrc/app/components/profile/profile.component.html[39m[22m:
                                                                                              [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
     [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/profile/profile.component.html[39m[22m  4.63 kB       [1m0[39m[22m  [1m[32m[39m[22m
     chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/profile/profile.component.html[39m[22m 2.15 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
-Child [1msrc/app/components/settings/settings.component.html[39m[22m:
-                                                                                               [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
-    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/settings/settings.component.html[39m[22m  11.1 kB       [1m0[39m[22m  [1m[32m[39m[22m
-    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/settings/settings.component.html[39m[22m 8.64 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
 Child [1msrc/app/components/profile-channel-overview/profile.channel.overview.component.html[39m[22m:
                                                                                                                                [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
     [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/profile-channel-overview/profile.channel.overview.component.html[39m[22m  4.94 kB       [1m0[39m[22m  [1m[32m[39m[22m
     chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/profile-channel-overview/profile.channel.overview.component.html[39m[22m 2.45 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
+Child [1msrc/app/components/settings/settings.component.html[39m[22m:
+                                                                                               [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
+    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/settings/settings.component.html[39m[22m  11.1 kB       [1m0[39m[22m  [1m[32m[39m[22m
+    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/settings/settings.component.html[39m[22m 8.64 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
+Child [1msrc/app/components/channel-details-modal/channel.details.modal.component.html[39m[22m:
+                                                                                                                         [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
+    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/channel-details-modal/channel.details.modal.component.html[39m[22m  2.52 kB       [1m0[39m[22m  [1m[32m[39m[22m
+    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/channel-details-modal/channel.details.modal.component.html[39m[22m 34 bytes[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
 Child [1msrc/app/components/comment-box/comment-box.component.html[39m[22m:
                                                                                                      [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
     [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/comment-box/comment-box.component.html[39m[22m  3.94 kB       [1m0[39m[22m  [1m[32m[39m[22m
@@ -886,34 +886,18 @@ Child [1msrc/app/app.component.scss[39m[22m:
                                                                       [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
     [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/app.component.scss[39m[22m  23.8 kB       [1m0[39m[22m  [1m[32m[39m[22m
     chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/app.component.scss[39m[22m 21.3 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
-Child [1msrc/app/components/backtest-settings/backtest-settings.component.scss[39m[22m:
-                                                                                                                 [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
-    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/backtest-settings/backtest-settings.component.scss[39m[22m  47.1 kB       [1m0[39m[22m  [1m[32m[39m[22m
-    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/backtest-settings/backtest-settings.component.scss[39m[22m 44.5 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
-Child [1msrc/app/components/backtest-report/backtest-report.component.scss[39m[22m:
-                                                                                                             [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
-    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/backtest-report/backtest-report.component.scss[39m[22m  14.8 kB       [1m0[39m[22m  [1m[32m[39m[22m
-    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/backtest-report/backtest-report.component.scss[39m[22m 12.3 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
-Child [1msrc/app/components/dialog/dialog.component.scss[39m[22m:
-                                                                                           [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
-    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/dialog/dialog.component.scss[39m[22m  21.7 kB       [1m0[39m[22m  [1m[32m[39m[22m
-    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/dialog/dialog.component.scss[39m[22m 19.1 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
 Child [1msrc/app/components/backtest/backtest.component.scss[39m[22m:
                                                                                                [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
     [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/backtest/backtest.component.scss[39m[22m  15.2 kB       [1m0[39m[22m  [1m[32m[39m[22m
     chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/backtest/backtest.component.scss[39m[22m 12.7 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
+Child [1msrc/app/components/backtest-report/backtest-report.component.scss[39m[22m:
+                                                                                                             [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
+    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/backtest-report/backtest-report.component.scss[39m[22m  14.8 kB       [1m0[39m[22m  [1m[32m[39m[22m
+    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/backtest-report/backtest-report.component.scss[39m[22m 12.3 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
 Child [1msrc/app/components/chart-box/chart-box.component.scss[39m[22m:
                                                                                                  [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
     [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/chart-box/chart-box.component.scss[39m[22m  7.81 kB       [1m0[39m[22m  [1m[32m[39m[22m
     chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/chart-box/chart-box.component.scss[39m[22m 5.28 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
-Child [1msrc/app/components/jseditor/jseditor.component.scss[39m[22m:
-                                                                                               [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
-    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/jseditor/jseditor.component.scss[39m[22m  5.54 kB       [1m0[39m[22m  [1m[32m[39m[22m
-    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/jseditor/jseditor.component.scss[39m[22m 3.01 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
-Child [1msrc/app/components/intrument-list/instrument-list.component.scss[39m[22m:
-                                                                                                            [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
-    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/intrument-list/instrument-list.component.scss[39m[22m  7.07 kB       [1m0[39m[22m  [1m[32m[39m[22m
-    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/intrument-list/instrument-list.component.scss[39m[22m 4.54 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
 Child [1msrc/app/components/chart-overview/chart-overview.component.scss[39m[22m:
                                                                                                            [1mAsset[39m[22m    [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
     [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/chart-overview/chart-overview.component.scss[39m[22m  9.7 kB       [1m0[39m[22m  [1m[32m[39m[22m
@@ -922,74 +906,90 @@ Child [1msrc/app/components/file-tree/file-tree.component.scss[39m[22m:
                                                                                                  [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
     [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/file-tree/file-tree.component.scss[39m[22m  5.31 kB       [1m0[39m[22m  [1m[32m[39m[22m
     chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/file-tree/file-tree.component.scss[39m[22m 2.77 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
+Child [1msrc/app/components/dialog/dialog.component.scss[39m[22m:
+                                                                                           [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
+    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/dialog/dialog.component.scss[39m[22m  21.7 kB       [1m0[39m[22m  [1m[32m[39m[22m
+    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/dialog/dialog.component.scss[39m[22m 19.1 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
+Child [1msrc/app/components/backtest-settings/backtest-settings.component.scss[39m[22m:
+                                                                                                                 [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
+    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/backtest-settings/backtest-settings.component.scss[39m[22m  47.1 kB       [1m0[39m[22m  [1m[32m[39m[22m
+    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/backtest-settings/backtest-settings.component.scss[39m[22m 44.5 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
+Child [1msrc/app/components/jseditor/jseditor.component.scss[39m[22m:
+                                                                                               [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
+    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/jseditor/jseditor.component.scss[39m[22m  5.54 kB       [1m0[39m[22m  [1m[32m[39m[22m
+    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/jseditor/jseditor.component.scss[39m[22m 3.01 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
+Child [1msrc/app/components/intrument-list/instrument-list.component.scss[39m[22m:
+                                                                                                            [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
+    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/intrument-list/instrument-list.component.scss[39m[22m  7.07 kB       [1m0[39m[22m  [1m[32m[39m[22m
+    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/intrument-list/instrument-list.component.scss[39m[22m 4.54 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
 Child [1msrc/app/components/social-feed/social.feed.component.scss[39m[22m:
                                                                                                      [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
     [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/social-feed/social.feed.component.scss[39m[22m  8.52 kB       [1m0[39m[22m  [1m[32m[39m[22m
     chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/social-feed/social.feed.component.scss[39m[22m 5.99 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
-Child [1msrc/app/components/password-reset/password-reset.component.scss[39m[22m:
-                                                                                                           [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
-    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/password-reset/password-reset.component.scss[39m[22m  36.6 kB       [1m0[39m[22m  [1m[32m[39m[22m
-    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/password-reset/password-reset.component.scss[39m[22m 34 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
-Child [1msrc/app/components/login/login.component.scss[39m[22m:
-                                                                                         [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
-    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/login/login.component.scss[39m[22m  36.6 kB       [1m0[39m[22m  [1m[32m[39m[22m
-    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/login/login.component.scss[39m[22m 34 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
-Child [1msrc/app/components/request-password-reset/request-password-reset.component.scss[39m[22m:
-                                                                                                                           [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
-    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/request-password-reset/request-password-reset.component.scss[39m[22m  36.6 kB       [1m0[39m[22m  [1m[32m[39m[22m
-    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/request-password-reset/request-password-reset.component.scss[39m[22m 34 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
 Child [1msrc/app/components/channel-row/channel.row.component.scss[39m[22m:
                                                                                                      [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
     [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/channel-row/channel.row.component.scss[39m[22m  6.41 kB       [1m0[39m[22m  [1m[32m[39m[22m
     chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/channel-row/channel.row.component.scss[39m[22m 3.88 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
-Child [1msrc/app/components/page-main/page.main.component.scss[39m[22m:
-                                                                                                 [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
-    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/page-main/page.main.component.scss[39m[22m  14.6 kB       [1m0[39m[22m  [1m[32m[39m[22m
-    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/page-main/page.main.component.scss[39m[22m 12 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
+Child [1msrc/app/components/login/login.component.scss[39m[22m:
+                                                                                         [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
+    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/login/login.component.scss[39m[22m  36.6 kB       [1m0[39m[22m  [1m[32m[39m[22m
+    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/login/login.component.scss[39m[22m 34 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
+Child [1msrc/app/components/password-reset/password-reset.component.scss[39m[22m:
+                                                                                                           [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
+    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/password-reset/password-reset.component.scss[39m[22m  36.6 kB       [1m0[39m[22m  [1m[32m[39m[22m
+    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/password-reset/password-reset.component.scss[39m[22m 34 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
+Child [1msrc/app/components/request-password-reset/request-password-reset.component.scss[39m[22m:
+                                                                                                                           [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
+    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/request-password-reset/request-password-reset.component.scss[39m[22m  36.6 kB       [1m0[39m[22m  [1m[32m[39m[22m
+    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/request-password-reset/request-password-reset.component.scss[39m[22m 34 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
 Child [1msrc/app/components/modal/modal.component.scss[39m[22m:
                                                                                          [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
     [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/modal/modal.component.scss[39m[22m  8.63 kB       [1m0[39m[22m  [1m[32m[39m[22m
     chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/modal/modal.component.scss[39m[22m 6.1 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
+Child [1msrc/app/components/page-main/page.main.component.scss[39m[22m:
+                                                                                                 [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
+    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/page-main/page.main.component.scss[39m[22m  14.6 kB       [1m0[39m[22m  [1m[32m[39m[22m
+    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/page-main/page.main.component.scss[39m[22m 12 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
 Child [1msrc/app/components/channel-overview/channel-overview.component.scss[39m[22m:
                                                                                                                [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
     [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/channel-overview/channel-overview.component.scss[39m[22m  14.7 kB       [1m0[39m[22m  [1m[32m[39m[22m
     chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/channel-overview/channel-overview.component.scss[39m[22m 12.1 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
-Child [1msrc/app/components/alert/alert.component.scss[39m[22m:
-                                                                                         [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
-    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/alert/alert.component.scss[39m[22m  8.78 kB       [1m0[39m[22m  [1m[32m[39m[22m
-    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/alert/alert.component.scss[39m[22m 6.24 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
-Child [1msrc/app/components/user-overview/user.overview.component.scss[39m[22m:
-                                                                                                         [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
-    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/user-overview/user.overview.component.scss[39m[22m  14.8 kB       [1m0[39m[22m  [1m[32m[39m[22m
-    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/user-overview/user.overview.component.scss[39m[22m 12.3 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
 Child [1msrc/app/components/register/register.component.scss[39m[22m:
                                                                                                [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
     [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/register/register.component.scss[39m[22m  39.1 kB       [1m0[39m[22m  [1m[32m[39m[22m
     chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/register/register.component.scss[39m[22m 36.5 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
+Child [1msrc/app/components/alert/alert.component.scss[39m[22m:
+                                                                                         [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
+    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/alert/alert.component.scss[39m[22m  8.78 kB       [1m0[39m[22m  [1m[32m[39m[22m
+    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/alert/alert.component.scss[39m[22m 6.24 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
 Child [1msrc/app/components/profile/profile.component.scss[39m[22m:
                                                                                              [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
     [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/profile/profile.component.scss[39m[22m  6.56 kB       [1m0[39m[22m  [1m[32m[39m[22m
     chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/profile/profile.component.scss[39m[22m 4.03 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
-Child [1msrc/app/components/channel-details-modal/channel.details.modal.component.scss[39m[22m:
-                                                                                                                         [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
-    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/channel-details-modal/channel.details.modal.component.scss[39m[22m  8.76 kB       [1m0[39m[22m  [1m[32m[39m[22m
-    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/channel-details-modal/channel.details.modal.component.scss[39m[22m 6.23 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
-Child [1msrc/app/components/settings/settings.component.scss[39m[22m:
-                                                                                               [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
-    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/settings/settings.component.scss[39m[22m  15.1 kB       [1m0[39m[22m  [1m[32m[39m[22m
-    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/settings/settings.component.scss[39m[22m 12.6 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
+Child [1msrc/app/components/user-overview/user.overview.component.scss[39m[22m:
+                                                                                                         [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
+    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/user-overview/user.overview.component.scss[39m[22m  14.8 kB       [1m0[39m[22m  [1m[32m[39m[22m
+    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/user-overview/user.overview.component.scss[39m[22m 12.3 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
 Child [1msrc/app/components/portfolio/portfolio.component.scss[39m[22m:
                                                                                                  [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
     [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/portfolio/portfolio.component.scss[39m[22m  19.2 kB       [1m0[39m[22m  [1m[32m[39m[22m
     chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/portfolio/portfolio.component.scss[39m[22m 16.7 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
-Child [1msrc/app/components/comment-box/comment-box.component.scss[39m[22m:
-                                                                                                     [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
-    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/comment-box/comment-box.component.scss[39m[22m  6.88 kB       [1m0[39m[22m  [1m[32m[39m[22m
-    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/comment-box/comment-box.component.scss[39m[22m 4.34 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
+Child [1msrc/app/components/channel-details-modal/channel.details.modal.component.scss[39m[22m:
+                                                                                                                         [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
+    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/channel-details-modal/channel.details.modal.component.scss[39m[22m  8.76 kB       [1m0[39m[22m  [1m[32m[39m[22m
+    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/channel-details-modal/channel.details.modal.component.scss[39m[22m 6.23 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
 Child [1msrc/app/components/profile-channel-overview/profile.channel.overview.component.scss[39m[22m:
                                                                                                                                [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
     [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/profile-channel-overview/profile.channel.overview.component.scss[39m[22m  37.6 kB       [1m0[39m[22m  [1m[32m[39m[22m
     chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/profile-channel-overview/profile.channel.overview.component.scss[39m[22m 35.1 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
+Child [1msrc/app/components/comment-box/comment-box.component.scss[39m[22m:
+                                                                                                     [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
+    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/comment-box/comment-box.component.scss[39m[22m  6.88 kB       [1m0[39m[22m  [1m[32m[39m[22m
+    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/comment-box/comment-box.component.scss[39m[22m 4.34 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
+Child [1msrc/app/components/settings/settings.component.scss[39m[22m:
+                                                                                               [1mAsset[39m[22m     [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m[1m[39m[22m[1mChunk Names[39m[22m
+    [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/settings/settings.component.scss[39m[22m  15.1 kB       [1m0[39m[22m  [1m[32m[39m[22m
+    chunk    {[1m[33m0[39m[22m} [1m[32m/Users/kewinbrandsma/Projects/TradeJS/client/src/app/components/settings/settings.component.scss[39m[22m 12.6 kB[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
 [0m[0m
 [0m[1m[33mWARNING in main.9048eb0fc7eb2a8f27ce.bundle.js from UglifyJs[39m[22m[0m
 [0m[1m[33mCondition always true [main.9048eb0fc7eb2a8f27ce.bundle.js:23,4][39m[22m[0m

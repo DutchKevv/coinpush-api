@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "./node_modules/.bin/tsc-watch --onSuccess \"node index.js\"",
+    "prod": "node index.js",
     "build": "tsc"
   },
   "author": "",
