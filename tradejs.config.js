@@ -2,23 +2,19 @@ const path = require('path');
 
 let domain;
 
-if (process.env.NODE_ENV === 'prod')
-    domain = {
-        host: 'http://149.210.227.14',
-        apiUrl: 'http://149.210.227.14:3100',
-        port: 3100
-    };
+// if (process.env.NODE_ENV === 'prod')
+//     domain = {
+//         host: 'http://149.210.227.14',
+//         apiUrl: 'http://149.210.227.14:3100',
+//         port: 3100
+//     };
 
-else
+// else
     domain = {
         host: 'http://localhost',
         apiUrl: 'http://localhost:3100',
         port: 3100
     };
-
-setInterval(() => {
-    console.log(domain, process.env.NODE_ENV);
-}, 1000);
 
 module.exports = {
     domain,
