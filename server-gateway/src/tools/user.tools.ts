@@ -9,7 +9,7 @@ const argv = minimist(process.argv.slice(2));
 
 module.exports = {
 
-	async addFakeUsers(count) {
+	async addFakeUsers(count: number = 20) {
 		let i = count;
 
 		while (i--) {
@@ -92,6 +92,10 @@ if (argv['check-user']) {
 
 if (argv['sync-user']) {
 	module.exports.syncUser(argv['sync-user']).catch(console.error);
+}
+
+if (argv['add-fake-users']) {
+	module.exports.addFakeUsers(argv['add-fake-users']).catch(console.error);
 }
 
 // module.exports.addFakeUsers(5).then(() => process.exit(0)).catch(console.error);
