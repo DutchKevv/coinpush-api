@@ -98,6 +98,8 @@ app.use(expressJwt({
  * websocket
  */
 server.on('upgrade', (req, socket, head) => {
+	console.log(config.server.oldApi.apiUrl);
+	
 	switch (parse(req.url).pathname) {
 		case '/ws/general/':
 			proxy.ws(req, socket, head, { target: config.server.oldApi.apiUrl });
