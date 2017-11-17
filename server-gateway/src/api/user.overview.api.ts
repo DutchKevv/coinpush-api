@@ -8,7 +8,7 @@ const router = Router();
  */
 router.get('/', async (req, res, next) => {
 	try {
-		res.send(await userOverviewController.getOverview(req.user, {}));
+		res.send(await userOverviewController.getOverview(req.user, req.query));
 	} catch (error) {
 		console.error(error);
 		next(error);

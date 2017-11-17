@@ -9,7 +9,8 @@ export default class MyEA extends EA implements IEA {
 	MA2: any;
 	MA3: any;
 	MA4: any;
-
+	
+	
 	public async onInit(): Promise<any> {
 
 		this.MA1 = this.addIndicator('MA', {

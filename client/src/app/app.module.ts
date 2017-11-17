@@ -52,6 +52,8 @@ import {CommentService} from "./services/comment.service";
 import {PasswordResetComponent} from "./components/password-reset/password-reset.component";
 import {RequestPasswordResetComponent} from "./components/request-password-reset/request-password-reset.component";
 import {BootstrapService} from "./services/bootstrap.service";
+import { TypescriptCompilerService } from './services/typescript.compiler.service';
+import { WebworkerService } from './services/code.runner.service';
 
 @NgModule({
 	declarations: [
@@ -106,6 +108,8 @@ import {BootstrapService} from "./services/bootstrap.service";
 		ChannelService,
 		CommentService,
 		BootstrapService,
+		TypescriptCompilerService,
+		WebworkerService,
 
 		{provide: OrderService, useClass: OrderService},
 		{provide: ConstantsService, useClass: ConstantsService},

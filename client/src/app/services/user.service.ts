@@ -35,8 +35,8 @@ export class UserService {
 		return this._http.get('/user/' + id, {params: options}).map((res: Response) => new UserModel(res.json()));
 	}
 
-	getOverview() {
-		return this._http.get('/user-overview').map((res: Response) => res.json().editorChoice.map(user => new UserModel(user)));
+	getOverview(options: any = {}) {
+		return this._http.get('/user-overview', {params: options}).map((res: Response) => res.json().editorChoice.map(user => new UserModel(user)));
 	}
 
 	create(user) {

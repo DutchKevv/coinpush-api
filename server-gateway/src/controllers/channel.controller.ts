@@ -33,10 +33,11 @@ export const channelController = {
 		return undefined;
 	},
 
-	findMany(reqUser: IReqUser, params): Promise<Array<any>> {
+	findMany(reqUser: IReqUser, params: any = {}): Promise<Array<any>> {
 		return request({
 			uri: config.server.channel.apiUrl + '/channel',
 			headers: {'_id': reqUser.id},
+			qs: params,
 			json: true
 		});
 	},

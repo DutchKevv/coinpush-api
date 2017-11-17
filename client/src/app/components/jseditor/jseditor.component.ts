@@ -1,4 +1,4 @@
-import {FileTreeComponent} from '../file-tree/file-tree.component';
+import { FileTreeComponent } from '../file-tree/file-tree.component';
 
 declare var ace: any;
 declare var $: any;
@@ -7,7 +7,9 @@ import {
 	Component, AfterViewInit, ElementRef, ViewEncapsulation, NgZone, ChangeDetectorRef,
 	ViewChild
 } from '@angular/core';
-import {SocketService} from '../../services/socket.service';
+import { SocketService } from '../../services/socket.service';
+import { TypescriptCompilerService } from '../../services/typescript.compiler.service';
+import { WebworkerService } from '../../services/code.runner.service';
 // import '../../../assets/vendor/js/ace/ace.js';
 // import '../../../assets/vendor/js/ace/theme-tomorrow_night_bright.js';
 
@@ -38,9 +40,11 @@ export class JSEditorComponent implements AfterViewInit {
 	private _fileTreeSubscription;
 
 	constructor(private _zone: NgZone,
-				private _ref: ChangeDetectorRef,
-				private _socketService: SocketService,
-				private _elementRef: ElementRef) {}
+		private _ref: ChangeDetectorRef,
+		private _webworkerService: WebworkerService,
+		private _socketService: SocketService,
+		private _typescriptCompileService: TypescriptCompilerService,
+		private _elementRef: ElementRef) { }
 
 	ngAfterViewInit() {
 		this._$el = $(this._elementRef.nativeElement);
@@ -117,7 +121,7 @@ export class JSEditorComponent implements AfterViewInit {
 	loadFile(id: any, focus = true) {
 		this.currentFile = id;
 
-		this._socketService.send('file:load', {id: id}, (err: any, result: any) => {
+		this._socketService.send('file:load', { id: id }, (err: any, result: any) => {
 			try {
 				this.editor.session.setValue(result || '');
 
@@ -140,22 +144,32 @@ export class JSEditorComponent implements AfterViewInit {
 
 	saveFile() {
 		return new Promise((resolve, reject) => {
-			if (!this.editor.session.getUndoManager().isClean()) {
-				this.editor.session.getUndoManager().markClean();
 
-				let content = this.editor.getValue();
+			if (this.editor.session.getUndoManager().isClean())
+				resolve();
 
-				this._socketService.send('file:save', {path: this.currentFile, content: content}, (err) => {
-					if (err) {
-						this.showBanner('error', 'File not saved: ' + err);
-						return reject();
-					}
+			this.editor.session.getUndoManager().markClean();
 
-					this.showBanner('success', 'File saved');
-					this._ref.markForCheck();
-					resolve();
-				});
-			}
+			let content = this.editor.getValue();
+
+
+			const jsStrings = this._typescriptCompileService.compile([content]);
+
+			this._webworkerService.evalAsync(jsStrings[0].outputText)
+				.then(result => console.log(result))
+				.catch(reason => console.error(reason));
+
+			this._socketService.send('file:save', { path: this.currentFile, content: content }, (err) => {
+				if (err) {
+					this.showBanner('error', 'File not saved: ' + err);
+					return reject();
+				}
+
+				this.showBanner('success', 'File saved');
+				this._ref.markForCheck();
+				resolve();
+			});
+
 		});
 	}
 

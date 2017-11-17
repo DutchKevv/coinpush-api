@@ -5,6 +5,7 @@ import {Subject} from 'rxjs/Subject';
 import {CacheService} from '../../services/cache.service';
 import {UserService} from '../../services/user.service';
 import {SymbolModel} from "../../models/symbol.model";
+import { TypescriptCompilerService } from '../../services/typescript.compiler.service';
 
 @Component({
 	selector: 'page-main',
@@ -23,6 +24,7 @@ export class PageMainComponent {
 				private _http: Http,
 				private _cacheService: CacheService,
 				private _authenticationService: AuthenticationService) {
+
 	}
 
 	public onSearchKeyUp(event): void {
