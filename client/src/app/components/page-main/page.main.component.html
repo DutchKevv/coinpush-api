@@ -1,4 +1,4 @@
-<nav class="nav-main">
+<nav class="nav-main" id="sidebar" #navbar>
     <a [routerLink]="['/main/user/', userService.model.get('user_id')]" [routerLinkActive]="['active']" class="profile">
         <img class="logo" width="70" height="70" src="{{(userService.model.options$ | async).profileImg}}">
         <h4>{{userService.model.options.name}}</h4>
@@ -15,6 +15,10 @@
     <a [routerLink]="['/main/news']" [routerLinkActive]="['active']">
         <i class="fa fa-newspaper-o"></i>
         <span>News feed</span>
+    </a>
+    <a [routerLink]="['/main/calender']" [routerLinkActive]="['active']">
+        <i class="fa fa-calendar"></i>
+        <span>Calender</span>
     </a>
     <a [routerLink]="['/main/user']" [routerLinkActive]="['active']">
         <i class="fa fa-users"></i>
@@ -40,11 +44,16 @@
         <i class="fa fa-sign-out"></i>
         <span>Logout</span>
     </a>
+    
 </nav>
+
+<div (click)="onClickOverlay()" class="nav-overlay"></div>
 
 <main class="main-container">
     <header>
-        <div class="account-details" *ngIf="userService.accountStatus$ | async as status">
+        <i (click)="collapseNav($event)" class="fa fa-navicon hidden-lg-up" ></i>
+        <i *ngIf="['/main/portfolio', '/main/charts', '/main/user'].includes(router.url)" (click)="collapseNav($event)" class="fa fa-filter hidden-lg-up"></i>
+        <div class="account-details hidden-xs-down" *ngIf="userService.accountStatus$ | async as status">
             <div>
                 <h3>{{status.available | currency : 'EUR':'symbol'}}</h3>
                 <span>available</span>
@@ -61,18 +70,18 @@
                 <h3 [ngClass]="{'positive': status.profit > 0, 'negative': status.profit < 0}">{{status.profit | currency : 'EUR':'symbol'}}</h3>
                 <span>profit</span>
             </div>
-            <div class="header-search">
-                <input (keyup)="onSearchKeyUp($event)" placeholder="Markets / Channels / People" #input>
-                <div class="search-drop-down" *ngIf="(searchResults$ | async) as result" (click)="onClickDropdownItem()" #dropdown>
-                    <a *ngFor="let symbol of result.symbols" [routerLink]="['/main/charts', symbol.name]">
-                        <img src="/images/default/symbol/spx500-70x70.png">
-                        <span>{{symbol.name}}</span>
-                    </a>
-                    <a *ngFor="let user of result.users" [routerLink]="['/main/user/', user.user_id]">
-                        <img src="{{user.profileImg}}">
-                        <span>{{user.name}}</span>
-                    </a>
-                </div>
+        </div>
+        <div class="header-search">
+            <input (keyup)="onSearchKeyUp($event)" placeholder="Markets / Channels / People" #input>
+            <div class="search-drop-down" *ngIf="(searchResults$ | async) as result" (click)="onClickDropdownItem()" #dropdown>
+                <a *ngFor="let symbol of result.symbols" [routerLink]="['/main/charts', symbol.name]">
+                    <img src="/images/default/symbol/spx500-70x70.png">
+                    <span>{{symbol.name}}</span>
+                </a>
+                <a *ngFor="let user of result.users" [routerLink]="['/main/user/', user.user_id]">
+                    <img src="{{user.profileImg}}">
+                    <span>{{user.name}}</span>
+                </a>
             </div>
         </div>
     </header>

@@ -1,3 +1,6 @@
+@import '~bootstrap/scss/_variables';
+@import '~bootstrap/scss/_mixins';
+@import '~bootstrap/scss/utilities/_visibility';
 @import '../../style/variables/variables';
 
 :host {
@@ -14,9 +17,28 @@
 }
 
 .filter-list {
+	background: black;
 	width: 200px;
 	overflow: auto;
 	margin: 5px;
+
+	transition: transform .2s ease-in-out;
+
+	@media only screen and (max-width : 768px) {
+        position: absolute;
+        top: 0;
+        transform: translateX(-250px);
+        bottom: 0;
+        z-index: 1001;
+
+        &.show {
+            transform: translateX(0);
+
+            + .nav-overlay {
+                display: block;
+            }
+        }
+	}
 
 	a {
 		padding-left: 20px;
@@ -35,46 +57,68 @@
 	flex-flow: column;
 }
 
-table {
-	table-layout: fixed;
-	font-size: 12px;
+.table-header {
+	font-size: 14px;
+	background: $background-light3;
+	color: white;
+	justify-content: space-around;
+	display: flex;
 
-	&.table-header {
+	> div {
+		padding: 6px 0;
+	}
+}
+
+.table-mobile-header {
+	font-size: 26px;
+	background: $background-light3;
+	color: white;
+	padding-left: 20px;
+}
+
+ul {
+	overflow: auto;
+	height: 100%;
+	
+	li {
+		border-bottom: 1px solid $border-color-grey;
 		font-size: 14px;
-		background: $background-light3;
-	}
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: flex-start;
+		align-items: center;
 
-	&.table-content {
-		tr {
-			border-bottom: 1px solid $border-color-grey;
-			font-size: 14px;
-			&.active,
-			&:hover {
-				background: #6f748e;
-				cursor: pointer;
+		&.active,
+		&:hover {
+			background: #6f748e;
+			cursor: pointer;
+		}
+
+		@media only screen and (min-width : 768px) { 
+			justify-content: space-between;
+		}
+
+		> div {
+			padding: 6px 0 0 6px;
+			flex: 0 1 46%;
+			font-size: 12px;
+			
+			@media only screen and (min-width : 768px) { 
+				flex: initial;
 			}
-		}
 
-		td {
-			padding-left: 10px;
-		}
-	}
-
-	th,
-	td {
-		padding: 4px;
-
-		&:last-child {
-			width: 90px;
-
-			i {
-				color: $font-color-light;
-				margin-right: 10px;
-				font-size: 16px;
-
-				&.active,
-				&:hover {
-					color: $general-active;
+			&:last-child {
+				width: 90px;
+	
+				i {
+					color: $font-color-light;
+					margin-right: 10px;
+					font-size: 16px;
+	
+					&.active,
+					&:hover {
+						color: $general-active;
+					}
 				}
 			}
 		}

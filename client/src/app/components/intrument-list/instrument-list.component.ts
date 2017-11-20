@@ -1,6 +1,6 @@
 import {
 	Component, ChangeDetectionStrategy, ViewEncapsulation, Output, EventEmitter, OnInit,
-	OnDestroy, ElementRef, AfterViewInit
+	OnDestroy, ElementRef, AfterViewInit, ViewChild
 } from '@angular/core';
 import {CacheService} from '../../services/cache.service';
 import {ConstantsService} from "../../services/constants.service";
@@ -22,6 +22,7 @@ import {ActivatedRoute} from "@angular/router";
 export class InstrumentListComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	@Output() activeSymbolChange = new EventEmitter<SymbolModel>();
+	@ViewChild('navbar') navbar: ElementRef;
 
 	public activeSymbol: SymbolModel;
 	public activeFilter: string = 'all';
@@ -91,6 +92,15 @@ export class InstrumentListComponent implements OnInit, AfterViewInit, OnDestroy
 		event.stopPropagation();
 
 		this._orderService.create({symbol, side, amount: 1});
+	}
+
+	public collapseNav(event?, state?: boolean) {
+		if (event) {
+			event.preventDefault();
+			event.stopPropagation();
+		}
+
+		this.navbar.nativeElement.classList.toggle('show', state);
 	}
 
 	private _scrollIntoView(symbol: SymbolModel) {

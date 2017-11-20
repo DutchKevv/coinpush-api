@@ -2,6 +2,7 @@
 
 @import '~bootstrap/scss/_variables';
 @import '~bootstrap/scss/_mixins';
+@import '~bootstrap/scss/_grid';
 @import '~bootstrap/scss/_buttons';
 @import '~bootstrap/scss/utilities/_clearfix';
 @import '../../style/variables/variables';
@@ -17,18 +18,13 @@
 	height: 100%;
 	width: 100%;
 	padding: 20px;
-	box-sizing: border-box;
-	display: block;
-	position: relative;
+	display: flex;
+	flex-flow: column;
+	overflow: auto;
 }
-.scroll-container {
-	overflow-y: auto;
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	padding: 20px;
+
+form.container {
+	margin: 0;
 }
 
 .headline-header {
@@ -46,10 +42,6 @@
 		position: absolute;
 		bottom: 0;
 	}
-}
-
-form {
-	max-width: 50%;
 }
 
 .form-box-row {

@@ -54,6 +54,7 @@ import {RequestPasswordResetComponent} from "./components/request-password-reset
 import {BootstrapService} from "./services/bootstrap.service";
 import { TypescriptCompilerService } from './services/typescript.compiler.service';
 import { WebworkerService } from './services/code.runner.service';
+import { EventOverviewComponent } from './components/event-overview/event-overview.component';
 
 @NgModule({
 	declarations: [
@@ -65,6 +66,7 @@ import { WebworkerService } from './services/code.runner.service';
 		ChartOverviewComponent,
 		DialogAnchorDirective,
 		DialogComponent,
+		EventOverviewComponent,
 		FileTreeComponent,
 		GroupIdsPipe,
 		ParseCommentContentPipe,

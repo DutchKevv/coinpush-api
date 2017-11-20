@@ -3,6 +3,7 @@
 @import '~bootstrap/scss/_variables';
 @import '~bootstrap/scss/_mixins';
 @import '~bootstrap/scss/_buttons';
+@import '~bootstrap/scss/utilities/_visibility';
 @import '~bootstrap/scss/utilities/_clearfix';
 @import '../../style/variables/variables';
 
@@ -17,7 +18,8 @@
     width: 100%;
     padding: 20px;
     box-sizing: border-box;
-    display: block;
+    display: flex;
+    flex-flow: column;
 }
 
 .filter-options {
@@ -55,15 +57,6 @@
     }
 }
 
-.scroll-container {
-    overflow-y: auto;
-    position: absolute;
-    top: 80px;
-    left: 0;
-    right: 0;
-    bottom: 0;
-}
-
 .item-row-header {
     border-bottom: 1px solid white;
     color: #ddd;
@@ -97,6 +90,7 @@
     width: 300px;
     min-width: 300px;
     margin: 0 20px;
+    height: 300px;
 
     header {
         width: 100%;

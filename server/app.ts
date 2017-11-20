@@ -210,7 +210,7 @@ export default class App extends Base {
 				require('./api/socket/instrument')(this, socket);
 
 				// TODO: Should not be required, client should ask for status
-				socket.emit('system:state', this.controllers.system.state);
+				// socket.emit('system:state', this.controllers.system.state);
 
 				this.debug('info', 'Connected to server');
 			});

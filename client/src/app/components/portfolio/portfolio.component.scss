@@ -14,18 +14,21 @@
     width: 100%;
     box-sizing: border-box;
     position: relative;
+    display: flex;
 }
 
 .order-table {
     width: 100%;
     color: $font-color-light;
     font-weight: bold;
-    padding: 20px;
     box-sizing: border-box;
+
+    @media only screen and (min-width : 768px) {
+        padding: 20px;
+    }
 
     .negative {
         color: $general-error;
-
     }
 
     .positive {

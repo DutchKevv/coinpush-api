@@ -16,11 +16,11 @@
                  #row>
                 <div class="row-container">
                     <!--*ngIf="(row.options$ | async) as options"-->
-                    <div><img src="/images/default/symbol/spx500-70x70.png" width="70" height="70" align="left"><span>{{position.key}}</span></div>
+                    <div><img src="/images/default/symbol/spx500-70x70.png" width="40" height="40" align="left"><span>{{position.key}}</span></div>
                     <div><span>{{position.amount}}</span></div>
-                    <div>{{position.invested | currency : 'EUR':true}}</div>
-                    <div>{{position.value | currency :'EUR':true}}</div>
-                    <div [ngClass]="{'positive': position.PL > 0, 'negative': position.PL < 0}">{{position.PL | currency :'EUR':true }}</div>
+                    <div>{{position.invested | currency : 'EUR':'symbol'}}</div>
+                    <div>{{position.value | currency :'EUR':'symbol'}}</div>
+                    <div [ngClass]="{'positive': position.PL > 0, 'negative': position.PL < 0}">{{position.PL | currency :'EUR':'symbol' }}</div>
                     <div [ngClass]="{'positive': position.PLPerc > 0, 'negative': position.PLPerc < 0}">{{position.PLPerc}}%</div>
                     <div>
                         <button [ngClass]="{'positive': position.symbolHandle.options.bidDirection === 'up', 'negative': position.symbolHandle.options.bidDirection === 'down'}"
@@ -59,11 +59,11 @@
                             <div>
                                 <span>{{model.options.amount}}</span>
                             </div>
-                            <div>{{model.options.amount * model.options.openPrice | currency : 'EUR':true}}</div>
-                            <div>{{options.value | currency :'EUR':true}}</div>
+                            <div>{{model.options.amount * model.options.openPrice | currency : 'EUR':'symbol'}}</div>
+                            <div>{{options.value | currency :'EUR':'symbol'}}</div>
                             <div></div>
                             <div></div>
-                            <div [ngClass]="{'positive': options.PL > 0, 'negative': options.PL < 0}">{{options.PL | currency :'EUR':true }}</div>
+                            <div [ngClass]="{'positive': options.PL > 0, 'negative': options.PL < 0}">{{options.PL | currency :'EUR':'symbol' }}</div>
                             <div [ngClass]="{'positive': options.PLPerc > 0, 'negative': options.PLPerc < 0}">{{options.PLPerc}}%</div>
                             <div>
                                 <a (click)="closeOrder($event, model)"><i class="fa fa-close"></i></a>

@@ -16,6 +16,7 @@ import { SocialFeedComponent } from './components/social-feed/social.feed.compon
 import { ProfileChannelOverviewComponent } from './components/profile-channel-overview/profile.channel.overview.component';
 import { PasswordResetComponent } from "./components/password-reset/password-reset.component";
 import { RequestPasswordResetComponent } from "./components/request-password-reset/request-password-reset.component";
+import { EventOverviewComponent } from './components/event-overview/event-overview.component';
 
 const routes: Routes = [
 	{ path: '', redirectTo: 'main', pathMatch: 'full', canActivate: [AuthGuard] },
@@ -30,6 +31,7 @@ const routes: Routes = [
 			{ path: 'channels', component: ChannelOverviewComponent },
 			{ path: 'portfolio', component: PortfolioComponent },
 			{ path: 'user', component: UserOverviewComponent },
+			{ path: 'calender', component: EventOverviewComponent },
 			{
 				path: 'user/:id', component: ProfileComponent, children:
 				[

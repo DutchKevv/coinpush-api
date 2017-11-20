@@ -1,10 +1,10 @@
 <instrument-list (activeSymbolChange)="onSymbolChange($event)"></instrument-list>
 
 <div class="chart-header">
-    <h4>{{(activeSymbol$ | async)?.options.name}}</h4>
+    <h5>{{(activeSymbol$ | async)?.options.name}}</h5>
     <ul class="header-buttons">
         <li>
-            <button (click)="activeSymbol$.getValue() && activeSymbol$.getValue().setZoom(-1)"
+            <button (click)="charts[0].instrumentModel.setZoom(-1)"
                     [ngClass]="{'active': (activeSymbol$ | async)?.options.zoom === 1}"
                     [disabled]="!activeSymbol$.getValue()"
                     type="button"

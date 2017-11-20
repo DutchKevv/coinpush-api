@@ -30,10 +30,10 @@ proxy.on('proxyReq', function (proxyReq, req, res, options) {
 	if (req.body) {
 		let bodyData = JSON.stringify(req.body);
 		// in case if content-type is application/x-www-form-urlencoded -> we need to change to application/json
-		proxyReq.setHeader('Content-Type', 'application/json');
-		proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+		// proxyReq.setHeader('Content-Type', 'application/json');
+		// proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
 		// stream the content
-		proxyReq.write(bodyData);
+		// proxyReq.write(bodyData);
 	}
 });
 
@@ -86,7 +86,7 @@ app.use(expressJwt({
 	return (
 		(/\.(gif|jpg|jpeg|tiff|png)$/i).test(req.originalUrl) ||
 		req.originalUrl === '/' ||
-		// req.originalUrl.startsWith('/ws/') ||
+		req.originalUrl.startsWith('/ws/') ||
 		(req.originalUrl === '/api/v1/authenticate' && (['POST', 'PUT', 'OPTIONS'].includes(req.method) && !req.headers.authorization)) ||
 		req.originalUrl === '/api/v1/authenticate/request-password-reset' ||
 		(req.originalUrl === '/api/v1/user' && (req.method === 'POST' || req.method === 'OPTIONS'))
@@ -97,9 +97,7 @@ app.use(expressJwt({
 /**
  * websocket
  */
-server.on('upgrade', (req, socket, head) => {
-	console.log(config.server.oldApi.apiUrl);
-	
+server.on('upgrade', (req, socket, head) => {	
 	switch (parse(req.url).pathname) {
 		case '/ws/general/':
 			proxy.ws(req, socket, head, { target: config.server.oldApi.apiUrl });

@@ -46,7 +46,6 @@ function setRowValues(rows) {
 @Pipe({name: 'groupBy'})
 export class GroupByPipe implements PipeTransform {
 	transform(value: Array<any>, field: string): Array<any> {
-		console.log('gorup!!!!!!!!!');
 		return groupBy(value, field);
 	}
 }
@@ -158,7 +157,6 @@ export class PortfolioComponent implements OnInit, OnDestroy {
 			row.PLPerc = row.items.reduce((sum, order) => sum + order.options.PLPerc, 0).toFixed(2);
 		});
 
-		console.log(result);
 		return result;
 	}
 

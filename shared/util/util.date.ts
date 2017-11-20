@@ -8,7 +8,8 @@ export const timeFrameSteps = {
 	'M15': 900000,
 	'M30': 1800000,
 	'H1': 3600000,
-	'H4': 14400000
+	'H4': 14400000,
+	'D': 86400000
 };
 
 export function getEstimatedTimeFromCount(timeFrame, count) {

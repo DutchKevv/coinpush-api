@@ -19,12 +19,16 @@ import { SymbolModel } from "../../models/symbol.model";
 
 const Highcharts = require('highcharts');
 const Highstock = require('highcharts/highstock');
-// import Highcharts from 'highcharts';
+require('highcharts/modules/exporting');
+require('../../../assets/vendor/js/highcharts/indicators/indicators.js');
+require('../../../assets/vendor/js/highcharts/indicators/macd.js');
+require('../../../assets/vendor/js/highcharts/indicators/ema');
+// require('../../../assets/vendor/js/highcharts/indicators/sma');
 // import Highstock from 'highcharts/highstock';
 
 declare let $: any;
 
-import {HighchartsDefaultTheme} from '../../style/highcharts/highstock.theme.default';
+import { HighchartsDefaultTheme } from '../../style/highcharts/highstock.theme.default';
 import '../../style/highcharts/highstock.theme.dark';
 
 @Component({
@@ -94,15 +98,20 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 			volume = new Array(length / rowLength),
 			candles = new Array(length / rowLength);
 
-		// TODO - Volume
 		for (; i < length; i += rowLength) {
-			let date = moment(data[i]).format('DD-MM hh:mm'),
-				c = i / rowLength;
+			candles[i / rowLength] = [
+				data[i],
+				data[i + 1], // open
+				data[i + 3], // high
+				data[i + 5], // low
+				data[i + 7] // close
+			];
 
-			candles[c] = { time: data[i], y: [data[i + 1], data[i + 3], data[i + 5], data[i + 7]] };
-			volume[c] = { label: date, y: data[i + 9] };
+			volume[i / rowLength] = [
+				data[i],
+				data[i + 9] // the volume
+			];
 		}
-
 
 		return {
 			candles: candles,
@@ -166,6 +175,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 			Object.keys(changes).forEach(change => {
 				switch (change) {
 					case 'zoom':
+
 						if (this._chart)
 							this._updateViewPort();
 						dirty = true;
@@ -197,7 +207,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 				this.render();
 		});
 
-		this._createChart();
+		// this._createChart();
 	}
 
 	placeOrder(event, side: number) {
@@ -251,260 +261,138 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		this._zone.runOutsideAngular(() => {
 
 			this._destroyChart();
+			console.log(this.symbolModel.options);
 
+			// create the chart
+			this._chart = Highstock.chart(this.chartRef.nativeElement, {
 
-			// // split the data set into ohlc and volume
-			// var ohlc = [],
-			// 	volume = [],
-			// 	dataLength = data.length,
-			// 	// set the allowed units for data grouping
-			// 	groupingUnits = [[
-			// 		'week',                         // unit name
-			// 		[1]                             // allowed multiples
-			// 	], [
-			// 		'month',
-			// 		[1, 2, 3, 4, 6]
-			// 	]],
+				title: {
+					text: ''
+					// text: this.symbolModel.get('displayName')
+				},
 
-			// 	i = 0;
+				subtitle: {
+					text: '',
+					style: {
+						display: 'none'
+					}
+				},
 
-			// for (i; i < dataLength; i += 1) {
-			// 	ohlc.push([
-			// 		data[i][0], // the date
-			// 		data[i][1], // open
-			// 		data[i][2], // high
-			// 		data[i][3], // low
-			// 		data[i][4] // close
-			// 	]);
+				legend: {
+					enabled: false
+				},
 
-			// 	volume.push([
-			// 		data[i][0], // the date
-			// 		data[i][5] // the volume
-			// 	]);
-			// }
-
-			$.getJSON('https://www.highcharts.com/samples/data/jsonp.php?filename=usdeur.json&callback=?', (data) => {
-			
-				// split the data set into ohlc and volume
-				var ohlc = [],
-					volume = [],
-					dataLength = data.length,
-					// set the allowed units for data grouping
-					groupingUnits = [[
-						'week',                         // unit name
-						[1]                             // allowed multiples
-					], [
-						'month',
-						[1, 2, 3, 4, 6]
-					]],
-
-					i = 0;
-
-				for (i; i < dataLength; i += 1) {
-					ohlc.push([
-						data[i][0], // the date
-						data[i][1], // open
-						data[i][2], // high
-						data[i][3], // low
-						data[i][4] // close
-					]);
-
-					volume.push([
-						data[i][0], // the date
-						data[i][5] // the volume
-					]);
-				}
-
-				// create the chart
-				this._chart = Highstock.chart(this.chartRef.nativeElement, {
-
-					rangeSelector: {
-						selected: 1
+				xAxis: [{
+					labels: {
+						step: 1, // Disable label rotating when there is not enough space
+						staggerLines: false,
+						format: '{value:%d-%m %H:%M}',
+						y: 14
 					},
+					minorGridLineWidth: 0,
+					lineColor: '#d2d2d5',
+					lineWidth: 1,
+					gridLineWidth: 1,
+					gridLineDashStyle: 'dot',
+					gridZIndex: -1,
+					tickPixelInterval: 80,
+					minorTickLength: 0,
 
+					// Fill empty time gaps (when there are no bars)
+					ordinal: true
+				},
+				{
+					labels: {
+						step: 1, // Disable label rotating when there is not enough space
+						staggerLines: false,
+					},
+					lineWidth: 0,
+					gridLineWidth: 1,
+					gridLineDashStyle: 'dot',
+					gridZIndex: -1,
+
+					// Fill empty time gaps (when there are no bars)
+					ordinal: true
+				}],
+
+				yAxis: [{
+					opposite: true,
+					labels: {
+						align: 'left',
+						// x: 0
+					},
 					title: {
-						text: 'AAPL Historical'
+						text: 'OHLC'
 					},
-
-					yAxis: [{
-						labels: {
-							align: 'right',
-							x: -3
-						},
-						title: {
-							text: 'OHLC'
-						},
-						height: '60%',
-						lineWidth: 2,
-						resize: {
-							enabled: true
-						}
-					}, {
-						labels: {
-							align: 'right',
-							x: -3
-						},
-						title: {
-							text: 'Volume'
-						},
-						top: '65%',
-						height: '35%',
-						offset: 0,
-						lineWidth: 2
-					}],
-
-					tooltip: {
-						split: true
+					height: '60%',
+					lineWidth: 1,
+					resize: {
+						enabled: true
+					}
+				}, {
+					opposite: true,
+					labels: {
+						align: 'left',
+						// x: 0
 					},
+					title: {
+						text: 'Volume'
+					},
+					top: '65%',
+					height: '35%',
+					offset: 0,
+					lineWidth: 1
+				}],
 
-					series: [{
+				tooltip: {
+					split: true
+				},
+
+				series: [
+					{
+						id: 'main-series',
 						type: 'candlestick',
 						name: 'AAPL',
-						data: ohlc,
-						dataGrouping: {
-							units: groupingUnits
-						}
-					}, {
+						// data: ohlc,
+						data: this._data.candles,
+						// dataGrouping: {
+						// 	enabled: false
+						// }
+					}, 
+					{
 						type: 'column',
 						name: 'Volume',
-						data: volume,
+						data: this._data.volume,
 						yAxis: 1,
-						dataGrouping: {
-							units: groupingUnits
-						}
-					}]
-				});
+						// dataGrouping: {
+						// 	units: groupingUnits
+						// }
+					}, 
+				]
 			});
 
-			// let chartOptions = {
-			// 	interactivityEnabled: true,
-			// 	exportEnabled: false,
-			// 	animationEnabled: false,
-			// 	backgroundColor: '#000',
-			// 	dataPointWidth: 2,
-			// 	creditText: '',
-			// 	toolTip: {
-			// 		animationEnabled: false,
-			// 		borderThickness: 0,
-			// 		cornerRadius: 0
-			// 	},
-			// 	scales: {
-			// 		xAxes: [{
-			// 			display: false
-			// 		}]
-			// 	},
+			// {
+			// 	type: 'sma',
+			// 	linkedTo: 'main-series',
+			// 	params: {
+			// 	  period: 14
+			// 	}
+			//   }, {
+			// 	type: 'sma',
+			// 	linkedTo: 'main-series',
+			// 	params: {
+			// 	  period: 28
+			// 	}
+			//   }, {
+			// 	type: 'sma',
+			// 	linkedTo: 'main-series',
+			// 	params: {
+			// 	  period: 7
+			// 	}
+			//   }
 
-			// 	axisY2: {
-			// 		includeZero: false,
-			// 		// title: 'Prices',
-			// 		// prefix: '$',
-			// 		labelFontColor: '#fff',
-			// 		labelFontSize: '12',
-			// 		gridDashType: 'dash',
-			// 		gridColor: '#787D73',
-			// 		gridThickness: 0.5,
-			// 		stripLines: [{
-			// 			value: 0,
-			// 			label: '',
-			// 			labelPlacement: 'outside',
-			// 			labelAlign: 'far',
-			// 			labelBackgroundColor: '#959598',
-			// 			labelFontColor: '#000',
-			// 			thickness: 0.5,
-			// 			color: '#d2d2d5'
-			// 		}],
-			// 		tickThickness: 0.5,
-			// 		lineThickness: 1.5,
-			// 		labelMinWidth: 50,
-			// 		labelMaxWidth: 50
-			// 	},
-			// 	axisX: {
-			// 		includeZero: false,
-			// 		labelFontColor: '#fff',
-			// 		labelFontSize: '12',
-			// 		gridDashType: 'dash',
-			// 		gridColor: '#787D73',
-			// 		gridThickness: 0.5,
-			// 		tickThickness: 0,
-			// 		valueFormatString: ' ',
-			// 		labelFormatter: function(e){
-			// 			return  ''
-			// 		},
-			// 		lineThickness: 1
-			// 	},
-			// 	data: [
-			// 		{
-			// 			type: this.instrumentModel.options.graphType,
-			// 			connectNullData: false,
-			// 			// fillOpacity: 0,
-			// 			// risingColor: '#000000',
-			// 			color: '#1381ff',
-			// 			risingColor: '#17EFDA',
-			// 			dataPoints: this._data.candles,
-			// 			axisYType: 'secondary',
-			// 			bevelEnabled: false,
-			// 			thickness: 1
-			// 		},
-			// 		{
-			// 			type: 'line',
-			// 			connectNullData: false,
-			// 			bevelEnabled: false,
-			// 			markerType: 'triangle',
-			// 			lineThickness: 1,
-			// 			markerSize: 10,
-			// 			dataPoints: [],
-			// 			axisYType: 'secondary',
-			// 			valueFormatString: ' ',
-			// 			toolTipContent: '#{id}</br>Profit: {profit}'
-			// 		}
-			// 	]
-			// };
-
-			// this._chart = new window['CanvasJS'].Chart(this._candlesRef.nativeElement, chartOptions);
-			// this._chartVolume = new window['CanvasJS'].Chart(this._volumeRef.nativeElement, {
-			// 	exportEnabled: false,
-			// 	animationEnabled: false,
-			// 	backgroundColor: '#000',
-			// 	dataPointWidth: 2,
-			// 	creditText: '',
-			// 	toolTip: {
-			// 		animationEnabled: false,
-			// 		borderThickness: 0,
-			// 		cornerRadius: 0
-			// 	},
-			// 	axisX: {
-			// 		includeZero: false,
-			// 		labelFontColor: '#fff',
-			// 		labelFontSize: '12',
-			// 		gridDashType: 'dash',
-			// 		gridColor: '#787D73',
-			// 		gridThickness: 0.5,
-			// 		tickThickness: 0
-			// 	},
-			// 	axisY2: {
-			// 		includeZero: false,
-			// 		// title: 'Prices',
-			// 		// prefix: '$',
-			// 		labelFontColor: '#fff',
-			// 		labelFontSize: '12',
-			// 		gridDashType: 'dash',
-			// 		gridColor: '#787D73',
-			// 		gridThickness: 0.5,
-			// 		tickThickness: 0
-			// 	},
-			// 	data: [
-			// 		{
-			// 			type: 'column',
-			// 			dataPoints: this._data.volume,
-			// 			connectNullData: false,
-			// 			bevelEnabled: false,
-			// 			axisYType: 'secondary',
-			// 			color: 'white'
-			// 		}
-			// 	]
-			// });
-			// this._candlesRef.nativeElement.addEventListener('mousewheel', <any>this._onScrollBounced);
-			// this._updateViewPort();
+			this.chartRef.nativeElement.addEventListener('mousewheel', <any>this._onScrollBounced);
+			this._updateViewPort();
 			// this._updateIndicators();
 			// this._updateOrders();
 
@@ -535,10 +423,10 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 			this._scrollOffset = offset;
 
-			// this._chart.options.axisX.viewportMinimum = data.length - offset - viewable;
-			// this._chartVolume.options.axisX.viewportMinimum = data.length - offset - viewable;
-			// this._chart.options.axisX.viewportMaximum = data.length - offset + 2;
-			// this._chartVolume.options.axisX.viewportMaximum = data.length - offset + 2;
+			let firstBar = (data[data.length - viewable - offset] || data[0]),
+				lastBar = data[data.length - 1 - offset];
+
+			this._chart.xAxis[0].setExtremes(firstBar[0], lastBar[0], true, false);
 		});
 	}
 
@@ -547,17 +435,20 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 			try {
 				let data: any = ChartBoxComponent._prepareData(await this._cacheService.read({
 					symbol: this.instrumentModel.options.symbol,
+					// timeFrame: 'D',
 					timeFrame: this.instrumentModel.options.timeFrame,
 					until: this.instrumentModel.options.type === 'backtest' && this.instrumentModel.options.status.progress < 1 ? this.instrumentModel.options.from : this.instrumentModel.options.until,
 					count: ChartBoxComponent.DEFAULT_CHUNK_LENGTH,
 					offset: this._offset
 				}));
 
-				this._data.candles.push(...data.candles);
-				this._data.volume.push(...data.volume);
+				console.log('sdfsfsdf', data);
 
-				// if (!this._chart)
-				// 	this._createChart();
+				this._data.candles = data.candles;
+				this._data.volume = data.volume;
+
+				if (!this._chart)
+					this._createChart();
 
 				// this._updateCurrentPricePlot();
 				// this._updateViewPort();
@@ -850,12 +741,9 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	}
 
 	private _onPriceChange(options: any) {
-		const lastCandle = this._data.candles[this._data.candles.length - 1];
-
-		if (!lastCandle)
+		if (!this._data.candles.length)
 			return;
 
-		lastCandle.y[2] = options.ask;
 		this._updateCurrentPricePlot();
 		this.render();
 	}
@@ -874,17 +762,17 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		clearTimeout(this._onScrollTooltipTimeout);
 
 		this._mouseActive = false;
-		this._chart.options.toolTip.enabled = false;
+		// this._chart.options.toolTip.enabled = false;
 		this._onScrollTooltipTimeout = setTimeout(() => {
-			this._chart.options.toolTip.enabled = true;
+			// this._chart.options.toolTip.enabled = true;
 			this._mouseActive = true;
-			this.render();
+			// this.render();
 		}, 500);
-		this._chart.toolTip.hide();
+		// this._chart.toolTip.hide();
 
 		this._updateViewPort(event.wheelDelta > 0 ? -shift : shift);
 
-		this.render();
+		// this.render();
 
 		return false;
 	}
