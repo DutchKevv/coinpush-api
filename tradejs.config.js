@@ -87,8 +87,7 @@ module.exports = {
 
     },
     broker: {
-        account: {
-            'broker': 'oanda',
+        oanda: {
             'environment': '',
             'username': null,
             'token': '067331173f67faf3cef7e69263a3015a-fefb596cddfe98d2f24e9ca843c3c443',

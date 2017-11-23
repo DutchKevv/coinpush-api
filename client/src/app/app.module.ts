@@ -55,6 +55,7 @@ import {BootstrapService} from "./services/bootstrap.service";
 import { TypescriptCompilerService } from './services/typescript.compiler.service';
 import { WebworkerService } from './services/code.runner.service';
 import { EventOverviewComponent } from './components/event-overview/event-overview.component';
+import { NewsService } from './services/news.service';
 
 @NgModule({
 	declarations: [
@@ -112,7 +113,8 @@ import { EventOverviewComponent } from './components/event-overview/event-overvi
 		BootstrapService,
 		TypescriptCompilerService,
 		WebworkerService,
-
+		NewsService,
+		
 		{provide: OrderService, useClass: OrderService},
 		{provide: ConstantsService, useClass: ConstantsService},
 		{provide: SocketService, useClass: SocketService},

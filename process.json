@@ -1,7 +1,7 @@
 [
   {
     "script": "server-gateway/index.js",
-    "name": "gateway-api",
+    "name": "gateway",
     "exec_mode": "fork",
     "env_production" : {
       "NODE_ENV": "dev"
@@ -10,7 +10,7 @@
   },
   {
     "script": "server-cache/index.js",
-    "name": "cache-api",
+    "name": "cache",
     "exec_mode": "fork",
     "env_production" : {
       "NODE_ENV": "dev"
@@ -19,7 +19,7 @@
   },
   {
     "script": "server-order/index.js",
-    "name": "order-api",
+    "name": "order",
     "exec_mode": "fork",
     "env_production" : {
       "NODE_ENV": "dev"
@@ -28,7 +28,7 @@
   },
   {
     "script": "server-broker/index.js",
-    "name": "broker-api",
+    "name": "broker",
     "exec_mode": "fork",
     "env_production" : {
       "NODE_ENV": "dev"
@@ -37,7 +37,7 @@
   },
   {
     "script": "server-channel/index.js",
-    "name": "channel-api",
+    "name": "channel",
     "exec_mode": "fork",
     "env_production" : {
       "NODE_ENV": "dev"
@@ -46,7 +46,7 @@
   },
   {
     "script": "server-user/index.js",
-    "name": "user-api",
+    "name": "user",
     "exec_mode": "fork",
     "env_production" : {
       "NODE_ENV": "dev"
@@ -55,7 +55,7 @@
   },
   {
     "script": "server-comment/index.js",
-    "name": "comment-api",
+    "name": "comment",
     "exec_mode": "fork",
     "env_production" : {
       "NODE_ENV": "dev"
@@ -64,7 +64,7 @@
   },
   {
     "script": "server-email/index.js",
-    "name": "email-api",
+    "name": "email",
     "exec_mode": "fork",
     "env_production" : {
       "NODE_ENV": "dev"
@@ -73,7 +73,7 @@
   },
   {
     "script": "server/bootstrapper.js",
-    "name": "old-api",
+    "name": "legacy",
     "exec_mode": "fork",
     "env_production" : {
       "NODE_ENV": "dev"

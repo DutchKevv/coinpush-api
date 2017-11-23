@@ -38,6 +38,7 @@
     "codelyzer": "^3.2.2",
     "colors": "1.1.2",
     "deepmerge": "^2.0.0",
+    "ib": "^0.2.1",
     "lodash": "4.17.4",
     "mkdirp": "0.5.1",
     "moment": "^2.19.1",
@@ -46,6 +47,7 @@
     "socket.io-client": "^2.0.4",
     "tslint": "^5.8.0",
     "typescript": "^2.5.3",
-    "winston": "^2.4.0"
+    "winston": "^2.4.0",
+    "xml2json": "^0.11.0"
   }
 }

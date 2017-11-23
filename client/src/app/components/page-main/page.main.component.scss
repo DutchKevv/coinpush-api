@@ -24,6 +24,101 @@
     color: $general-error;
 }
 
+header {
+    width: 100%;
+    text-align: center;
+    background: $background-light;
+    display: flex;
+    padding: 0 10px;
+  
+    @media only screen and (min-width : 768px) {
+        justify-content: space-around;
+
+        > * {
+            width: 100%;
+        }
+
+        span {
+            font-size: 14px;
+        }
+    }  
+
+    .fa {
+        color: white;
+        font-size: 30px;
+        line-height: 40px;
+        padding-right: 20px;
+    }
+
+    .header-search {
+        width: 100%;
+
+        @media only screen and (min-width : 768px) {
+            position: relative;
+        }  
+    }
+
+    input {
+        margin: 3px;
+        padding: 7px;
+        line-height: 14px;
+        width: 100%;
+        border-radius: 2px;
+        font-size: 14px;
+        background-color: $input-color-glyphicon-background;
+        border: 1px solid black;
+        color: $input-color-text;
+        text-align: center;
+        box-sizing: border-box;
+
+        @media only screen and (min-width : 768px) {
+            width: 300px;
+        }
+    }
+
+    .search-drop-down {
+        position: absolute;
+        z-index: 122;
+        top: 36px;
+        left: 0;
+        width: 100%;
+        background: $background-light;
+        box-sizing: border-box;
+
+        &.hidden {
+            display: none;
+        }
+
+        @media only screen and (min-width : 768px) {
+            width: 298px;
+            left: calc(50% - 149px);
+        } 
+
+        a {
+            padding: 10px;
+            border-bottom: $border-color-grey;
+            color: $font-color-light;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+
+            &:hover {
+                background: $background-light2
+            }
+
+            span {
+                line-height: 30px;
+            }
+
+            img {
+                width: 30px;
+                height: 30px;
+                margin-right: 10px;
+            }
+        }
+    }
+}
+
 .nav-main {
     background: $background-light;
     overflow-y: auto;
@@ -95,90 +190,4 @@
     display: flex;
     flex-flow: column;
     width: 100%;
-}
-
-header {
-    width: 100%;
-    text-align: center;
-    background: $background-light;
-    display: flex;
-    padding: 0 10px;
-
-    .account-details {
-        display: flex;
-        justify-content: space-around;
-        padding: 4px 0;
-        width: 100%;
-    }
-
-    .fa {
-        color: white;
-        font-size: 30px;
-        line-height: 40px;
-        padding-right: 20px;
-    }
-
-    .header-search {
-        width: 100%;
-
-        @media only screen and (min-width : 768px) {
-            position: relative;
-        }  
-    }
-
-    input {
-        margin: 3px;
-        padding: 7px;
-        line-height: 14px;
-        width: 100%;
-        border-radius: 2px;
-        font-size: 14px;
-        background-color: $input-color-glyphicon-background;
-        border: 1px solid black;
-        color: $input-color-text;
-        text-align: center;
-        box-sizing: border-box;
-    }
-
-    .search-drop-down {
-        position: absolute;
-        z-index: 122;
-        top: 36px;
-        left: 0;
-        width: 100%;
-        background: $background-light;
-        box-sizing: border-box;
-
-        &.hidden {
-            display: none;
-        }
-
-        @media only screen and (min-width : 768px) {
-            width: 298px;
-            left: calc(50% - 149px);
-        } 
-
-        a {
-            padding: 10px;
-            border-bottom: $border-color-grey;
-            color: $font-color-light;
-            text-align: left;
-            cursor: pointer;
-            display: flex;
-
-            &:hover {
-                background: $background-light2
-            }
-
-            span {
-                line-height: 30px;
-            }
-
-            img {
-                width: 30px;
-                height: 30px;
-                margin-right: 10px;
-            }
-        }
-    }
 }

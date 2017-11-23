@@ -3,6 +3,7 @@ import * as mongoose from 'mongoose';
 import {log} from '../../../shared/logger';
 import {timeFrameSteps} from '../../../shared/util/util.date';
 import {CandleSchema} from '../schemas/candle';
+import { Status } from '../schemas/status.schema';
 
 const config = require('../../../tradejs.config');
 
@@ -20,7 +21,7 @@ db.once('open', function () {
 
 export const dataLayer = {
 
-	async read(params: { symbol: string, timeFrame: string, from: number, until: number, count: number, fields?: any }): Promise<NodeBuffer> {
+	async read(params: { symbol: string, timeFrame: string, from?: number, until?: number, count?: number, fields?: any }): Promise<NodeBuffer> {
 
 		let symbol = params.symbol,
 			timeFrame = params.timeFrame,
@@ -68,8 +69,9 @@ export const dataLayer = {
 		log.info('DataLayer', 'Creating ' + symbols.length * timeFrames.length + ' tables');
 
 		symbols.forEach(symbol => {
-			timeFrames.forEach(timeFrame => {
+			timeFrames.forEach(async timeFrame => {
 				mongoose.model(this.getCollectionName(symbol, timeFrame), CandleSchema);
+				await Status.update({symbol: symbol.name, timeFrame}, {symbol, timeFrame, lastSync: null}, {upsert: true});
 			});
 		});
 	},

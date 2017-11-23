@@ -3,10 +3,13 @@ import * as redis from '../modules/redis';
 
 const config = require('../../../tradejs.config');
 
-import {log} from '../../../shared/logger';
+import { log } from '../../../shared/logger';
 import OandaApi from '../../../shared/brokers/oanda';
 import CacheMapper from '../../../shared/classes/cache/CacheMap';
-import {dataLayer} from './cache.datalayer';
+import { dataLayer } from './cache.datalayer';
+import { symbolController } from './symbol.controller';
+import { app } from '../app';
+import { Status } from '../schemas/status.schema';
 
 const READ_COUNT_DEFAULT = 500;
 
@@ -26,20 +29,15 @@ export const cacheController = {
 	_fetchQueue: Promise.resolve(),
 	_tickStreamOpen: false,
 	_tickIntervalTimer: null,
-	_brokerApi: null,
 
-	init(brokerApi: OandaApi) {
-		this._brokerApi = brokerApi;
-	},
-
-	async find(params: { symbol: string, timeFrame: string, from: number, until: number, count: number }) {
+	async find(params: { symbol: string, timeFrame: string, from?: number, until?: number, count?: number }) {
 		let symbol = params.symbol,
 			timeFrame = params.timeFrame,
 			from = params.from,
 			until = params.until,
 			count = params.count,
-			candles = null,
-			softUntil;
+			candles = null;
+			// softUntil;
 
 		log.info('Cache', `Read ${symbol}-${timeFrame} from ${from} until ${until} count ${count}`);
 
@@ -61,38 +59,42 @@ export const cacheController = {
 		// Create a soft until for the isComplete check
 		// This is needed to fake updated data status
 		// -- Let Mapper think all data from when the tick stream opened until now is complete --
-		softUntil = dataMapper.streamOpenSince && until > dataMapper.streamOpenSince ? dataMapper.streamOpenSince : until;
+		// softUntil = dataMapper.streamOpenSince && until > dataMapper.streamOpenSince ? dataMapper.streamOpenSince : until;
 
 		// If full dateRange given,
 		// Its possible to check if range is complete purely on mapper
-		if (from && until) {
-			if (!dataMapper.isComplete(symbol, timeFrame, from, softUntil, count))
-				await this.fetch(Object.assign({}, params, {until: softUntil}));
-		}
-		// Count given
-		// First read, then check in mapper if data is complete by first/last candles
-		// Otherwise fetch and read again
-		else {
-			candles = await dataLayer.read(params);
+		// if (from && until) {
+		// 	if (!dataMapper.isComplete(symbol, timeFrame, from, softUntil, count))
+		// 		await this.fetch(Object.assign({}, params, { until: softUntil }));
+		// }
+		// // Count given
+		// // First read, then check in mapper if data is complete by first/last candles
+		// // Otherwise fetch and read again
+		// else {
+		// 	candles = await dataLayer.read(params);
 
-			if (candles.length) {
-				let first = candles.readDoubleLE(0),
-					last = candles.readDoubleLE(candles.length - (10 * Float64Array.BYTES_PER_ELEMENT));
+		// 	if (candles.length) {
+		// 		let first = candles.readDoubleLE(0),
+		// 			last = candles.readDoubleLE(candles.length - (10 * Float64Array.BYTES_PER_ELEMENT));
 
-				if (!dataMapper.isComplete(symbol, timeFrame, first, last)) {
-					candles = null;
-					await this.fetch(Object.assign({}, params, {until: softUntil}));
-				}
-			} else {
-				candles = null;
-				await this.fetch(Object.assign({}, params, {until: softUntil}));
-			}
-		}
+		// 		if (!dataMapper.isComplete(symbol, timeFrame, first, last)) {
+		// 			candles = null;
+		// 			await this.fetch(Object.assign({}, params, { until: softUntil }));
+		// 		}
+		// 	} else {
+		// 		candles = null;
+		// 		await this.fetch(Object.assign({}, params, { until: softUntil }));
+		// 	}
+		// }
 
-		if (candles === null)
-			candles = await dataLayer.read(params);
+		// if (candles === null)
+		// 	candles = await dataLayer.read(params);
+		// else if (candles.length / (10 * Float64Array.BYTES_PER_ELEMENT) > params.count) {
+		// 	candles.slice(candles.length - ((10 * Float64Array.BYTES_PER_ELEMENT) * params.count));
+		// }
+			
 
-		return candles;
+		return await dataLayer.read(params);
 	},
 
 	async fetch(params: { symbol: string, timeFrame: string, from: number, until: number, count: number }, emitStatus?: boolean): Promise<void> {
@@ -124,10 +126,12 @@ export const cacheController = {
 						endTriggered = false,
 						total = 0;
 
-					log.info('Cache', `Fetching ${symbol} from ${chunk.from} until ${chunk.until} count ${chunk.count}`);
+					log.info('Cache', `Fetching ${symbol}/${timeFrame} from ${chunk.from} until ${chunk.until} count ${chunk.count}`);
 
-					this._brokerApi.getCandles(symbol, timeFrame, chunk.from, chunk.until, chunk.count, async (buf: NodeBuffer) => {
+					app.broker.getCandles(symbol, timeFrame, chunk.from, chunk.until, chunk.count, async (buf: NodeBuffer) => {
 						streamChunkTotal++;
+
+						console.log(`WRITING ${(buf.length / 8) / 10} candles to DB`);
 
 						// Store candles in DB
 						await dataLayer.write(symbol, timeFrame, buf);
@@ -181,11 +185,11 @@ export const cacheController = {
 	},
 
 	async openTickStream(): Promise<any> {
-		this._brokerApi.removeAllListeners('tick');
+		app.broker.removeAllListeners('tick');
 
-		await this._brokerApi.subscribePriceStream(this.symbols.map(symbol => symbol.name));
+		await app.broker.openTickStream(this.symbols.map(symbol => symbol.name));
 
-		this._brokerApi.on('tick', tick => this._onTickReceive(tick));
+		app.broker.on('tick', tick => this._onTickReceive(tick));
 		this._tickStreamOpen = true;
 		dataMapper.streamOpenSince = Date.now();
 
@@ -203,14 +207,27 @@ export const cacheController = {
 		log.info('Cache', 'Reset complete');
 	},
 
-	startBroadcastInterval(io) {
+	startBroadcastInterval() {
 		this._tickIntervalTimer = setInterval(() => {
 			if (!Object.getOwnPropertyNames(this._tickBuffer).length) return;
 
-			io.sockets.emit('ticks', this._tickBuffer);
+			app.io.sockets.emit('ticks', this._tickBuffer);
 
 			this._tickBuffer = {};
 		}, 200);
+	},
+
+	async preLoad() {
+		const results = await Promise.all(symbolController.symbols.map(symbol => {
+			return this.fetch({ symbol: symbol.name, timeFrame: 'M1', count: 5000 });
+		}));
+
+		console.log('done!');
+	},
+
+	async _isComplete(symbol, timeFrame, from, until) {
+		const status = await Status.findOne({symbol, timeFrame});
+		return status.lastSync > until
 	},
 
 	_updateRedis(symbols) {
@@ -230,18 +247,5 @@ export const cacheController = {
 		this._updateRedis([symbolObj]);
 
 		this._tickBuffer[tick.instrument].push([tick.time, tick.bid, tick.ask]);
-	},
-
-	async destroyBrokerApi(): Promise<boolean> {
-		if (!this._brokerApi)
-			return;
-		
-		try {
-			this._brokerApi.destroy();
-			return true;
-		} catch (error) {
-			console.error(error);
-			return false;
-		}
 	}
 };

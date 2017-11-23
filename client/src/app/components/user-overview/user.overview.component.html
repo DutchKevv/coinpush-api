@@ -45,7 +45,7 @@
 <h2 class="item-row-header">Newest members</h2>
 
 <section class="item-row">
-    <div *ngFor="let model of newest$ | async" class="card clearfix">
+    <div *ngFor="let model of newest$ | async" class="card">
         <ng-container *ngIf="model.options$ | async as options">
             <header [style.background]="'url(' + options.profileImg + ')'">
                 <a [routerLink]="['/main/user/', options.user_id]" [routerLinkActive]="['active']"></a>
@@ -76,10 +76,10 @@
     </div>
 </section>
 
-<h2 class="item-row-header">Editors' Choice</h2>
+<!-- <h2 class="item-row-header">Editors' Choice</h2>
 
 <section class="item-row">
-    <div *ngFor="let model of editorChoice$ | async" class="card clearfix">
+    <div *ngFor="let model of editorChoice$ | async" class="card">
         <ng-container *ngIf="model.options$ | async as options">
             <header [style.background]="'url(' + options.profileImg + ')'">
                 <a [routerLink]="['/main/user/', options.user_id]" [routerLinkActive]="['active']"></a>
@@ -113,7 +113,7 @@
 <h2 class="item-row-header">Top Investors</h2>
 
 <section class="item-row">
-    <div *ngFor="let model of topInvestors$ | async" class="card clearfix">
+    <div *ngFor="let model of topInvestors$ | async" class="card">
         <ng-container *ngIf="model.options$ | async as options">
             <header [style.background]="'url(' + model.options.profileImg + ')'">
                 <a [routerLink]="['/main/user/', options.user_id]" [routerLinkActive]="['active']"></a>
@@ -142,4 +142,4 @@
             </footer>
         </ng-container>
     </div>
-</section>
+</section> -->

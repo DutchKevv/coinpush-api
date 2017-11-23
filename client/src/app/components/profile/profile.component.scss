@@ -1,3 +1,7 @@
+@import '~bootstrap/scss/_variables';
+@import '~bootstrap/scss/_mixins';
+@import '~bootstrap/scss/utilities/_visibility';
+
 @import '../../style/variables/variables';
 @import '../../style/helpers/normalize';
 
@@ -9,30 +13,23 @@
 
 header {
     .profile-details {
-        padding: 20px;
+        padding: 10px 20px;
         display: flex;
         background: url(/images/default/cover/cover.svg) center/cover; 
-        height: 75px;
+        height: 100px;
         position: relative;
 
         .profileImg {
-            width: 70px;
-            height: 70px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
             margin-right: 20px;
-            position: absolute;
-            top: 70px;
             background: white;
             padding: 6px;
-            left: 30px;
         }
 
         .meta-data {
             margin-left: 20px;
-        }
-
-        .profile-details-meta-container {
-            margin-left: 100px;
         }
     }
 
@@ -57,8 +54,11 @@ header {
             }
 
             i {
-                margin-right: 20px;
                 font-size: 30px !important;
+
+                @media only screen and (min-width : 768px) {
+                    margin-right: 20px;
+                }
             }
         }
     }

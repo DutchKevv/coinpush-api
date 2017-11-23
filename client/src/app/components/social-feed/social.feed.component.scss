@@ -1,5 +1,8 @@
 @import '../../style/variables/variables';
 @import '../../style/helpers/normalize';
+@import '~bootstrap/scss/_variables';
+@import '~bootstrap/scss/_mixins';
+@import '~bootstrap/scss/utilities/_visibility';
 
 .g-username,
 .g-link {
@@ -74,7 +77,7 @@
 }
 
 .feed {
-	width: 500px;
+	max-width: 500px;
 }
 
 emoji-input{
@@ -90,7 +93,7 @@ app-comment-box {
 	background: white;
 	margin-bottom: 20px;
 	border-radius: 5px;
-	width: 500px;
+	max-width: 500px;
 	box-sizing: border-box;
 	font-size: 12px;
 	transition: all 1s;

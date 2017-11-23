@@ -1,3 +1,30 @@
 @import '../../style/variables/variables';
 @import '../../style/helpers/normalize';
 
+:host {
+    display: flex;
+    height: 100%;
+    justify-content: space-around;
+    overflow: scroll;
+    padding: 10px;
+}
+
+section {
+   
+}
+
+article {
+    border: 1px solid grey;
+    background: white;
+    padding: 10px;
+    max-width: 500px;
+    margin: 20px 5px;
+
+    h4 {
+        color: black;
+    }
+
+    p {
+        color: black;
+    }
+}

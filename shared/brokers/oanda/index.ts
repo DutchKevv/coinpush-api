@@ -2,11 +2,12 @@ import * as Stream 		from 'stream';
 import {Adapter} 		from './lib/OANDAAdapter';
 import {splitToChunks} 	from '../../util/util.date';
 import {log} 			from '../../logger';
+import {EventEmitter} 	from 'events';
 import {Base} 			from '../../classes/Base';
 import * as Constants 	from '../../constants/constants';
 import {ORDER_TYPE_IF_TOUCHED, ORDER_TYPE_LIMIT, ORDER_TYPE_MARKET, ORDER_TYPE_STOP} from '../../constants/constants';
 
-export default class OandaApi extends Base {
+export default class OandaApi extends EventEmitter {
 
 	public static readonly FAVORITE_SYMBOLS = [
 		'EUR_USD',
@@ -19,9 +20,12 @@ export default class OandaApi extends Base {
 
 	private _client = null;
 
-	public init() {
-		super.init();
+	constructor(public options: any) {
+		super();
+	}
 
+	public init() {
+		
 		this._client = new Adapter({
 			// 'live', 'practice' or 'sandbox'
 			environment: this.options.environment,
@@ -91,8 +95,10 @@ export default class OandaApi extends Base {
 		this._client.unsubscribeEvents(listener);
 	}
 
-	public subscribePriceStream(instruments: Array<string>): void {
-		this._client.subscribePrices(this.options.accountId, instruments, tick => this.emit('tick', tick));
+	public subscribePriceStream(symbols: Array<string>): void {
+		this._client.subscribePrices(this.options.accountId, symbols, tick => {
+			this.emit('tick', tick);
+		});
 	}
 
 	public unsubscribePriceStream(instruments) {

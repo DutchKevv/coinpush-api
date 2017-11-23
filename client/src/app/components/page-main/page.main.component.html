@@ -16,7 +16,7 @@
         <i class="fa fa-newspaper-o"></i>
         <span>News feed</span>
     </a>
-    <a [routerLink]="['/main/calender']" [routerLinkActive]="['active']">
+    <a [routerLink]="['/main/calendar']" [routerLinkActive]="['active']">
         <i class="fa fa-calendar"></i>
         <span>Calender</span>
     </a>
@@ -44,33 +44,32 @@
         <i class="fa fa-sign-out"></i>
         <span>Logout</span>
     </a>
-    
+
 </nav>
 
 <div (click)="onClickOverlay()" class="nav-overlay"></div>
 
 <main class="main-container">
-    <header>
-        <i (click)="collapseNav($event)" class="fa fa-navicon hidden-lg-up" ></i>
+    <header *ngIf="userService.accountStatus$ | async as status">
+        <i (click)="collapseNav($event)" class="fa fa-navicon hidden-lg-up"></i>
         <i *ngIf="['/main/portfolio', '/main/charts', '/main/user'].includes(router.url)" (click)="collapseNav($event)" class="fa fa-filter hidden-lg-up"></i>
-        <div class="account-details hidden-xs-down" *ngIf="userService.accountStatus$ | async as status">
-            <div>
-                <h3>{{status.available | currency : 'EUR':'symbol'}}</h3>
-                <span>available</span>
-            </div>
-            <div>
-                <h3>{{status.equity | currency : 'EUR':'symbol'}}</h3>
-                <span>equality</span>
-            </div>
-            <div>
-                <h3>{{status.openMargin | currency : 'EUR':'symbol'}}</h3>
-                <span>O. margin</span>
-            </div>
-            <div>
-                <h3 [ngClass]="{'positive': status.profit > 0, 'negative': status.profit < 0}">{{status.profit | currency : 'EUR':'symbol'}}</h3>
-                <span>profit</span>
-            </div>
+        <div class="account-details hidden-xs-down">
+            <h4>{{status.available | currency : 'EUR':'symbol'}}</h4>
+            <span>available</span>
         </div>
+        <div class="account-details hidden-xs-down">
+            <h4>{{status.equity | currency : 'EUR':'symbol'}}</h4>
+            <span>equality</span>
+        </div>
+        <div class="account-details hidden-xs-down">
+            <h4>{{status.openMargin | currency : 'EUR':'symbol'}}</h4>
+            <span>O. margin</span>
+        </div>
+        <div class="account-details hidden-xs-down">
+            <h4 [ngClass]="{'positive': status.profit > 0, 'negative': status.profit < 0}">{{status.profit | currency : 'EUR':'symbol'}}</h4>
+            <span>profit</span>
+        </div>
+
         <div class="header-search">
             <input (keyup)="onSearchKeyUp($event)" placeholder="Markets / Channels / People" #input>
             <div class="search-drop-down" *ngIf="(searchResults$ | async) as result" (click)="onClickDropdownItem()" #dropdown>

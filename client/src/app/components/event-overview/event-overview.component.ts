@@ -4,7 +4,8 @@ import {
 } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { Http } from '@angular/http';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { NewsService } from '../../services/news.service';
 
 @Component({
 	selector: 'app-event-overview',
@@ -15,13 +16,19 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class EventOverviewComponent implements OnInit {
 
-	@Output() comments$: BehaviorSubject<Array<any>> = new BehaviorSubject([]);
+	@Output() crypto$: BehaviorSubject<any> = new BehaviorSubject([]);
+	@Output() top$: Subject<any> = new Subject();
 
 	constructor(
-		public userService: UserService) {
+		private _newsService: NewsService) {
 	}
 
-	ngOnInit() {
+	async ngOnInit() {
+		const news = await this._newsService.find();
+
+		this.top$.next(news.top);
+		this.crypto$.next(news.crypto);
 		
+		console.log('asdf', news);
 	}
 }

@@ -31,7 +31,7 @@ const routes: Routes = [
 			{ path: 'channels', component: ChannelOverviewComponent },
 			{ path: 'portfolio', component: PortfolioComponent },
 			{ path: 'user', component: UserOverviewComponent },
-			{ path: 'calender', component: EventOverviewComponent },
+			{ path: 'calendar', component: EventOverviewComponent },
 			{
 				path: 'user/:id', component: ProfileComponent, children:
 				[
