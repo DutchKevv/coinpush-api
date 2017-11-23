@@ -23,6 +23,7 @@
     "NodeJS"
   ],
   "scripts": {
+    "preinstall": "npm run install-all && exit",
     "start": "pm2 start process.json && pm2 monit",
     "prod": "NODE_ENV=prod pm2 start process.json && pm2 monit",
     "stop": "pm2 stop all",
