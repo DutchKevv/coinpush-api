@@ -76,8 +76,6 @@ export const dataLayer = {
 			const insertCandlesResult = await model.insertMany(documents);
 			// const insertCandlesResult = await model.updateMany({}, documents);
 			const updateStatusResult = await Status.update({ symbol, timeFrame }, { lastSync: candles[candles.length - 10] });
-
-			console.log(insertCandlesResult, updateStatusResult);
 		}
 		else
 			return Promise.resolve();

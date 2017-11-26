@@ -1,12 +1,12 @@
 <instrument-list (activeSymbolChange)="onSymbolChange($event)"></instrument-list>
 
 <div class="chart-header">
-    <h5>{{(activeSymbol$ | async)?.options.name}}</h5>
+    <h5>{{activeSymbol?.options.name}}</h5>
     <ul class="header-buttons">
         <li>
             <button (click)="charts[0].instrumentModel.setZoom(-1)"
                     [ngClass]="{'active': (activeSymbol$ | async)?.options.zoom === 1}"
-                    [disabled]="!activeSymbol$.getValue()"
+                    [disabled]="!activeSymbol"
                     type="button"
                     class="text-dark button-zoom-out btn-menu"
                     aria-expanded="false">
@@ -16,7 +16,7 @@
         </li>
 
         <li>
-            <button (click)="activeSymbol$.getValue() && activeSymbol$.getValue().setZoom(1)"
+            <button (click)="activeSymbol && activeSymbol.setZoom(1)"
                     [ngClass]="{'active': (activeSymbol$ | async)?.options.zoom === 10}"
                     type="button"
                     class="text-dark btn-menu button-zoom-in"
@@ -25,8 +25,8 @@
             </button>
         </li>
         <li>
-            <button (click)="activeSymbol$.getValue() && activeSymbol$.getValue().set({graphType: 'ohlc'})"
-                    [disabled]="!activeSymbol$.getValue()"
+            <button (click)="activeSymbol && activeSymbol.set({graphType: 'ohlc'})"
+                    [disabled]="!activeSymbol"
                     type="button"
                     class="text-dark button-ohlc btn-menu"
                     [ngClass]="{'active': (activeSymbol$ | async)?.options.graphType === 'ohlc'}"
@@ -35,7 +35,7 @@
             </button>
         </li>
         <li>
-            <button (click)="activeSymbol$.getValue() && activeSymbol$.getValue().set({graphType: 'candlestick'})"
+            <button (click)="activeSymbol && activeSymbol.set({graphType: 'candlestick'})"
                     [ngClass]="{'active': (activeSymbol$ | async)?.options.graphType === 'candlestick'}"
                     type="button"
                     class="text-dark button-candlestick btn-menu"
@@ -52,23 +52,23 @@
                 <!--<ng-container *ngIf="model !== null">-->
                 <span>{{(activeSymbol$ | async)?.options.timeFrame}}</span>
                 <!--</ng-container>-->
-                <ng-container *ngIf="!activeSymbol$.getValue()"><span>M15</span></ng-container>
+                <ng-container *ngIf="!activeSymbol"><span>M15</span></ng-container>
             </button>
 
             <ul class="dropdown-menu">
-                <li><a (click)="activeSymbol$.getValue() && activeSymbol$.getValue().set({timeFrame: 'M1'})">M1</a></li>
-                <li><a (click)="activeSymbol$.getValue() && activeSymbol$.getValue().set({timeFrame: 'M5'})">M5</a></li>
-                <li><a (click)="activeSymbol$.getValue() && activeSymbol$.getValue().set({timeFrame: 'M15'})">M15</a></li>
-                <li><a (click)="activeSymbol$.getValue() && activeSymbol$.getValue().set({timeFrame: 'M30'})">M30</a></li>
-                <li><a (click)="activeSymbol$.getValue() && activeSymbol$.getValue().set({timeFrame: 'H1'})">H1</a></li>
-                <li><a (click)="activeSymbol$.getValue() && activeSymbol$.getValue().set({timeFrame: 'H4'})">H4</a></li>
-                <li><a (click)="activeSymbol$.getValue() && activeSymbol$.getValue().set({timeFrame: 'D1'})">D</a></li>
-                <li><a (click)="activeSymbol$.getValue() && activeSymbol$.getValue().set({timeFrame: 'W1'})">W</a></li>
+                <li><a (click)="activeSymbol && activeSymbol.set({timeFrame: 'M1'})">M1</a></li>
+                <li><a (click)="activeSymbol && activeSymbol.set({timeFrame: 'M5'})">M5</a></li>
+                <li><a (click)="activeSymbol && activeSymbol.set({timeFrame: 'M15'})">M15</a></li>
+                <li><a (click)="activeSymbol && activeSymbol.set({timeFrame: 'M30'})">M30</a></li>
+                <li><a (click)="activeSymbol && activeSymbol.set({timeFrame: 'H1'})">H1</a></li>
+                <li><a (click)="activeSymbol && activeSymbol.set({timeFrame: 'H4'})">H4</a></li>
+                <li><a (click)="activeSymbol && activeSymbol.set({timeFrame: 'D1'})">D</a></li>
+                <li><a (click)="activeSymbol && activeSymbol.set({timeFrame: 'W1'})">W</a></li>
             </ul>
         </li>
         <li class="dropdown">
             <button type="button"
-                    [disabled]="!activeSymbol$.getValue()"
+                    [disabled]="!activeSymbol"
                     class="dropdown-toggle btn-menu"
                     data-toggle="dropdown"
                     aria-haspopup="true"
@@ -107,8 +107,8 @@
 </div>
 
 <div class="chart-container">
-    <chart-box *ngIf="activeSymbol$ | async as symbolModel"
-               [symbolModel]="symbolModel"
+    <chart-box *ngIf="activeSymbol"
+               [symbolModel]="activeSymbol"
                [showBox]="false"
                [quickBuy]="true"
                class="chart-absolute">

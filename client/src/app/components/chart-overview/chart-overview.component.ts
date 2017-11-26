@@ -8,6 +8,7 @@ import { ChartBoxComponent } from '../chart-box/chart-box.component';
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { SymbolModel } from "../../models/symbol.model";
 import { InstrumentModel } from "../../models/instrument.model";
+import { Subject } from 'rxjs';
 
 declare let $: any;
 
@@ -24,7 +25,8 @@ export class ChartOverviewComponent implements OnInit {
 	@ViewChildren(ChartBoxComponent) charts: QueryList<ChartBoxComponent>;
 	@ViewChild('container') container;
 
-	public activeSymbol$: BehaviorSubject<SymbolModel> = new BehaviorSubject(null);
+	public activeSymbol$: Subject<SymbolModel> = new Subject();
+	public activeSymbol: SymbolModel;
 
 	constructor(public instrumentsService: InstrumentsService) {
 	}
@@ -34,14 +36,15 @@ export class ChartOverviewComponent implements OnInit {
 	}
 
 	onSymbolChange(symbolModel: SymbolModel): void {
-		this.activeSymbol$.next(null);
+	
+		// this.activeSymbol$.next(null);
 		// if (symbolModel === null) {
 		//
 		// 	return;
 		// }
-		setTimeout(() => {
-			this.activeSymbol$.next(symbolModel)
-		}, 0);
+		// setTimeout(() => {
+			this.activeSymbol = symbolModel;
+		// }, 0);
 
 	}
 

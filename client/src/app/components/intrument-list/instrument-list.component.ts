@@ -40,21 +40,23 @@ export class InstrumentListComponent implements OnInit, AfterViewInit, OnDestroy
 
 	ngOnInit() {
 		this.toggleFilter(this.activeFilter);
-
-		this._routeSub = this._route.params.subscribe(params => {
-			const symbol = this.cacheService.symbols.find(s => s.options.name === params['id']);
-			this.setActiveSymbol(symbol || this.symbols$.getValue()[0]);
-		});
 	}
 
 	ngAfterViewInit() {
-		this._scrollIntoView(this.activeSymbol);
+		this._routeSub = this._route.params.subscribe(params => {
+			if (this.activeSymbol && this.activeSymbol.options.name === params['id'])
+				return;
+
+			const symbol = this.cacheService.symbols.find(s => s.options.name === params['id']);
+			this.setActiveSymbol(symbol || this.symbols$.getValue()[0]);
+			this._scrollIntoView(this.activeSymbol);
+		});
 	}
 
 	toggleFilter(filter: string) {
 		this.activeFilter = filter;
 		this.activeMenu = null;
-		
+
 		switch (filter) {
 			case 'all':
 				this.symbols$.next(this.cacheService.symbols);
@@ -118,6 +120,10 @@ export class InstrumentListComponent implements OnInit, AfterViewInit, OnDestroy
 
 		const el = this._elementRef.nativeElement.shadowRoot.querySelector(`[data-symbol=${symbol.get('name')}]`);
 
+		// Already in viewport
+		if (isAnyPartOfElementInViewport(el))
+			return;
+
 		if (el)
 			el.scrollIntoView();
 	}
@@ -127,3 +133,17 @@ export class InstrumentListComponent implements OnInit, AfterViewInit, OnDestroy
 			this._routeSub.unsubscribe();
 	}
 }
+
+function isAnyPartOfElementInViewport(el) {
+	
+		const rect = el.getBoundingClientRect();
+		// DOMRect { x: 8, y: 8, width: 100, height: 100, top: 8, right: 108, bottom: 108, left: 8 }
+		const windowHeight = (window.innerHeight || document.documentElement.clientHeight);
+		const windowWidth = (window.innerWidth || document.documentElement.clientWidth);
+	
+		// http://stackoverflow.com/questions/325933/determine-whether-two-date-ranges-overlap
+		const vertInView = (rect.top <= windowHeight) && ((rect.top + rect.height) >= 0);
+		const horInView = (rect.left <= windowWidth) && ((rect.left + rect.width) >= 0);
+	
+		return (vertInView && horInView);
+	}

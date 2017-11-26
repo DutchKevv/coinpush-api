@@ -1,7 +1,7 @@
 import { forEach, random, throttle } from 'lodash';
 import {
 	Component, OnDestroy, ElementRef, Input, ViewChild,
-	OnInit, AfterViewInit, ViewEncapsulation, NgZone, Output, SimpleChanges, OnChanges
+	OnInit, AfterViewInit, ViewEncapsulation, NgZone, Output, SimpleChanges, OnChanges, ChangeDetectionStrategy
 } from '@angular/core';
 
 import { DialogComponent } from '../dialog/dialog.component';
@@ -38,7 +38,7 @@ import '../../style/highcharts/highstock.theme.dark';
 		'./chart-box.component.scss'
 	],
 	encapsulation: ViewEncapsulation.Native,
-	// changeDetection: ChangeDetectionStrategy.OnPush,
+	changeDetection: ChangeDetectionStrategy.OnPush,
 	entryComponents: [DialogComponent]
 })
 
@@ -128,11 +128,22 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
-		
+		// console.log(changes);
+
+		if (changes.symbolModel) {
+			this.instrumentModel = null;
+			this.symbolModel = changes.symbolModel.currentValue;
+		}
+			this.init();
 	}
 
 	ngOnInit() {
-		
+		this.init();
+	}
+
+	init() {
+		this._destroy();
+	
 		if (!this.symbolModel && !this.instrumentModel)
 			throw new Error('symbol or instrument model required');
 
@@ -146,7 +157,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 			});
 		}
 
-		this.$el = $(this._elementRef.nativeElement);
 		this._onScrollBounced = throttle(this._onScroll.bind(this), 33);
 
 		this._restoreStyles();
@@ -206,8 +216,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 			if (dirty)
 				this.render();
 		});
-
-		// this._createChart();
 	}
 
 	placeOrder(event, side: number) {
@@ -261,7 +269,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		this._zone.runOutsideAngular(() => {
 
 			this._destroyChart();
-	
+
 
 			// create the chart
 			this._chart = Highstock.chart(this.chartRef.nativeElement, {
@@ -832,14 +840,31 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 		if (this._chart)
 			this._chart.destroy();
+
+		this._chart = null;
+	}
+
+	private _destroy() {
+		if (this._changeSubscription)
+			this._changeSubscription.unsubscribe();
+
+		if (this._priceSubscription)
+			this._priceSubscription.unsubscribe();
+
+		if (this._orderSubscription)
+			this._orderSubscription.unsubscribe();
+
+		this._destroyChart();
+
+		this._data = {
+			candles: [],
+			volume: [],
+			indicators: [],
+			orders: []
+		};
 	}
 
 	async ngOnDestroy() {
-		this._changeSubscription.unsubscribe();
-		this._priceSubscription.unsubscribe();
-		this._orderSubscription.unsubscribe();
-		this._destroyChart();
-		this._data = null;
-		this.$el = null;
+		this._destroy();
 	}
 }
