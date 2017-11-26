@@ -315,7 +315,7 @@ OandaAdapter.prototype.getCandles = function (symbol, start, end, granularity, c
 			granularity: granularity,
 			alignmentTimezone: 'GMT0',
 			dailyAlignment: 0,
-			// includeFirst: false
+			includeFirst: start ? false : undefined
 		}))),
 		headers: {
 			Authorization: 'Bearer ' + this.accessToken,

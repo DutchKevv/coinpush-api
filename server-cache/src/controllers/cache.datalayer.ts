@@ -65,17 +65,20 @@ export const dataLayer = {
 			if (!candles[i])
 				throw new Error('NO TIME!');
 			// console.log('TIME TIME', candles[i], typeof candles[i]);
-			let time = candles[i];
-			const buffer = Buffer.from(candles.slice(i, i += rowLength).buffer);
-			
+			const time = candles[i];
+			const data = Buffer.from(candles.slice(i, i += rowLength).buffer);
+
 			// console.log('sadf', new Date(time * 1000));
-			documents.push({ time: time, data: buffer });
+			documents.push({ time, data });
 		}
 
-		if (candles.length)
-			return model.updateMany({}, documents).then(() => {
-				return Status.update({ symbol, timeFrame }, { lastSync: candles[candles.length - 10] })
-			});
+		if (candles.length) {
+			const insertCandlesResult = await model.insertMany(documents);
+			// const insertCandlesResult = await model.updateMany({}, documents);
+			const updateStatusResult = await Status.update({ symbol, timeFrame }, { lastSync: candles[candles.length - 10] });
+
+			console.log(insertCandlesResult, updateStatusResult);
+		}
 		else
 			return Promise.resolve();
 	},
