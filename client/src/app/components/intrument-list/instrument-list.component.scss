@@ -127,12 +127,14 @@ ul {
 			&:last-child {
 				width: 110px;
 				text-align: right;
-
+				min-height: 18px;
+				
 				i {
 					color: $font-color-light;
 					margin-right: 10px;
 					font-size: 16px;
-	
+					line-height: 16px;
+
 					&.active,
 					&:hover {
 						color: $general-active;

@@ -128,22 +128,22 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
-		// console.log(changes);
+		console.log(changes);
 
 		if (changes.symbolModel) {
 			this.instrumentModel = null;
 			this.symbolModel = changes.symbolModel.currentValue;
-		}
 			this.init();
+		}
+			
 	}
 
 	ngOnInit() {
-		this.init();
 	}
 
 	init() {
 		this._destroy();
-	
+		console.log('box INIT!!');
 		if (!this.symbolModel && !this.instrumentModel)
 			throw new Error('symbol or instrument model required');
 

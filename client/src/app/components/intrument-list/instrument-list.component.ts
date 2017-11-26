@@ -10,6 +10,7 @@ import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { SYMBOL_CAT_TYPE_FOREX, SYMBOL_CAT_TYPE_RESOURCE } from "../../../../../shared/constants/constants";
 import { UserService } from "../../services/user.service";
 import { ActivatedRoute } from "@angular/router";
+import { Subject } from 'rxjs';
 
 
 @Component({
@@ -27,7 +28,7 @@ export class InstrumentListComponent implements OnInit, AfterViewInit, OnDestroy
 	public activeSymbol: SymbolModel;
 	public activeFilter: string = 'all';
 	public activeMenu: string = null;
-	public symbols$: BehaviorSubject<Array<SymbolModel>> = new BehaviorSubject([]);
+	public symbols = this.cacheService.symbols;
 
 	private _routeSub;
 
@@ -39,7 +40,7 @@ export class InstrumentListComponent implements OnInit, AfterViewInit, OnDestroy
 		private _orderService: OrderService) { }
 
 	ngOnInit() {
-		this.toggleFilter(this.activeFilter);
+	
 	}
 
 	ngAfterViewInit() {
@@ -48,7 +49,7 @@ export class InstrumentListComponent implements OnInit, AfterViewInit, OnDestroy
 				return;
 
 			const symbol = this.cacheService.symbols.find(s => s.options.name === params['id']);
-			this.setActiveSymbol(symbol || this.symbols$.getValue()[0]);
+			this.setActiveSymbol(symbol || this.cacheService.symbols[0]);
 			this._scrollIntoView(this.activeSymbol);
 		});
 	}
@@ -59,25 +60,25 @@ export class InstrumentListComponent implements OnInit, AfterViewInit, OnDestroy
 
 		switch (filter) {
 			case 'all':
-				this.symbols$.next(this.cacheService.symbols);
+				this.symbols = this.cacheService.symbols;
 				break;
 			case 'all open':
-				this.symbols$.next(this.cacheService.symbols.filter(s => !s.get('halted')));
+				this.symbols = this.cacheService.symbols.filter(s => !s.get('halted'));
 				break;
 			case 'all popular':
-				this.symbols$.next(this.cacheService.symbols);
+				this.symbols = this.cacheService.symbols;
 				break;
 			case 'favorite':
-				this.symbols$.next(this.cacheService.symbols.filter(s => this.userService.model.options.favorites.includes(s.options.name)));
+				this.symbols = this.cacheService.symbols.filter(s => this.userService.model.options.favorites.includes(s.options.name));
 				break;
 			case 'forex':
-				this.symbols$.next(this.cacheService.symbols.filter(s => s.get('type') === SYMBOL_CAT_TYPE_FOREX));
+				this.symbols = this.cacheService.symbols.filter(s => s.get('type') === SYMBOL_CAT_TYPE_FOREX);
 				break;
 			case 'forex pop':
-				this.symbols$.next(this.cacheService.symbols.filter(s => s.get('type') === SYMBOL_CAT_TYPE_FOREX));
+				this.symbols = this.cacheService.symbols.filter(s => s.get('type') === SYMBOL_CAT_TYPE_FOREX);
 				break;
 			case 'resources':
-				this.symbols$.next(this.cacheService.symbols.filter(s => s.get('type') === SYMBOL_CAT_TYPE_RESOURCE));
+				this.symbols = this.cacheService.symbols.filter(s => s.get('type') === SYMBOL_CAT_TYPE_RESOURCE);
 				break;
 		}
 	}
@@ -121,7 +122,7 @@ export class InstrumentListComponent implements OnInit, AfterViewInit, OnDestroy
 		const el = this._elementRef.nativeElement.shadowRoot.querySelector(`[data-symbol=${symbol.get('name')}]`);
 
 		// Already in viewport
-		if (isAnyPartOfElementInViewport(el))
+		if (!el || isAnyPartOfElementInViewport(el))
 			return;
 
 		if (el)
@@ -135,15 +136,15 @@ export class InstrumentListComponent implements OnInit, AfterViewInit, OnDestroy
 }
 
 function isAnyPartOfElementInViewport(el) {
-	
-		const rect = el.getBoundingClientRect();
-		// DOMRect { x: 8, y: 8, width: 100, height: 100, top: 8, right: 108, bottom: 108, left: 8 }
-		const windowHeight = (window.innerHeight || document.documentElement.clientHeight);
-		const windowWidth = (window.innerWidth || document.documentElement.clientWidth);
-	
-		// http://stackoverflow.com/questions/325933/determine-whether-two-date-ranges-overlap
-		const vertInView = (rect.top <= windowHeight) && ((rect.top + rect.height) >= 0);
-		const horInView = (rect.left <= windowWidth) && ((rect.left + rect.width) >= 0);
-	
-		return (vertInView && horInView);
-	}
+
+	const rect = el.getBoundingClientRect();
+	// DOMRect { x: 8, y: 8, width: 100, height: 100, top: 8, right: 108, bottom: 108, left: 8 }
+	const windowHeight = (window.innerHeight || document.documentElement.clientHeight);
+	const windowWidth = (window.innerWidth || document.documentElement.clientWidth);
+
+	// http://stackoverflow.com/questions/325933/determine-whether-two-date-ranges-overlap
+	const vertInView = (rect.top <= windowHeight) && ((rect.top + rect.height) >= 0);
+	const horInView = (rect.left <= windowWidth) && ((rect.left + rect.width) >= 0);
+
+	return (vertInView && horInView);
+}

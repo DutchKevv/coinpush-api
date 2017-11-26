@@ -31,21 +31,12 @@ export class ChartOverviewComponent implements OnInit {
 	constructor(public instrumentsService: InstrumentsService) {
 	}
 
-	ngOnInit(): void {
-		// this.instrumentsService.instruments$.subscribe(() => this.setFocusToHighestIndex());
+	ngOnInit() {
+		
 	}
 
 	onSymbolChange(symbolModel: SymbolModel): void {
-	
-		// this.activeSymbol$.next(null);
-		// if (symbolModel === null) {
-		//
-		// 	return;
-		// }
-		// setTimeout(() => {
-			this.activeSymbol = symbolModel;
-		// }, 0);
-
+		this.activeSymbol = symbolModel;
 	}
 
 	addIndicator(name: string) {

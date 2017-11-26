@@ -34,7 +34,7 @@
 	</div> -->
 
 	<ul>
-		<li *ngFor="let symbol of symbols$ | async; trackBy:trackByFunc" [ngClass]="{'active': activeSymbol === symbol}" [attr.data-symbol]="symbol.options.name"
+		<li *ngFor="let symbol of symbols; trackBy:trackByFunc" [ngClass]="{'active': activeSymbol === symbol}" [attr.data-symbol]="symbol.options.name"
 		 [routerLink]="['/main/charts', symbol.options.name]">
 
 			<ng-container *ngIf="symbol.options$ | async as options">
@@ -45,18 +45,10 @@
 					<span [ngClass]="{'text-positive': options.changedAmount > 0, 'text-negative': options.changedAmount < 0}">{{options.changedAmount}} %</span>
 				</div>
 				<div>
-					<!-- <button [ngClass]="{'positive': options.bidDirection === 'up', 'negative': options.bidDirection === 'down'}" (click)="placeOrder($event, constantsService.constants.ORDER_SIDE_BUY, options.name)"
-					 class="btn btn-sm">
-						<span>B</span> -->
-						<span>{{options.bid || 0}}</span>
-					<!-- </button> -->
+					<span>{{options.bid || 0}}</span>
 				</div>
 				<div>
-					<!-- <button [ngClass]="{'positive': options.askDirection === 'up', 'negative': options.askDirection === 'down'}" (click)="placeOrder($event, constantsService.constants.ORDER_SIDE_BUY, options.name)"
-					 class="btn btn-sm">
-						<span>S</span> -->
-						<span>{{options.ask || 0}}</span>
-					<!-- </button> -->
+					<span>{{options.ask || 0}}</span>
 				</div>
 				<div *ngIf="options.halted">Market closed</div>
 				<div *ngIf="!options.halted">{{options.high | number : '1.2-2'}} / {{options.low | number : '1.2-2'}}</div>
