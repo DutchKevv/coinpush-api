@@ -12,6 +12,7 @@ import { app } from '../app';
 import { Status } from '../schemas/status.schema';
 
 const READ_COUNT_DEFAULT = 500;
+const HISTORY_M1_COUNT_DEFAULT = 2000;
 
 /**
  * Broker
@@ -30,14 +31,13 @@ export const cacheController = {
 	_tickStreamOpen: false,
 	_tickIntervalTimer: null,
 
-	async find(params: { symbol: string, timeFrame: string, from?: number, until?: number, count?: number }) {
+	async find(params: { symbol: string, timeFrame: string, from?: number, until?: number, count?: number, toArray?: boolean }) {
 		let symbol = params.symbol,
 			timeFrame = params.timeFrame,
 			from = params.from,
 			until = params.until,
-			count = params.count,
-			candles = null;
-			// softUntil;
+			count = params.count;
+		// softUntil;
 
 		log.info('Cache', `Read ${symbol}-${timeFrame} from ${from} until ${until} count ${count}`);
 
@@ -55,6 +55,7 @@ export const cacheController = {
 
 		// Make sure there is a count/limit
 		count = params.count = params.count || READ_COUNT_DEFAULT;
+
 
 		// Create a soft until for the isComplete check
 		// This is needed to fake updated data status
@@ -92,96 +93,32 @@ export const cacheController = {
 		// else if (candles.length / (10 * Float64Array.BYTES_PER_ELEMENT) > params.count) {
 		// 	candles.slice(candles.length - ((10 * Float64Array.BYTES_PER_ELEMENT) * params.count));
 		// }
-			
 
-		return await dataLayer.read(params);
+		const candles = await dataLayer.read(params);
+
+		if (params.toArray) {
+			return new Float64Array(candles.buffer, candles.byteOffset, candles.length / Float64Array.BYTES_PER_ELEMENT);
+		} else {
+			return candles;
+		}
 	},
 
-	async fetch(params: { symbol: string, timeFrame: string, from: number, until: number, count: number }, emitStatus?: boolean): Promise<void> {
+	async fetch(params: { symbol: string, timeFrame: string, from: number, until: number, count: number }, emitStatus?: boolean): Promise<any> {
 
-		this._fetchQueue = this._fetchQueue.then(async () => {
-			let symbol = params.symbol,
-				timeFrame = params.timeFrame,
-				from = params.from,
-				until = params.until,
-				count = params.count;
+		return new Promise((resolve, reject) => {
 
-			if (count && from && until)
-				throw new Error('Cache->fetch : Only from OR until can be given when using count, not both');
+			app.broker.getCandles(params.symbol, params.timeFrame, params.from, params.until, params.count, async (candles: Float64Array) => {
 
-			// Get missing chunks
-			let chunks = dataMapper.getMissingChunks(symbol, timeFrame, from, until, count),
-				done = 0;
+				// Store candles in DB
+				await dataLayer.write(params.symbol, params.timeFrame, candles);
 
-			if (!chunks.length)
-				return;
+			}, err => {
+				if (err)
+					return reject(err);
 
-			// Fire all missing chunk request
-			return Promise.all(chunks.map(chunk => {
-
-				return new Promise((resolve, reject) => {
-					let now = Date.now(),
-						streamChunkTotal = 0,
-						streamChunkWritten = 0,
-						endTriggered = false,
-						total = 0;
-
-					log.info('Cache', `Fetching ${symbol}/${timeFrame} from ${chunk.from} until ${chunk.until} count ${chunk.count}`);
-
-					app.broker.getCandles(symbol, timeFrame, chunk.from, chunk.until, chunk.count, async (buf: NodeBuffer) => {
-						streamChunkTotal++;
-
-						console.log(`WRITING ${(buf.length / 8) / 10} candles to DB`);
-
-						// Store candles in DB
-						await dataLayer.write(symbol, timeFrame, buf);
-
-						// Make sure there is a from to store in mapper
-						from = from || buf.readDoubleLE(0);
-
-						let c_until = buf.readDoubleLE(buf.length - (10 * Float64Array.BYTES_PER_ELEMENT)),
-							c_count = buf.length / (10 * Float64Array.BYTES_PER_ELEMENT);
-
-						total += c_count;
-
-						// Update map every time a chunk is successfully added
-						// Use the original from date (if given) as data comes in forwards, this simplifies the mapper updating
-						dataMapper.update(symbol, timeFrame, from, c_until || until, c_count);
-
-						streamChunkWritten++;
-
-						// Send trigger for clients
-						if (emitStatus) {
-							this.ipc.send('main', 'cache:fetch:status', {
-								symbol: symbol,
-								timeFrame: timeFrame,
-								value: dataMapper.getPercentageComplete(symbol, timeFrame, from, until, count)
-							});
-						}
-
-						if (done === chunks.length && streamChunkWritten === streamChunkTotal)
-							resolve();
-
-					}, err => {
-
-						if (err)
-							return reject(err);
-
-						// Update the total request
-						dataMapper.update(symbol, timeFrame, from, until, total);
-
-						log.info('Cache', `Fetching ${symbol} took ${Date.now() - now} ms`);
-
-						endTriggered = true;
-
-						if (++done === chunks.length && streamChunkWritten === streamChunkTotal)
-							resolve();
-					});
-				});
-			}));
+				resolve();
+			});
 		});
-
-		return this._fetchQueue;
 	},
 
 	async openTickStream(): Promise<any> {
@@ -208,25 +145,32 @@ export const cacheController = {
 	},
 
 	startBroadcastInterval() {
-		this._tickIntervalTimer = setInterval(() => {
-			if (!Object.getOwnPropertyNames(this._tickBuffer).length) return;
+		// this._tickIntervalTimer = setInterval(() => {
+		// 	if (!Object.getOwnPropertyNames(this._tickBuffer).length) return;
 
-			app.io.sockets.emit('ticks', this._tickBuffer);
+		// 	app.io.sockets.emit('ticks', this._tickBuffer);
 
-			this._tickBuffer = {};
-		}, 200);
+		// 	this._tickBuffer = {};
+		// }, 200);
 	},
 
 	async preLoad() {
-		const results = await Promise.all(symbolController.symbols.map(symbol => {
-			return this.fetch({ symbol: symbol.name, timeFrame: 'M1', count: 5000 });
+		const statuses = await Status.find({ timeFrame: 'M1' });
+
+		const results = await Promise.all(statuses.map((status, index) => {
+
+			const from = status.lastSync ? (new Date(status.lastSync)).getTime() : undefined;
+			const until = Date.now();
+			const count = status.lastSync ? undefined : HISTORY_M1_COUNT_DEFAULT;
+			console.log('from', from);
+			return this.fetch({ symbol: status.symbol, timeFrame: 'M1', from, until, count })
 		}));
 
 		console.log('done!');
 	},
 
 	async _isComplete(symbol, timeFrame, from, until) {
-		const status = await Status.findOne({symbol, timeFrame});
+		const status = await Status.findOne({ symbol, timeFrame });
 		return status.lastSync > until
 	},
 
@@ -235,8 +179,8 @@ export const cacheController = {
 	},
 
 	_onTickReceive(tick): void {
-		if (!this._tickBuffer[tick.instrument])
-			this._tickBuffer[tick.instrument] = [];
+		// if (!this._tickBuffer[tick.instrument])
+		// 	this._tickBuffer[tick.instrument] = [];
 
 		let symbolObj = this.symbols.find(symbol => symbol.name === tick.instrument);
 
@@ -244,8 +188,8 @@ export const cacheController = {
 		symbolObj.ask = tick.ask;
 		symbolObj.lastTick = tick.time;
 
-		this._updateRedis([symbolObj]);
+		app.io.sockets.emit('ticks', { [tick.instrument]: [[tick.time, tick.bid, tick.ask]] });
 
-		this._tickBuffer[tick.instrument].push([tick.time, tick.bid, tick.ask]);
+		// this._tickBuffer[tick.instrument].push([tick.time, tick.bid, tick.ask]);
 	}
 };

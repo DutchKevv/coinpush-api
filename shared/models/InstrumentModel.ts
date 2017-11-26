@@ -7,7 +7,7 @@ export class InstrumentModel extends BaseModel {
 	public static readonly DEFAULTS: InstrumentSettings = {
 		ea: null,
 		symbol: null,
-		timeFrame: 'M15',
+		timeFrame: 'M1',
 		id: null,
 		groupId: null,
 		focus: false,

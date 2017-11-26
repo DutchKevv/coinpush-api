@@ -84,7 +84,7 @@ app.use(expressJwt({
 	}
 }).unless((req) => {
 	return (
-		(/\.(gif|jpg|jpeg|tiff|png)$/i).test(req.originalUrl) ||
+		(/\.(gif|jpg|jpeg|tiff|png|ico)$/i).test(req.originalUrl) ||
 		req.originalUrl === '/' ||
 		req.originalUrl.startsWith('/ws/') ||
 		(req.originalUrl === '/api/v1/authenticate' && (['POST', 'PUT', 'OPTIONS'].includes(req.method) && !req.headers.authorization)) ||

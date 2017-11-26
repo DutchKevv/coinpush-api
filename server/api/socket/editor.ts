@@ -1,6 +1,7 @@
 module.exports = (app, socket) => {
 
 	socket.on('editor:directory-list', async () => {
+		console.log('GET DIRECTORY!!');
 		socket.emit('editor:directory-list', null, await app.controllers.editor.directoryTree);
 	});
 

@@ -304,7 +304,6 @@ OandaAdapter.prototype._candlesJsonStringToArray = function (chunk) {
 };
 
 OandaAdapter.prototype.getCandles = function (symbol, start, end, granularity, count, callback) {
-	let readableStream = new PassThrough();
 
 	this._sendRESTRequest({
 		method: 'GET',
@@ -324,16 +323,7 @@ OandaAdapter.prototype.getCandles = function (symbol, start, end, granularity, c
 			// Connection: 'Keep-Alive'
 
 		}
-	}, function (err) {
-		if (err) {
-			console.error(err);
-			return readableStream.emit('error', err);
-		}
-
-		readableStream.end();
-	}, data => readableStream.push(data));
-
-	return readableStream
+	}, callback);
 };
 
 OandaAdapter.prototype.getTransactionHistory = function (accountId, minId, callback) {

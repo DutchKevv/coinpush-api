@@ -14,7 +14,7 @@ const db = mongoose.connection;
 /**
  * Broker API
  */
-const brokerAPI = global['brokerAPI'] = new index_1.default(config.broker.account);
+const brokerAPI = global['brokerAPI'] = new index_1.default(config.broker.oanda);
 brokerAPI.init();
 app.use(morgan('dev'));
 app.use(helmet());

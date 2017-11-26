@@ -3,11 +3,11 @@ import {Schema, model} from 'mongoose';
 export const CandleSchema = new Schema({
 	time: {
 		type: Date,
-		lowercase: true,
-		default: Date.now
+		unique: true,
+		required: true
 	},
 	data: {
-		type: Buffer,
+		type: Schema.Types.Buffer,
 		required: true
 	}
 });

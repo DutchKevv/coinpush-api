@@ -1,0 +1,113 @@
+<div class="filter-list" #navbar>
+	<h4>Popular</h4>
+	<a [ngClass]="{active: activeFilter === 'all'}" (click)="toggleFilter('all')">All</a>
+	<a [ngClass]="{active: activeFilter === 'all popular'}" (click)="toggleFilter('all popular')">All popular</a>
+	<a [ngClass]="{active: activeFilter === 'all open'}" (click)="toggleFilter('all open')">All open</a>
+	<a [ngClass]="{active: activeFilter === 'rise and fall'}" (click)="toggleFilter('rise and fall')">Risers and fallers</a>
+	<a [ngClass]="{active: activeFilter === 'favorite'}" (click)="toggleFilter('favorite')">My favorites</a>
+	<h4>Resources</h4>
+	<a [ngClass]="{active: activeFilter === 'resources'}" (click)="toggleFilter('resources')">All resources</a>
+	<a [ngClass]="{active: activeFilter === 'resources pop'}" (click)="toggleFilter('resources pop')">Popular resources</a>
+	<h4>Indices</h4>
+	<a [ngClass]="{active: activeFilter === 'all2'}" (click)="toggleFilter('all2')">All indices</a>
+	<a [ngClass]="{active: activeFilter === 'all2'}" (click)="toggleFilter('all2')">Popular indices</a>
+	<h4>Crypto</h4>
+	<a [ngClass]="{active: activeFilter === 'all2'}" (click)="toggleFilter('all2')">All crypto</a>
+	<a [ngClass]="{active: activeFilter === 'all2'}" (click)="toggleFilter('all2')">Popular crypto</a>
+	<h4>Forex</h4>
+	<a [ngClass]="{active: activeFilter === 'forex'}" (click)="toggleFilter('forex')">All forex</a>
+	<a [ngClass]="{active: activeFilter === 'forex pop'}" (click)="toggleFilter('forex pop')">Popular forex</a>
+</div>
+
+<div class="instrument-list">
+	<div class="table-header hidden-xs-down">
+		<div>Instrument</div>
+		<div>Diff</div>
+		<div>Bid</div>
+		<div>Ask</div>
+		<div>H / L</div>
+		<div></div>
+	</div>
+
+	<!-- <div class="table-mobile-header hidden-md-up">
+		<i (click)="collapseNav($event)" class="fa fa-filter"></i>
+	</div> -->
+
+	<ul>
+		<li *ngFor="let symbol of symbols$ | async; trackBy:trackByFunc" [ngClass]="{'active': activeSymbol === symbol}" [attr.data-symbol]="symbol.options.name"
+		 [routerLink]="['/main/charts', symbol.options.name]">
+
+			<ng-container *ngIf="symbol.options$ | async as options">
+				<div>
+					<span>{{options.displayName}}</span>
+				</div>
+				<div>
+					<span [ngClass]="{'text-positive': options.changedAmount > 0, 'text-negative': options.changedAmount < 0}">{{options.changedAmount}} %</span>
+				</div>
+				<div>
+					<!-- <button [ngClass]="{'positive': options.bidDirection === 'up', 'negative': options.bidDirection === 'down'}" (click)="placeOrder($event, constantsService.constants.ORDER_SIDE_BUY, options.name)"
+					 class="btn btn-sm">
+						<span>B</span> -->
+						<span>{{options.bid || 0}}</span>
+					<!-- </button> -->
+				</div>
+				<div>
+					<!-- <button [ngClass]="{'positive': options.askDirection === 'up', 'negative': options.askDirection === 'down'}" (click)="placeOrder($event, constantsService.constants.ORDER_SIDE_BUY, options.name)"
+					 class="btn btn-sm">
+						<span>S</span> -->
+						<span>{{options.ask || 0}}</span>
+					<!-- </button> -->
+				</div>
+				<div *ngIf="options.halted">Market closed</div>
+				<div *ngIf="!options.halted">{{options.high | number : '1.2-2'}} / {{options.low | number : '1.2-2'}}</div>
+				<div>
+					<i (click)="onClickToggleFavorite($event, symbol);" [ngClass]="{'active': userService.model.options.favorites.includes(options.name)}"
+					 class="fa fa-star"></i>
+					<i (click)="activeMenu = 'alarm'" class="fa fa-bell"></i>
+					<i class="fa fa-info-circle"></i>
+				</div>
+			</ng-container>
+		</li>
+	</ul>
+</div>
+
+<div class="side-menu" [ngClass]="{'open': activeMenu !== null}">
+	<section *ngIf="activeMenu === 'alarm'">
+		<header>
+			<i (click)="activeMenu = null" class="fa fa-close"></i>
+			<h5>{{activeSymbol.options.displayName}} Alarms</h5>
+		</header>
+		<main>
+			<ul>
+				<li>New</li>
+				<li>Active</li>
+			</ul>
+			<form class="form" (ngSubmit)="login($event)" #loginForm="ngForm">
+				<div class="form-check form-check-inline">
+					<label class="form-check-label">
+						<input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">Price
+					</label>
+				</div>
+				<div class="form-check form-check-inline">
+					<label class="form-check-label">
+						<input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">Momentum
+					</label>
+				</div>
+				<div class="form-check form-check-inline disabled">
+					<label class="form-check-label">
+						<input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3"> 3
+					</label>
+				</div>
+
+				<div class="form-group">
+					<label for="passwordConf">Amount</label>
+					<input id="passwordConf" type="text" class="form-control" name="password" value="{{activeSymbol.options.bid}}" required/>
+				</div>
+
+				<div class="col-sm-12 col-lg-4">
+					<button class="btn btn-primary pull-right">Submit</button>
+				</div>
+			</form>
+		</main>
+	</section>
+</div>

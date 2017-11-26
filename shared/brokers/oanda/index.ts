@@ -122,7 +122,7 @@ export default class OandaApi extends EventEmitter {
 		});
 	}
 
-	public getCandles(symbol, timeFrame, from, until, count, onData, onDone) {
+	public getCandles(symbol: string, timeFrame: string, from: number, until: number, count: number, onData: Function, onDone: Function): void {
 		let countChunks = splitToChunks(timeFrame, from, until, count, OandaApi.FETCH_CHUNK_LIMIT),
 			writeChunks = 0,
 			finished = 0;
@@ -132,72 +132,99 @@ export default class OandaApi extends EventEmitter {
 			let leftOver = '';
 			let startFound = false;
 			let now = Date.now();
+			
+			this._client.getCandles(symbol, chunk.from, chunk.until, timeFrame, chunk.count, async (error, data: any) => {
+				if (error)
+					return console.error(error);
+						
+				const candles = new Float64Array(data.candles.length * 10);
 
-			let transformStream = new Stream.Transform();
+				data.candles.forEach((candle, index) => {
+					const startIndex = index * 10;
 
-			transformStream._transform = function (data, type, done) {
-				if (!this._firstByte) {
-					this._firstByte = true;
-					log.info('OANDA', `FirstByte of ${symbol} took: ${Date.now() - now} ms`);
-				}
-
-				if (!startFound) {
-					let start = data.indexOf(91);
-					if (start > -1) {
-						startFound = true;
-						data = data.slice(start, data.length);
-					} else {
-						return done();
-					}
-				}
-
-				let valArr = (leftOver + data.toString()).split(':');
-				leftOver = valArr.pop();
-
-				valArr.forEach(val => {
-					let value = val.replace(/[^\d\.]/g, '');
-
-					if (typeof value === 'string' && value !== '')
-						arr.push(+value);
+					candles[startIndex] = candle.time / 1000;
+					candles[startIndex + 1] = candle.openBid;
+					candles[startIndex + 2] = candle.openAsk;
+					candles[startIndex + 3] = candle.highBid;
+					candles[startIndex + 4] = candle.highAsk;
+					candles[startIndex + 5] = candle.lowBid;
+					candles[startIndex + 6] = candle.lowAsk;
+					candles[startIndex + 7] = candle.closeBid;
+					candles[startIndex + 8] = candle.closeAsk;
+					candles[startIndex + 9] = candle.volume;
 				});
 
-				let maxIndex = this._lastPiece ? arr.length : (Math.floor(arr.length / OandaApi.FETCH_CHUNK_LIMIT) * OandaApi.FETCH_CHUNK_LIMIT),
-					buf;
+				await onData(candles);
+				
+				if (++finished === countChunks.length)
+					onDone();
+			});
 
-				// if (this._lastPiece)
-					if (maxIndex === 0)
-						return done();
+			// let transformStream = new Stream.Transform();
 
-				buf = Buffer.alloc(maxIndex * Float64Array.BYTES_PER_ELEMENT, 0, 'binary');
+			// transformStream._transform = function (data, type, done) {
+			// 	if (!this._firstByte) {
+			// 		this._firstByte = true;
+			// 		log.info('OANDA', `FirstByte of ${symbol} took: ${Date.now() - now} ms`);
+			// 	}
 
-				arr.forEach((value, index) => {
-					if (index < maxIndex)
-						buf.writeDoubleLE(index % 10 ? value : value / 1000, index * Float64Array.BYTES_PER_ELEMENT, false);
-				});
+			// 	if (!startFound) {
+			// 		let start = data.indexOf(91);
+			// 		if (start > -1) {
+			// 			startFound = true;
+			// 			data = data.slice(start, data.length);
+			// 		} else {
+			// 			return done();
+			// 		}
+			// 	}
 
-				writeChunks++;
-				transformStream.push(buf);
+			// 	let valArr = (leftOver + data.toString()).split(':');
+			// 	leftOver = valArr.pop();
 
-				arr = arr.slice(maxIndex, arr.length);
+			// 	valArr.forEach(val => {
+			// 		let value = val.replace(/[^\d\.]/g, '');
 
-				done();
-			};
+			// 		if (typeof value === 'string' && value !== '')
+			// 			arr.push(+value);
+			// 	});
 
-			// Make Typescript happy (does not know _flush)
-			(<any>transformStream)._flush = function(done) {
-				this._lastPiece = true;
-				this.push();
-				done();
-			};
+			// 	let maxIndex = this._lastPiece ? arr.length : (Math.floor(arr.length / OandaApi.FETCH_CHUNK_LIMIT) * OandaApi.FETCH_CHUNK_LIMIT),
+			// 		buf;
 
-			this._client.getCandles(symbol, chunk.from, chunk.until, timeFrame, chunk.count)
-				.pipe(transformStream)
-				.on('data', onData)
-				.on('error', onDone)
-				.on('end', () => {
-					if (++finished === countChunks.length)
-						onDone(null, writeChunks);
-				});
+			// 	// if (this._lastPiece)
+			// 		if (maxIndex === 0)
+			// 			return done();
+
+			// 	buf = Buffer.alloc(maxIndex * Float64Array.BYTES_PER_ELEMENT, 0, 'binary');
+
+			// 	arr.forEach((value, index) => {
+			// 		if (index < maxIndex)
+			// 			buf.writeDoubleLE(index % 10 ? value : value / 1000, index * Float64Array.BYTES_PER_ELEMENT, false);
+			// 	});
+
+			// 	writeChunks++;
+			// 	transformStream.push(buf);
+
+			// 	arr = arr.slice(maxIndex, arr.length);
+
+			// 	done();
+			// };
+
+			// // Make Typescript happy (does not know _flush)
+			// (<any>transformStream)._flush = function(done) {
+			// 	this._lastPiece = true;
+			// 	this.push();
+			// 	done();
+			// };
+
+			// this._client.getCandles(symbol, chunk.from, chunk.until, timeFrame, chunk.count)
+			// 	.pipe(transformStream)
+			// 	.on('data', onData)
+			// 	.on('error', onDone)
+			// 	.on('end', () => {
+			// 		if (++finished === countChunks.length)
+			// 			onDone(null, writeChunks);
+			// 	});
 		});
 	}
 

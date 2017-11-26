@@ -16,11 +16,12 @@ export const symbolController = {
 	symbols: [],
 
 	async setList(): Promise<void> {
-		let symbolList = await app.broker.getSymbols();
+		// this.symbols = [(await app.broker.getSymbols())[0]];
+		this.symbols = await app.broker.getSymbols();
 
-		let currentPrices = await app.broker.getCurrentPrices(symbolList.map(symbol => symbol.name));
+		let currentPrices = await app.broker.getCurrentPrices(this.symbols.map(symbol => symbol.name));
 
-		symbolList.forEach(symbol => {
+		this.symbols.forEach(symbol => {
 			const price = currentPrices.find(priceObj => priceObj.instrument === symbol.name);
 			const meta = metaData.find(m => m.name === symbol.name);
 
@@ -31,12 +32,9 @@ export const symbolController = {
 			
 		});
 
-		this.symbols = symbolList;
+		// this._updateRedis(this.symbols);
 
-		this._updateRedis(this.symbols);
-
-		await dataLayer.setModels(symbolList.map(symbol => symbol.name));
-
+		await dataLayer.setModels(this.symbols.map(symbol => symbol.name));
 		
 		log.info('Cache', 'Symbol list loaded');
 
@@ -51,8 +49,35 @@ export const symbolController = {
 		now.setMilliseconds(0);
 
 		this.symbols.forEach(async symbol => {
-			const result = await cacheController.find({symbol: symbol.name, timeFrame: 'M1', until: now.getTime(), count: 1});
-			console.log(result.length, new Float64Array(result.buffer, 0, result.length));
+
+			// find last 24 hours of bars
+			const barsAmount = 60 * 24; // 1440 M1 bars
+			const candles = await cacheController.find({symbol: symbol.name, timeFrame: 'M1', until: now.getTime(), count: barsAmount, toArray: true});
+		
+			const time = candles[0];
+			const price = candles[1];
+			
+			// set timed marks (for changed amount over a day)
+			symbol.marks = {
+				D: {
+					time: time,
+					price: price
+				}
+			};
+
+			// set high and low of the day
+			let high = 0;
+			let low = 100000000000000;
+			for (let i = 0, len = candles.length; i < len; i += 10) {
+				let candle = candles[i + 1];
+
+				if (candle > high)
+					high = candle;
+				if (candle < low)
+					low = candle;
+			}
+			symbol.high = high;
+			symbol.low = low;
 		});
 	},
 
