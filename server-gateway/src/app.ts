@@ -9,8 +9,8 @@ const app = express();
 const morgan = require('morgan');
 const helmet = require('helmet');
 const { json } = require('body-parser');
-const PATH_PUBLIC_PROD = path.join(__dirname, '../../client/dist');
-const PATH_PUBLIC_DEV = path.join(__dirname, '../../client/dist');
+const PATH_PUBLIC_PROD = path.join(__dirname, '../../client/www/dist');
+const PATH_PUBLIC_DEV = path.join(__dirname, '../../client/www/dist');
 const PATH_IMAGES_PROD = path.join(__dirname, '../../images');
 const PATH_IMAGES_DEV = path.join(__dirname, '../../images');
 
