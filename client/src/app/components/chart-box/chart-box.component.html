@@ -30,7 +30,7 @@
 <div dialogAnchor></div>
 
 <div style="height: 100%;">
-	<div *ngIf="quickBuy && instrumentModel.options.type === 'live'" class="quickOrderContainer" style="display: none">
+	<!-- <div *ngIf="quickBuy && instrumentModel.options.type === 'live'" class="quickOrderContainer" style="display: none">
 		<a (click)="placeOrder($event, constantsService.constants.ORDER_SIDE_BUY)" class="buyButton">
 			<p>BUY</p>
 			<input type="number" value="1" #buyAmount>
@@ -39,7 +39,7 @@
 			<p>SELL</p>
 			<input type="number" value="1" #sellAmount>
 		</a>
-	</div>
+	</div> -->
 
 	<div class="chart-content" #chart>
 		<!-- <div class="spinner">

@@ -9,7 +9,7 @@ import { SymbolModel } from "../../models/symbol.model";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { SYMBOL_CAT_TYPE_FOREX, SYMBOL_CAT_TYPE_RESOURCE } from "../../../../../shared/constants/constants";
 import { UserService } from "../../services/user.service";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { Subject } from 'rxjs';
 
 
@@ -24,11 +24,13 @@ export class InstrumentListComponent implements OnInit, AfterViewInit, OnDestroy
 
 	@Output() activeSymbolChange = new EventEmitter<SymbolModel>();
 	@ViewChild('navbar') navbar: ElementRef;
+	@ViewChild('list') listRef: ElementRef;
 
-	public activeSymbol: SymbolModel;
+	public symbols = this.cacheService.symbols;
+	public activeSymbol: SymbolModel = null;
 	public activeFilter: string = 'all';
 	public activeMenu: string = null;
-	public symbols = this.cacheService.symbols;
+
 
 	private _routeSub;
 
@@ -37,20 +39,21 @@ export class InstrumentListComponent implements OnInit, AfterViewInit, OnDestroy
 		public userService: UserService,
 		private _elementRef: ElementRef,
 		private _route: ActivatedRoute,
+		private _router: Router,
 		private _orderService: OrderService) { }
 
 	ngOnInit() {
-	
+		this.activeSymbol = this.cacheService.getBySymbol(this._route.snapshot.queryParams['symbol']) || this.symbols[0];
 	}
 
 	ngAfterViewInit() {
-		this._routeSub = this._route.params.subscribe(params => {
-			if (this.activeSymbol && this.activeSymbol.options.name === params['id'])
+		this._routeSub = this._route.queryParams.subscribe(params => {
+			if (this.activeSymbol && this.activeSymbol.options.name === params['symbol'])
 				return;
 
-			const symbol = this.cacheService.symbols.find(s => s.options.name === params['id']);
-			this.setActiveSymbol(symbol || this.cacheService.symbols[0]);
-			this._scrollIntoView(this.activeSymbol);
+			const symbol = this.cacheService.getBySymbol(params['symbol']);
+			this.setActiveSymbol(undefined, symbol || this.symbols[0]);
+			// this._scrollIntoView(this.activeSymbol);
 		});
 	}
 
@@ -90,9 +93,21 @@ export class InstrumentListComponent implements OnInit, AfterViewInit, OnDestroy
 		this.userService.toggleFavoriteSymbol(symbol);
 	}
 
-	setActiveSymbol(symbol: SymbolModel) {
-		this.activeSymbolChange.next(symbol);
+	setActiveSymbol(event, symbol: SymbolModel) {
 		this.activeSymbol = symbol;
+
+		if (event) {
+			event.preventDefault();
+			event.stopPropagation();
+		}
+
+		this._router.navigate(['/main/charts'], {skipLocationChange: false, queryParams: {symbol: symbol.options.name}});
+
+		const el = this._elementRef.nativeElement.shadowRoot.querySelector(`[data-symbol=${symbol.get('name')}]`);
+		if (!el || isAnyPartOfElementInViewport(el))
+			return
+		
+		el.scrollIntoView();
 	}
 
 	placeOrder(event, side, symbol) {

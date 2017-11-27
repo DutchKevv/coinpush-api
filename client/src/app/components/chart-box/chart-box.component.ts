@@ -86,7 +86,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	private _priceSubscription;
 	private _orderSubscription;
 
-	public static readonly DEFAULT_CHUNK_LENGTH = 1000;
+	public static readonly DEFAULT_CHUNK_LENGTH = 500;
 	public static readonly VIEW_STATE_WINDOWED = 1;
 	public static readonly VIEW_STATE_STRETCHED = 2;
 	public static readonly VIEW_STATE_MINIMIZED = 3;
@@ -130,15 +130,19 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	ngOnChanges(changes: SimpleChanges) {
 		console.log(changes);
 
-		if (changes.symbolModel) {
+		if (changes.symbolModel && changes.symbolModel.previousValue) {
 			this.instrumentModel = null;
 			this.symbolModel = changes.symbolModel.currentValue;
-			this.init();
+
+			requestAnimationFrame(() => this.init());
 		}
-			
 	}
 
 	ngOnInit() {
+	}
+
+	ngAfterViewInit() {
+		this.init();
 	}
 
 	init() {
@@ -228,10 +232,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		this._orderService.create({ symbol: this.instrumentModel.options.symbol, side, amount });
 	}
 
-	ngAfterViewInit() {
-
-	}
-
 	public changeGraphType() {
 		if (!this._chart)
 			return;
@@ -243,19 +243,18 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		if (!this._chart)
 			return;
 
-		// this._chartVolume.options.height = this._volumeRef.nativeElement.clientHeight;
-		// this._chartVolume.options.width = this._volumeRef.nativeElement.clientWidth;
-		this._chart.options.height = this.chartRef.nativeElement.clientHeight;
-		this._chart.options.width = this.chartRef.nativeElement.clientWidth;
-
-		this._updateViewPort();
+		this._zone.runOutsideAngular(() => {
+			this._chart.options.height = this.chartRef.nativeElement.clientHeight;
+			this._chart.options.width = this.chartRef.nativeElement.clientWidth;
+			this._updateViewPort();
+		});
 	}
 
 	public render() {
 		if (!this._chart)
 			return;
 
-		this._chart.render();
+		// this._chart.render();
 		// this._chartVolume.render();
 	}
 

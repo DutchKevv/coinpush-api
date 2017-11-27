@@ -1,7 +1,7 @@
-<instrument-list (activeSymbolChange)="onSymbolChange($event)"></instrument-list>
+<instrument-list #list (activeSymbolChange)="onSymbolChange($event)"></instrument-list>
 
 <div class="chart-header">
-    <h5>{{activeSymbol?.options.name}}</h5>
+    <h5>{{list.activeSymbol.options.name}}</h5>
     <ul class="header-buttons">
         <li>
             <button (click)="charts[0].instrumentModel.setZoom(-1)"
@@ -107,10 +107,9 @@
 </div>
 
 <div class="chart-container">
-    <chart-box *ngIf="activeSymbol"
-               [symbolModel]="activeSymbol"
+    <chart-box [symbolModel]="list.activeSymbol"
                [showBox]="false"
-               [quickBuy]="true"
+               [quickBuy]="false"
                class="chart-absolute">
     </chart-box>
 </div>

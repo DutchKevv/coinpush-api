@@ -1,8 +1,8 @@
-<section>
+<!-- <section>
     <header>
         <h1>Top stories</h1>
     </header>
-    <article *ngFor="let item of top$ | async">
+    <article *ngFor="let item of top$ | async" (click)="onClickItem($event, item.url)">
         <header>
             <h4>{{item.title}}</h4>
         </header>
@@ -11,13 +11,13 @@
         </main>
         <footer></footer>
     </article>
-</section>
+</section> -->
 
 <section>
     <header>
         <h1>Crypto</h1>
     </header>
-    <article *ngFor="let item of crypto$ | async">
+    <article *ngFor="let item of crypto$ | async" (click)="onClickItem($event, item.url)">
         <header>
             <h4>{{item.title}}</h4>
         </header>

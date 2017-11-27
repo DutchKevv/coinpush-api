@@ -10,18 +10,27 @@
 }
 
 section {
-   
+   header {
+       h1 {
+           text-align: center;
+       }
+   }
 }
 
 article {
-    border: 1px solid grey;
+    // border: 1px solid grey;
     background: white;
-    padding: 10px;
+    cursor: pointer;
     max-width: 500px;
     margin: 20px 5px;
 
-    h4 {
-        color: black;
+    header {
+        padding: 6px;
+        background: #035403
+    }
+
+    main {
+        padding: 6px;
     }
 
     p {

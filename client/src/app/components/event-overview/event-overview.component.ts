@@ -25,10 +25,18 @@ export class EventOverviewComponent implements OnInit {
 
 	async ngOnInit() {
 		const news = await this._newsService.find();
+		console.log(news);
 
 		this.top$.next(news.top);
 		this.crypto$.next(news.crypto);
 		
 		console.log('asdf', news);
+	}
+
+	onClickItem(event, url: string) {
+		event.preventDefault();
+		event.stopPropagation();
+
+		window.open(url)
 	}
 }
