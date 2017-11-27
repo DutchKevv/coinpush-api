@@ -25,12 +25,7 @@
         "../node_modules/jquery-touchswipe/jquery.touchSwipe.js",
         "../node_modules/tether/dist/js/tether.min.js",
         "../node_modules/bootstrap/dist/js/bootstrap.min.js",
-        "../node_modules/jstree/dist/jstree.js",
-        "assets/vendor/js/ace/ace.js",
-        "assets/vendor/js/ace/ext-language_tools.js",
-        "assets/vendor/js/ace/theme-tomorrow_night_bright.js",
-        "assets/vendor/js/ace/mode-javascript.js",
-        "assets/vendor/js/ace/mode-typescript.js"
+        "../node_modules/jstree/dist/jstree.js"
       ]
     }
   ],

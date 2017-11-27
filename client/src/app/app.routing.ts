@@ -27,7 +27,7 @@ const routes: Routes = [
 	{
 		path: 'main', component: PageMainComponent, canActivate: [AuthGuard],
 		children: [
-			{ path: '', redirectTo: 'user', pathMatch: 'full' },
+			{ path: '', redirectTo: 'charts', pathMatch: 'full' },
 			{ path: 'channels', component: ChannelOverviewComponent },
 			{ path: 'portfolio', component: PortfolioComponent },
 			{ path: 'user', component: UserOverviewComponent },
@@ -41,14 +41,13 @@ const routes: Routes = [
 				]
 			},
 			{ path: 'charts', component: ChartOverviewComponent },
-			{ path: 'charts/:id', component: ChartOverviewComponent },
 			{ path: 'backtest', component: BacktestComponent },
-			{ path: 'editor', component: JSEditorComponent },
+			{ path: 'editor', loadChildren: './components/jseditor/jseditor.module#JSEditorModule' },
 			{ path: 'settings', component: SettingsComponent },
 		]
 	}
 ];
 
-export const routing: ModuleWithProviders = RouterModule.forRoot(routes, {
+export const AppRouter: ModuleWithProviders = RouterModule.forRoot(routes, {
 	useHash: true
 });

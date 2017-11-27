@@ -29,7 +29,7 @@ header {
     text-align: center;
     background: $background-light;
     display: flex;
-    padding: 0 10px;
+    padding: 5px 10px;
   
     @media only screen and (min-width : 768px) {
         justify-content: space-around;
@@ -47,7 +47,8 @@ header {
         color: white;
         font-size: 40px;
         line-height: 40px;
-        padding-right: 20px;
+        width: 50px;
+        padding-right: 10px;
     }
 
     .header-search {

@@ -4,14 +4,14 @@
         <h4>{{userService.model.options.name}}</h4>
     </a>
 
-    <a [routerLink]="['/main/channels']" [routerLinkActive]="['active']">
+    <!-- <a [routerLink]="['/main/channels']" [routerLinkActive]="['active']">
         <i class="fa fa-upload"></i>
         <span>Watchlist</span>
-    </a>
-    <a [routerLink]="['/main/portfolio']" [routerLinkActive]="['active']">
+    </a> -->
+    <!-- <a [routerLink]="['/main/portfolio']" [routerLinkActive]="['active']">
         <i class="fa fa-handshake-o"></i>
         <span>Portfolio</span>
-    </a>
+    </a> -->
     <a [routerLink]="['/main/news']" [routerLinkActive]="['active']">
         <i class="fa fa-newspaper-o"></i>
         <span>News feed</span>
@@ -28,10 +28,10 @@
         <i class="fa fa-bar-chart"></i>
         <span>Symbols</span>
     </a>
-    <a [routerLink]="['/main/backtest']" [routerLinkActive]="['active']">
+    <!-- <a [routerLink]="['/main/backtest']" [routerLinkActive]="['active']">
         <i class="fa fa-flash"></i>
         <span>Backtest</span>
-    </a>
+    </a> -->
     <a [routerLink]="['/main/editor']" [routerLinkActive]="['active']">
         <i class="fa fa-code"></i>
         <span>Editor</span>
@@ -52,7 +52,7 @@
 <main class="main-container">
     <header *ngIf="userService.accountStatus$ | async as status">
         <i (click)="collapseNav($event)" class="fa fa-navicon hidden-lg-up"></i>
-        <i *ngIf="['/main/portfolio', '/main/charts', '/main/user'].includes(router.url)" (click)="collapseNav($event)" class="fa fa-filter hidden-lg-up"></i>
+        <i *ngIf="router.url.startsWith('/main/charts') || ['/main/user'].includes(router.url)" (click)="collapseNav($event)" class="fa fa-filter hidden-lg-up"></i>
         <div class="account-details hidden-xs-down">
             <h4>{{status.available | currency : 'EUR':'symbol'}}</h4>
             <span>available</span>
@@ -73,7 +73,7 @@
         <div class="header-search">
             <input (keyup)="onSearchKeyUp($event)" placeholder="Markets / Channels / People" #input>
             <div class="search-drop-down" *ngIf="(searchResults$ | async) as result" (click)="onClickDropdownItem()" #dropdown>
-                <a *ngFor="let symbol of result.symbols" [routerLink]="['/main/charts', symbol.name]">
+                <a *ngFor="let symbol of result.symbols" [routerLink]="['/main/charts']" [queryParams]="{symbol: symbol.name}">
                     <img src="/images/default/symbol/spx500-70x70.png">
                     <span>{{symbol.name}}</span>
                 </a>

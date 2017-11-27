@@ -1,17 +1,13 @@
 // Lib
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
-
-import {FileTreeComponent} from './components/file-tree/file-tree.component';
-import {JSEditorComponent} from './components/jseditor/jseditor.component';
 import {SocketService} from './services/socket.service';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 import {AppComponent} from './app.component';
-import {routing} from './app.routing';
+import {AppRouter} from './app.routing';
 
 import {MultiselectDropdownModule} from 'angular-2-dropdown-multiselect';
-import {InstrumentListComponent} from './components/intrument-list/instrument-list.component';
 import {ChartOverviewComponent} from './components/chart-overview/chart-overview.component';
 import {AuthGuard} from './guards/auth.guard';
 import {UserService} from './services/user.service';
@@ -52,8 +48,6 @@ import {CommentService} from "./services/comment.service";
 import {PasswordResetComponent} from "./components/password-reset/password-reset.component";
 import {RequestPasswordResetComponent} from "./components/request-password-reset/request-password-reset.component";
 import {BootstrapService} from "./services/bootstrap.service";
-import { TypescriptCompilerService } from './services/typescript.compiler.service';
-import { WebworkerService } from './services/code.runner.service';
 import { EventOverviewComponent } from './components/event-overview/event-overview.component';
 import { NewsService } from './services/news.service';
 
@@ -68,11 +62,8 @@ import { NewsService } from './services/news.service';
 		DialogAnchorDirective,
 		DialogComponent,
 		EventOverviewComponent,
-		FileTreeComponent,
 		GroupIdsPipe,
 		ParseCommentContentPipe,
-		InstrumentListComponent,
-		JSEditorComponent,
 		SocialFeedComponent,
 		ChannelRowComponent,
 		LoginComponent,
@@ -96,11 +87,11 @@ import { NewsService } from './services/news.service';
 	],
 	imports: [
 		BrowserModule,
-		routing,
+		AppRouter,
 		FormsModule,
 		ReactiveFormsModule,
 		HttpModule,
-		MultiselectDropdownModule
+		MultiselectDropdownModule,
 	],
 	providers: [
 		customHttpProvider,
@@ -111,8 +102,6 @@ import { NewsService } from './services/news.service';
 		ChannelService,
 		CommentService,
 		BootstrapService,
-		TypescriptCompilerService,
-		WebworkerService,
 		NewsService,
 		
 		{provide: OrderService, useClass: OrderService},

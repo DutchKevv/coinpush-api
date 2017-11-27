@@ -12,7 +12,7 @@ declare let Module: any;
 	selector: 'backtest-report',
 	templateUrl: './backtest-report.component.html',
 	styleUrls: ['./backtest-report.component.scss'],
-	encapsulation: ViewEncapsulation.Native,
+	// encapsulation: ViewEncapsulation.Native,
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 

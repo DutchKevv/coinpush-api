@@ -10,7 +10,7 @@ import { UserModel } from '../../models/user.model';
 @Component({
 	styleUrls: ['./register.component.scss'],
 	templateUrl: 'register.component.html',
-	encapsulation: ViewEncapsulation.Native,
+	// encapsulation: ViewEncapsulation.Native,
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 

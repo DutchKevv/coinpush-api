@@ -15,12 +15,9 @@ declare let Module: any;
 		<app-alert></app-alert>
 		<router-outlet></router-outlet>
 	`,
-	styleUrls: [
-		'./app.component.scss',
-		'../../node_modules/font-awesome/css/font-awesome.css'
-	],
+	styleUrls: ['./app.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	encapsulation: ViewEncapsulation.None
+	// encapsulation: ViewEncapsulation.None
 })
 
 export class AppComponent implements OnInit {

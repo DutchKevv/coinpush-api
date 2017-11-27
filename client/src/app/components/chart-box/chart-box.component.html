@@ -1,30 +1,6 @@
 <div class="chart-header">
 	<ng-container *ngIf="showBox && instrumentModel.options$ | async as options">
 		<h5 class="chart-title">{{options.symbol}} - {{options.timeFrame}} - {{options.type}} #{{options.groupId}}</h5>
-
-		<button (click)="!$event.stopPropagation() && toggleViewState(false)"
-				type="button" class="dropdown-toggle text-dark button-minimize"
-				aria-expanded="false">
-			<i class="fa fa-window-minimize"></i>
-		</button>
-		<button *ngIf="(viewState$ | async) === 'windowed'"
-				(click)="toggleViewState('stretched', true)"
-				type="button" class="dropdown-toggle text-dark button-expand"
-				aria-expanded="false">
-			<i class="fa fa-expand"></i>
-		</button>
-		<button *ngIf="(viewState$ | async) === 'stretched'"
-				(click)="toggleViewState('windowed', true)"
-				type="button"
-				class="dropdown-toggle text-dark button-compress"
-				aria-expanded="false">
-			<i class="fa fa-compress"></i>
-		</button>
-		<button (click)="instrumentsService.remove(model)" type="button" class="dropdown-toggle text-dark button-destroy"
-				data-toggle="dropdown" aria-haspopup="true"
-				aria-expanded="false">
-			<i class="fa fa-close"></i>
-		</button>
 	</ng-container>
 </div>
 <div dialogAnchor></div>

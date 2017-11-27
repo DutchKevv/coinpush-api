@@ -12,6 +12,9 @@
     },
     "cordova-plugin-statusbar": {
       "PACKAGE_NAME": "com.example.app"
+    },
+    "cordova-plugin-crosswalk-webview": {
+      "PACKAGE_NAME": "com.example.app"
     }
   },
   "dependent_plugins": {},
@@ -33,6 +36,7 @@
   ],
   "plugin_metadata": {
     "cordova-plugin-whitelist": "1.3.3",
-    "cordova-plugin-statusbar": "2.3.0"
+    "cordova-plugin-statusbar": "2.3.0",
+    "cordova-plugin-crosswalk-webview": "2.3.0"
   }
 }

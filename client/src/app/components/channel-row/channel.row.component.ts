@@ -9,7 +9,7 @@ import {ChannelService} from '../../services/channel.service';
 	selector: 'app-channel-row',
 	templateUrl: './channel.row.component.html',
 	styleUrls: ['./channel.row.component.scss'],
-	encapsulation: ViewEncapsulation.Native,
+	// encapsulation: ViewEncapsulation.Native,
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 

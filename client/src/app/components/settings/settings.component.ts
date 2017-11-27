@@ -15,7 +15,7 @@ declare let $: any;
 @Component({
 	styleUrls: ['./settings.component.scss'],
 	templateUrl: 'settings.component.html',
-	encapsulation: ViewEncapsulation.Native,
+	// encapsulation: ViewEncapsulation.Native,
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 

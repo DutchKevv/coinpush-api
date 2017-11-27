@@ -22,7 +22,7 @@ let speed = 200;
 		'../../../assets/vendor/css/jstree/default-dark/style.css',
 		'./file-tree.component.scss'
 	],
-	encapsulation: ViewEncapsulation.Native,
+	// encapsulation: ViewEncapsulation.Native,
 	entryComponents: [DialogComponent],
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -51,7 +51,7 @@ export class FileTreeComponent implements AfterViewInit, OnDestroy {
 	ngAfterViewInit(): void {
 		this.load();
 
-		this.$el = $(this._elementRef.nativeElement.shadowRoot.getElementById('fileListContainer'));
+		this.$el = $(this._elementRef.nativeElement.getElementById('fileListContainer'));
 
 		let swipeOptions = {
 			triggerOnTouchEnd: true,

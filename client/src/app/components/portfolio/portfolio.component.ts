@@ -55,7 +55,7 @@ export class GroupByPipe implements PipeTransform {
 	selector: 'app-portfolio',
 	templateUrl: './portfolio.component.html',
 	styleUrls: ['./portfolio.component.scss'],
-	encapsulation: ViewEncapsulation.Native,
+	// encapsulation: ViewEncapsulation.Native,
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 

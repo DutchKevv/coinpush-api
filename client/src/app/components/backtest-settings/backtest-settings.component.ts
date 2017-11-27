@@ -45,7 +45,7 @@ export class BacktestSettingsModel extends BaseModel {
 	selector: 'backtest-settings',
 	templateUrl: './backtest-settings.component.html',
 	styleUrls: ['./backtest-settings.component.scss'],
-	encapsulation: ViewEncapsulation.Native,
+	// encapsulation: ViewEncapsulation.Native,
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 

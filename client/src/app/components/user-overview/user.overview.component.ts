@@ -19,7 +19,7 @@ const shuffleArray = (arr) => arr.sort(() => (Math.random() - 0.5));
 	selector: 'app-user-overview',
 	templateUrl: './user.overview.component.html',
 	styleUrls: ['./user.overview.component.scss'],
-	encapsulation: ViewEncapsulation.Native,
+	// encapsulation: ViewEncapsulation.Native,
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 

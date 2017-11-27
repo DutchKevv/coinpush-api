@@ -6,7 +6,7 @@ import {AlertService} from '../../services/alert.service';
 @Component({
 	styleUrls: ['./request-password-reset.component.scss'],
 	templateUrl: 'request-password-reset.component.html',
-	encapsulation: ViewEncapsulation.Native,
+	// encapsulation: ViewEncapsulation.Native,
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 

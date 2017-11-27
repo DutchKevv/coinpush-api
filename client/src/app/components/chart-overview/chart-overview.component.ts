@@ -1,6 +1,9 @@
 import {
 	Component, OnInit, ElementRef, QueryList, ViewChildren, ChangeDetectionStrategy, ViewEncapsulation, NgZone,
-	ViewChild
+	ViewChild,
+	ChangeDetectorRef,
+	AfterViewInit,
+	Output
 } from '@angular/core';
 
 import { InstrumentsService } from '../../services/instruments.service';
@@ -9,6 +12,12 @@ import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { SymbolModel } from "../../models/symbol.model";
 import { InstrumentModel } from "../../models/instrument.model";
 import { Subject } from 'rxjs';
+import { ConstantsService } from '../../services/constants.service';
+import { UserService } from '../../services/user.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { OrderService } from '../../services/order.service';
+import { CacheService } from '../../services/cache.service';
+import { SYMBOL_CAT_TYPE_FOREX, SYMBOL_CAT_TYPE_RESOURCE } from "../../../../../shared/constants/constants";
 
 declare let $: any;
 
@@ -16,23 +25,151 @@ declare let $: any;
 	selector: 'chart-overview',
 	templateUrl: './chart-overview.component.html',
 	styleUrls: ['./chart-overview.component.scss'],
-	encapsulation: ViewEncapsulation.Native,
+	// encapsulation: ViewEncapsulation.Native,
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class ChartOverviewComponent implements OnInit {
+export class ChartOverviewComponent implements OnInit, AfterViewInit {
 
 	@ViewChildren(ChartBoxComponent) charts: QueryList<ChartBoxComponent>;
 	@ViewChild('container') container;
 
 	public activeSymbol$: Subject<SymbolModel> = new Subject();
-	public activeSymbol: SymbolModel;
+	@Output() public activeSymbol: SymbolModel;
 
-	constructor(public instrumentsService: InstrumentsService) {
+	@ViewChild('navbar') navbar: ElementRef;
+	@ViewChild('list') listRef: ElementRef;
+
+	public symbols = [];
+	public activeFilter: string = 'all';
+	public activeMenu: string = null;
+
+
+	private _routeSub;
+
+	constructor(
+		public instrumentsService: InstrumentsService,
+		public constantsService: ConstantsService,
+		public userService: UserService,
+		public cacheService: CacheService,
+		public cd: ChangeDetectorRef,
+		private _elementRef: ElementRef,
+		private _route: ActivatedRoute,
+		private _router: Router,
+		private _orderService: OrderService
+	) {
 	}
 
 	ngOnInit() {
 		
+	}
+
+	ngAfterViewInit() {
+		this.symbols = this.cacheService.symbols;
+		this.activeSymbol = this.cacheService.getBySymbol(this._route.snapshot.queryParams['symbol']) || this.symbols[0];
+		
+		this._routeSub = this._route.queryParams.subscribe(params => {
+			if (this.activeSymbol && this.activeSymbol.options.name === params['symbol']) {
+				this._scrollIntoView(this.activeSymbol);
+				return;
+			}
+				
+			const symbol = this.cacheService.getBySymbol(params['symbol']);
+			this.setActiveSymbol(undefined, symbol || this.symbols[0]);
+			// 
+		});
+
+		setTimeout(() => {
+			this.cd.detectChanges();
+			this._scrollIntoView(this.activeSymbol);
+		}, 0);
+	}
+
+	toggleFilter(filter: string) {
+		this.activeFilter = filter;
+		this.activeMenu = null;
+
+		switch (filter) {
+			case 'all':
+				this.symbols = this.cacheService.symbols;
+				break;
+			case 'all open':
+				this.symbols = this.cacheService.symbols.filter(s => !s.get('halted'));
+				break;
+			case 'all popular':
+				this.symbols = this.cacheService.symbols;
+				break;
+			case 'favorite':
+				this.symbols = this.cacheService.symbols.filter(s => this.userService.model.options.favorites.includes(s.options.name));
+				break;
+			case 'forex':
+				this.symbols = this.cacheService.symbols.filter(s => s.get('type') === SYMBOL_CAT_TYPE_FOREX);
+				break;
+			case 'forex pop':
+				this.symbols = this.cacheService.symbols.filter(s => s.get('type') === SYMBOL_CAT_TYPE_FOREX);
+				break;
+			case 'resources':
+				this.symbols = this.cacheService.symbols.filter(s => s.get('type') === SYMBOL_CAT_TYPE_RESOURCE);
+				break;
+		}
+	}
+
+	onClickToggleFavorite(event, symbol: SymbolModel) {
+		event.preventDefault();
+		event.stopPropagation();
+
+		this.userService.toggleFavoriteSymbol(symbol);
+	}
+
+	setActiveSymbol(event, symbol: SymbolModel) {
+		this.activeSymbol = symbol;
+
+		if (event) {
+			event.preventDefault();
+			event.stopPropagation();
+		}
+
+		this._router.navigate(['/main/charts'], { skipLocationChange: false, queryParams: { symbol: symbol.options.name } });
+
+		const el = this._elementRef.nativeElement.querySelector(`[data-symbol=${symbol.get('name')}]`);
+		if (!el || isAnyPartOfElementInViewport(el))
+			return
+
+		el.scrollIntoView();
+	}
+
+	placeOrder(event, side, symbol) {
+		event.preventDefault();
+		event.stopPropagation();
+
+		this._orderService.create({ symbol, side, amount: 1 });
+	}
+
+	public trackByFunc(index, item) {
+		return item.options.name;
+	}
+
+	public collapseNav(event?, state?: boolean) {
+		if (event) {
+			event.preventDefault();
+			event.stopPropagation();
+		}
+
+		this.navbar.nativeElement.classList.toggle('show', state);
+	}
+
+	private _scrollIntoView(symbol: SymbolModel) {
+		if (!symbol)
+			return;
+
+		const el = this._elementRef.nativeElement.querySelector(`[data-symbol=${symbol.options.name}]`);
+		console.log('asdfasdsdf', el);
+		// Already in viewport
+		if (!el || isAnyPartOfElementInViewport(el))
+			return;
+
+		if (el)
+			el.scrollIntoView();
 	}
 
 	onSymbolChange(symbolModel: SymbolModel): void {
@@ -115,3 +252,18 @@ export class ChartOverviewComponent implements OnInit {
 		return sideLength;
 	}*/
 }
+
+
+function isAnyPartOfElementInViewport(el) {
+	
+		const rect = el.getBoundingClientRect();
+		// DOMRect { x: 8, y: 8, width: 100, height: 100, top: 8, right: 108, bottom: 108, left: 8 }
+		const windowHeight = (window.innerHeight || document.documentElement.clientHeight);
+		const windowWidth = (window.innerWidth || document.documentElement.clientWidth);
+	
+		// http://stackoverflow.com/questions/325933/determine-whether-two-date-ranges-overlap
+		const vertInView = (rect.top <= windowHeight) && ((rect.top + rect.height) >= 0);
+		const horInView = (rect.left <= windowWidth) && ((rect.left + rect.width) >= 0);
+	
+		return (vertInView && horInView);
+	}

@@ -34,6 +34,7 @@ export class PageMainComponent implements OnInit {
 	}
 
 	ngOnInit() {
+		console.log(this.router);
 		this.router.events.subscribe((val) => {
 			if (val instanceof NavigationEnd) {
 				this.collapseNav(undefined, false);

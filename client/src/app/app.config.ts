@@ -21,7 +21,6 @@ if (!environment.production) {
 		ip = location.hostname;
 		port = location.port;
 		host = location.protocol;
-		
 	}
 }
 

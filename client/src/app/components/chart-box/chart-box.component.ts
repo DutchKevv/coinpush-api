@@ -37,7 +37,7 @@ import '../../style/highcharts/highstock.theme.dark';
 	styleUrls: [
 		'./chart-box.component.scss'
 	],
-	encapsulation: ViewEncapsulation.Native,
+	// encapsulation: ViewEncapsulation.Native,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	entryComponents: [DialogComponent]
 })
@@ -86,7 +86,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	private _priceSubscription;
 	private _orderSubscription;
 
-	public static readonly DEFAULT_CHUNK_LENGTH = 500;
+	public static readonly DEFAULT_CHUNK_LENGTH = 100;
 	public static readonly VIEW_STATE_WINDOWED = 1;
 	public static readonly VIEW_STATE_STRETCHED = 2;
 	public static readonly VIEW_STATE_MINIMIZED = 3;
@@ -130,11 +130,11 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	ngOnChanges(changes: SimpleChanges) {
 		console.log(changes);
 
-		if (changes.symbolModel && changes.symbolModel.previousValue) {
+		if (changes.symbolModel) {
 			this.instrumentModel = null;
 			this.symbolModel = changes.symbolModel.currentValue;
 
-			requestAnimationFrame(() => this.init());
+			setTimeout(() => this.init(), 0);
 		}
 	}
 
@@ -142,14 +142,16 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	}
 
 	ngAfterViewInit() {
-		this.init();
+		// this.init();
 	}
 
 	init() {
-		this._destroy();
-		console.log('box INIT!!');
 		if (!this.symbolModel && !this.instrumentModel)
-			throw new Error('symbol or instrument model required');
+			return;
+
+		this._destroy();
+
+		console.log('box INIT!!');
 
 		if (this.instrumentModel) {
 			if (!this.symbolModel)
@@ -163,7 +165,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 		this._onScrollBounced = throttle(this._onScroll.bind(this), 33);
 
-		this._restoreStyles();
 		this._fetchCandles();
 
 		// Listen for price change
@@ -325,11 +326,11 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 				yAxis: [{
 					opposite: true,
 					labels: {
-						align: 'left',
+						align: 'left'
 						// x: 0
 					},
 					title: {
-						text: 'OHLC'
+						text: null
 					},
 					height: '60%',
 					lineWidth: 1,
@@ -343,7 +344,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 						// x: 0
 					},
 					title: {
-						text: 'Volume'
+						text: null
 					},
 					top: '65%',
 					height: '35%',
@@ -359,7 +360,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 					{
 						id: 'main-series',
 						type: 'candlestick',
-						name: 'AAPL',
+						name: this.symbolModel.options.displayName,
 						// data: ohlc,
 						data: this._data.candles,
 						// dataGrouping: {
@@ -402,12 +403,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 			this._updateViewPort();
 			// this._updateIndicators();
 			this._updateOrders(this._orderService.orders$.getValue());
-
-			// this._oCanvasMouseMoveFunc = this._chart._mouseEventHandler;
-			// this._chart._mouseEventHandler = event => {
-			// 	if (this._mouseActive)
-			// 		this._oCanvasMouseMoveFunc.call(this._chart, event);
-			// };
 		});
 	}
 
@@ -433,7 +428,8 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 			let firstBar = (data[data.length - viewable - offset] || data[0]),
 				lastBar = data[data.length - 1 - offset];
 
-			this._chart.xAxis[0].setExtremes(firstBar[0], lastBar[0], true, false);
+			if (firstBar && lastBar)
+				this._chart.xAxis[0].setExtremes(firstBar[0], lastBar[0], false, false);
 		});
 	}
 
@@ -488,7 +484,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 						color: 'white'
 					}
 				}
-			});
+			}, false, false);
 		});
 	}
 
@@ -724,33 +720,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	public storeStyles() {
 		if (this.instrumentModel.options.id)
 			localStorage.setItem(`instrument-${this.instrumentModel.options.id}-p`, JSON.stringify(this.getStyles()));
-	}
-
-	public _restoreStyles(styles?: { x?: any, y?: any, z?: any, w?: any, h?: any }): void {
-		styles = styles || <any>JSON.parse(localStorage.getItem(`instrument-${this.instrumentModel.options.id}-p`));
-
-		if (styles) {
-			this.toggleViewState('windowed');
-			this.setStyles(styles);
-		}
-		else {
-			this.toggleViewState('windowed');
-			this.setRandomPosition();
-			this.storeStyles();
-		}
-	}
-
-	public setRandomPosition() {
-		let el = this._elementRef.nativeElement,
-			containerH = el.parentNode.clientHeight,
-			containerW = el.parentNode.clientWidth,
-			chartH = el.clientHeight,
-			chartW = el.clientWidth;
-
-		this.setStyles({
-			x: random(0, containerW - chartW),
-			y: Math.max(random(0, containerH - chartH), 0)
-		});
 	}
 
 	public toggleViewState(viewState: string | boolean, render = false) {

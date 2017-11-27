@@ -15,11 +15,6 @@
 
 $header-height: 18px;
 
-:host {
-    position: relative;
-    contain: layout;
-}
-
 .splitter {
     position: absolute;
     top: -6px;
@@ -148,16 +143,6 @@ ul {
 .fa-warning {
     color: $general-warning;
 }
-
-// Mobile
-@media screen and (max-width: 768px) {
-   :host {
-
-       // margin-bottom: -20px;
-   }
-}
-
-
 
 status {
     display: flex;

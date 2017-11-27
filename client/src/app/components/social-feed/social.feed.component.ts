@@ -43,7 +43,7 @@ export class ParseCommentContentPipe implements PipeTransform {
 	selector: 'app-social-feed',
 	styleUrls: ['./social.feed.component.scss'],
 	templateUrl: 'social.feed.component.html',
-	encapsulation: ViewEncapsulation.Native,
+	// encapsulation: ViewEncapsulation.Native,
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SocialFeedComponent implements OnInit {

@@ -126,14 +126,14 @@ export class OrderService {
 		if (unload)
 			this.unload();
 
-		this.getList().subscribe((list: Array<OrderModel>) => {
-			this.orders$.next(list);
-		}, (error) => {
-			console.error(error);
-			this._alertService.error('Could not load order list');
-		});
+		// this.getList().subscribe((list: Array<OrderModel>) => {
+		// 	this.orders$.next(list);
+		// }, (error) => {
+		// 	console.error(error);
+		// 	this._alertService.error('Could not load order list');
+		// });
 
-		this.calculateAccountStatus();
+		// this.calculateAccountStatus();
 	}
 
 	public unload() {
@@ -141,18 +141,18 @@ export class OrderService {
 	}
 
 	private _onTick(symbols) {
-		symbols.forEach(symbol => {
-			const model = this._cacheService.symbols.find(m => m === symbol);
+		// symbols.forEach(symbol => {
+		// 	const model = this._cacheService.symbols.find(m => m === symbol);
 
-			if (model)
-				this.orders$.getValue()
-					.filter((o: OrderModel) => o.options.symbol === symbol)
-					.forEach((o: OrderModel) => {
-						this.updateModel(o, model.options);
-					});
-		});
+		// 	if (model)
+		// 		this.orders$.getValue()
+		// 			.filter((o: OrderModel) => o.options.symbol === symbol)
+		// 			.forEach((o: OrderModel) => {
+		// 				this.updateModel(o, model.options);
+		// 			});
+		// });
 
-		this.calculateAccountStatus()
+		// this.calculateAccountStatus()
 	}
 }
 

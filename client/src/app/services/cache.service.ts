@@ -12,8 +12,8 @@ export class CacheService {
 	private _socket: any;
 
 	constructor(private _zone: NgZone) {
+		this._connect();
 	}
-
 
 	public read(params) {
 		console.log('asdf',params);
@@ -34,18 +34,24 @@ export class CacheService {
 	}
 
 	public load(unload = true) {
+		const start = Date.now();
+
 		return new Promise((resolve, reject) => {
 
 			if (unload)
 				this.unload();
 
-			this._connect();
+			console.log('beforeEmit', (Date.now() - start) / 1000);
 
 			this._socket.emit('symbol:list', {}, (err, symbols) => {
 				if (err)
 					return reject(err);
 
+				console.log('received', (Date.now() - start) / 1000);
+
 				this._updateSymbols(symbols);
+
+				console.log('symbolsSets', (Date.now() - start) / 1000);
 
 				resolve();
 			});
@@ -62,7 +68,6 @@ export class CacheService {
 				this.changed$.next(Object.keys(ticks));
 			});
 		});
-
 	}
 
 	public unload() {
@@ -72,14 +77,14 @@ export class CacheService {
 
 	private _connect() {
 
-		// this._zone.runOutsideAngular(() => {
+		this._zone.runOutsideAngular(() => {
 			this._socket = io(appConfig.ip + ':' + appConfig.port, {
 				'reconnectionAttempts': 10, // avoid having user reconnect manually in order to prevent dead clients after a server restart
 				'timeout': 10000, // before connect_error and connect_timeout are emitted.
 				'transports': ['websocket'],
 				path: '/ws/candles/'
 			});
-		// });
+		});
 	}
 
 	private _disconnect() {

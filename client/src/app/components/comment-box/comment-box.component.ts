@@ -11,7 +11,7 @@ import {UserService} from "../../services/user.service";
 	selector: 'app-comment-box',
 	styleUrls: ['./comment-box.component.scss'],
 	templateUrl: 'comment-box.component.html',
-	encapsulation: ViewEncapsulation.Native,
+	// encapsulation: ViewEncapsulation.Native,
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 

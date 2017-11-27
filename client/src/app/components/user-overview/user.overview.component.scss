@@ -16,10 +16,13 @@
     background-color: $background-light2;
     height: 100%;
     width: 100%;
-    padding: 20px;
     display: flex;
     flex-flow: column;
     overflow: scroll;
+
+    @media only screen and (min-width : 768px) {
+        padding: 20px;
+    }
 }
 
 .filter-options {

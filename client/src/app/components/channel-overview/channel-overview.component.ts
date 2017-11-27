@@ -13,7 +13,7 @@ declare let $: any;
 	selector: 'app-channel-overview',
 	templateUrl: './channel-overview.component.html',
 	styleUrls: ['./channel-overview.component.scss'],
-	encapsulation: ViewEncapsulation.Native,
+	// encapsulation: ViewEncapsulation.Native,
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 

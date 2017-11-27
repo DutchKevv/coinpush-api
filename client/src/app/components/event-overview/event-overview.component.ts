@@ -11,7 +11,7 @@ import { NewsService } from '../../services/news.service';
 	selector: 'app-event-overview',
 	styleUrls: ['./event-overview.component.scss'],
 	templateUrl: 'event-overview.component.html',
-	encapsulation: ViewEncapsulation.Native,
+	// encapsulation: ViewEncapsulation.Native,
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EventOverviewComponent implements OnInit {

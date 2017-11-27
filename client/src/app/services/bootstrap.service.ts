@@ -19,7 +19,7 @@ export class BootstrapService {
 	public async loadAppData() {
 		this._socketService.connect();
 		await this._cacheService.load();
-		await this._orderService.load();
+		// await this._orderService.load();
 
 		this.isReady = true;
 	}

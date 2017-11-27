@@ -6,7 +6,7 @@ import {AlertService} from '../../services/alert.service';
 @Component({
 	styleUrls: ['./login.component.scss'],
 	templateUrl: 'login.component.html',
-	encapsulation: ViewEncapsulation.Native,
+	// encapsulation: ViewEncapsulation.Native,
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 

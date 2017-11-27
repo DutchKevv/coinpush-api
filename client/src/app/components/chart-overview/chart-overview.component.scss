@@ -1,5 +1,12 @@
+@import '~bootstrap/scss/_variables';
+@import '~bootstrap/scss/_mixins';
+@import '~bootstrap/scss/utilities/_visibility';
+
 @import '../../style/variables/variables';
+@import '../../style/helpers/normalize';
 @import '../../style/components/dropdown';
+
+
 
 :host {
     display: flex;
@@ -11,8 +18,243 @@
     background: $general-active;
 }
 
-instrument-list {
+.instrument-list-outer {
     height: 50%;
+    display: flex;
+	background: $background-light;
+
+    ul {
+        overflow: auto;
+        height: 100%;
+    
+        li {
+            border-bottom: 1px solid $border-color-grey;
+            font-size: 14px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            align-items: center;
+            
+            &.active {
+                background: #6f748e;
+            }
+           
+            @media only screen and (min-width : 768px) { 
+                justify-content: space-between;
+
+                &:hover {
+                    background: #6f748e;
+                    cursor: pointer;
+                }
+            }
+    
+            > div {
+                padding: 0px 10px;
+                flex: 0 1 46%;
+                text-align: center;
+                margin: 2px 0;
+    
+                span {
+                    font-size: 12px;
+                    line-height: 16px;
+                }
+                
+                @media only screen and (min-width : 768px) { 
+                    flex: 1;
+                }
+    
+                &:first-child {
+                    text-align: left;
+                }
+    
+                &:last-child {
+                    width: 110px;
+                    text-align: right;
+                    min-height: 18px;
+    
+                    i {
+                        color: $font-color-light;
+                        margin-right: 10px;
+                        font-size: 16px;
+                        line-height: 16px;
+    
+                        &.active,
+                        &:hover {
+                            color: $general-active;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    .side-menu {
+    
+        &.open {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            background: black;
+        }
+    
+        @media only screen and (min-width : 768px) { 
+            &.open {
+                position: static;
+                min-width: 300px;
+                width: 300px;
+            }
+        }
+    
+        header {
+            background: green;
+            padding: 6px 10px;
+            display: flex;
+    
+            i {
+                margin-right: 10px;
+                color: white;	
+                cursor: pointer;
+                font-size: 22px;
+            }
+    
+            h5 {
+                line-height: 22px;
+            }
+        }
+    
+        main {
+            padding: 6px 10px;
+    
+            > ul {
+                display: flex;
+    
+                > li {
+                    flex: 1;
+                }
+            }
+        }
+    }
+}
+
+// TODO - Move to general font file
+.font-color-up,
+.text-positive {
+	color: #38cc38;
+}
+.font-color-down,
+.text-negative {
+	color: #f92929;
+}
+
+.filter-list {
+	background: black;
+	width: 200px;
+	overflow: auto;
+	padding: 6px;
+
+	transition: transform .2s ease-in-out;
+
+	@media only screen and (max-width : 768px) {
+        position: absolute;
+        top: 0;
+        transform: translateX(-250px);
+        bottom: 0;
+        z-index: 1001;
+
+        &.show {
+            transform: translateX(0);
+
+            + .nav-overlay {
+                display: block;
+            }
+        }
+	}
+
+	a {
+		padding-left: 20px;
+		display: block;
+
+		&:hover,
+		&.active {
+			background: $general-active;
+		}
+	}
+}
+
+.instrument-list {
+	width: 100%;
+	display: flex;
+	flex-flow: column;
+}
+
+.table-header {
+	font-size: 14px;
+	background: $background-light3;
+	color: white;
+	justify-content: space-between;
+	display: flex;
+	padding: 6px 10px;
+
+	> div {
+		align-items: center;
+
+		&:last-child {
+			width: 110px;
+		}
+	}
+}
+
+.table-mobile-header {
+	font-size: 26px;
+	background: $background-light3;
+	color: white;
+	padding-left: 20px;
+}
+
+button.btn-sm {
+	padding: 0;
+	background: $background-light;
+	width: 150px;
+	border-radius: 4px;
+	border: 1px solid grey;
+	display: flex;
+	
+	&.positive {
+		animation: fade-positive 2s ease;
+
+		span {
+			color: $general-success;
+		}
+	}
+
+	&.negative {
+		animation: fade-negative 2s ease;
+
+		span {
+			color: $general-error;
+		}
+	}
+
+	span:first-child {
+		color: $font-color-light;
+		padding: 5px 10px;
+		font-size: 12px;
+		text-align: center;
+		border-radius: 4px 0 0 4px;
+	}
+
+	span:nth-child(2) {
+		background: #f8f8f8;
+		color: $font-color-dark;
+		padding: 5px;
+		display: block;
+		width: 100%;
+		text-align: right;
+		border-radius: 0 4px 4px 0;
+		font-size: 12px;
+	}
 }
 
 .chart-header {
@@ -20,7 +262,8 @@ instrument-list {
     display: flex;
     justify-content: space-between;
     padding-left: 10px;
-
+    height: 26px;
+    
     > h5 {
         line-height: 26px;
     }
@@ -62,7 +305,7 @@ instrument-list {
             cursor: pointer;
 
             i.fa {
-                line-height: 20px;
+                line-height: 26px;
                 display: block;
             }
 
@@ -116,13 +359,13 @@ instrument-list {
             background: #878787 linear-gradient(180deg, #000, #6a6a6a);
         }
 
-        &[disabled] {
-            background: #6f6f6f;
+        // &[disabled] {
+        //     background: #6f6f6f;
 
-            &:hover {
-                cursor: not-allowed;
-            }
-        }
+        //     &:hover {
+        //         cursor: not-allowed;
+        //     }
+        // }
 
         &:focus {
             outline: none;

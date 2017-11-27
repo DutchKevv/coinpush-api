@@ -19,7 +19,7 @@ export class GroupIdsPipe implements PipeTransform {
 	selector: 'backtest',
 	templateUrl: './backtest.component.html',
 	styleUrls: ['./backtest.component.scss'],
-	encapsulation: ViewEncapsulation.Native,
+	// encapsulation: ViewEncapsulation.Native,
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 

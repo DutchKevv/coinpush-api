@@ -6,7 +6,7 @@ import {AlertService} from '../../services/alert.service';
 @Component({
 	styleUrls: ['./password-reset.component.scss'],
 	templateUrl: 'password-reset.component.html',
-	encapsulation: ViewEncapsulation.Native
+	// encapsulation: ViewEncapsulation.Native
 })
 
 export class PasswordResetComponent implements OnInit {
