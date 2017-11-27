@@ -58,11 +58,9 @@ export class ChannelService {
 				});
 				text = `Now following ${model.options.name}`;
 			} else {
-				model.options.followers.remove([{
-					_id: this._userService.model.get('user_id'),
-					name: this._userService.model.get('name'),
-					profileImg: this._userService.model.get('profileImg'),
-				}]);
+				const index = model.options.followers.find(f => f._id === this._userService.model.get('user_id'));
+				model.options.followers.slice(index, 1);
+
 				model.set({
 					iFollow: !!state,
 					followersCount: --model.options.followersCount

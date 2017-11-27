@@ -31,7 +31,6 @@
     "@types/node": "8.0.53",
     "angular-2-dropdown-multiselect": "^1.6.2",
     "bootstrap": "4.0.0-alpha.6",
-    "canvasjs": "1.8.1",
     "cordova-android": "^6.3.0",
     "cordova-browser": "^5.0.1",
     "cordova-plugin-statusbar": "^2.3.0",
