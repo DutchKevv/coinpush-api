@@ -2,12 +2,66 @@
 <html>
 
 <head>
-    <meta charset="utf-8">
     <title>TradeJS - Practise</title>
-    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <meta charset="utf-8">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, height=device-height, user-scalable=no, initial-scale=1, minimum-scale=1, maximum-scale=1">
+
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="assets/vendor/font-awesome/css/font-awesome.min.css">
+
+    <script>
+        (function () {
+            window.AppConfig = {
+                isApp: !!window['_cordovaNative'],
+                isEmulator: navigator.platform === 'Linux i686',
+                isLocal: document.URL.indexOf('file://') > -1
+            };
+
+            if (window.AppConfig.isApp) {
+                var script = document.createElement('script');
+                script.src = 'cordova.js';
+                document.head.appendChild(script); //or something of the likes
+            }
+
+            window.isElectron = (window.process && window.process.type);
+
+            function onDeviceReady() {
+                var admobid = {};
+                if (/(android)/i.test(navigator.userAgent)) { // for android & amazon-fireos
+                    admobid = {
+                        banner: 'ca-app-pub-1181429338292864/7213864636',
+                        interstitial: 'ca-app-pub-1181429338292864/7213864636'
+                    };
+                } else if (/(ipod|iphone|ipad)/i.test(navigator.userAgent)) { // for ios
+                    admobid = {
+                        banner: 'ca-app-pub-1181429338292864/7213864636',
+                        interstitial: 'ca-app-pub-1181429338292864/7213864636'
+                    };
+                } else { // for windows phone
+                    admobid = {
+                        banner: 'ca-app-pub-1181429338292864/7213864636',
+                        interstitial: 'ca-app-pub-1181429338292864/7213864636'
+                    };
+                }
+
+                if (window.AdMob) {
+                    window.AdMob.createBanner({
+                        adSize: 'BANNER',
+                        height: 60, // valid when set adSize 'CUSTOM'
+                        adId: admobid.banner,
+                        position: AdMob.AD_POSITION.BOTTOM_CENTER,
+                        autoShow: true,
+                        isTesting: true
+                    });
+                }
+            }
+
+            document.addEventListener("deviceready", (onDeviceReady), false);
+
+        })()
+    </script>
 
     <style>
         html,
@@ -103,10 +157,6 @@
             overflow: hidden;
         }
     </style>
-
-    <script>
-        window.isElectron = (window.process && window.process.type);
-    </script>
 </head>
 
 <body>

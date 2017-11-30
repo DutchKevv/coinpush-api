@@ -61,27 +61,25 @@ export class ChartOverviewComponent implements OnInit, AfterViewInit {
 	}
 
 	ngOnInit() {
-		
+		this.activeSymbol = this.cacheService.getBySymbol(this._route.snapshot.queryParams['symbol']) || this.cacheService.symbols[0];
 	}
 
 	ngAfterViewInit() {
 		this.symbols = this.cacheService.symbols;
-		this.activeSymbol = this.cacheService.getBySymbol(this._route.snapshot.queryParams['symbol']) || this.symbols[0];
 		
-		this._routeSub = this._route.queryParams.subscribe(params => {
-			if (this.activeSymbol && this.activeSymbol.options.name === params['symbol']) {
-				this._scrollIntoView(this.activeSymbol);
-				return;
-			}
-				
-			const symbol = this.cacheService.getBySymbol(params['symbol']);
-			this.setActiveSymbol(undefined, symbol || this.symbols[0]);
-			// 
-		});
-
 		setTimeout(() => {
 			this.cd.detectChanges();
-			this._scrollIntoView(this.activeSymbol);
+
+			this._routeSub = this._route.queryParams.subscribe(params => {
+				if (this.activeSymbol && this.activeSymbol.options.name === params['symbol']) {
+					this._scrollIntoView(this.activeSymbol);
+					return;
+				}
+					
+				const symbol = this.cacheService.getBySymbol(params['symbol']);
+				this.setActiveSymbol(undefined, symbol || this.symbols[0]);
+				// 
+			});
 		}, 0);
 	}
 
@@ -123,13 +121,13 @@ export class ChartOverviewComponent implements OnInit, AfterViewInit {
 
 	setActiveSymbol(event, symbol: SymbolModel) {
 		this.activeSymbol = symbol;
-
+		console.log(symbol);
 		if (event) {
 			event.preventDefault();
 			event.stopPropagation();
 		}
 
-		this._router.navigate(['/main/charts'], { skipLocationChange: false, queryParams: { symbol: symbol.options.name } });
+		this._router.navigate(['/charts'], { skipLocationChange: false, queryParams: { symbol: symbol.options.name } });
 
 		const el = this._elementRef.nativeElement.querySelector(`[data-symbol=${symbol.get('name')}]`);
 		if (!el || isAnyPartOfElementInViewport(el))

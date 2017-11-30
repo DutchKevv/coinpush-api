@@ -1,0 +1,96 @@
+<div modalAnchor></div>
+<app-alert></app-alert>
+
+<nav class="nav-main" id="sidebar" #navbar>
+    <a [routerLink]="['/user/', userService.model.get('user_id')]" [routerLinkActive]="['active']" class="profile">
+        <img class="logo" width="70" height="70" src="{{(userService.model.options$ | async).profileImg}}">
+        <h4>{{userService.model.options.name}}</h4>
+    </a>
+
+    <!-- <a [routerLink]="['/channels']" [routerLinkActive]="['active']">
+            <i class="fa fa-upload"></i>
+            <span>Watchlist</span>
+        </a> -->
+    <!-- <a [routerLink]="['/portfolio']" [routerLinkActive]="['active']">
+            <i class="fa fa-handshake-o"></i>
+            <span>Portfolio</span>
+        </a> -->
+    <a [routerLink]="['/news']" [routerLinkActive]="['active']">
+        <i class="fa fa-newspaper-o"></i>
+        <span>News feed</span>
+    </a>
+    <a [routerLink]="['/calendar']" [routerLinkActive]="['active']">
+        <i class="fa fa-calendar"></i>
+        <span>Calender</span>
+    </a>
+    <a [routerLink]="['/user']" [routerLinkActive]="['active']">
+        <i class="fa fa-users"></i>
+        <span>Users</span>
+    </a>
+    <a [routerLink]="['/charts']" [routerLinkActive]="['active']">
+        <i class="fa fa-bar-chart"></i>
+        <span>Symbols</span>
+    </a>
+    <!-- <a [routerLink]="['/backtest']" [routerLinkActive]="['active']">
+            <i class="fa fa-flash"></i>
+            <span>Backtest</span>
+        </a> -->
+    <a [routerLink]="['/editor']" [routerLinkActive]="['active']">
+        <i class="fa fa-code"></i>
+        <span>Editor</span>
+    </a>
+    <a [routerLink]="['/settings']" [routerLinkActive]="['active']">
+        <i class="fa fa-gears"></i>
+        <span>Settings</span>
+    </a>
+    <a (click)="logout()">
+        <i class="fa fa-sign-out"></i>
+        <span>Logout</span>
+    </a>
+
+</nav>
+
+<div (click)="onClickOverlay()" class="nav-overlay"></div>
+
+<main class="main-container">
+    <header *ngIf="userService.accountStatus$ | async as status">
+        <i (click)="collapseNav($event)" class="fa fa-navicon hidden-lg-up"></i>
+        <i *ngIf="router.url.startsWith('/charts') || ['/user'].includes(router.url)" (click)="collapseNav($event)" class="fa fa-filter hidden-lg-up"></i>
+        <div class="account-details hidden-xs-down">
+            <h4>{{status.available | currency : 'EUR':'symbol'}}</h4>
+            <span>available</span>
+        </div>
+        <div class="account-details hidden-xs-down">
+            <h4>{{status.equity | currency : 'EUR':'symbol'}}</h4>
+            <span>equality</span>
+        </div>
+        <div class="account-details hidden-xs-down">
+            <h4>{{status.openMargin | currency : 'EUR':'symbol'}}</h4>
+            <span>O. margin</span>
+        </div>
+        <div class="account-details hidden-xs-down">
+            <h4 [ngClass]="{'positive': status.profit > 0, 'negative': status.profit < 0}">{{status.profit | currency : 'EUR':'symbol'}}</h4>
+            <span>profit</span>
+        </div>
+
+        <div class="header-search">
+            <input (keyup)="onSearchKeyUp($event)" (focus)="onSearchKeyUp($event)" placeholder="Markets / Channels / People" #input>
+            <div class="search-drop-down" *ngIf="(searchResults$ | async) as result" (click)="onClickDropdownItem()" #dropdown>
+                <a *ngFor="let symbol of result.symbols" [routerLink]="['/charts']" [queryParams]="{symbol: symbol.name}">
+                    <img src="/images/default/symbol/spx500-70x70.png">
+                    <span>{{symbol.name}}</span>
+                </a>
+                <a *ngFor="let user of result.users" [routerLink]="['/user/', user.user_id]">
+                    <img src="{{user.profileImg}}">
+                    <span>{{user.name}}</span>
+                </a>
+            </div>
+        </div>
+    </header>
+    <router-outlet></router-outlet>
+
+    <!-- <section class="ad-container">
+            <p>ADVERTISING MY BITCH UP</p>
+        </section> -->
+</main>
+<!-- <router-outlet></router-outlet> -->

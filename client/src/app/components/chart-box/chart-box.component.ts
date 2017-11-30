@@ -50,14 +50,17 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 	@Input() showBox: Boolean = false;
 	@Input() quickBuy: Boolean = false;
-	@Output() loading$ = new BehaviorSubject(true);
 
 	@ViewChild(DialogAnchorDirective) private _dialogAnchor: DialogAnchorDirective;
 	@ViewChild('chart') private chartRef: ElementRef;
+	@ViewChild('loading') private loadingRef: ElementRef;
 
 	@Output() public viewState$: BehaviorSubject<any> = new BehaviorSubject('windowed');
 
 	public viewState = 'windowed';
+	public graphType = 'ohlc';
+	public zoom = 3;
+	public timeFrame = 'M1';
 
 	$el: any;
 
@@ -86,7 +89,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	private _priceSubscription;
 	private _orderSubscription;
 
-	public static readonly DEFAULT_CHUNK_LENGTH = 100;
+	public static readonly DEFAULT_CHUNK_LENGTH = 200;
 	public static readonly VIEW_STATE_WINDOWED = 1;
 	public static readonly VIEW_STATE_STRETCHED = 2;
 	public static readonly VIEW_STATE_MINIMIZED = 3;
@@ -128,8 +131,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
-		console.log(changes);
-
+	
 		if (changes.symbolModel) {
 			this.instrumentModel = null;
 			this.symbolModel = changes.symbolModel.currentValue;
@@ -142,10 +144,14 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	}
 
 	ngAfterViewInit() {
-		// this.init();
+		this._onScrollBounced = throttle(this._onScroll.bind(this), 33);
+		this.chartRef.nativeElement.addEventListener('mousewheel', <any>this._onScrollBounced);
+		// this.chartRef.nativeElement.addEventListener('touchmove', <any>this._onScrollBounced);
 	}
 
 	init() {
+		this.toggleLoading(true);
+
 		if (!this.symbolModel && !this.instrumentModel)
 			return;
 
@@ -163,42 +169,31 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 			});
 		}
 
-		this._onScrollBounced = throttle(this._onScroll.bind(this), 33);
-
 		this._fetchCandles();
 
 		// Listen for price change
 		this._priceSubscription = this.symbolModel.options$.subscribe((options) => this._onPriceChange(options));
 
 		// Listen for orders change
-		this._orderSubscription = this._orderService.orders$.subscribe((options) => this._updateOrders(options));
+		// this._orderSubscription = this._orderService.orders$.subscribe((options) => this._updateOrders(options));
 
-		if (this.instrumentModel.options.id) {
-			this._fetchIndicators(ChartBoxComponent.DEFAULT_CHUNK_LENGTH, this._offset);
-		} else {
-			let subscription = this.instrumentModel.changed$.subscribe(() => {
-				if (this.instrumentModel.options.id) {
-					subscription.unsubscribe();
-					this._fetchIndicators(ChartBoxComponent.DEFAULT_CHUNK_LENGTH, this._offset);
-				}
-			});
-		}
+		// if (this.instrumentModel.options.id) {
+		// 	this._fetchIndicators(ChartBoxComponent.DEFAULT_CHUNK_LENGTH, this._offset);
+		// } else {
+		// 	let subscription = this.instrumentModel.changed$.subscribe(() => {
+		// 		if (this.instrumentModel.options.id) {
+		// 			subscription.unsubscribe();
+		// 			this._fetchIndicators(ChartBoxComponent.DEFAULT_CHUNK_LENGTH, this._offset);
+		// 		}
+		// 	});
+		// }
 
 		this._changeSubscription = this.instrumentModel.changed$.subscribe(changes => {
 			let dirty = false;
 
 			Object.keys(changes).forEach(change => {
 				switch (change) {
-					case 'zoom':
 
-						if (this._chart)
-							this._updateViewPort();
-						dirty = true;
-						break;
-					case 'graphType':
-						this.changeGraphType();
-						dirty = true;
-						break;
 					case 'timeFrame':
 						this.toggleTimeFrame();
 						break;
@@ -233,11 +228,17 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		this._orderService.create({ symbol: this.instrumentModel.options.symbol, side, amount });
 	}
 
-	public changeGraphType() {
+	public setZoom(amount) {
+		this.zoom += amount;
+		this._updateViewPort(0, false, true);
+	}
+
+	public changeGraphType(type) {
 		if (!this._chart)
 			return;
 
-		this._chart.options.data[0].type = this.instrumentModel.options.graphType;
+		this.graphType = type;
+		this._chart.series[0].update({type});
 	}
 
 	public reflow() {
@@ -254,15 +255,18 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	public render() {
 		if (!this._chart)
 			return;
-
-		// this._chart.render();
-		// this._chartVolume.render();
 	}
 
 	public toggleTimeFrame() {
-		this.loading$.next(true);
+		this.toggleLoading(true);
 		this._fetchCandles();
 		// this._fetchIndicators(ChartBoxComponent.DEFAULT_CHUNK_LENGTH, this._offset);
+	}
+
+	public toggleLoading(state?: boolean) {
+		requestAnimationFrame(() => {
+			this.loadingRef.nativeElement.classList.toggle('active', !!state);
+		});
 	}
 
 	private _createChart() {
@@ -270,20 +274,32 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 			this._destroyChart();
 
+			const extremes = this._updateViewPort(0, true) || [];
 
 			// create the chart
 			this._chart = Highstock.chart(this.chartRef.nativeElement, {
-
+				chart: {
+					pinchType: 'x',
+					marginLeft: 4,
+					marginTop: 4,
+					marginBottom: 30
+					// marginRight: 5,
+					// padding: 0,
+					// spacing: [0, 0, 0, 0]
+				},
 				title: {
 					text: ''
 					// text: this.symbolModel.get('displayName')
 				},
-
 				subtitle: {
 					text: '',
 					style: {
 						display: 'none'
 					}
+				},
+
+				credits: {
+					enabled: false
 				},
 
 				legend: {
@@ -297,6 +313,8 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 						format: '{value:%d-%m %H:%M}',
 						y: 14
 					},
+					min: extremes[0],
+					max: extremes[1],
 					minorGridLineWidth: 0,
 					lineColor: '#d2d2d5',
 					lineWidth: 1,
@@ -305,6 +323,8 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 					gridZIndex: -1,
 					tickPixelInterval: 80,
 					minorTickLength: 0,
+					minPadding: 0,
+					maxPadding: 0,
 
 					// Fill empty time gaps (when there are no bars)
 					ordinal: true
@@ -314,14 +334,28 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 						step: 1, // Disable label rotating when there is not enough space
 						staggerLines: false,
 					},
+					min: extremes[0],
+					max: extremes[1],
 					lineWidth: 0,
 					gridLineWidth: 1,
 					gridLineDashStyle: 'dot',
 					gridZIndex: -1,
+					minPadding: 0,
+					maxPadding: 0,
 
 					// Fill empty time gaps (when there are no bars)
 					ordinal: true
 				}],
+
+				plotOptions: {
+					candles: {
+						pointPadding: 0,
+						borderWidth: 0,
+						groupPadding: 0,
+						shadow: false,
+						stacking: 'percent'
+					}
+				},
 
 				yAxis: [{
 					opposite: true,
@@ -336,7 +370,10 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 					lineWidth: 1,
 					resize: {
 						enabled: true
-					}
+					},
+					plotLines: [
+						this._updateCurrentPricePlot(true)
+					]
 				}, {
 					opposite: true,
 					labels: {
@@ -359,7 +396,8 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 				series: [
 					{
 						id: 'main-series',
-						type: 'candlestick',
+						type: this.graphType,
+						// type: 'candles/tick',
 						name: this.symbolModel.options.displayName,
 						// data: ohlc,
 						data: this._data.candles,
@@ -377,39 +415,17 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 						// }
 					},
 				]
-			});
+			}, false, false);
 
-			// {
-			// 	type: 'sma',
-			// 	linkedTo: 'main-series',
-			// 	params: {
-			// 	  period: 14
-			// 	}
-			//   }, {
-			// 	type: 'sma',
-			// 	linkedTo: 'main-series',
-			// 	params: {
-			// 	  period: 28
-			// 	}
-			//   }, {
-			// 	type: 'sma',
-			// 	linkedTo: 'main-series',
-			// 	params: {
-			// 	  period: 7
-			// 	}
-			//   }
-
-			this.chartRef.nativeElement.addEventListener('mousewheel', <any>this._onScrollBounced);
-			this._updateViewPort();
+			// this._updateViewPort();
+			this.toggleLoading(false);
 			// this._updateIndicators();
-			this._updateOrders(this._orderService.orders$.getValue());
+			// this._updateOrders(this._orderService.orders$.getValue());
 		});
 	}
 
-	private _updateViewPort(shift = 0) {
-		this._zone.runOutsideAngular(() => {
-			if (!this._chart || !this._data.candles.length)
-				return;
+	private _updateViewPort(shift = 0, optionsOnly: boolean = false, render: boolean = false) {
+		return this._zone.runOutsideAngular(() => {
 
 			let data = this._data.candles,
 				offset = this._scrollOffset + shift,
@@ -428,8 +444,14 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 			let firstBar = (data[data.length - viewable - offset] || data[0]),
 				lastBar = data[data.length - 1 - offset];
 
-			if (firstBar && lastBar)
-				this._chart.xAxis[0].setExtremes(firstBar[0], lastBar[0], false, false);
+			if (!firstBar || !lastBar)
+				return;
+
+			if (optionsOnly)
+				return [firstBar[0], lastBar[0]];
+
+			if (this._chart)
+				this._chart.xAxis[0].setExtremes(firstBar[0], lastBar[0], render, false);
 		});
 	}
 
@@ -451,40 +473,43 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 				if (!this._chart)
 					this._createChart();
 
-				this._updateCurrentPricePlot();
-				// this._updateViewPort();
-				// this.render();
+				// this._updateCurrentPricePlot();
+
 			} catch (error) {
-				this.loading$.next(false);
 				console.log('error error error', error);
 			}
 		});
 	}
 
-	private _updateCurrentPricePlot(): void {
-		this._zone.runOutsideAngular(() => {
+	private _updateCurrentPricePlot(optionsOnly?: boolean) {
+		return this._zone.runOutsideAngular(() => {
 			let lastCandle = this._data.candles[this._data.candles.length - 1];
 
 			if (!lastCandle)
 				return;
 
-			this._chart.yAxis[0].removePlotLine('cPrice', false, false);
-
-			this._chart.yAxis[0].addPlotLine({
+			const options = {
 				id: 'cPrice',
 				color: '#FF0000',
 				width: 1,
 				value: lastCandle[1],
 				label: {
-					text: lastCandle[1].toString(),
+					text: '<div class="plot-label">' + lastCandle[1].toString() + '</div>',
+					useHTML: true,
 					align: 'right',
 					x: 40,
 					y: 2,
 					style: {
-						color: 'white'
+						color: 'white',
 					}
 				}
-			}, false, false);
+			};
+
+			if (optionsOnly)
+				return options;
+
+			this._chart.yAxis[0].removePlotLine('cPrice', false, false);
+			this._chart.yAxis[0].addPlotLine(options, false, false);
 		});
 	}
 
@@ -657,7 +682,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 	private _calculateViewableBars(checkParent = true) {
 		let el = this._elementRef.nativeElement,
-			barW = 3 * this.instrumentModel.options.zoom;
+			barW = 3 * this.zoom;
 
 		return Math.floor(el.clientWidth / barW);
 	}
@@ -770,18 +795,16 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 		clearTimeout(this._onScrollTooltipTimeout);
 
-		this._mouseActive = false;
-		// this._chart.options.toolTip.enabled = false;
-		this._onScrollTooltipTimeout = setTimeout(() => {
-			// this._chart.options.toolTip.enabled = true;
-			this._mouseActive = true;
-			// this.render();
-		}, 500);
+		// this._mouseActive = false;
+		// // this._chart.options.toolTip.enabled = false;
+		// this._onScrollTooltipTimeout = setTimeout(() => {
+		// 	// this._chart.options.toolTip.enabled = true;
+		// 	this._mouseActive = true;
+		// 	// this.render();
+		// }, 500);
 		// this._chart.toolTip.hide();
 
-		this._updateViewPort(event.wheelDelta > 0 ? -shift : shift);
-
-		// this.render();
+		this._updateViewPort(event.wheelDelta > 0 ? -shift : shift, false, true);
 
 		return false;
 	}
@@ -804,7 +827,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	}
 
 	private _destroyChart() {
-		this.chartRef.nativeElement.removeEventListener('mousewheel', <any>this._onScrollBounced);
+
 
 		if (this._chart)
 			this._chart.destroy();
@@ -833,6 +856,8 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	}
 
 	async ngOnDestroy() {
+		this.chartRef.nativeElement.removeEventListener('mousewheel', <any>this._onScrollBounced);
+
 		this._destroy();
 	}
 }

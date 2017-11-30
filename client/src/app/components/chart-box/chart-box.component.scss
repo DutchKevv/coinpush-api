@@ -1,18 +1,22 @@
 @import '../../style/variables/variables';
 @import '../../style/components/spinner';
+@import '../../style/helpers/normalize';
+@import '../../style/components/dropdown';
 
 :host {
-    height: 400px;
-    width: 700px;
+    height: 100%;
+    width: 100%;
 
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1;
-    border: 1px solid #999999;
-    overflow: hidden;
+    // position: absolute;
+    // top: 0;
+    // left: 0;
+    // z-index: 1;
+    // border: 1px solid #999999;
+    // overflow: hidden;
     background: black; // rgba(0,0,0,0.7);
     // contain: layout;
+    display: flex;
+    flex-flow: column;
 }
 
 :host(.black) {
@@ -59,12 +63,118 @@
     }
 }
 
-.chart-header {
-    background: $chart-header-background-blur;
-    display: flex;
+// .chart-header {
+//     background: $chart-header-background-blur;
+//     display: flex;
 
-    h5 {
-        margin-right: auto;
+//     h5 {
+//         margin-right: auto;
+//     }
+// }
+
+.chart-header {
+    background: $background-dark;
+    display: flex;
+    padding-left: 10px;
+    height: 28px;
+    
+    > h5 {
+        line-height: 26px;
+        color: white;
+        margin-right: 6px;
+    }
+
+    .header-buttons {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        display: flex;
+
+        @media screen and (min-width: 768px) {
+            &:first-child {
+                width: 280px;
+            }
+        }
+
+        > li {
+            cursor: pointer;
+        }
+
+        .button-editor {
+            // margin-right: 225px;
+
+            @media screen and (max-width: 768px) {
+                margin-right: 0;
+            }
+        }
+
+        button {
+            padding: 0px 8px;
+            // margin: 0 10px;
+            font-size: 18px;
+            cursor: pointer;
+
+            i.fa {
+                line-height: 26px;
+                display: block;
+            }
+
+            @media screen and (max-width: 768px) {
+                font-size: 16px;
+
+                i.fa {
+                    line-height: 25px;
+                }
+            }
+
+            &.dropdown-toggle {
+                span {
+                    padding-right: 5px;
+                    line-height: 20px;
+                }
+
+                &:after {
+                    float: right;
+                    margin-top: 7px;
+                }
+            }
+        }
+    }
+
+    //.dropdown-toggle:not([disabled]):hover + .dropdown-menu {
+    //	display: block;
+    //}
+
+    .dropdown-menu {
+        margin: 0;
+
+        a:hover {
+            background: white;
+            color: $font-color-dark;
+        }
+    }
+
+    .btn-menu {
+        background: black;
+        // background: #878787 linear-gradient(180deg, #6a6a6a, #000);
+        color: #fff;
+        text-decoration: none;
+        min-width: 30px;
+        text-align: center;
+        margin-right: 5px;
+        border: none;
+        border-radius: 0;
+        line-height: 26px;
+
+        &:hover,
+        &.active {
+            background: #878787 linear-gradient(180deg, #000, #6a6a6a);
+        }
+
+        &:focus {
+            outline: none;
+        }
     }
 }
 
@@ -73,11 +183,6 @@
     line-height: 22px;
     margin-bottom: 0;
     margin-top: 0;
-    margin-left: 6px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    height: 22px;
 }
 
 .quickOrderContainer {
@@ -119,12 +224,27 @@
     height: 100%;
 }
 
-.spinner {
-    top: 25%;
-    position: absolute;
-    left: calc(50% - 20px);
+.spinner-container {
+    background: black;
+    display: none;
+
+    &.active {
+        display: block;
+    }
 }
 
-.canvasjs-chart-credit {
-    display: none;
+.spinner {
+    position: absolute;
+    top: calc(66% - 20px);
+    left: calc(50% - 20px);
+    z-index: 2;
 }
+
+.plot-label {
+    border: 0 none;
+    background-color: rgba(0, 0, 0, 1);
+    color: green;
+    border-radius: 2px;
+    padding: 0 3px;
+    text-align: center;
+  }

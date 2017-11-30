@@ -39,6 +39,11 @@
                         <span>{{options.displayName}}</span>
                     </div>
                     <div>
+                        <span>1h</span>
+                        <span [ngClass]="{'text-positive': options.changedAmount > 0, 'text-negative': options.changedAmount < 0}">
+                            {{options.changedAmount}} %
+                        </span>
+                        <span>|</span>
                         <span>24h</span>
                         <span [ngClass]="{'text-positive': options.changedAmount > 0, 'text-negative': options.changedAmount < 0}">
                             {{options.changedAmount}} %
@@ -46,12 +51,14 @@
                     </div>
                     <div>
                         <span>B {{options.bid || 0}}</span>
-                    </div>
-                    <div>
                         <span>S {{options.ask || 0}}</span>
                     </div>
+
                     <div *ngIf="options.halted">Market closed</div>
-                    <div *ngIf="!options.halted">{{options.high | number : '1.2-2'}} / {{options.low | number : '1.2-2'}}</div>
+                    <div *ngIf="!options.halted">H {{options.high | number : '1.2-2'}} / L {{options.low | number : '1.2-2'}}</div>
+                    <div>
+
+                    </div>
                     <div>
                         <i (click)="onClickToggleFavorite($event, symbol);" [ngClass]="{'active': userService.model.options.favorites.includes(options.name)}"
                             class="fa fa-star"></i>
@@ -103,115 +110,6 @@
             </main>
         </section>
     </div>
-</div>
-
-<div class="chart-header">
-    <h5>{{activeSymbol?.options.name}}</h5>
-    <ul class="header-buttons">
-        <li>
-            <button (click)="charts[0].instrumentModel.setZoom(-1)" [ngClass]="{'active': (activeSymbol$ | async)?.options.zoom === 1}"
-               type="button" class="text-dark button-zoom-out btn-menu" aria-expanded="false">
-                <i class="fa fa-search-minus">
-                </i>
-            </button>
-        </li>
-
-        <li>
-            <button (click)="activeSymbol && activeSymbol.setZoom(1)" [ngClass]="{'active': (activeSymbol$ | async)?.options.zoom === 10}"
-                type="button" class="text-dark btn-menu button-zoom-in" aria-expanded="false">
-                <i class="fa fa-search-plus"></i>
-            </button>
-        </li>
-        <li>
-            <button (click)="activeSymbol && activeSymbol.set({graphType: 'ohlc'})" type="button" class="text-dark button-ohlc btn-menu"
-                [ngClass]="{'active': (activeSymbol$ | async)?.options.graphType === 'ohlc'}" aria-expanded="false">
-                <i class="fa fa-line-chart"></i>
-            </button>
-        </li>
-        <li>
-            <button (click)="activeSymbol && activeSymbol.set({graphType: 'candlestick'})" [ngClass]="{'active': (activeSymbol$ | async)?.options.graphType === 'candlestick'}"
-                type="button" class="text-dark button-candlestick btn-menu">
-                <i class="fa fa-bar-chart"></i>
-            </button>
-        </li>
-        <li class="dropdown">
-            <button type="button" class="dropdown-toggle btn-menu" data-toggle="dropdown" aria-haspopup="true">
-                <span>{{chart.instrumentModel?.options.timeFrame}}</span>
-            </button>
-
-            <ul class="dropdown-menu">
-                <li>
-                    <a (click)="activeSymbol && activeSymbol.set({timeFrame: 'M1'})">M1</a>
-                </li>
-                <li>
-                    <a (click)="activeSymbol && activeSymbol.set({timeFrame: 'M5'})">M5</a>
-                </li>
-                <li>
-                    <a (click)="activeSymbol && activeSymbol.set({timeFrame: 'M15'})">M15</a>
-                </li>
-                <li>
-                    <a (click)="activeSymbol && activeSymbol.set({timeFrame: 'M30'})">M30</a>
-                </li>
-                <li>
-                    <a (click)="activeSymbol && activeSymbol.set({timeFrame: 'H1'})">H1</a>
-                </li>
-                <li>
-                    <a (click)="activeSymbol && activeSymbol.set({timeFrame: 'H4'})">H4</a>
-                </li>
-                <li>
-                    <a (click)="activeSymbol && activeSymbol.set({timeFrame: 'D1'})">D</a>
-                </li>
-                <li>
-                    <a (click)="activeSymbol && activeSymbol.set({timeFrame: 'W1'})">W</a>
-                </li>
-            </ul>
-        </li>
-        <li class="dropdown">
-            <button type="button" class="dropdown-toggle btn-menu" data-toggle="dropdown" aria-haspopup="true"
-                aria-expanded="false">
-                <span>Indicator</span>
-            </button>
-
-            <ul class="dropdown-menu">
-                <li class="dropdown-submenu">
-                    <a tabindex="-1" href="#">Indicators</a>
-                    <ul class="dropdown-menu">
-                        <li class="dropdown-header">Custom</li>
-
-                        <li role="separator" class="divider"></li>
-                        <li class="dropdown-header">Default</li>
-
-                        <li>
-                            <a (click)="addIndicator('MA')">MA</a>
-                        </li>
-
-                        <li class="dropdown-submenu pull-left">
-                            <a href="#">Even More..</a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a href="#">3rd level</a>
-                                </li>
-                                <li>
-                                    <a href="#">3rd level</a>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">Another action</a>
-                </li>
-                <li>
-                    <a href="#">Something else here</a>
-                </li>
-                <li role="separator" class="divider"></li>
-                <li>
-                    <a href="#">Separated link</a>
-                </li>
-            </ul>
-        </li>
-    </ul>
-    <!--</ng-container>-->
 </div>
 
 <div class="chart-container">

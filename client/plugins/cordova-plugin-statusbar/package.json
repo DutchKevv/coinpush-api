@@ -22,7 +22,7 @@
   "_resolved": "https://registry.npmjs.org/cordova-plugin-statusbar/-/cordova-plugin-statusbar-2.3.0.tgz",
   "_shasum": "314e1d009c65910cdfde034bfca13bd502c9e5e0",
   "_spec": "cordova-plugin-statusbar@2.3.0",
-  "_where": "/Users/kewinbrandsma/Projects/TradeJS/app",
+  "_where": "/Users/kewinbrandsma/Projects/TradeJS/client",
   "author": {
     "name": "Apache Software Foundation"
   },

@@ -1,11 +1,115 @@
 <div class="chart-header">
-	<ng-container *ngIf="showBox && instrumentModel.options$ | async as options">
-		<h5 class="chart-title">{{options.symbol}} - {{options.timeFrame}} - {{options.type}} #{{options.groupId}}</h5>
+	<ng-container *ngIf="!showBox && symbolModel.options$ | async as options">
+		<h5 class="chart-title">{{options.name}}</h5>
+
+		<ul class="header-buttons">
+			<li>
+				<button (click)="setZoom(-1)" [ngClass]="{'active': options.zoom === 1}" type="button" class="text-dark button-zoom-out btn-menu"
+				 aria-expanded="false">
+					<i class="fa fa-search-minus">
+					</i>
+				</button>
+			</li>
+
+			<li>
+				<button (click)="setZoom(1)" [ngClass]="{'active': options.zoom === 10}" type="button" class="text-dark btn-menu button-zoom-in"
+				 aria-expanded="false">
+					<i class="fa fa-search-plus"></i>
+				</button>
+			</li>
+			<li>
+				<button (click)="changeGraphType('ohlc')" type="button" class="text-dark button-ohlc btn-menu"
+				 [ngClass]="{'active': (activeSymbol$ | async)?.options.graphType === 'ohlc'}" aria-expanded="false">
+					<i class="fa fa-line-chart"></i>
+				</button>
+			</li>
+			<li>
+				<button (click)="changeGraphType('candlestick')" [ngClass]="{'active': options.graphType === 'candlestick'}"
+				 type="button" class="text-dark button-candlestick btn-menu">
+					<i class="fa fa-bar-chart"></i>
+				</button>
+			</li>
+			<li class="dropdown">
+				<button type="button" class="dropdown-toggle btn-menu" data-toggle="dropdown" aria-haspopup="true">
+					<span>{{timeFrame}}</span>
+				</button>
+
+				<ul class="dropdown-menu">
+					<li>
+						<a (click)="activeSymbol && activeSymbol.set({timeFrame: 'M1'})">M1</a>
+					</li>
+					<li>
+						<a (click)="activeSymbol && activeSymbol.set({timeFrame: 'M5'})">M5</a>
+					</li>
+					<li>
+						<a (click)="activeSymbol && activeSymbol.set({timeFrame: 'M15'})">M15</a>
+					</li>
+					<li>
+						<a (click)="activeSymbol && activeSymbol.set({timeFrame: 'M30'})">M30</a>
+					</li>
+					<li>
+						<a (click)="activeSymbol && activeSymbol.set({timeFrame: 'H1'})">H1</a>
+					</li>
+					<li>
+						<a (click)="activeSymbol && activeSymbol.set({timeFrame: 'H4'})">H4</a>
+					</li>
+					<li>
+						<a (click)="activeSymbol && activeSymbol.set({timeFrame: 'D1'})">D</a>
+					</li>
+					<li>
+						<a (click)="activeSymbol && activeSymbol.set({timeFrame: 'W1'})">W</a>
+					</li>
+				</ul>
+			</li>
+			<li class="dropdown">
+				<button type="button" class="dropdown-toggle btn-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<span>Indicator</span>
+				</button>
+
+				<ul class="dropdown-menu">
+					<li class="dropdown-submenu">
+						<a tabindex="-1" href="#">Indicators</a>
+						<ul class="dropdown-menu">
+							<li class="dropdown-header">Custom</li>
+
+							<li role="separator" class="divider"></li>
+							<li class="dropdown-header">Default</li>
+
+							<li>
+								<a (click)="addIndicator('MA')">MA</a>
+							</li>
+
+							<li class="dropdown-submenu pull-left">
+								<a href="#">Even More..</a>
+								<ul class="dropdown-menu">
+									<li>
+										<a href="#">3rd level</a>
+									</li>
+									<li>
+										<a href="#">3rd level</a>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+					<li>
+						<a href="#">Another action</a>
+					</li>
+					<li>
+						<a href="#">Something else here</a>
+					</li>
+					<li role="separator" class="divider"></li>
+					<li>
+						<a href="#">Separated link</a>
+					</li>
+				</ul>
+			</li>
+		</ul>
 	</ng-container>
 </div>
 <div dialogAnchor></div>
 
-<div style="height: 100%;">
+<!-- <div> -->
 	<!-- <div *ngIf="quickBuy && instrumentModel.options.type === 'live'" class="quickOrderContainer" style="display: none">
 		<a (click)="placeOrder($event, constantsService.constants.ORDER_SIDE_BUY)" class="buyButton">
 			<p>BUY</p>
@@ -17,10 +121,12 @@
 		</a>
 	</div> -->
 
-	<div class="chart-content" #chart>
-		<!-- <div class="spinner">
+	<div class="spinner-container active" #loading>
+		<div class="spinner">
 			<div class="dot1"></div>
 			<div class="dot2"></div>
-		</div> -->
+		</div>
 	</div>
-</div>
+
+	<div class="chart-content" #chart></div>
+<!-- </div> -->

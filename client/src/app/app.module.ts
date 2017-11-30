@@ -25,7 +25,6 @@ import {BacktestSettingsComponent} from './components/backtest-settings/backtest
 import {BacktestReportComponent} from './components/backtest-report/backtest-report.component';
 import {CacheService} from './services/cache.service';
 import {BacktestComponent, GroupIdsPipe} from './components/backtest/backtest.component';
-import {PageMainComponent} from './components/page-main/page.main.component';
 import {AuthenticationService} from './services/authenticate.service';
 import {customHttpProvider} from './services/http.service';
 import {AlertService} from './services/alert.service';
@@ -73,7 +72,6 @@ import { NewsService } from './services/news.service';
 		ModalComponent,
 		ModalAnchorDirective,
 		ResizableDirective,
-		PageMainComponent,
 		ChannelOverviewComponent,
 		AlertComponent,
 		UserOverviewComponent,

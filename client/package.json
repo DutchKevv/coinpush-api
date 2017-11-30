@@ -5,7 +5,8 @@
   "description": "A sample Apache Cordova application that responds to the deviceready event.",
   "main": "index.js",
   "scripts": {
-    "start": "ng serve --aot --proxy proxy.conf.json --host 0.0.0.0 --no-sourcemaps",
+    "start2": "ng serve --aot --proxy proxy.conf.json --host 0.0.0.0 --no-sourcemaps",
+    "start": "ng build --watch --aot --proxy proxy.conf.json --host 0.0.0.0 --no-sourcemaps",
     "build": "ng build --prod --env=prod",
     "build-verbose": "ng build --prod --env=prod --verbose > build.txt"
   },
@@ -33,7 +34,8 @@
     "bootstrap": "4.0.0-alpha.6",
     "cordova-android": "^6.3.0",
     "cordova-browser": "^5.0.1",
-    "cordova-plugin-crosswalk-webview": "^2.3.0",
+    "cordova-plugin-admobpro": "^2.29.29",
+    "cordova-plugin-extension": "^1.5.3",
     "cordova-plugin-statusbar": "^2.3.0",
     "cordova-plugin-whitelist": "^1.3.3",
     "core-js": "^2.5.1",
@@ -54,14 +56,8 @@
   "cordova": {
     "plugins": {
       "cordova-plugin-whitelist": {},
-      "cordova-plugin-statusbar": {},
-      "cordova-plugin-crosswalk-webview": {
-        "XWALK_VERSION": "23+",
-        "XWALK_LITEVERSION": "xwalk_core_library_canary:17+",
-        "XWALK_COMMANDLINE": "--disable-pull-to-refresh-effect",
-        "XWALK_MODE": "embedded",
-        "XWALK_MULTIPLEAPK": "true"
-      }
+      "cordova-plugin-admobpro": {},
+      "cordova-plugin-statusbar": {}
     },
     "platforms": [
       "browser",

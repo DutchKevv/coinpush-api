@@ -1,0 +1,174 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>TradeJS - Practise</title>
+    <meta charset="utf-8">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, height=device-height, user-scalable=no, initial-scale=1, minimum-scale=1, maximum-scale=1">
+
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="assets/vendor/font-awesome/css/font-awesome.min.css">
+
+    <script>
+        (function () {
+            window.AppConfig = {
+                isApp: !!window['_cordovaNative'],
+                isEmulator: navigator.platform === 'Linux i686',
+                isLocal: document.URL.indexOf('file://') > -1
+            };
+
+            if (window.AppConfig.isApp) {
+                var script = document.createElement('script');
+                script.src = 'cordova.js';
+                document.head.appendChild(script); //or something of the likes
+            }
+
+            window.isElectron = (window.process && window.process.type);
+
+            function onDeviceReady() {
+                var admobid = {};
+                if (/(android)/i.test(navigator.userAgent)) { // for android & amazon-fireos
+                    admobid = {
+                        banner: 'ca-app-pub-1181429338292864/7213864636',
+                        interstitial: 'ca-app-pub-1181429338292864/7213864636'
+                    };
+                } else if (/(ipod|iphone|ipad)/i.test(navigator.userAgent)) { // for ios
+                    admobid = {
+                        banner: 'ca-app-pub-1181429338292864/7213864636',
+                        interstitial: 'ca-app-pub-1181429338292864/7213864636'
+                    };
+                } else { // for windows phone
+                    admobid = {
+                        banner: 'ca-app-pub-1181429338292864/7213864636',
+                        interstitial: 'ca-app-pub-1181429338292864/7213864636'
+                    };
+                }
+
+                if (window.AdMob) {
+                    window.AdMob.createBanner({
+                        adSize: 'BANNER',
+                        height: 60, // valid when set adSize 'CUSTOM'
+                        adId: admobid.banner,
+                        position: AdMob.AD_POSITION.BOTTOM_CENTER,
+                        autoShow: true,
+                        isTesting: true
+                    });
+                }
+            }
+
+            document.addEventListener("deviceready", (onDeviceReady), false);
+
+        })()
+    </script>
+
+    <style>
+        html,
+        body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        html {
+            touch-action: manipulation;
+        }
+
+        body {
+            background: #2d2d2d;
+            background: url(assets/custom/img/charts-overview-background.jpg) repeat;
+            margin: 0;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+        app>.spinner {
+            margin: 0 calc(50% - 20px);
+            position: absolute;
+            top: calc(40% - 20px);
+        }
+
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            animation: sk-rotate 2.0s infinite linear;
+        }
+
+        .dot1,
+        .dot2 {
+            width: 60%;
+            height: 60%;
+            display: inline-block;
+            position: absolute;
+            top: 0;
+            background-color: #fff;
+            border-radius: 100%;
+
+            -webkit-animation: sk-bounce 2.0s infinite ease-in-out;
+            animation: sk-bounce 2.0s infinite ease-in-out;
+        }
+
+        .dot2 {
+            top: auto;
+            bottom: 0;
+            -webkit-animation-delay: -1.0s;
+            animation-delay: -1.0s;
+        }
+
+        @-webkit-keyframes sk-rotate {
+            100% {
+                -webkit-transform: rotate(360deg)
+            }
+        }
+
+        @keyframes sk-rotate {
+            100% {
+                transform: rotate(360deg);
+                -webkit-transform: rotate(360deg)
+            }
+        }
+
+        @-webkit-keyframes sk-bounce {
+            0%,
+            100% {
+                -webkit-transform: scale(0.0)
+            }
+            50% {
+                -webkit-transform: scale(1.0)
+            }
+        }
+
+        @keyframes sk-bounce {
+            0%,
+            100% {
+                transform: scale(0.0);
+                -webkit-transform: scale(0.0);
+            }
+            50% {
+                transform: scale(1.0);
+                -webkit-transform: scale(1.0);
+            }
+        }
+
+        .div-fake-hidden {
+            width: 0px;
+            height: 0px;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="div-fake-hidden">
+        <i class="fa fa-square-o fa-3x"></i>
+    </div>
+    <app>
+        <div class="spinner">
+            <div class="dot1"></div>
+            <div class="dot2"></div>
+        </div>
+    </app>
+<script type="text/javascript" src="inline.bundle.js"></script><script type="text/javascript" src="polyfills.bundle.js"></script><script type="text/javascript" src="scripts.bundle.js"></script><script type="text/javascript" src="vendor.bundle.js"></script><script type="text/javascript" src="main.bundle.js"></script></body>
+
+</html>

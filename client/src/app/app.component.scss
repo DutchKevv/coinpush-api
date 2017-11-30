@@ -9,9 +9,210 @@
 @import '~bootstrap/scss/_nav';
 @import '~bootstrap/scss/_buttons';
 @import '~bootstrap/scss/utilities/_clearfix';
+@import '~bootstrap/scss/utilities/visibility';
 @import 'style/variables/variables';
 
 @import './style/components/contextmenu';
+
+::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    color: $input-color-text;
+}
+
+:host {
+    display: flex;
+    height: 100%;
+}
+
+.positive {
+    color: $general-success;
+}
+
+.negative {
+    color: $general-error;
+}
+
+header {
+    width: 100%;
+    text-align: center;
+    background: $background-light;
+    display: flex;
+    padding: 4px 10px;
+    height: 42px;
+
+    @media only screen and (min-width : 768px) {
+        justify-content: space-around;
+
+        > * {
+            width: 100%;
+        }
+
+        span {
+            font-size: 14px;
+        }
+    }  
+
+    .fa {
+        color: white;
+        font-size: 34px;
+        line-height: 30px;
+        width: 50px;
+        padding-right: 10px;
+    }
+
+    .header-search {
+        width: 100%;
+
+        @media only screen and (min-width : 768px) {
+            position: relative;
+        }  
+    }
+
+    input {
+        padding: 5px;
+        line-height: 14px;
+        width: 100%;
+        border-radius: 2px;
+        font-size: 14px;
+        background-color: $input-color-glyphicon-background;
+        border: 1px solid black;
+        color: $input-color-text;
+        text-align: center;
+        box-sizing: border-box;
+
+        @media only screen and (min-width : 768px) {
+            width: 300px;
+        }
+    }
+
+    .search-drop-down {
+        position: absolute;
+        z-index: 122;
+        top: 36px;
+        left: 0;
+        width: 100%;
+        background: $background-light;
+        height: 100%;
+        overflow: auto;
+
+        &.hidden {
+            display: none;
+        }
+
+        @media only screen and (min-width : 768px) {
+            width: 298px;
+            left: calc(50% - 149px);
+            height: auto;
+        } 
+
+        a {
+            padding: 10px;
+            border-bottom: $border-color-grey;
+            color: $font-color-light;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+
+            &:hover {
+                background: $background-light2
+            }
+
+            span {
+                line-height: 30px;
+            }
+
+            img {
+                width: 30px;
+                height: 30px;
+                margin-right: 10px;
+            }
+        }
+    }
+}
+
+.nav-main {
+    background: $background-light;
+    overflow-y: auto;
+    width: 250px;
+    min-width: 250px;
+
+    transition: transform .2s ease-in-out;
+
+    @media only screen and (max-width : 768px) {
+        position: absolute;
+        top: 0;
+        transform: translateX(-250px);
+        bottom: 0;
+        z-index: 1001;
+
+        &.show {
+            transform: translateX(0);
+
+            + .nav-overlay {
+                display: block;
+            }
+        }
+    }
+
+    a {
+        padding: 15px 10px 15px 30px;
+        font-size: 18px;
+        box-sizing: border-box;
+        display: block;
+
+        i {
+            padding-right: 20px;
+            width: 20px;
+        }
+
+        &:hover {
+            background: $background-light2;
+        }
+
+        &.active {
+            background: $background-light2;
+        }
+    }
+
+    .profile {
+        padding-top: 40px;
+
+        h4 {
+            margin-top: 10px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    }
+}
+
+.nav-overlay {
+    background: rgba(0, 0, 0, 0.7);
+    display: none;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+}
+
+.main-container {
+    display: flex;
+    flex-flow: column;
+    width: 100%;
+}
+
+.ad-container {
+    height: 60px;
+    background: black;
+    
+    > * {
+        line-height: 60px;
+        text-align: center;
+        color: pink;
+    }
+}
 
 $header-height: 18px;
 

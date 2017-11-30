@@ -10,12 +10,16 @@
     "cordova-plugin-whitelist": {
       "PACKAGE_NAME": "com.example.app"
     },
-    "cordova-plugin-statusbar": {
+    "cordova-plugin-admobpro": {
       "PACKAGE_NAME": "com.example.app"
     },
-    "cordova-plugin-crosswalk-webview": {
+    "cordova-plugin-statusbar": {
       "PACKAGE_NAME": "com.example.app"
     }
   },
-  "dependent_plugins": {}
+  "dependent_plugins": {
+    "cordova-plugin-extension": {
+      "PACKAGE_NAME": "com.example.app"
+    }
+  }
 }

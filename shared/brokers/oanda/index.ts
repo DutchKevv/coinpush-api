@@ -37,7 +37,7 @@ export default class OandaApi extends EventEmitter {
 
 		this._client.on('stream-timeout', () => {
 			try {
-				this._client.on('stream-timeout', () => this.emit('stream-timeout'));
+				this.emit('stream-timeout')
 			} catch (error) {
 				console.log(error);
 			}
