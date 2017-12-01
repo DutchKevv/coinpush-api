@@ -34,7 +34,7 @@ export class ChannelRowComponent implements OnInit {
 
 	onClickTogglePublic(state) {
 		this.channelService.update(this.model, {public: !!state}).subscribe(() => {
-			console.log('asdf');
+		
 		});
 	}
 }

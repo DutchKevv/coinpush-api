@@ -7,6 +7,7 @@ import * as io from 'socket.io';
 import { cacheController } from './controllers/cache.controller';
 import { symbolController } from './controllers/symbol.controller';
 import { BrokerMiddleware } from '../../shared/brokers/broker.middleware';
+import { clearInterval } from 'timers';
 
 // error catching
 process.on('unhandledRejection', (reason, p) => {
@@ -21,22 +22,24 @@ export const app = {
 
 	api: null,
 	io: null,
-	broker: null,
+	broker: <BrokerMiddleware>null,
+
+	_tickInterval: null,
+	_tickIntervalTime: 1000,
 
 	async init(): Promise<void> {
-		
+
 		// broker
 		this.broker = new BrokerMiddleware();
+		await this.broker.setSymbols()
+
+		await cacheController.sync();
+		await symbolController.update24HourStartPrice();
 
 		// api
 		this._setupApi();
+		this._toggleWebSocketTickInterval(true);
 
-		// controllers
-		await symbolController.setList();
-		cacheController.symbols = symbolController.symbols;
-		await cacheController.preLoad();
-		await symbolController.update24HourStartPrice();
-		await cacheController.startBroadcastInterval();
 		await cacheController.openTickStream();
 	},
 
@@ -58,6 +61,17 @@ export const app = {
 			res.header('Access-Control-Allow-Headers', '_id, Authorization, Origin, X-Requested-With, Content-Type, Accept');
 			next();
 		});
+	},
+
+	_toggleWebSocketTickInterval(state: boolean) {
+		if (!state)
+			return clearInterval(this._tickInterval);
+
+		this._tickInterval = setInterval(() => {
+			this.io.sockets.emit('ticks', cacheController.tickBuffer);
+
+			cacheController.tickBuffer = {};
+		}, this._tickIntervalTime);
 	}
 };
 

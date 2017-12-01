@@ -59,8 +59,8 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 	public viewState = 'windowed';
 	public graphType = 'ohlc';
-	public zoom = 3;
-	public timeFrame = 'M1';
+	public zoom = 2;
+	public timeFrame = 'H1';
 
 	$el: any;
 
@@ -80,16 +80,13 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	private _scrollSpeedMax = 20;
 
 	private _chart: any;
-	private _chartVolume: any;
 	private _onScrollBounced: Function = null;
-	private _onScrollTooltipTimeout = null;
-	private _oCanvasMouseMoveFunc = null;
 	private _mouseActive = true;
 	private _changeSubscription;
 	private _priceSubscription;
 	private _orderSubscription;
 
-	public static readonly DEFAULT_CHUNK_LENGTH = 200;
+	public static readonly DEFAULT_CHUNK_LENGTH = 300;
 	public static readonly VIEW_STATE_WINDOWED = 1;
 	public static readonly VIEW_STATE_STRETCHED = 2;
 	public static readonly VIEW_STATE_MINIMIZED = 3;
@@ -101,15 +98,22 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 			volume = new Array(length / rowLength),
 			candles = new Array(length / rowLength);
 
+
+		let prevtime = 0;
 		for (; i < length; i += rowLength) {
+			if (data[i] <= prevtime)
+				throw new Error(`${prevtime} / ${data[i]}`);
+
+			prevtime = data[i];
+
 			candles[i / rowLength] = [
 				data[i],
-				data[i + 1], // open
-				data[i + 3], // high
-				data[i + 5], // low
-				data[i + 7] // close
+				data[i + 2], // open
+				data[i + 4], // high
+				data[i + 6], // low
+				data[i + 8] // close
 			];
-
+			
 			volume[i / rowLength] = [
 				data[i],
 				data[i + 9] // the volume
@@ -131,7 +135,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
-	
+
 		if (changes.symbolModel) {
 			this.instrumentModel = null;
 			this.symbolModel = changes.symbolModel.currentValue;
@@ -157,8 +161,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 		this._destroy();
 
-		console.log('box INIT!!');
-
 		if (this.instrumentModel) {
 			if (!this.symbolModel)
 				this.symbolModel = this._cacheService.getBySymbol(this.instrumentModel.options.symbol);
@@ -172,7 +174,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		this._fetchCandles();
 
 		// Listen for price change
-		this._priceSubscription = this.symbolModel.options$.subscribe((options) => this._onPriceChange(options));
+		// this._priceSubscription = this.symbolModel.options$.subscribe((options) => this._onPriceChange(options));
 
 		// Listen for orders change
 		// this._orderSubscription = this._orderService.orders$.subscribe((options) => this._updateOrders(options));
@@ -187,35 +189,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		// 		}
 		// 	});
 		// }
-
-		this._changeSubscription = this.instrumentModel.changed$.subscribe(changes => {
-			let dirty = false;
-
-			Object.keys(changes).forEach(change => {
-				switch (change) {
-
-					case 'timeFrame':
-						this.toggleTimeFrame();
-						break;
-					case 'indicator':
-						this._updateIndicators();
-						dirty = true;
-						break;
-					case 'focus':
-						if (changes.focus === true) {
-							this.toggleViewState(true);
-						}
-						break;
-					case 'orders':
-						this._updateOrders(changes.orders);
-						dirty = true;
-						break;
-				}
-			});
-
-			if (dirty)
-				this.render();
-		});
 	}
 
 	placeOrder(event, side: number) {
@@ -238,7 +211,23 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 			return;
 
 		this.graphType = type;
-		this._chart.series[0].update({type});
+		this._chart.series[0].update({ type });
+	}
+
+	public toggleTimeFrame(timeFrame: string) {
+		this.timeFrame = timeFrame;
+		this.init();
+		// this._fetchIndicators(ChartBoxComponent.DEFAULT_CHUNK_LENGTH, this._offset);
+	}
+
+	public addIndicator(name: string) {
+
+	}
+
+	public toggleLoading(state?: boolean) {
+		requestAnimationFrame(() => {
+			this.loadingRef.nativeElement.classList.toggle('active', !!state);
+		});
 	}
 
 	public reflow() {
@@ -249,23 +238,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 			this._chart.options.height = this.chartRef.nativeElement.clientHeight;
 			this._chart.options.width = this.chartRef.nativeElement.clientWidth;
 			this._updateViewPort();
-		});
-	}
-
-	public render() {
-		if (!this._chart)
-			return;
-	}
-
-	public toggleTimeFrame() {
-		this.toggleLoading(true);
-		this._fetchCandles();
-		// this._fetchIndicators(ChartBoxComponent.DEFAULT_CHUNK_LENGTH, this._offset);
-	}
-
-	public toggleLoading(state?: boolean) {
-		requestAnimationFrame(() => {
-			this.loadingRef.nativeElement.classList.toggle('active', !!state);
 		});
 	}
 
@@ -459,9 +431,8 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		this._zone.runOutsideAngular(async () => {
 			try {
 				let data: any = ChartBoxComponent._prepareData(await this._cacheService.read({
-					symbol: this.instrumentModel.options.symbol,
-					// timeFrame: 'D',
-					timeFrame: this.instrumentModel.options.timeFrame,
+					symbol: this.symbolModel.options.name,
+					timeFrame: this.timeFrame,
 					until: this.instrumentModel.options.type === 'backtest' && this.instrumentModel.options.status.progress < 1 ? this.instrumentModel.options.from : this.instrumentModel.options.until,
 					count: ChartBoxComponent.DEFAULT_CHUNK_LENGTH,
 					offset: this._offset
@@ -472,8 +443,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 				if (!this._chart)
 					this._createChart();
-
-				// this._updateCurrentPricePlot();
 
 			} catch (error) {
 				console.log('error error error', error);
@@ -530,9 +499,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 				this._data.indicators = data.indicators;
 
 				this._updateIndicators();
-
-				if (this._chart)
-					this.render();
 
 			} catch (error) {
 				console.error(error);
@@ -727,7 +693,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 						this._elementRef.nativeElement.classList.add('black');
 						setTimeout(() => {
 							this._updateViewPort();
-							this.render();
+
 							this._elementRef.nativeElement.classList.remove('black');
 						}, 0);
 					}
@@ -761,10 +727,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 				this.viewState$.next(this.viewState);
 				this.reflow();
-
-				if (render) {
-					this.render();
-				}
 			}
 		} else {
 			this.viewState = viewState ? 'windowed' : 'minimized';
@@ -775,11 +737,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	}
 
 	private _onPriceChange(options: any) {
-		if (!this._data.candles.length)
-			return;
-
 		this._updateCurrentPricePlot();
-		this.render();
 	}
 
 	private _onScroll(event: MouseWheelEvent): boolean {
@@ -792,17 +750,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 			shift = this._scrollSpeedMin;
 		else if (shift > this._scrollSpeedMax)
 			shift = this._scrollSpeedMax;
-
-		clearTimeout(this._onScrollTooltipTimeout);
-
-		// this._mouseActive = false;
-		// // this._chart.options.toolTip.enabled = false;
-		// this._onScrollTooltipTimeout = setTimeout(() => {
-		// 	// this._chart.options.toolTip.enabled = true;
-		// 	this._mouseActive = true;
-		// 	// this.render();
-		// }, 500);
-		// this._chart.toolTip.hide();
 
 		this._updateViewPort(event.wheelDelta > 0 ? -shift : shift, false, true);
 

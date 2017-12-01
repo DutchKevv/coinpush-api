@@ -1,4 +1,18 @@
-<!doctype html><html><head><title>TradeJS - Practise</title><meta charset="utf-8"><meta name="mobile-web-app-capable" content="yes"><meta name="viewport" content="width=device-width,height=device-height,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1"><link rel="shortcut icon" href="favicon.ico" type="image/x-icon"><link rel="icon" href="favicon.ico" type="image/x-icon"><link rel="stylesheet" href="assets/vendor/font-awesome/css/font-awesome.min.css"><script>(function () {
+<!doctype html>
+<html>
+
+<head>
+    <title>TradeJS - Practise</title>
+    <meta charset="utf-8">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, height=device-height, user-scalable=no, initial-scale=1, minimum-scale=1, maximum-scale=1">
+
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="assets/vendor/font-awesome/css/font-awesome.min.css">
+
+    <script>
+        (function () {
             window.AppConfig = {
                 isApp: !!window['_cordovaNative'],
                 isEmulator: navigator.platform === 'Linux i686',
@@ -46,7 +60,11 @@
 
             document.addEventListener("deviceready", (onDeviceReady), false);
 
-        })()</script><style>html,
+        })()
+    </script>
+
+    <style>
+        html,
         body {
             height: 100%;
             overflow: hidden;
@@ -137,4 +155,20 @@
             width: 0px;
             height: 0px;
             overflow: hidden;
-        }</style></head><body><div class="div-fake-hidden"><i class="fa fa-square-o fa-3x"></i></div><app><div class="spinner"><div class="dot1"></div><div class="dot2"></div></div></app><script type="text/javascript" src="inline.5a096f63c388285305a2.bundle.js"></script><script type="text/javascript" src="polyfills.ba0babf96cf0aca90990.bundle.js"></script><script type="text/javascript" src="scripts.0f536fe2a49b9cc4074a.bundle.js"></script><script type="text/javascript" src="main.892a616f4a62cbbd4a86.bundle.js"></script></body></html>
+        }
+    </style>
+</head>
+
+<body>
+    <div class="div-fake-hidden">
+        <i class="fa fa-square-o fa-3x"></i>
+    </div>
+    <app>
+        <div class="spinner">
+            <div class="dot1"></div>
+            <div class="dot2"></div>
+        </div>
+    </app>
+<script type="text/javascript" src="inline.bundle.js"></script><script type="text/javascript" src="polyfills.bundle.js"></script><script type="text/javascript" src="scripts.bundle.js"></script><script type="text/javascript" src="vendor.bundle.js"></script><script type="text/javascript" src="main.bundle.js"></script></body>
+
+</html>

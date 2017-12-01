@@ -62,13 +62,13 @@ export class UserService {
 	}
 
 	toggleFavoriteSymbol(symbol: SymbolModel) {
-		this._http.post('/favorite', {symbol: symbol.get('name')})
+		this._http.post('/favorite', {symbol: symbol.options.name})
 			.map((res: Response) => res.json())
 			.subscribe(result => {
 				if (result.state)
-					this.model.options.favorites.push(symbol.get('name'));
+					this.model.options.favorites.push(symbol.options.name);
 				else
-					this.model.options.favorites.splice(this.model.options.favorites.indexOf(symbol.get('name')), 1);
+					this.model.options.favorites.splice(this.model.options.favorites.indexOf(symbol.options.name), 1);
 			})
 	}
 

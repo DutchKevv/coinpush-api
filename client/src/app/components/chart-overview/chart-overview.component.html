@@ -8,16 +8,16 @@
         <a [ngClass]="{active: activeFilter === 'favorite'}" (click)="toggleFilter('favorite')">My favorites</a>
         <h4>Resources</h4>
         <a [ngClass]="{active: activeFilter === 'resources'}" (click)="toggleFilter('resources')">All resources</a>
-        <a [ngClass]="{active: activeFilter === 'resources pop'}" (click)="toggleFilter('resources pop')">Popular resources</a>
+        <a [ngClass]="{active: activeFilter === 'resources popular'}" (click)="toggleFilter('resources popular')">Popular resources</a>
         <h4>Indices</h4>
         <a [ngClass]="{active: activeFilter === 'all2'}" (click)="toggleFilter('all2')">All indices</a>
         <a [ngClass]="{active: activeFilter === 'all2'}" (click)="toggleFilter('all2')">Popular indices</a>
         <h4>Crypto</h4>
-        <a [ngClass]="{active: activeFilter === 'all2'}" (click)="toggleFilter('all2')">All crypto</a>
-        <a [ngClass]="{active: activeFilter === 'all2'}" (click)="toggleFilter('all2')">Popular crypto</a>
+        <a [ngClass]="{active: activeFilter === 'crypto all'}" (click)="toggleFilter('crypto all')">All crypto</a>
+        <a [ngClass]="{active: activeFilter === 'crypto popular'}" (click)="toggleFilter('crypto popular')">Popular crypto</a>
         <h4>Forex</h4>
         <a [ngClass]="{active: activeFilter === 'forex'}" (click)="toggleFilter('forex')">All forex</a>
-        <a [ngClass]="{active: activeFilter === 'forex pop'}" (click)="toggleFilter('forex pop')">Popular forex</a>
+        <a [ngClass]="{active: activeFilter === 'forex popular'}" (click)="toggleFilter('forex popular')">Popular forex</a>
     </div>
 
     <div class="instrument-list">
@@ -34,38 +34,38 @@
             <li *ngFor="let symbol of symbols; trackBy:trackByFunc" [ngClass]="{'active': activeSymbol === symbol}" [attr.data-symbol]="symbol.options.name"
                 (click)="setActiveSymbol($event, symbol)">
 
-                <ng-container *ngIf="symbol.options$ | async as options">
+                <!-- <ng-container *ngIf="symbol.options$ | async as options"> -->
                     <div>
-                        <span>{{options.displayName}}</span>
+                        <span>{{symbol.options.displayName}}</span>
                     </div>
                     <div>
                         <span>1h</span>
-                        <span [ngClass]="{'text-positive': options.changedAmount > 0, 'text-negative': options.changedAmount < 0}">
-                            {{options.changedAmount}} %
+                        <span [ngClass]="{'text-positive': symbol.options.changedAmount > 0, 'text-negative': symbol.options.changedAmount < 0}">
+                            {{symbol.options.changedAmount}} %
                         </span>
                         <span>|</span>
                         <span>24h</span>
-                        <span [ngClass]="{'text-positive': options.changedAmount > 0, 'text-negative': options.changedAmount < 0}">
-                            {{options.changedAmount}} %
+                        <span [ngClass]="{'text-positive': symbol.options.changedAmount > 0, 'text-negative': symbol.options.changedAmount < 0}">
+                            {{symbol.options.changedAmount}} %
                         </span>
                     </div>
                     <div>
-                        <span>B {{options.bid || 0}}</span>
-                        <span>S {{options.ask || 0}}</span>
+                        <span>B {{symbol.options.bid || 0}}</span>
+                        <span>S {{symbol.options.ask || 0}}</span>
                     </div>
 
-                    <div *ngIf="options.halted">Market closed</div>
-                    <div *ngIf="!options.halted">H {{options.high | number : '1.2-2'}} / L {{options.low | number : '1.2-2'}}</div>
+                    <div *ngIf="symbol.options.halted">Market closed</div>
+                    <div *ngIf="!symbol.options.halted">H {{symbol.options.high | number : '1.2-2'}} / L {{symbol.options.low | number : '1.2-2'}}</div>
                     <div>
 
                     </div>
                     <div>
-                        <i (click)="onClickToggleFavorite($event, symbol);" [ngClass]="{'active': userService.model.options.favorites.includes(options.name)}"
+                        <i (click)="onClickToggleFavorite($event, symbol);" [ngClass]="{'active': userService.model.options.favorites.includes(symbol.options.name)}"
                             class="fa fa-star"></i>
                         <i (click)="activeMenu = 'alarm'" class="fa fa-bell"></i>
                         <i class="fa fa-info-circle"></i>
                     </div>
-                </ng-container>
+                <!-- </ng-container> -->
             </li>
         </ul>
     </div>

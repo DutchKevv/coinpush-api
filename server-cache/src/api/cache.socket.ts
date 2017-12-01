@@ -1,5 +1,5 @@
 import {cacheController} from '../controllers/cache.controller'
-
+import { app } from '../app';
 
 module.exports = (socket) => {
 
@@ -14,7 +14,7 @@ module.exports = (socket) => {
 
 	socket.on('symbol:list', async (params, cb: Function) => {
 		try {
-			cb(null, cacheController.symbols);
+			cb(null, app.broker.symbols);
 		} catch (error) {
 			console.error(error);
 			cb(error);

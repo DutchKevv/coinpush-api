@@ -2,39 +2,102 @@ import * as IB from 'ib';
 import * as fs from 'fs';
 import * as parser from 'xml2json';
 import OandaApi from './oanda/index';
-import {EventEmitter} from 'events';
+import { EventEmitter } from 'events';
+import CyrptoCompareApi from './cc/cryptocompare.broker';
+import { BROKER_GENERAL_TYPE_CC, BROKER_GENERAL_TYPE_OANDA } from '../constants/constants';
 
 const config = require('../../tradejs.config');
 
 export class BrokerMiddleware extends EventEmitter {
+
+    private _symbols: Array<any> = [];
+
+    get symbols() {
+        return this._symbols;
+    }
+
+    set symbols(symbols) {
+        this._symbols = symbols;
+    }
 
     constructor() {
         super();
 
         this._installBrokerOanda();
         this._installBrokerIb();
+        this._installBrokerCC();
     }
 
-    private _brokers = {
+    private _brokers: { ib: IB, oanda: OandaApi, cc: CyrptoCompareApi } = {
         ib: null,
-        oanda: null
+        oanda: null,
+        cc: null
     }
 
-    public getSymbols(): Promise<Array<any>> {
-       return this._brokers.oanda.getSymbols();
+    public async setSymbols(): Promise<void> {
+        const results = await Promise.all([this._brokers.oanda.getSymbols(), this._brokers.cc.getSymbols()]);
+
+        this.symbols = [].concat(...results).sort((a, b) => {
+            return a.displayName.localeCompare(b.displayName);
+         });
     }
 
-    public getCurrentPrices(symbols: Array<any>): Promise<Array<any>> {
-        return this._brokers.oanda.getCurrentPrices(symbols);
+    public async getCurrentPrices(symbols: Array<any>): Promise<Array<any>> {
+        const brokers = this.splitSymbolsToBrokers(symbols);
+        const pList = [];
+
+        if (brokers.oanda.length)
+            pList.push(this._brokers.oanda.getCurrentPrices(brokers.oanda));
+
+        if (brokers.cc.length)
+            pList.push(this._brokers.cc.getCurrentPrices(brokers.cc));
+
+        const result = [].concat(...(await Promise.all(pList)));
+
+        return
     }
 
-    public getCandles(...params) {
-        return this._brokers.oanda.getCandles(...params);
+    public getCandles(symbolName, from, until, granularity, count, onData, onDone) {
+        const symbol = this.symbols.find(symbol => symbol.name === symbolName);
+
+        if (!symbol) {
+            throw new Error('Symbol not found: ' + symbolName);
+        }
+
+        if (symbol.broker === BROKER_GENERAL_TYPE_CC)
+            return this._brokers.cc.getCandles(symbolName, from, until, granularity, count, onData, onDone);
+        else if (symbol.broker === BROKER_GENERAL_TYPE_OANDA)
+            return this._brokers.oanda.getCandles(symbolName, from, until, granularity, count, onData, onDone);
+        else
+            throw new Error('UNKOWN BROKER: ' + JSON.stringify(symbol, null, 2));
     }
 
     public openTickStream(symbols: Array<string>): void {
+        const brokers = this.splitSymbolsToBrokers(symbols);
+
         this._brokers.oanda.on('tick', tick => this.emit('tick', tick));
-        this._brokers.oanda.subscribePriceStream(symbols);
+        this._brokers.oanda.subscribePriceStream(brokers.oanda);
+    }
+
+    public splitSymbolsToBrokers(symbols: Array<string>): { oanda: Array<string>, cc: Array<string> } {
+        const oanda = [];
+        const cc = [];
+
+        symbols.forEach(symbol => {
+            let symbolObj = this.symbols.find(s => s.name === symbol);
+            if (!symbolObj)
+                return;
+
+            if (symbolObj.broker === BROKER_GENERAL_TYPE_CC)
+                cc.push(symbol);
+            else
+                oanda.push(symbol);
+        });
+
+        return {
+            oanda,
+            cc
+        }
     }
 
     private _installBrokerIb() {
@@ -60,12 +123,12 @@ export class BrokerMiddleware extends EventEmitter {
                 ib.reqHistoricalData(4001, ib.contract.forex('EUR', 'USD'), '20170408 12:00:00', '1 M', '1 day', 'TRADES', 1, 1, false);
             })
             .on('scannerParameters', data => {
-                var json = parser.toJson(data, {object: true});
+                var json = parser.toJson(data, { object: true });
                 fs.writeFileSync('temp.json', JSON.stringify(json.ScanParameterResponse, null, 2));
             })
             .on('historicalData', (reqId, data) => {
                 console.log(data);
-                var json = parser.toJson(data, {object: true});
+                var json = parser.toJson(data, { object: true });
                 fs.writeFileSync('temp.json', JSON.stringify(json.ScanParameterResponse, null, 2));
             })
             .once('openOrderEnd', function () {
@@ -80,6 +143,10 @@ export class BrokerMiddleware extends EventEmitter {
     private _installBrokerOanda() {
         this._brokers.oanda = new OandaApi(config.broker.oanda);
         this._brokers.oanda.init();
+    }
+
+    private _installBrokerCC() {
+        this._brokers.cc = new CyrptoCompareApi({});
     }
 
     destroy() {

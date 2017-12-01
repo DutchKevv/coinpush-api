@@ -5,7 +5,7 @@ import { CacheService } from "./services/cache.service";
 import { OrderService } from "./services/order.service";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { Subject } from "rxjs/Subject";
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, NavigationStart } from '@angular/router';
 import { UserService } from './services/user.service';
 import { Http } from '@angular/http';
 import { SymbolModel } from './models/symbol.model';
@@ -42,10 +42,8 @@ export class AppComponent implements OnInit {
 		this._authenticationService.authenticate();
 		
 		this.router.events.subscribe((val) => {
-			console.log(val);
-			if (val instanceof NavigationEnd) {
+			if (val instanceof NavigationStart)
 				this.collapseNav(undefined, false);
-			}
 		});
 
 	}

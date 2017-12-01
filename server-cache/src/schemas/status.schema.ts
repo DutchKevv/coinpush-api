@@ -12,6 +12,10 @@ export const StatusSchema = new Schema({
 	lastSync: {
 		type: Date,
 		required: true
+	},
+	lastPrice: {
+		type: Number,
+		required: true
 	}
 });
 

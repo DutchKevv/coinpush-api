@@ -23,7 +23,7 @@ let environments = {
 		secure: true
 	}
 };
-let maxSockets = 2, maxRequestsPerSecond = 15, maxRequestsWarningThreshold = 1000;
+let maxSockets = 3, maxRequestsPerSecond = 15, maxRequestsWarningThreshold = 1000;
 
 /*
  * config.environment
@@ -179,9 +179,9 @@ OandaAdapter.prototype.getInstruments = function (accountId, callback) {
 OandaAdapter.prototype.getPrices = function (symbol, callback) {
 	let multiple = Array.isArray(symbol);
 
-	if (multiple) {
+	
+	if (multiple)
 		symbol = symbol.join('%2C');
-	}
 
 	this._sendRESTRequest({
 		method: 'GET',
@@ -304,7 +304,7 @@ OandaAdapter.prototype._candlesJsonStringToArray = function (chunk) {
 };
 
 OandaAdapter.prototype.getCandles = function (symbol, start, end, granularity, count, callback) {
-
+	
 	this._sendRESTRequest({
 		method: 'GET',
 		path: '/v1/candles?' + querystring.stringify(JSON.parse(JSON.stringify({

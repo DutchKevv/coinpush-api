@@ -11,7 +11,7 @@ export const HighchartsDefaultTheme = {
         tooltip: {
             animation: false,
             shadow: false,
-            followTouchMove: false
+            followTouchMove: true
         },
     
         chart: {

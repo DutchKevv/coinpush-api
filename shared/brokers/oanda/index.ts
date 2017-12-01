@@ -1,11 +1,13 @@
-import * as Stream 		from 'stream';
-import {Adapter} 		from './lib/OANDAAdapter';
-import {splitToChunks} 	from '../../util/util.date';
-import {log} 			from '../../logger';
-import {EventEmitter} 	from 'events';
-import {Base} 			from '../../classes/Base';
-import * as Constants 	from '../../constants/constants';
-import {ORDER_TYPE_IF_TOUCHED, ORDER_TYPE_LIMIT, ORDER_TYPE_MARKET, ORDER_TYPE_STOP} from '../../constants/constants';
+import * as Stream from 'stream';
+import { Adapter } from './lib/OANDAAdapter';
+import { splitToChunks } from '../../util/util.date';
+import { log } from '../../logger';
+import { EventEmitter } from 'events';
+import { Base } from '../../classes/Base';
+import * as Constants from '../../constants/constants';
+import { ORDER_TYPE_IF_TOUCHED, ORDER_TYPE_LIMIT, ORDER_TYPE_MARKET, ORDER_TYPE_STOP, BROKER_GENERAL_TYPE_OANDA, SYMBOL_CAT_TYPE_OTHER } from '../../constants/constants';
+
+const metaData = require('./symbols-meta').meta;
 
 export default class OandaApi extends EventEmitter {
 
@@ -25,7 +27,7 @@ export default class OandaApi extends EventEmitter {
 	}
 
 	public init() {
-		
+
 		this._client = new Adapter({
 			// 'live', 'practice' or 'sandbox'
 			environment: this.options.environment,
@@ -105,19 +107,25 @@ export default class OandaApi extends EventEmitter {
 		this._client.unsubscribePrices(this.options.accountId, instruments, tick => this.emit('tick', tick));
 	}
 
-	public getSymbols(): any {
+	public getSymbols(): Promise<Array<any>> {
 		return new Promise((resolve, reject) => {
-			this._client.getInstruments(this.options.accountId, (err, symbols) => {
 
+			this._client.getInstruments(this.options.accountId, (err, symbols) => {
 				if (err)
 					return reject(err);
 
-				symbols.forEach(symbol => {
-					symbol.name = symbol.instrument;
-					delete symbol.instrument;
+				const normalized = symbols.map(symbol => {
+					const meta = metaData.find(m => m.name === symbol.name);
+
+					return {
+						name: symbol.instrument,
+						displayName: symbol.displayName,
+						broker: BROKER_GENERAL_TYPE_OANDA,
+						type: meta ? meta.type : SYMBOL_CAT_TYPE_OTHER
+					}
 				});
 
-				resolve(symbols);
+				resolve(normalized);
 			});
 		});
 	}
@@ -132,11 +140,11 @@ export default class OandaApi extends EventEmitter {
 			let leftOver = '';
 			let startFound = false;
 			let now = Date.now();
-			
+
 			this._client.getCandles(symbol, chunk.from, chunk.until, timeFrame, chunk.count, async (error, data: any) => {
 				if (error)
 					return console.error(error);
-						
+
 				const candles = new Float64Array(data.candles.length * 10);
 
 				data.candles.forEach((candle, index) => {
@@ -155,76 +163,11 @@ export default class OandaApi extends EventEmitter {
 				});
 
 				await onData(candles);
-				
+
 				if (++finished === countChunks.length)
 					onDone();
 			});
 
-			// let transformStream = new Stream.Transform();
-
-			// transformStream._transform = function (data, type, done) {
-			// 	if (!this._firstByte) {
-			// 		this._firstByte = true;
-			// 		log.info('OANDA', `FirstByte of ${symbol} took: ${Date.now() - now} ms`);
-			// 	}
-
-			// 	if (!startFound) {
-			// 		let start = data.indexOf(91);
-			// 		if (start > -1) {
-			// 			startFound = true;
-			// 			data = data.slice(start, data.length);
-			// 		} else {
-			// 			return done();
-			// 		}
-			// 	}
-
-			// 	let valArr = (leftOver + data.toString()).split(':');
-			// 	leftOver = valArr.pop();
-
-			// 	valArr.forEach(val => {
-			// 		let value = val.replace(/[^\d\.]/g, '');
-
-			// 		if (typeof value === 'string' && value !== '')
-			// 			arr.push(+value);
-			// 	});
-
-			// 	let maxIndex = this._lastPiece ? arr.length : (Math.floor(arr.length / OandaApi.FETCH_CHUNK_LIMIT) * OandaApi.FETCH_CHUNK_LIMIT),
-			// 		buf;
-
-			// 	// if (this._lastPiece)
-			// 		if (maxIndex === 0)
-			// 			return done();
-
-			// 	buf = Buffer.alloc(maxIndex * Float64Array.BYTES_PER_ELEMENT, 0, 'binary');
-
-			// 	arr.forEach((value, index) => {
-			// 		if (index < maxIndex)
-			// 			buf.writeDoubleLE(index % 10 ? value : value / 1000, index * Float64Array.BYTES_PER_ELEMENT, false);
-			// 	});
-
-			// 	writeChunks++;
-			// 	transformStream.push(buf);
-
-			// 	arr = arr.slice(maxIndex, arr.length);
-
-			// 	done();
-			// };
-
-			// // Make Typescript happy (does not know _flush)
-			// (<any>transformStream)._flush = function(done) {
-			// 	this._lastPiece = true;
-			// 	this.push();
-			// 	done();
-			// };
-
-			// this._client.getCandles(symbol, chunk.from, chunk.until, timeFrame, chunk.count)
-			// 	.pipe(transformStream)
-			// 	.on('data', onData)
-			// 	.on('error', onDone)
-			// 	.on('end', () => {
-			// 		if (++finished === countChunks.length)
-			// 			onDone(null, writeChunks);
-			// 	});
 		});
 	}
 

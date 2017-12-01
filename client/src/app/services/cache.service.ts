@@ -1,6 +1,6 @@
-import {EventEmitter, Injectable, NgZone, Output} from '@angular/core';
+import { EventEmitter, Injectable, NgZone, Output } from '@angular/core';
 import * as io from 'socket.io-client';
-import {SymbolModel} from "../models/symbol.model";
+import { SymbolModel } from "../models/symbol.model";
 import { appConfig } from '../app.config';
 
 @Injectable()
@@ -16,7 +16,7 @@ export class CacheService {
 	}
 
 	public read(params) {
-		console.log('asdf',params);
+
 		return new Promise((resolve, reject) => {
 			this._socket.emit('read', params, (err, buffer: Uint8Array) => {
 				if (err)
@@ -41,28 +41,24 @@ export class CacheService {
 			if (unload)
 				this.unload();
 
-			console.log('beforeEmit', (Date.now() - start) / 1000);
-
 			this._socket.emit('symbol:list', {}, (err, symbols) => {
 				if (err)
 					return reject(err);
 
-				console.log('received', (Date.now() - start) / 1000);
+				this.symbols = symbols.map(symbol => new SymbolModel(symbol));
 
-				this._updateSymbols(symbols);
-
-				console.log('symbolsSets', (Date.now() - start) / 1000);
+				this.symbols.forEach((symbol: SymbolModel) => symbol.tick([]));
 
 				resolve();
 			});
 
 			this._socket.on('ticks', ticks => {
-
+				
 				for (let _symbol in ticks) {
 					let symbol = this.getBySymbol(_symbol);
 
 					if (symbol)
-						symbol.tick(ticks[_symbol]);
+						symbol.tick([ticks[_symbol]]);
 				}
 
 				this.changed$.next(Object.keys(ticks));
@@ -89,14 +85,6 @@ export class CacheService {
 
 	private _disconnect() {
 		// this._socket.destroy();
-	}
-
-	private _updateSymbols(symbols) {
-		this.symbols = symbols.map(symbol => new SymbolModel(symbol));
-
-		this.symbols.forEach((symbol: SymbolModel) => {
-			symbol.tick([]);
-		});
 	}
 
 	public add(model) {

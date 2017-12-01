@@ -36,5 +36,3 @@ export const appConfig = {
 	port,
 	apiUrl
 };
-
-console.log('APPCONFIG', appConfig);

@@ -12,7 +12,7 @@ const config = require('../../../tradejs.config');
  */
 const db = mongoose.connection;
 mongoose.Promise = global.Promise;
-mongoose.connect(config.server.cache.connectionString);
+mongoose.connect(config.server.cache.connectionString, { poolSize: 1 });
 
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
@@ -29,73 +29,82 @@ export const dataLayer = {
 			until = params.until,
 			count = params.count;
 
-		const model = mongoose.model(this.getCollectionName(symbol, timeFrame));
+		if (from && until)
+			throw new Error('dataLayer: "from" and "until" cannot both pe passes as params');
 
-		const qs = { time: {} };
+		const collectionName = this.getCollectionName(symbol, timeFrame);
+		const model = mongoose.model(collectionName);
+		const qs: any = {};
 
-		if (from)
+		log.info('DataLayer', `Read ${collectionName} from ${from} until ${until} count ${count}`);
+
+		if (from) {
+			qs.time = qs.time || {};
 			qs.time['$gt'] = from;
+		}
 
-		if (until)
+		if (until) {
+			qs.time = qs.time || {};
 			qs.time['$lt'] = until;
+		}
 
-		const rows = await model.find(qs).limit(count || 1000);
-
-		// console.log('adxcvxc', rows[0].data.length, rows[0].data.byteLength);
-		// console.log(new Float64Array(Buffer.from(rows[0].data)));
-		// console.log('before concat', rows[0].data.length, new Float64Array(rows[0].data.buffer, rows[0].data.byteOffset, 10));
-		const buffer = Buffer.concat(rows.map(row => row.data), rows.length * Float64Array.BYTES_PER_ELEMENT * 10);
+		const rows = await model.find({}).limit(count || 1000).sort({time: -1});
+		const buffer = Buffer.concat(rows.reverse().map(row => row.data), rows.length * Float64Array.BYTES_PER_ELEMENT * 10);
 		// console.log('afetr concat', new Float64Array(buffer.buffer));
 		return buffer;
 	},
 
 	async write(symbol, timeFrame, candles: Float64Array): Promise<any> {
-
 		if (!candles.length)
 			return;
 
 		let collectionName = this.getCollectionName(symbol, timeFrame),
 			model = mongoose.model(collectionName),
+			bulk = model.collection.initializeUnorderedBulkOp(),
 			rowLength = 10, i = 0;
 
-		console.log(`WRITING ${candles.length / 10} candles to ${collectionName}`);
-		// console.log('WRITING', candles);
-		const documents = [];
+		log.info('DataLayer', `WRITING ${candles.length / 10} candles to ${collectionName} starting ${new Date(candles[0])} until ${new Date(candles[candles.length - 10])}`);
+
 		while (i < candles.length) {
-			if (!candles[i])
-				throw new Error('NO TIME!');
-			// console.log('TIME TIME', candles[i], typeof candles[i]);
-			const time = candles[i];
+			const time = new Date(candles[i]);
 			const data = Buffer.from(candles.slice(i, i += rowLength).buffer);
 
-			// console.log('sadf', new Date(time * 1000));
-			documents.push({ time, data });
+			bulk.find({ time }).upsert().update({ $set: { time, data } });
 		}
 
+		await bulk.execute();
+
 		if (candles.length) {
-			const insertCandlesResult = await model.insertMany(documents);
-			// const insertCandlesResult = await model.updateMany({}, documents);
-			const updateStatusResult = await Status.update({ symbol, timeFrame }, { lastSync: candles[candles.length - 10] });
+			const lastCandleTime = candles[candles.length - 10];
+			const lastCloseBidPrice = candles[candles.length - 7];
+
+			await Status.update({ symbol, timeFrame }, { lastSync: lastCandleTime, lastPrice: lastCloseBidPrice });
 		}
-		else
-			return Promise.resolve();
 	},
 
 	async setModels(symbols) {
 		let timeFrames = Object.keys(timeFrameSteps);
 
-		log.info('DataLayer', 'Creating ' + symbols.length * timeFrames.length + ' tables');
+		log.info('DataLayer', 'Creating ' + symbols.length * timeFrames.length + ' collections');
 
-		await Promise.all(symbols.map(symbol => {
+		for (let i = 0; i < symbols.length; i++) {
+			let symbol = symbols[i];
 
-			return timeFrames.map(async timeFrame => {
+			for (let k = 0; k < timeFrames.length; k++) {
+				let timeFrame = timeFrames[k];
 
-				mongoose.model(this.getCollectionName(symbol, timeFrame), CandleSchema);
+				mongoose.model(this.getCollectionName(symbol.name, timeFrame), CandleSchema);
 
 				// Create update document if not exists
-				const updateStatus = await Status.update({ symbol, timeFrame }, { symbol, timeFrame }, { upsert: true, new: true, setDefaultsOnInsert: true });
-			});
-		}));
+				await Status.update(
+					{ symbol: symbol.name, timeFrame },
+					{ symbol: symbol.name, timeFrame, broker: symbol.broker },
+					{ upsert: true, setDefaultsOnInsert: true }
+				);
+			}
+		}
+
+		log.info('DataLayer', 'Creating collections done');
 	},
 
 	getCollectionName(symbol, timeFrame): string {

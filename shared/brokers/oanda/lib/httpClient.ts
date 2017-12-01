@@ -5,7 +5,7 @@ import {log} 			from '../../../logger';
 
 let httpAgent,
 	httpsAgent,
-	maxSockets = 2;
+	maxSockets = 3;
 
 export function setMaxSockets(max) {
 	maxSockets = max;
@@ -79,11 +79,11 @@ export function sendRequest(options, callback, onData) {
 					return callback(true, body, statusCode, body); // TODO added body as second argument anyway (error responses can have a body that describes the error). Get rid of anywhere expecting it as 4th arg
 				}
 				// console.info('[INFO]  HTTPS IN ', options.hostname, options.port, options.method, options.path);
-				if (options.agent) {
-					Object.keys(options.agent.requests).forEach(function (connectionName) {
-						console.info('[INFO] Socket pool for', connectionName, 'has', options.agent.requests[connectionName].length, 'pending requests over', options.agent.sockets[connectionName].length, 'sockets');
-					});
-				}
+				// if (options.agent) {
+					// Object.keys(options.agent.requests).forEach(function (connectionName) {
+						// console.info('[INFO] Socket pool for', connectionName, 'has', options.agent.requests[connectionName].length, 'pending requests over', options.agent.sockets[connectionName].length, 'sockets');
+					// });
+				// }
 				callback(null, body, statusCode);
 			});
 			response.once('error', function (error) {

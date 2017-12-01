@@ -62,7 +62,7 @@ export class SocialFeedComponent implements OnInit {
 	async ngOnInit() {
 		this.parent.user$.subscribe(async (user) => {
 			this.user = user;
-			console.log('asfdasdf', user);
+
 			this.channelId = user.options._id;
 
 			this.comments$.next(await this.commentService.findByChannelId(this.channelId));

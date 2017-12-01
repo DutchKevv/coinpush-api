@@ -29,8 +29,6 @@ export class EventOverviewComponent implements OnInit {
 
 		this.top$.next(news.top);
 		this.crypto$.next(news.crypto);
-		
-		console.log('asdf', news);
 	}
 
 	onClickItem(event, url: string) {

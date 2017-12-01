@@ -1,116 +1,114 @@
 <div class="chart-header">
-	<ng-container *ngIf="!showBox && symbolModel.options$ | async as options">
-		<h5 class="chart-title">{{options.name}}</h5>
+	<h5 class="chart-title">{{symbolModel.options.name}}</h5>
 
-		<ul class="header-buttons">
-			<li>
-				<button (click)="setZoom(-1)" [ngClass]="{'active': options.zoom === 1}" type="button" class="text-dark button-zoom-out btn-menu"
-				 aria-expanded="false">
-					<i class="fa fa-search-minus">
-					</i>
-				</button>
-			</li>
+	<ul class="header-buttons">
+		<li>
+			<button (click)="setZoom(-1)" [ngClass]="{'active': symbolModel.options.zoom === 1}" type="button" class="text-dark button-zoom-out btn-menu"
+			 aria-expanded="false">
+				<i class="fa fa-search-minus">
+				</i>
+			</button>
+		</li>
 
-			<li>
-				<button (click)="setZoom(1)" [ngClass]="{'active': options.zoom === 10}" type="button" class="text-dark btn-menu button-zoom-in"
-				 aria-expanded="false">
-					<i class="fa fa-search-plus"></i>
-				</button>
-			</li>
-			<li>
-				<button (click)="changeGraphType('ohlc')" type="button" class="text-dark button-ohlc btn-menu"
-				 [ngClass]="{'active': (activeSymbol$ | async)?.options.graphType === 'ohlc'}" aria-expanded="false">
-					<i class="fa fa-line-chart"></i>
-				</button>
-			</li>
-			<li>
-				<button (click)="changeGraphType('candlestick')" [ngClass]="{'active': options.graphType === 'candlestick'}"
-				 type="button" class="text-dark button-candlestick btn-menu">
-					<i class="fa fa-bar-chart"></i>
-				</button>
-			</li>
-			<li class="dropdown">
-				<button type="button" class="dropdown-toggle btn-menu" data-toggle="dropdown" aria-haspopup="true">
-					<span>{{timeFrame}}</span>
-				</button>
+		<li>
+			<button (click)="setZoom(1)" [ngClass]="{'active': symbolModel.options.zoom === 10}" type="button" class="text-dark btn-menu button-zoom-in"
+			 aria-expanded="false">
+				<i class="fa fa-search-plus"></i>
+			</button>
+		</li>
+		<li>
+			<button (click)="changeGraphType('ohlc')" type="button" class="text-dark button-ohlc btn-menu" [ngClass]="{'active': symbolModel.options.graphType === 'ohlc'}"
+			 aria-expanded="false">
+				<i class="fa fa-line-chart"></i>
+			</button>
+		</li>
+		<li>
+			<button (click)="changeGraphType('candlestick')" [ngClass]="{'active': symbolModel.options.graphType === 'candlestick'}" type="button"
+			 class="text-dark button-candlestick btn-menu">
+				<i class="fa fa-bar-chart"></i>
+			</button>
+		</li>
+		<li class="dropdown">
+			<button type="button" class="dropdown-toggle btn-menu" data-toggle="dropdown" aria-haspopup="true">
+				<span>{{timeFrame}}</span>
+			</button>
 
-				<ul class="dropdown-menu">
-					<li>
-						<a (click)="activeSymbol && activeSymbol.set({timeFrame: 'M1'})">M1</a>
-					</li>
-					<li>
-						<a (click)="activeSymbol && activeSymbol.set({timeFrame: 'M5'})">M5</a>
-					</li>
-					<li>
-						<a (click)="activeSymbol && activeSymbol.set({timeFrame: 'M15'})">M15</a>
-					</li>
-					<li>
-						<a (click)="activeSymbol && activeSymbol.set({timeFrame: 'M30'})">M30</a>
-					</li>
-					<li>
-						<a (click)="activeSymbol && activeSymbol.set({timeFrame: 'H1'})">H1</a>
-					</li>
-					<li>
-						<a (click)="activeSymbol && activeSymbol.set({timeFrame: 'H4'})">H4</a>
-					</li>
-					<li>
-						<a (click)="activeSymbol && activeSymbol.set({timeFrame: 'D1'})">D</a>
-					</li>
-					<li>
-						<a (click)="activeSymbol && activeSymbol.set({timeFrame: 'W1'})">W</a>
-					</li>
-				</ul>
-			</li>
-			<li class="dropdown">
-				<button type="button" class="dropdown-toggle btn-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					<span>Indicator</span>
-				</button>
+			<ul class="dropdown-menu">
+				<li>
+					<a (click)="toggleTimeFrame('M1')">M1</a>
+				</li>
+				<!-- <li>
+					<a (click)="toggleTimeFrame('M5')">M5</a>
+				</li>
+				<li>
+					<a (click)="toggleTimeFrame('M15')">M15</a>
+				</li>
+				<li>
+					<a (click)="toggleTimeFrame('M30')">M30</a>
+				</li> -->
+				<li>
+					<a (click)="toggleTimeFrame('H1')">H1</a>
+				</li>
+				<!-- <li>
+					<a (click)="toggleTimeFrame('H4')">H4</a>
+				</li> -->
+				<li>
+					<a (click)="toggleTimeFrame('D')">D</a>
+				</li>
+				<!-- <li>
+					<a (click)="toggleTimeFrame('W')">W</a>
+				</li> -->
+			</ul>
+		</li>
+		<li class="dropdown">
+			<button type="button" class="dropdown-toggle btn-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<span>Indicator</span>
+			</button>
 
-				<ul class="dropdown-menu">
-					<li class="dropdown-submenu">
-						<a tabindex="-1" href="#">Indicators</a>
-						<ul class="dropdown-menu">
-							<li class="dropdown-header">Custom</li>
+			<ul class="dropdown-menu">
+				<li class="dropdown-submenu">
+					<a tabindex="-1" href="#">Indicators</a>
+					<ul class="dropdown-menu">
+						<li class="dropdown-header">Custom</li>
 
-							<li role="separator" class="divider"></li>
-							<li class="dropdown-header">Default</li>
+						<li role="separator" class="divider"></li>
+						<li class="dropdown-header">Default</li>
 
-							<li>
-								<a (click)="addIndicator('MA')">MA</a>
-							</li>
+						<li>
+							<a (click)="addIndicator('MA')">MA</a>
+						</li>
 
-							<li class="dropdown-submenu pull-left">
-								<a href="#">Even More..</a>
-								<ul class="dropdown-menu">
-									<li>
-										<a href="#">3rd level</a>
-									</li>
-									<li>
-										<a href="#">3rd level</a>
-									</li>
-								</ul>
-							</li>
-						</ul>
-					</li>
-					<li>
-						<a href="#">Another action</a>
-					</li>
-					<li>
-						<a href="#">Something else here</a>
-					</li>
-					<li role="separator" class="divider"></li>
-					<li>
-						<a href="#">Separated link</a>
-					</li>
-				</ul>
-			</li>
-		</ul>
-	</ng-container>
+						<li class="dropdown-submenu pull-left">
+							<a href="#">Even More..</a>
+							<ul class="dropdown-menu">
+								<li>
+									<a href="#">3rd level</a>
+								</li>
+								<li>
+									<a href="#">3rd level</a>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<a href="#">Another action</a>
+				</li>
+				<li>
+					<a href="#">Something else here</a>
+				</li>
+				<li role="separator" class="divider"></li>
+				<li>
+					<a href="#">Separated link</a>
+				</li>
+			</ul>
+		</li>
+	</ul>
 </div>
 <div dialogAnchor></div>
 
 <!-- <div> -->
-	<!-- <div *ngIf="quickBuy && instrumentModel.options.type === 'live'" class="quickOrderContainer" style="display: none">
+<!-- <div *ngIf="quickBuy && instrumentModel.options.type === 'live'" class="quickOrderContainer" style="display: none">
 		<a (click)="placeOrder($event, constantsService.constants.ORDER_SIDE_BUY)" class="buyButton">
 			<p>BUY</p>
 			<input type="number" value="1" #buyAmount>
@@ -121,12 +119,12 @@
 		</a>
 	</div> -->
 
-	<div class="spinner-container active" #loading>
-		<div class="spinner">
-			<div class="dot1"></div>
-			<div class="dot2"></div>
-		</div>
+<div class="spinner-container active" #loading>
+	<div class="spinner">
+		<div class="dot1"></div>
+		<div class="dot2"></div>
 	</div>
+</div>
 
-	<div class="chart-content" #chart></div>
+<div class="chart-content" #chart></div>
 <!-- </div> -->
