@@ -13,11 +13,11 @@ testem.log
 dump.rdb
 
 #### Log ####
+/_logs
 server.txt
 
-
 #### App ####
-/_logs
+tradejs.config.custom.json
 /_builds
 !/_builds/ea/example/*
 !/_builds/indicator/example/*

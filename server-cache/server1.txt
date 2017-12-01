@@ -6022,3 +6022,335 @@
 2017-12-01T21:56:48.455Z - info: DataLayer            :  Read eur_nzd_m1 from undefined until 1512165408455 count 300
 2017-12-01T21:56:50.096Z - info: DataLayer            :  Read eur_nzd_h1 from undefined until 1512165410096 count 300
 2017-12-01T21:56:58.939Z - info: DataLayer            :  Read zrx_h1 from undefined until 1512165418939 count 300
+2017-12-01T22:31:41.775Z - info: DataLayer            :  Creating 660 collections
+2017-12-01T22:31:42.490Z - info: DataLayer            :  Creating collections done
+2017-12-01T22:31:42.528Z - info: CacheController      :  Syncing 660 collections
+2017-12-01T22:31:43.058Z - info: DataLayer            :  WRITING 4 candles to aud_cad_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:43.224Z - info: DataLayer            :  WRITING 4 candles to aud_chf_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:43.351Z - info: DataLayer            :  WRITING 2 candles to aud_hkd_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:43.497Z - info: DataLayer            :  WRITING 4 candles to aud_jpy_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:44.734Z - info: DataLayer            :  WRITING 4 candles to aud_nzd_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:44.869Z - info: DataLayer            :  WRITING 3 candles to aud_sgd_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:45.013Z - info: DataLayer            :  WRITING 2 candles to aud_usd_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:45.649Z - info: DataLayer            :  WRITING 3 candles to bco_usd_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:58:00 GMT+0100 (CET)
+2017-12-01T22:31:45.917Z - info: DataLayer            :  WRITING 4 candles to cad_chf_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:46.458Z - info: DataLayer            :  WRITING 4 candles to cad_hkd_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:46.586Z - info: DataLayer            :  WRITING 4 candles to cad_jpy_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:46.715Z - info: DataLayer            :  WRITING 4 candles to cad_sgd_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:46.888Z - info: DataLayer            :  WRITING 4 candles to chf_hkd_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:47.020Z - info: DataLayer            :  WRITING 4 candles to chf_jpy_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:47.493Z - info: DataLayer            :  WRITING 4 candles to chf_zar_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:47.766Z - info: DataLayer            :  WRITING 3 candles to xcu_usd_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:58:00 GMT+0100 (CET)
+2017-12-01T22:31:49.101Z - info: DataLayer            :  WRITING 3 candles to eur_aud_m1 starting Fri Dec 01 2017 22:57:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:49.236Z - info: DataLayer            :  WRITING 4 candles to eur_cad_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:49.370Z - info: DataLayer            :  WRITING 4 candles to eur_chf_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:49.496Z - info: DataLayer            :  WRITING 4 candles to eur_czk_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:50.284Z - info: DataLayer            :  WRITING 3 candles to eur_gbp_m1 starting Fri Dec 01 2017 22:57:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:50.299Z - info: DataLayer            :  WRITING 2 candles to eur_dkk_m1 starting Fri Dec 01 2017 22:57:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:50.490Z - info: DataLayer            :  WRITING 4 candles to eur_hkd_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:50.617Z - info: DataLayer            :  WRITING 4 candles to eur_huf_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:51.150Z - info: DataLayer            :  WRITING 4 candles to eur_jpy_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:51.283Z - info: DataLayer            :  WRITING 4 candles to eur_nok_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:51.409Z - info: DataLayer            :  WRITING 4 candles to eur_nzd_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:51.537Z - info: DataLayer            :  WRITING 4 candles to eur_pln_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:51.999Z - info: DataLayer            :  WRITING 4 candles to eur_sgd_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:52.000Z - info: DataLayer            :  WRITING 4 candles to eur_sek_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:52.283Z - info: DataLayer            :  WRITING 4 candles to eur_try_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:52.412Z - info: DataLayer            :  WRITING 4 candles to eur_usd_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:52.538Z - info: DataLayer            :  WRITING 4 candles to eur_zar_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:53.569Z - info: DataLayer            :  WRITING 4 candles to gbp_aud_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:53.699Z - info: DataLayer            :  WRITING 4 candles to gbp_cad_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:53.861Z - info: DataLayer            :  WRITING 4 candles to gbp_chf_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:54.350Z - info: DataLayer            :  WRITING 4 candles to gbp_hkd_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:54.484Z - info: DataLayer            :  WRITING 4 candles to gbp_jpy_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:54.622Z - info: DataLayer            :  WRITING 4 candles to gbp_nzd_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:54.749Z - info: DataLayer            :  WRITING 4 candles to gbp_pln_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:55.186Z - info: DataLayer            :  WRITING 4 candles to gbp_usd_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:55.188Z - info: DataLayer            :  WRITING 4 candles to gbp_sgd_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:55.570Z - info: DataLayer            :  WRITING 4 candles to gbp_zar_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:55.944Z - info: DataLayer            :  WRITING 3 candles to xau_usd_m1 starting Fri Dec 01 2017 22:57:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:56.411Z - info: DataLayer            :  WRITING 4 candles to xau_aud_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:56.536Z - info: DataLayer            :  WRITING 4 candles to xau_cad_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:56.692Z - info: DataLayer            :  WRITING 4 candles to xau_chf_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:56.820Z - info: DataLayer            :  WRITING 4 candles to xau_eur_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:56.990Z - info: DataLayer            :  WRITING 4 candles to xau_gbp_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:57.427Z - info: DataLayer            :  WRITING 3 candles to xau_hkd_m1 starting Fri Dec 01 2017 22:57:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:57.469Z - info: DataLayer            :  WRITING 4 candles to xau_jpy_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:57.626Z - info: DataLayer            :  WRITING 4 candles to xau_nzd_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:58.046Z - info: DataLayer            :  WRITING 4 candles to xau_sgd_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:58.178Z - info: DataLayer            :  WRITING 4 candles to xau_xag_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:58.814Z - info: DataLayer            :  WRITING 4 candles to hkd_jpy_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:59.256Z - info: DataLayer            :  WRITING 4 candles to jp225_usd_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:31:59.949Z - info: DataLayer            :  WRITING 1 candles to natgas_usd_m1 starting Fri Dec 01 2017 22:58:00 GMT+0100 (CET) until Fri Dec 01 2017 22:58:00 GMT+0100 (CET)
+2017-12-01T22:32:00.647Z - info: DataLayer            :  WRITING 4 candles to nzd_cad_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:01.008Z - info: DataLayer            :  WRITING 4 candles to nzd_chf_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:01.148Z - info: DataLayer            :  WRITING 4 candles to nzd_hkd_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:01.277Z - info: DataLayer            :  WRITING 4 candles to nzd_jpy_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:01.918Z - info: DataLayer            :  WRITING 4 candles to nzd_sgd_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:02.065Z - info: DataLayer            :  WRITING 4 candles to nzd_usd_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:02.194Z - info: DataLayer            :  WRITING 3 candles to xpd_usd_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:02.348Z - info: DataLayer            :  WRITING 4 candles to xpt_usd_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:03.000Z - info: DataLayer            :  WRITING 4 candles to sgd_chf_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:03.141Z - info: DataLayer            :  WRITING 4 candles to sgd_hkd_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:03.578Z - info: DataLayer            :  WRITING 4 candles to sgd_jpy_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:03.705Z - info: DataLayer            :  WRITING 4 candles to xag_usd_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:03.834Z - info: DataLayer            :  WRITING 4 candles to xag_aud_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:03.964Z - info: DataLayer            :  WRITING 4 candles to xag_cad_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:04.363Z - info: DataLayer            :  WRITING 4 candles to xag_eur_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:04.424Z - info: DataLayer            :  WRITING 4 candles to xag_chf_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:04.627Z - info: DataLayer            :  WRITING 4 candles to xag_gbp_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:04.755Z - info: DataLayer            :  WRITING 4 candles to xag_hkd_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:05.264Z - info: DataLayer            :  WRITING 4 candles to xag_jpy_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:05.853Z - info: DataLayer            :  WRITING 4 candles to xag_nzd_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:06.081Z - info: DataLayer            :  WRITING 4 candles to xag_sgd_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:07.372Z - info: DataLayer            :  WRITING 4 candles to try_jpy_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:08.274Z - info: DataLayer            :  WRITING 2 candles to usb10y_usd_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:08.553Z - info: DataLayer            :  WRITING 1 candles to usb05y_usd_m1 starting Fri Dec 01 2017 22:58:00 GMT+0100 (CET) until Fri Dec 01 2017 22:58:00 GMT+0100 (CET)
+2017-12-01T22:32:08.965Z - info: DataLayer            :  WRITING 4 candles to nas100_usd_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:09.168Z - info: DataLayer            :  WRITING 4 candles to us2000_usd_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:09.367Z - info: DataLayer            :  WRITING 4 candles to spx500_usd_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:09.367Z - info: DataLayer            :  WRITING 2 candles to usb30y_usd_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:57:00 GMT+0100 (CET)
+2017-12-01T22:32:09.797Z - info: DataLayer            :  WRITING 4 candles to us30_usd_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:10.363Z - info: DataLayer            :  WRITING 4 candles to usd_cad_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:10.504Z - info: DataLayer            :  WRITING 4 candles to usd_chf_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:10.643Z - info: DataLayer            :  WRITING 4 candles to usd_cnh_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:10.770Z - info: DataLayer            :  WRITING 4 candles to usd_czk_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:10.924Z - info: DataLayer            :  WRITING 4 candles to usd_dkk_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:11.525Z - info: DataLayer            :  WRITING 3 candles to usd_hkd_m1 starting Fri Dec 01 2017 22:57:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:11.526Z - info: DataLayer            :  WRITING 4 candles to usd_huf_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:12.047Z - info: DataLayer            :  WRITING 4 candles to usd_jpy_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:12.812Z - info: DataLayer            :  WRITING 4 candles to usd_mxn_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:13.316Z - info: DataLayer            :  WRITING 4 candles to usd_nok_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:13.461Z - info: DataLayer            :  WRITING 4 candles to usd_pln_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:13.725Z - info: DataLayer            :  WRITING 4 candles to usd_sek_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:13.858Z - info: DataLayer            :  WRITING 4 candles to usd_sgd_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:14.321Z - info: DataLayer            :  WRITING 1 candles to usd_thb_m1 starting Fri Dec 01 2017 22:57:00 GMT+0100 (CET) until Fri Dec 01 2017 22:57:00 GMT+0100 (CET)
+2017-12-01T22:32:14.522Z - info: DataLayer            :  WRITING 4 candles to usd_try_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:14.718Z - info: DataLayer            :  WRITING 4 candles to usd_zar_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:15.426Z - info: DataLayer            :  WRITING 2 candles to wtico_usd_m1 starting Fri Dec 01 2017 22:56:00 GMT+0100 (CET) until Fri Dec 01 2017 22:58:00 GMT+0100 (CET)
+2017-12-01T22:32:15.701Z - info: DataLayer            :  WRITING 3 candles to zar_jpy_m1 starting Fri Dec 01 2017 22:57:00 GMT+0100 (CET) until Fri Dec 01 2017 22:59:00 GMT+0100 (CET)
+2017-12-01T22:32:15.787Z - info: DataLayer            :  Read zrx_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.787Z - info: DataLayer            :  Read acc_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.788Z - info: DataLayer            :  Read adx_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.788Z - info: DataLayer            :  Read ae_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.788Z - info: DataLayer            :  Read ardr_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.789Z - info: DataLayer            :  Read ark_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.789Z - info: DataLayer            :  Read aud_cad_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.789Z - info: DataLayer            :  Read aud_chf_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.789Z - info: DataLayer            :  Read aud_hkd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.789Z - info: DataLayer            :  Read aud_jpy_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.790Z - info: DataLayer            :  Read aud_nzd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.790Z - info: DataLayer            :  Read aud_sgd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.790Z - info: DataLayer            :  Read aud_usd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.790Z - info: DataLayer            :  Read rep_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.790Z - info: DataLayer            :  Read au200_aud_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.790Z - info: DataLayer            :  Read bnt_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.790Z - info: DataLayer            :  Read bat_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.791Z - info: DataLayer            :  Read bnb_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.791Z - info: DataLayer            :  Read btc_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.791Z - info: DataLayer            :  Read bch_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.791Z - info: DataLayer            :  Read btg_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.791Z - info: DataLayer            :  Read btcd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.791Z - info: DataLayer            :  Read btm_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.791Z - info: DataLayer            :  Read bts_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.792Z - info: DataLayer            :  Read block_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.792Z - info: DataLayer            :  Read bco_usd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.792Z - info: DataLayer            :  Read de10yb_eur_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.792Z - info: DataLayer            :  Read gbyte_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.792Z - info: DataLayer            :  Read bcn_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.792Z - info: DataLayer            :  Read cad_chf_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.793Z - info: DataLayer            :  Read cad_hkd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.793Z - info: DataLayer            :  Read cad_jpy_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.793Z - info: DataLayer            :  Read cad_sgd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.793Z - info: DataLayer            :  Read ada_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.793Z - info: DataLayer            :  Read chf_hkd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.793Z - info: DataLayer            :  Read chf_jpy_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.793Z - info: DataLayer            :  Read chf_zar_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.793Z - info: DataLayer            :  Read cn50_usd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.794Z - info: DataLayer            :  Read cvc_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.794Z - info: DataLayer            :  Read xcu_usd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.794Z - info: DataLayer            :  Read corn_usd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.794Z - info: DataLayer            :  Read cnx_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.794Z - info: DataLayer            :  Read dcr_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.794Z - info: DataLayer            :  Read dgb_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.794Z - info: DataLayer            :  Read dash_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.794Z - info: DataLayer            :  Read dgd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.795Z - info: DataLayer            :  Read doge_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.795Z - info: DataLayer            :  Read emc2_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.795Z - info: DataLayer            :  Read eos_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.795Z - info: DataLayer            :  Read eth_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.795Z - info: DataLayer            :  Read etc_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.795Z - info: DataLayer            :  Read ethos_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.795Z - info: DataLayer            :  Read eur_aud_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.795Z - info: DataLayer            :  Read eur_cad_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.795Z - info: DataLayer            :  Read eur_chf_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.796Z - info: DataLayer            :  Read eur_czk_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.796Z - info: DataLayer            :  Read eur_dkk_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.796Z - info: DataLayer            :  Read eur_gbp_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.796Z - info: DataLayer            :  Read eur_hkd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.797Z - info: DataLayer            :  Read eur_huf_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.797Z - info: DataLayer            :  Read eur_jpy_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.797Z - info: DataLayer            :  Read eur_nok_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.797Z - info: DataLayer            :  Read eur_nzd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.797Z - info: DataLayer            :  Read eur_pln_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.797Z - info: DataLayer            :  Read eur_sek_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.797Z - info: DataLayer            :  Read eur_sgd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.797Z - info: DataLayer            :  Read eur_try_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.798Z - info: DataLayer            :  Read eur_usd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.798Z - info: DataLayer            :  Read eur_zar_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.798Z - info: DataLayer            :  Read eu50_eur_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.798Z - info: DataLayer            :  Read xuc_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.798Z - info: DataLayer            :  Read fct_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.798Z - info: DataLayer            :  Read fair_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.798Z - info: DataLayer            :  Read fr40_eur_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.798Z - info: DataLayer            :  Read fun_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.799Z - info: DataLayer            :  Read game_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.799Z - info: DataLayer            :  Read gas_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.799Z - info: DataLayer            :  Read gbp_aud_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.799Z - info: DataLayer            :  Read gbp_cad_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.799Z - info: DataLayer            :  Read gbp_chf_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.799Z - info: DataLayer            :  Read gbp_hkd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.799Z - info: DataLayer            :  Read gbp_jpy_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.799Z - info: DataLayer            :  Read gbp_nzd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.800Z - info: DataLayer            :  Read gbp_pln_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.800Z - info: DataLayer            :  Read gbp_sgd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.800Z - info: DataLayer            :  Read gbp_usd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.800Z - info: DataLayer            :  Read gbp_zar_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.800Z - info: DataLayer            :  Read de30_eur_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.800Z - info: DataLayer            :  Read gno_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.800Z - info: DataLayer            :  Read xau_usd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.800Z - info: DataLayer            :  Read xau_aud_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.800Z - info: DataLayer            :  Read xau_cad_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.801Z - info: DataLayer            :  Read xau_chf_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.801Z - info: DataLayer            :  Read xau_eur_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.801Z - info: DataLayer            :  Read xau_gbp_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.801Z - info: DataLayer            :  Read xau_hkd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.801Z - info: DataLayer            :  Read xau_jpy_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.801Z - info: DataLayer            :  Read xau_nzd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.801Z - info: DataLayer            :  Read xau_sgd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.802Z - info: DataLayer            :  Read xau_xag_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.802Z - info: DataLayer            :  Read gnt_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.802Z - info: DataLayer            :  Read hkd_jpy_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.802Z - info: DataLayer            :  Read hk33_hkd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.802Z - info: DataLayer            :  Read hsr_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.802Z - info: DataLayer            :  Read icn_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.803Z - info: DataLayer            :  Read in50_usd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.803Z - info: DataLayer            :  Read ioc_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.803Z - info: DataLayer            :  Read jp225_usd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.803Z - info: DataLayer            :  Read kmd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.803Z - info: DataLayer            :  Read knc_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.803Z - info: DataLayer            :  Read lsk_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.803Z - info: DataLayer            :  Read ltc_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.804Z - info: DataLayer            :  Read lkk_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.804Z - info: DataLayer            :  Read maid_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.804Z - info: DataLayer            :  Read mtl_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.804Z - info: DataLayer            :  Read etp_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.804Z - info: DataLayer            :  Read mnx_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.804Z - info: DataLayer            :  Read mona_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.804Z - info: DataLayer            :  Read xmr_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.804Z - info: DataLayer            :  Read natgas_usd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.805Z - info: DataLayer            :  Read nav_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.805Z - info: DataLayer            :  Read xem_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.805Z - info: DataLayer            :  Read neo_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.805Z - info: DataLayer            :  Read nl25_eur_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.805Z - info: DataLayer            :  Read nxs_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.805Z - info: DataLayer            :  Read nxt_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.805Z - info: DataLayer            :  Read nzd_cad_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.805Z - info: DataLayer            :  Read nzd_chf_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.806Z - info: DataLayer            :  Read nzd_hkd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.806Z - info: DataLayer            :  Read nzd_jpy_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.806Z - info: DataLayer            :  Read nzd_sgd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.806Z - info: DataLayer            :  Read nzd_usd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.806Z - info: DataLayer            :  Read omg_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.806Z - info: DataLayer            :  Read xpd_usd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.806Z - info: DataLayer            :  Read part_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.807Z - info: DataLayer            :  Read ppc_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.807Z - info: DataLayer            :  Read xpt_usd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.807Z - info: DataLayer            :  Read ppt_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.807Z - info: DataLayer            :  Read pot_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.807Z - info: DataLayer            :  Read powr_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.807Z - info: DataLayer            :  Read pivx_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.808Z - info: DataLayer            :  Read pura_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.808Z - info: DataLayer            :  Read qtum_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.809Z - info: DataLayer            :  Read qsp_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.809Z - info: DataLayer            :  Read rdn_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.810Z - info: DataLayer            :  Read xrp_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.810Z - info: DataLayer            :  Read salt_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.810Z - info: DataLayer            :  Read san_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.810Z - info: DataLayer            :  Read sgd_chf_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.810Z - info: DataLayer            :  Read sgd_hkd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.810Z - info: DataLayer            :  Read sgd_jpy_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.810Z - info: DataLayer            :  Read sc_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.810Z - info: DataLayer            :  Read xag_usd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.811Z - info: DataLayer            :  Read xag_aud_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.811Z - info: DataLayer            :  Read xag_cad_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.811Z - info: DataLayer            :  Read xag_chf_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.811Z - info: DataLayer            :  Read xag_eur_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.811Z - info: DataLayer            :  Read xag_gbp_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.811Z - info: DataLayer            :  Read xag_hkd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.811Z - info: DataLayer            :  Read xag_jpy_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.811Z - info: DataLayer            :  Read xag_nzd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.812Z - info: DataLayer            :  Read xag_sgd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.812Z - info: DataLayer            :  Read sg30_sgd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.812Z - info: DataLayer            :  Read sngls_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.812Z - info: DataLayer            :  Read soybn_usd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.812Z - info: DataLayer            :  Read snt_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.812Z - info: DataLayer            :  Read steem_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.812Z - info: DataLayer            :  Read xlm_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.813Z - info: DataLayer            :  Read storj_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.813Z - info: DataLayer            :  Read strat_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.813Z - info: DataLayer            :  Read data_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.813Z - info: DataLayer            :  Read sub_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.813Z - info: DataLayer            :  Read sugar_usd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.813Z - info: DataLayer            :  Read sys_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.813Z - info: DataLayer            :  Read twix_usd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.814Z - info: DataLayer            :  Read pay_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.814Z - info: DataLayer            :  Read usdt_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.814Z - info: DataLayer            :  Read trx_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.814Z - info: DataLayer            :  Read try_jpy_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.814Z - info: DataLayer            :  Read ubq_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.814Z - info: DataLayer            :  Read uk100_gbp_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.814Z - info: DataLayer            :  Read uk10yb_gbp_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.814Z - info: DataLayer            :  Read usb10y_usd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.815Z - info: DataLayer            :  Read usb02y_usd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.815Z - info: DataLayer            :  Read usb05y_usd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.815Z - info: DataLayer            :  Read nas100_usd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.815Z - info: DataLayer            :  Read us2000_usd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.815Z - info: DataLayer            :  Read spx500_usd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.815Z - info: DataLayer            :  Read usb30y_usd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.815Z - info: DataLayer            :  Read us30_usd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.815Z - info: DataLayer            :  Read usd_cad_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.816Z - info: DataLayer            :  Read usd_chf_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.816Z - info: DataLayer            :  Read usd_cnh_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.816Z - info: DataLayer            :  Read usd_czk_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.816Z - info: DataLayer            :  Read usd_dkk_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.816Z - info: DataLayer            :  Read usd_hkd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.816Z - info: DataLayer            :  Read usd_huf_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.816Z - info: DataLayer            :  Read usd_inr_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.816Z - info: DataLayer            :  Read usd_jpy_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.817Z - info: DataLayer            :  Read usd_mxn_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.817Z - info: DataLayer            :  Read usd_nok_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.817Z - info: DataLayer            :  Read usd_pln_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.817Z - info: DataLayer            :  Read usd_sar_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.817Z - info: DataLayer            :  Read usd_sek_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.817Z - info: DataLayer            :  Read usd_sgd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.817Z - info: DataLayer            :  Read usd_thb_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.817Z - info: DataLayer            :  Read usd_try_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.817Z - info: DataLayer            :  Read usd_zar_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.818Z - info: DataLayer            :  Read ven_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.818Z - info: DataLayer            :  Read xvg_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.818Z - info: DataLayer            :  Read veri_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.818Z - info: DataLayer            :  Read vtc_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.818Z - info: DataLayer            :  Read wtc_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.818Z - info: DataLayer            :  Read waves_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.819Z - info: DataLayer            :  Read wtico_usd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.819Z - info: DataLayer            :  Read wheat_usd_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.820Z - info: DataLayer            :  Read zar_jpy_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.821Z - info: DataLayer            :  Read zec_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.821Z - info: DataLayer            :  Read xzc_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.821Z - info: DataLayer            :  Read zen_m1 from undefined until 1512082800000 count 1440
+2017-12-01T22:32:15.913Z - info: Cache                :  Tick stream opened
+2017-12-01T22:32:21.394Z - info: DataLayer            :  Read zrx_h1 from undefined until 1512167541394 count 300
+2017-12-01T22:32:32.715Z - info: DataLayer            :  Read adx_h1 from undefined until 1512167552715 count 300
+2017-12-01T22:32:33.628Z - info: DataLayer            :  Read ae_h1 from undefined until 1512167553628 count 300
+2017-12-01T22:33:34.514Z - info: DataLayer            :  Read acc_h1 from undefined until 1512167614514 count 300

@@ -16,7 +16,7 @@ let domain;
         port: 3100
     };
 
-module.exports = {
+const config = {
     domain,
     system: {
         'port': 3000,
@@ -88,10 +88,10 @@ module.exports = {
     },
     broker: {
         oanda: {
-            'environment': '',
-            'username': null,
-            'token': '067331173f67faf3cef7e69263a3015a-fefb596cddfe98d2f24e9ca843c3c443',
-            'accountId': '1218398'
+            'environment': '', // Your environment
+            'username': '', // Your username
+            'token': '', // Your oanda token
+            'accountId': '' // Your account id
         }
     },
     email: {
@@ -99,13 +99,18 @@ module.exports = {
             noReply: {
                 service: 'Gmail',
                 auth: {
-                    user: 'brandsma1987@gmail.com', // Your email id
-                    pass: 'halo33221' // Your password
+                    user: '**', // Your email id
+                    pass: '**' // Your password
                 }
             }
         }
     }
 };
+
+const customConfig = require('./tradejs.config.custom.json');
+Object.assign(config, customConfig);
+
+module.exports = config;
 
 Object.keys(module.exports.server).forEach(name => {
     const server = module.exports.server[name];
