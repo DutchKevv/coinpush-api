@@ -301,7 +301,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 						text: null
 					},
 					// offset: 10,
-					height: '65%',
+					height: '75%',
 					lineWidth: 1,
 					resize: {
 						enabled: true
@@ -316,8 +316,8 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 					title: {
 						text: null
 					},
-					top: '70%',
-					height: '30%',
+					top: '80%',
+					height: '20%',
 					// offset: 10,
 					lineWidth: 1
 				}],
@@ -420,8 +420,10 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 			
 			const options = {
 				id: 'cPrice',
-				color: '#FF0000',
+				color: '#67C8FF',
+				// color: '#FF0000',
 				width: 1,
+				dashStyle: 'dot',
 				value: lastCandle[1],
 				label: {
 					text: '<div class="plot-label;" style="font-size:10px; padding: 2px;">' +  price + '</div>',
@@ -431,9 +433,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 					y: 4,
 					style: {
 						color: 'white',
-						background: 'red',
-						backgroundColo: 'red',
-						marginLeft: 0
+						background: 'rgb(8, 84, 128)'
 					}
 				}
 			};
@@ -638,13 +638,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	}
 
 	private _priceToFixed(number) {
-		let m = 0;
-		
-		if (this.symbolModel.options.precision)
-			return number.toFixed(this.symbolModel.options.precision);
-		
-		
-		return number;
+		return number.toFixed(this.symbolModel.options.precision || Math.max(number.toString().length, 4));
 	}
 
 	private _clearData(render: boolean = false) {

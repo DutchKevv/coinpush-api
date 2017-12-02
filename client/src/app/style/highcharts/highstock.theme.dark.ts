@@ -12,7 +12,7 @@ import Highstock from 'highcharts/highstock';
 Highstock.theme = Highcharts.theme = {
 // colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066', '#eeaaee',
 //     '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
-colors: ['#9aee7e', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066', '#eeaaee',
+colors: ['#67C8FF', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066', '#eeaaee',
     '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
 
 loading: {
@@ -122,11 +122,16 @@ plotOptions: {
     boxplot: {
         fillColor: '#505053'
     },
+    column: {
+        borderWidth: 0,
+        color: 'rgb(8, 84, 128)'
+    },
     candlestick: {
         lineColor: 'white',
-        // lineWidth: 0,
-        color: '#fff',
+        lineWidth: 0,
+        color: '#f00',
         upColor: '#00ee5e'
+        // upColor: '#67C8FF'
     },
     errorbar: {
         color: 'white'
