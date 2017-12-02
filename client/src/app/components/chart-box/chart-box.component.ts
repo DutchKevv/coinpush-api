@@ -55,7 +55,8 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	@ViewChild('chart') private chartRef: ElementRef;
 	@ViewChild('loading') private loadingRef: ElementRef;
 
-	public graphType = 'ohlc';
+	public graphType = 'candlestick';
+	// public graphType = 'ohlc';
 	public zoom = 2;
 	public timeFrame = 'H1';
 
@@ -220,12 +221,14 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 				chart: {
 					pinchType: 'x',
 					marginLeft: 4,
-					marginTop: 4,
+					marginTop: 1,
 					marginBottom: 25
 				},
+
 				title: {
 					text: ''
 				},
+
 				subtitle: {
 					text: '',
 					style: {
@@ -239,6 +242,16 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 				legend: {
 					enabled: false
+				},
+
+				resetZoomButton: {
+					theme: {
+						display: 'none'
+					}
+				},
+
+				tooltip: {
+					split: true
 				},
 
 				xAxis: [{
@@ -278,21 +291,12 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 					ordinal: true
 				}],
 
-				plotOptions: {
-					candles: {
-						pointPadding: 0,
-						borderWidth: 0,
-						groupPadding: 0,
-						shadow: false,
-						stacking: 'percent'
-					}
-				},
-
 				yAxis: [{
 					opposite: true,
 					labels: {
 						align: 'left',
 						x: 6,
+						y: 8,
 						formatter: function () {
 							return self._priceToFixed(this.value);
 						}
@@ -311,7 +315,8 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 					opposite: true,
 					labels: {
 						align: 'left',
-						x: 6
+						x: 6,
+						y: 8
 					},
 					title: {
 						text: null
@@ -322,8 +327,14 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 					lineWidth: 1
 				}],
 
-				tooltip: {
-					split: true
+				plotOptions: {
+					candles: {
+						pointPadding: 0,
+						borderWidth: 0,
+						groupPadding: 0,
+						shadow: false,
+						stacking: 'percent'
+					}
 				},
 
 				series: [
@@ -346,9 +357,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 						// }
 					},
 				]
-			}, false, false);
-
-			this.toggleLoading(false);
+			}, false);
 		});
 	}
 
@@ -379,7 +388,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 				return [firstBar[0], lastBar[0]];
 
 			if (this._chart)
-				this._chart.xAxis[0].setExtremes(firstBar[0], lastBar[0], render, false);
+				this._chart.xAxis[0].setExtremes(firstBar[0], lastBar[0], render, true);
 		});
 	}
 
@@ -394,6 +403,8 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 					offset: this._offset
 				}));
 
+				this.toggleLoading(false);
+
 				this._data.candles = data.candles;
 				this._data.volume = data.volume;
 
@@ -402,7 +413,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 				this._updateCurrentPricePlot();
 				this._updateViewPort(0, false, true);
-				this.toggleLoading(false);
 			} catch (error) {
 				console.log('error error error', error);
 			}
@@ -417,7 +427,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 				return;
 
 			const price = this._priceToFixed(lastCandle[1]);
-			
+
 			const options = {
 				id: 'cPrice',
 				color: '#67C8FF',
@@ -426,7 +436,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 				dashStyle: 'dot',
 				value: lastCandle[1],
 				label: {
-					text: '<div class="plot-label;" style="font-size:10px; padding: 2px;">' +  price + '</div>',
+					text: '<div class="plot-label;" style="font-size:10px; padding: 2px;">' + price + '</div>',
 					useHTML: true,
 					align: 'right',
 					x: 6.1 * price.toString().length,
@@ -638,6 +648,10 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	}
 
 	private _priceToFixed(number) {
+		if (this.symbolModel.options.precision)
+			return number.toFixed(this.symbolModel.options.precision);
+
+		let n = Math.min(Math.max(number.toString().length, 2), 6);
 		return number.toFixed(this.symbolModel.options.precision || Math.max(number.toString().length, 4));
 	}
 
@@ -645,15 +659,13 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		if (!this._chart || !this._chart.series[0] || !this._chart.series[1])
 			return;
 
+		this._chart.yAxis[0].removePlotLine('cPrice', false, false);
+
 		this._chart.series[0].setData([], false, false);
 		this._chart.series[1].setData([], render, false);
-
-		this._chart.yAxis[0].removePlotLine('cPrice', false, false);
 	}
 
 	private _destroyChart() {
-
-
 		if (this._chart)
 			this._chart.destroy();
 

@@ -4,7 +4,9 @@ import {
 	ChangeDetectorRef,
 	AfterViewInit,
 	Output,
-	OnDestroy
+	OnDestroy,
+	ApplicationRef,
+	Injector
 } from '@angular/core';
 
 import { InstrumentsService } from '../../services/instruments.service';
@@ -35,8 +37,7 @@ export class ChartOverviewComponent implements OnInit, AfterViewInit, OnDestroy 
 	@Output() public activeSymbol: SymbolModel;
 
 	@ViewChildren(ChartBoxComponent) charts: QueryList<ChartBoxComponent>;
-	@ViewChild('container') container;
-	@ViewChild('navbar') navbar: ElementRef;
+	@ViewChild('filter') filterRef: ElementRef;
 	@ViewChild('list') listRef: ElementRef;
 
 	public activeSymbol$: Subject<SymbolModel> = new Subject();
@@ -55,8 +56,12 @@ export class ChartOverviewComponent implements OnInit, AfterViewInit, OnDestroy 
 		private _elementRef: ElementRef,
 		private _route: ActivatedRoute,
 		private _router: Router,
-		private _orderService: OrderService
+		private _orderService: OrderService,
+		private applicationRef: ApplicationRef, 
+		injector: Injector
 	) {
+		console.log(applicationRef.components[0].instance.filterClick$.subscribe(() => this.toggleFilterNav()));
+		// this.appElementRef = injector.get(applicationRef.componentTypes[0]).elementRef;
 	}
 
 	ngOnInit() {
@@ -84,9 +89,20 @@ export class ChartOverviewComponent implements OnInit, AfterViewInit, OnDestroy 
 		}, 0);
 	}
 
-	toggleFilter(filter: string) {
+	public toggleFilterNav(event?, state?: boolean) {
+		if (event) {
+			event.preventDefault();
+			event.stopPropagation();
+		}
+
+		this.filterRef.nativeElement.classList.toggle('show', state);
+	}
+
+	toggleActiveFilter(filter: string) {
 		this.activeFilter = filter;
 		this.activeMenu = null;
+
+		this.toggleFilterNav(undefined, false);
 
 		switch (filter) {
 			case 'all':
@@ -114,6 +130,8 @@ export class ChartOverviewComponent implements OnInit, AfterViewInit, OnDestroy 
 				this.symbols = this.cacheService.symbols.filter(s => s.options.type === SYMBOL_CAT_TYPE_RESOURCE);
 				break;
 		}
+
+		this.setActiveSymbol(undefined, this.symbols[0]);
 	}
 
 	onClickToggleFavorite(event, symbol: SymbolModel) {
@@ -155,15 +173,6 @@ export class ChartOverviewComponent implements OnInit, AfterViewInit, OnDestroy 
 
 	public trackByFunc(index, item) {
 		return item.options.name;
-	}
-
-	public collapseNav(event?, state?: boolean) {
-		if (event) {
-			event.preventDefault();
-			event.stopPropagation();
-		}
-
-		this.navbar.nativeElement.classList.toggle('show', state);
 	}
 
 	private _scrollIntoView(symbol: SymbolModel) {
