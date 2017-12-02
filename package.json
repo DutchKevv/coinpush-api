@@ -58,6 +58,6 @@
     "build-user": "cd ./server-user && npm run build",
     "build-email": "cd ./server-email && npm run build",
     "run-client": "cd ./client && npm start",
-    "ibr": "npm i && npm run build && npm run prod"
+    "klabam": "npm run stop && npm i && npm run build && npm run prod"
   }
 }

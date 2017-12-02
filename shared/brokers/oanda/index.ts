@@ -118,7 +118,7 @@ export default class OandaApi extends EventEmitter {
 					const meta = metaData.find(m => m.name === symbol.name);
 				
 					return {
-						precision: symbol.precision,
+						precision: -Math.floor( Math.log(symbol.precision,) / Math.log(10) + 1),
 						img: '/images/default/symbol/spx500-70x70.png',
 						name: symbol.instrument,
 						displayName: symbol.displayName,

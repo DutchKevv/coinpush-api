@@ -416,21 +416,24 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 			if (!lastCandle)
 				return;
 
+			const price = this._priceToFixed(lastCandle[1]);
+			
 			const options = {
 				id: 'cPrice',
 				color: '#FF0000',
 				width: 1,
 				value: lastCandle[1],
 				label: {
-					text: '<div class="plot-label">' +  this._priceToFixed(lastCandle[1]) + '</div>',
+					text: '<div class="plot-label;" style="font-size:10px; padding: 2px;">' +  price + '</div>',
 					useHTML: true,
 					align: 'right',
-					x: 40,
+					x: 6.1 * price.toString().length,
 					y: 4,
 					style: {
 						color: 'white',
 						background: 'red',
 						backgroundColo: 'red',
+						marginLeft: 0
 					}
 				}
 			};
@@ -637,10 +640,9 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	private _priceToFixed(number) {
 		let m = 0;
 		
-		if (this.symbolModel.options.precision) {
-			m = -Math.floor( Math.log(this.symbolModel.options.precision) / Math.log(10) + 1);
-			return number.toFixed(m);
-		}
+		if (this.symbolModel.options.precision)
+			return number.toFixed(this.symbolModel.options.precision);
+		
 		
 		return number;
 	}
