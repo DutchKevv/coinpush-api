@@ -116,8 +116,10 @@ export default class OandaApi extends EventEmitter {
 
 				const normalized = symbols.map(symbol => {
 					const meta = metaData.find(m => m.name === symbol.name);
-
+				
 					return {
+						precision: symbol.precision,
+						img: '/images/default/symbol/spx500-70x70.png',
 						name: symbol.instrument,
 						displayName: symbol.displayName,
 						broker: BROKER_GENERAL_TYPE_OANDA,

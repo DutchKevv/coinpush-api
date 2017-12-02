@@ -172,33 +172,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		this._clearData(false);
 
 		this._chart.series[0].name = this.symbolModel.options.displayName;
-
-		// Listen for price change
-		// this._priceSubscription = this.symbolModel.options$.subscribe((options) => this._onPriceChange(options));
-
-		// Listen for orders change
-		// this._orderSubscription = this._orderService.orders$.subscribe((options) => this._updateOrders(options));
-
-		// if (this.instrumentModel.options.id) {
-		// 	this._fetchIndicators(ChartBoxComponent.DEFAULT_CHUNK_LENGTH, this._offset);
-		// } else {
-		// 	let subscription = this.instrumentModel.changed$.subscribe(() => {
-		// 		if (this.instrumentModel.options.id) {
-		// 			subscription.unsubscribe();
-		// 			this._fetchIndicators(ChartBoxComponent.DEFAULT_CHUNK_LENGTH, this._offset);
-		// 		}
-		// 	});
-		// }
-	}
-
-	placeOrder(event, side: number) {
-		event.preventDefault();
-
-		if (event.path[0].nodeName.toLowerCase() === 'input')
-			return;
-
-		const amount = parseFloat(event.currentTarget.querySelector('input').value);
-		this._orderService.create({ symbol: this.instrumentModel.options.symbol, side, amount });
 	}
 
 	public setZoom(amount) {
@@ -217,17 +190,10 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	public toggleTimeFrame(timeFrame: string) {
 		this.timeFrame = timeFrame;
 		this.init();
-		// this._fetchIndicators(ChartBoxComponent.DEFAULT_CHUNK_LENGTH, this._offset);
 	}
 
 	public addIndicator(name: string) {
 
-	}
-
-	public toggleLoading(state?: boolean) {
-		requestAnimationFrame(() => {
-			this.loadingRef.nativeElement.classList.toggle('active', !!state);
-		});
 	}
 
 	public reflow() {
@@ -241,13 +207,12 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		});
 	}
 
+	public toggleLoading(state?: boolean) {
+		this.loadingRef.nativeElement.classList.toggle('active', !!state);
+	}
+
 	private _createChart() {
 		this._zone.runOutsideAngular(() => {
-
-			// this._destroyChart();
-
-			const extremes = this._updateViewPort(0, true) || [];
-			const hasData = extremes[0] && extremes[1];
 
 			// create the chart
 			this._chart = Highstock.chart(this.chartRef.nativeElement, {
@@ -256,13 +221,9 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 					marginLeft: 4,
 					marginTop: 4,
 					marginBottom: 30
-					// marginRight: 5,
-					// padding: 0,
-					// spacing: [0, 0, 0, 0]
 				},
 				title: {
 					text: ''
-					// text: this.symbolModel.get('displayName')
 				},
 				subtitle: {
 					text: '',
@@ -280,8 +241,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 				},
 
 				xAxis: [{
-					min: extremes[0],
-					max: extremes[1],
 					minorGridLineWidth: 0,
 					lineColor: '#d2d2d5',
 					lineWidth: 1,
@@ -302,8 +261,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 						staggerLines: false,
 						y: 0
 					},
-					min: extremes[0],
-					max: extremes[1],
 					lineWidth: 0,
 					gridLineWidth: 1,
 					gridLineDashStyle: 'dot',
@@ -339,7 +296,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 					resize: {
 						enabled: true
 					},
-					plotLines: hasData ? [this._updateCurrentPricePlot(true)] : []
+					plotLines: []
 				}, {
 					opposite: true,
 					labels: {
@@ -363,9 +320,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 					{
 						id: 'main-series',
 						type: this.graphType,
-						// type: 'candles/tick',
 						name: this.symbolModel.options.displayName,
-						// data: ohlc,
 						data: this._data.candles,
 						// dataGrouping: {
 						// 	enabled: false
@@ -383,10 +338,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 				]
 			}, false, false);
 
-			// this._updateViewPort();
 			this.toggleLoading(false);
-			// this._updateIndicators();
-			// this._updateOrders(this._orderService.orders$.getValue());
 		});
 	}
 
@@ -447,7 +399,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		});
 	}
 
-	private _updateCurrentPricePlot(optionsOnly?: boolean) {
+	private _updateCurrentPricePlot(optionsOnly?: boolean, render: boolean = false) {
 		return this._zone.runOutsideAngular(() => {
 			let lastCandle = this._data.candles[this._data.candles.length - 1];
 
@@ -475,7 +427,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 				return options;
 
 			this._chart.yAxis[0].removePlotLine('cPrice', false, false);
-			this._chart.yAxis[0].addPlotLine(options, false, false);
+			this._chart.yAxis[0].addPlotLine(options, render, false);
 		});
 	}
 
@@ -671,11 +623,13 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	}
 
 	private _clearData(render: boolean = false) {
-		if (!this._chart.series[0] || !this._chart.series[1])
+		if (!this._chart || !this._chart.series[0] || !this._chart.series[1])
 			return;
 
 		this._chart.series[0].setData([], false, false);
 		this._chart.series[1].setData([], render, false);
+
+		this._chart.yAxis[0].removePlotLine('cPrice', false, false);
 	}
 
 	private _destroyChart() {

@@ -12,6 +12,7 @@ import { app } from '../app';
 import { Status } from '../schemas/status.schema';
 import { BROKER_GENERAL_TYPE_CC } from '../../../shared/constants/constants';
 import { timeFrameSteps } from '../../../shared/util/util.date';
+import * as ProgressBar from 'progress';
 
 const READ_COUNT_DEFAULT = 500;
 const HISTORY_COUNT_DEFAULT = 500;
@@ -98,36 +99,44 @@ export const cacheController = {
 	},
 
 	async sync() {
-		await dataLayer.setModels(app.broker.symbols);
-
 		// sync all candles in the DB until the current time
 		const bulkCount = 10;
 		const timeFrames = Object.keys(timeFrameSteps);
-		
-		let statuses = await Status.find({ timeFrame: {$in: timeFrames} }, {symbol: 1, lastSync: 1, timeFrame: 1});
-		
-		log.info('CacheController', `Syncing ${app.broker.symbols.length * timeFrames.length} collections`);
+		const total = app.broker.symbols.length * timeFrames.length;
+
+		const bar = new ProgressBar(`syncing ${total} symbols [:bar] :rate/ps :percent :etas`, {
+			complete: '=',
+			incomplete: ' ',
+			width: 20,
+			total
+		});
+
+		await dataLayer.setModels(app.broker.symbols);
+
+		let statuses = await Status.find({ timeFrame: { $in: timeFrames } }, { symbol: 1, lastSync: 1, timeFrame: 1 });
+
+		log.info('CacheController', `Syncing ${total} collections`);
 
 		for (let i = 0, len = app.broker.symbols.length; i < len; i += bulkCount) {
-			
+
 			// Get a group of symbols
 			let symbols = app.broker.symbols.slice(i, i + bulkCount);
 
 			// Create multi promise for each symbol * timeFrames
 			let pMultiList = symbols.map(symbol => {
-				
+
 				const statusArr = statuses.filter(status => status.symbol === symbol.name);
-				
+
 				return statusArr.map(status => {
 					const from = status.lastSync ? (new Date(status.lastSync)).getTime() : undefined;
 					const until = Date.now();
 					const count = status.lastSync ? undefined : HISTORY_COUNT_DEFAULT;
-	
-					return this.fetch({ symbol: symbol.name, timeFrame: status.timeFrame, from, until, count });
+
+					return this.fetch({ symbol: symbol.name, timeFrame: status.timeFrame, from, until, count }).then(() => bar.tick());
 				})
-				
+
 			});
-	
+
 			// Flatten promise list
 			let pList = [].concat(...pMultiList);
 

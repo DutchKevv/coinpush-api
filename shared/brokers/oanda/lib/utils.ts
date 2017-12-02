@@ -18,9 +18,6 @@ export function rateLimit(fn, context, rate, warningThreshold) {
 			return;
 		}
 		queue.push(arguments);
-		if (queue.length * rate > warningThreshold) {
-			console.warn("[WARNING] Rate limited function call will be delayed by", ((queue.length * rate) / 1000).toFixed(3), "secs");
-		}
 	};
 }
 

@@ -85,12 +85,10 @@ export default class CyrptoCompareApi extends EventEmitter {
                     type: SYMBOL_CAT_TYPE_CRYPTO,
                     name: coin.Name,
                     displayName: coin.CoinName,
-                    img: coin.ImageUrl,
+                    img: 'https://www.cryptocompare.com' + coin.ImageUrl,
                     broker: BROKER_GENERAL_TYPE_CC
                 });
             }
-
-            console.log(`Counted ${normalized.length} valid coins`)
 
             return normalized;
 
