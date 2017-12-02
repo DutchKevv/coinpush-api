@@ -78,6 +78,8 @@ export class ChartOverviewComponent implements OnInit, AfterViewInit, OnDestroy 
 
 				const symbol = this.cacheService.getBySymbol(params['symbol']);
 				this.setActiveSymbol(undefined, symbol || this.symbols[0]);
+				this._scrollIntoView(this.activeSymbol);
+				this.cd.detectChanges();
 			});
 		}, 0);
 	}
@@ -119,6 +121,13 @@ export class ChartOverviewComponent implements OnInit, AfterViewInit, OnDestroy 
 		event.stopPropagation();
 
 		this.userService.toggleFavoriteSymbol(symbol);
+	}
+
+	onClickAlarm(event) {
+		event.preventDefault();
+		event.stopPropagation();
+
+		this.activeMenu = 'alarm';
 	}
 
 	setActiveSymbol(event, symbol: SymbolModel) {

@@ -24,9 +24,9 @@
         <div class="table-header hidden-xs-down">
             <div>Instrument</div>
             <div>Diff</div>
-            <div>Bid</div>
-            <div>Ask</div>
+            <div>Bid / Ask</div>
             <div>H / L</div>
+            <div></div>
             <div></div>
         </div>
 
@@ -35,37 +35,39 @@
                 (click)="setActiveSymbol($event, symbol)">
 
                 <!-- <ng-container *ngIf="symbol.options$ | async as options"> -->
-                    <div>
-                        <img src="{{symbol.options.img}}" />
-                        <span>{{symbol.options.displayName}}</span>
-                    </div>
-                    <div>
-                        <span>1h</span>
-                        <span [ngClass]="{'text-positive': symbol.options.changedAmount > 0, 'text-negative': symbol.options.changedAmount < 0}">
-                            {{symbol.options.changedAmount}} %
-                        </span>
-                        <span>|</span>
-                        <span>24h</span>
-                        <span [ngClass]="{'text-positive': symbol.options.changedAmount > 0, 'text-negative': symbol.options.changedAmount < 0}">
-                            {{symbol.options.changedAmount}} %
-                        </span>
-                    </div>
-                    <div>
-                        <span>B {{symbol.options.bid || 0}}</span>
-                        <span>S {{symbol.options.ask || 0}}</span>
-                    </div>
+                <div>
+                    <img src="{{symbol.options.img}}" />
+                    <span>{{symbol.options.displayName}}</span>
+                </div>
+                <div>
+                    <span>1h</span>
+                    <span [ngClass]="{'text-positive': symbol.options.changedAmount > 0, 'text-negative': symbol.options.changedAmount < 0}">
+                        {{symbol.options.changedAmount}} %
+                    </span>
+                    <span>|</span>
+                    <span>24h</span>
+                    <span [ngClass]="{'text-positive': symbol.options.changedAmount > 0, 'text-negative': symbol.options.changedAmount < 0}">
+                        {{symbol.options.changedAmount}} %
+                    </span>
+                </div>
+                <div>
+                    <span>B {{symbol.options.bid || 0}}</span>
+                    <span>S {{symbol.options.ask || 0}}</span>
+                </div>
 
-                    <div *ngIf="symbol.options.halted">Market closed</div>
-                    <div *ngIf="!symbol.options.halted">H {{symbol.options.high | number : '1.2-2'}} / L {{symbol.options.low | number : '1.2-2'}}</div>
-                    <div>
+                <div *ngIf="symbol.options.halted"><span>Market closed</span></div>
+                <div *ngIf="!symbol.options.halted">
+                    <span>H {{symbol.options.high | number : '1.2-2'}} / L {{symbol.options.low | number : '1.2-2'}}</span>
+                </div>
+                <div>
 
-                    </div>
-                    <div>
-                        <i (click)="onClickToggleFavorite($event, symbol);" [ngClass]="{'active': userService.model.options.favorites.includes(symbol.options.name)}"
-                            class="fa fa-star"></i>
-                        <i (click)="activeMenu = 'alarm'" class="fa fa-bell"></i>
-                        <i class="fa fa-info-circle"></i>
-                    </div>
+                </div>
+                <div>
+                    <i (click)="onClickToggleFavorite($event, symbol);" [ngClass]="{'active': userService.model.options.favorites.includes(symbol.options.name)}"
+                        class="fa fa-star"></i>
+                    <i (click)="onClickAlarm($event)" class="fa fa-bell"></i>
+                    <i class="fa fa-info-circle"></i>
+                </div>
                 <!-- </ng-container> -->
             </li>
         </ul>

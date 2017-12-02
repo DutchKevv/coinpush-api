@@ -213,6 +213,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 	private _createChart() {
 		this._zone.runOutsideAngular(() => {
+			var self = this;
 
 			// create the chart
 			this._chart = Highstock.chart(this.chartRef.nativeElement, {
@@ -220,7 +221,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 					pinchType: 'x',
 					marginLeft: 4,
 					marginTop: 4,
-					marginBottom: 30
+					marginBottom: 25
 				},
 				title: {
 					text: ''
@@ -241,6 +242,11 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 				},
 
 				xAxis: [{
+					labels: {
+						step: 1, // Disable label rotating when there is not enough space
+						staggerLines: false,
+						y: 16
+					},
 					minorGridLineWidth: 0,
 					lineColor: '#d2d2d5',
 					lineWidth: 1,
@@ -256,11 +262,11 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 					ordinal: true
 				},
 				{
-					labels: {
-						step: 1, // Disable label rotating when there is not enough space
-						staggerLines: false,
-						y: 0
-					},
+					// labels: {
+					// 	step: 1, // Disable label rotating when there is not enough space
+					// 	staggerLines: false,
+					// 	y: 0
+					// },
 					lineWidth: 0,
 					gridLineWidth: 1,
 					gridLineDashStyle: 'dot',
@@ -285,13 +291,17 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 				yAxis: [{
 					opposite: true,
 					labels: {
-						align: 'left'
-						// x: 0
+						align: 'left',
+						x: 6,
+						formatter: function () {
+							return self._priceToFixed(this.value);
+						}
 					},
 					title: {
 						text: null
 					},
-					height: '60%',
+					// offset: 10,
+					height: '65%',
 					lineWidth: 1,
 					resize: {
 						enabled: true
@@ -301,14 +311,14 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 					opposite: true,
 					labels: {
 						align: 'left',
-						// x: 0
+						x: 6
 					},
 					title: {
 						text: null
 					},
-					top: '65%',
-					height: '35%',
-					offset: 0,
+					top: '70%',
+					height: '30%',
+					// offset: 10,
 					lineWidth: 1
 				}],
 
@@ -412,13 +422,15 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 				width: 1,
 				value: lastCandle[1],
 				label: {
-					text: '<div class="plot-label">' + lastCandle[1].toString() + '</div>',
+					text: '<div class="plot-label">' +  this._priceToFixed(lastCandle[1]) + '</div>',
 					useHTML: true,
 					align: 'right',
 					x: 40,
-					y: 2,
+					y: 4,
 					style: {
 						color: 'white',
+						background: 'red',
+						backgroundColo: 'red',
 					}
 				}
 			};
@@ -620,6 +632,17 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		this._updateViewPort(event.wheelDelta > 0 ? -shift : shift, false, true);
 
 		return false;
+	}
+
+	private _priceToFixed(number) {
+		let m = 0;
+		
+		if (this.symbolModel.options.precision) {
+			m = -Math.floor( Math.log(this.symbolModel.options.precision) / Math.log(10) + 1);
+			return number.toFixed(m);
+		}
+		
+		return number;
 	}
 
 	private _clearData(render: boolean = false) {

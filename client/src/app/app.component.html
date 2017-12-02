@@ -76,9 +76,9 @@
         <div class="header-search">
             <input (keyup)="onSearchKeyUp($event)" (focus)="onSearchKeyUp($event)" placeholder="Markets / Channels / People" #input>
             <div class="search-drop-down" *ngIf="(searchResults$ | async) as result" (click)="onClickDropdownItem()" #dropdown>
-                <a *ngFor="let symbol of result.symbols" [routerLink]="['/charts']" [queryParams]="{symbol: symbol.name}">
-                    <img src="/images/default/symbol/spx500-70x70.png">
-                    <span>{{symbol.name}}</span>
+                <a *ngFor="let symbol of result.symbols" [routerLink]="['/charts']" [queryParams]="{symbol: symbol.options.name}">
+                    <img src="{{symbol.options.img}}">
+                    <span>{{symbol.options.displayName}}</span>
                 </a>
                 <a *ngFor="let user of result.users" [routerLink]="['/user/', user.user_id]">
                     <img src="{{user.profileImg}}">

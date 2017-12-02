@@ -97,6 +97,6 @@ export class CacheService {
 
 	public getByText(text: string) {
 		text = text.trim().toLowerCase();
-		return this.symbols.filter(symbol => !console.log(symbol.options.displayName) && symbol.options.name.toLowerCase().indexOf(text) > -1 || symbol.options.displayName.toLowerCase().indexOf(text) > -1);
+		return this.symbols.filter(symbol => symbol.options.name.toLowerCase().indexOf(text) > -1 || symbol.options.displayName.toLowerCase().indexOf(text) > -1);
 	}
 }

@@ -56,9 +56,7 @@ export class AppComponent implements OnInit {
 			return;
 		}
 
-		const symbols = this._cacheService.getByText(value).slice(0, 5).map((symbol: SymbolModel) => ({
-			name: symbol.options.name
-		}));
+		const symbols = this._cacheService.getByText(value).slice(0, 5);
 
 		const currentResult = {
 			users: [],
