@@ -57,6 +57,7 @@
     "build-shared": "cd ./shared && npm run build",
     "build-user": "cd ./server-user && npm run build",
     "build-email": "cd ./server-email && npm run build",
-    "run-client": "cd ./client && npm start"
+    "run-client": "cd ./client && npm start",
+    "ibn": "npm run i && npm run build && npm run prod"
   }
 }

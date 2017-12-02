@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, ViewEncapsulation, AfterViewInit, OnInit, Output, ViewChild, ElementRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewEncapsulation, AfterViewInit, OnInit, Output, ViewChild, ElementRef, EventEmitter } from '@angular/core';
 import { AuthenticationService } from "./services/authenticate.service";
 import { SocketService } from "./services/socket.service";
 import { CacheService } from "./services/cache.service";
@@ -22,7 +22,7 @@ declare let Module: any;
 
 export class AppComponent implements OnInit {
 
-	@Output() public ready$: Subject<boolean> = new Subject();
+	@Output() public filterClick$: EventEmitter<boolean> = new EventEmitter();
 
 	@Output() public searchResults$: Subject<any> = new Subject();
 	@ViewChild('input') public input;
@@ -43,7 +43,7 @@ export class AppComponent implements OnInit {
 		
 		this.router.events.subscribe((val) => {
 			if (val instanceof NavigationStart)
-				this.collapseNav(undefined, false);
+				this.toggleNav(undefined, false);
 		});
 
 	}
@@ -87,11 +87,7 @@ export class AppComponent implements OnInit {
 		}
 	}
 
-	public logout(): void {
-		this._authenticationService.logout();
-	}
-
-	public collapseNav(event?, state?: boolean) {
+	public toggleNav(event?, state?: boolean) {
 		if (event) {
 			event.preventDefault();
 			event.stopPropagation();
@@ -100,7 +96,20 @@ export class AppComponent implements OnInit {
 		this.navbar.nativeElement.classList.toggle('show', state);
 	}
 
+	public onClickFilter(event?, state?: boolean) {
+		if (event) {
+			event.preventDefault();
+			event.stopPropagation();
+		}
+
+		this.filterClick$.emit(true);
+	}
+
 	public onClickOverlay() {
-		this.collapseNav(undefined, false);
+		this.toggleNav(undefined, false);
+	}
+
+	public logout(): void {
+		this._authenticationService.logout();
 	}
 }

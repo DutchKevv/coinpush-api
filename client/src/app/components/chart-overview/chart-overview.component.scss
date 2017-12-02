@@ -21,7 +21,8 @@
 .instrument-list-outer {
     height: 50%;
     display: flex;
-	background: $background-light;
+    background: $background-light;
+    position: relative;
 
     ul {
         overflow: auto;
@@ -150,26 +151,24 @@
 
 .filter-list {
 	background: black;
-	width: 200px;
 	overflow: auto;
 	padding: 6px;
 
-	transition: transform .2s ease-in-out;
+    display: none;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1001;
 
-	@media only screen and (max-width : 768px) {
-        position: absolute;
-        top: 0;
-        transform: translateX(-250px);
-        bottom: 0;
-        z-index: 1001;
+    &.show {
+        display: block;
+    }
 
-        &.show {
-            transform: translateX(0);
-
-            + .nav-overlay {
-                display: block;
-            }
-        }
+	@media only screen and (min-width : 768px) {
+        position: static;
+        width: 200px;
 	}
 
 	a {

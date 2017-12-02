@@ -8,7 +8,10 @@
     "start2": "ng serve --aot --proxy proxy.conf.json --host 0.0.0.0 --no-sourcemaps",
     "start": "ng build --watch --aot --proxy proxy.conf.json --host 0.0.0.0 --no-sourcemaps",
     "build": "ng build --prod --env=prod",
-    "build-verbose": "ng build --prod --env=prod --verbose > build.txt"
+    "build-verbose": "ng build --prod --env=prod --verbose > build.txt",
+    "build-android": "cordova build android",
+    "emulate-android": "cordova emulate android",
+    "run-android": "cordova run android"
   },
   "author": "Apache Cordova Team",
   "license": "Apache-2.0",

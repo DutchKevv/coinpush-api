@@ -60,6 +60,7 @@ export class ChartOverviewComponent implements OnInit, AfterViewInit, OnDestroy 
 	}
 
 	ngOnInit() {
+		console.log(this._route);
 		this.activeSymbol = this.cacheService.getBySymbol(this._route.snapshot.queryParams['symbol']) || this.cacheService.symbols[0];
 	}
 

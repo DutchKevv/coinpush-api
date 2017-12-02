@@ -55,9 +55,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	@ViewChild('chart') private chartRef: ElementRef;
 	@ViewChild('loading') private loadingRef: ElementRef;
 
-	@Output() public viewState$: BehaviorSubject<any> = new BehaviorSubject('windowed');
-
-	public viewState = 'windowed';
 	public graphType = 'ohlc';
 	public zoom = 2;
 	public timeFrame = 'H1';
@@ -108,12 +105,12 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 			candles[i / rowLength] = [
 				data[i],
-				data[i + 2], // open
-				data[i + 4], // high
-				data[i + 6], // low
-				data[i + 8] // close
+				data[i + 1], // open
+				data[i + 3], // high
+				data[i + 5], // low
+				data[i + 7] // close
 			];
-			
+
 			volume[i / rowLength] = [
 				data[i],
 				data[i + 9] // the volume
@@ -145,6 +142,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	}
 
 	ngOnInit() {
+		this._createChart();
 	}
 
 	ngAfterViewInit() {
@@ -159,8 +157,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		if (!this.symbolModel && !this.instrumentModel)
 			return;
 
-		this._destroy();
-
 		if (this.instrumentModel) {
 			if (!this.symbolModel)
 				this.symbolModel = this._cacheService.getBySymbol(this.instrumentModel.options.symbol);
@@ -172,6 +168,10 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		}
 
 		this._fetchCandles();
+
+		this._clearData(false);
+
+		this._chart.series[0].name = this.symbolModel.options.displayName;
 
 		// Listen for price change
 		// this._priceSubscription = this.symbolModel.options$.subscribe((options) => this._onPriceChange(options));
@@ -244,9 +244,10 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	private _createChart() {
 		this._zone.runOutsideAngular(() => {
 
-			this._destroyChart();
+			// this._destroyChart();
 
 			const extremes = this._updateViewPort(0, true) || [];
+			const hasData = extremes[0] && extremes[1];
 
 			// create the chart
 			this._chart = Highstock.chart(this.chartRef.nativeElement, {
@@ -279,12 +280,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 				},
 
 				xAxis: [{
-					labels: {
-						step: 1, // Disable label rotating when there is not enough space
-						staggerLines: false,
-						format: '{value:%d-%m %H:%M}',
-						y: 14
-					},
 					min: extremes[0],
 					max: extremes[1],
 					minorGridLineWidth: 0,
@@ -305,6 +300,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 					labels: {
 						step: 1, // Disable label rotating when there is not enough space
 						staggerLines: false,
+						y: 0
 					},
 					min: extremes[0],
 					max: extremes[1],
@@ -343,9 +339,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 					resize: {
 						enabled: true
 					},
-					plotLines: [
-						this._updateCurrentPricePlot(true)
-					]
+					plotLines: hasData ? [this._updateCurrentPricePlot(true)] : []
 				}, {
 					opposite: true,
 					labels: {
@@ -441,9 +435,12 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 				this._data.candles = data.candles;
 				this._data.volume = data.volume;
 
-				if (!this._chart)
-					this._createChart();
+				this._chart.series[0].setData(this._data.candles, false);
+				this._chart.series[1].setData(this._data.volume, false);
 
+				this._updateCurrentPricePlot();
+				this._updateViewPort(0, false, true);
+				this.toggleLoading(false);
 			} catch (error) {
 				console.log('error error error', error);
 			}
@@ -653,89 +650,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		return Math.floor(el.clientWidth / barW);
 	}
 
-	public getStyles(): any {
-		return {
-			x: parseInt(this._elementRef.nativeElement.getAttribute('data-x'), 10) || 0,
-			y: parseInt(this._elementRef.nativeElement.getAttribute('data-y'), 10) || 0,
-			z: parseInt(this._elementRef.nativeElement.style.zIndex, 10) || 1,
-			w: this._elementRef.nativeElement.clientWidth,
-			h: this._elementRef.nativeElement.clientHeight
-		};
-	}
-
-	public setStyles(styles?: { x?: any, y?: any, z?: any, w?: any, h?: any }, redraw = false): void {
-		let diffs = BaseModel.getObjectDiff(styles, this.getStyles()),
-			obj: any = {};
-
-		if (!diffs.length)
-			return;
-
-		// Filter out changes
-		diffs.forEach(key => {
-			switch (key) {
-				case 'x':
-				case 'y':
-					this._elementRef.nativeElement.setAttribute('data-x', styles.x);
-					this._elementRef.nativeElement.setAttribute('data-y', styles.y);
-					obj.transform = `translate(${styles.x}px, ${styles.y}px)`;
-					break;
-				case 'z':
-					obj.zIndex = styles[key];
-					break;
-				case 'w':
-				case 'h':
-					obj.width = parseInt(styles.w, 10) + 'px';
-					obj.height = parseInt(styles.h, 10) + 'px';
-
-					this.toggleViewState('windowed');
-
-					if (redraw) {
-						this._elementRef.nativeElement.classList.add('black');
-						setTimeout(() => {
-							this._updateViewPort();
-
-							this._elementRef.nativeElement.classList.remove('black');
-						}, 0);
-					}
-					break;
-			}
-		});
-
-		// Apply multiple styles in 1 go
-		// TODO: Check if really is faster then setting props 1 by 1
-		Object.assign(this._elementRef.nativeElement.style, obj);
-
-		this.storeStyles();
-	}
-
-	public storeStyles() {
-		if (this.instrumentModel.options.id)
-			localStorage.setItem(`instrument-${this.instrumentModel.options.id}-p`, JSON.stringify(this.getStyles()));
-	}
-
-	public toggleViewState(viewState: string | boolean, render = false) {
-		let elClassList = this._elementRef.nativeElement.classList;
-
-		if (typeof viewState === 'string') {
-
-			if (this.viewState !== viewState) {
-
-				elClassList.remove(this.viewState);
-				elClassList.add(viewState);
-
-				this.viewState = viewState;
-
-				this.viewState$.next(this.viewState);
-				this.reflow();
-			}
-		} else {
-			this.viewState = viewState ? 'windowed' : 'minimized';
-			elClassList.toggle('minimized', !viewState);
-		}
-
-		// this._ref.markForCheck();
-	}
-
 	private _onPriceChange(options: any) {
 		this._updateCurrentPricePlot();
 	}
@@ -756,21 +670,12 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		return false;
 	}
 
-	private _prepareData(data: any) {
-		let length = data.length,
-			volume = new Array(length),
-			i = 0;
+	private _clearData(render: boolean = false) {
+		if (!this._chart.series[0] || !this._chart.series[1])
+			return;
 
-		for (; i < length; i += 1)
-			volume[i] = [
-				data[i][0], // Date
-				data[i].pop() // Volume
-			];
-
-		return {
-			candles: data,
-			volume: volume
-		};
+		this._chart.series[0].setData([], false, false);
+		this._chart.series[1].setData([], render, false);
 	}
 
 	private _destroyChart() {
