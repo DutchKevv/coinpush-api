@@ -58,15 +58,13 @@
                 <div *ngIf="!symbol.options.halted">
                     <span>H {{symbol.options.high | number : '1.2-2'}} / L {{symbol.options.low | number : '1.2-2'}}</span>
                 </div>
-                <a class="more-arrow">
-                    <i class="fa fa-arrow-right"></i>
-                </a>
-                <!-- <div>
+                <i class="fa fa-arrow-right more-arrow hidden-lg-up" (click)="onClickMore($event)"></i>
+                <div class="more-container" #more>
                     <i (click)="onClickToggleFavorite($event, symbol);" [ngClass]="{'active': userService.model.options.favorites.includes(symbol.options.name)}"
                         class="fa fa-star"></i>
                     <i (click)="onClickAlarm($event)" class="fa fa-bell"></i>
                     <i class="fa fa-info-circle"></i>
-                </div> -->
+                </div>
             </li>
         </ul>
     </div>

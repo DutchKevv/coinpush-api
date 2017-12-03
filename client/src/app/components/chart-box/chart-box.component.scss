@@ -118,16 +118,15 @@ line-height: 24px;
 
             i.fa {
                 line-height: 24px;
+                font-size: 18px;
                 display: block;
             }
 
-            @media screen and (max-width: 768px) {
-                font-size: 16px;
-
-                i.fa {
-                    line-height: 25px;
-                }
-            }
+            // @media screen and (max-width: 768px) {
+            //     i.fa {
+            //         line-height: 25px;
+            //     }
+            // }
 
             &.dropdown-toggle {
                 span {

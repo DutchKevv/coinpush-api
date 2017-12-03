@@ -148,6 +148,15 @@ export class ChartOverviewComponent implements OnInit, AfterViewInit, OnDestroy 
 		this.activeMenu = 'alarm';
 	}
 
+	onClickMore(event) {
+		event.preventDefault();
+		event.stopPropagation();
+
+		console.log(event.currentTarget, event.target);
+
+		event.currentTarget.parentNode.classList.toggle('open');
+	}
+
 	setActiveSymbol(event, symbol: SymbolModel) {
 		if (event) {
 			event.preventDefault();

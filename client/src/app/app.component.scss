@@ -331,6 +331,14 @@ ul {
             &:hover {
                 background: $general-secondary;
             }
+
+            &:active {
+                background: blue;
+            }
+
+            &:focus {
+                background: blue;
+            }
         }
     }
 }

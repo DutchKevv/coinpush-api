@@ -56,7 +56,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	@ViewChild('loading') private loadingRef: ElementRef;
 
 	public graphType = 'candlestick';
-	// public graphType = 'ohlc';
 	public zoom = 2;
 	public timeFrame = 'H1';
 
@@ -222,7 +221,13 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 					pinchType: 'x',
 					marginLeft: 4,
 					marginTop: 1,
-					marginBottom: 25
+					marginBottom: 25,
+
+					resetZoomButton: {
+						theme: {
+							display: 'none'
+						}
+					}
 				},
 
 				title: {
@@ -242,12 +247,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 				legend: {
 					enabled: false
-				},
-
-				resetZoomButton: {
-					theme: {
-						display: 'none'
-					}
 				},
 
 				tooltip: {
@@ -379,7 +378,9 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 			this._scrollOffset = offset;
 
 			let firstBar = (data[data.length - viewable - offset] || data[0]),
-				lastBar = data[data.length - 1 - offset];
+				lastBar = data[data.length - 1 - offset] || data[data.length - 1];
+
+			console.log(firstBar, lastBar);
 
 			if (!firstBar || !lastBar)
 				return;
@@ -388,7 +389,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 				return [firstBar[0], lastBar[0]];
 
 			if (this._chart)
-				this._chart.xAxis[0].setExtremes(firstBar[0], lastBar[0], render, true);
+				this._chart.xAxis[0].setExtremes(firstBar[0], lastBar[0], render, false);
 		});
 	}
 
@@ -436,10 +437,10 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 				dashStyle: 'dot',
 				value: lastCandle[1],
 				label: {
-					text: '<div class="plot-label;" style="font-size:10px; padding: 2px;">' + price + '</div>',
+					text: '<div class="plot-label;" style="font-size:10px; padding: 2px;"><span style="color: rgb(8, 84, 128); font-size: 27px; position: absolute; left: -16px; top: -9px;">&#x25C4;</span>' + price + '</div>',
 					useHTML: true,
 					align: 'right',
-					x: 6.1 * price.toString().length,
+					x: (6.1 * price.toString().length) + 4,
 					y: 4,
 					style: {
 						color: 'white',
