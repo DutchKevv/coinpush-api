@@ -241,10 +241,25 @@ line-height: 24px;
 }
 
 .plot-label {
-    border: 0 none;
-    background-color: rgba(0, 0, 0, 1);
-    color: green;
+    font-size: 9px; 
+    padding: 1px;
+    
+    background-color: #0059de;
+    color: white;
     border-radius: 2px;
-    padding: 0 3px;
     text-align: center;
+    position: relative;
+
+    &:after {
+        height:0;
+        width:0;
+        position:absolute;
+        left: -11px;
+        top: 0;
+        border: 6px solid transparent;
+        border-right-color: #0059de;
+        padding: 0px;
+        z-index: 101;
+        content: '';
+    }
   }

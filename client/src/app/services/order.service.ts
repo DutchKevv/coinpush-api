@@ -13,11 +13,6 @@ export class OrderService {
 
 	@Output() public orders$: BehaviorSubject<Array<OrderModel>> = new BehaviorSubject([]);
 
-	private _audio = {
-		fail: new Audio('/assets/sounds/fail.mp3'),
-		success: new Audio('/assets/sounds/success.mp3'),
-	};
-
 	constructor(private _cacheService: CacheService,
 		private _userService: UserService,
 		private _alertService: AlertService,
@@ -53,7 +48,8 @@ export class OrderService {
 				this.orders$.next(orders);
 
 				// Play success sound
-				this._audio.success.play();
+				let audio = new Audio('/assets/sounds/success.mp3')
+				audio.play();
 
 				// Show conformation box
 				this._alertService.success('Order set');
@@ -61,7 +57,8 @@ export class OrderService {
 				console.log(error);
 
 				// Play fail sound
-				this._audio.fail.play();
+				let audio = new Audio('/assets/sounds/fail.mp3')
+				audio.play();
 
 				// Try parsing information about failure
 				try {

@@ -50,8 +50,7 @@
                     </span>
                 </div>
                 <div>
-                    <span>B {{symbol.options.bid || 0}}</span>
-                    <span>S {{symbol.options.ask || 0}}</span>
+                    <span>{{symbol.options.bid || 0}}</span>
                 </div>
 
                 <div *ngIf="symbol.options.halted"><span>Market closed</span></div>

@@ -37,7 +37,7 @@ import '../../style/highcharts/highstock.theme.dark';
 	styleUrls: [
 		'./chart-box.component.scss'
 	],
-	// encapsulation: ViewEncapsulation.Native,
+	encapsulation: ViewEncapsulation.None,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	entryComponents: [DialogComponent]
 })
@@ -55,7 +55,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	@ViewChild('chart') private chartRef: ElementRef;
 	@ViewChild('loading') private loadingRef: ElementRef;
 
-	public graphType = 'candlestick';
+	public graphType = 'ohlc';
 	public zoom = 2;
 	public timeFrame = 'H1';
 
@@ -380,7 +380,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 			let firstBar = (data[data.length - viewable - offset] || data[0]),
 				lastBar = data[data.length - 1 - offset] || data[data.length - 1];
 
-			console.log(firstBar, lastBar);
+			// console.log(firstBar, lastBar);
 
 			if (!firstBar || !lastBar)
 				return;
@@ -437,15 +437,11 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 				dashStyle: 'dot',
 				value: lastCandle[1],
 				label: {
-					text: '<div class="plot-label;" style="font-size:10px; padding: 2px;"><span style="color: rgb(8, 84, 128); font-size: 27px; position: absolute; left: -16px; top: -9px;">&#x25C4;</span>' + price + '</div>',
+					text: '<div class="plot-label">' + price + '</div>',
 					useHTML: true,
 					align: 'right',
-					x: (6.1 * price.toString().length) + 4,
-					y: 4,
-					style: {
-						color: 'white',
-						background: 'rgb(8, 84, 128)'
-					}
+					x: (6 * price.toString().length),
+					y: 4
 				}
 			};
 

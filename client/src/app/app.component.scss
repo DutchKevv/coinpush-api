@@ -147,7 +147,7 @@ header {
 
     transition: transform .2s ease-in-out;
 
-    @media only screen and (max-width : 768px) {
+    @media only screen and (max-width : 992px) {
         position: absolute;
         top: 0;
         transform: translateX(-250px);
