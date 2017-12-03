@@ -55,8 +55,8 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	@ViewChild('chart') private chartRef: ElementRef;
 	@ViewChild('loading') private loadingRef: ElementRef;
 
-	public graphType = 'ohlc';
-	public zoom = 2;
+	public graphType = 'line';
+	public zoom = 1;
 	public timeFrame = 'H1';
 
 	$el: any;
@@ -88,21 +88,14 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	public static readonly VIEW_STATE_STRETCHED = 2;
 	public static readonly VIEW_STATE_MINIMIZED = 3;
 
-	public static _prepareData(data: any) {
+	private _prepareData(data: any) {
 		let i = 0,
 			rowLength = 10,
 			length = data.length,
 			volume = new Array(length / rowLength),
 			candles = new Array(length / rowLength);
 
-
-		let prevtime = 0;
 		for (; i < length; i += rowLength) {
-			if (data[i] <= prevtime)
-				throw new Error(`${prevtime} / ${data[i]}`);
-
-			prevtime = data[i];
-
 			candles[i / rowLength] = [
 				data[i],
 				data[i + 1], // open
@@ -133,16 +126,19 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 	ngOnChanges(changes: SimpleChanges) {
 
+		if (!this._chart)
+			this._createChart();
+
+		this.init();
+
 		if (changes.symbolModel) {
 			this.instrumentModel = null;
 			this.symbolModel = changes.symbolModel.currentValue;
-
-			setTimeout(() => this.init(), 0);
 		}
 	}
 
 	ngOnInit() {
-		this._createChart();
+		// this._createChart();
 	}
 
 	ngAfterViewInit() {
@@ -169,7 +165,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 		this._fetchCandles();
 
-		this._clearData(false);
+		// this._clearData(true);
 
 		this._chart.series[0].name = this.symbolModel.options.displayName;
 	}
@@ -183,8 +179,15 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		if (!this._chart)
 			return;
 
+		if (type === 'line') {
+			this._chart.series[0].setData(this._data.candles.map(candle => [candle[0], candle[1]]), false);
+		} else if (this.graphType === 'line') {
+			this._chart.series[0].setData(this._data.candles, false);
+		}
+
 		this.graphType = type;
-		this._chart.series[0].update({ type });
+
+		this._chart.series[0].update({ type }, true, false);
 	}
 
 	public toggleTimeFrame(timeFrame: string) {
@@ -208,7 +211,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	}
 
 	public toggleLoading(state?: boolean) {
-		this.loadingRef.nativeElement.classList.toggle('active', !!state);
+		// this.loadingRef.nativeElement.classList.toggle('active', !!state);
 	}
 
 	private _createChart() {
@@ -388,15 +391,17 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 			if (optionsOnly)
 				return [firstBar[0], lastBar[0]];
 
+			console.log(firstBar, lastBar);
 			if (this._chart)
 				this._chart.xAxis[0].setExtremes(firstBar[0], lastBar[0], render, false);
+			// this._chart.redraw();
 		});
 	}
 
 	private _fetchCandles() {
 		this._zone.runOutsideAngular(async () => {
 			try {
-				let data: any = ChartBoxComponent._prepareData(await this._cacheService.read({
+				let data: any = this._prepareData(await this._cacheService.read({
 					symbol: this.symbolModel.options.name,
 					timeFrame: this.timeFrame,
 					until: this.instrumentModel.options.type === 'backtest' && this.instrumentModel.options.status.progress < 1 ? this.instrumentModel.options.from : this.instrumentModel.options.until,
@@ -550,13 +555,13 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 						style: {
 							// 'font-size': '9px',
 							// padding: '1px',
-							
+
 							// 'background': '#0059de',
 							// color: 'white',
 							// 'border-radius': '2px',
 							// 'text-align': 'center',
 							// position: 'relative',
-						
+
 							// after: {
 							// 	height: 0,
 							// 	width: 0,
@@ -639,7 +644,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 	private _calculateViewableBars(checkParent = true) {
 		let el = this._elementRef.nativeElement,
-			barW = 3 * this.zoom;
+			barW = 6 * this.zoom;
 
 		return Math.floor(el.clientWidth / barW);
 	}

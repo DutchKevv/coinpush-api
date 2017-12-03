@@ -46,6 +46,8 @@ export class ChartOverviewComponent implements OnInit, AfterViewInit, OnDestroy 
 	public activeMenu: string = null;
 
 	private _routeSub;
+	private _filterSub;
+	private _priceChangeSub;
 
 	constructor(
 		public instrumentsService: InstrumentsService,
@@ -57,15 +59,13 @@ export class ChartOverviewComponent implements OnInit, AfterViewInit, OnDestroy 
 		private _route: ActivatedRoute,
 		private _router: Router,
 		private _orderService: OrderService,
-		private applicationRef: ApplicationRef, 
-		injector: Injector
+		private _applicationRef: ApplicationRef
 	) {
-		console.log(applicationRef.components[0].instance.filterClick$.subscribe(() => this.toggleFilterNav()));
-		// this.appElementRef = injector.get(applicationRef.componentTypes[0]).elementRef;
 	}
 
 	ngOnInit() {
-		console.log(this._route);
+		this._filterSub = this._applicationRef.components[0].instance.filterClick$.subscribe(() => this.toggleFilterNav());
+		this._priceChangeSub = this.cacheService.changed$.subscribe(changedSymbols => this._onPriceChange(changedSymbols));
 		this.activeSymbol = this.cacheService.getBySymbol(this._route.snapshot.queryParams['symbol']) || this.cacheService.symbols[0];
 	}
 
@@ -98,7 +98,7 @@ export class ChartOverviewComponent implements OnInit, AfterViewInit, OnDestroy 
 		this.filterRef.nativeElement.classList.toggle('show', state);
 	}
 
-	toggleActiveFilter(filter: string) {
+	public toggleActiveFilter(filter: string) {
 		this.activeFilter = filter;
 		this.activeMenu = null;
 
@@ -152,8 +152,6 @@ export class ChartOverviewComponent implements OnInit, AfterViewInit, OnDestroy 
 		event.preventDefault();
 		event.stopPropagation();
 
-		console.log(event.currentTarget, event.target);
-
 		event.currentTarget.parentNode.classList.toggle('open');
 	}
 
@@ -162,7 +160,7 @@ export class ChartOverviewComponent implements OnInit, AfterViewInit, OnDestroy 
 			event.preventDefault();
 			event.stopPropagation();
 		}
-		
+
 		this.activeSymbol = symbol;
 		this._router.navigate(['/charts'], { skipLocationChange: false, queryParams: { symbol: symbol.options.name } });
 
@@ -202,11 +200,21 @@ export class ChartOverviewComponent implements OnInit, AfterViewInit, OnDestroy 
 		this.activeSymbol = symbolModel;
 	}
 
+	private _onPriceChange(changedSymbols) {
+		this.cd.detectChanges();
+	}
+
 	addIndicator(name: string) {
 
 	}
 
 	ngOnDestroy() {
+		if (this._priceChangeSub)
+			this._priceChangeSub.unsubscribe();
+
+		if (this._filterSub)
+			this._filterSub.unsubscribe();
+
 		if (this._routeSub)
 			this._routeSub.unsubscribe();
 	}

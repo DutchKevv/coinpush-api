@@ -2,7 +2,7 @@
 	<h5 class="chart-title">{{symbolModel.options.name}}</h5>
 
 	<ul class="header-buttons">
-		<li>
+		<li class="hidden-lg-down">
 			<button (click)="setZoom(-1)" [ngClass]="{'active': symbolModel.options.zoom === 1}" type="button" class="text-dark button-zoom-out btn-menu"
 			 aria-expanded="false">
 				<i class="fa fa-search-minus">
@@ -10,22 +10,28 @@
 			</button>
 		</li>
 
-		<li>
+		<li class="hidden-lg-down">
 			<button (click)="setZoom(1)" [ngClass]="{'active': symbolModel.options.zoom === 10}" type="button" class="text-dark btn-menu button-zoom-in"
 			 aria-expanded="false">
 				<i class="fa fa-search-plus"></i>
 			</button>
 		</li>
 		<li>
-			<button (click)="changeGraphType('ohlc')" type="button" class="text-dark button-ohlc btn-menu" [ngClass]="{'active': symbolModel.options.graphType === 'ohlc'}"
+			<button (click)="changeGraphType('line')" type="button" class="text-dark button-ohlc btn-menu" [ngClass]="{'active': symbolModel.options.graphType === 'line'}"
 			 aria-expanded="false">
 				<i class="fa fa-line-chart"></i>
 			</button>
 		</li>
 		<li>
+			<button (click)="changeGraphType('ohlc')" type="button" class="text-dark button-ohlc btn-menu" [ngClass]="{'active': symbolModel.options.graphType === 'ohlc'}"
+			 aria-expanded="false">
+				<i class="fa fa-bar-chart"></i>
+			</button>
+		</li>
+		<li>
 			<button (click)="changeGraphType('candlestick')" [ngClass]="{'active': symbolModel.options.graphType === 'candlestick'}" type="button"
 			 class="text-dark button-candlestick btn-menu">
-				<i class="fa fa-bar-chart"></i>
+				<i class="fa fa-area-chart"></i>
 			</button>
 		</li>
 		<li class="dropdown">
@@ -119,7 +125,7 @@
 		</a>
 	</div> -->
 
-<div class="spinner-container active" #loading>
+<div class="spinner-container" #loading>
 	<div class="spinner">
 		<div class="dot1"></div>
 		<div class="dot2"></div>

@@ -9,8 +9,14 @@ import * as Constants from '../../constants/constants';
 import { ORDER_TYPE_IF_TOUCHED, ORDER_TYPE_LIMIT, ORDER_TYPE_MARKET, ORDER_TYPE_STOP, BROKER_GENERAL_TYPE_CC, SYMBOL_CAT_TYPE_CRYPTO } from '../../constants/constants';
 import * as request from 'request-promise';
 import { symbols } from './symbols';
+import * as io from 'socket.io-client';
+import { CCC } from './util.cc';
+
+let currentPrice = {};
 
 export default class CyrptoCompareApi extends EventEmitter {
+
+    private _socket: any;
 
     public static readonly FAVORITE_SYMBOLS = [
         'EUR_USD',
@@ -49,6 +55,7 @@ export default class CyrptoCompareApi extends EventEmitter {
     }
 
     public subscribeEventStream(callback: Function) {
+
         this._client.subscribeEvents(event => callback(event));
     }
 
@@ -57,13 +64,39 @@ export default class CyrptoCompareApi extends EventEmitter {
     }
 
     public subscribePriceStream(symbols: Array<string>): void {
-        this._client.subscribePrices(this.options.accountId, symbols, tick => {
-            this.emit('tick', tick);
+        this._socket = io.connect('https://streamer.cryptocompare.com/');
+        //Format: {SubscriptionId}~{ExchangeName}~{FromSymbol}~{ToSymbol}
+        //Use SubscriptionId 0 for TRADE, 2 for CURRENT and 5 for CURRENTAGG
+        //For aggregate quote updates use CCCAGG as market
+        const subs = symbols.map(symbol => `5~CCCAGG~${symbol}~USD`);
+        
+        this._socket.on("m", (message) => {
+            
+            var messageType = message.substring(0, message.indexOf("~"));
+            var res: any = {};
+            
+            if (messageType == CCC.STATIC.TYPE.CURRENTAGG) { 
+            // if (messageType == CCC.STATIC.TYPE.CURRENTAGG) { 
+                res = CCC.CURRENT.unpack(message);
+                // console.log(typeof res, res);
+
+                if (res.PRICE && res.LASTUPDATE) {
+                    this.emit('tick', {
+                        time: res.LASTUPDATE * 1000,
+                        instrument: res.FROMSYMBOL,
+                        bid: res.PRICE,
+                        ask: res.PRICE,
+                    })
+                }
+                // dataUnpack(res);
+            }
         });
+
+        this._socket.emit('SubAdd', { subs });
     }
 
     public unsubscribePriceStream(instruments) {
-        this._client.unsubscribePrices(this.options.accountId, instruments, tick => this.emit('tick', tick));
+       
     }
 
     public async getSymbols(): Promise<Array<any>> {
@@ -131,10 +164,10 @@ export default class CyrptoCompareApi extends EventEmitter {
             })
 
             let candles = new Float64Array(result.Data.length * 10);
-           
+
             result.Data.forEach((candle, index) => {
                 const startIndex = index * 10;
-                
+
                 candles[startIndex] = candle.time * 1000;
                 candles[startIndex + 1] = candle.open;
                 candles[startIndex + 2] = candle.open;
@@ -273,3 +306,28 @@ export default class CyrptoCompareApi extends EventEmitter {
         }
     }
 }
+
+
+function dataUnpack(data) {
+    var from = data['FROMSYMBOL'];
+    var to = data['TOSYMBOL'];
+    var fsym = CCC.STATIC.CURRENCY.getSymbol(from);
+    var tsym = CCC.STATIC.CURRENCY.getSymbol(to);
+    var pair = from + to;
+    console.log(data);
+
+    if (!currentPrice.hasOwnProperty(pair)) {
+        currentPrice[pair] = {};
+    }
+
+    for (var key in data) {
+        currentPrice[pair][key] = data[key];
+    }
+
+    if (currentPrice[pair]['LASTTRADEID']) {
+        currentPrice[pair]['LASTTRADEID'] = parseInt(currentPrice[pair]['LASTTRADEID']).toFixed(0);
+    }
+    currentPrice[pair]['CHANGE24HOUR'] = CCC.convertValueToDisplay(tsym, (currentPrice[pair]['PRICE'] - currentPrice[pair]['OPEN24HOUR']));
+    currentPrice[pair]['CHANGE24HOURPCT'] = ((currentPrice[pair]['PRICE'] - currentPrice[pair]['OPEN24HOUR']) / currentPrice[pair]['OPEN24HOUR'] * 100).toFixed(2) + "%";;
+    // displayData(currentPrice[pair], from, tsym, fsym);
+};

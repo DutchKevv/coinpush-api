@@ -126,6 +126,14 @@
                         color: $general-active;
                     }
                 }
+
+                @media only screen and (min-width : 992px) { 
+                    position: static;
+                    transition: none;
+                    -webkit-transform: none;
+                    transform: none;
+                    justify-content: space-around;
+                }
             }
 
             > div:nth-child(2) {

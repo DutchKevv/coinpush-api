@@ -25,7 +25,7 @@ export const app = {
 	broker: <BrokerMiddleware>null,
 
 	_tickInterval: null,
-	_tickIntervalTime: 1000,
+	_tickIntervalTime: 500,
 
 	async init(): Promise<void> {
 
@@ -68,6 +68,9 @@ export const app = {
 			return clearInterval(this._tickInterval);
 
 		this._tickInterval = setInterval(() => {
+			if (!Object.keys(cacheController.tickBuffer).length)
+				return;
+
 			this.io.sockets.emit('ticks', cacheController.tickBuffer);
 
 			cacheController.tickBuffer = {};

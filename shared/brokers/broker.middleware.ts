@@ -24,7 +24,7 @@ export class BrokerMiddleware extends EventEmitter {
         super();
 
         this._installBrokerOanda();
-        this._installBrokerIb();
+        // this._installBrokerIb();
         this._installBrokerCC();
     }
 
@@ -77,6 +77,9 @@ export class BrokerMiddleware extends EventEmitter {
 
         this._brokers.oanda.on('tick', tick => this.emit('tick', tick));
         this._brokers.oanda.subscribePriceStream(brokers.oanda);
+
+        this._brokers.cc.on('tick', tick => this.emit('tick', tick));
+        this._brokers.cc.subscribePriceStream(brokers.cc);
     }
 
     public splitSymbolsToBrokers(symbols: Array<string>): { oanda: Array<string>, cc: Array<string> } {

@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="com.example.app" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>App</name>
+    <name>CoinPush</name>
     <description>
-        A sample Apache Cordova application that responds to the deviceready event.
+        Stock trading application with custom alarams
     </description>
-    <author email="dev@cordova.apache.org" href="http://cordova.io">
+    <author email="kewin@frontend-freelance.com" href="">
         Apache Cordova Team
     </author>
     <preference name="StatusBarOverlaysWebView" value="false" />
@@ -23,6 +23,15 @@
     <platform name="ios">
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
+    </platform>
+    <platform name="android">
+        <allow-intent href="market:*" />
+        <icon density="ldpi" src="res/icon/android/icon-36-ldpi.png" />
+        <icon density="mdpi" src="res/icon/android/icon-48-mdpi.png" />
+        <icon density="hdpi" src="res/icon/android/icon-72-hdpi.png" />
+        <icon density="xhdpi" src="res/icon/android/icon-96-xhdpi.png" />
+        <icon density="xxhdpi" src="res/icon/android/icon-96-xhdpi.png" />
+        <icon density="xxxhdpi" src="res/icon/android/icon-96-xhdpi.png" />
     </platform>
     <engine name="browser" spec="^5.0.1" />
     <engine name="android" spec="^6.3.0" />
