@@ -548,7 +548,27 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 						x: 40,
 						y: 2,
 						style: {
-							color: 'white'
+							// 'font-size': '9px',
+							// padding: '1px',
+							
+							// 'background': '#0059de',
+							// color: 'white',
+							// 'border-radius': '2px',
+							// 'text-align': 'center',
+							// position: 'relative',
+						
+							// after: {
+							// 	height: 0,
+							// 	width: 0,
+							// 	position: 'absolute',
+							// 	left: '-11px',
+							// 	top: 0,
+							// 	border: '6px solid transparent',
+							// 	'border-right-color': '#0059de',
+							// 	padding: '0px',
+							// 	'z-index': 101,
+							// 	content: '',
+							// }
 						}
 					}
 				});
