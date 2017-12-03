@@ -29,13 +29,14 @@ UserSchema.plugin(beautifyUnique);
  * helpers
  */
 UserSchema.statics.normalizeProfileImg = function (doc) {
+    const domainPrefix = 'http://' + (process.env.NODE_ENV === 'prod' ? config.ip.prod : config.ip.devLocal) + ':' + config.port;
 
     // default img
     if (!doc.profileImg) {
         if (doc.type === CHANNEL_TYPE_MAIN)
-            doc.profileImg = config.image.profileDefaultUrl;
+            doc.profileImg = domainPrefix + config.image.profileDefaultUrl;
         else
-            doc.profileImg = config.image.channelDefaultUrl;
+            doc.profileImg = domainPrefix + config.image.channelDefaultUrl;
 
         return this;
     }
@@ -46,11 +47,13 @@ UserSchema.statics.normalizeProfileImg = function (doc) {
 
     // user image
     if (doc.type === CHANNEL_TYPE_MAIN)
-        doc.profileImg = join(config.image.profileBaseUrl, doc.profileImg);
+        doc.profileImg = domainPrefix + join(config.image.profileBaseUrl, doc.profileImg);
 
     // channel image
     else
-        doc.profileImg = join(config.image.channelBaseUrl, doc.profileImg);
+        doc.profileImg = domainPrefix + join(config.image.channelBaseUrl, doc.profileImg);
+
+        console.log(doc.profileImg);
 };
 
 export const User = model('User', UserSchema);

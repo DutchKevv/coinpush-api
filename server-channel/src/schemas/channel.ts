@@ -111,7 +111,7 @@ ChannelSchema.statics.setIFollow = function (user, doc) {
  * @returns {any}
  */
 ChannelSchema.statics.normalizeProfileImg = function (doc) {
-	console.log('doc doc doc doc', doc);
+	const domainPrefix = 'http://' + (process.env.NODE_ENV === 'prod' ? config.ip.prod : config.ip.local) + ':' + config.port;
 
 	// copiers
 	if (doc.copiers && doc.copiers.length)
@@ -124,9 +124,9 @@ ChannelSchema.statics.normalizeProfileImg = function (doc) {
 	// default img
 	if (!doc.profileImg) {
 		if (doc.type === CHANNEL_TYPE_MAIN)
-			doc.profileImg = config.image.profileDefaultUrl;
+			doc.profileImg = domainPrefix + config.image.profileDefaultUrl;
 		else
-			doc.profileImg = config.image.channelDefaultUrl;
+			doc.profileImg = domainPrefix + config.image.channelDefaultUrl;
 
 		return;
 	}
@@ -137,11 +137,13 @@ ChannelSchema.statics.normalizeProfileImg = function (doc) {
 
 	// user image
 	if (doc.type === CHANNEL_TYPE_MAIN)
-		doc.profileImg = join(config.image.profileBaseUrl, doc.profileImg);
+		doc.profileImg = domainPrefix + join(config.image.profileBaseUrl, doc.profileImg);
 
 	// channel image
 	else
-		doc.profileImg = join(config.image.channelBaseUrl, doc.profileImg);
+		doc.profileImg = domainPrefix + join(config.image.channelBaseUrl, doc.profileImg);
+
+		
 };
 
 export const Channel = model('Channel', ChannelSchema);

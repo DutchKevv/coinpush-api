@@ -104,7 +104,14 @@ const config = {
                 }
             }
         }
-    }
+    },
+    ip: {
+        local: '',
+        prod: '',
+        devLocal: '127.0.0.1',
+        devApp: '10.0.2.2'
+    },
+    port: 3100
 };
 
 const customConfig = require('./tradejs.config.custom.json');

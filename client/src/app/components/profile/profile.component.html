@@ -1,7 +1,7 @@
 <ng-container *ngIf="user$ | async as user">
     <ng-container *ngIf="user.options$ | async as options">
         <header>
-            <div class="profile-details">
+            <div class="profile-details" style="background: url(./assets/image/cover.svg) center/cover;">
                 <img class="profileImg" src="{{options.profileImg}}">
                 <div class="meta-data">
                     <h2>{{options.name}}</h2>
