@@ -11,58 +11,8 @@
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="assets/vendor/font-awesome/css/font-awesome.min.css">
     <!-- <base href="./"> -->
-    
-    <script>
-        (function () {
-            window.AppConfig = {
-                isApp: !!window['_cordovaNative'],
-                isEmulator: navigator.platform === 'Linux i686',
-                isLocal: document.URL.indexOf('file://') > -1
-            };
 
-            if (window.AppConfig.isApp) {
-                var script = document.createElement('script');
-                script.src = 'cordova.js';
-                document.head.appendChild(script); //or something of the likes
-            }
-
-            window.isElectron = (window.process && window.process.type);
-
-            function onDeviceReady() {
-                var admobid = {};
-                if (/(android)/i.test(navigator.userAgent)) { // for android & amazon-fireos
-                    admobid = {
-                        banner: 'ca-app-pub-1181429338292864/7213864636',
-                        interstitial: 'ca-app-pub-1181429338292864/7213864636'
-                    };
-                } else if (/(ipod|iphone|ipad)/i.test(navigator.userAgent)) { // for ios
-                    admobid = {
-                        banner: 'ca-app-pub-1181429338292864/7213864636',
-                        interstitial: 'ca-app-pub-1181429338292864/7213864636'
-                    };
-                } else { // for windows phone
-                    admobid = {
-                        banner: 'ca-app-pub-1181429338292864/7213864636',
-                        interstitial: 'ca-app-pub-1181429338292864/7213864636'
-                    };
-                }
-
-                if (window.AdMob) {
-                    window.AdMob.createBanner({
-                        adSize: 'BANNER',
-                        height: 60, // valid when set adSize 'CUSTOM'
-                        adId: admobid.banner,
-                        position: AdMob.AD_POSITION.BOTTOM_CENTER,
-                        autoShow: true,
-                        isTesting: true
-                    });
-                }
-            }
-
-            document.addEventListener("deviceready", (onDeviceReady), false);
-
-        })()
-    </script>
+    <script src="assets/custom/js/bootstrapper.js"></script>
 
     <style>
         html,
@@ -170,6 +120,8 @@
             <div class="dot2"></div>
         </div>
     </app>
+
+    <script>if (window.AppConfig.isApp) document.body.querySelector('app').classList.add('app')</script>
 </body>
 
 </html>

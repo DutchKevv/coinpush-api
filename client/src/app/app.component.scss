@@ -21,6 +21,10 @@
 :host {
     display: flex;
     height: 100%;
+
+    &.app {
+        padding-bottom: 50px;
+    }
 }
 
 .positive {

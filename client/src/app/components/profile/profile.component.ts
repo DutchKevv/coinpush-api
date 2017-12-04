@@ -38,6 +38,12 @@ export class ProfileComponent implements OnInit {
 		// this.channelService.find(this.channelId).subscribe((channel: ChannelModel) => {
 		// 	this.user$.next(channel);
 		// });
+		this.userId = this._route.snapshot.queryParams['id'];
+		this.isSelf = this.userId === this.userService.model.get('user_id');
+
+		this.user$.next(new ChannelModel({
+			user_id: this.userId
+		}));
 
 		this._sub = this._route.params.subscribe(params => {
 

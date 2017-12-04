@@ -39,6 +39,7 @@
     "cordova-browser": "^5.0.1",
     "cordova-plugin-admobpro": "^2.29.29",
     "cordova-plugin-extension": "^1.5.3",
+    "cordova-plugin-firebase": "^0.1.25",
     "cordova-plugin-statusbar": "^2.3.0",
     "cordova-plugin-whitelist": "^1.3.3",
     "core-js": "^2.5.1",
@@ -60,7 +61,8 @@
     "plugins": {
       "cordova-plugin-whitelist": {},
       "cordova-plugin-admobpro": {},
-      "cordova-plugin-statusbar": {}
+      "cordova-plugin-statusbar": {},
+      "cordova-plugin-firebase": {}
     },
     "platforms": [
       "browser",

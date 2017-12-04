@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.example.app" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.ff.coinpush" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>CoinPush</name>
     <description>
         Stock trading application with custom alarams
@@ -27,16 +27,16 @@
     </platform>
     <platform name="android">
         <allow-intent href="market:*" />
-        <icon density="ldpi" src="res/icon/android/icon-36-ldpi.png" />
         <icon density="mdpi" src="res/icon/android/icon-48-mdpi.png" />
         <icon density="hdpi" src="res/icon/android/icon-72-hdpi.png" />
         <icon density="xhdpi" src="res/icon/android/icon-96-xhdpi.png" />
-        <icon density="xxhdpi" src="res/icon/android/icon-96-xhdpi.png" />
-        <icon density="xxxhdpi" src="res/icon/android/icon-96-xhdpi.png" />
+        <icon density="xxhdpi" src="res/icon/android/icon-120-xxhdpi.png" />
+        <icon density="xxxhdpi" src="res/icon/android/icon-144-xxxhdpi.png" />
     </platform>
     <engine name="browser" spec="^5.0.1" />
     <engine name="android" spec="^6.3.0" />
     <plugin name="cordova-plugin-whitelist" spec="^1.3.3" />
     <plugin name="cordova-plugin-admobpro" spec="^2.29.29" />
     <plugin name="cordova-plugin-statusbar" spec="^2.3.0" />
+    <plugin name="cordova-plugin-firebase" spec="^0.1.25" />
 </widget>
