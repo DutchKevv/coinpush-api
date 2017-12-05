@@ -1,5 +1,5 @@
-import {Comment} from '../schemas/comment';
-import {Types} from 'mongoose';
+import { Comment } from '../schemas/comment';
+import { Types } from 'mongoose';
 import * as redis from '../modules/redis';
 
 const config = require('../../../tradejs.config');
@@ -12,17 +12,19 @@ export const commentController = {
 		if (!comment)
 			return;
 
+		if (!comment.parentId)
+			comment.children = (await Comment.find({ parentId: { $eq: Types.ObjectId(comment._id) } }).sort({ _id: -1 }).limit(5).lean()).reverse();
+
 		Comment.addILike(reqUser.id, [comment]);
 
 		return comment;
 	},
 
 	async findByChannelId(reqUser, channelId) {
-		let comments = await Comment.find({channelId, parentId: {$eq: undefined}}).sort({_id: -1}).limit(20).lean();
+		let comments = await Comment.find({ channelId, parentId: { $eq: undefined } }).sort({ _id: -1 }).limit(20).lean();
 
 		comments = await Promise.all(comments.map(async comment => {
-			console.log(comment);
-			comment.children = (await Comment.find({parentId: {$eq: Types.ObjectId(comment._id)}}).sort({_id: -1}).limit(5).lean()).reverse();
+			comment.children = (await Comment.find({ parentId: { $eq: Types.ObjectId(comment._id) } }).sort({ _id: -1 }).limit(5).lean()).reverse();
 			return comment;
 		}));
 
@@ -32,10 +34,10 @@ export const commentController = {
 	},
 
 	async findByUserd(reqUser, userId) {
-		let comments = await Comment.find({userId, parentId: {$eq: undefined}}).sort({_id: -1}).limit(20).lean();
+		let comments = await Comment.find({ userId, parentId: { $eq: undefined } }).sort({ _id: -1 }).limit(20).lean();
 
 		comments = await Promise.all(comments.map(async comment => {
-			comment.children = (await Comment.find({parentId: {$eq: Types.ObjectId(comment._id)}}).sort({_id: -1}).limit(5).lean()).reverse();
+			comment.children = (await Comment.find({ parentId: { $eq: Types.ObjectId(comment._id) } }).sort({ _id: -1 }).limit(5).lean()).reverse();
 			return comment;
 		}));
 
@@ -45,7 +47,6 @@ export const commentController = {
 	},
 
 	async create(reqUser, options): Promise<any> {
-		console.log(options);
 
 		const comment = await Comment.create({
 			userId: reqUser.id,
@@ -57,12 +58,12 @@ export const commentController = {
 		});
 
 		if (options.parentId) {
-			const parent = await Comment.findOneAndUpdate({_id: comment.parentId}, {$inc: {childCount: 1}});
+			const parent = await Comment.findOneAndUpdate({ _id: comment.parentId }, { $inc: { childCount: 1 } });
 
 			// notify
-			if (parent.userId.toString() !== reqUser.id) {
+			// if (parent.userId.toString() !== reqUser.id) {
 				let pubOptions = {
-					type: 'comment-reaction',
+					type: 'post-comment',
 					data: {
 						toUserId: parent.userId,
 						fromUserId: reqUser.id,
@@ -73,28 +74,29 @@ export const commentController = {
 				};
 
 				redis.client.publish("notify", JSON.stringify(pubOptions));
-			}
+			// }
 		}
 
-		return {_id: comment._id};
+		return { _id: comment._id };
 	},
 
 	async toggleLike(reqUser, commentId) {
-		const {iLike, comment} = await Comment.toggleLike(reqUser.id, commentId);
-		console.log(comment);
+		const { iLike, comment } = await Comment.toggleLike(reqUser.id, commentId);
+
 		if (comment && iLike) {
 			let pubOptions = {
-				type: 'comment-like',
+				type: comment.parentId ? 'comment-like' : 'post-like',
 				data: {
 					commentId: commentId,
+					parentId: comment.parentId,
 					fromUserId: reqUser.id,
 					toUserId: comment.userId,
 				}
 			};
-	
+
 			redis.client.publish("notify", JSON.stringify(pubOptions));
 		}
 
-		return {state: iLike};
+		return { state: iLike };
 	}
 };

@@ -64,7 +64,7 @@
     border-bottom: 1px solid white;
     color: #ddd;
     position: relative;
-    margin: 20px;
+    margin: 15px;
     padding-bottom: 5px;
 
     &:after {
@@ -80,7 +80,7 @@
 .item-row {
     display: flex;
     overflow-x: auto;
-    margin: 20px 0;
+    margin: 15px 0;
     padding-bottom: 20px;
     min-height: 320px;
 }
@@ -92,7 +92,7 @@
     display: block;
     width: 300px;
     min-width: 300px;
-    margin: 0 20px;
+    margin: 0 15px;
     height: 300px;
 
     header {

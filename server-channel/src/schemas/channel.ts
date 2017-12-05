@@ -2,6 +2,7 @@ import { Schema, model, Types } from 'mongoose';
 import { join } from 'path';
 import { isEmail } from 'validator';
 import { CHANNEL_TYPE_MAIN } from '../../../shared/constants/constants';
+import * as beautifyUnique from 'mongoose-beautiful-unique-validation';
 
 const config = require('../../../tradejs.config');
 
@@ -80,6 +81,9 @@ export const ChannelSchema = new Schema({
 		default: Date.now
 	}
 });
+
+// Enable beautifying on this schema 
+ChannelSchema.plugin(beautifyUnique);
 
 ChannelSchema.statics.normalize = function (user, doc) {
 	if (!doc)

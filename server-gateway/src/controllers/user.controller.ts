@@ -109,7 +109,7 @@ export const userController = {
 
 			// send newMember email
 			await request({
-				uri: config.server.email.apiUrl + '/mail/new-member',
+				uri: config.server.notify.apiUrl + '/mail/new-member',
 				headers: { '_id': user._id },
 				method: 'POST',
 				body: {
@@ -151,9 +151,9 @@ export const userController = {
 			}),
 			// channel
 			channelController.updateByUserId(reqUser, userId, params),
-			// email
+			// notify
 			request({
-				uri: config.server.email.apiUrl + '/user/' + userId,
+				uri: config.server.notify.apiUrl + '/user/' + userId,
 				headers: { '_id': reqUser.id },
 				method: 'PUT',
 				body: params,
@@ -265,7 +265,7 @@ export const userController = {
 		// email
 		try {
 			email = await request({
-				uri: config.server.email.apiUrl + '/user/' + userId,
+				uri: config.server.notify.apiUrl + '/user/' + userId,
 				headers: { '_id': reqUser.id },
 				method: 'DELETE'
 			});

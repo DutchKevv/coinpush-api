@@ -34,13 +34,11 @@ export class AppComponent implements OnInit {
 	constructor(
 		public router: Router,
 		public userService: UserService,
-		private _elementRef: ElementRef,
 		private _http: Http,
 		private _cacheService: CacheService,
 		private _authenticationService: AuthenticationService) { }
 
 	ngOnInit() {
-		console.log(this._elementRef);
 		this._authenticationService.authenticate();
 		
 		this.router.events.subscribe((val) => {

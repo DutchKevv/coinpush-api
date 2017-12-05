@@ -48,7 +48,7 @@ export const userController = {
 
 	// TODO - Filter fields
 	async update(reqUser, userId, params): Promise<void> {
-		
+		console.log(params);
 		if (params.device) {
 			await User['addDevice'](userId, params.device);
 			delete params.device;

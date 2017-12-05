@@ -57,9 +57,9 @@ export const commentController = {
 
 	async create(reqUser, params): Promise<any> {
 		// get username and profileImg
-		const user = await channelController.findByUserId(reqUser, reqUser.id, ['name', 'profileImg', 'c_id']);
+		const channel = await channelController.findByUserId(reqUser, params.userId, ['name', 'profileImg', '_id']);
 
-		if (!user)
+		if (!channel)
 			throw new Error('user not found');
 
 		return request({
@@ -67,8 +67,10 @@ export const commentController = {
 			method: 'POST',
 			headers: {'_id': reqUser.id},
 			body: {
-				...params,
-				...user
+				name: channel.name,
+				profileImg: channel.profileImg,
+				content: params.content,
+				channelId: channel._id
 			},
 			json: true
 		});

@@ -52,6 +52,8 @@ export class SocialFeedComponent implements OnInit {
 
 	user: any = new UserModel;
 	channelId: string;
+	userId: string;
+	commentId: string;
 
 	constructor(private _route: ActivatedRoute,
 		// @Host() public parent: ProfileComponent,
@@ -66,13 +68,13 @@ export class SocialFeedComponent implements OnInit {
 		// 	this.user = user;
 
 		// 	this.channelId = user.options._id;
-		let commentId = this._route.snapshot.params['id'];
-		let userId = this._route.parent.snapshot.params['id']
-
-		if (commentId)
-			this.comments$.next(await this.commentService.findById(commentId));
+		this.commentId = this._route.snapshot.params['id'];
+		this.userId = this._route.parent.snapshot.params['id']
+		
+		if (this.commentId)
+			this.comments$.next(await this.commentService.findById(this.commentId));
 		else
-			this.comments$.next(await this.commentService.findByUserId(userId));
+			this.comments$.next(await this.commentService.findByUserId(this.userId));
 		// });
 	}
 
@@ -89,7 +91,7 @@ export class SocialFeedComponent implements OnInit {
 
 		const input = event.currentTarget;
 		input.setAttribute('disabled', true);
-		const comment = await this.commentService.create(this.channelId, this.channelId, parentModel, input.value);
+		const comment = await this.commentService.create(this.channelId, this.userId, parentModel, input.value);
 		input.removeAttribute('disabled');
 		if (!comment)
 			return;

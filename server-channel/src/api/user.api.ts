@@ -34,6 +34,7 @@ router.post('/', async (req: any, res, next) => {
 		res.send(await userController.create(req.user, req.body, req.query));
 	} catch (error) {
 		if (error) {
+			console.log('2222', error);
 			if (error.name === 'ValidationError') {
 				res.status(409).send({ code: G_ERROR_DUPLICATE, field: Object.keys(error.errors)[0] });
 				return;

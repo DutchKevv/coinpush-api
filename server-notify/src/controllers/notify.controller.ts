@@ -18,18 +18,18 @@ export const notifyController = {
 
         const user: any = await userController.findById({ id: userId }, userId);
 
-        console.log(user);
-
         const tokens = (user.devices || []).map(device => device.token);
 
-        // Send a message to the devices corresponding to the provided
-        // registration tokens.
-        // Prepare a message to be sent
-        var message = new gcm.Message();
-
-        message.addNotification({
-            title: params.title,
-            body: params.body
+        var message = new gcm.Message({
+            priority: 'high',
+            data: {
+                body: params.body,
+                contentAvailable: true,
+            },
+            notification: {
+                title: params.title,
+                body: ''
+            }
         });
 
         // Actually send the message
@@ -48,7 +48,7 @@ export const notifyController = {
             title: `${fromUser.name} responded on your post`,
             label: 'blaldksldksd',
             body: {
-                type: 'comment-reaction',
+                type: 'post-comment',
                 commentId: data.commentId,
                 parentId: data.parentId
             }
@@ -84,7 +84,7 @@ export const notifyController = {
 
     parseByType(type, data) {
         switch (type) {
-            case 'comment-reaction':
+            case 'post-comment':
                 return this.sendTypePostComment(data.toUserId, data);
             case 'post-like':
                 return this.sendTypePostLike(data.toUserId, data);

@@ -12,6 +12,7 @@
 	z-index: 200000;
 	left: 50%;
 	transform: translateX(-50%);
+	width: 90%;
 
 	> div {
 		margin-bottom: 0;
@@ -19,9 +20,10 @@
 }
 
 .alert {
-	padding: 10px 100px;
+	// padding: 10px 100px;
 	border-radius: 0;
 	font-weight: bold;
+	text-align: center;
 }
 
 .alert-success {

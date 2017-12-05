@@ -1,5 +1,6 @@
 import {Router} from 'express';
 import {channelController} from '../controllers/channel.controller';
+import { G_ERROR_DUPLICATE } from '../../../shared/constants/constants';
 
 const router = Router();
 
@@ -73,7 +74,6 @@ router.post('/:id/follow', async (req, res, next) => {
 	try {
 		res.send(await channelController.toggleFollow(req.user, req.params.id));
 	} catch (error) {
-		console.error(error);
 		next(error);
 	}
 });
@@ -97,7 +97,13 @@ router.post('/', async (req, res, next) => {
 	try {
 		res.send(await channelController.create(req.user, req.body, req.body.type));
 	} catch (error) {
-		console.error(error);
+		if (error) {
+			console.log('sadfsdf', error);
+			if (error.name === 'ValidationError') {
+				res.status(409).send({ code: G_ERROR_DUPLICATE, field: Object.keys(error.errors)[0] });
+				return;
+			}
+		}
 		next(error);
 	}
 });

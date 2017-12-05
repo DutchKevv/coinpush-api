@@ -9,7 +9,7 @@ const config = require('../../../tradejs.config');
 
 export const authenticateController = {
 
-	async authenticate(reqUser, params: { email?: string, password?: string, token?: string, device?: string }): Promise<any> {
+	async authenticate(reqUser, params: { email?: string, password?: string, token?: string, device?: any }): Promise<any> {
 
 		params['fields'] = ['balance', 'leverage', 'favorites', 'c_id'];
 

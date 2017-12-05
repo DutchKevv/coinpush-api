@@ -78,6 +78,7 @@
 
 .feed {
 	max-width: 500px;
+	width: 100%;
 }
 
 emoji-input{
@@ -85,7 +86,7 @@ emoji-input{
 }
 
 app-comment-box {
-	display: block;
+	display: inline-block;
 	margin-bottom: 20px;
 }
 

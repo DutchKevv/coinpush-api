@@ -40,15 +40,15 @@
 </div>
 
 <div class="feed">
-	<app-comment-box [channelId]="channelId" (newMessage)="addMessage($event)"></app-comment-box>
+	<app-comment-box *ngIf="userId" [userId]="userId" (newMessage)="addMessage($event)"></app-comment-box>
 
 	<div *ngFor="let comment of comments$ | async" class="comment-container fade-in" [ngClass]="{'fade-in': comment.options.isNew}">
 		<header>
-			<a [routerLink]="['/main/user/', comment.options.userId]">
+			<a [routerLink]="['/user/', comment.options.userId]">
 				<img [attr.src]="comment.options.profileImg" />
 			</a>
 			<div>
-				<a [routerLink]="['/main/user/', comment.options.userId]" class="g-username">
+				<a [routerLink]="['/user/', comment.options.userId]" class="g-username">
 					{{comment.options.username}}
 				</a>
 				<a [routerLink]="['/comment/', comment.options._id]">{{comment.options.created | date:'shortTime'}}</a>
@@ -76,7 +76,7 @@
 			<div class="child-row fade-in" *ngFor="let child of comment.options.children">
 				<img [attr.src]="child.options.profileImg" />
 				<div>
-					<a class="g-username" [routerLink]="['/main/user/', child.options.userId]">{{child.options.username}}</a>
+					<a class="g-username" [routerLink]="['/user/', child.options.userId]">{{child.options.username}}</a>
 					<span [innerHtml]="child.options.content | parseCommentContent"></span>
 					<div class="child-buttons">
 						<a (click)="commentService.toggleLike(child)" [ngClass]="{active: (child.options$ | async).iLike}">

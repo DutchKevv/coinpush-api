@@ -94,7 +94,7 @@ const config = {
             'accountId': '' // Your account id
         }
     },
-    notify: {
+    email: {
         account: {
             noReply: {
                 service: 'Gmail',

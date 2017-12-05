@@ -91,18 +91,17 @@
                 notification.body = JSON.parse(notification.body);
               
                 switch (notification.body.type) {
-                    case 'comment-reaction':
-                        window.location.hash = '#/comment/' + notification.body.commentId
+                    case 'post-comment':
+                        window.location.hash = '#/comment/' + notification.body.parentId + '?focus=' + notification.body.commentId;
                         break;
                     case 'post-like':
-                        window.location.hash = '#/comment/' + notification.body.commentId
+                        window.location.hash = '#/comment/' + notification.body.commentId;
                         break;
                     case 'comment-like':
-                        window.location.hash = '#/comment/' + notification.body.commentId
+                        window.location.hash = '#/comment/' + notification.body.parentId + '?focus=' + notification.body.commentId;
                         break
                 }
                
-                console.log('notification', typeof notification, JSON.stringify(notification));
             }, function (error) {
                 console.error(error);
             });
