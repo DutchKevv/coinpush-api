@@ -14,9 +14,9 @@ declare let window: any;
 
 // dev environment
 if (!environment.production) {
-	if (window.AppConfig.isLocal) {
-		if (window.AppConfig.isEmulator) {
-			ip = window.AppConfig.isApp ? devAppIp : devLocalIp;
+	if (window.app.platform.isLocal) {
+		if (window.app.platform.isEmulator) {
+			ip = window.app.platform.isApp ? devAppIp : devLocalIp;
 		} else {
 			ip = localIp;
 		}

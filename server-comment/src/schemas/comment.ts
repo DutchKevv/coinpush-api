@@ -64,8 +64,8 @@ CommentSchema.statics.addILike = async function (userId, comments: Array<any>): 
 	return comments;
 };
 
-CommentSchema.statics.toggleLike = async function (userId, commentId: string): Promise<boolean> {
-	const comment = await this.findById(commentId, {liked: 1});
+CommentSchema.statics.toggleLike = async function (userId, commentId: string): Promise<any> {
+	const comment = await this.findById(commentId, {liked: 1, userId: 1});
 
 	if (!comment)
 		return;
@@ -74,7 +74,7 @@ CommentSchema.statics.toggleLike = async function (userId, commentId: string): P
 
 	await comment.update(isLiked ? {$pull: {liked: userId}, $inc: {likeCount: -1}} : {$addToSet: {liked: userId}, $inc: {likeCount: 1}});
 
-	return !isLiked;
+	return {iLike: !isLiked, comment};
 };
 
 export const Comment = model('Comment', CommentSchema);

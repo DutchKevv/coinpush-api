@@ -8,7 +8,7 @@ export const emailController = {
 
     async findUserById(reqUser, userId: string, options: any = {}): Promise<IUser> {
 		const user = await request({
-			uri: config.server.email.apiUrl + '/user/' + userId,
+			uri: config.server.notify.apiUrl + '/user/' + userId,
             headers: {'_id': reqUser.id},
             qs: options,
             json: true
@@ -20,7 +20,7 @@ export const emailController = {
 	async addUser(reqUser: IReqUser, params: IUser, updateWhenPresent = undefined): Promise<IUser> {
        
         const user = await request({
-            uri: config.server.email.apiUrl + '/user',
+            uri: config.server.notify.apiUrl + '/user',
             headers: { '_id': params._id },
             method: 'POST',
             body: {

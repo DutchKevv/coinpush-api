@@ -6,12 +6,14 @@ const config = require('../../../tradejs.config');
 
 export const commentController = {
 
-	findById(reqUser, channelId): Promise<any> {
-		return request({
-			uri: config.server.comment.apiUrl + '/channel/' + channelId,
+	async findById(reqUser, id): Promise<any> {
+		const result = await request({
+			uri: config.server.comment.apiUrl + '/comment/' + id ,
 			headers: {'_id': reqUser.id},
 			json: true
 		});
+
+		return result;
 	},
 
 	async findByChannelId(reqUser: {id: string}, channelId: string, fields?: Array<string>): Promise<any> {
@@ -29,22 +31,14 @@ export const commentController = {
 	},
 
 	async findByUserId(reqUser: {id: string}, userId: string, fields?: Array<string>): Promise<any> {
-		const user = await request({
-			uri: config.server.user.apiUrl + '/user/' + userId,
-			headers: {'_id': reqUser.id},
-			qs: {
-				fields: ['c_id']
-			},
-			json: true
-		});
-
-		console.log('safsfd', user)
+		const channel = await channelController.findByUserId(reqUser, userId);
+		console.log('safsfd', channel)
 
 		const result = await request({
 			uri: config.server.comment.apiUrl + '/comment/',
 			headers: {'_id': reqUser.id},
 			qs: {
-				channel: user.c_id,
+				channel: channel._id,
 				fields: fields
 			},
 			json: true

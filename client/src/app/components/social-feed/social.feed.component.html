@@ -51,7 +51,7 @@
 				<a [routerLink]="['/main/user/', comment.options.userId]" class="g-username">
 					{{comment.options.username}}
 				</a>
-				<span>{{comment.options.created | date:'shortTime'}}</span>
+				<a [routerLink]="['/comment/', comment.options._id]">{{comment.options.created | date:'shortTime'}}</a>
 			</div>
 			<a>:</a>
 		</header>

@@ -18,33 +18,29 @@ import { RequestPasswordResetComponent } from "./components/request-password-res
 import { EventOverviewComponent } from './components/event-overview/event-overview.component';
 
 const routes: Routes = [
-	{ path: '', redirectTo: 'charts', pathMatch: 'full', canActivate: [AuthGuard]},
+	{ path: '', redirectTo: 'charts', pathMatch: 'full', canActivate: [AuthGuard] },
 	{ path: 'login', component: LoginComponent },
 	{ path: 'register', component: RegisterComponent },
 	{ path: 'password-reset', component: PasswordResetComponent },
 	{ path: 'request-password-reset', component: RequestPasswordResetComponent },
-	// {
-	// 	path: 'main', component: PageMainComponent, canActivate: [AuthGuard],
-	// 	children: [
-			// { path: '', redirectTo: 'charts', pathMatch: 'full' },
-			{ path: 'channels', component: ChannelOverviewComponent, canActivate: [AuthGuard] },
-			{ path: 'portfolio', component: PortfolioComponent, canActivate: [AuthGuard] },
-			{ path: 'user', component: UserOverviewComponent, canActivate: [AuthGuard] },
-			{ path: 'calendar', component: EventOverviewComponent, canActivate: [AuthGuard] },
-			{
-				path: 'user/:id', component: ProfileComponent, children:
-				[
-					{ path: '', redirectTo: 'feed', pathMatch: 'full' },
-					{ path: 'feed', component: SocialFeedComponent },
-					{ path: 'channels', component: ProfileChannelOverviewComponent },
-				]
-			},
-			{ path: 'charts', component: ChartOverviewComponent, canActivate: [AuthGuard] },
-			{ path: 'backtest', component: BacktestComponent, canActivate: [AuthGuard] },
-			{ path: 'editor', loadChildren: './components/jseditor/jseditor.module#JSEditorModule', canActivate: [AuthGuard] },
-			{ path: 'settings', component: SettingsComponent, canActivate: [AuthGuard] },
-	// 	]
-	// }
+
+	{ path: 'comment/:id', component: SocialFeedComponent, canActivate: [AuthGuard] },
+	{ path: 'channels', component: ChannelOverviewComponent, canActivate: [AuthGuard] },
+	{ path: 'portfolio', component: PortfolioComponent, canActivate: [AuthGuard] },
+	{ path: 'user', component: UserOverviewComponent, canActivate: [AuthGuard] },
+	{ path: 'calendar', component: EventOverviewComponent, canActivate: [AuthGuard] },
+	{
+		path: 'user/:id', component: ProfileComponent, children:
+			[
+				{ path: '', redirectTo: 'feed', pathMatch: 'full' },
+				{ path: 'feed', component: SocialFeedComponent },
+				{ path: 'channels', component: ProfileChannelOverviewComponent },
+			]
+	},
+	{ path: 'charts', component: ChartOverviewComponent, canActivate: [AuthGuard] },
+	{ path: 'backtest', component: BacktestComponent, canActivate: [AuthGuard] },
+	{ path: 'editor', loadChildren: './components/jseditor/jseditor.module#JSEditorModule', canActivate: [AuthGuard] },
+	{ path: 'settings', component: SettingsComponent, canActivate: [AuthGuard] },
 ];
 
 export const AppRouter: ModuleWithProviders = RouterModule.forRoot(routes, {

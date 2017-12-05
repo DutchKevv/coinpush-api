@@ -1,5 +1,6 @@
 import {Comment} from '../schemas/comment';
 import {Types} from 'mongoose';
+import * as redis from '../modules/redis';
 
 const config = require('../../../tradejs.config');
 
@@ -18,6 +19,20 @@ export const commentController = {
 
 	async findByChannelId(reqUser, channelId) {
 		let comments = await Comment.find({channelId, parentId: {$eq: undefined}}).sort({_id: -1}).limit(20).lean();
+
+		comments = await Promise.all(comments.map(async comment => {
+			console.log(comment);
+			comment.children = (await Comment.find({parentId: {$eq: Types.ObjectId(comment._id)}}).sort({_id: -1}).limit(5).lean()).reverse();
+			return comment;
+		}));
+
+		Comment.addILike(reqUser.id, comments);
+
+		return comments;
+	},
+
+	async findByUserd(reqUser, userId) {
+		let comments = await Comment.find({userId, parentId: {$eq: undefined}}).sort({_id: -1}).limit(20).lean();
 
 		comments = await Promise.all(comments.map(async comment => {
 			comment.children = (await Comment.find({parentId: {$eq: Types.ObjectId(comment._id)}}).sort({_id: -1}).limit(5).lean()).reverse();
@@ -41,17 +56,45 @@ export const commentController = {
 			profileImg: options.profileImg
 		});
 
-		console.log('asdfsadf', comment);
-
 		if (options.parentId) {
-			await Comment.update({_id: comment.parentId}, {$inc: {childCount: 1}});
+			const parent = await Comment.findOneAndUpdate({_id: comment.parentId}, {$inc: {childCount: 1}});
+
+			// notify
+			if (parent.userId.toString() !== reqUser.id) {
+				let pubOptions = {
+					type: 'comment-reaction',
+					data: {
+						toUserId: parent.userId,
+						fromUserId: reqUser.id,
+						parentId: parent._id,
+						commentId: comment._id,
+						content: options.content
+					}
+				};
+
+				redis.client.publish("notify", JSON.stringify(pubOptions));
+			}
 		}
 
 		return {_id: comment._id};
 	},
 
 	async toggleLike(reqUser, commentId) {
-		const isLiked = await Comment.toggleLike(reqUser.id, commentId);
-		return {state: isLiked};
+		const {iLike, comment} = await Comment.toggleLike(reqUser.id, commentId);
+		console.log(comment);
+		if (comment && iLike) {
+			let pubOptions = {
+				type: 'comment-like',
+				data: {
+					commentId: commentId,
+					fromUserId: reqUser.id,
+					toUserId: comment.userId,
+				}
+			};
+	
+			redis.client.publish("notify", JSON.stringify(pubOptions));
+		}
+
+		return {state: iLike};
 	}
 };

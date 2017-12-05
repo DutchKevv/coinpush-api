@@ -2,15 +2,15 @@ import {
 	ChangeDetectionStrategy, Component, ElementRef, Host, Input, NgZone, OnInit, Output, Pipe, PipeTransform,
 	ViewEncapsulation
 } from '@angular/core';
-import {UserService} from '../../services/user.service';
-import {Http} from '@angular/http';
-import {FormBuilder} from '@angular/forms';
-import {ActivatedRoute} from "@angular/router";
-import {CommentService} from "../../services/comment.service";
-import {Subject} from "rxjs/Subject";
-import {CommentModel} from "../../models/comment.model";
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
-import {ProfileComponent} from "../profile/profile.component";
+import { UserService } from '../../services/user.service';
+import { Http } from '@angular/http';
+import { FormBuilder } from '@angular/forms';
+import { ActivatedRoute, Router } from "@angular/router";
+import { CommentService } from "../../services/comment.service";
+import { Subject } from "rxjs/Subject";
+import { CommentModel } from "../../models/comment.model";
+import { BehaviorSubject } from "rxjs/BehaviorSubject";
+import { ProfileComponent } from "../profile/profile.component";
 import { UserModel } from '../../models/user.model';
 
 function linkify(inputText) {
@@ -31,7 +31,7 @@ function linkify(inputText) {
 	return replacedText;
 }
 
-@Pipe({name: 'parseCommentContent'})
+@Pipe({ name: 'parseCommentContent' })
 export class ParseCommentContentPipe implements PipeTransform {
 	transform(value: string, field: string): string {
 		return linkify(value);
@@ -54,19 +54,26 @@ export class SocialFeedComponent implements OnInit {
 	channelId: string;
 
 	constructor(private _route: ActivatedRoute,
-				@Host() public parent: ProfileComponent,
-				public commentService: CommentService,
-				public userService: UserService) {
+		// @Host() public parent: ProfileComponent,
+		public commentService: CommentService,
+		public _router: Router,
+		public userService: UserService) {
 	}
 
 	async ngOnInit() {
-		this.parent.user$.subscribe(async (user) => {
-			this.user = user;
+		console.log(this._route.parent, this._router);
+		// this.parent.user$.subscribe(async (user) => {
+		// 	this.user = user;
 
-			this.channelId = user.options._id;
+		// 	this.channelId = user.options._id;
+		let commentId = this._route.snapshot.params['id'];
+		let userId = this._route.parent.snapshot.params['id']
 
-			this.comments$.next(await this.commentService.findByChannelId(this.channelId));
-		});
+		if (commentId)
+			this.comments$.next(await this.commentService.findById(commentId));
+		else
+			this.comments$.next(await this.commentService.findByUserId(userId));
+		// });
 	}
 
 	onEnterFunction() {
@@ -80,7 +87,7 @@ export class SocialFeedComponent implements OnInit {
 	async respond(event, parentModel) {
 		console.log(event, parentModel);
 
-		const input = event.currentTarget.querySelector('input');
+		const input = event.currentTarget;
 		input.setAttribute('disabled', true);
 		const comment = await this.commentService.create(this.channelId, this.channelId, parentModel, input.value);
 		input.removeAttribute('disabled');

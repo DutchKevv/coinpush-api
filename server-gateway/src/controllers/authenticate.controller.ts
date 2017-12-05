@@ -1,14 +1,15 @@
 import * as jwt from 'jsonwebtoken';
 import * as request from 'request-promise';
-import {channelController} from './channel.controller';
-import {userController} from "./user.controller";
-import {G_ERROR_UNKNOWN} from "../../../shared/constants/constants";
+import { channelController } from './channel.controller';
+import { userController } from "./user.controller";
+import { G_ERROR_UNKNOWN } from "../../../shared/constants/constants";
+import { log } from '../../../shared/logger';
 
 const config = require('../../../tradejs.config');
 
 export const authenticateController = {
 
-	async authenticate(reqUser, params: { email?: string, password?: string, token?: string }): Promise<any> {
+	async authenticate(reqUser, params: { email?: string, password?: string, token?: string, device?: string }): Promise<any> {
 
 		params['fields'] = ['balance', 'leverage', 'favorites', 'c_id'];
 
@@ -25,7 +26,18 @@ export const authenticateController = {
 		if (!user || !user.token)
 			return null;
 
-		const channel = await channelController.findByUserId({id: user._id}, user._id, {fields: ['name', 'profileImg', 'user_id']});
+		if (params.device) {
+			userController
+				.update({ id: user._id }, user._id, <any>{ device: params.device })
+				.then(() => {
+					log.info('AuthenticateController', 'added device id (firebase) to notify service')
+				})
+				.catch(error => {
+					console.error('TODO - FIX: could not set firebase device token for user: ', user._id);
+				})
+		}
+
+		const channel = await channelController.findByUserId({ id: user._id }, user._id, { fields: ['name', 'profileImg', 'user_id'] });
 
 		return Object.assign(user, channel);
 	},
@@ -36,14 +48,14 @@ export const authenticateController = {
 		try {
 			user = await request({
 				uri: config.server.user.apiUrl + '/authenticate/request-password-reset',
-				headers: {'_id': reqUser.id},
+				headers: { '_id': reqUser.id },
 				method: 'post',
-				body: {email},
+				body: { email },
 				json: true
 			});
 		} catch (error) {
 			if (!error.error)
-				throw({code: G_ERROR_UNKNOWN});
+				throw ({ code: G_ERROR_UNKNOWN });
 
 			return;
 		}
@@ -51,10 +63,10 @@ export const authenticateController = {
 		user.email = email;
 
 		const result = await request({
-			uri: config.server.email.apiUrl + '/mail/request-password-reset',
-			headers: {'_id': reqUser.id},
+			uri: config.server.notify.apiUrl + '/mail/request-password-reset',
+			headers: { '_id': reqUser.id },
 			method: 'POST',
-			body: {user},
+			body: { user },
 			json: true
 		});
 

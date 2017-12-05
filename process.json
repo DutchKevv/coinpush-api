@@ -63,8 +63,8 @@
     "instances": 1
   },
   {
-    "script": "server-email/index.js",
-    "name": "email",
+    "script": "server-notify/index.js",
+    "name": "notify",
     "exec_mode": "fork",
     "env_production" : {
       "NODE_ENV": "dev"

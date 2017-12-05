@@ -60,7 +60,7 @@ const config = {
             port: 3009,
             connectionString: 'mongodb://localhost:27017/tradejs-comment'
         },
-        email: {
+        notify: {
             port: 3010,
             connectionString: 'mongodb://localhost:27017/tradejs-email'
         },
@@ -94,7 +94,7 @@ const config = {
             'accountId': '' // Your account id
         }
     },
-    email: {
+    notify: {
         account: {
             noReply: {
                 service: 'Gmail',

@@ -83,11 +83,16 @@ export class AuthenticationService {
 		}
 
 		try {
+			const deviceToken = await this._getDeviceToken();
+
 			const user = await this._http.post('/authenticate', {
 					email,
 					password,
 					token,
-					profile
+					profile,
+					device: {
+						token: deviceToken
+					}
 				})
 				.map((r: Response) => r.json())
 				.toPromise();
@@ -121,5 +126,33 @@ export class AuthenticationService {
 		} else {
 			this._router.navigate(['/login']);
 		}
+	}
+
+	private _getDeviceToken() {
+		return new Promise((resolve, reject) => {
+			if (!window['app'].platform.isApp)
+				return resolve();
+
+			window['FirebasePlugin'].getToken(token => {
+				if (!token)
+					return reject('No device token found!');
+
+					resolve(token);
+			});
+		});
+	}
+
+	/**
+	 * Only required in Cordova
+	 */
+	private _listenToTokenRefresh() {
+		if (!window['app'].platform.isApp)
+			return;
+
+		window['FirebasePlugin'].onTokenRefresh(token => this._syncDeviceToken(token));
+	}
+
+	private _syncDeviceToken(token: string): void {
+		
 	}
 }

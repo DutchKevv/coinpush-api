@@ -34,6 +34,18 @@ export class CommentService {
 		return model;
 	}
 
+	async findById(id: string): Promise<Array<CommentModel>> {
+		const result = await this._http.get('/comment/' + id)
+			.map(res => [res.json()].map(r => {
+				const model = new CommentModel(r);
+				model.options.children = model.options.children.map(c => new CommentModel(c));
+				return model;
+			}))
+			.toPromise();
+
+		return result;
+	}
+
 	async findByChannelId(channelId: string): Promise<Array<CommentModel>> {
 		const result = await this._http.get('/comment', {params: {channel: channelId}})
 			.map(res => res.json().map(r => {
