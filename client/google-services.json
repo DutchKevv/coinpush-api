@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "484918912130",
+    "firebase_url": "https://coinpush-187922.firebaseio.com",
+    "project_id": "coinpush-187922",
+    "storage_bucket": "coinpush-187922.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:484918912130:android:ddf1fc733af0a074",
+        "android_client_info": {
+          "package_name": "com.ff.coinpush"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "484918912130-hcdhd5dafs8aqgg1cqtd119c41tvs57o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDrbWHv66I_yF_zR3Nmf20XQTh6LA4sJp4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
