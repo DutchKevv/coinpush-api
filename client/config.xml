@@ -27,11 +27,11 @@
     </platform>
     <platform name="android">
         <allow-intent href="market:*" />
-        <icon density="mdpi" src="res/icon/android/icon-48-mdpi.png" />
-        <icon density="hdpi" src="res/icon/android/icon-72-hdpi.png" />
-        <icon density="xhdpi" src="res/icon/android/icon-96-xhdpi.png" />
-        <icon density="xxhdpi" src="res/icon/android/icon-120-xxhdpi.png" />
-        <icon density="xxxhdpi" src="res/icon/android/icon-144-xxxhdpi.png" />
+        <icon qualifier="mdpi" src="res/icon/android/icon-48-mdpi.png" />
+        <icon qualifier="hdpi" src="res/icon/android/icon-72-hdpi.png" />
+        <icon qualifier="xhdpi" src="res/icon/android/icon-96-xhdpi.png" />
+        <icon qualifier="xxhdpi" src="res/icon/android/icon-120-xxhdpi.png" />
+        <icon qualifier="xxxhdpi" src="res/icon/android/icon-144-xxxhdpi.png" />
     </platform>
     <hook src="scripts/incrementBuildNum.js" type="after_build" />
     <engine name="browser" spec="^5.0.1" />

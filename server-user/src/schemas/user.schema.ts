@@ -164,10 +164,6 @@ UserSchema.statics.setIFollow = function (user, doc) {
 UserSchema.statics.normalizeProfileImg = function (doc) {
 	const domainPrefix = 'http://' + (process.env.NODE_ENV === 'prod' ? config.ip.prod : config.ip.local) + ':' + config.port;
 
-	// copiers
-	if (doc.copiers && doc.copiers.length)
-		doc.copiers.forEach(copier => UserSchema.statics.normalizeProfileImg(copier));
-
 	// followers
 	if (doc.followers && doc.followers.length)
 		doc.followers.forEach(follower => UserSchema.statics.normalizeProfileImg(follower));
