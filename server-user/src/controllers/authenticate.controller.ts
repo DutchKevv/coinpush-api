@@ -18,11 +18,11 @@ export const authenticateController = {
 		else
 			user = <IUser>await (<any>User).authenticate(params, fields);
 
-		if (user)
+		if (user) {
 			user.token = jwt.sign({id: user._id}, config.token.secret);
-
-		(<any>User).normalizeProfileImg(user);
-
+			(<any>User).normalizeProfileImg(user);			
+		}
+		
 		return user;
 	}
 };

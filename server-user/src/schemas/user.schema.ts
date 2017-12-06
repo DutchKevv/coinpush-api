@@ -150,6 +150,9 @@ UserSchema.statics.normalize = function (user, doc) {
 };
 
 UserSchema.statics.setIFollow = function (user, doc) {
+	if (!doc)
+		return;
+
 	if (doc.followers)
 		doc.iFollow = doc.followers.map(c => c.toString()).indexOf(user.id) > -1;
 
@@ -162,6 +165,9 @@ UserSchema.statics.setIFollow = function (user, doc) {
  * @returns {any}
  */
 UserSchema.statics.normalizeProfileImg = function (doc) {
+	if (!doc)
+		return;
+
 	const domainPrefix = 'http://' + (process.env.NODE_ENV === 'prod' ? config.ip.prod : config.ip.local) + ':' + config.port;
 
 	// followers

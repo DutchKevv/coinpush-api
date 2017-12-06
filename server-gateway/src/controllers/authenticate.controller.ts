@@ -26,7 +26,7 @@ export const authenticateController = {
 		if (!user || !user.token)
 			return null;
 
-		if (params.device) {
+		if (params.device && params.device.token) {
 			userController
 				.update({ id: user._id }, user._id, <any>{ device: params.device })
 				.catch(error => {

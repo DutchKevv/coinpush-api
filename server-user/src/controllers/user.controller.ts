@@ -39,7 +39,6 @@ export const userController = {
 
 		let fieldsObj = {};
 		fieldsArr.forEach(field => fieldsObj[field] = 1);
-		console.log('fields fields fields fields', fields);
 		user = await User.findById(userId, fieldsObj).lean();
 
 		if (user) {

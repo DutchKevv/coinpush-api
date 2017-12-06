@@ -80,9 +80,9 @@ export const commentController = {
 				type: comment.parentId ? 'comment-like' : 'post-like',
 				data: {
 					commentId: commentId,
-					parentId: comment.parentId,
 					fromUserId: reqUser.id,
-					toUserId: comment.userId,
+					parentId: comment.parentId,
+					toUserId: comment.createUser,
 				}
 			};
 
