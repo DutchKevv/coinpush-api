@@ -75,18 +75,18 @@ app.use((req, res, next) => {
 });
 
 // TEMP TEMP TEMP, NOT REQUIRED WHEN USING ANDROID PLAYSTORE
-app.use((req, res, next) => {
-	const appVersion = req.headers['app-version'];
-	console.log(appVersion);
+// app.use((req, res, next) => {
+// 	const appVersion = req.headers['app-version'];
+// 	console.log(appVersion);
 
-	if (!appVersion)
-		return next();
+// 	if (!appVersion)
+// 		return next();
 
-	if (semver.lt(appVersion, config.appVersion))
-		return res.status(424)
+// 	if (semver.lt(appVersion, config.appVersion))
+// 		return res.status(424)
 		
-	next();
-});
+// 	next();
+// });
 
 // use JWT auth to secure the api, the token can be passed in the authorization header or query string
 app.use(expressJwt({

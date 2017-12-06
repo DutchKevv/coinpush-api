@@ -61,5 +61,4 @@ redis.client.on("message", function (channel, message) {
             notifyController.parseByType(data.type, data.data);
             break;
     }
-    console.log('channel')
 });

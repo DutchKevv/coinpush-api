@@ -18,8 +18,8 @@ export const userController = {
 		return user;
 	},
 
-	findById(reqUser, id, options: any = {}) {
-		return User.findById(id);
+	findById(reqUser, userId) {
+		return User.findById(userId);
 	},
 
 	async findMany(reqUser, params) {
@@ -50,7 +50,8 @@ export const userController = {
 	async update(reqUser, userId, params): Promise<void> {
 		console.log(params);
 		if (params.device) {
-			await User['addDevice'](userId, params.device);
+			if (params.device.token)
+				await (<any>User).addDevice(userId, params.device);
 			delete params.device;
 		}
 

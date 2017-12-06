@@ -57,7 +57,7 @@ export const commentController = {
 				let pubOptions = {
 					type: 'post-comment',
 					data: {
-						toUserId: parent.userId,
+						toUserId: parent.createUser,
 						fromUserId: reqUser.id,
 						parentId: parent._id,
 						commentId: comment._id,

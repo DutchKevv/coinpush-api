@@ -7,8 +7,7 @@ import { User } from '../schemas/user.schema';
 
 const config = require('../../../tradejs.config');
 
-// Set up the sender with your GCM/FCM API key (declare this once for multiple messages)
-const sender = new gcm.Sender('AAAAcOdrZII:APA91bHdt3bPaqUW4sWF7tht0xJs13B_X-4Svm4TlWeLnXXFoVsPxWRQGxUPdqudCP1OHkQ-IJCVO10DJKi8G2fLekqfpy0xAXGakQmj-7FZW3DwB18BxcHNIWlgNC9T3T1tbXEnbaxM');
+const sender = new gcm.Sender(config.firebase.key);
 
 redis.client.subscribe("notify");
 
@@ -17,6 +16,9 @@ export const notifyController = {
     async sendToUser(userId, params) {
 
         const user: any = await userController.findById({ id: userId }, userId);
+
+        if (!user)
+            throw new Error('Could not find user');
 
         const tokens = (user.devices || []).map(device => device.token);
 
@@ -35,14 +37,14 @@ export const notifyController = {
         // Actually send the message
         sender.send(message, { registrationTokens: tokens }, function (err, response) {
             if (err)
-                return console.error(err);
-
-            else console.log(response);
+                return !console.log('ERROR') && console.error(err);
+            else
+                console.log('response', response);
         });
     },
 
     async sendTypePostComment(toUserId, data) {
-        const fromUser: any = await User.findById(data.fromUserId, {name: 1});
+        const fromUser: any = await User.findById(data.fromUserId, { name: 1 });
 
         return notifyController.sendToUser(data.toUserId, {
             title: `${fromUser.name} responded on your post`,
