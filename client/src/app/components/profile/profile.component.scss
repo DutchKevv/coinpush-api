@@ -1,5 +1,6 @@
 @import '~bootstrap/scss/_variables';
 @import '~bootstrap/scss/_mixins';
+@import '~bootstrap/scss/_buttons';
 @import '~bootstrap/scss/utilities/_visibility';
 
 @import '../../style/variables/variables';
@@ -26,6 +27,7 @@ header {
             margin-right: 20px;
             background: white;
             padding: 6px;
+            border: 0;
         }
 
         .meta-data {

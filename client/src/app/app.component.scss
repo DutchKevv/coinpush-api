@@ -40,8 +40,7 @@ header {
     text-align: center;
     background: $background-light;
     display: flex;
-    padding: 4px 10px;
-    height: 40px;
+    padding: 4px;
 
     @media only screen and (min-width : 768px) {
         justify-content: space-around;
@@ -57,18 +56,13 @@ header {
 
     .fa {
         color: white;
-        font-size: 35px;
+        font-size: 33px;
         line-height: 27px;
         width: 50px;
         padding-right: 10px;
 
         &:first-child {
-            padding-top: 2px;
-            font-size: 35px;
-        }
-
-        &:nth-child(2) {
-            padding-top: 1px;
+            font-size: 33px;
         }
     }
 
@@ -81,8 +75,8 @@ header {
     }
 
     input {
-        padding: 6px;
-        line-height: 14px;
+        padding: 4px;
+        line-height: 16px;
         width: 100%;
         border-radius: 2px;
         font-size: 16px;
@@ -92,6 +86,10 @@ header {
         text-align: center;
         box-sizing: border-box;
         border: none;
+
+        &:focus {
+            outline: none;
+        }
 
         @media only screen and (min-width : 768px) {
             width: 300px;

@@ -57,6 +57,12 @@
     "build-shared": "cd ./shared && npm run build",
     "build-user": "cd ./server-user && npm run build",
     "build-notify": "cd ./server-notify && npm run build",
+    "build-mobile": "cd client && npm run build-mobile",
+    "build-android": "cd client && npm run build-android",
+    "build-ios": "cd client && npm run build-ios",
+    "build-mobile-release": "cd client && npm run build-mobile-release",
+    "build-android-release": "cd client && npm run build-android-release",
+    "build-ios-release": "cd client && npm run build-ios-release",
     "run-client": "cd ./client && npm start",
     "klabam": "npm run stop && npm i && npm run build && npm run prod"
   }

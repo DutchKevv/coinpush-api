@@ -25,6 +25,8 @@
         constructor() {
             super();
 
+            this.version = null;
+
             this._setPlatformData();
         }
 
@@ -81,6 +83,10 @@
 
                 // window.AdMob.showBannerAtXY(0, window.innerHeight - 50)
             }
+
+            cordova.getAppVersion.getVersionNumber().then(function (version) {
+                app.version = version;
+            });
 
             window.FirebasePlugin.hasPermission(function (data) {
                 if (!data.isEnabled)

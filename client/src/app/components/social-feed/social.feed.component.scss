@@ -18,13 +18,13 @@
 }
 
 :host {
-	padding: 20px;
 	height: 100%;
 	width: 100%;
 	margin: 0 auto;
 	display: flex;
 	justify-content: space-between;
 	box-sizing: border-box;
+	padding: 20px 0;
 
 	p,
 	span,
@@ -92,12 +92,9 @@ app-comment-box {
 
 .comment-container {
 	background: white;
-	margin-bottom: 20px;
-	border-radius: 5px;
-	max-width: 500px;
-	box-sizing: border-box;
+	margin-bottom: 15px;
 	font-size: 12px;
-	transition: all 1s;
+	transition: opacity 1s;
 
 	&.fade-in {
 		animation: fadeIn 1s; /* IE 10+, Fx 29+ */
@@ -138,8 +135,8 @@ app-comment-box {
 		}
 
 		img {
-			width: 30px;
-			height: 30px;
+			width: 40px;
+			height: 40px;
 			background: black;
 			margin-right: 10px;
 		}
@@ -201,11 +198,12 @@ app-comment-box {
 		}
 
 		img {
-			height: 25px;
-			width: 25px;
+			height: 28px;
+			width: 28px;
 			margin-right: 10px;
-			border: 1px solid grey;
+			border: 1px solid rgb(190, 190, 190);
 			border-radius: 50%;
+			margin-top: 1px;
 		}
 
 		.comment-input {
@@ -235,6 +233,11 @@ app-comment-box {
 			}
 
 		}
+	}
+
+	@media screen and (min-width: 768px) {
+		border-radius: 5px;
+		max-width: 500px;
 	}
 }
 

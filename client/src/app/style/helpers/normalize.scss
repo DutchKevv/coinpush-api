@@ -18,7 +18,9 @@ button {
 
 input,
 textarea {
-	box-sizing: border-box;
+	&:focus {
+		outline: none;
+	}
 }
 
 ul {

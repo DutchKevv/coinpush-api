@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, ViewEncapsulation, AfterViewInit, OnInit, Output, ViewChild, ElementRef, EventEmitter } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewEncapsulation, AfterViewInit, OnInit, Output, ViewChild, ElementRef, EventEmitter, HostListener } from '@angular/core';
 import { AuthenticationService } from "./services/authenticate.service";
 import { SocketService } from "./services/socket.service";
 import { CacheService } from "./services/cache.service";
@@ -30,7 +30,22 @@ export class AppComponent implements OnInit {
 	@ViewChild('navbar') navbar: ElementRef;
 
 	private _sub: any;
-	
+	private _routerEventsSub: any;
+	private _isNavOpen: boolean = false;
+
+	@HostListener('window:popstate', ['$event'])
+	onPopState(event) {
+		if (!this._isNavOpen)
+			return;
+
+		event.preventDefault();
+		event.stopPropagation();
+
+		this.toggleNav(undefined, false);
+
+		return false;
+	}
+
 	constructor(
 		public router: Router,
 		public userService: UserService,
@@ -40,8 +55,8 @@ export class AppComponent implements OnInit {
 
 	ngOnInit() {
 		this._authenticationService.authenticate();
-		
-		this.router.events.subscribe((val) => {
+
+		this._routerEventsSub = this.router.events.subscribe((val) => {
 			if (val instanceof NavigationStart)
 				this.toggleNav(undefined, false);
 		});
@@ -92,6 +107,8 @@ export class AppComponent implements OnInit {
 		}
 
 		this.navbar.nativeElement.classList.toggle('show', state);
+
+		this._isNavOpen = typeof state === 'boolean' ? state : !this._isNavOpen;
 	}
 
 	public onClickFilter(event?, state?: boolean) {

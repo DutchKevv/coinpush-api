@@ -2,11 +2,11 @@
     <ng-container *ngIf="(user$ | async).options as options">
         <header>
             <div class="profile-details" style="background: url(./assets/image/cover.svg) center/cover;">
-                <img class="profileImg" src="{{options.profileImg}}">
+                <img class="profileImg" [attr.src]="options.profileImg ? options.profileImg : undefined">
                 <div class="meta-data">
                     <h2>{{options.name}}</h2>
                     <div class="profile-details-meta-container">
-                        <div *ngIf="!isSelf">
+                        <div *ngIf="options.name && !isSelf">
                             <button *ngIf="!options.iCopy" (click)="channelService.toggleCopy(user, true)" class="btn btn-sm btn-success">Copy</button>
                             <button *ngIf="options.iCopy" (click)="channelService.toggleCopy(user, false)" class="btn btn-sm btn-danger ">UnCopy</button>
                             <button *ngIf="!options.iFollow" (click)="channelService.toggleFollow(user, true)" class="btn btn-sm btn-success ">Follow

@@ -14,19 +14,19 @@ export class CustomHttp extends Http {
 	}
 
 	get(url: string, options?: RequestOptionsArgs): Observable<Response> {
-		return super.get(this._normalizeUrl(url), this.addJwt(options)).catch(this.handleError);
+		return super.get(this._normalizeUrl(url), this._addHeaders(options)).catch(this.handleError);
 	}
 
 	post(url: string, body: string, options?: RequestOptionsArgs): Observable<Response> {
-		return super.post(this._normalizeUrl(url), body, this.addJwt(options)).catch(this.handleError);
+		return super.post(this._normalizeUrl(url), body, this._addHeaders(options)).catch(this.handleError);
 	}
 
 	put(url: string, body: string, options?: RequestOptionsArgs): Observable<Response> {
-		return super.put(this._normalizeUrl(url), body, this.addJwt(options)).catch(this.handleError);
+		return super.put(this._normalizeUrl(url), body, this._addHeaders(options)).catch(this.handleError);
 	}
 
 	delete(url: string, options?: RequestOptionsArgs): Observable<Response> {
-		return super.delete(this._normalizeUrl(url), this.addJwt(options)).catch(this.handleError);
+		return super.delete(this._normalizeUrl(url), this._addHeaders(options)).catch(this.handleError);
 	}
 
 	private _normalizeUrl(url: string) {
@@ -35,16 +35,29 @@ export class CustomHttp extends Http {
 		return url;
 	}
 
-	private addJwt(options?: RequestOptionsArgs): RequestOptionsArgs {
+	private _addHeaders(options?: RequestOptionsArgs): RequestOptionsArgs {
 		// ensure request options and headers are not null
 		options = options || new RequestOptions();
 		options.headers = options.headers || new Headers();
 
+		this._addHeaderJwt(options);
+		this._addHeaderAppVersion(options);
+
+		return options;
+	}
+
+	private _addHeaderJwt(options: RequestOptionsArgs): RequestOptionsArgs {
 		// add authorization header with jwt token
 		let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-		if (currentUser && currentUser.token) {
+		if (currentUser && currentUser.token)
 			options.headers.append('Authorization', 'Bearer ' + currentUser.token);
-		}
+
+		return options;
+	}
+
+	private _addHeaderAppVersion(options: RequestOptionsArgs): RequestOptionsArgs {
+		if (window['app'].version)
+			options.headers.append('app-version', window['app'].version);
 
 		return options;
 	}

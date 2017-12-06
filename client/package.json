@@ -5,13 +5,19 @@
   "description": "A sample Apache Cordova application that responds to the deviceready event.",
   "main": "index.js",
   "scripts": {
-    "start2": "ng serve --aot --proxy proxy.conf.json --host 0.0.0.0 --no-sourcemaps",
     "start": "ng build --watch --aot --proxy proxy.conf.json --host 0.0.0.0 --no-sourcemaps",
     "build": "ng build --prod --env=prod",
     "build-verbose": "ng build --prod --env=prod --verbose > build.txt",
-    "build-android": "cordova build android",
+    "build-mobile": "cordova build --no-inc",
+    "build-android": "cordova build android --no-inc",
+    "build-ios": "cordova build ios --no-inc",
+    "build-mobile-release": "cordova build --release --inc-version",
+    "build-android-release": "cordova build android --release --inc-version",
+    "build-ios-release": "cordova build ios --release --inc-version",
     "emulate-android": "cordova emulate android",
-    "run-android": "cordova run android"
+    "emulate-ios": "cordova emulate ios",
+    "run-android": "cordova run android",
+    "run-ios": "cordova run android"
   },
   "author": "Apache Cordova Team",
   "license": "Apache-2.0",
@@ -37,7 +43,9 @@
     "bootstrap": "4.0.0-alpha.6",
     "cordova-android": "^6.3.0",
     "cordova-browser": "^5.0.1",
+    "cordova-build-increment": "^0.1.0",
     "cordova-plugin-admobpro": "^2.29.29",
+    "cordova-plugin-app-version": "^0.1.9",
     "cordova-plugin-extension": "^1.5.3",
     "cordova-plugin-firebase": "^0.1.25",
     "cordova-plugin-statusbar": "^2.3.0",
@@ -62,7 +70,8 @@
       "cordova-plugin-whitelist": {},
       "cordova-plugin-admobpro": {},
       "cordova-plugin-statusbar": {},
-      "cordova-plugin-firebase": {}
+      "cordova-plugin-firebase": {},
+      "cordova-plugin-app-version": {}
     },
     "platforms": [
       "browser",

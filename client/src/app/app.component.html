@@ -55,7 +55,7 @@
 <main class="main-container">
     <header *ngIf="userService.accountStatus$ | async as status">
         <i (click)="toggleNav($event)" class="fa fa-navicon hidden-lg-up"></i>
-        <i *ngIf="router.url.startsWith('/charts') || ['/user'].includes(router.url)" (click)="onClickFilter($event)" class="fa fa-filter hidden-lg-up"></i>
+        <i  *ngIf="router.url.startsWith('/charts') || ['/user'].includes(router.url)" (click)="onClickFilter($event)" class="fa fa-filter hidden-lg-up"></i>
         <!-- <div class="account-details hidden-xs-down">
             <h4>{{status.available | currency : 'EUR':'symbol'}}</h4>
             <span>available</span>

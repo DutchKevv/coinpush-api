@@ -27,6 +27,7 @@
     "redis": "^2.8.0",
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
+    "semver": "^5.4.1",
     "tsc-watch": "^1.0.8",
     "typescript": "^2.6.1"
   }

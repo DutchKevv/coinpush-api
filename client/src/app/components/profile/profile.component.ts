@@ -32,12 +32,6 @@ export class ProfileComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		// this.channelId = this._route.params['_value'].id;
-		// this.isSelf = this.channelId === this.userService.model.get('_id');
-		//
-		// this.channelService.find(this.channelId).subscribe((channel: ChannelModel) => {
-		// 	this.user$.next(channel);
-		// });
 		this.userId = this._route.snapshot.queryParams['id'];
 		this.isSelf = this.userId === this.userService.model.get('user_id');
 
@@ -46,7 +40,7 @@ export class ProfileComponent implements OnInit {
 		}));
 
 		this._sub = this._route.params.subscribe(params => {
-
+			
 			const type = params['t'];
 			this.userId = params['id'];
 			this.isSelf = this.userId === this.userService.model.get('user_id');
@@ -59,5 +53,6 @@ export class ProfileComponent implements OnInit {
 	}
 
 	ngOnDestroy() {
+		this._sub.unsubscribe();
 	}
 }
