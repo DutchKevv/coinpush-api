@@ -7,7 +7,6 @@ import {InstrumentsService} from '../../services/instruments.service';
 import {UserService} from '../../services/user.service';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {UserModel} from '../../models/user.model';
-import {ChannelService} from '../../services/channel.service';
 import countries from '../../../../../shared/data/countries';
 import { CacheService } from '../../services/cache.service';
 
@@ -37,9 +36,8 @@ export class UserOverviewComponent implements OnInit, OnDestroy, AfterViewChecke
 	private _moveInterval;
 
 	constructor(public instrumentsService: InstrumentsService,
-				private _cacheService: CacheService,
-				public channelService: ChannelService,
-				public userService: UserService) {
+				public userService: UserService,
+				private _cacheService: CacheService) {
 	}
 
 	ngOnInit() {

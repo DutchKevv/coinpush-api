@@ -63,7 +63,7 @@ export const dataLayer = {
 			bulk = model.collection.initializeUnorderedBulkOp(),
 			rowLength = 10, i = 0;
 
-		log.info('DataLayer', `WRITING ${candles.length / 10} candles to ${collectionName} starting ${new Date(candles[0])} until ${new Date(candles[candles.length - 10])}`);
+		// log.info('DataLayer', `WRITING ${candles.length / 10} candles to ${collectionName} starting ${new Date(candles[0])} until ${new Date(candles[candles.length - 10])}`);
 
 		while (i < candles.length) {
 			const time = new Date(candles[i]);

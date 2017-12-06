@@ -39,8 +39,12 @@ header {
     width: 100%;
     text-align: center;
     background: $background-light;
-    display: flex;
     padding: 4px;
+    display: none;
+
+    &.visible {
+        display: flex;
+    }
 
     @media only screen and (min-width : 768px) {
         justify-content: space-around;
@@ -146,6 +150,11 @@ header {
     overflow-y: auto;
     width: 250px;
     min-width: 250px;
+    display: none;
+    
+    &.visible {
+        display: block;
+    }
 
     transition: transform .2s ease-in-out;
 
@@ -241,71 +250,6 @@ $header-height: 18px;
     padding-left: 1px;
     color: $font-color-light;
     transition: transform .2s;
-}
-
-//table {
-//    // Faster rendering (read it on google)
-//    table-layout: fixed;
-//    margin-bottom: 0;
-//
-//    thead {
-//        tr {
-//            th {
-//                border: none;
-//            }
-//        }
-//    }
-//
-//    th,
-//    td {
-//        font-size: 10px;
-//        padding: 0 0 0 5px;
-//        border-color: $border-color-grey;
-//    }
-//
-//    th {
-//        color: $font-color-light;
-//    }
-//
-//
-//    td {
-//        color: $font-color-light-gray;
-//
-//        &.type-error {
-//            color: $general-error;
-//        }
-//    }
-//
-//    td:first-child {
-//        text-align: center;
-//    }
-//
-//
-//    th:nth-child(2) {
-//        width: 100px;
-//    }
-//
-//    td:nth-child(3) {
-//        white-space: pre-line;
-//    }
-//}
-
-.spinner {
-    margin: 0;
-    height: 10px;
-    width: 10px;
-}
-
-.footer-bar-wrapper {
-    background: $background-dark;
-    border-bottom: 1px solid $border-color-grey;
-    display: flex;
-}
-
-ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
 }
 
 .nav-tabs {

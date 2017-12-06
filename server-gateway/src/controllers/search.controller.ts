@@ -8,15 +8,13 @@ export const searchController = {
 
 		const results = await Promise.all([
 			request({
-				uri: config.server.channel.apiUrl + '/search',
+				uri: config.server.user.apiUrl + '/user',
 				method: 'get',
 				headers: {_id: reqUser.id},
 				qs: params,
 				json: true
 			})
 		]);
-
-		console.log(results);
 
 		return {
 			users: results[0]

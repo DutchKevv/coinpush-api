@@ -1,7 +1,6 @@
 import * as request from 'request-promise';
 import * as redis from '../modules/redis';
-import { CHANNEL_TYPE_MAIN, USER_FETCH_TYPE_ACCOUNT_DETAILS, USER_FETCH_TYPE_FULL, USER_FETCH_TYPE_PROFILE_SETTINGS } from '../../../shared/constants/constants';
-import { channelController } from './channel.controller';
+import { USER_FETCH_TYPE_ACCOUNT_DETAILS, USER_FETCH_TYPE_FULL, USER_FETCH_TYPE_PROFILE_SETTINGS } from '../../../shared/constants/constants';
 import { emailController } from './email.controller';
 import { IReqUser } from '../../../shared/interfaces/IReqUser.interface';
 import { IUser } from '../../../shared/interfaces/IUser.interface';
@@ -12,31 +11,20 @@ export const userController = {
 
 	async findById(reqUser: IReqUser, userId: string, options: any = {}): Promise<any> {
 
-		console.log('asdfsdf', options);
-
-		const pList = [
-			this._getUser(reqUser, userId, options.type),
-			channelController.findByUserId(reqUser, userId, options),
-		];
+		const pList = [this._getUser(reqUser, userId, options.type)];
 
 		if (options.type === USER_FETCH_TYPE_PROFILE_SETTINGS)
 			pList.push(emailController.findUserById(reqUser, userId, options));
 
 		const results = await Promise.all(pList);
 
-		console.log('asdff', results, );
+		console.log('asdff', results);
 
-		// Remove channel _id & user_id cause it overwrites the user id's
-		if (results[1]) {
-			delete results[1]._id;
-			delete results[1].user_id;
-		}
-
-		return Object.assign({}, results[0] || {}, results[1] || {}, results[2] || {});
+		return Object.assign(results[0] || {}, results[1] || {});
 	},
 
 	async findMany(reqUser: IReqUser, params): Promise<Array<any>> {
-		return request({ uri: config.server.user.apiUrl + '/user/' + reqUser.id, json: true })
+		return request({ uri: config.server.user.apiUrl + '/user/', json: true })
 	},
 
 	async getBalance(reqUser: IReqUser, userId) {
@@ -47,8 +35,8 @@ export const userController = {
 		}
 	},
 
-	async create(reqUser: IReqUser, params: IUser): Promise<{ user: any, channel: any }> {
-		let user, channel, email;
+	async create(reqUser: IReqUser, params: IUser): Promise<IUser> {
+		let user, notify;
 
 		try {
 			// create user
@@ -66,47 +54,28 @@ export const userController = {
 				},
 				json: true
 			});
-
-			console.log('1');
-
-			// channel
-			channel = await channelController.addUser({ id: user._id }, {
-				_id: user._id,
-				name: user.name,
-				description: user.description
-			});
-
-			console.log('2');
-
-			// update user c_id
-			// TODO : REMOVE FUCKING C_ID
-			// await this.update({ id: user._id }, user._id, { c_id: channel._id });
-
-			console.log('3');
-
-			// email
-			email = await emailController.addUser({ id: user._id }, {
+			console.log(1);
+			// notify
+			notify = await emailController.addUser({ id: user._id }, {
 				_id: user._id,
 				name: user.name,
 				email: user.email,
 				language: user.language
 			});
-
-			console.log('4');
-			// // update user with channel id
-			// await this.update(reqUser, user._id, {
-			// 	c_id: channel._id
-			// });
-
+			console.log(12);
 			// comment
-			// await request({
-			// 	uri: config.server.comment.apiUrl + '/user',
-			// 	headers: { '_id': user._id },
-			// 	method: 'POST',
-			// 	body: user,
-			// 	json: true
-			// });
-
+			await request({
+				uri: config.server.comment.apiUrl + '/user',
+				headers: { '_id': user._id },
+				method: 'POST',
+				body: {
+					_id: user._id,
+					name: user.name,
+					img: user.img,
+				},
+				json: true
+			});
+			console.log(120000);
 			// send newMember email
 			await request({
 				uri: config.server.notify.apiUrl + '/mail/new-member',
@@ -118,9 +87,7 @@ export const userController = {
 				json: true
 			});
 
-			console.log('5');
-
-			return { user, channel };
+			return user;
 
 		} catch (error) {
 			if (user && user._id) {
@@ -149,8 +116,16 @@ export const userController = {
 				body: params,
 				json: true
 			}),
-			// channel
-			channelController.updateByUserId(reqUser, userId, params),
+
+			// comment
+			request({
+				uri: config.server.comment.apiUrl + '/user/' + userId,
+				headers: { '_id': reqUser.id },
+				method: 'PUT',
+				body: params,
+				json: true
+			}),
+
 			// notify
 			request({
 				uri: config.server.notify.apiUrl + '/user/' + userId,
@@ -187,46 +162,13 @@ export const userController = {
 		});
 	},
 
-	/*
-		TODO: Not request main channel but let channel service find user main channel
-	 */
-	async toggleFollow(reqUser: IReqUser, toFollowId?: boolean) {
-
-		// Get user main channel
-		const channel = await request({
-			uri: config.server.channel.apiUrl + '/channel/',
-			method: 'GET',
+	async toggleFollow(reqUser: IReqUser, toFollowUserId: string) {
+		const result = await request({
+			uri: config.server.user.apiUrl + '/user/' + toFollowUserId + '/follow',
+			method: 'POST',
 			headers: { '_id': reqUser.id },
-			qs: {
-				user: toFollowId
-			},
 			json: true
 		});
-
-		// Subscribe to channel
-		const result = await channelController.toggleFollow(reqUser.id, channel.user[0]._id);
-
-		return result;
-	},
-
-	/*
-		TODO: Not request main channel but let channel service find user main channel
-	 */
-	async toggleCopy(reqUser: IReqUser, toFollowId) {
-
-		// Get user main channel
-		const channel = await request({
-			uri: config.server.channel.apiUrl + '/channel/',
-			method: 'GET',
-			headers: { '_id': reqUser.id },
-			qs: {
-				user: toFollowId
-			},
-			json: true
-		});
-
-		// Subscribe to channel
-		const result = await channelController.toggleCopy(reqUser.id, channel.user[0]._id);
 
 		return result;
 	},
@@ -242,7 +184,7 @@ export const userController = {
 	},
 
 	async remove(reqUser: IReqUser, userId: string) {
-		let user, channel, email;
+		let user, notify, comment;
 
 		// user
 		user = await request({
@@ -251,10 +193,10 @@ export const userController = {
 			method: 'DELETE'
 		});
 
-		// channel
+		// comment
 		try {
-			channel = await request({
-				uri: config.server.channel.apiUrl + '/user/' + userId,
+			comment = await request({
+				uri: config.server.comment.apiUrl + '/user/' + userId,
 				headers: { '_id': reqUser.id },
 				method: 'DELETE'
 			});
@@ -262,9 +204,9 @@ export const userController = {
 			console.error(error);
 		}
 
-		// email
+		// notify
 		try {
-			email = await request({
+			notify = await request({
 				uri: config.server.notify.apiUrl + '/user/' + userId,
 				headers: { '_id': reqUser.id },
 				method: 'DELETE'

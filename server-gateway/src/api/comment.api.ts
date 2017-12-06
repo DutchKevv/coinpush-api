@@ -1,5 +1,5 @@
-import {Router} from 'express';
-import {commentController} from '../controllers/comment.controller';
+import { Router } from 'express';
+import { commentController } from '../controllers/comment.controller';
 
 const router = Router();
 
@@ -10,7 +10,6 @@ router.get('/:id', async (req, res, next) => {
 	try {
 		res.send(await commentController.findById(req.user, req.params.id));
 	} catch (error) {
-		console.error(error);
 		next(error);
 	}
 });
@@ -20,13 +19,11 @@ router.get('/:id', async (req, res, next) => {
  */
 router.get('/', async (req, res, next) => {
 	try {
-		if (req.query.channel)
-			res.send(await commentController.findByChannelId(req.user, req.query.channel));
 		if (req.query.user)
 			res.send(await commentController.findByUserId(req.user, req.query.user));
-
+		else
+			res.send([]);
 	} catch (error) {
-		console.error(error);
 		next(error);
 	}
 });

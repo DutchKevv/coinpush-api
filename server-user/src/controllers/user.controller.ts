@@ -1,7 +1,7 @@
 import * as bcrypt from 'bcrypt';
 import { Types } from 'mongoose';
 import { client } from '../modules/redis';
-import { User } from '../schemas/user';
+import { User, UserSchema } from '../schemas/user.schema';
 import {
 	G_ERROR_EXPIRED,
 	G_ERROR_USER_NOT_FOUND,
@@ -14,11 +14,11 @@ const RESET_PASSWORD_TOKEN_EXPIRE = 1000 * 60 * 60 * 24; // 24 hour
 
 export const userController = {
 
-	getAllowedFields: ['_id', 'username', 'profileImg', 'country', 'followers', 'following', 'membershipStartDate', 'description', 'balance'],
+	getAllowedFields: ['_id', 'name', 'img', 'description', 'country', 'followers', 'following', 'membershipStartDate', 'description', 'balance'],
 
-	async find(reqUser, userId, type: number = USER_FETCH_TYPE_SLIM, fields: Array<string> = ['_id']) {
+	async findById(reqUser, userId, type: number = USER_FETCH_TYPE_SLIM, fields: Array<string> = ['_id', 'name', 'img', 'followers']) {
 		if (!userId)
-			throw new Error('user id is required');
+			throw new Error('userId is required');
 
 		let REDIS_KEY = REDIS_USER_PREFIX + userId;
 		let fieldsArr = [];
@@ -26,10 +26,10 @@ export const userController = {
 
 		switch (type) {
 			case USER_FETCH_TYPE_ACCOUNT_DETAILS:
-				fieldsArr = ['country', 'balance', 'leverage'];
+				fieldsArr = ['name', 'country', 'balance', 'leverage'];
 				break;
 			case USER_FETCH_TYPE_PROFILE_SETTINGS:
-				fieldsArr = ['country', 'leverage', 'gender'];
+				fieldsArr = ['country', 'leverage', 'gender', 'description'];
 				break;
 			case USER_FETCH_TYPE_SLIM:
 			default:
@@ -37,18 +37,20 @@ export const userController = {
 				break;
 		}
 
-		if (!user) {
-			let fieldsObj = {};
-			fieldsArr.forEach(field => fieldsObj[field] = 1);
+		let fieldsObj = {};
+		fieldsArr.forEach(field => fieldsObj[field] = 1);
+		console.log('fields fields fields fields', fields);
+		user = await User.findById(userId, fieldsObj).lean();
 
-			user = await User.findById(userId, fieldsObj);
+		if (user) {
+			UserSchema.statics.normalize(reqUser, user);
 		}
-
+			
 		return user;
 	},
 
 	async findMany(reqUser, params) {
-		const limit = params.limit || 20;
+		const limit = parseInt(params.limit, 10) || 20;
 		const sort = params.sort || -1;
 
 		// Filter allowed fields
@@ -59,14 +61,34 @@ export const userController = {
 		if (params.email)
 			where.email = params.email;
 
-		return User.find(where, fields).sort({ _id: sort }).limit(limit);
+		if (params.text)
+			where.$text = { $search: params.text };
+
+		const users = <Array<IUser>>await User.find(where, fields).sort({ _id: sort }).limit(limit).lean();
+
+		users.forEach((user) => (<any>User).normalize(reqUser, user));
+		console.log(users);
+		return users;
 	},
 
 	async findByEmail(reqUser, email: string, fields: Array<string> = []) {
 		let fieldsObj = {};
 		fields.forEach(field => fieldsObj[field] = 1);
 
-		return User.findOne({ email }, fields);
+		const user = await User.findOne({ email }, fields);
+
+		if (user)
+		(<any>User).normalize(reqUser, user)
+
+		return user;
+	},
+
+	async findByText(reqUser: IReqUser, text: string): Promise<Array<IUser>> {
+		const users = await User.find({ $match: { name: new RegExp('.*' + text + '.*', 'i') } });
+
+		users.forEach(user =>(<any>User).normalize(reqUser, user));
+
+		return users;
 	},
 
 	async create(params) {
@@ -81,17 +103,6 @@ export const userController = {
 		};
 
 		return User.create(userData);
-	},
-
-	async getCached(key) {
-		return new Promise((resolve, reject) => {
-			client.get(key, function (err, reply) {
-				if (err)
-					reject(err);
-				else
-					resolve(JSON.parse(reply))
-			});
-		});
 	},
 
 	// TODO - Filter fields
@@ -146,10 +157,30 @@ export const userController = {
 		return { _id: user._id, resetPasswordToken: token, resetPasswordExpires: expires, name: user.name };
 	},
 
+	async toggleFollow(reqUser: { id: string }, userId: string, state?: boolean): Promise<any> {
+		if (userId === reqUser.id)
+			throw new Error('Cannot follow self');
+
+		const user = await <any>User.findById(userId, {followers: 1});
+
+		// Validity checks
+		if (!user)
+			throw new Error('User not found');
+
+		const isFollowing = user.followers && user.followers.indexOf(reqUser.id) > -1;
+
+		if (isFollowing)
+			await user.update({ $pull: { followers: reqUser.id }, $inc: { followersCount: -1 } });
+		else
+			await user.update({ $addToSet: { followers: reqUser.id }, $inc: { followersCount: 1 } });
+
+		return { state: !isFollowing };
+	},
+
 	async remove(reqUser, id): Promise<any> {
 		console.log('DELETE!!');
 		if (reqUser.id !== id)
-			throw({code: '???', message: 'Remove user - req.user.id and userId to not match'});
+			throw ({ code: '???', message: 'Remove user - req.user.id and userId to not match' });
 
 		const user = await User.findByIdAndRemove(id).lean();
 

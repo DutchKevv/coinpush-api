@@ -9,7 +9,7 @@ const router = Router();
  */
 router.get('/', async (req: any, res, next) => {
 	try {
-		res.send(await userController.find(req.user, req.user, null, ['favorites']));
+		res.send(await userController.findById(req.user, req.user, null, ['favorites']));
 	} catch (error) {
 		console.error(error);
 		next(error);

@@ -1,6 +1,5 @@
 export interface IUser {
-	_id: string;
-	c_id?: string;
+	_id?: string;
 	name?: string;
 	email?: string;
 	balance?: number;
@@ -8,6 +7,7 @@ export interface IUser {
 	gender?: number;
 	country?: string;
 	language?: string;
-	profileImg?: string;
+	img?: string;
 	description?: string;
+	favorites?: Array<string>
 }

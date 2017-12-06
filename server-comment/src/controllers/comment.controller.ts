@@ -1,60 +1,52 @@
-import { Comment } from '../schemas/comment';
+import { Comment } from '../schemas/comment.schema';
 import { Types } from 'mongoose';
 import * as redis from '../modules/redis';
+import { User } from '../schemas/user.schema';
 
 const config = require('../../../tradejs.config');
 
 export const commentController = {
 
 	async findById(reqUser, id: string): Promise<any> {
-		const comment = await Comment.findById(id).lean();
+		const comment = await Comment.findById(id).populate('createUser').lean();
 
 		if (!comment)
 			return;
 
-		if (!comment.parentId)
-			comment.children = (await Comment.find({ parentId: { $eq: Types.ObjectId(comment._id) } }).sort({ _id: -1 }).limit(5).lean()).reverse();
+		if (comment.childCount)
+			comment.children = (await Comment.find({ parentId: { $eq: Types.ObjectId(comment._id) } }).populate('createUser').sort({ _id: -1 }).limit(5).lean()).reverse();
 
 		Comment.addILike(reqUser.id, [comment]);
+		User.normalizeProfileImg(comment);
 
 		return comment;
 	},
 
-	async findByChannelId(reqUser, channelId) {
-		let comments = await Comment.find({ channelId, parentId: { $eq: undefined } }).sort({ _id: -1 }).limit(20).lean();
+	async findByToUserId(reqUser, toUserId) {
+		let comments = await Comment.find({ toUser: toUserId, parentId: { $eq: undefined } }).sort({ _id: -1 }).limit(20).populate('createUser').lean();
 
 		comments = await Promise.all(comments.map(async comment => {
-			comment.children = (await Comment.find({ parentId: { $eq: Types.ObjectId(comment._id) } }).sort({ _id: -1 }).limit(5).lean()).reverse();
+			comment.children = (await Comment.find({ parentId: { $eq: Types.ObjectId(comment._id) } }).sort({ _id: -1 }).limit(5).populate('createUser').lean()).reverse();
 			return comment;
 		}));
-
+		
 		Comment.addILike(reqUser.id, comments);
-
+		comments.forEach(User.normalizeProfileImg);
+		
 		return comments;
 	},
 
-	async findByUserd(reqUser, userId) {
-		let comments = await Comment.find({ userId, parentId: { $eq: undefined } }).sort({ _id: -1 }).limit(20).lean();
-
-		comments = await Promise.all(comments.map(async comment => {
-			comment.children = (await Comment.find({ parentId: { $eq: Types.ObjectId(comment._id) } }).sort({ _id: -1 }).limit(5).lean()).reverse();
-			return comment;
-		}));
-
-		Comment.addILike(reqUser.id, comments);
-
-		return comments;
+	async findMany(reqUser, userId) {
+		return [];
 	},
 
 	async create(reqUser, options): Promise<any> {
 
 		const comment = await Comment.create({
-			userId: reqUser.id,
-			channelId: options.channelId,
+			createUser: reqUser.id,
+			toUser: options.toUserId,
 			parentId: options.parentId,
-			content: options.content,
-			username: options.name,
-			profileImg: options.profileImg
+			content: options.content
 		});
 
 		if (options.parentId) {

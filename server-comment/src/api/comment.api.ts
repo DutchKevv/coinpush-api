@@ -19,10 +19,10 @@ router.get('/:id', async (req, res, next) => {
  */
 router.get('/', async (req, res, next) => {
 	try {
-		if (req.query.channel)
-			res.send(await commentController.findByChannelId(req.user, req.query.channel));
+		if (req.query.userId)
+			res.send(await commentController.findByToUserId(req.user, req.query.userId));
 		else
-			res.send(null);
+			res.send(await commentController.findMany(req.user, req.query.userId));
 	} catch (error) {
 		next(error);
 	}

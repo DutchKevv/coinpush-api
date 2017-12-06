@@ -2,7 +2,7 @@
 	<div class="info-box">
 		<header>Info</header>
 		<main>
-			
+
 		</main>
 	</div>
 
@@ -19,7 +19,7 @@
 		<main>
 			<ul>
 				<li *ngFor="let copier of (user.options$ | async).copiers ">
-					<img src="{{copier.profileImg}}">
+					<img src="{{copier.img}}">
 					<span>{{copier.name}}</span>
 				</li>
 			</ul>
@@ -31,7 +31,7 @@
 		<main>
 			<ul>
 				<li *ngFor="let follower of (user.options$ | async).followers ">
-					<img src="{{follower.profileImg}}">
+					<img src="{{follower.img}}">
 					<span>{{follower.name}}</span>
 				</li>
 			</ul>
@@ -44,12 +44,12 @@
 
 	<div *ngFor="let comment of comments$ | async" class="comment-container fade-in" [ngClass]="{'fade-in': comment.options.isNew}">
 		<header>
-			<a [routerLink]="['/user/', comment.options.userId]">
-				<img [attr.src]="comment.options.profileImg" />
+			<a [routerLink]="['/user/', comment.options.createUser._id]">
+				<img [attr.src]="comment.options.createUser.img" />
 			</a>
 			<div>
-				<a [routerLink]="['/user/', comment.options.userId]" class="g-username">
-					{{comment.options.username}}
+				<a [routerLink]="['/user/', comment.options.createUser._id]" class="g-username">
+					{{comment.options.createUser.name}}
 				</a>
 				<a [routerLink]="['/comment/', comment.options._id]">{{comment.options.created | date:'shortTime'}}</a>
 			</div>
@@ -74,9 +74,12 @@
 			</div>
 
 			<div class="child-row fade-in" *ngFor="let child of comment.options.children">
-				<img [attr.src]="child.options.profileImg" />
+				<a [routerLink]="['/user/', child.options.createUser._id]">
+					<img [attr.src]="child.options.createUser.img" />
+				</a>
+				
 				<div>
-					<a class="g-username" [routerLink]="['/user/', child.options.userId]">{{child.options.username}}</a>
+					<a class="g-username" [routerLink]="['/user/', child.options.createUser._id]">{{child.options.createUser.name}}</a>
 					<span [innerHtml]="child.options.content | parseCommentContent"></span>
 					<div class="child-buttons">
 						<a (click)="commentService.toggleLike(child)" [ngClass]="{active: (child.options$ | async).iLike}">
@@ -92,7 +95,7 @@
 			</div>
 
 			<div class="child-row comment-input">
-				<img [attr.src]="userService.model.options.profileImg">
+				<img [attr.src]="userService.model.options.img">
 				<input (keyup.enter)="respond($event, comment.options._id)" type="text" placeholder="Write a comment..." />
 			</div>
 		</footer>

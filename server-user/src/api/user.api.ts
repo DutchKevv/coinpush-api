@@ -9,7 +9,7 @@ const router = Router();
  */
 router.get('/:id', async (req: any, res, next) => {
 	try {
-		res.send(await userController.find(req.user, req.params.id, parseInt(req.query.type, 10), req.query.fields));
+		res.send(await userController.findById(req.user, req.params.id, parseInt(req.query.type, 10), req.query.fields));
 	} catch (error) {
 		next(error);
 	}
@@ -21,6 +21,17 @@ router.get('/:id', async (req: any, res, next) => {
 router.get('/', async (req: any, res, next) => {
 	try {
 		res.send(await userController.findMany(req.user, req.query));
+	} catch (error) {
+		next(error);
+	}
+});
+
+/**
+ * Follow
+ */
+router.post('/:id/follow', async (req: any, res, next) => {
+	try {
+		res.send(await userController.toggleFollow(req.user, req.params.id));
 	} catch (error) {
 		next(error);
 	}

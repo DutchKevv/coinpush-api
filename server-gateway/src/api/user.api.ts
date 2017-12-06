@@ -41,17 +41,6 @@ router.post('/:id/follow', async (req, res, next) => {
 });
 
 /**
- * Copy
- */
-router.post('/:id/copy', async (req, res, next) => {
-	try {
-		res.send(await userController.toggleCopy(req.user, req.params.id));
-	} catch (error) {
-		next(error);
-	}
-});
-
-/**
  * Create
  */
 router.post('/', async (req, res, next) => {

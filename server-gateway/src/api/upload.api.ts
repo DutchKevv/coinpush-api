@@ -1,7 +1,7 @@
 import {Router} from 'express';
 import * as multer from 'multer';
 import {join, extname} from 'path';
-import {channelController} from '../controllers/channel.controller';
+import { userController } from '../controllers/user.controller';
 const config = require('../../../tradejs.config');
 
 const router = Router();
@@ -32,7 +32,7 @@ function normalizeProfileImg(filename) {
 router.post('/profile', upload.single('image'), async (req: any, res, next) => {
 
 	try {
-		const result = await channelController.updateByUserId(req.user, req.user.id, {profileImg: req.file.filename});
+		const result = await userController.update(req.user, req.user.id, {img: req.file.filename});
 		console.log('asdfsadfsdfads', result);
 
 		res.send({url: normalizeProfileImg(req.file.filename)});

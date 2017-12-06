@@ -33,15 +33,10 @@ import { RegisterComponent } from './components/register/register.component';
 import { HttpModule, XHRBackend, RequestOptions, Http } from '@angular/http';
 import { UserOverviewComponent } from './components/user-overview/user.overview.component';
 import { OrderService } from './services/order.service';
-import { ChannelOverviewComponent } from './components/channel-overview/channel-overview.component';
 import { GroupByPipe, PortfolioComponent } from './components/portfolio/portfolio.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { ParseCommentContentPipe, SocialFeedComponent } from './components/social-feed/social.feed.component';
-import { ChannelRowComponent } from './components/channel-row/channel.row.component';
-import { ProfileChannelOverviewComponent } from './components/profile-channel-overview/profile.channel.overview.component';
-import { ChannelService } from './services/channel.service';
-import { ChannelDetailsModalComponent } from './components/channel-details-modal/channel.details.modal.component';
 import { CommentBoxComponent } from './components/comment-box/comment-box.component';
 import { CommentService } from "./services/comment.service";
 import { PasswordResetComponent } from "./components/password-reset/password-reset.component";
@@ -65,7 +60,6 @@ import { Router } from '@angular/router';
 		GroupIdsPipe,
 		ParseCommentContentPipe,
 		SocialFeedComponent,
-		ChannelRowComponent,
 		LoginComponent,
 		PasswordResetComponent,
 		RequestPasswordResetComponent,
@@ -73,15 +67,12 @@ import { Router } from '@angular/router';
 		ModalComponent,
 		ModalAnchorDirective,
 		ResizableDirective,
-		ChannelOverviewComponent,
 		AlertComponent,
 		UserOverviewComponent,
 		PortfolioComponent,
 		GroupByPipe,
 		ProfileComponent,
-		ProfileChannelOverviewComponent,
 		SettingsComponent,
-		ChannelDetailsModalComponent,
 		CommentBoxComponent
 	],
 	imports: [
@@ -97,7 +88,6 @@ import { Router } from '@angular/router';
 		AlertService,
 		AuthenticationService,
 		UserService,
-		ChannelService,
 		CommentService,
 		BootstrapService,
 		NewsService,
@@ -118,7 +108,7 @@ import { Router } from '@angular/router';
 		AppComponent
 	],
 
-	entryComponents: [DialogComponent, ChannelDetailsModalComponent]
+	entryComponents: [DialogComponent]
 })
 
 export class AppModule {

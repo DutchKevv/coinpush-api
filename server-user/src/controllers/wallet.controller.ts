@@ -1,6 +1,6 @@
 import {Types} from 'mongoose';
 import {client} from '../modules/redis';
-import {User} from '../schemas/user';
+import {User} from '../schemas/user.schema';
 import {IUser} from "../../../shared/interfaces/IUser.interface";
 import {IReqUser} from "../../../shared/interfaces/IReqUser.interface";
 

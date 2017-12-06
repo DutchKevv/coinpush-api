@@ -26,7 +26,7 @@
             <div class="profileImg">
 
                 <input accept="image/*" class="uploadInput" id="uploadProfileImg" type="file" #uploadBtn (change)="onChangeFileInput($event)">
-                <label class="uploadInputBtn" for="uploadProfileImg" [ngStyle]="{'background-image': 'url(' + model?.options.profileImg + ')'}"
+                <label class="uploadInputBtn" for="uploadProfileImg" [ngStyle]="{'background-image': 'url(' + model.options.img + ')'}"
                     #uploadImageHolder></label>
                 <div class="saveOptions hidden" #saveOptions>
                     <span>save?</span>
@@ -144,23 +144,6 @@
 
     <!-- Account -->
     <h2 class="headline-header">Account</h2>
-
-    <div class="form-box">
-        <label for="balance">Balance</label>
-        <input type="number" id="balance" formControlName="balance" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-    </div>
-
-    <div class="form-box">
-        <label for="leverage">Leverage</label>
-        <select id="leverage" formControlName="leverage">
-            <option value="1">1:1</option>
-            <option value="10">1:10</option>
-            <option value="20">1:20</option>
-            <option value="25">1:25</option>
-            <option value="50">1:50</option>
-            <option value="100">1:100</option>
-        </select>
-    </div>
 
     <div class="form-box">
         <label for="name">Username</label>

@@ -44,11 +44,9 @@ export class SettingsComponent implements OnInit, OnDestroy {
 		this.form = this._formBuilder.group({
 			name: this._userService.model.get('name'),
 			email: this._userService.model.get('email'),
-			description: this._userService.model.get('description'),
+			description: this._userService.model.get('description') || '',
 			country: this._userService.model.get('country'),
 			gender: this._userService.model.get('gender'),
-			balance: this._userService.model.get('balance'),
-			leverage: this._userService.model.get('leverage'),
 			'settings.lowMargin': 0,
 			'settings.orderClosedByMarket': 0,
 			'settings.userFollowsMe': 0,
@@ -58,16 +56,14 @@ export class SettingsComponent implements OnInit, OnDestroy {
 			'settings.summary': 0,
 		});
 
-		this._userService.find(this._userService.model.get('user_id'), {type: USER_FETCH_TYPE_PROFILE_SETTINGS}).subscribe((user: UserModel) => {
+		this._userService.findById(this._userService.model.get('_id'), {type: USER_FETCH_TYPE_PROFILE_SETTINGS}).subscribe((user: UserModel) => {
 			console.log(user.options);
 
 			this.form.setValue({
 				name: user.options.name,
 				email: user.options.email,
 				country: user.options.country,
-				description: user.options.description,
-				balance: this._userService.model.get('balance'),
-				leverage: this._userService.model.get('leverage'),
+				description: user.options.description || '',
 				gender: user.options.gender,
 				'settings.lowMargin': +user.options.settings.lowMargin,
 				'settings.orderClosedByMarket': +user.options.settings.orderClosedByMarket,

@@ -4,8 +4,6 @@ import {UserService} from '../../services/user.service';
 import {AlertService} from '../../services/alert.service';
 import {UserModel} from '../../models/user.model';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {ChannelService} from '../../services/channel.service';
-import {ChannelModel} from '../../models/channel.model';
 import {Subject} from "rxjs/Subject";
 
 @Component({
@@ -18,14 +16,14 @@ import {Subject} from "rxjs/Subject";
 
 export class ProfileComponent implements OnInit {
 
-	@Output() public user$: BehaviorSubject<ChannelModel> = new BehaviorSubject(null);
+	@Output() public user$: BehaviorSubject<UserModel> = new BehaviorSubject(null);
 
 	public userId: string;
 	public isSelf: boolean;
 
 	private _sub: any;
 
-	constructor(public channelService: ChannelService,
+	constructor(
 				public router: Router,
 				public userService: UserService,
 				private _route: ActivatedRoute) {
@@ -33,21 +31,20 @@ export class ProfileComponent implements OnInit {
 
 	ngOnInit() {
 		this.userId = this._route.snapshot.queryParams['id'];
-		this.isSelf = this.userId === this.userService.model.get('user_id');
+		this.isSelf = this.userId === this.userService.model.get('_id');
 
-		this.user$.next(new ChannelModel({
-			user_id: this.userId
+		this.user$.next(new UserModel({
+			_id: this.userId
 		}));
 
 		this._sub = this._route.params.subscribe(params => {
 			
 			const type = params['t'];
 			this.userId = params['id'];
-			this.isSelf = this.userId === this.userService.model.get('user_id');
+			this.isSelf = this.userId === this.userService.model.get('_id');
 
-			this.channelService.findByUserId(this.userId, {followers: 5, copiers: 5}).subscribe((channel: ChannelModel) => {
-				// this.channelId = channel.get('_id');
-				this.user$.next(channel);
+			this.userService.findById(this.userId, {followers: 5, copiers: 5}).subscribe((user: UserModel) => {
+				this.user$.next(user);
 			});
 		});
 	}

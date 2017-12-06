@@ -177,12 +177,6 @@ app.use('/api/v1/upload', require('./api/upload.api'));
  * user
  */
 app.use('/api/v1/user', require('./api/user.api'));
-app.use('/api/v1/user-overview', require('./api/user.overview.api'));
-
-/**
- * channel
- */
-app.use('/api/v1/channel', require('./api/channel.api'));
 
 /**
  * order

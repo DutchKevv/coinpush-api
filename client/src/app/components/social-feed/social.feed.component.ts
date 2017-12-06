@@ -51,7 +51,6 @@ export class SocialFeedComponent implements OnInit {
 	@Output() comments$: BehaviorSubject<Array<CommentModel>> = new BehaviorSubject([]);
 
 	user: any = new UserModel;
-	channelId: string;
 	userId: string;
 	commentId: string;
 
@@ -91,7 +90,7 @@ export class SocialFeedComponent implements OnInit {
 
 		const input = event.currentTarget;
 		input.setAttribute('disabled', true);
-		const comment = await this.commentService.create(this.channelId, this.userId, parentModel, input.value);
+		const comment = await this.commentService.create(this.userId, parentModel, input.value);
 		input.removeAttribute('disabled');
 		if (!comment)
 			return;

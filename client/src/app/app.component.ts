@@ -49,18 +49,17 @@ export class AppComponent implements OnInit {
 	constructor(
 		public router: Router,
 		public userService: UserService,
+		public authenticationService: AuthenticationService,
 		private _http: Http,
-		private _cacheService: CacheService,
-		private _authenticationService: AuthenticationService) { }
+		private _cacheService: CacheService) {
+			this.authenticationService.authenticate();
+		 }
 
 	ngOnInit() {
-		this._authenticationService.authenticate();
-
 		this._routerEventsSub = this.router.events.subscribe((val) => {
 			if (val instanceof NavigationStart)
 				this.toggleNav(undefined, false);
 		});
-
 	}
 
 	public onSearchKeyUp(event): void {
@@ -125,6 +124,6 @@ export class AppComponent implements OnInit {
 	}
 
 	public logout(): void {
-		this._authenticationService.logout();
+		this.authenticationService.logout();
 	}
 }

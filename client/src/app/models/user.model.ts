@@ -8,6 +8,7 @@ export class UserModel extends BaseModel {
 		country: 'US',
 		balance: 0,
 		favorites: [],
+		followers: [],
 		leverage: LEVERAGE_TYPE_1,
 		iFollow: false,
 		iCopy: false,

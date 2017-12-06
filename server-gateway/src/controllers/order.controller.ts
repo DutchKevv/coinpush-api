@@ -1,5 +1,5 @@
 import * as request from 'request-promise';
-import {BROKER_ERROR_NOT_ENOUGH_FUNDS, CHANNEL_TYPE_MAIN} from '../../../shared/constants/constants';
+import {BROKER_ERROR_NOT_ENOUGH_FUNDS} from '../../../shared/constants/constants';
 import {userController} from './user.controller';
 import * as redis from '../modules/redis';
 
@@ -94,31 +94,6 @@ export const orderController = {
 	},
 
 	async _copyOrder(order): Promise<Boolean> {
-
-		try {
-			// Get user MAIN channel
-			const user = (await request({
-				uri: config.server.channel.apiUrl + '/channel/',
-				method: 'GET',
-				headers: {'_id': order.user},
-				qs: {
-					fields: ['_id, copiers'],
-					user: order.user,
-					type: CHANNEL_TYPE_MAIN
-				},
-				json: true
-			})).user[0];
-
-			console.log('user', user);
-
-			user.copiers.forEach(copier => {
-				this.create({id: copier}, order, false).catch(console.error);
-			});
-		} catch (error) {
-			console.error(error);
-			return false;
-		}
-
 		return true;
 	},
 

@@ -13,8 +13,8 @@ export class CommentService {
 
 	}
 
-	async create(channelId: string = null, userId = null, parentId: string = null, content: string): Promise<CommentModel> {
-		const comment = await this._http.post('/comment', {channelId, userId, parentId, content})
+	async create(toUserId = null, parentId: string = null, content: string): Promise<CommentModel> {
+		const comment = await this._http.post('/comment', {toUserId, parentId, content})
 			.map(res => res.json())
 			.toPromise();
 
@@ -27,8 +27,11 @@ export class CommentService {
 			isNew: true,
 			created: new Date(),
 			parentId,
-			username: this._userService.model.get('name'),
-			profileImg: this._userService.model.get('profileImg'),
+			createUser: {
+				_id: this._userService.model.get('_id'),
+				name: this._userService.model.get('name'),
+				img: this._userService.model.get('img'),
+			}
 		});
 
 		return model;

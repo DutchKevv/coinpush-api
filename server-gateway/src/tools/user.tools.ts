@@ -1,7 +1,6 @@
 import * as faker from 'faker';
 import * as minimist from 'minimist';
 import { userController } from '../controllers/user.controller';
-import { channelController } from '../controllers/channel.controller';
 import { emailController } from '../controllers/email.controller';
 import { USER_FETCH_TYPE_PROFILE_SETTINGS } from '../../../shared/constants/constants';
 
@@ -17,17 +16,17 @@ module.exports = {
 			try {
 				let password = faker.internet.password();
 
-				const { user, channel } = await userController.create({ id: null }, {
+				const user = await userController.create({ id: null }, {
 					_id: undefined,
 					name: faker.name.findName(),
 					email: faker.internet.email(),
 					country: faker.address.countryCode(),
 					password: password,
-					profileImg: faker.image.avatar(),
+					img: faker.image.avatar(),
 					description: faker.lorem.sentence()
 				});
 
-				console.log(i, 'user-id:', user._id, ' channel-id:', channel._id);
+				console.log(i, 'user-id:', user._id);
 
 			} catch (error) {
 				console.error('USER ERROR', error);
@@ -39,9 +38,8 @@ module.exports = {
 
 	async checkUser(id: string) {
 		const user = await userController.findById({ id }, id);
-		const channel = await channelController.findById({ id }, id);
 
-		if (user && channel) {
+		if (user) {
 			console.log('USER OK');
 			process.exit(0);
 		} else {
@@ -55,13 +53,6 @@ module.exports = {
 
 		if (!user || !user._id)
 			throw new Error('User not found in main tradejs-user collection');
-
-		try {
-			await channelController.addUser({id}, user, true);
-		} catch (error) {
-			console.log('CHANNEL');
-			console.error(error.message);
-		}
 
 		try {
 			await emailController.addUser({id}, user, true);

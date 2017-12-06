@@ -62,7 +62,7 @@ const config = {
         },
         notify: {
             port: 3010,
-            connectionString: 'mongodb://localhost:27017/tradejs-email'
+            connectionString: 'mongodb://localhost:27017/tradejs-notify'
         },
         fe: {
             port: 4200,

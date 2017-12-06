@@ -2,16 +2,14 @@
     <ng-container *ngIf="(user$ | async).options as options">
         <header>
             <div class="profile-details" style="background: url(./assets/image/cover.svg) center/cover;">
-                <img class="profileImg" [attr.src]="options.profileImg ? options.profileImg : undefined">
+                <img class="profileImg" [attr.src]="options.img ? options.img : undefined">
                 <div class="meta-data">
                     <h2>{{options.name}}</h2>
                     <div class="profile-details-meta-container">
                         <div *ngIf="options.name && !isSelf">
-                            <button *ngIf="!options.iCopy" (click)="channelService.toggleCopy(user, true)" class="btn btn-sm btn-success">Copy</button>
-                            <button *ngIf="options.iCopy" (click)="channelService.toggleCopy(user, false)" class="btn btn-sm btn-danger ">UnCopy</button>
-                            <button *ngIf="!options.iFollow" (click)="channelService.toggleFollow(user, true)" class="btn btn-sm btn-success ">Follow
+                            <button *ngIf="!options.iFollow" (click)="userService.toggleFollow(user$.getValue(), true)" class="btn btn-sm btn-success ">Follow
                             </button>
-                            <button *ngIf="options.iFollow" (click)="channelService.toggleFollow(user, false)" class="btn btn-sm btn-danger ">UnFollow
+                            <button *ngIf="options.iFollow" (click)="userService.toggleFollow(user$.getValue(), false)" class="btn btn-sm btn-danger ">UnFollow
                             </button>
                         </div>
                     </div>
@@ -21,10 +19,6 @@
                 <a [routerLink]="['/user/', userId, 'feed']" [routerLinkActive]="['active']">
                     <i class="fa fa-comments-o"></i>
                     <span class="hidden-md-down">Feed</span>
-                </a>
-                <a [routerLink]="['/user/', userId, 'channels']" [routerLinkActive]="['active']">
-                    <i class="fa fa-exchange"></i>
-                    <span class="hidden-md-down">Channels</span>
                 </a>
                 <a [routerLink]="['/user/', userId, 'statistics']" [routerLinkActive]="['active']">
                     <i class="fa fa-bar-chart"></i>
@@ -37,6 +31,6 @@
             </nav>
         </header>
         <!--<app-social-feed *ngIf="router.url.includes('/feed')" [model]="user"></app-social-feed>-->
-        <router-outlet *ngIf="(user$ | async).options._id"></router-outlet>
+        <router-outlet></router-outlet>
     </ng-container>
 <!-- </ng-container> -->

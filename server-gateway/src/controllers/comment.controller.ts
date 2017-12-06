@@ -1,12 +1,12 @@
 import * as request from 'request-promise';
 import {userController} from "./user.controller";
-import {channelController} from "./channel.controller";
+import { IReqUser } from '../../../shared/interfaces/IReqUser.interface';
 
 const config = require('../../../tradejs.config');
 
 export const commentController = {
 
-	async findById(reqUser, id): Promise<any> {
+	async findById(reqUser: IReqUser, id): Promise<any> {
 		const result = await request({
 			uri: config.server.comment.apiUrl + '/comment/' + id ,
 			headers: {'_id': reqUser.id},
@@ -16,13 +16,13 @@ export const commentController = {
 		return result;
 	},
 
-	async findByChannelId(reqUser: {id: string}, channelId: string, fields?: Array<string>): Promise<any> {
+	async findByUserId(reqUser: IReqUser, userId: string, fields?: Array<string>): Promise<any> {		
 		const result = await request({
 			uri: config.server.comment.apiUrl + '/comment/',
 			headers: {'_id': reqUser.id},
 			qs: {
-				channel: channelId,
-				fields: fields
+				userId,
+				fields
 			},
 			json: true
 		});
@@ -30,53 +30,17 @@ export const commentController = {
 		return result;
 	},
 
-	async findByUserId(reqUser: {id: string}, userId: string, fields?: Array<string>): Promise<any> {
-		const channel = await channelController.findByUserId(reqUser, userId);
-		console.log('safsfd', channel)
-
-		const result = await request({
-			uri: config.server.comment.apiUrl + '/comment/',
-			headers: {'_id': reqUser.id},
-			qs: {
-				channel: channel._id,
-				fields: fields
-			},
-			json: true
-		});
-
-		return result;
-	},
-
-	findMany(reqUser, params): Promise<Array<any>> {
-		return request({
-			uri: config.server.comment.apiUrl + '/channel',
-			headers: {'_id': reqUser.id},
-			json: true
-		});
-	},
-
-	async create(reqUser, params): Promise<any> {
-		// get username and profileImg
-		const channel = await channelController.findByUserId(reqUser, params.userId, ['name', 'profileImg', '_id']);
-
-		if (!channel)
-			throw new Error('user not found');
-
+	async create(reqUser: IReqUser, params): Promise<any> {
 		return request({
 			uri: config.server.comment.apiUrl + '/comment/',
 			method: 'POST',
 			headers: {'_id': reqUser.id},
-			body: {
-				name: channel.name,
-				profileImg: channel.profileImg,
-				content: params.content,
-				channelId: channel._id
-			},
+			body: params,
 			json: true
 		});
 	},
 
-	toggleLike(reqUser, commentId) {
+	toggleLike(reqUser: IReqUser, commentId): Promise<any> {
 		return request({
 			uri: config.server.comment.apiUrl + '/comment/like/' + commentId,
 			method: 'POST',
@@ -85,50 +49,11 @@ export const commentController = {
 		});
 	},
 
-	update(reqUser, channelId, params) {
-		return request({
-			uri: config.server.comment.apiUrl + '/channel/' + channelId,
-			method: 'PUT',
-			body: params,
-			headers: {'_id': reqUser.id},
-			json: true
-		});
+	update(reqUser: IReqUser, commentId, params): Promise<any> {
+		return Promise.resolve();
 	},
 
-	updateByUserId(reqUser, userId, params) {
-		return request({
-			uri: config.server.comment.apiUrl + '/channel/',
-			method: 'PUT',
-			body: params,
-			headers: {'_id': reqUser.id},
-			qs: {user: userId},
-			json: true
-		});
-	},
-
-	async toggleFollow(followerId: string, channelId: string) {
-		const result = await request({
-			uri: config.server.comment.apiUrl + '/channel/' + channelId + '/follow',
-			method: 'POST',
-			headers: {'_id': followerId},
-			json: true
-		});
-
-		return result;
-	},
-
-	async toggleCopy(followerId: string, channelId: string) {
-		const result = await request({
-			uri: config.server.comment.apiUrl + '/channel/' + channelId + '/copy',
-			method: 'POST',
-			headers: {'_id': followerId},
-			json: true
-		});
-
-		return result;
-	},
-
-	remove(reqUser, channelId) {
-
+	remove(reqUser, commentId): Promise<any> {
+		return Promise.resolve();
 	}
 };

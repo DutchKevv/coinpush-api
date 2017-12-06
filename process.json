@@ -36,15 +36,6 @@
     "instances": 1
   },
   {
-    "script": "server-channel/index.js",
-    "name": "channel",
-    "exec_mode": "fork",
-    "env_production" : {
-      "NODE_ENV": "dev"
-    },
-    "instances": 1
-  },
-  {
     "script": "server-user/index.js",
     "name": "user",
     "exec_mode": "fork",

@@ -14,6 +14,10 @@
 	transform: translateX(-50%);
 	width: 90%;
 
+	@media only screen and (min-width : 768px) {
+		max-width: 500px;
+	}
+
 	> div {
 		margin-bottom: 0;
 	}
