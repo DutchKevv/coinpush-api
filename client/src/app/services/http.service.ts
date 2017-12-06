@@ -6,10 +6,15 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class CustomHttp extends Http {
-	constructor(backend: ConnectionBackend, defaultOptions: RequestOptions) {
+	constructor(
+		backend: ConnectionBackend,
+		defaultOptions: RequestOptions,
+		router: Router
+	) {
 		super(backend, defaultOptions);
 	}
 
@@ -63,21 +68,30 @@ export class CustomHttp extends Http {
 	}
 
 	private handleError(error: any) {
-		if (error.status === 401) {
-			// 401 unauthorized response so log user out of client
-			window.location.href = '/#/login';
+		switch (error.status) {
+			case 401:
+				window.location.hash = '#/login';
+				break;
+			case 424:
+				if (confirm('New version available. Download now?')) {
+					
+				} else {
+					
+				}
+				break;
+
 		}
 		console.log(error);
 		return Observable.throw(error._body);
 	}
 }
 
-export function customHttpFactory(xhrBackend: XHRBackend, requestOptions: RequestOptions): Http {
-	return new CustomHttp(xhrBackend, requestOptions);
-}
+// export function customHttpFactory(xhrBackend: XHRBackend, requestOptions: RequestOptions): Http {
+// 	return new CustomHttp(xhrBackend, requestOptions);
+// }
 
-export let customHttpProvider = {
-	provide: Http,
-	useFactory: customHttpFactory,
-	deps: [XHRBackend, RequestOptions]
-};
+// export let customHttpProvider = {
+// 	provide: Http,
+// 	useFactory: customHttpFactory,
+// 	deps: [XHRBackend, RequestOptions]
+// };

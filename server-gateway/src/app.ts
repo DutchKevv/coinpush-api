@@ -76,7 +76,6 @@ app.use((req, res, next) => {
 
 // TEMP TEMP TEMP, NOT REQUIRED WHEN USING ANDROID PLAYSTORE
 app.use((req, res, next) => {
-	console.log(req.headers);
 	const appVersion = req.headers['app-version'];
 	console.log(appVersion);
 
@@ -84,7 +83,7 @@ app.use((req, res, next) => {
 		return next();
 
 	if (semver.lt(appVersion, config.appVersion))
-		return res.status(400)
+		return res.status(424)
 		
 	next();
 });
