@@ -12,7 +12,7 @@ export const authenticateController = {
 
 		let fieldsObj = {};
 		fields.forEach(field => fieldsObj[field] = 1);
-		
+		console.log(reqUser);
 		if (reqUser.id)
 			user = <IUser>await (<any>User).findById(reqUser.id, fieldsObj).lean();
 		else

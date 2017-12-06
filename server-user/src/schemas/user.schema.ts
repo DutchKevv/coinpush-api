@@ -126,7 +126,7 @@ UserSchema.statics.authenticate = async (params: IUser, fields = []) => {
 		return null;
 
 	return new Promise((resolve, reject) => {
-
+		console.log(params, user);
 		bcrypt.compare(params.password, user.password, (err, result) => {
 			if (err)
 				return reject(err);

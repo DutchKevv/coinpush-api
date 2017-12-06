@@ -8,6 +8,7 @@ import {CacheService} from "./cache.service";
 import {SocketService} from "./socket.service";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {AlertService} from "./alert.service";
+import { UserModel } from '../models/user.model';
 
 @Injectable()
 export class AuthenticationService {
@@ -124,6 +125,7 @@ export class AuthenticationService {
 		if (window.location.hash.startsWith('#/register')) {
 				
 		} else {
+			this._userService.model = new UserModel();
 			this._router.navigate(['/login']);
 		}
 	}

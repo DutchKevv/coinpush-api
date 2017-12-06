@@ -107,6 +107,13 @@ export const userController = {
 		if (reqUser.id !== userId)
 			throw ({ code: 0, message: 'Not allowed' });
 
+		const pList = [];
+		const keys = Object.keys(params);
+
+		if (keys.includes('name') || keys.includes('img')) {
+			
+		}
+
 		const results = await Promise.all([
 			// user
 			request({

@@ -108,12 +108,12 @@ export class SettingsComponent implements OnInit, OnDestroy {
 		data.append('image', this.uploadBtn.nativeElement.files.item(0));
 
 		this._http.post('/upload/profile', data).map(res => res.json()).subscribe((result) => {
-			this._userService.update({profileImg: result.url}, false);
+			this._userService.update({img: result.url}, false);
 		}, (error) => console.error(error));
 	}
 
 	resetProfileImg() {
-		this.setProfileImgPreview(this.model.options.profileImg);
+		this.setProfileImgPreview(this.model.options.img);
 		this.uploadBtn.nativeElement.value = '';
 		this.toggleSaveOptionsVisibility(false);
 	}
