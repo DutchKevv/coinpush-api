@@ -42,7 +42,7 @@
 <div class="feed">
 	<app-comment-box *ngIf="userId" [userId]="userId" (newMessage)="addMessage($event)"></app-comment-box>
 
-	<div *ngFor="let comment of comments$ | async" class="comment-container fade-in" [ngClass]="{'fade-in': comment.options.isNew}">
+	<div *ngFor="let comment of comments$ | async" class="comment-container" [ngClass]="{'fade-in': comment.options.isNew}">
 		<header>
 			<a [routerLink]="['/user/', comment.options.createUser._id]">
 				<img [attr.src]="comment.options.createUser.img" />
@@ -73,7 +73,7 @@
 				</a>
 			</div>
 
-			<div class="child-row fade-in" *ngFor="let child of comment.options.children">
+			<div class="child-row" *ngFor="let child of comment.options.children">
 				<a [routerLink]="['/user/', child.options.createUser._id]">
 					<img [attr.src]="child.options.createUser.img" />
 				</a>

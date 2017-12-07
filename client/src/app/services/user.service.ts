@@ -17,22 +17,21 @@ export interface IAccountStatus {
 @Injectable()
 export class UserService {
 
-	@Output() model: UserModel = new UserModel();
+	public model: UserModel = new UserModel(this.loadCurrentUser());
 
-	@Output() public accountStatus$: BehaviorSubject<IAccountStatus> = new BehaviorSubject({
+	public accountStatus$: BehaviorSubject<IAccountStatus> = new BehaviorSubject({
 		available: 0,
 		equity: 0,
 		openMargin: 0,
 		profit: 0
 	});
 
-	constructor(private _http: Http,
-		private _alertService: AlertService) {
+	constructor(
+		private _http: Http,
+		private _alertService: AlertService) { }
 
-	}
-
-	findById(id: string, options: any = {}) {
-		return this._http.get('/user/' + id, { params: options }).map((res: Response) => new UserModel(res.json()));
+	findById(id: string, options: any = {}): Promise<UserModel> {
+		return this._http.get('/user/' + id, { params: options }).map((res: Response) => new UserModel(res.json())).toPromise();
 	}
 
 	getOverview(options: any = {}) {
@@ -43,21 +42,26 @@ export class UserService {
 		return this._http.post('/user', user).map((res: Response) => res.json());
 	}
 
-	update(changes, toServer = true) {
+	async update(changes, toServer = true, showAlert: boolean = true) {
 		this.model.set(changes);
 
 		if (toServer) {
-			return this._http.put('/user/' + this.model.get('_id'), changes).subscribe(() => {
-				this.storeLocalStoreUser();
-				this._alertService.success('Settings saved');
-			}, error => {
+			try {
+				await this._http.put('/user/' + this.model.get('_id'), changes).toPromise();
+				this.storeCurrentUser();
+
+				if (showAlert)
+					this._alertService.success('Settings saved');
+			} catch (error) {
 				console.error(error);
 				this._alertService.error('Error saving settings')
-			});
+			}
 		}
 		else {
-			this.storeLocalStoreUser();
-			this._alertService.success('Settings saved');
+			this.storeCurrentUser();
+
+			if (showAlert)
+				this._alertService.success('Settings saved');
 		}
 	}
 
@@ -109,11 +113,22 @@ export class UserService {
 		return subscription;
 	}
 
-	loadLocalStorageUser() {
-		return JSON.parse(localStorage.getItem('currentUser'));
+	loadCurrentUser() {
+		const localUserString = localStorage.getItem('currentUser');
+
+		if (localUserString) {
+			try {
+				return JSON.parse(localUserString);
+			} catch (error) {
+				console.error('Could not load stored user, returning empty object!');
+				return {};
+			}
+		} else {
+			return {}
+		}
 	}
 
-	storeLocalStoreUser() {
+	storeCurrentUser() {
 		localStorage.setItem('currentUser', JSON.stringify(this.model.options));
 	}
 

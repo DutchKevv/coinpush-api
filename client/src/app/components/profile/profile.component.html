@@ -1,5 +1,5 @@
 <!-- <ng-container *ngIf="user$ | async as user"> -->
-    <ng-container *ngIf="(user$ | async).options as options">
+    <ng-container *ngIf="user.options$ | async as options">
         <header>
             <div class="profile-details" style="background: url(./assets/image/cover.svg) center/cover;">
                 <img class="profileImg" [attr.src]="options.img ? options.img : undefined">

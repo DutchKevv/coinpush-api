@@ -20,8 +20,8 @@ export class AuthGuard implements CanActivate {
 			return false;
 		}
 
-		if (!this._bootstrapService.isReady)
-			await this._bootstrapService.loadAppData();
+		// if (!this._bootstrapService.isReady)
+			// await this._bootstrapService.loadAppData();
 
 		return true;
 	}

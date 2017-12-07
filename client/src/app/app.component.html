@@ -3,8 +3,8 @@
 
 <nav [ngClass]="{visible: !router.url.startsWith('/login') && !router.url.startsWith('/register')}" class="nav-main" id="sidebar" #navbar>
     <a [routerLink]="['/user/', userService.model.options._id]" [routerLinkActive]="['active']" class="profile">
-        <img class="logo" width="70" height="70" src="{{(userService.model.options$ | async).img}}">
-        <h4>{{userService.model.options.name}}</h4>
+        <img class="logo" width="70" height="70" [attr.src]="userService.model.options.img ? userService.model.options.img : undefined">
+        <h4>{{userService.model.options.name || '&nbsp;'}}</h4>
     </a>
     <!-- <a [routerLink]="['/portfolio']" [routerLinkActive]="['active']">
             <i class="fa fa-handshake-o"></i>

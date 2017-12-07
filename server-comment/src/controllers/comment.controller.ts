@@ -9,7 +9,7 @@ export const commentController = {
 
 	async findById(reqUser, id: string): Promise<any> {
 		const comment = await Comment.findById(id).populate('createUser').lean();
-
+		
 		if (!comment)
 			return;
 
@@ -24,7 +24,7 @@ export const commentController = {
 
 	async findByToUserId(reqUser, toUserId) {
 		let comments = await Comment.find({ toUser: toUserId, parentId: { $eq: undefined } }).sort({ _id: -1 }).limit(20).populate('createUser').lean();
-
+		console.log(comments)
 		comments = await Promise.all(comments.map(async comment => {
 			comment.children = (await Comment.find({ parentId: { $eq: Types.ObjectId(comment._id) } }).sort({ _id: -1 }).limit(5).populate('createUser').lean()).reverse();
 			return comment;
@@ -41,7 +41,6 @@ export const commentController = {
 	},
 
 	async create(reqUser, options): Promise<any> {
-
 		const comment = await Comment.create({
 			createUser: reqUser.id,
 			toUser: options.toUserId,
@@ -61,7 +60,7 @@ export const commentController = {
 						fromUserId: reqUser.id,
 						parentId: parent._id,
 						commentId: comment._id,
-						content: options.content
+						content: options.content.substring(0, 100) // Don't send entire message (is only for notification label)
 					}
 				};
 
@@ -79,10 +78,10 @@ export const commentController = {
 			let pubOptions = {
 				type: comment.parentId ? 'comment-like' : 'post-like',
 				data: {
-					commentId: commentId,
-					fromUserId: reqUser.id,
-					parentId: comment.parentId,
 					toUserId: comment.createUser,
+					fromUserId: reqUser.id,
+					commentId: commentId,
+					parentId: comment.parentId
 				}
 			};
 

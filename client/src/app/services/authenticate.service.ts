@@ -38,10 +38,6 @@ export class AuthenticationService {
 		return null;
 	}
 
-	updateStoredUser(data): void {
-		localStorage.setItem('currentUser', JSON.stringify(Object.assign(this.getStoredUser() || {}, data)));
-	}
-
 	removeStoredUser(): void {
 		localStorage.removeItem('currentUser');
 	}
@@ -103,9 +99,7 @@ export class AuthenticationService {
 				return false;
 			}
 
-			this.updateStoredUser(user);
-
-			this._userService.model.set(user);
+			this._userService.update(user, false, false)
 
 			this.loggedIn$.emit(true);
 

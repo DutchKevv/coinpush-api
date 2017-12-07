@@ -18,7 +18,6 @@ export class BootstrapService {
 	}
 
 	public async loadAppData() {
-		this._socketService.connect();
 		await this._cacheService.load();
 
 		this.isReady = true;

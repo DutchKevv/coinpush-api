@@ -56,14 +56,14 @@ export class SettingsComponent implements OnInit, OnDestroy {
 			'settings.summary': 0,
 		});
 
-		this._userService.findById(this._userService.model.get('_id'), {type: USER_FETCH_TYPE_PROFILE_SETTINGS}).subscribe((user: UserModel) => {
+		this._userService.findById(this._userService.model.get('_id'), {type: USER_FETCH_TYPE_PROFILE_SETTINGS}).then((user: UserModel) => {
 			console.log(user.options);
 
 			this.form.setValue({
 				name: user.options.name,
 				email: user.options.email,
 				country: user.options.country,
-				description: user.options.description || '',
+				description: user.options.description,
 				gender: user.options.gender,
 				'settings.lowMargin': +user.options.settings.lowMargin,
 				'settings.orderClosedByMarket': +user.options.settings.orderClosedByMarket,
