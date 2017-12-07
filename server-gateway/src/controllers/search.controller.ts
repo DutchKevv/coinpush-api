@@ -5,11 +5,9 @@ const config = require('../../../tradejs.config');
 export const searchController = {
 
 	async byText(reqUser, params?): Promise<any> {
-
 		const results = await Promise.all([
 			request({
 				uri: config.server.user.apiUrl + '/user',
-				method: 'get',
 				headers: {_id: reqUser.id},
 				qs: params,
 				json: true

@@ -76,11 +76,10 @@ export class UserService {
 			})
 	}
 
-	toggleFollow(model: UserModel, state: boolean) {
+	async toggleFollow(model: UserModel, state: boolean) {
+		try {
+			const result = await this._http.post('/user/' + model.get('_id') + '/follow', null).map(res => res.json()).toPromise();
 
-		const subscription = this._http.post('/user/' + model.get('_id') + '/follow', null).map(res => res.json());
-
-		subscription.subscribe(result => {
 			let text;
 
 			if (result.state) {
@@ -90,27 +89,28 @@ export class UserService {
 					img: this.model.get('profileImg'),
 				}]);
 				model.set({
-					iFollow: !!state,
+					iFollow: result.state,
 					followersCount: ++model.options.followersCount
 				});
 				text = `Now following ${model.options.name}`;
 			} else {
-				const index = model.options.followers.find(f => f._id === this.model.get('user_id'));
+				const index = model.options.followers.find(f => f._id === this.model.get('_id'));
 				model.options.followers.slice(index, 1);
 
 				model.set({
-					iFollow: !!state,
+					iFollow: result.state,
 					followersCount: --model.options.followersCount
 				});
 				text = `Stopped following ${model.options.name}`;
 			}
 			this._alertService.success(text);
-		}, (error) => {
+
+			return true;
+		} catch (error) {
 			console.error(error);
 			this._alertService.error(`An error occurred when following ${model.options.username}...`);
-		});
-
-		return subscription;
+			return false;
+		}
 	}
 
 	loadCurrentUser() {

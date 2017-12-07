@@ -21,8 +21,7 @@ export const UserSchema = new Schema({
 		type: String,
 		unique: true,
 		required: true,
-		trim: true,
-		text: true
+		trim: true
 	},
 	img: {
 		type: String
@@ -111,7 +110,6 @@ export const UserSchema = new Schema({
 	}
 });
 
-// Enable beautifying on this schema 
 UserSchema.plugin(beautifyUnique);
 
 // authenticate input against database
@@ -152,7 +150,7 @@ UserSchema.statics.normalize = function (user, doc) {
 UserSchema.statics.setIFollow = function (user, doc) {
 	if (!doc)
 		return;
-
+	
 	if (doc.followers)
 		doc.iFollow = doc.followers.map(c => c.toString()).indexOf(user.id) > -1;
 

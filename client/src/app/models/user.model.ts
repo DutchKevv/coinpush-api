@@ -9,9 +9,9 @@ export class UserModel extends BaseModel {
 		balance: 0,
 		favorites: [],
 		followers: [],
+		followersCount: 0,
 		leverage: LEVERAGE_TYPE_1,
 		iFollow: false,
-		iCopy: false,
 		transactions: 0,
 		profileImg: ''
 	}

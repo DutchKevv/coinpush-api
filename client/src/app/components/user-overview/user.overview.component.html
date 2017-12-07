@@ -54,21 +54,19 @@
                 <h4>
                     <a>{{model.options.name}}</a>
                 </h4>
-                <h4 style="color: #b7b7b7;">
-                    <span>{{options.transactions}}</span> transactions</h4>
+                <p>{{options.country}}</p>
             </main>
             <footer>
                 <div>
                     <p>
-                        <span class="followers">{{options.followersCount}}</span> followers</p>
-                    <p>
-                        <span class="followers">{{options.copiersCount}}</span> copiers</p>
+                        <span class="followers">{{options.followersCount}}</span> followers
+                    </p>
                 </div>
                 <div *ngIf="options._id !== selfId">
-                    <button *ngIf="!options.iCopy" (click)="channelService.toggleCopy(model, true)" class="btn btn-sm btn-success pull-right">Copy</button>
-                    <button *ngIf="options.iCopy" (click)="channelService.toggleCopy(model, false)" class="btn btn-sm btn-danger pull-right">UnCopy</button>
-                    <button *ngIf="!options.iFollow" (click)="channelService.toggleFollow(model, true)" class="btn btn-sm btn-success pull-right">Follow</button>
-                    <button *ngIf="options.iFollow" (click)="channelService.toggleFollow(model, false)" class="btn btn-sm btn-danger pull-right">UnFollow</button>
+                    <button *ngIf="!options.iCopy" (click)="userService.toggleCopy(model, true)" class="btn btn-sm btn-success pull-right">Copy</button>
+                    <button *ngIf="options.iCopy" (click)="userService.toggleCopy(model, false)" class="btn btn-sm btn-danger pull-right">UnCopy</button>
+                    <button *ngIf="!options.iFollow" (click)="userService.toggleFollow(model, true)" class="btn btn-sm btn-success pull-right">Follow</button>
+                    <button *ngIf="options.iFollow" (click)="userService.toggleFollow(model, false)" class="btn btn-sm btn-danger pull-right">UnFollow</button>
                 </div>
             </footer>
         </ng-container>
@@ -87,21 +85,19 @@
                 <h4>
                     <a>{{model.options.name}}</a>
                 </h4>
-                <h4 style="color: #b7b7b7;">
-                    <span>{{options.transactions}}</span> transactions</h4>
+                <p>{{options.country}}</p>
             </main>
             <footer>
                 <div>
                     <p>
-                        <span class="followers">{{options.followersCount}}</span> followers</p>
-                    <p>
-                        <span class="followers">{{options.copiersCount}}</span> copiers</p>
+                        <span class="followers">{{options.followersCount}}</span> followers
+                    </p>
                 </div>
                 <div *ngIf="options._id !== selfId">
-                    <button *ngIf="!options.iCopy" (click)="channelService.toggleCopy(model, true)" class="btn btn-sm btn-success pull-right">Copy</button>
-                    <button *ngIf="options.iCopy" (click)="channelService.toggleCopy(model, false)" class="btn btn-sm btn-danger pull-right">UnCopy</button>
-                    <button *ngIf="!options.iFollow" (click)="channelService.toggleFollow(model, true)" class="btn btn-sm btn-success pull-right">Follow</button>
-                    <button *ngIf="options.iFollow" (click)="channelService.toggleFollow(model, false)" class="btn btn-sm btn-danger pull-right">UnFollow</button>
+                    <button *ngIf="!options.iCopy" (click)="userService.toggleCopy(model, true)" class="btn btn-sm btn-success pull-right">Copy</button>
+                    <button *ngIf="options.iCopy" (click)="userService.toggleCopy(model, false)" class="btn btn-sm btn-danger pull-right">UnCopy</button>
+                    <button *ngIf="!options.iFollow" (click)="userService.toggleFollow(model, true)" class="btn btn-sm btn-success pull-right">Follow</button>
+                    <button *ngIf="options.iFollow" (click)="userService.toggleFollow(model, false)" class="btn btn-sm btn-danger pull-right">UnFollow</button>
                 </div>
             </footer>
         </ng-container>
@@ -120,15 +116,13 @@
                 <h4>
                     <a>{{model.options.name}}</a>
                 </h4>
-                <h4 style="color: #b7b7b7;">
-                    <span>{{model.options.transactions}}</span> transactions</h4>
+                <p>{{options.country}}</p>
             </main>
             <footer>
                 <div>
                     <p>
-                        <span class="followers">{{options.followersCount}}</span> followers</p>
-                    <p>
-                        <span class="followers">{{options.copiersCount}}</span> copiers</p>
+                        <span class="followers">{{options.followersCount}}</span> followers
+                    </p>
                 </div>
                 <div *ngIf="options._id !== selfId">
                     <button *ngIf="!options.iCopy" (click)="userService.toggleCopy(model, true)" class="btn btn-sm btn-success pull-right">Copy</button>

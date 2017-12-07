@@ -1,6 +1,7 @@
 import {
 	ChangeDetectionStrategy, Component, ElementRef, Host, Input, NgZone, OnInit, Output, Pipe, PipeTransform,
-	ViewEncapsulation
+	ViewEncapsulation,
+	OnDestroy
 } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { Http } from '@angular/http';
@@ -46,13 +47,13 @@ export class ParseCommentContentPipe implements PipeTransform {
 	// encapsulation: ViewEncapsulation.Native,
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SocialFeedComponent implements OnInit {
+export class SocialFeedComponent implements OnInit, OnDestroy {
 
 	@Output() comments$: BehaviorSubject<Array<CommentModel>> = new BehaviorSubject([]);
 
-	user: any = new UserModel;
 	userId: string;
 	commentId: string;
+	private _routeParamsSub;
 
 	constructor(private _route: ActivatedRoute,
 		// @Host() public parent: ProfileComponent,
@@ -62,19 +63,20 @@ export class SocialFeedComponent implements OnInit {
 	}
 
 	async ngOnInit() {
-		console.log(this._route.parent, this._router);
-		// this.parent.user$.subscribe(async (user) => {
-		// 	this.user = user;
-
-		// 	this.channelId = user.options._id;
 		this.commentId = this._route.snapshot.params['id'];
 		this.userId = this._route.parent.snapshot.params['id']
-		
+
 		if (this.commentId)
-			this.comments$.next(await this.commentService.findById(this.commentId));
+			this._loadByPostId(this.commentId);
 		else
-			this.comments$.next(await this.commentService.findByUserId(this.userId));
-		// });
+			this._loadByUserId(this.userId);
+
+		this._routeParamsSub = this._route.parent.params.subscribe(params => {
+			// only load if userId is different then current userId
+			if (!this.userId !== params['id']) {
+				this._loadByUserId(params['id']);
+			}
+		});
 	}
 
 	onEnterFunction() {
@@ -86,8 +88,6 @@ export class SocialFeedComponent implements OnInit {
 	}
 
 	async respond(event, parentModel) {
-		console.log(event, parentModel);
-
 		const input = event.currentTarget;
 		input.setAttribute('disabled', true);
 		const comment = await this.commentService.create(this.userId, parentModel, input.value);
@@ -115,5 +115,18 @@ export class SocialFeedComponent implements OnInit {
 
 	onChangeFileInput(event) {
 
+	}
+
+	private async _loadByUserId(userId: string) {
+		this.comments$.next(await this.commentService.findByUserId(userId));
+	}
+
+	private async _loadByPostId(postId: string) {
+		this.comments$.next(await this.commentService.findById(postId));
+	}
+
+	ngOnDestroy() {
+		if (this._routeParamsSub)
+			this._routeParamsSub.unsubscribe();
 	}
 }

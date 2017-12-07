@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, OnInit, Output, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute, Route, Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component, OnInit, Output, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { AlertService } from '../../services/alert.service';
 import { UserModel } from '../../models/user.model';
@@ -17,13 +17,13 @@ import { Subject } from "rxjs/Subject";
 export class ProfileComponent implements OnInit {
 
 	public user: UserModel = null;
-	public isSelf: boolean;
+	public isSelf: boolean = true;
 
 	private _routeSub: any;
 
 	constructor(
-		public router: Router,
-		private _userService: UserService,
+		public userService: UserService,
+		private _changeRef: ChangeDetectorRef,
 		private _route: ActivatedRoute) {
 			
 	}
@@ -35,14 +35,21 @@ export class ProfileComponent implements OnInit {
 
 		this._routeSub = this._route.params.subscribe(params => {
 			// only load if userId is different then current userId
-			if (!this.user || !this.user.options || this.user.options._id !== params['id'])
+			if (!this.user || !this.user.options || this.user.options._id !== params['id']) {
 				this._loadUser(params['id']);
+			}	
 		});
 	}
 
+	public async toggleFollow(userModel: UserModel, state: boolean) {
+		const result = await this.userService.toggleFollow(userModel, state);
+		this._changeRef.detectChanges();
+	}
+
 	private async _loadUser(userId: string) {
-		this.user = await this._userService.findById(userId, { followers: 5, copiers: 5 });
-		this.isSelf = userId === this._userService.model.options._id;
+		this.user = await this.userService.findById(userId, { followers: 5, copiers: 5 });
+		this.isSelf = userId === this.userService.model.options._id;
+		this._changeRef.detectChanges();
 	}
 
 	ngOnDestroy() {

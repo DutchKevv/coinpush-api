@@ -96,14 +96,14 @@ header {
         }
 
         @media only screen and (min-width : 768px) {
-            width: 300px;
+            width: 400px;
         }
     }
 
     .search-drop-down {
         position: absolute;
         z-index: 122;
-        top: 36px;
+        top: 28px;
         left: 0;
         width: 100%;
         background: $background-light;
@@ -115,8 +115,8 @@ header {
         }
 
         @media only screen and (min-width : 768px) {
-            width: 298px;
-            left: calc(50% - 149px);
+            width: 400px;
+            left: calc(50% - 200px);
             height: auto;
         } 
 

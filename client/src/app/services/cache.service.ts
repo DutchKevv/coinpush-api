@@ -45,7 +45,7 @@ export class CacheService {
 				if (err)
 					return reject(err);
 
-				this.symbols = symbols.map(symbol => new SymbolModel(symbol));
+				this._updateSymbols(symbols);
 
 				this.symbols.forEach((symbol: SymbolModel) => symbol.tick([]));
 
@@ -53,7 +53,7 @@ export class CacheService {
 			});
 
 			this._socket.on('ticks', ticks => {
-				
+
 				for (let _symbol in ticks) {
 					let symbol = this.getBySymbol(_symbol);
 
@@ -87,11 +87,24 @@ export class CacheService {
 		// this._socket.destroy();
 	}
 
+	private _updateSymbols(symbols: Array<any>) {
+		symbols.forEach(symbol => {
+			const storedSymbol = this.getBySymbol(symbol.name);
+			if (storedSymbol) {
+				Object.assign(storedSymbol.options, symbol);
+			} else {
+				this.symbols.push(new SymbolModel(symbol));
+			}
+		});
+
+
+	}
+
 	public add(model) {
 		return model;
 	}
 
-	public getBySymbol(symbol: string) {
+	public getBySymbol(symbol: string): SymbolModel {
 		return this.symbols.find(_symbol => _symbol.options.name === symbol)
 	}
 

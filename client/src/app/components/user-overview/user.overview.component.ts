@@ -31,7 +31,7 @@ export class UserOverviewComponent implements OnInit, OnDestroy, AfterViewChecke
 	public countries: any[] = countries;
 	public symbols: any[] = this._cacheService.symbols;
 	
-	public selfId = this.userService.model.get('_id');
+	public selfId = this.userService.model.options._id;
 
 	private _moveInterval;
 
@@ -42,6 +42,7 @@ export class UserOverviewComponent implements OnInit, OnDestroy, AfterViewChecke
 
 	ngOnInit() {
 		this.userService.getOverview().subscribe((users: Array<UserModel>) => {
+			console.log(users);
 			this.newest$.next(users.slice());
 			this.editorChoice$.next(users.slice().reverse());
 			this.topInvestors$.next(shuffleArray(users.slice()));

@@ -14,19 +14,7 @@
 		</main>
 	</div>
 
-	<div class="info-box info-box-user-list">
-		<header>Copiers ({{(user.options$ | async).copiersCount}})</header>
-		<main>
-			<ul>
-				<li *ngFor="let copier of (user.options$ | async).copiers ">
-					<img src="{{copier.img}}">
-					<span>{{copier.name}}</span>
-				</li>
-			</ul>
-		</main>
-	</div>
-
-	<div class="info-box info-box-user-list">
+	<!-- <div class="info-box info-box-user-list">
 		<header>Followers ({{(user.options$ | async).followersCount}})</header>
 		<main>
 			<ul>
@@ -36,7 +24,7 @@
 				</li>
 			</ul>
 		</main>
-	</div>
+	</div> -->
 </div>
 
 <div class="feed">
@@ -108,13 +96,6 @@
 		<main>
 			<p>Followers: 0</p>
 			<p>Following: 0</p>
-		</main>
-	</div>
-
-	<div class="info-box">
-		<header>Visitors</header>
-		<main>
-			blabla
 		</main>
 	</div>
 </div>

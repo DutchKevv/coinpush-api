@@ -71,7 +71,7 @@ export class AppComponent implements OnInit {
 		}
 
 		const symbols = this._cacheService.getByText(value).slice(0, 5);
-
+		console.log(symbols);
 		const currentResult = {
 			users: [],
 			symbols: symbols,

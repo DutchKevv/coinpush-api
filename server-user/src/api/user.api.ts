@@ -20,6 +20,7 @@ router.get('/:id', async (req: any, res, next) => {
  */
 router.get('/', async (req: any, res, next) => {
 	try {
+		console.log('asfdsadf',req.user);
 		res.send(await userController.findMany(req.user, req.query));
 	} catch (error) {
 		next(error);

@@ -14,9 +14,9 @@ const RESET_PASSWORD_TOKEN_EXPIRE = 1000 * 60 * 60 * 24; // 24 hour
 
 export const userController = {
 
-	getAllowedFields: ['_id', 'name', 'img', 'description', 'country', 'followers', 'following', 'membershipStartDate', 'description', 'balance'],
+	getAllowedFields: ['_id', 'name', 'img', 'description', 'country', 'followers', 'following', 'followersCount', 'membershipStartDate', 'description', 'balance'],
 
-	async findById(reqUser, userId, type: number = USER_FETCH_TYPE_SLIM, fields: Array<string> = ['_id', 'name', 'img', 'followers']) {
+	async findById(reqUser, userId, type: number = USER_FETCH_TYPE_SLIM, fields: Array<string> = ['_id', 'name', 'img', 'followers', 'followersCount']) {
 		if (!userId)
 			throw new Error('userId is required');
 
@@ -53,7 +53,7 @@ export const userController = {
 		const sort = params.sort || -1;
 
 		// Filter allowed fields
-		const fields = {};
+		const fields: any = {};
 		(params.fields || this.getAllowedFields).filter(field => this.getAllowedFields.includes(field)).forEach(field => fields[field] = 1);
 
 		const where: any = {};
@@ -61,12 +61,19 @@ export const userController = {
 			where.email = params.email;
 
 		if (params.text)
-			where.$text = { $search: params.text };
+			where.name = { "$regex": params.text, "$options": "i" } 
 
+		console.log('where', where, params);
+
+		fields.followers = 1;
 		const users = <Array<IUser>>await User.find(where, fields).sort({ _id: sort }).limit(limit).lean();
-
-		users.forEach((user) => (<any>User).normalize(reqUser, user));
-		console.log(users);
+		// console.log(users[1]);
+		users.forEach((user) => {
+			
+			(<any>User).normalize(reqUser, user);
+			delete user['followers'];
+		});
+		
 		return users;
 	},
 

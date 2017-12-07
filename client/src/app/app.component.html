@@ -60,7 +60,7 @@
                     <span>{{symbol.options.displayName}}</span>
                 </a>
                 <a *ngFor="let user of result.users" [routerLink]="['/user/', user._id]">
-                    <img src="{{user.profileImg}}">
+                    <img src="{{user.img}}">
                     <span>{{user.name}}</span>
                 </a>
             </div>
