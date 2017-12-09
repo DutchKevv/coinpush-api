@@ -30,7 +30,7 @@
 <div class="feed">
 	<app-comment-box *ngIf="userId" [userId]="userId" (newMessage)="addMessage($event)"></app-comment-box>
 
-	<div *ngFor="let comment of comments$ | async" class="comment-container" [ngClass]="{'fade-in': comment.options.isNew}">
+	<div *ngFor="let comment of comments$ | async; trackBy: trackByFn" class="comment-container" [ngClass]="{'fade-in': comment.options.isNew}">
 		<header>
 			<a [routerLink]="['/user/', comment.options.createUser._id]">
 				<img [attr.src]="comment.options.createUser.img" />
@@ -41,7 +41,7 @@
 				</a>
 				<a [routerLink]="['/comment/', comment.options._id]">{{comment.options.created | date:'shortTime'}}</a>
 			</div>
-			<a>:</a>
+			<i class="fa fa-ellipsis-v more-post-actions-button" (click)="showMorePostActions(comment)"></i>
 		</header>
 		<main>
 			<p [innerHtml]="comment.options.content | parseCommentContent"></p>
@@ -60,16 +60,18 @@
 					<i class="fa fa-comment"></i>
 				</a>
 			</div>
-
-			<div class="child-row" *ngFor="let child of comment.options.children">
+			<a *ngIf="comment.options.childCount > comment.options.children.length" class="load-more-row" (click)="loadMoreChildren(comment)">
+				Load older comments
+			</a>
+			<div class="child-row" *ngFor="let child of comment.options.children; trackByFn">
 				<a [routerLink]="['/user/', child.options.createUser._id]">
 					<img [attr.src]="child.options.createUser.img" />
 				</a>
-				
-				<div>
+
+				<div style="width: 100%;">
 					<a class="g-username" [routerLink]="['/user/', child.options.createUser._id]">{{child.options.createUser.name}}</a>
 					<span [innerHtml]="child.options.content | parseCommentContent"></span>
-					<div class="child-buttons">
+					<div class="child-buttons" style="display: flex">
 						<a (click)="commentService.toggleLike(child)" [ngClass]="{active: (child.options$ | async).iLike}">
 							<span *ngIf="(child.options$ | async).iLike">I Like - </span>
 							<span *ngIf="!(child.options$ | async).iLike">like - </span>
@@ -78,15 +80,20 @@
 							</span>
 						</a>
 						<span>{{child.options.created | date:'shortTime'}}</span>
+						<i class="fa fa-ellipsis-v more-comment-actions-button" (click)="showMoreCommentActions(child)"></i>
 					</div>
 				</div>
 			</div>
 
 			<div class="child-row comment-input">
 				<img [attr.src]="userService.model.options.img">
-				<input (keyup.enter)="respond($event, comment.options._id)" type="text" placeholder="Write a comment..." />
+				<input (keyup.enter)="respond($event, comment)" type="text" placeholder="Write a comment..." />
 			</div>
 		</footer>
+	</div>
+	<div *ngIf="isLoading" class="spinner" style="margin: 20px auto;">
+		<div class="dot1"></div>
+		<div class="dot2"></div>
 	</div>
 </div>
 

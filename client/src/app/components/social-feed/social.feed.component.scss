@@ -197,6 +197,14 @@ app-comment-box {
 			}
 		}
 
+		.load-more-row {
+			padding: 10px 0;
+			background: #ececec;
+			display: block;
+			text-align: center;
+			border-bottom: 1px solid #fff;
+		}
+
 		img {
 			height: 28px;
 			width: 28px;
@@ -231,8 +239,21 @@ app-comment-box {
 
 				//color: $general-active;
 			}
-
 		}
+	}
+
+	.more-post-actions-button {
+		margin-left: auto;
+		font-size: 18px;
+		margin-top: 5px;
+		cursor: pointer;
+	}
+
+	.more-comment-actions-button {
+		margin-left: auto;
+		font-size: 18px;
+		margin-top: -10px;
+		cursor: pointer;
 	}
 
 	@media screen and (min-width: 768px) {

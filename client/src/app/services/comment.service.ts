@@ -1,10 +1,10 @@
-import {Injectable} from '@angular/core';
-import {Response, Http} from '@angular/http';
+import { Injectable } from '@angular/core';
+import { Response, Http } from '@angular/http';
 
-import {Observable} from 'rxjs/Observable';
-import {CommentModel} from '../models/comment.model';
-import {AlertService} from './alert.service';
-import {UserService} from "./user.service";
+import { Observable } from 'rxjs/Observable';
+import { CommentModel } from '../models/comment.model';
+import { AlertService } from './alert.service';
+import { UserService } from "./user.service";
 
 @Injectable()
 export class CommentService {
@@ -14,7 +14,7 @@ export class CommentService {
 	}
 
 	async create(toUserId = null, parentId: string = null, content: string): Promise<CommentModel> {
-		const comment = await this._http.post('/comment', {toUserId, parentId, content})
+		const comment = await this._http.post('/comment', { toUserId, parentId, content })
 			.map(res => res.json())
 			.toPromise();
 
@@ -26,6 +26,7 @@ export class CommentService {
 			content,
 			isNew: true,
 			created: new Date(),
+			toUser: toUserId,
 			parentId,
 			createUser: {
 				_id: this._userService.model.get('_id'),
@@ -49,8 +50,8 @@ export class CommentService {
 		return result;
 	}
 
-	async findByChannelId(channelId: string): Promise<Array<CommentModel>> {
-		const result = await this._http.get('/comment', {params: {channel: channelId}})
+	async findByUserId(toUserId: string, offset: number = 0, limit: number = 5): Promise<Array<CommentModel>> {
+		const result = await this._http.get('/comment', { params: { toUserId, offset, limit } })
 			.map(res => res.json().map(r => {
 				const model = new CommentModel(r);
 				model.options.children = model.options.children.map(c => new CommentModel(c));
@@ -61,13 +62,9 @@ export class CommentService {
 		return result;
 	}
 
-	async findByUserId(userId: string): Promise<Array<CommentModel>> {
-		const result = await this._http.get('/comment', {params: {user: userId}})
-			.map(res => res.json().map(r => {
-				const model = new CommentModel(r);
-				model.options.children = model.options.children.map(c => new CommentModel(c));
-				return model;
-			}))
+	async findChildren(parentId: string, offset: number = 0, limit: number = 5) {
+		const result = await this._http.get('/comment/' + parentId, { params: { childrenOnly: true, offset, limit } })
+			.map(res => res.json().map(r => new CommentModel(r)))
 			.toPromise();
 
 		return result;
@@ -87,6 +84,6 @@ export class CommentService {
 			.toPromise();
 
 		const newCount = model.get('likeCount') + (result.state ? 1 : -1);
-		model.set({iLike: !!result.state, likeCount: newCount});
+		model.set({ iLike: !!result.state, likeCount: newCount });
 	}
 }

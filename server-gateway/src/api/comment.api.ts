@@ -8,7 +8,7 @@ const router = Router();
  */
 router.get('/:id', async (req, res, next) => {
 	try {
-		res.send(await commentController.findById(req.user, req.params.id));
+		res.send(await commentController.findById(req.user, req.params.id, req.query));
 	} catch (error) {
 		next(error);
 	}
@@ -19,8 +19,8 @@ router.get('/:id', async (req, res, next) => {
  */
 router.get('/', async (req, res, next) => {
 	try {
-		if (req.query.user)
-			res.send(await commentController.findByUserId(req.user, req.query.user));
+		if (req.query.toUserId)
+			res.send(await commentController.findByUserId(req.user, req.query));
 		else
 			res.send([]);
 	} catch (error) {

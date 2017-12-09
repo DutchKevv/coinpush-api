@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, Output, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, Output, ViewEncapsulation, ChangeDetectorRef, HostListener } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { AlertService } from '../../services/alert.service';
@@ -21,11 +21,13 @@ export class ProfileComponent implements OnInit {
 
 	private _routeSub: any;
 
+	@Output() test;
+
 	constructor(
 		public userService: UserService,
 		private _changeRef: ChangeDetectorRef,
 		private _route: ActivatedRoute) {
-			
+
 	}
 
 	ngOnInit() {
@@ -37,7 +39,7 @@ export class ProfileComponent implements OnInit {
 			// only load if userId is different then current userId
 			if (!this.user || !this.user.options || this.user.options._id !== params['id']) {
 				this._loadUser(params['id']);
-			}	
+			}
 		});
 	}
 

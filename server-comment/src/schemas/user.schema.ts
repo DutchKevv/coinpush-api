@@ -22,10 +22,6 @@ UserSchema.plugin(beautifyUnique);
 
 UserSchema.statics.normalizeProfileImg = function (doc) {
 	const domainPrefix = 'http://' + (process.env.NODE_ENV === 'prod' ? config.ip.prod : config.ip.local) + ':' + config.port;
-   
-	// child comments
-	if (doc.children)
-		doc.children.forEach(child => UserSchema.statics.normalizeProfileImg(child));
 
 	// default img
 	if (!doc.createUser.img) {

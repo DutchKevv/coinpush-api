@@ -1,7 +1,10 @@
 import {
 	ChangeDetectionStrategy, Component, ElementRef, Host, Input, NgZone, OnInit, Output, Pipe, PipeTransform,
 	ViewEncapsulation,
-	OnDestroy
+	OnDestroy,
+	HostListener,
+	AfterViewInit,
+	ChangeDetectorRef
 } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { Http } from '@angular/http';
@@ -47,36 +50,46 @@ export class ParseCommentContentPipe implements PipeTransform {
 	// encapsulation: ViewEncapsulation.Native,
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SocialFeedComponent implements OnInit, OnDestroy {
+export class SocialFeedComponent implements OnInit, AfterViewInit, OnDestroy {
 
-	@Output() comments$: BehaviorSubject<Array<CommentModel>> = new BehaviorSubject([]);
+	public comments$: BehaviorSubject<Array<CommentModel>> = new BehaviorSubject([]);
+	public isLoading: boolean = true;
 
 	userId: string;
 	commentId: string;
 	private _routeParamsSub;
+	private _offset = 0;
+	private _limit = 5;
 
 	constructor(private _route: ActivatedRoute,
-		// @Host() public parent: ProfileComponent,
 		public commentService: CommentService,
+		public changeDetectorRef: ChangeDetectorRef,
 		public _router: Router,
+		public elementRef: ElementRef,
 		public userService: UserService) {
 	}
 
-	async ngOnInit() {
+	ngOnInit() {
 		this.commentId = this._route.snapshot.params['id'];
 		this.userId = this._route.parent.snapshot.params['id']
 
 		if (this.commentId)
 			this._loadByPostId(this.commentId);
-		else
+		else {
 			this._loadByUserId(this.userId);
+		}
 
 		this._routeParamsSub = this._route.parent.params.subscribe(params => {
 			// only load if userId is different then current userId
-			if (!this.userId !== params['id']) {
+			if (this.userId !== params['id']) {
 				this._loadByUserId(params['id']);
 			}
 		});
+	}
+
+	ngAfterViewInit() {
+		if (this.userId)
+			this._bindScroll();
 	}
 
 	onEnterFunction() {
@@ -85,20 +98,6 @@ export class SocialFeedComponent implements OnInit, OnDestroy {
 
 	focusInput(event) {
 		event.currentTarget.parentNode.parentNode.querySelector('input').focus();
-	}
-
-	async respond(event, parentModel) {
-		const input = event.currentTarget;
-		input.setAttribute('disabled', true);
-		const comment = await this.commentService.create(this.userId, parentModel, input.value);
-		input.removeAttribute('disabled');
-		if (!comment)
-			return;
-
-		input.value = '';
-
-		this.addMessage(comment);
-		// this.newMessage.emit(comment);
 	}
 
 	addMessage(model) {
@@ -110,22 +109,86 @@ export class SocialFeedComponent implements OnInit, OnDestroy {
 			current.unshift(model);
 
 		this.comments$.next(current);
+	}
 
+	async respond(event, parentModel: CommentModel) {
+		const input = event.currentTarget;
+		input.setAttribute('disabled', true);
+		const comment = await this.commentService.create(parentModel.options.toUser, parentModel.options._id, input.value);
+		input.removeAttribute('disabled');
+		
+		if (!comment)
+			return;
+
+		parentModel.options.childCount++;
+		input.value = '';
+
+		this.addMessage(comment);
 	}
 
 	onChangeFileInput(event) {
 
 	}
 
+	showMorePostActions(comment: CommentModel) {
+		alert('more')
+	}
+
+	showMoreCommentActions(comment: CommentModel) {
+		alert('more')
+	}
+
+	trackByFn(index, item) {
+		return item.options._id; // or item.id
+	}
+
+	async loadMoreChildren(parentModel: CommentModel) {
+		const children = await this.commentService.findChildren(parentModel.options._id, parentModel.options.children.length);
+		parentModel.options.children = children.concat(parentModel.options.children);
+		this.changeDetectorRef.detectChanges();
+	}
+
 	private async _loadByUserId(userId: string) {
-		this.comments$.next(await this.commentService.findByUserId(userId));
+		this.isLoading = true;
+		const items = await this.commentService.findByUserId(userId, this._offset);
+		this.isLoading = false;
+
+		if (items.length) {
+			this._offset += items.length;
+		} else {
+			this._unbindScroll();
+		}
+
+		this.comments$.next(this.comments$.getValue().concat(items));
 	}
 
 	private async _loadByPostId(postId: string) {
+		this.isLoading = true;
 		this.comments$.next(await this.commentService.findById(postId));
+		this.isLoading = false;
+	}
+
+	private _onScroll(event) {
+		if (!this.isLoading && $(event.target).scrollTop() + $(event.target).innerHeight() >= $(event.target)[0].scrollHeight) {
+			this._loadByUserId(this.userId);
+		}
+	}
+
+	private _bindScroll() {
+		$(this.elementRef.nativeElement.parentNode).on('scroll.feed', (event) => this._onScroll(event)).scroll();
+	}
+
+	private _unbindScroll() {
+		$(this.elementRef.nativeElement.parentNode).off('scroll.feed');
+	}
+
+	private _toggleScrollLoading(state: boolean) {
+
 	}
 
 	ngOnDestroy() {
+		this._unbindScroll();
+
 		if (this._routeParamsSub)
 			this._routeParamsSub.unsubscribe();
 	}

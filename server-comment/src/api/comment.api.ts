@@ -8,7 +8,12 @@ const router = Router();
  */
 router.get('/:id', async (req, res, next) => {
 	try {
-		res.send(await commentController.findById(req.user, req.params.id));
+		if (req.query.childrenOnly) {
+			res.send(await commentController.findChildren(req.user, req.params.id, req.query))
+		} else {
+			res.send(await commentController.findById(req.user, req.params.id, req.query));
+		}
+		
 	} catch (error) {
 		next(error);
 	}
@@ -19,8 +24,8 @@ router.get('/:id', async (req, res, next) => {
  */
 router.get('/', async (req, res, next) => {
 	try {
-		if (req.query.userId)
-			res.send(await commentController.findByToUserId(req.user, req.query.userId));
+		if (req.query.toUserId)
+			res.send(await commentController.findByToUserId(req.user, req.query));
 		else
 			res.send(await commentController.findMany(req.user, req.query.userId));
 	} catch (error) {

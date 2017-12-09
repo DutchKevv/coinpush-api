@@ -6,24 +6,22 @@ const config = require('../../../tradejs.config');
 
 export const commentController = {
 
-	async findById(reqUser: IReqUser, id): Promise<any> {
+	async findById(reqUser: IReqUser, id: string, params: any = {}): Promise<any> {
 		const result = await request({
 			uri: config.server.comment.apiUrl + '/comment/' + id ,
 			headers: {'_id': reqUser.id},
+			qs: params,
 			json: true
 		});
 
 		return result;
 	},
 
-	async findByUserId(reqUser: IReqUser, userId: string, fields?: Array<string>): Promise<any> {		
+	async findByUserId(reqUser: IReqUser, params): Promise<any> {		
 		const result = await request({
 			uri: config.server.comment.apiUrl + '/comment/',
 			headers: {'_id': reqUser.id},
-			qs: {
-				userId,
-				fields
-			},
+			qs: params,
 			json: true
 		});
 
