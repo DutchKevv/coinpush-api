@@ -49,10 +49,10 @@
 		<footer>
 			<div class="parent-buttons">
 				<a (click)="commentService.toggleLike(comment)" [ngClass]="{active: (comment.options$ | async).iLike}">
-					<span *ngIf="(comment.options$ | async).iLike">I Like - </span>
-					<span *ngIf="!(comment.options$ | async).iLike">like - </span>
+					<span *ngIf="(comment.options$ | async).iLike">I Like</span>
+					<span *ngIf="!(comment.options$ | async).iLike">like</span>
 					<span *ngIf="(comment.options$ | async).likeCount > 0">
-						<i class="fa fa-thumbs-o-up"></i>{{(comment.options$ | async).likeCount}} -
+						<i class="fa fa-thumbs-o-up"></i> {{(comment.options$ | async).likeCount}} -
 					</span>
 				</a>
 				<a (click)="focusInput($event)">
@@ -76,10 +76,10 @@
 							<span *ngIf="(child.options$ | async).iLike">I Like - </span>
 							<span *ngIf="!(child.options$ | async).iLike">like - </span>
 							<span *ngIf="(child.options$ | async).likeCount > 0">
-								<i class="fa fa-thumbs-o-up"></i>{{(child.options$ | async).likeCount}} -
+								<i class="fa fa-thumbs-o-up"></i>{{(child.options$ | async).likeCount}}
 							</span>
 						</a>
-						<span>{{child.options.created | date:'shortTime'}}</span>
+						<span> - {{child.options.created | date:'shortTime'}}</span>
 						<i class="fa fa-ellipsis-v more-comment-actions-button" (click)="showMoreCommentActions(child)"></i>
 					</div>
 				</div>

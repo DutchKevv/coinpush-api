@@ -59,7 +59,7 @@
                 </div>
                 <i class="fa fa-arrow-right more-arrow hidden-lg-up" (click)="onClickMore($event)"></i>
                 <div class="more-container" #more>
-                    <i (click)="onClickToggleFavorite($event, symbol);" [ngClass]="{'active': userService.model.options.favorites.includes(symbol.options.name)}"
+                    <i (click)="onClickToggleFavorite($event, symbol);" [ngClass]="{'active-icon': userService.model.options.favorites.includes(symbol.options.name)}"
                         class="fa fa-star"></i>
                     <i (click)="onClickAlarm($event)" class="fa fa-bell"></i>
                     <i class="fa fa-info-circle"></i>

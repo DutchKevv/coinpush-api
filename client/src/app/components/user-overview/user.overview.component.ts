@@ -42,7 +42,6 @@ export class UserOverviewComponent implements OnInit, OnDestroy, AfterViewChecke
 
 	ngOnInit() {
 		this.userService.getOverview().subscribe((users: Array<UserModel>) => {
-			console.log(users);
 			this.newest$.next(users.slice());
 			this.editorChoice$.next(users.slice().reverse());
 			this.topInvestors$.next(shuffleArray(users.slice()));

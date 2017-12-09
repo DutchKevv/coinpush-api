@@ -388,12 +388,9 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 			let firstBar = (data[data.length - viewable - offset] || data[0]),
 				lastBar = data[data.length - 1 - offset] || data[data.length - 1];
 
-			// console.log(firstBar, lastBar);
-
 			if (!firstBar || !lastBar)
 				return;
 
-			console.log(firstBar, lastBar);
 			if (this._chart)
 				this._chart.xAxis[0].setExtremes(firstBar[0], lastBar[0], render, false);
 			// this._chart.redraw();

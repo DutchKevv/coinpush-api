@@ -161,7 +161,7 @@ app.get('/images/*', (req, res) => proxy.web(req, res, { target: config.server.f
 /**
  * favorite
  */
-app.use('/api/v1/favorite', (req, res) => proxy.web(req, res, { target: config.server.user.apiUrl + '/favorite' }));
+app.use('/api/v1/favorite', require('./api/favorite.api'));
 
 /**
  * authenticate
