@@ -2,7 +2,7 @@ import {Schema, model} from 'mongoose';
 
 export const CandleSchema = new Schema({
 	time: {
-		type: Date,
+		type: Number,
 		unique: true,
 		required: true
 	},

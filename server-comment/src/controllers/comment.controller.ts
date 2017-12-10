@@ -15,7 +15,7 @@ export const commentController = {
 			return;
 
 		if (comment.childCount)
-			comment.children = (await Comment.find({ parentId: { $eq: Types.ObjectId(comment._id) } }).populate('createUser').sort({ _id: -1 }).limit(5).lean()).reverse();
+			comment.children = await this.findChildren(reqUser, comment._id);
 
 		Comment.addILike(reqUser.id, [comment]);
 		User.normalizeProfileImg(comment);
@@ -24,7 +24,6 @@ export const commentController = {
 	},
 
 	async findByToUserId(reqUser, params: { toUserId: string, offset: any, limit: any }) {
-		console.log(params);
 
 		let comments = await Comment
 			.find({ toUser: params.toUserId, parentId: { $eq: undefined } })
@@ -35,7 +34,7 @@ export const commentController = {
 			.lean();
 
 		comments = await Promise.all(comments.map(async comment => {
-			comment.children = (await this.findChildren(reqUser, comment._id));
+			comment.children = await this.findChildren(reqUser, comment._id);
 			return comment;
 		}));
 

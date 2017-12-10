@@ -66,10 +66,10 @@ export const dataLayer = {
 		// log.info('DataLayer', `WRITING ${candles.length / 10} candles to ${collectionName} starting ${new Date(candles[0])} until ${new Date(candles[candles.length - 10])}`);
 
 		while (i < candles.length) {
-			const time = new Date(candles[i]);
+			const time = candles[i];
 			const data = Buffer.from(candles.slice(i, i += rowLength).buffer);
 
-			bulk.find({ time }).upsert().update({ $set: { time, data } });
+			bulk.find({ time }).upsert().update({ $set: {time, data }});
 		}
 
 		await bulk.execute();
@@ -78,7 +78,7 @@ export const dataLayer = {
 			const lastCandleTime = candles[candles.length - 10];
 			const lastCloseBidPrice = candles[candles.length - 7];
 
-			await Status.update({ symbol, timeFrame }, { lastSync: lastCandleTime, lastPrice: lastCloseBidPrice });
+			const result = await Status.update({ symbol, timeFrame }, { lastSync: lastCandleTime, lastPrice: lastCloseBidPrice });
 		}
 	},
 

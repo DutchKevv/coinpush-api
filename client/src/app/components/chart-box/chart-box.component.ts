@@ -140,7 +140,8 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	ngOnInit() {
 		this._changeSubscription = this._cacheService.changed$.subscribe(symbols => {
 			if (symbols.includes(this.symbolModel.options.name)) {
-				this._onPriceChange();
+				this._onPriceChange(false);
+				this._updateCurrentPricePlot();
 			}
 		});
 		// this._createChart();
@@ -418,6 +419,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 				this._updateCurrentPricePlot();
 				this._updateViewPort(0, true);
+				this._onPriceChange(true); // TODO renders 2 times
 			} catch (error) {
 				console.log('error error error', error);
 			}
@@ -641,9 +643,8 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		return Math.floor(el.clientWidth / barW);
 	}
 
-	private _onPriceChange() {
-		this._updateCurrentPricePlot();
-		this._chart.series[0].data[this._chart.series[0].data.length - 1].update(this.symbolModel.options.bid); 
+	private _onPriceChange(render: boolean = false) {
+		this._chart.series[0].data[this._chart.series[0].data.length - 1].update(this.symbolModel.options.bid, render, false); 
 	}
 
 	private _onScroll(event: MouseWheelEvent): boolean {
@@ -663,11 +664,11 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	}
 
 	private _priceToFixed(number) {
-		if (this.symbolModel.options.precision)
-			return number.toFixed(this.symbolModel.options.precision);
+		if (this.symbolModel.options.precision > 0)
+			return number.toFixed(this.symbolModel.options.precision || 4);
 
 		let n = Math.min(Math.max(number.toString().length, 2), 6);
-		return number.toFixed(this.symbolModel.options.precision || Math.max(number.toString().length, 4));
+		return number.toFixed(Math.max(number.toString().length, 4));
 	}
 
 	private _clearData(render: boolean = false) {

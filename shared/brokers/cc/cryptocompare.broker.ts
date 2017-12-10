@@ -155,7 +155,7 @@ export default class CyrptoCompareApi extends EventEmitter {
             }
             const result = await request({
                 uri: url + stringify({
-                    limit: count,
+                    limit: count || 2000,
                     fsym: symbol,
                     tsym: 'USD',
                     toTs: until || undefined

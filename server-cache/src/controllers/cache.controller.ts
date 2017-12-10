@@ -69,7 +69,7 @@ export const cacheController = {
 		return new Promise((resolve, reject) => {
 
 			app.broker.getCandles(params.symbol, params.timeFrame, params.from, params.until, params.count, async (candles: Float64Array) => {
-				// console.log('should write');
+				
 				// Store candles in DB
 				await dataLayer.write(params.symbol, params.timeFrame, candles);
 
@@ -131,7 +131,6 @@ export const cacheController = {
 					const from = status.lastSync ? (new Date(status.lastSync)).getTime() : undefined;
 					const until = Date.now();
 					const count = status.lastSync ? undefined : HISTORY_COUNT_DEFAULT;
-
 					return this.fetch({ symbol: symbol.name, timeFrame: status.timeFrame, from, until, count }).then(() => bar.tick());
 				})
 
