@@ -45,6 +45,7 @@ import { BootstrapService } from "./services/bootstrap.service";
 import { EventOverviewComponent } from './components/event-overview/event-overview.component';
 import { NewsService } from './services/news.service';
 import { Router } from '@angular/router';
+import { EventService } from './services/event.service';
 
 @NgModule({
 	declarations: [
@@ -91,6 +92,7 @@ import { Router } from '@angular/router';
 		CommentService,
 		BootstrapService,
 		NewsService,
+		EventService,
 		{
 			provide: Http, useFactory: (backend: XHRBackend, options: RequestOptions, route: Router) => {
 				return new CustomHttp(backend, options, route);

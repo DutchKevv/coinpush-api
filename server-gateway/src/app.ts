@@ -190,6 +190,11 @@ app.use('/api/v1/comment', require('./api/comment.api'));
 app.use('/api/v1/comment/*', require('./api/comment.api'));
 
 /**
+ * event
+ */
+app.use('/api/v1/event', require('./api/event.api'));
+
+/**
  * search
  */
 app.use('/api/v1/search', require('./api/search.api'));

@@ -17,7 +17,37 @@ export const symbolController = {
 		return app.broker.symbols.find(symbol => symbol.name === name);
 	},
 
-	update24HourStartPrice() {
+	update() {
+		return Promise.all([
+			this.update1HourStartPrice(),
+			this.update24HourStartPrice(),
+			this.updateHighLow()
+		]);
+	},
+
+	async update1HourStartPrice() {
+		app.broker.symbols.forEach(async symbol => {
+			const candle = await cacheController.find({ symbol: symbol.name, timeFrame: 'H1', count: 1, toArray: true });
+
+			symbol.marks.H = {
+				time: candle[0],
+				price: candle[1]
+			}
+		});
+	},
+
+	async update24HourStartPrice() {
+		app.broker.symbols.forEach(async symbol => {
+			const candle = await cacheController.find({ symbol: symbol.name, timeFrame: 'D', count: 1, toArray: true });
+
+			symbol.marks.D = {
+				time: candle[0],
+				price: candle[1]
+			};
+		});
+	},
+
+	async updateHighLow() {
 		const now = new Date();
 		now.setHours(0);
 		now.setMinutes(0);
@@ -28,18 +58,7 @@ export const symbolController = {
 
 			// find last 24 hours of bars
 			const barsAmount = 60 * 24; // 1440 M1 bars
-			const candles = await cacheController.find({ symbol: symbol.name, timeFrame: 'M1', until: now.getTime(), count: barsAmount, toArray: true });
-
-			const time = candles[0];
-			const price = candles[1];
-
-			// set timed marks (for changed amount over a day)
-			symbol.marks = {
-				D: {
-					time: time,
-					price: price
-				}
-			};
+			const candles = await cacheController.find({ symbol: symbol.name, timeFrame: 'M1', count: barsAmount, toArray: true });
 
 			// set high and low of the day
 			let high = 0;

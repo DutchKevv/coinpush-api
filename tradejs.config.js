@@ -64,6 +64,10 @@ const config = {
             port: 3010,
             connectionString: 'mongodb://localhost:27017/tradejs-notify'
         },
+        event: {
+            connectionString: 'mongodb://localhost:27017/tradejs-event',
+            port: 3011,
+        },
         fe: {
             port: 4200,
         }

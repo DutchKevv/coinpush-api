@@ -63,6 +63,15 @@
     "instances": 1
   },
   {
+    "script": "server-event/index.js",
+    "name": "event",
+    "exec_mode": "fork",
+    "env_production" : {
+      "NODE_ENV": "dev"
+    },
+    "instances": 1
+  },
+  {
     "script": "server/bootstrapper.js",
     "name": "legacy",
     "exec_mode": "fork",

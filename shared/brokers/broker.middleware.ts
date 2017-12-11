@@ -40,6 +40,14 @@ export class BrokerMiddleware extends EventEmitter {
         this.symbols = [].concat(...results).sort((a, b) => {
             return a.displayName.localeCompare(b.displayName);
          });
+
+         // add marks placeholder (Hour / Day)
+         this.symbols.forEach(symbol => {
+            symbol.marks = {
+                H: undefined,
+                D: undefined
+            }
+         })
     }
 
     public async getCurrentPrices(symbols: Array<any>): Promise<Array<any>> {

@@ -17,10 +17,6 @@ import * as ProgressBar from 'progress';
 const READ_COUNT_DEFAULT = 500;
 const HISTORY_COUNT_DEFAULT = 500;
 
-/**
- * Broker
- */
-
 const dataMapper = new CacheMapper({
 	path: path.join(__dirname, '..', '..', '_data')
 });
@@ -49,8 +45,8 @@ export const cacheController = {
 		if (count && from && until)
 			throw new Error('Cache -> Read : Only from OR until can be given when using count, not both');
 
-		if ((!from && !until))
-			until = params.until = Date.now();
+		// if ((!from && !until))
+		// 	until = params.until = Date.now();
 
 		// Make sure there is a count/limit
 		count = params.count = params.count || READ_COUNT_DEFAULT;
@@ -69,7 +65,7 @@ export const cacheController = {
 		return new Promise((resolve, reject) => {
 
 			app.broker.getCandles(params.symbol, params.timeFrame, params.from, params.until, params.count, async (candles: Float64Array) => {
-				
+
 				// Store candles in DB
 				await dataLayer.write(params.symbol, params.timeFrame, candles);
 
@@ -98,24 +94,27 @@ export const cacheController = {
 		throw new Error('RESETR!!');
 	},
 
-	async sync() {
+	async sync(silent: boolean = true) {
+		const now = Date.now();
+
 		// sync all candles in the DB until the current time
 		const bulkCount = 10;
 		const timeFrames = Object.keys(timeFrameSteps);
 		const total = app.broker.symbols.length * timeFrames.length;
+		let bar;
 
-		const bar = new ProgressBar(`syncing ${total} symbols [:bar] :rate/ps :percent :etas`, {
-			complete: '=',
-			incomplete: ' ',
-			width: 20,
-			total
-		});
+		if (!silent) {
+			bar = new ProgressBar(`syncing ${total} symbols [:bar] :rate/ps :percent :etas`, {
+				complete: '=',
+				incomplete: ' ',
+				width: 20,
+				total
+			});
+		}
 
 		await dataLayer.setModels(app.broker.symbols);
 
-		let statuses = await Status.find({ timeFrame: { $in: timeFrames } }, { symbol: 1, lastSync: 1, timeFrame: 1 });
-
-		log.info('CacheController', `Syncing ${total} collections`);
+		let statuses = <Array<any>>await Status.find({ timeFrame: { $in: timeFrames } }, { symbol: 1, lastSync: 1, timeFrame: 1 }).lean();
 
 		for (let i = 0, len = app.broker.symbols.length; i < len; i += bulkCount) {
 
@@ -131,7 +130,10 @@ export const cacheController = {
 					const from = status.lastSync ? (new Date(status.lastSync)).getTime() : undefined;
 					const until = Date.now();
 					const count = status.lastSync ? undefined : HISTORY_COUNT_DEFAULT;
-					return this.fetch({ symbol: symbol.name, timeFrame: status.timeFrame, from, until, count }).then(() => bar.tick());
+					
+					return this
+						.fetch({ symbol: symbol.name, timeFrame: status.timeFrame, from, until, count })
+						.then(() => !silent && bar.tick());
 				})
 
 			});
@@ -145,22 +147,13 @@ export const cacheController = {
 		// set last price on symbols
 		statuses = await Status.find({ timeFrame: 'M1' });
 		app.broker.symbols.forEach(symbol => {
-			const status = statuses.find(status => status.symbol === symbol.name)
+			const status = statuses.find(status => status.symbol === symbol.name);
 
 			if (!status)
 				return;
 
 			symbol.bid = status.lastPrice;
 		});
-	},
-
-	async _isComplete(symbol, timeFrame, from, until) {
-		const status = await Status.findOne({ symbol, timeFrame });
-		return status.lastSync > until
-	},
-
-	_updateRedis(symbols) {
-		symbols.forEach(symbol => redis.client.set(`symbol-${symbol.name}`, JSON.stringify(symbol)));
 	},
 
 	_onTickReceive(tick): void {
@@ -174,9 +167,5 @@ export const cacheController = {
 		symbolObj.bid = tick.bid;
 		symbolObj.ask = tick.ask;
 		symbolObj.lastTick = tick.time;
-
-		// app.io.sockets.emit('ticks', { [tick.instrument]: [[tick.time, tick.bid, tick.ask]] });
-
-		// this._tickBuffer[tick.instrument].push([tick.time, tick.bid, tick.ask]);
 	}
 };

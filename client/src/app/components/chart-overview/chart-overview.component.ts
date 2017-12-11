@@ -14,13 +14,15 @@ import { ChartBoxComponent } from '../chart-box/chart-box.component';
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { SymbolModel } from "../../models/symbol.model";
 import { InstrumentModel } from "../../models/instrument.model";
-import { Subject } from 'rxjs';
+import { Subject } from 'rxjs/Subject';
 import { ConstantsService } from '../../services/constants.service';
 import { UserService } from '../../services/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OrderService } from '../../services/order.service';
 import { CacheService } from '../../services/cache.service';
-import { SYMBOL_CAT_TYPE_FOREX, SYMBOL_CAT_TYPE_RESOURCE, SYMBOL_CAT_TYPE_CRYPTO } from "../../../../../shared/constants/constants";
+import { SYMBOL_CAT_TYPE_FOREX, SYMBOL_CAT_TYPE_RESOURCE, SYMBOL_CAT_TYPE_CRYPTO, CUSTOM_EVENT_TYPE_ALARM } from "../../../../../shared/constants/constants";
+import { EventService } from '../../services/event.service';
+import { NgForm } from '@angular/forms';
 
 declare let $: any;
 
@@ -32,7 +34,7 @@ declare let $: any;
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class ChartOverviewComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ChartOverviewComponent implements OnInit, OnDestroy {
 
 	@Output() public activeSymbol: SymbolModel;
 
@@ -44,6 +46,10 @@ export class ChartOverviewComponent implements OnInit, AfterViewInit, OnDestroy 
 	public symbols = [];
 	public activeFilter: string = 'all';
 	public activeMenu: string = null;
+
+	public formModel: any = {
+		alarmType: "1"
+	};
 
 	private _routeSub;
 	private _filterSub;
@@ -59,6 +65,7 @@ export class ChartOverviewComponent implements OnInit, AfterViewInit, OnDestroy 
 		private _route: ActivatedRoute,
 		private _router: Router,
 		private _orderService: OrderService,
+		private _eventService: EventService,
 		private _applicationRef: ApplicationRef
 	) {
 	}
@@ -66,27 +73,24 @@ export class ChartOverviewComponent implements OnInit, AfterViewInit, OnDestroy 
 	ngOnInit() {
 		this._filterSub = this._applicationRef.components[0].instance.filterClick$.subscribe(() => this.toggleFilterNav());
 		this._priceChangeSub = this.cacheService.changed$.subscribe(changedSymbols => this._onPriceChange(changedSymbols));
-		this.activeSymbol = this.cacheService.getBySymbol(this._route.snapshot.queryParams['symbol']) || this.cacheService.symbols[0];
-	}
 
-	ngAfterViewInit() {
 		this.symbols = this.cacheService.symbols;
+		
+		this.setActiveSymbol(undefined, this.cacheService.getBySymbol(this._route.snapshot.queryParams['symbol']) || this.cacheService.symbols[0], false);
+		// setTimeout(() => {
 
-		setTimeout(() => {
-			this.cd.detectChanges();
-
-			this._routeSub = this._route.queryParams.subscribe(params => {
-				if (this.activeSymbol && this.activeSymbol.options.name === params['symbol']) {
-					this._scrollIntoView(this.activeSymbol);
-					return;
-				}
-
-				const symbol = this.cacheService.getBySymbol(params['symbol']);
-				this.setActiveSymbol(undefined, symbol || this.symbols[0]);
+		this._routeSub = this._route.queryParams.subscribe(params => {
+			if (this.activeSymbol && this.activeSymbol.options.name === params['symbol']) {
 				this._scrollIntoView(this.activeSymbol);
-				this.cd.detectChanges();
-			});
-		}, 0);
+				return;
+			}
+
+			const symbol = this.cacheService.getBySymbol(params['symbol']);
+			this.setActiveSymbol(undefined, symbol || this.symbols[0]);
+			this._scrollIntoView(this.activeSymbol);
+			this.cd.detectChanges();
+		});
+		// }, 0);
 	}
 
 	public toggleFilterNav(event?, state?: boolean) {
@@ -142,9 +146,6 @@ export class ChartOverviewComponent implements OnInit, AfterViewInit, OnDestroy 
 	}
 
 	onClickAlarm(event) {
-		event.preventDefault();
-		event.stopPropagation();
-
 		this.activeMenu = 'alarm';
 	}
 
@@ -155,11 +156,20 @@ export class ChartOverviewComponent implements OnInit, AfterViewInit, OnDestroy 
 		event.currentTarget.parentNode.classList.toggle('open');
 	}
 
-	setActiveSymbol(event, symbol: SymbolModel) {
+	setActiveSymbol(event, symbol: SymbolModel, navigate: boolean = true) {
 		if (event) {
 			event.preventDefault();
 			event.stopPropagation();
 		}
+
+		if (symbol === this.activeSymbol)
+			return;
+
+		// reset side-menu form model
+		this.formModel = {
+			alarmType: "1",
+			amount: symbol.options.bid
+		};
 
 		this.activeSymbol = symbol;
 		this._router.navigate(['/charts'], { skipLocationChange: false, queryParams: { symbol: symbol.options.name } });
@@ -176,6 +186,38 @@ export class ChartOverviewComponent implements OnInit, AfterViewInit, OnDestroy 
 		event.stopPropagation();
 
 		this._orderService.create({ symbol, side, amount: 1 });
+	}
+
+	public onCreateFormSubmit(form: NgForm) {
+		if (!this.activeSymbol)
+			return;
+
+		this.formModel.symbol = this.activeSymbol.options.name;
+		this.formModel.type = CUSTOM_EVENT_TYPE_ALARM;
+		this._eventService.create(this.formModel);
+	}
+
+	public onClickSideMenuNumberInput(dir: number, inputEl: HTMLElement) {
+		let newValue = this.formModel.amount || this.activeSymbol.options.bid;
+		let inc = 0.0001;
+
+		if (typeof this.activeSymbol.options.precision === 'number') {
+			inc = 1;
+			let counter = this.activeSymbol.options.precision + 1;
+
+			while (counter--)
+				inc /= 10;
+		}
+
+		if (dir > 0)
+			newValue += inc;
+		else
+			newValue -= inc;
+		
+		newValue = this._priceToFixed(newValue);
+
+		this.formModel.amount = parseFloat(newValue);
+		inputEl.setAttribute('value', this._priceToFixed(newValue));
 	}
 
 	public trackByFunc(index, item) {
@@ -206,6 +248,14 @@ export class ChartOverviewComponent implements OnInit, AfterViewInit, OnDestroy 
 
 	addIndicator(name: string) {
 
+	}
+
+	private _priceToFixed(number) {
+		if (this.activeSymbol.options.precision > 0)
+			return number.toFixed(this.activeSymbol.options.precision + 1 || 4);
+
+		let n = Math.max(Math.min(number.toString().length, 2), 6);
+		return number.toFixed(n);
 	}
 
 	ngOnDestroy() {

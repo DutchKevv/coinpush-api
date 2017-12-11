@@ -21,6 +21,7 @@
 :host {
     display: flex;
     height: 100%;
+    width: 100%;
 
     &.app {
         padding-bottom: 50px;
@@ -47,8 +48,6 @@ header {
     }
 
     @media only screen and (min-width : 768px) {
-        justify-content: space-around;
-
         > * {
             width: 100%;
         }
@@ -219,8 +218,6 @@ header {
 }
 
 .main-container {
-    display: flex;
-    flex-flow: column;
     width: 100%;
 }
 

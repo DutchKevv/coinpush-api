@@ -1,5 +1,7 @@
 @import '~bootstrap/scss/_variables';
 @import '~bootstrap/scss/_mixins';
+@import '~bootstrap/scss/_forms';
+@import '~bootstrap/scss/_buttons';
 @import '~bootstrap/scss/utilities/_visibility';
 
 @import '../../style/variables/variables';
@@ -12,6 +14,7 @@
     display: flex;
     flex-flow: column;
     height: 100%;
+    width: 100%;
 }
 
 .active {
@@ -165,10 +168,18 @@
             }
         }
     }
+
+    .changed-amount {
+        width: 60px;
+        display: inline-block;
+        text-align: center;
+    }
     
     .side-menu {
-    
+        display: none;
+
         &.open {
+            display: block;
             position: absolute;
             left: 0;
             right: 0;
@@ -180,37 +191,50 @@
         @media only screen and (min-width : 992px) { 
             &.open {
                 position: static;
-                min-width: 300px;
-                width: 300px;
+                min-width: 400px;
+                width: 400px;
             }
         }
     
         header {
             background: green;
-            padding: 6px 10px;
+            padding: 3px 10px;
             display: flex;
-    
+            
             i {
-                margin-right: 10px;
-                color: white;	
+                color: white;
+                font-size: 20px;
+            }
+
+            .fa-close {
+                margin-left: auto;
                 cursor: pointer;
-                font-size: 22px;
+            }
+
+            .fa-bell {
+                font-size: 16px;
+                margin-top: 2px;
+                margin-right: 10px;
             }
     
             h5 {
-                line-height: 22px;
+                line-height: 20px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
             }
         }
-    
-        main {
-            padding: 6px 10px;
-    
-            > ul {
-                display: flex;
-    
-                > li {
-                    flex: 1;
-                }
+
+        main > form {
+            padding: 6px;
+        }
+
+        .side-menu-top-nav {
+            display: flex;
+
+            li {
+                padding: 3px 4px;
+                width: 100%;
             }
         }
     }

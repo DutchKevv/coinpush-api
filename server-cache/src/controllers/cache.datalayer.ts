@@ -11,8 +11,7 @@ const config = require('../../../tradejs.config');
  *  Database
  */
 const db = mongoose.connection;
-mongoose.Promise = global.Promise;
-mongoose.connect(config.server.cache.connectionString, { poolSize: 1 });
+mongoose.connect(config.server.cache.connectionString);
 
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
@@ -36,7 +35,7 @@ export const dataLayer = {
 		const model = mongoose.model(collectionName);
 		const qs: any = {};
 
-		log.info('DataLayer', `Read ${collectionName} from ${from} until ${until} count ${count}`);
+		// log.info('DataLayer', `Read ${collectionName} from ${from} until ${until} count ${count}`);
 
 		if (from) {
 			qs.time = qs.time || {};
@@ -48,7 +47,7 @@ export const dataLayer = {
 			qs.time['$lt'] = until;
 		}
 
-		const rows = await model.find({}).limit(count || 1000).sort({time: -1});
+		const rows = <Array<any>>await model.find({}).limit(count || 1000).sort({time: -1});
 		const buffer = Buffer.concat(rows.reverse().map(row => row.data), rows.length * Float64Array.BYTES_PER_ELEMENT * 10);
 		// console.log('afetr concat', new Float64Array(buffer.buffer));
 		return buffer;
@@ -68,7 +67,6 @@ export const dataLayer = {
 		while (i < candles.length) {
 			const time = candles[i];
 			const data = Buffer.from(candles.slice(i, i += rowLength).buffer);
-
 			bulk.find({ time }).upsert().update({ $set: {time, data }});
 		}
 
@@ -76,15 +74,17 @@ export const dataLayer = {
 
 		if (candles.length) {
 			const lastCandleTime = candles[candles.length - 10];
-			const lastCloseBidPrice = candles[candles.length - 7];
+			const lastCloseBidPrice = candles[candles.length - 3];
 
 			const result = await Status.update({ symbol, timeFrame }, { lastSync: lastCandleTime, lastPrice: lastCloseBidPrice });
 		}
 	},
 
-	async setModels(symbols) {
-		let timeFrames = Object.keys(timeFrameSteps);
-
+	async setModels(symbols: Array<any>) {
+		const now = Date.now();
+		const timeFrames = Object.keys(timeFrameSteps);
+		const existingModels = mongoose.modelNames();
+		
 		log.info('DataLayer', 'Creating ' + symbols.length * timeFrames.length + ' collections');
 
 		for (let i = 0; i < symbols.length; i++) {
@@ -93,8 +93,11 @@ export const dataLayer = {
 			for (let k = 0; k < timeFrames.length; k++) {
 				let timeFrame = timeFrames[k];
 
-				mongoose.model(this.getCollectionName(symbol.name, timeFrame), CandleSchema);
+				const collectionName = this.getCollectionName(symbol.name, timeFrame);
 
+				if (!existingModels.includes(collectionName))
+					mongoose.model(collectionName, CandleSchema);;
+					
 				// Create update document if not exists
 				await Status.update(
 					{ symbol: symbol.name, timeFrame },
@@ -104,7 +107,7 @@ export const dataLayer = {
 			}
 		}
 
-		log.info('DataLayer', 'Creating collections done');
+		log.info('CacheController', `Creating collections took ${Date.now() - now}ms`);
 	},
 
 	getCollectionName(symbol, timeFrame): string {

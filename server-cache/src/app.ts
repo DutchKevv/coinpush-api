@@ -24,8 +24,10 @@ export const app = {
 	io: null,
 	broker: <BrokerMiddleware>null,
 
-	_tickInterval: null,
-	_tickIntervalTime: 500,
+	_symbolUpdateTimeout: null,
+	_symbolUpdateTimeoutTime: 60 * 1000 , // 1 minute
+	_socketTickInterval: null,
+	_socketTickIntervalTime: 500,
 
 	async init(): Promise<void> {
 
@@ -33,8 +35,9 @@ export const app = {
 		this.broker = new BrokerMiddleware();
 		await this.broker.setSymbols()
 
-		await cacheController.sync();
-		await symbolController.update24HourStartPrice();
+		await cacheController.sync(false);
+		await symbolController.update();
+		this._toggleSymbolUpdateInterval(true);
 
 		// api
 		this._setupApi();
@@ -63,18 +66,36 @@ export const app = {
 		});
 	},
 
+	_toggleSymbolUpdateInterval(state: boolean) {
+		if (!state)
+			return clearInterval(this._symbolUpdateInterval);
+
+		const timeoutFunc = async function() {
+			try {
+				await cacheController.sync();
+				await symbolController.update();
+			} catch (error) {
+				console.error(error);
+			} finally {
+				this._symbolUpdateTimeout = setTimeout(timeoutFunc, this._toggleSymbolUpdateInterval);
+			}
+		}.bind(this);
+
+		this._symbolUpdateTimeout = setTimeout(() => timeoutFunc(), this._symbolUpdateTimeoutTime);
+	},
+
 	_toggleWebSocketTickInterval(state: boolean) {
 		if (!state)
-			return clearInterval(this._tickInterval);
+			return clearInterval(this._socketTickInterval);
 
-		this._tickInterval = setInterval(() => {
+		this._socketTickInterval = setInterval(() => {
 			if (!Object.keys(cacheController.tickBuffer).length)
 				return;
 
 			this.io.sockets.emit('ticks', cacheController.tickBuffer);
 
 			cacheController.tickBuffer = {};
-		}, this._tickIntervalTime);
+		}, this._socketTickIntervalTime);
 	}
 };
 

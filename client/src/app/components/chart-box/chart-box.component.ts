@@ -419,7 +419,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 				this._updateCurrentPricePlot();
 				this._updateViewPort(0, true);
-				this._onPriceChange(true); // TODO renders 2 times
+				// this._onPriceChange(true); // TODO renders 2 times
 			} catch (error) {
 				console.log('error error error', error);
 			}
@@ -644,7 +644,8 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	}
 
 	private _onPriceChange(render: boolean = false) {
-		this._chart.series[0].data[this._chart.series[0].data.length - 1].update(this.symbolModel.options.bid, render, false); 
+		if (this._chart && this._chart.series[0].data.length)
+			this._chart.series[0].data[this._chart.series[0].data.length - 1].update(this.symbolModel.options.bid, render, false); 
 	}
 
 	private _onScroll(event: MouseWheelEvent): boolean {

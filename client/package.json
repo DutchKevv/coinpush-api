@@ -5,7 +5,7 @@
   "description": "A sample Apache Cordova application that responds to the deviceready event.",
   "main": "index.js",
   "scripts": {
-    "start": "ng build --watch --aot --proxy proxy.conf.json --host 0.0.0.0 --no-sourcemaps",
+    "start": "ng build --watch --aot --host 0.0.0.0 --no-sourcemaps",
     "build": "ng build --prod --env=prod",
     "build-verbose": "ng build --prod --env=prod --verbose > build.txt",
     "build-mobile": "cordova build --no-inc",

@@ -65,15 +65,17 @@ export class UserService {
 		}
 	}
 
-	toggleFavoriteSymbol(symbol: SymbolModel) {
-		this._http.post('/favorite', { symbol: symbol.options.name })
-			.map((res: Response) => res.json())
-			.subscribe(result => {
-				if (result.state)
-					this.model.options.favorites.push(symbol.options.name);
-				else
-					this.model.options.favorites.splice(this.model.options.favorites.indexOf(symbol.options.name), 1);
-			})
+	async toggleFavoriteSymbol(symbol: SymbolModel) {
+		try {
+			const result = await this._http.post('/favorite', { symbol: symbol.options.name }).map((res: Response) => res.json()).toPromise();
+
+			if (result.state)
+				this.model.options.favorites.push(symbol.options.name);
+			else
+				this.model.options.favorites.splice(this.model.options.favorites.indexOf(symbol.options.name), 1);
+		} catch (error) {
+			console.error(error);
+		}
 	}
 
 	async toggleFollow(model: UserModel, state: boolean) {

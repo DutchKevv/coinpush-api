@@ -2,29 +2,43 @@
     <div class="filter-list" #filter>
         <h4>Popular</h4>
         <a [ngClass]="{active: activeFilter === 'all'}" (click)="toggleActiveFilter('all')">All</a>
-        <a [ngClass]="{active: activeFilter === 'all popular'}" (click)="toggleActiveFilter('all popular')">All popular <sup>(not implement)</sup></a>
+        <a [ngClass]="{active: activeFilter === 'all popular'}" (click)="toggleActiveFilter('all popular')">All popular
+            <sup>(not implement)</sup>
+        </a>
         <a [ngClass]="{active: activeFilter === 'all open'}" (click)="toggleActiveFilter('all open')">All open</a>
-        <a [ngClass]="{active: activeFilter === 'rise and fall'}" (click)="toggleActiveFilter('rise and fall')">Risers and fallers <sup>(not implement)</sup></a>
+        <a [ngClass]="{active: activeFilter === 'rise and fall'}" (click)="toggleActiveFilter('rise and fall')">Risers and fallers
+            <sup>(not implement)</sup>
+        </a>
         <a [ngClass]="{active: activeFilter === 'favorite'}" (click)="toggleActiveFilter('favorite')">My favorites</a>
         <h4>Resources</h4>
         <a [ngClass]="{active: activeFilter === 'resources'}" (click)="toggleActiveFilter('resources')">All resources</a>
-        <a [ngClass]="{active: activeFilter === 'resources popular'}" (click)="toggleActiveFilter('resources popular')">Popular resources <sup>(not implement)</sup></a>
+        <a [ngClass]="{active: activeFilter === 'resources popular'}" (click)="toggleActiveFilter('resources popular')">Popular resources
+            <sup>(not implement)</sup>
+        </a>
         <h4>Indices</h4>
-        <a [ngClass]="{active: activeFilter === 'all2'}" (click)="toggleActiveFilter('all2')">All indices <sup>(not implement)</sup></a>
-        <a [ngClass]="{active: activeFilter === 'all2'}" (click)="toggleActiveFilter('all2')">Popular indices <sup>(not implement)</sup></a>
+        <a [ngClass]="{active: activeFilter === 'all2'}" (click)="toggleActiveFilter('all2')">All indices
+            <sup>(not implement)</sup>
+        </a>
+        <a [ngClass]="{active: activeFilter === 'all2'}" (click)="toggleActiveFilter('all2')">Popular indices
+            <sup>(not implement)</sup>
+        </a>
         <h4>Crypto</h4>
         <a [ngClass]="{active: activeFilter === 'crypto all'}" (click)="toggleActiveFilter('crypto all')">All crypto</a>
-        <a [ngClass]="{active: activeFilter === 'crypto popular'}" (click)="toggleActiveFilter('crypto popular')">Popular crypto <sup>(not implement)</sup></a>
+        <a [ngClass]="{active: activeFilter === 'crypto popular'}" (click)="toggleActiveFilter('crypto popular')">Popular crypto
+            <sup>(not implement)</sup>
+        </a>
         <h4>Forex</h4>
         <a [ngClass]="{active: activeFilter === 'forex'}" (click)="toggleActiveFilter('forex')">All forex</a>
-        <a [ngClass]="{active: activeFilter === 'forex popular'}" (click)="toggleActiveFilter('forex popular')">Popular forex <sup>(not implement)</sup></a>
+        <a [ngClass]="{active: activeFilter === 'forex popular'}" (click)="toggleActiveFilter('forex popular')">Popular forex
+            <sup>(not implement)</sup>
+        </a>
     </div>
 
     <div class="instrument-list">
         <div class="table-header hidden-xs-down">
             <div>Instrument</div>
             <div>Diff</div>
-            <div>Bid / Ask</div>
+            <div>Price</div>
             <div>H / L</div>
             <div></div>
             <div></div>
@@ -40,20 +54,21 @@
                 </div>
                 <div>
                     <span>1h</span>
-                    <span [ngClass]="{'text-positive': symbol.options.changedAmount > 0, 'text-negative': symbol.options.changedAmount < 0}">
-                        {{symbol.options.changedAmount}} %
+                    <span [ngClass]="{'text-positive': symbol.options.changedHAmount > 0, 'text-negative': symbol.options.changedHAmount < 0}" class="changed-amount">
+                        {{symbol.options.changedHAmount}} %
                     </span>
-                    <span>|</span>
                     <span>24h</span>
-                    <span [ngClass]="{'text-positive': symbol.options.changedAmount > 0, 'text-negative': symbol.options.changedAmount < 0}">
-                        {{symbol.options.changedAmount}} %
+                    <span [ngClass]="{'text-positive': symbol.options.changedDAmount > 0, 'text-negative': symbol.options.changedDAmount < 0}" class="changed-amount">
+                        {{symbol.options.changedDAmount}} %
                     </span>
                 </div>
                 <div>
                     <span>{{symbol.options.bid || 0}}</span>
                 </div>
 
-                <div *ngIf="symbol.options.halted"><span>Market closed</span></div>
+                <div *ngIf="symbol.options.halted">
+                    <span>Market closed</span>
+                </div>
                 <div *ngIf="!symbol.options.halted">
                     <span>H {{symbol.options.high | number : '1.2-2'}} / L {{symbol.options.low | number : '1.2-2'}}</span>
                 </div>
@@ -69,47 +84,49 @@
     </div>
 
     <div class="side-menu" [ngClass]="{'open': activeMenu !== null}">
-        <section *ngIf="activeMenu === 'alarm'">
-            <header>
-                <i (click)="activeMenu = null" class="fa fa-close"></i>
-                <h5>{{activeSymbol?.options.displayName}} Alarms</h5>
-            </header>
-            <main>
-                <ul>
-                    <li>New</li>
-                    <li>Active</li>
-                </ul>
-                <form class="form" (ngSubmit)="login($event)" #loginForm="ngForm">
-                    <div class="form-check form-check-inline">
-                        <label class="form-check-label">
-                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">Price
-                        </label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <label class="form-check-label">
-                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">Momentum
-                        </label>
-                    </div>
-                    <div class="form-check form-check-inline disabled">
-                        <label class="form-check-label">
-                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3"> 3
-                        </label>
-                    </div>
+        <header>
+            <i class="fa fa-bell"></i>
+            <h5>{{activeSymbol?.options.displayName}} Alarms</h5>
+            <i (click)="activeMenu = null" class="fa fa-close"></i>
+        </header>
+        <main>
+            <ul class="side-menu-top-nav">
+                <li class="active">New</li>
+                <li>Active</li>
+            </ul>
+            <form class="form" (ngSubmit)="onCreateFormSubmit(alarmForm)" #alarmForm="ngForm">
+                <div class="form-check form-check-inline">
+                    <label class="form-check-label">
+                        <input class="form-check-input" type="radio" name="alarmType" id="alarmType1" value="1" [(ngModel)]="formModel.alarmType">price
+                    </label>
+                </div>
 
-                    <div class="form-group">
-                        <label for="passwordConf">Amount</label>
-                        <input id="passwordConf" type="text" class="form-control" name="password" value="{{activeSymbol?.options.bid}}" required/>
+                <div class="form-group">
+                    <label for="amount">Amount</label>
+                    <div class="input-group" style="display: flex;">
+                        <span class="input-group-btn">
+                            <button (click)="onClickSideMenuNumberInput(-1, sideMenuNumberInput)" type="button" class="btn btn-danger btn-number" data-type="minus">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                        </span>
+                        <input type="text" [(ngModel)]="formModel.amount" name="amount" class="form-control input-number" #sideMenuNumberInput>
+                        <span class="input-group-btn">
+                            <button (click)="onClickSideMenuNumberInput(1, sideMenuNumberInput)" type="button" class="btn btn-success btn-number" data-type="plus">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        </span>
                     </div>
+                </div>
 
-                    <div class="col-sm-12 col-lg-4">
-                        <button class="btn btn-primary pull-right">Submit</button>
-                    </div>
-                </form>
-            </main>
-        </section>
+                <div class="col-sm-12 col-lg-4">
+                    <button class="btn btn-primary pull-right">Set alarm</button>
+                </div>
+            </form>
+        </main>
     </div>
 </div>
 
 <div class="chart-container">
-    <chart-box #chart [symbolModel]="activeSymbol" [showBox]="false" [quickBuy]="false" style="display: flex; flex-flow: column; width: 100%; height: 100%;" > </chart-box>
+    <chart-box #chart [symbolModel]="activeSymbol" [showBox]="false" [quickBuy]="false" style="display: flex; flex-flow: column; width: 100%; height: 100%;">
+    </chart-box>
 </div>

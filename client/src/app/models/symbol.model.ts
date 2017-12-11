@@ -13,11 +13,7 @@ export class SymbolModel {
 	public tick(ticks) {
 
 		ticks.forEach(tick => {
-			this.options.direction = this.options.bid > tick[1] ? 'down' : 'up';
-			this.options.bidDirection = this.options.bid > tick[1] ? 'down' : 'up';
-			this.options.askDirection = this.options.ask > tick[2] ? 'down' : 'up';
 			this.options.bid = tick[1];
-			this.options.ask = tick[2];
 
 			if (tick[1] > this.options.high)
 				this.options.high = tick[1];
@@ -35,14 +31,19 @@ export class SymbolModel {
 		if (!this.options.marks)
 			return console.warn('Symbol ' + this.options.name + ' is incomplete');
 
-		const startPrice = this.options.marks.D.price;
+		const startHPrice = this.options.marks.H.price;
+		const startDPrice = this.options.marks.D.price;
 		const nowPrice = this.options.bid;
 
-		const perc = Number(((nowPrice - startPrice) / startPrice * 100).toFixed(2));
+		const percH = Number(((nowPrice - startHPrice) / startHPrice * 100).toFixed(2));
+		const percD = Number(((nowPrice - startDPrice) / startDPrice * 100).toFixed(2));
 
 		// Only update if changed
-		if (this.options.changedAmount !== perc)
-			this.options.changedAmount = perc;
+		if (this.options.changedHAmount !== percH)
+			this.options.changedHAmount = percH;
+
+		if (this.options.changedDAmount !== percD)
+			this.options.changedDAmount = percD;
 	}
 
 	/**
