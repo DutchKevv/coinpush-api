@@ -18,7 +18,6 @@
         html,
         body {
             height: 100%;
-            overflow: hidden;
         }
 
         html {
@@ -27,12 +26,12 @@
 
         body {
             background: #222122;
-            /* background: url(assets/custom/img/charts-overview-background.jpg) repeat; */
             margin: 0;
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            overflow: hidden;
         }
 
-        app>.spinner {
+        app > .spinner {
             margin: 0 calc(50% - 20px);
             position: absolute;
             top: calc(40% - 20px);
@@ -102,7 +101,7 @@
             }
         }
 
-        .div-fake-hidden {
+        .font-awesome-preload-trigger {
             width: 0px;
             height: 0px;
             overflow: hidden;
@@ -111,7 +110,7 @@
 </head>
 
 <body>
-    <div class="div-fake-hidden">
+    <div class="font-awesome-preload-trigger">
         <i class="fa fa-square-o fa-3x"></i>
     </div>
     <app>

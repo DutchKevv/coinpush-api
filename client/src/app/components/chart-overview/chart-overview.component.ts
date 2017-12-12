@@ -5,8 +5,7 @@ import {
 	AfterViewInit,
 	Output,
 	OnDestroy,
-	ApplicationRef,
-	Injector
+	ApplicationRef
 } from '@angular/core';
 
 import { InstrumentsService } from '../../services/instruments.service';
@@ -36,19 +35,21 @@ declare let $: any;
 
 export class ChartOverviewComponent implements OnInit, OnDestroy {
 
-	@Output() public activeSymbol: SymbolModel;
-
-	@ViewChildren(ChartBoxComponent) charts: QueryList<ChartBoxComponent>;
 	@ViewChild('filter') filterRef: ElementRef;
-	@ViewChild('list') listRef: ElementRef;
 
+	public activeSymbol: SymbolModel;
 	public activeSymbol$: Subject<SymbolModel> = new Subject();
 	public symbols = [];
 	public activeFilter: string = 'all';
 	public activeMenu: string = null;
+	public activeAlarmMenu: string = null;
+	public events$;
 
 	public formModel: any = {
-		alarmType: "1"
+		alarmType: "1",
+		alarm: {
+
+		}
 	};
 
 	private _routeSub;
@@ -60,12 +61,12 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 		public constantsService: ConstantsService,
 		public userService: UserService,
 		public cacheService: CacheService,
+		private eventService: EventService,
 		public cd: ChangeDetectorRef,
 		private _elementRef: ElementRef,
 		private _route: ActivatedRoute,
 		private _router: Router,
 		private _orderService: OrderService,
-		private _eventService: EventService,
 		private _applicationRef: ApplicationRef
 	) {
 	}
@@ -75,21 +76,22 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 		this._priceChangeSub = this.cacheService.changed$.subscribe(changedSymbols => this._onPriceChange(changedSymbols));
 
 		this.symbols = this.cacheService.symbols;
-		
+
 		this.setActiveSymbol(undefined, this.cacheService.getBySymbol(this._route.snapshot.queryParams['symbol']) || this.cacheService.symbols[0], false);
-		// setTimeout(() => {
 
-		this._routeSub = this._route.queryParams.subscribe(params => {
-			if (this.activeSymbol && this.activeSymbol.options.name === params['symbol']) {
+			// setTimeout(() => {
+
+			this._routeSub = this._route.queryParams.subscribe(params => {
+				if (this.activeSymbol && this.activeSymbol.options.name === params['symbol']) {
+					this._scrollIntoView(this.activeSymbol);
+					return;
+				}
+
+				const symbol = this.cacheService.getBySymbol(params['symbol']);
+				this.setActiveSymbol(undefined, symbol || this.symbols[0]);
 				this._scrollIntoView(this.activeSymbol);
-				return;
-			}
-
-			const symbol = this.cacheService.getBySymbol(params['symbol']);
-			this.setActiveSymbol(undefined, symbol || this.symbols[0]);
-			this._scrollIntoView(this.activeSymbol);
-			this.cd.detectChanges();
-		});
+				this.cd.detectChanges();
+			});
 		// }, 0);
 	}
 
@@ -146,7 +148,13 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 	}
 
 	onClickAlarm(event) {
-		this.activeMenu = 'alarm';
+		if (this.activeMenu === 'alarm') {
+			this.activeMenu = this.activeAlarmMenu = null;
+		} else {
+			this.activeMenu = 'alarm';
+			this.activeAlarmMenu = 'new'
+		}
+
 	}
 
 	onClickMore(event) {
@@ -168,11 +176,16 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 		// reset side-menu form model
 		this.formModel = {
 			alarmType: "1",
-			amount: symbol.options.bid
+			amount: symbol.options.bid,
+			alarm: {
+				
+			}
 		};
 
 		this.activeSymbol = symbol;
-		this._router.navigate(['/charts'], { skipLocationChange: false, queryParams: { symbol: symbol.options.name } });
+		this.events$ = this.eventService.findBySymbol(this.activeSymbol.options.name);
+
+		this._router.navigate(['/charts'], { skipLocationChange: true, queryParams: { symbol: symbol.options.name } });
 
 		const el = this._elementRef.nativeElement.querySelector(`[data-symbol=${symbol.options.name}]`);
 		if (!el || isAnyPartOfElementInViewport(el))
@@ -194,30 +207,20 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 
 		this.formModel.symbol = this.activeSymbol.options.name;
 		this.formModel.type = CUSTOM_EVENT_TYPE_ALARM;
-		this._eventService.create(this.formModel);
+		this.formModel.alarm.dir = this.formModel.amount < this.activeSymbol.options.bid;
+		this.eventService.create(this.formModel);
 	}
 
 	public onClickSideMenuNumberInput(dir: number, inputEl: HTMLElement) {
 		let newValue = this.formModel.amount || this.activeSymbol.options.bid;
-		let inc = 0.0001;
-
-		if (typeof this.activeSymbol.options.precision === 'number') {
-			inc = 1;
-			let counter = this.activeSymbol.options.precision + 1;
-
-			while (counter--)
-				inc /= 10;
-		}
+		let inc = this.activeSymbol.options.bid / 700
 
 		if (dir > 0)
 			newValue += inc;
 		else
 			newValue -= inc;
-		
-		newValue = this._priceToFixed(newValue);
 
-		this.formModel.amount = parseFloat(newValue);
-		inputEl.setAttribute('value', this._priceToFixed(newValue));
+		this.formModel.amount = parseFloat(this._priceToFixed(newValue));
 	}
 
 	public trackByFunc(index, item) {

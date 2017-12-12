@@ -5,7 +5,11 @@ export const StatusSchema = new Schema({
 		type: String,
 		required: true
 	},
-	timeFrame: {
+	collectionName: {
+		type: String,
+		required: true
+	},
+	timeframe: {
 		type: String,
 		required: true
 	},
@@ -19,4 +23,4 @@ export const StatusSchema = new Schema({
 	}
 });
 
-export const Status = model('Status', StatusSchema);
+export const Status = model('__status', StatusSchema);

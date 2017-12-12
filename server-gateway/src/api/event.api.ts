@@ -3,36 +3,25 @@ import {Router} from 'express';
 import { eventController } from '../controllers/event.controller';
 
 const config = require('../../../tradejs.config');
-const proxy = httpProxy.createProxyServer({
-	target: config.server.order.apiUrl + '/event'
-});
-
-proxy.on('error', function(err, req, res) {
-    res.end();
-})
 
 const router = Router();
-
-proxy.on('error', function(err, req, res) {
-    res.end();
-})
-
-proxy.on('error', function (err, req, res) {
-	console.error(err);
-});
 
 /**
  * Single
  */
 router.get('/:id', function (req, res, next) {
-	proxy.web(req, res, {target: config.server.order.apiUrl + '/event'});
+
 });
 
 /**
  * List
  */
-router.get('/', (req, res) => {
-	proxy.web(req, res, {target: config.server.event.apiUrl + '/event'});
+router.get('/', async (req, res, next) => {
+	try {
+		res.send(await eventController.findMany(req.user, req.query));
+	} catch (error) {
+		next(error);
+	}
 });
 
 /**
@@ -50,7 +39,11 @@ router.post('/', async (req, res, next) => {
  * Delete
  */
 router.delete('/:id', async (req, res, next) => {
-	proxy.web(req, res, {target: config.server.order.apiUrl + '/event'});
+	try {
+		res.send(await eventController.remove(req.user, req.params.id));
+	} catch (error) {
+		next(error);
+	}
 });
 
 

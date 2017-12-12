@@ -48,6 +48,7 @@ app.use((error, req, res, next) => {
 	res.status(500).send({error});
 });
 
+redis.client.subscribe("notify");
 redis.client.on("message", function (channel, message) {
     let data;
     try {

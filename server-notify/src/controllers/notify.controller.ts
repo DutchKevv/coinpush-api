@@ -9,8 +9,6 @@ const config = require('../../../tradejs.config');
 
 const sender = new gcm.Sender(config.firebase.key);
 
-redis.client.subscribe("notify");
-
 export const notifyController = {
 
     async sendToUser(userId, params) {

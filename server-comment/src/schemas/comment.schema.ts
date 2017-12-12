@@ -1,6 +1,5 @@
 import {Schema, model, Types} from 'mongoose';
 import {join} from 'path';
-import {CHANNEL_TYPE_MAIN} from '../../../shared/constants/constants';
 
 const config = require('../../../tradejs.config');
 

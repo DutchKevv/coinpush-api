@@ -8,6 +8,7 @@ import { cacheController } from './controllers/cache.controller';
 import { symbolController } from './controllers/symbol.controller';
 import { BrokerMiddleware } from '../../shared/brokers/broker.middleware';
 import { clearInterval } from 'timers';
+import { client } from './modules/redis';
 
 // error catching
 process.on('unhandledRejection', (reason, p) => {
@@ -25,7 +26,7 @@ export const app = {
 	broker: <BrokerMiddleware>null,
 
 	_symbolUpdateTimeout: null,
-	_symbolUpdateTimeoutTime: 60 * 1000 , // 1 minute
+	_symbolUpdateTimeoutTime: 60 * 1000, // 1 minute
 	_socketTickInterval: null,
 	_socketTickIntervalTime: 500,
 
@@ -70,14 +71,14 @@ export const app = {
 		if (!state)
 			return clearInterval(this._symbolUpdateInterval);
 
-		const timeoutFunc = async function() {
+		const timeoutFunc = async function () {
 			try {
 				await cacheController.sync();
 				await symbolController.update();
 			} catch (error) {
 				console.error(error);
 			} finally {
-				this._symbolUpdateTimeout = setTimeout(timeoutFunc, this._toggleSymbolUpdateInterval);
+				this._symbolUpdateTimeout = setTimeout(timeoutFunc, this._symbolUpdateTimeoutTime);
 			}
 		}.bind(this);
 
@@ -93,6 +94,7 @@ export const app = {
 				return;
 
 			this.io.sockets.emit('ticks', cacheController.tickBuffer);
+			// client.publish('ticks', JSON.stringify(cacheController.tickBuffer));
 
 			cacheController.tickBuffer = {};
 		}, this._socketTickIntervalTime);

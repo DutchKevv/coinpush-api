@@ -1,10 +1,10 @@
 import {Schema, model} from 'mongoose';
 
 export const CandleSchema = new Schema({
-	time: {
+	_id: {
 		type: Number,
-		unique: true,
-		required: true
+		required: true,
+		index: true
 	},
 	data: {
 		type: Schema.Types.Buffer,

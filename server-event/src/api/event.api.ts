@@ -4,9 +4,18 @@ import { app } from '../app';
 
 const router = Router();
 
-router.get('/', (req, res, next) => {
+router.get('/:id', async (req, res, next) => {
 	try {
-		eventController.findMany(req.user);
+		// res.send(await eventController.findMany(req.user, req.req.query));
+	} catch (error) {
+		next(error);
+	}
+});
+
+router.get('/', async (req, res, next) => {
+	try {
+		console.log('asdfasfasdfsdfasdfasdfasfsffdsf', req.query);
+		res.send(await eventController.findMany(req.user, req.query));
 	} catch (error) {
 		next(error);
 	}
@@ -28,9 +37,9 @@ router.put('/', (req, res, next) => {
 	}
 });
 
-router.delete('/', (req, res, next) => {
+router.delete('/:id', async (req, res, next) => {
 	try {
-		
+		res.send(await eventController.remove(req.user, req.params.id));
 	} catch (error) {
 		next(error);
 	}

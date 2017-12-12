@@ -32,22 +32,22 @@ export const dataLayer = {
 			throw new Error('dataLayer: "from" and "until" cannot both pe passes as params');
 
 		const collectionName = this.getCollectionName(symbol, timeFrame);
-		const model = mongoose.model(collectionName);
+		const model = mongoose.model(collectionName, CandleSchema);
 		const qs: any = {};
 
 		// log.info('DataLayer', `Read ${collectionName} from ${from} until ${until} count ${count}`);
 
 		if (from) {
-			qs.time = qs.time || {};
-			qs.time['$gt'] = from;
+			qs._id = qs._id || {};
+			qs._id['$gt'] = from;
 		}
 
 		if (until) {
-			qs.time = qs.time || {};
-			qs.time['$lt'] = until;
+			qs._id = qs._id || {};
+			qs._id['$lt'] = until;
 		}
 
-		const rows = <Array<any>>await model.find({}).limit(count || 1000).sort({time: -1});
+		const rows = <Array<any>>await model.find({}).limit(count || 1000).sort({ _id: -1 });
 		const buffer = Buffer.concat(rows.reverse().map(row => row.data), rows.length * Float64Array.BYTES_PER_ELEMENT * 10);
 		// console.log('afetr concat', new Float64Array(buffer.buffer));
 		return buffer;
@@ -58,8 +58,8 @@ export const dataLayer = {
 			return;
 
 		let collectionName = this.getCollectionName(symbol, timeFrame),
-			model = mongoose.model(collectionName),
-			bulk = model.collection.initializeUnorderedBulkOp(),
+			model = mongoose.model(collectionName, CandleSchema),
+			bulk = model.collection.initializeOrderedBulkOp(),
 			rowLength = 10, i = 0;
 
 		// log.info('DataLayer', `WRITING ${candles.length / 10} candles to ${collectionName} starting ${new Date(candles[0])} until ${new Date(candles[candles.length - 10])}`);
@@ -67,7 +67,7 @@ export const dataLayer = {
 		while (i < candles.length) {
 			const time = candles[i];
 			const data = Buffer.from(candles.slice(i, i += rowLength).buffer);
-			bulk.find({ time }).upsert().update({ $set: {time, data }});
+			bulk.find({ _id: time }).upsert().update({ $set: { _id: time, data } });
 		}
 
 		await bulk.execute();
@@ -76,7 +76,7 @@ export const dataLayer = {
 			const lastCandleTime = candles[candles.length - 10];
 			const lastCloseBidPrice = candles[candles.length - 3];
 
-			const result = await Status.update({ symbol, timeFrame }, { lastSync: lastCandleTime, lastPrice: lastCloseBidPrice });
+			const result = await Status.update({ collectionName }, { lastSync: lastCandleTime, lastPrice: lastCloseBidPrice });
 		}
 	},
 
@@ -84,7 +84,8 @@ export const dataLayer = {
 		const now = Date.now();
 		const timeFrames = Object.keys(timeFrameSteps);
 		const existingModels = mongoose.modelNames();
-		
+		const bulk = Status.collection.initializeUnorderedBulkOp();
+
 		log.info('DataLayer', 'Creating ' + symbols.length * timeFrames.length + ' collections');
 
 		for (let i = 0; i < symbols.length; i++) {
@@ -95,17 +96,14 @@ export const dataLayer = {
 
 				const collectionName = this.getCollectionName(symbol.name, timeFrame);
 
-				if (!existingModels.includes(collectionName))
-					mongoose.model(collectionName, CandleSchema);;
-					
-				// Create update document if not exists
-				await Status.update(
-					{ symbol: symbol.name, timeFrame },
-					{ symbol: symbol.name, timeFrame, broker: symbol.broker },
-					{ upsert: true, setDefaultsOnInsert: true }
-				);
+
+				bulk.find({ collectionName }).upsert().update({ $set: { collectionName, broker: symbol.broker, symbol: symbol.name, timeFrame } });
 			}
 		}
+
+		// Mongo crashes if bulk is empty
+		// if (bulk.length > 0)
+			await bulk.execute();
 
 		log.info('CacheController', `Creating collections took ${Date.now() - now}ms`);
 	},

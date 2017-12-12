@@ -18,13 +18,15 @@ export class CacheService {
 	public read(params) {
 
 		return new Promise((resolve, reject) => {
-			this._socket.emit('read', params, (err, buffer: Uint8Array) => {
-				if (err)
-					return reject(err);
+			this._zone.runOutsideAngular(() => {
+				this._socket.emit('read', params, (err, buffer: Uint8Array) => {
+					if (err)
+						return reject(err);
 
-				let arr = new Float64Array(buffer);
+					let arr = new Float64Array(buffer);
 
-				resolve(arr);
+					resolve(arr);
+				});
 			});
 		})
 	}
@@ -52,16 +54,19 @@ export class CacheService {
 				resolve();
 			});
 
-			this._socket.on('ticks', ticks => {
+			this._zone.runOutsideAngular(() => {
 
-				for (let _symbol in ticks) {
-					let symbol = this.getBySymbol(_symbol);
+				this._socket.on('ticks', ticks => {
 
-					if (symbol)
-						symbol.tick([ticks[_symbol]]);
-				}
+					for (let _symbol in ticks) {
+						let symbol = this.getBySymbol(_symbol);
 
-				this.changed$.next(Object.keys(ticks));
+						if (symbol)
+							symbol.tick([ticks[_symbol]]);
+					}
+
+					this.changed$.next(Object.keys(ticks));
+				});
 			});
 		});
 	}

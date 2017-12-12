@@ -13,7 +13,16 @@ export const eventController = {
             headers: {_id: reqUser.id},
             json: true
         })
-	},
+    },
+    
+    findMany(reqUser: IReqUser, params) {
+        return request({
+            uri: config.server.event.apiUrl + '/event',
+            headers: {_id: reqUser.id},
+            qs: params,
+            json: true
+        })
+    },
 
 	create(reqUser: IReqUser, params) {
 		return request({
@@ -25,7 +34,11 @@ export const eventController = {
         })
 	},
 
-	remove(reqUser, IReqUser, eventId) {
-
+	remove(reqUser: IReqUser, eventId) {
+        return request({
+            uri: config.server.event.apiUrl + '/event/' + eventId,
+            method: 'delete',
+            headers: {_id: reqUser.id}
+        })
 	}
 };

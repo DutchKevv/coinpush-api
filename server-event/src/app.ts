@@ -2,7 +2,7 @@ import { json, urlencoded } from 'body-parser';
 import * as express from 'express';
 import * as helmet from 'helmet';
 import * as morgan from 'morgan';
-import * as redis from './modules/redis';
+import { client } from './modules/redis';
 
 // error catching
 process.on('unhandledRejection', (reason, p) => {
@@ -18,11 +18,14 @@ export const app = {
     api: null,
 
     async init(): Promise<void> {
+        this._setRedisListener();
         this._setupApi();
     },
 
-    setRedisListener() {
-        redis.client.on("message", function (channel, message) {
+    _setRedisListener() {
+        client.subscribe("ticks");
+
+        client.on("message", function (channel, message) {
             let data;
 
             try {
@@ -32,8 +35,9 @@ export const app = {
             }
 
             switch (channel) {
-                case 'price-change-perc':
-
+                case 'price':
+                    break;
+                case 'bar':
                     break;
             }
         });
@@ -58,8 +62,8 @@ export const app = {
         });
 
         this.api.use(json());
-        this.api.use(urlencoded({extended: false}));
-        
+        this.api.use(urlencoded({ extended: false }));
+
         this.api.use('/event', require('./api/event.api'));
     },
 };

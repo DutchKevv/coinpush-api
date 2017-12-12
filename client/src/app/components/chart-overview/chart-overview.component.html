@@ -54,11 +54,13 @@
                 </div>
                 <div>
                     <span>1h</span>
-                    <span [ngClass]="{'text-positive': symbol.options.changedHAmount > 0, 'text-negative': symbol.options.changedHAmount < 0}" class="changed-amount">
+                    <span [ngClass]="{'text-positive': symbol.options.changedHAmount > 0, 'text-negative': symbol.options.changedHAmount < 0}"
+                        class="changed-amount">
                         {{symbol.options.changedHAmount}} %
                     </span>
                     <span>24h</span>
-                    <span [ngClass]="{'text-positive': symbol.options.changedDAmount > 0, 'text-negative': symbol.options.changedDAmount < 0}" class="changed-amount">
+                    <span [ngClass]="{'text-positive': symbol.options.changedDAmount > 0, 'text-negative': symbol.options.changedDAmount < 0}"
+                        class="changed-amount">
                         {{symbol.options.changedDAmount}} %
                     </span>
                 </div>
@@ -86,42 +88,61 @@
     <div class="side-menu" [ngClass]="{'open': activeMenu !== null}">
         <header>
             <i class="fa fa-bell"></i>
-            <h5>{{activeSymbol?.options.displayName}} Alarms</h5>
+            <h5>{{activeSymbol?.options.displayName}}</h5>
             <i (click)="activeMenu = null" class="fa fa-close"></i>
         </header>
         <main>
             <ul class="side-menu-top-nav">
-                <li class="active">New</li>
-                <li>Active</li>
+                <li [ngClass]="{active: activeAlarmMenu === 'new'}" (click)="activeAlarmMenu = 'new'">New</li>
+                <li [ngClass]="{active: activeAlarmMenu === 'active'}" (click)="activeAlarmMenu = 'active'">Active</li>
             </ul>
-            <form class="form" (ngSubmit)="onCreateFormSubmit(alarmForm)" #alarmForm="ngForm">
-                <div class="form-check form-check-inline">
-                    <label class="form-check-label">
-                        <input class="form-check-input" type="radio" name="alarmType" id="alarmType1" value="1" [(ngModel)]="formModel.alarmType">price
-                    </label>
-                </div>
-
-                <div class="form-group">
-                    <label for="amount">Amount</label>
-                    <div class="input-group" style="display: flex;">
-                        <span class="input-group-btn">
-                            <button (click)="onClickSideMenuNumberInput(-1, sideMenuNumberInput)" type="button" class="btn btn-danger btn-number" data-type="minus">
-                                <i class="fa fa-minus"></i>
-                            </button>
-                        </span>
-                        <input type="text" [(ngModel)]="formModel.amount" name="amount" class="form-control input-number" #sideMenuNumberInput>
-                        <span class="input-group-btn">
-                            <button (click)="onClickSideMenuNumberInput(1, sideMenuNumberInput)" type="button" class="btn btn-success btn-number" data-type="plus">
-                                <i class="fa fa-plus"></i>
-                            </button>
-                        </span>
+            <ng-container *ngIf="activeAlarmMenu === 'new'">
+                <form class="form" (ngSubmit)="onCreateFormSubmit(alarmForm)" #alarmForm="ngForm">
+                    <div class="form-check form-check-inline">
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="radio" name="alarmType" id="alarmType1" value="1" [(ngModel)]="formModel.alarmType">price
+                        </label>
                     </div>
-                </div>
 
-                <div class="col-sm-12 col-lg-4">
-                    <button class="btn btn-primary pull-right">Set alarm</button>
+                    <div class="form-group">
+                        <label for="amount">Amount <sup>(at least 1% difference)</sup></label>
+                        <div class="input-group" style="display: flex;">
+                            <span class="input-group-btn">
+                                <button (click)="onClickSideMenuNumberInput(-1, sideMenuNumberInput)" type="button" class="btn btn-danger btn-number" data-type="minus">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                            </span>
+                            <input type="text" [(ngModel)]="formModel.amount" name="amount" class="form-control input-number" #sideMenuNumberInput>
+                            <span class="input-group-btn">
+                                <button (click)="onClickSideMenuNumberInput(1, sideMenuNumberInput)" type="button" class="btn btn-success btn-number" data-type="plus">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <span class="muted">Diff: {{(((sideMenuNumberInput.value / activeSymbol.options.bid) * 100) - 100).toFixed(2)}}%</span>
+                        <p>Current price: {{activeSymbol.options.bid}}</p>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <label for="alarmName">Name</label>
+                        <input class="form-control form-input" type="text" name="name" id="alarmName" [(ngModel)]="formModel.name" placeholder="name">
+                    </div>
+
+                    <div class="col-sm-12 col-lg-4">
+                        <button class="btn btn-primary pull-right">Set alarm</button>
+                    </div>
+                </form>
+            </ng-container>
+            <div *ngIf="activeAlarmMenu === 'active'">
+                <div class="alarm-row" *ngFor="let event of this.events$ | async">
+                    <i class="fa fa-bell"></i>
+                    <span>{{event.alarm.price}}</span>
+                    <span>Triggered : {{event.triggered}}</span>
+                    <i (click)="eventService.remove(event._id)" class="fa fa-close" style="float: right"></i>
+                    <i class="fa fa-pencil" style="float: right"></i>
                 </div>
-            </form>
+            </div>
         </main>
     </div>
 </div>

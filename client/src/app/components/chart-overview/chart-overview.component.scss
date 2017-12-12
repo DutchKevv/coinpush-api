@@ -22,32 +22,27 @@
 }
 
 .instrument-list-outer {
-    height: 45%;
+    height: 55%;
+    width: 100%;
     display: flex;
     background: $background-light;
     position: relative;
+    flex-shrink: 0;
 
     ul {
         overflow-y: auto;
         height: 100%;
-        overflow-x: hidden;
     
         li {
             border-bottom: 1px solid $border-color-grey;
             font-size: 14px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: flex-start;
-            align-items: center;
             position: relative;
-            transition: transform .6s ease;
 
             &.active {
                 background: #6f748e;
             }
            
             @media only screen and (min-width : 768px) { 
-                justify-content: space-between;
 
                 &:hover {
                     background: #6f748e;
@@ -56,22 +51,19 @@
             }
     
             > div {
+                display: inline-table;
+                width: 15%;
                 padding: 0px 10px;
-                flex: 0 1 46%;
-                // text-align: center;
                 margin: 2px 0;
                     
                 span {
                     font-size: 12px;
                     line-height: 16px;
                 }
-                
-                @media only screen and (min-width : 992px) { 
-                    flex: 1;
-                }
     
                 &:first-child {
                     text-align: left;
+                    width: 25%;
 
                     img {
                         width: 16px;
@@ -79,6 +71,23 @@
                         float: left;
                         margin-top: 2px;
                         margin-right: 10px;
+                    }
+                }
+
+                &:nth-child(2) {
+                    transition: opacity .6s ease;
+                    width: 20%;
+                }
+    
+                &:nth-child(4) {
+                    transition: opacity .6s ease;
+                    width: 20%;
+                }
+
+                &:last-child {
+                    > * {
+                        width: 33%;
+                        text-align: center;
                     }
                 }
             }
@@ -113,11 +122,6 @@
                 position: absolute;
                 right: 0;
                 top: 10px;
-                
-                width: 50%;
-                display: flex;
-                justify-content: space-between;
-                min-height: 18px;
 
                 i {
                     color: $font-color-light;
@@ -136,16 +140,7 @@
                     transition: none;
                     -webkit-transform: none;
                     transform: none;
-                    justify-content: space-around;
                 }
-            }
-
-            > div:nth-child(2) {
-                transition: opacity .6s ease;
-            }
-
-            > div:nth-child(4) {
-                transition: opacity .6s ease;
             }
 
             &.open {
@@ -174,68 +169,89 @@
         display: inline-block;
         text-align: center;
     }
-    
-    .side-menu {
-        display: none;
+}
 
+.side-menu {
+    display: none;
+
+    &.open {
+        display: block;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background: black;
+    }
+
+    @media only screen and (min-width : 992px) { 
         &.open {
-            display: block;
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            background: black;
+            position: static;
+            min-width: 400px;
+            width: 400px;
         }
-    
-        @media only screen and (min-width : 992px) { 
-            &.open {
-                position: static;
-                min-width: 400px;
-                width: 400px;
-            }
-        }
-    
-        header {
-            background: green;
-            padding: 3px 10px;
-            display: flex;
-            
-            i {
-                color: white;
-                font-size: 20px;
-            }
+    }
 
-            .fa-close {
-                margin-left: auto;
-                cursor: pointer;
-            }
-
-            .fa-bell {
-                font-size: 16px;
-                margin-top: 2px;
-                margin-right: 10px;
-            }
-    
-            h5 {
-                line-height: 20px;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-            }
+    header {
+        padding: 4px 10px;
+        display: flex;
+        
+        i {
+            font-size: 20px;
         }
 
-        main > form {
-            padding: 6px;
+        .fa-close {
+            margin-left: auto;
+            cursor: pointer;
         }
 
-        .side-menu-top-nav {
-            display: flex;
+        .fa-bell {
+            font-size: 16px;
+            margin-top: 2px;
+            margin-right: 10px;
+        }
 
-            li {
-                padding: 3px 4px;
-                width: 100%;
-            }
+        h5 {
+            line-height: 20px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
+
+    main > form {
+        padding: 6px;
+    }
+
+    .side-menu-top-nav {
+        display: flex;
+
+        li {
+            padding: 4px 4px;
+            width: 100%;
+        }
+    }
+
+    .btn-number {
+        line-height: 20px;
+        padding: 4px 8px;
+        border-radius: 0;
+        border: none;
+    }
+
+    .form-control {
+        padding: 4px 8px;
+        border-radius: 0;
+        border: none;
+    }
+
+    .alarm-row {
+        padding: 4px;
+        border-top: 1px solid white;
+
+        .fa {
+            margin: 0 10px;
+            cursor: pointer;
         }
     }
 }
@@ -279,7 +295,8 @@
     
     @media only screen and (min-width : 992px) {
         position: static;
-        width: 200px;
+        min-width: 200px;
+        max-width: 200px;
         display: block;
 
         a {
@@ -291,7 +308,7 @@
 .instrument-list {
 	width: 100%;
 	display: flex;
-	flex-flow: column;
+    flex-flow: column;
 }
 
 .table-header {
@@ -301,6 +318,7 @@
 	justify-content: space-between;
 	display: flex;
 	padding: 6px 10px;
+    flex-shrink: 0;
 
 	> div {
 		align-items: center;
@@ -363,7 +381,7 @@ button.btn-sm {
 }
 
 .chart-container {
-    height: 55%;
+    height: 45%;
 }
 
 .chart-no-charts {

@@ -12,7 +12,11 @@ const EventSchema = new Schema({
     },
     symbol: {
         type: String,
-        required: true
+        required: true,
+        lowercase: true
+    },
+    name: {
+        type: String
     },
 	type: {
         type: Number,
@@ -24,7 +28,14 @@ const EventSchema = new Schema({
         },
         perc: {
             type: Number
+        },
+        dir: {
+            type: Number
         }
+    },
+    triggered: {
+        type: Boolean,
+        default: false
     }
 });
 
