@@ -5,7 +5,6 @@
     "lib": ["es6", "es7"],
     "module": "commonjs",
     "moduleResolution": "node",
-    "sourceMap": true,
     "rootDir": "./",
     "target": "es2017"
   }

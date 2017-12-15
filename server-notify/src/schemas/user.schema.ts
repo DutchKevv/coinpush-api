@@ -65,8 +65,6 @@ const UserSchema = new Schema({
 UserSchema.statics.addDevice = async function(userId, device) {
     const prevUsers: any = await User.find({devices: {$elemMatch: {token: device.token}}}, {_id: 1}).lean();
 
-    console.log(userId, device);
-
     await Promise.all(prevUsers.map(user => {
         if (user._id !== userId)
             return UserSchema.statics.removeDevice(userId, device);

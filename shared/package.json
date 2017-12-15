@@ -23,7 +23,7 @@
     "NodeJS"
   ],
   "scripts": {
-    "start": "tsc-watch",
+    "start": "tsc-watch --sourceMap",
     "build": "tsc"
   },
   "dependencies": {

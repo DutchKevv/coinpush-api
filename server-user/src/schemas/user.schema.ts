@@ -166,7 +166,7 @@ UserSchema.statics.normalizeProfileImg = function (doc) {
 	if (!doc)
 		return;
 
-	const domainPrefix = 'http://' + (process.env.NODE_ENV === 'prod' ? config.ip.prod : config.ip.local) + ':' + config.port;
+	const domainPrefix = 'http://' + (process.env.NODE_ENV === 'production' ? config.ip.prod : config.ip.local) + ':' + config.port;
 
 	// followers
 	if (doc.followers && doc.followers.length)
