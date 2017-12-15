@@ -63,8 +63,6 @@
                     </p>
                 </div>
                 <div *ngIf="options._id !== selfId">
-                    <button *ngIf="!options.iCopy" (click)="userService.toggleCopy(model, true)" class="btn btn-sm btn-success pull-right">Copy</button>
-                    <button *ngIf="options.iCopy" (click)="userService.toggleCopy(model, false)" class="btn btn-sm btn-danger pull-right">UnCopy</button>
                     <button *ngIf="!options.iFollow" (click)="userService.toggleFollow(model, true)" class="btn btn-sm btn-success pull-right">Follow</button>
                     <button *ngIf="options.iFollow" (click)="userService.toggleFollow(model, false)" class="btn btn-sm btn-danger pull-right">UnFollow</button>
                 </div>
@@ -94,8 +92,6 @@
                     </p>
                 </div>
                 <div *ngIf="options._id !== selfId">
-                    <button *ngIf="!options.iCopy" (click)="userService.toggleCopy(model, true)" class="btn btn-sm btn-success pull-right">Copy</button>
-                    <button *ngIf="options.iCopy" (click)="userService.toggleCopy(model, false)" class="btn btn-sm btn-danger pull-right">UnCopy</button>
                     <button *ngIf="!options.iFollow" (click)="userService.toggleFollow(model, true)" class="btn btn-sm btn-success pull-right">Follow</button>
                     <button *ngIf="options.iFollow" (click)="userService.toggleFollow(model, false)" class="btn btn-sm btn-danger pull-right">UnFollow</button>
                 </div>
@@ -125,8 +121,6 @@
                     </p>
                 </div>
                 <div *ngIf="options._id !== selfId">
-                    <button *ngIf="!options.iCopy" (click)="userService.toggleCopy(model, true)" class="btn btn-sm btn-success pull-right">Copy</button>
-                    <button *ngIf="options.iCopy" (click)="userService.toggleCopy(model, false)" class="btn btn-sm btn-danger pull-right">UnCopy</button>
                     <button *ngIf="!options.iFollow" (click)="userService.toggleFollow(model, true)" class="btn btn-sm btn-success pull-right">Follow</button>
                     <button *ngIf="options.iFollow" (click)="userService.toggleFollow(model, false)" class="btn btn-sm btn-danger pull-right">UnFollow</button>
                 </div>

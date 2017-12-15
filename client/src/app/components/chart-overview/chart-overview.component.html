@@ -48,7 +48,7 @@
             <li *ngFor="let symbol of symbols; trackBy:trackByFunc" [ngClass]="{'active': activeSymbol === symbol}" (click)="setActiveSymbol($event, symbol)">
 
                 <div>
-                    <!-- <img src="{{symbol.options.img}}" /> -->
+                    <img src="{{symbol.options.img}}" />
                     <span>{{symbol.options.displayName}}</span>
                 </div>
                 <div>

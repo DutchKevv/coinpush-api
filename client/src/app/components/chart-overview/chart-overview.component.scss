@@ -31,15 +31,24 @@
 
     ul {
         overflow-y: auto;
+        overflow-x: hidden;
         height: 100%;
-    
+        width: 100%;
+
         li {
             border-bottom: 1px solid $border-color-grey;
             font-size: 14px;
             position: relative;
+            cursor: pointer;
 
             &.active {
                 background: #6f748e;
+            }
+
+            @media only screen and (min-width : 992px) { 
+                &:hover {
+                    background: #6f748e;
+                }
             }
     
             > div {
@@ -86,7 +95,7 @@
                     width: 15%;
 
                     &:first-child {
-                        width: 25%;
+                        width: 30%;
                     }
                     
                     &:nth-child(2) {
@@ -124,12 +133,9 @@
             }
 
             .more-container {
-                -webkit-transform: translateX(100%);
-                transform: translateX(100%);
-                -webkit-transition: -webkit-transform .6s ease;
-                transition: transform .6s ease;
+                transition: right .6s ease;
                 position: absolute;
-                right: 0;
+                right: -100%;
                 top: 10px;
 
                 i {
@@ -147,8 +153,6 @@
                 @media only screen and (min-width : 992px) { 
                     position: static;
                     transition: none;
-                    -webkit-transform: none;
-                    transform: none;
                 }
             }
 
@@ -167,7 +171,7 @@
                 }
 
                 .more-container {
-                    transform: translateX(-40%);
+                    right: 60px;
                 }
             }
         }
@@ -238,6 +242,7 @@
         li {
             padding: 4px 4px;
             width: 100%;
+            cursor: pointer;
         }
     }
 
@@ -257,7 +262,6 @@
     .alarm-row {
         padding: 4px;
         border-bottom: 1px solid white;
-
 
         > * {
             padding-right: 10px;

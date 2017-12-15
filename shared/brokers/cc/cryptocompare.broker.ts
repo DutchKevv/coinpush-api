@@ -315,7 +315,8 @@ export default class CyrptoCompareApi extends EventEmitter {
                     json: true
                 })
             }).catch(error => {
-                console.error('status code', error.statusCode);
+                console.log('reattempt', params);
+                console.error('status code', error.statusCode || error.httpCode);
             });
         }
         
