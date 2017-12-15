@@ -1,20 +1,10 @@
 const path = require('path');
 
-let domain;
-
-// if (process.env.NODE_ENV === 'prod')
-//     domain = {
-//         host: 'http://149.210.227.14',
-//         apiUrl: 'http://149.210.227.14:3100',
-//         port: 3100
-//     };
-
-// else
-    domain = {
-        host: 'http://localhost',
-        apiUrl: 'http://localhost:3100',
-        port: 3100
-    };
+let domain = {
+    host: 'http://localhost',
+    apiUrl: 'http://localhost:3100',
+    port: 3100
+};
 
 const config = {
     domain,
@@ -110,20 +100,27 @@ const config = {
         }
     },
     ip: {
-        local: '',
-        prod: '',
-        devLocal: '127.0.0.1',
-        devApp: '10.0.2.2'
+        local: "",
+        prod: "",
+        devLocal: "127.0.0.1",
+        devApp: "10.0.2.2"
     },
-    port: 3100
+    firebase: {
+        key: "" // Your firebase accound id (push messages)
+    },
+    port: 3100,
+    appVersion: "0.0.1"
 };
 
+// merge config with custom config
+// TODO: Deep merge, but prever no global node_modules folder..
 const customConfig = require('./tradejs.config.custom.json');
 Object.assign(config, customConfig);
 
-module.exports = config;
-
-Object.keys(module.exports.server).forEach(name => {
-    const server = module.exports.server[name];
+// build domain url strings
+for (let name in config.server) {
+    const server = config.server[name];
     server.apiUrl = domain.host + ':' + server.port;
-});
+};
+
+module.exports = config;

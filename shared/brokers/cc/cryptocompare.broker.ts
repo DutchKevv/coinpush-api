@@ -69,14 +69,14 @@ export default class CyrptoCompareApi extends EventEmitter {
         //Use SubscriptionId 0 for TRADE, 2 for CURRENT and 5 for CURRENTAGG
         //For aggregate quote updates use CCCAGG as market
         const subs = symbols.map(symbol => `5~CCCAGG~${symbol}~USD`);
-        
+
         this._socket.on("m", (message) => {
-            
+
             var messageType = message.substring(0, message.indexOf("~"));
             var res: any = {};
-            
-            if (messageType == CCC.STATIC.TYPE.CURRENTAGG) { 
-            // if (messageType == CCC.STATIC.TYPE.CURRENTAGG) { 
+
+            if (messageType == CCC.STATIC.TYPE.CURRENTAGG) {
+                // if (messageType == CCC.STATIC.TYPE.CURRENTAGG) { 
                 res = CCC.CURRENT.unpack(message);
                 // console.log(typeof res, res);
 
@@ -96,7 +96,7 @@ export default class CyrptoCompareApi extends EventEmitter {
     }
 
     public unsubscribePriceStream(instruments) {
-       
+
     }
 
     public async getSymbols(): Promise<Array<any>> {
@@ -133,36 +133,34 @@ export default class CyrptoCompareApi extends EventEmitter {
     public getCandles(symbol: string, timeFrame: string, from: number, until: number, count: number, onData: Function, onDone: Function): void {
         let countChunks = splitToChunks(timeFrame, from, until, count, CyrptoCompareApi.FETCH_CHUNK_LIMIT),
             writeChunks = 0,
-            finished = 0;
+            finished = 0,
+            url = '';
+
+        switch (timeFrame) {
+            case 'M1':
+                url = 'https://min-api.cryptocompare.com/data/histominute?';
+                break;
+            case 'H1':
+                url = 'https://min-api.cryptocompare.com/data/histohour?';
+                break;
+            case 'D':
+                url = 'https://min-api.cryptocompare.com/data/histoday?';
+                break;
+        }
 
         countChunks.forEach(async chunk => {
             let arr = [];
             let leftOver = '';
             let startFound = false;
             let now = Date.now();
-            let url = '';
 
-            switch (timeFrame) {
-                case 'M1':
-                    url = 'https://min-api.cryptocompare.com/data/histominute?';
-                    break;
-                case 'H1':
-                    url = 'https://min-api.cryptocompare.com/data/histohour?';
-                    break;
-                case 'D':
-                    url = 'https://min-api.cryptocompare.com/data/histoday?';
-                    break;
-            }
-            const result = await request({
-                uri: url + stringify({
-                    limit: count || 2000,
-                    fsym: symbol,
-                    tsym: 'USD',
-                    toTs: until || undefined
-                }),
-                json: true
-            })
-
+            const result: any = await this._doRequest(url, {
+                limit: count || 2000,
+                fsym: symbol,
+                tsym: 'USD',
+                toTs: until || undefined
+            });
+           
             let candles = new Float64Array(result.Data.length * 10);
 
             result.Data.forEach((candle, index) => {
@@ -303,6 +301,29 @@ export default class CyrptoCompareApi extends EventEmitter {
                 return 'stop';
             case ORDER_TYPE_IF_TOUCHED:
                 return 'marketIfTouched';
+        }
+    }
+
+    private async _doRequest(url, params: any, attemptNr: number = 0) {
+        let max = 5;
+        let p: any = Promise.reject(null);
+
+        for (var i = 0; i < max; i++) {
+            p = p.catch(() => {
+                return request({
+                    uri: url + stringify(params),
+                    json: true
+                })
+            }).catch(error => {
+                console.error('status code', error.statusCode);
+            });
+        }
+        
+        try {
+            return await p;
+        } catch (error) {
+           console.error('5 attempts failed!', error);
+           throw new Error('Request could not be made')
         }
     }
 }

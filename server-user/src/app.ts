@@ -9,12 +9,13 @@ const config = require('../../tradejs.config');
 const app = express();
 app.listen(config.server.user.port, () => console.log(`\n User service started on      : 127.0.0.1:${config.server.channel.port}`));
 
-mongoose.set('debug', true);
+mongoose.set('debug', process.env.NODE_ENV === 'development');
+(<any>mongoose).Promise = global.Promise;
 mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
 mongoose.connection.once('open', function () {
 	console.log('DB connected');
 });
-mongoose.connect(config.server.user.connectionString);
+mongoose.connect(config.server.user.connectionString, { useMongoClient: true });
 
 /**
  * redis events

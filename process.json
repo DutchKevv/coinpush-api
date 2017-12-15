@@ -3,24 +3,48 @@
     "script": "server-gateway/index.js",
     "name": "gateway",
     "exec_mode": "fork",
+    "env_production" : {
+      "NODE_ENV": "production"
+    },
+    "env_development" : {
+      "NODE_ENV": "development"
+    },
     "instances": 1
   },
   {
     "script": "server-cache/index.js",
     "name": "cache",
     "exec_mode": "fork",
+    "env_production" : {
+      "NODE_ENV": "production"
+    },
+    "env_development" : {
+      "NODE_ENV": "development"
+    },
     "instances": 1
   },
   {
     "script": "server-order/index.js",
     "name": "order",
     "exec_mode": "fork",
+    "env_production" : {
+      "NODE_ENV": "production"
+    },
+    "env_development" : {
+      "NODE_ENV": "development"
+    },
     "instances": 1
   },
   {
     "script": "server-broker/index.js",
     "name": "broker",
     "exec_mode": "fork",
+    "env_production" : {
+      "NODE_ENV": "production"
+    },
+    "env_development" : {
+      "NODE_ENV": "development"
+    },
     "instances": 1
   },
   {
@@ -28,7 +52,10 @@
     "name": "user",
     "exec_mode": "fork",
     "env_production" : {
-      "NODE_ENV": "dev"
+      "NODE_ENV": "production"
+    },
+    "env_development" : {
+      "NODE_ENV": "development"
     },
     "instances": 1
   },
@@ -36,24 +63,48 @@
     "script": "server-comment/index.js",
     "name": "comment",
     "exec_mode": "fork",
+    "env_production" : {
+      "NODE_ENV": "production"
+    },
+    "env_development" : {
+      "NODE_ENV": "development"
+    },
     "instances": 1
   },
   {
     "script": "server-notify/index.js",
     "name": "notify",
     "exec_mode": "fork",
+    "env_production" : {
+      "NODE_ENV": "production"
+    },
+    "env_development" : {
+      "NODE_ENV": "development"
+    },
     "instances": 1
   },
   {
     "script": "server-event/index.js",
     "name": "event",
     "exec_mode": "fork",
+    "env_production" : {
+      "NODE_ENV": "production"
+    },
+    "env_development" : {
+      "NODE_ENV": "development"
+    },
     "instances": 1
   },
   {
     "script": "server/bootstrapper.js",
     "name": "legacy",
     "exec_mode": "fork",
+    "env_production" : {
+      "NODE_ENV": "production"
+    },
+    "env_development" : {
+      "NODE_ENV": "development"
+    },
     "instances": 1
   }
 ]

@@ -9,30 +9,30 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "./node_modules/.bin/tsc-watch --onSuccess \"node index.js\"",
+    "start": "tsc-watch --onSuccess \"node index.js\"",
     "build": "tsc"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/lodash": "^4.14.90",
-    "@types/mongoose": "^4.7.28",
+    "@types/lodash": "^4.14.91",
+    "@types/mongoose": "^4.7.29",
     "@types/validator": "^6.3.0",
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
     "helmet": "^3.9.0",
     "http-proxy": "^1.16.2",
-    "jsonwebtoken": "^8.0.0",
+    "jsonwebtoken": "^8.1.0",
     "lodash": "^4.17.4",
     "minimist": "^1.2.0",
-    "mongoose": "^4.12.4",
+    "mongoose": "^4.13.7",
     "mongoose-beautiful-unique-validation": "^7.0.0",
     "morgan": "^1.9.0",
     "node-gcm": "^0.14.9",
-    "nodemailer": "^4.3.1",
+    "nodemailer": "^4.4.1",
     "redis": "^2.8.0",
     "tsc-watch": "^1.0.8",
-    "typescript": "^2.5.2",
-    "validator": "^9.1.1"
+    "typescript": "^2.6.2",
+    "validator": "^9.2.0"
   }
 }

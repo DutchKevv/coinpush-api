@@ -25,8 +25,8 @@
   "scripts": {
     "preinstall": "npm run install-server && npm run install-client",
     "build": "npm run build-server && npm run build-client",
-    "start": "pm2 start process.json --env dev && pm2 monit",
-    "prod": "pm2 start process.json --env prod && pm2 monit",
+    "start": "pm2 start process.json --env development && pm2 monit",
+    "prod": "pm2 start process.json --env production && pm2 monit",
     "stop": "pm2 stop all",
     "clean-client": "cd ./client && rm -rf node_modules",
     "clean-server": "",

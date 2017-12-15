@@ -2,6 +2,7 @@ import * as _http from 'http';
 import { json, urlencoded } from 'body-parser';
 import * as express from 'express';
 import * as helmet from 'helmet';
+import * as mongoose from 'mongoose';
 import * as morgan from 'morgan';
 import * as io from 'socket.io';
 import { cacheController } from './controllers/cache.controller';
@@ -21,6 +22,7 @@ const config = require('../../tradejs.config');
 
 export const app = {
 
+	db: null,
 	api: null,
 	io: null,
 	broker: <BrokerMiddleware>null,
@@ -31,17 +33,23 @@ export const app = {
 	_socketTickIntervalTime: 500,
 
 	async init(): Promise<void> {
+		// database
+		await this._connectMongo();
 
 		// broker
 		this.broker = new BrokerMiddleware();
 		await this.broker.setSymbols()
 
+		// cache + symbols syncing
 		await cacheController.sync(false);
 		await symbolController.update();
+		
 		this._toggleSymbolUpdateInterval(true);
 
-		// api
+		// http / websocket api
 		this._setupApi();
+
+		// ticks interval
 		this._toggleWebSocketTickInterval(true);
 
 		await cacheController.openTickStream();
@@ -58,12 +66,32 @@ export const app = {
 
 		this.api.use(morgan('dev'));
 		this.api.use(helmet());
-		this.api.use('/symbols', require('./api/symbol.api'));
 
 		this.api.use((req, res, next) => {
 			res.header('Access-Control-Allow-Origin', '*');
 			res.header('Access-Control-Allow-Headers', '_id, Authorization, Origin, X-Requested-With, Content-Type, Accept');
 			next();
+		});
+
+		this.api.use('/symbols', require('./api/symbol.api'));
+	},
+
+	_connectMongo() {
+		return new Promise((resolve, reject) => {
+			// mongoose.set('debug', process.env.NODE_ENV === 'development');
+			(<any>mongoose).Promise = global.Promise; // Typescript quirk
+			
+			this.db = mongoose.connection;
+			this.db.on('error', error => {
+				console.error('connection error:', error);
+				reject();
+			});
+			this.db.once('open', () => {
+				console.log('Cache DB connected');
+				resolve();
+			});
+
+			mongoose.connect(config.server.cache.connectionString, { useMongoClient: true });
 		});
 	},
 
@@ -75,7 +103,7 @@ export const app = {
 			try {
 				await cacheController.sync();
 				await symbolController.update();
-				
+
 				this.broker.symbols
 				client.set('symbols', JSON.stringify(this.broker.symbols));
 			} catch (error) {

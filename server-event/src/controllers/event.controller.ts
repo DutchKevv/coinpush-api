@@ -6,17 +6,6 @@ import { flatten } from 'lodash';
 
 const config = require('../../../tradejs.config');
 
-/**
- *  Database
- */
-const db = mongoose.connection;
-mongoose.connect(config.server.event.connectionString);
-
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function () {
-	console.log('Event DB connected');
-});
-
 export const eventController = {
 
 	findById(reqUser, params) {

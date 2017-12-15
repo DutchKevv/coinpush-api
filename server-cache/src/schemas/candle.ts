@@ -3,8 +3,7 @@ import {Schema, model} from 'mongoose';
 export const CandleSchema = new Schema({
 	_id: {
 		type: Number,
-		required: true,
-		index: true
+		required: true
 	},
 	data: {
 		type: Schema.Types.Buffer,

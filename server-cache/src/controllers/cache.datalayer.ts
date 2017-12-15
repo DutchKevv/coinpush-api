@@ -8,17 +8,6 @@ import { BulkWriteResult } from 'mongodb';
 
 const config = require('../../../tradejs.config');
 
-/**
- *  Database
- */
-const db = mongoose.connection;
-mongoose.connect(config.server.cache.connectionString);
-
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function () {
-	console.log('Cache DB connected');
-});
-
 export const dataLayer = {
 
 	async read(params: { symbol: string, timeFrame: string, from?: number, until?: number, count?: number, fields?: any }): Promise<NodeBuffer> {

@@ -2,9 +2,9 @@ import { json, urlencoded } from 'body-parser';
 import * as express from 'express';
 import * as helmet from 'helmet';
 import * as morgan from 'morgan';
+import * as mongoose from 'mongoose';
 import { client } from './modules/redis';
 import { eventController } from './controllers/event.controller';
-
 // error catching
 process.on('unhandledRejection', (reason, p) => {
     console.log('Catched *global* Unhandled Rejection at: Promise ', p, ' reason: ', reason);
@@ -22,6 +22,8 @@ export const app = {
     _eventCheckTimeoutTime: 2000,
 
     async init(): Promise<void> {
+        await this._connectMongo();
+        
         this._setRedisListener();
         this._toggleEventCheckTimeout();
         this._setupApi();
@@ -74,6 +76,25 @@ export const app = {
 
         this.api.use('/event', require('./api/event.api'));
     },
+
+    _connectMongo() {
+		return new Promise((resolve, reject) => {
+            // mongoose.set('debug', process.env.NODE_ENV === 'development');
+            (<any>mongoose).Promise = global.Promise; // Typescript quirk
+            
+            this.db = mongoose.connection;
+			this.db.on('error', error => {
+				console.error('connection error:', error);
+				reject();
+			});
+			this.db.once('open', () => {
+				console.log('Cache DB connected');
+				resolve();
+			});
+
+			mongoose.connect(config.server.cache.connectionString, { useMongoClient: true });
+		});
+	},
 
     _toggleEventCheckTimeout() {
 

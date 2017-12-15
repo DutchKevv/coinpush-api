@@ -13,12 +13,13 @@ app.listen(config.server.notify.port, () => console.log(`\n Notify service start
 /**
  * mongo
  */
-mongoose.set('debug', true);
+// mongoose.set('debug', true);
+(<any>mongoose).Promise = global.Promise;
 mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
 mongoose.connection.once('open', function () {
 	console.log('DB connected');
 });
-mongoose.connect(config.server.notify.connectionString);
+mongoose.connect(config.server.notify.connectionString, { useMongoClient: true });
 
 /**
  * express

@@ -15,8 +15,8 @@ const http = _http.createServer(app);
  *  DB
  */
 const db = mongoose.connection;
-mongoose.Promise = global.Promise;
-mongoose.connect(config.server.order.connectionString);
+(<any>mongoose).Promise = global.Promise;
+mongoose.connect(config.server.order.connectionString, { useMongoClient: true });
 
 // handle mongo error
 db.on('error', console.error.bind(console, 'connection error:'));
