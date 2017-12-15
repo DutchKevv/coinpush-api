@@ -30,7 +30,12 @@ export const cacheController = {
 	_tickStreamOpen: false,
 	_tickIntervalTimer: null,
 
-	async find(params: { symbol: string, timeFrame: string, from?: number, until?: number, count?: number, toArray?: boolean }) {
+	/**
+	 * find candles by symbol and time frame
+	 * can return candles as Float64Array or as raw buffer
+	 * @param params 
+	 */
+	async find(params: { symbol: string, timeFrame: string, from?: number, until?: number, count?: number, toArray?: boolean }): Promise<Float64Array | NodeBuffer> {
 		let symbol = params.symbol,
 			timeFrame = params.timeFrame,
 			from = params.from,
@@ -61,7 +66,13 @@ export const cacheController = {
 		}
 	},
 
-	async fetch(params: { symbol: string, timeFrame: string, from: number, until: number, count: number }, emitStatus?: boolean): Promise<any> {
+	/**
+	 * fetch candles from corresponding broker
+	 * this will also write to DB
+	 * @param params 
+	 * @param emitStatus 
+	 */
+	async fetch(params: { symbol: string, timeFrame: string, from: number, until: number, count: number }, emitStatus?: boolean): Promise<void | any> {
 
 		return new Promise((resolve, reject) => {
 
@@ -79,7 +90,10 @@ export const cacheController = {
 		});
 	},
 
-	async openTickStream(): Promise<any> {
+	/**
+	 * start listening to ticks from all brokers
+	 */
+	async openTickStream(): Promise<void> {
 		app.broker.removeAllListeners('tick');
 
 		await app.broker.openTickStream(app.broker.symbols.map(symbol => symbol.name));
@@ -91,14 +105,15 @@ export const cacheController = {
 		log.info('Cache', 'Tick stream opened');
 	},
 
-	async reset(symbol?: string, timeFrame?: string, from?: number, until?: number): Promise<any> {
-		throw new Error('RESETR!!');
-	},
-
-	async sync(silent: boolean = true) {
+	/**
+	 * sync all symbols with there corresponding brokers.
+	 * it will create (if not exists) the DB collections for each symbol
+	 * and fetch the (missing) candles required to set a minimum number until now (Date.now)
+	 * @param silent 
+	 */
+	async sync(silent: boolean = true): Promise<void> {
 		const now = Date.now();
 
-		// sync all candles in the DB until the current time
 		const bulkCount = 10;
 		const timeFrames = Object.keys(timeFrameSteps);
 		const total = app.broker.symbols.length * timeFrames.length;
@@ -156,7 +171,13 @@ export const cacheController = {
 		});
 	},
 
-	_onTickReceive(tick): void {
+	/**
+	 * callback function for when a tick is received
+	 * for now the ticks 'overwrite' them self every N miliseconds, because there can be 25.000 ticks p/s
+	 * this will overload the system
+	 * @param tick 
+	 */
+	_onTickReceive(tick: any): void {
 		let symbolObj = app.broker.symbols.find(symbol => symbol.name === tick.instrument);
 
 		if (!symbolObj)

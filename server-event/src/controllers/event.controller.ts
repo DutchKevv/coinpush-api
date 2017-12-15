@@ -103,7 +103,7 @@ export const eventController = {
 					return reject(err);
 
 				if (!symbols)
-					resolve();
+					return resolve();
 
 				symbols = JSON.parse(symbols);
 

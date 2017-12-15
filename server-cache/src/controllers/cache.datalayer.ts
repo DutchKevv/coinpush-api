@@ -104,8 +104,7 @@ export const dataLayer = {
 
 				const collectionName = this.getCollectionName(symbol.name, timeFrame);
 
-
-				bulk.find({ collectionName }).upsert().update({ $set: { collectionName, broker: symbol.broker, symbol: symbol.name, timeFrame } });
+				bulk.find({ collectionName }).upsert().updateOne({ $set: { collectionName, broker: symbol.broker, symbol: symbol.name, timeFrame } });
 			}
 		}
 
