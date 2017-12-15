@@ -13,7 +13,7 @@ const EventSchema = new Schema({
     symbol: {
         type: String,
         required: true,
-        lowercase: true
+        uppercase: true
     },
     name: {
         type: String
@@ -36,6 +36,13 @@ const EventSchema = new Schema({
     triggered: {
         type: Boolean,
         default: false
+    },
+    triggeredDate: {
+        type: Date
+    },
+    createDate: {
+        type: Date,
+        default: Date.now
     }
 });
 

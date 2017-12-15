@@ -5,7 +5,8 @@ import {
 	AfterViewInit,
 	Output,
 	OnDestroy,
-	ApplicationRef
+	ApplicationRef,
+	DoCheck
 } from '@angular/core';
 
 import { InstrumentsService } from '../../services/instruments.service';
@@ -19,7 +20,7 @@ import { UserService } from '../../services/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OrderService } from '../../services/order.service';
 import { CacheService } from '../../services/cache.service';
-import { SYMBOL_CAT_TYPE_FOREX, SYMBOL_CAT_TYPE_RESOURCE, SYMBOL_CAT_TYPE_CRYPTO, CUSTOM_EVENT_TYPE_ALARM } from "../../../../../shared/constants/constants";
+import { SYMBOL_CAT_TYPE_FOREX, SYMBOL_CAT_TYPE_RESOURCE, SYMBOL_CAT_TYPE_CRYPTO, CUSTOM_EVENT_TYPE_ALARM, ALARM_TRIGGER_DIRECTION_DOWN, ALARM_TRIGGER_DIRECTION_UP } from "../../../../../shared/constants/constants";
 import { EventService } from '../../services/event.service';
 import { NgForm } from '@angular/forms';
 
@@ -30,10 +31,11 @@ declare let $: any;
 	templateUrl: './chart-overview.component.html',
 	styleUrls: ['./chart-overview.component.scss'],
 	// encapsulation: ViewEncapsulation.Native,
-	changeDetection: ChangeDetectionStrategy.OnPush
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	preserveWhitespaces: false
 })
 
-export class ChartOverviewComponent implements OnInit, OnDestroy {
+export class ChartOverviewComponent implements OnInit, OnDestroy, DoCheck {
 
 	@ViewChild('filter') filterRef: ElementRef;
 
@@ -43,7 +45,8 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 	public activeFilter: string = 'all';
 	public activeMenu: string = null;
 	public activeAlarmMenu: string = null;
-	public events$;
+	public activeEvents$;
+	public historyEvents$;
 
 	public formModel: any = {
 		alarmType: "1",
@@ -56,13 +59,15 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 	private _filterSub;
 	private _priceChangeSub;
 
+	private _changeDetectionInterval;
+
 	constructor(
 		public instrumentsService: InstrumentsService,
 		public constantsService: ConstantsService,
 		public userService: UserService,
 		public cacheService: CacheService,
 		private eventService: EventService,
-		public cd: ChangeDetectorRef,
+		private _changeDetectorRef: ChangeDetectorRef,
 		private _elementRef: ElementRef,
 		private _route: ActivatedRoute,
 		private _router: Router,
@@ -72,14 +77,18 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
+		// this._changeDetectorRef.detach();
+		// this._changeDetectionInterval = setInterval(() => this._changeDetectorRef.detectChanges(), 500);
+
 		this._filterSub = this._applicationRef.components[0].instance.filterClick$.subscribe(() => this.toggleFilterNav());
 		this._priceChangeSub = this.cacheService.changed$.subscribe(changedSymbols => this._onPriceChange(changedSymbols));
 
-		this.symbols = this.cacheService.symbols;
-
 		this.setActiveSymbol(undefined, this.cacheService.getBySymbol(this._route.snapshot.queryParams['symbol']) || this.cacheService.symbols[0], false);
 
-			// setTimeout(() => {
+		setTimeout(() => {
+
+			this.symbols = this.cacheService.symbols;
+			this._changeDetectorRef.detectChanges();
 
 			this._routeSub = this._route.queryParams.subscribe(params => {
 				if (this.activeSymbol && this.activeSymbol.options.name === params['symbol']) {
@@ -90,9 +99,14 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 				const symbol = this.cacheService.getBySymbol(params['symbol']);
 				this.setActiveSymbol(undefined, symbol || this.symbols[0]);
 				this._scrollIntoView(this.activeSymbol);
-				this.cd.detectChanges();
+				this._changeDetectorRef.detectChanges();
 			});
-		// }, 0);
+
+		}, 0);
+	}
+
+	ngDoCheck() {
+		console.log('check!');
 	}
 
 	public toggleFilterNav(event?, state?: boolean) {
@@ -178,12 +192,13 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 			alarmType: "1",
 			amount: symbol.options.bid,
 			alarm: {
-				
+
 			}
 		};
 
 		this.activeSymbol = symbol;
-		this.events$ = this.eventService.findBySymbol(this.activeSymbol.options.name);
+		this.activeEvents$ = this.eventService.findBySymbol(this.activeSymbol.options.name, 0, 50);
+		this.historyEvents$ =  this.eventService.findBySymbol(this.activeSymbol.options.name, 0, 50, true);
 
 		this._router.navigate(['/charts'], { skipLocationChange: true, queryParams: { symbol: symbol.options.name } });
 
@@ -207,7 +222,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 
 		this.formModel.symbol = this.activeSymbol.options.name;
 		this.formModel.type = CUSTOM_EVENT_TYPE_ALARM;
-		this.formModel.alarm.dir = this.formModel.amount < this.activeSymbol.options.bid;
+		this.formModel.alarm.dir = this.formModel.amount < this.activeSymbol.options.bid ? ALARM_TRIGGER_DIRECTION_DOWN : ALARM_TRIGGER_DIRECTION_UP;
 		this.eventService.create(this.formModel);
 	}
 
@@ -246,7 +261,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 	}
 
 	private _onPriceChange(changedSymbols) {
-		this.cd.detectChanges();
+		// this._changeDetectorRef.detectChanges();
 	}
 
 	addIndicator(name: string) {
@@ -270,6 +285,8 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 
 		if (this._routeSub)
 			this._routeSub.unsubscribe();
+
+		clearInterval(this._changeDetectionInterval);
 	}
 }
 

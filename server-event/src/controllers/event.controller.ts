@@ -1,6 +1,8 @@
 import { Event } from '../schemas/event.schema';
 import * as mongoose from 'mongoose';
 import { CUSTOM_EVENT_TYPE_ALARM, ALARM_TRIGGER_TYPE_PRICE, ALARM_TRIGGER_TYPE_PERCENTAGE, ALARM_TRIGGER_DIRECTION_DOWN, ALARM_TRIGGER_DIRECTION_UP } from '../../../shared/constants/constants';
+import { client } from '../modules/redis';
+import { flatten } from 'lodash';
 
 const config = require('../../../tradejs.config');
 
@@ -22,12 +24,25 @@ export const eventController = {
 	},
 
 	findMany(reqUser, params: any = {}) {
-		const opt: any = { userId: reqUser.id };
+		const opt: any = {
+			userId: reqUser.id,
+			triggered: !!params.history
+		};
+		const fields: any = {
+			createDate: 1,
+			symbol: 1, 
+			alarm: 1, 
+			type: 1 
+		};
 
 		if (typeof params.symbol === 'string')
-			opt.symbol = params.symbol.toLowerCase();
+			opt.symbol = params.symbol.toUpperCase();
 
-		return Event.find(opt, { symbol: 1, alarm: 1, type: 1, triggered: 1 }).lean();
+		if (params.history) {
+			fields.triggeredDate = 1;
+		}
+
+		return Event.find(opt, fields).lean();
 	},
 
 	async create(reqUser, params: any = {}) {
@@ -44,7 +59,7 @@ export const eventController = {
 				alarm: {
 					price: params.type === ALARM_TRIGGER_TYPE_PRICE ? params.amount : undefined,
 					perc: params.type === ALARM_TRIGGER_TYPE_PERCENTAGE ? params.amount : undefined,
-					dir: params.dir
+					dir: params.alarm.dir
 				}
 			});
 		}
@@ -80,7 +95,40 @@ export const eventController = {
 		}
 	},
 
-	onPriceChangePercentage() {
+	async checkEvents() {
+		return new Promise((resolve, reject) => {
 
+			client.get('symbols', async (err, symbols) => {
+				if (err)
+					return reject(err);
+
+				if (!symbols)
+					resolve();
+
+				symbols = JSON.parse(symbols);
+
+				for (let i = 0, len = symbols.length; i < len; i++) {
+					let symbol = symbols[i];
+					let events = <any>flatten(await Promise.all(
+						[
+							Event.find({ triggered: false, symbol: symbol.name, 'alarm.dir': ALARM_TRIGGER_DIRECTION_UP, 'alarm.price': { $gt: symbol.high } }),
+							Event.find({ triggered: false, symbol: symbol.name, 'alarm.dir': ALARM_TRIGGER_DIRECTION_DOWN, 'alarm.price': { $lt: symbol.low } }),
+						]
+					));
+
+					if (events.length) {
+						console.log('events', events);
+						for (let k = 0, lenk = events.length; k < lenk; k++) {
+							const event = events[k];
+							event.triggered = true;
+							event.triggeredDate = new Date();
+							event.save();
+						}
+					}
+				}
+
+				resolve();
+			});
+		});
 	}
 };

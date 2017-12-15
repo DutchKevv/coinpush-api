@@ -5,7 +5,8 @@ declare var $: any;
 
 import {
 	Component, AfterViewInit, ElementRef, ViewEncapsulation, NgZone, ChangeDetectorRef,
-	ViewChild
+	ViewChild,
+	ChangeDetectionStrategy
 } from '@angular/core';
 import { SocketService } from '../../services/socket.service';
 import { TypescriptCompilerService } from '../../services/typescript.compiler.service';
@@ -16,7 +17,8 @@ import { WebworkerService } from '../../services/code.runner.service';
 @Component({
 	selector: 'js-editor',
 	templateUrl: './jseditor.component.html',
-	styleUrls: ['./jseditor.component.scss']
+	styleUrls: ['./jseditor.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush
 	// encapsulation: ViewEncapsulation.Native
 })
 

@@ -38,15 +38,17 @@
 
 header {
     width: 100%;
-    text-align: center;
     padding: 4px;
     display: none;
 
     &.visible {
         display: flex;
+        flex-shrink: 0;
     }
 
     @media only screen and (min-width : 768px) {
+        text-align: center;
+        
         > * {
             width: 100%;
         }
@@ -80,13 +82,11 @@ header {
         padding: 4px;
         line-height: 16px;
         width: 100%;
-        border-radius: 2px;
+        border-radius: 0;
         font-size: 16px;
         background-color: $input-color-glyphicon-background;
-        border: 1px solid black;
         color: $input-color-text;
         text-align: center;
-        box-sizing: border-box;
         border: none;
 
         &:focus {

@@ -13,6 +13,7 @@ import { Status } from '../schemas/status.schema';
 import { BROKER_GENERAL_TYPE_CC } from '../../../shared/constants/constants';
 import { timeFrameSteps } from '../../../shared/util/util.date';
 import * as ProgressBar from 'progress';
+import { client } from '../modules/redis';
 
 const READ_COUNT_DEFAULT = 500;
 const HISTORY_COUNT_DEFAULT = 500;
@@ -130,12 +131,11 @@ export const cacheController = {
 					const from = status.lastSync ? (new Date(status.lastSync)).getTime() : undefined;
 					const until = Date.now();
 					const count = status.lastSync ? undefined : HISTORY_COUNT_DEFAULT;
-					
+
 					return this
 						.fetch({ symbol: symbol.name, timeFrame: status.timeFrame, from, until, count })
 						.then(() => !silent && bar.tick());
 				})
-
 			});
 
 			// Flatten promise list
@@ -157,12 +157,12 @@ export const cacheController = {
 	},
 
 	_onTickReceive(tick): void {
-		this.tickBuffer[tick.instrument] = [tick.time, tick.bid, tick.ask];
-
 		let symbolObj = app.broker.symbols.find(symbol => symbol.name === tick.instrument);
 
 		if (!symbolObj)
 			return console.warn('onTickReceive - symbol not found: ' + tick.instrument);
+
+		this.tickBuffer[tick.instrument] = [tick.time, tick.bid, tick.ask];
 
 		symbolObj.bid = tick.bid;
 		symbolObj.ask = tick.ask;

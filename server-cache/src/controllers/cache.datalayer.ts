@@ -4,6 +4,7 @@ import { log } from '../../../shared/logger';
 import { timeFrameSteps } from '../../../shared/util/util.date';
 import { CandleSchema } from '../schemas/candle';
 import { Status } from '../schemas/status.schema';
+import { BulkWriteResult } from 'mongodb';
 
 const config = require('../../../tradejs.config');
 
@@ -53,24 +54,29 @@ export const dataLayer = {
 		return buffer;
 	},
 
-	async write(symbol, timeFrame, candles: Float64Array): Promise<any> {
+	async write(symbol, timeFrame, candles: Float64Array): Promise<BulkWriteResult> {
 		if (!candles.length)
 			return;
 
 		let collectionName = this.getCollectionName(symbol, timeFrame),
 			model = mongoose.model(collectionName, CandleSchema),
 			bulk = model.collection.initializeOrderedBulkOp(),
-			rowLength = 10, i = 0;
+			rowLength = 10, i = 0, len = candles.length;
+
+		// quick quality check (needs minimum 2 candles)
+		if (candles.length > rowLength)
+			if (candles[0] >= candles[rowLength])
+				throw new Error(`DataLayer - Write: Candle array timestamp needs to be in a forward order ${new Date(candles[0])} / ${new Date(candles[rowLength])}`)
 
 		// log.info('DataLayer', `WRITING ${candles.length / 10} candles to ${collectionName} starting ${new Date(candles[0])} until ${new Date(candles[candles.length - 10])}`);
 
-		while (i < candles.length) {
+		for (; i < candles.length;) {
 			const time = candles[i];
 			const data = Buffer.from(candles.slice(i, i += rowLength).buffer);
-			bulk.find({ _id: time }).upsert().update({ $set: { _id: time, data } });
+			bulk.find({ _id: time }).upsert().updateOne({ $set: { _id: time, data } });
 		}
 
-		await bulk.execute();
+		const bulkResult = await bulk.execute();
 
 		if (candles.length) {
 			const lastCandleTime = candles[candles.length - 10];
@@ -78,6 +84,8 @@ export const dataLayer = {
 
 			const result = await Status.update({ collectionName }, { lastSync: lastCandleTime, lastPrice: lastCloseBidPrice });
 		}
+
+		return bulkResult;
 	},
 
 	async setModels(symbols: Array<any>) {
@@ -103,7 +111,7 @@ export const dataLayer = {
 
 		// Mongo crashes if bulk is empty
 		// if (bulk.length > 0)
-			await bulk.execute();
+		await bulk.execute();
 
 		log.info('CacheController', `Creating collections took ${Date.now() - now}ms`);
 	},

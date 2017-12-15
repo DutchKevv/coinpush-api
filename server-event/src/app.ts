@@ -3,6 +3,7 @@ import * as express from 'express';
 import * as helmet from 'helmet';
 import * as morgan from 'morgan';
 import { client } from './modules/redis';
+import { eventController } from './controllers/event.controller';
 
 // error catching
 process.on('unhandledRejection', (reason, p) => {
@@ -17,17 +18,21 @@ export const app = {
 
     api: null,
 
+    _eventCheckTimeout: null,
+    _eventCheckTimeoutTime: 2000,
+
     async init(): Promise<void> {
         this._setRedisListener();
+        this._toggleEventCheckTimeout();
         this._setupApi();
     },
 
     _setRedisListener() {
-        client.subscribe("ticks");
+        // client.subscribe("symbols");
 
-        client.on("message", function (channel, message) {
+        client.on("message", (channel, message) => {
             let data;
-
+            
             try {
                 data = JSON.parse(message);
             } catch (error) {
@@ -35,7 +40,10 @@ export const app = {
             }
 
             switch (channel) {
-                case 'price':
+                case 'symbols':
+                    console.log(data);
+                case 'ticks':
+                   
                     break;
                 case 'bar':
                     break;
@@ -66,6 +74,22 @@ export const app = {
 
         this.api.use('/event', require('./api/event.api'));
     },
+
+    _toggleEventCheckTimeout() {
+
+        const timeoutFunc = async function () {
+			try {
+
+				eventController.checkEvents();
+			} catch (error) {
+				console.error(error);
+			} finally {
+				this._eventCheckTimeout = setTimeout(timeoutFunc, this._eventCheckTimeoutTime);
+			}
+		}.bind(this);
+
+		this._eventCheckTimeout = setTimeout(() => timeoutFunc(), this._eventCheckTimeoutTime);
+    }
 };
 
 

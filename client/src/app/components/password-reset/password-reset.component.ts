@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy} from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
 import {AuthenticationService} from '../../services/authenticate.service';
 import {AlertService} from '../../services/alert.service';
@@ -6,6 +6,7 @@ import {AlertService} from '../../services/alert.service';
 @Component({
 	styleUrls: ['./password-reset.component.scss'],
 	templateUrl: 'password-reset.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush
 	// encapsulation: ViewEncapsulation.Native
 })
 

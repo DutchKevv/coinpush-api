@@ -45,11 +45,10 @@
         </div>
 
         <ul>
-            <li *ngFor="let symbol of symbols; trackBy:trackByFunc" [ngClass]="{'active': activeSymbol === symbol}" [attr.data-symbol]="symbol.options.name"
-                (click)="setActiveSymbol($event, symbol)">
+            <li *ngFor="let symbol of symbols; trackBy:trackByFunc" [ngClass]="{'active': activeSymbol === symbol}" (click)="setActiveSymbol($event, symbol)">
 
                 <div>
-                    <img src="{{symbol.options.img}}" />
+                    <!-- <img src="{{symbol.options.img}}" /> -->
                     <span>{{symbol.options.displayName}}</span>
                 </div>
                 <div>
@@ -76,8 +75,7 @@
                 </div>
                 <i class="fa fa-arrow-right more-arrow hidden-lg-up" (click)="onClickMore($event)"></i>
                 <div class="more-container" #more>
-                    <i (click)="onClickToggleFavorite($event, symbol);" [ngClass]="{'active-icon': userService.model.options.favorites.includes(symbol.options.name)}"
-                        class="fa fa-star"></i>
+                    <i (click)="onClickToggleFavorite($event, symbol);" [ngClass]="{'active-icon': symbol.options.iFavorite}" class="fa fa-star"></i>
                     <i (click)="onClickAlarm($event)" class="fa fa-bell"></i>
                     <i class="fa fa-info-circle"></i>
                 </div>
@@ -95,6 +93,7 @@
             <ul class="side-menu-top-nav">
                 <li [ngClass]="{active: activeAlarmMenu === 'new'}" (click)="activeAlarmMenu = 'new'">New</li>
                 <li [ngClass]="{active: activeAlarmMenu === 'active'}" (click)="activeAlarmMenu = 'active'">Active</li>
+                <li [ngClass]="{active: activeAlarmMenu === 'history'}" (click)="activeAlarmMenu = 'history'">History</li>
             </ul>
             <ng-container *ngIf="activeAlarmMenu === 'new'">
                 <form class="form" (ngSubmit)="onCreateFormSubmit(alarmForm)" #alarmForm="ngForm">
@@ -105,7 +104,9 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="amount">Amount <sup>(at least 1% difference)</sup></label>
+                        <label for="amount">Amount
+                            <sup>(at least 1% difference)</sup>
+                        </label>
                         <div class="input-group" style="display: flex;">
                             <span class="input-group-btn">
                                 <button (click)="onClickSideMenuNumberInput(-1, sideMenuNumberInput)" type="button" class="btn btn-danger btn-number" data-type="minus">
@@ -134,13 +135,19 @@
                     </div>
                 </form>
             </ng-container>
-            <div *ngIf="activeAlarmMenu === 'active'">
-                <div class="alarm-row" *ngFor="let event of this.events$ | async">
-                    <i class="fa fa-bell"></i>
+            <div *ngIf="activeAlarmMenu === 'active'" class="active-alarm-view" style="padding-top: 10px;">
+                <div class="alarm-row" *ngFor="let event of this.activeEvents$ | async">
+                    <span>{{event.alarm.dir === 1 ? 'U' : 'D'}}</span>
                     <span>{{event.alarm.price}}</span>
-                    <span>Triggered : {{event.triggered}}</span>
                     <i (click)="eventService.remove(event._id)" class="fa fa-close" style="float: right"></i>
                     <i class="fa fa-pencil" style="float: right"></i>
+                </div>
+            </div>
+            <div *ngIf="activeAlarmMenu === 'history'" style="padding-top: 10px;">
+                <div class="alarm-row" *ngFor="let event of this.historyEvents$ | async">
+                    <span>{{event.alarm.dir === 1 ? 'U' : 'D'}}</span>
+                    <span>{{event.alarm.price}}</span>
+                    <span>{{event.triggeredDate | date: 'dd/MM/yyyy HH:MM:SS'}}</span>
                 </div>
             </div>
         </main>

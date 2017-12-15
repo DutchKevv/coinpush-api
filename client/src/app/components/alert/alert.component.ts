@@ -1,10 +1,11 @@
-import {Component, OnInit, Output} from '@angular/core';
+import {Component, OnInit, Output, ChangeDetectionStrategy} from '@angular/core';
 import {AlertService} from '../../services/alert.service';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
 	selector: 'app-alert',
 	styleUrls: ['./alert.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 	templateUrl: 'alert.component.html'
 })
 

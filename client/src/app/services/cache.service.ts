@@ -2,6 +2,7 @@ import { EventEmitter, Injectable, NgZone, Output } from '@angular/core';
 import * as io from 'socket.io-client';
 import { SymbolModel } from "../models/symbol.model";
 import { appConfig } from '../app.config';
+import { UserService } from './user.service';
 
 @Injectable()
 export class CacheService {
@@ -11,7 +12,10 @@ export class CacheService {
 
 	private _socket: any;
 
-	constructor(private _zone: NgZone) {
+	constructor(
+		private _zone: NgZone,
+		private _userService: UserService
+	) {
 		this._connect();
 	}
 
@@ -94,10 +98,15 @@ export class CacheService {
 
 	private _updateSymbols(symbols: Array<any>) {
 		symbols.forEach(symbol => {
+
 			const storedSymbol = this.getBySymbol(symbol.name);
+
 			if (storedSymbol) {
 				Object.assign(storedSymbol.options, symbol);
 			} else {
+				symbol.iFavorite = this._userService.model.options.favorites.includes(symbol.name);
+
+				const symbolModel = new SymbolModel(symbol);
 				this.symbols.push(new SymbolModel(symbol));
 			}
 		});

@@ -40,12 +40,8 @@ export class EventService {
 		return result;
 	}
 
-	findBySymbol(symbol: string, offset: number = 0, limit: number = 5): any {
-		const result = this._http.get('/event', { params: { symbol, offset, limit } })
-			.map(res => res.json())
-			// .toPromise();
-
-		return result;
+	findBySymbol(symbol: string, offset: number = 0, limit: number = 5, history?: boolean): any {
+		return this._http.get('/event', { params: { symbol, offset, limit, history } }).map(res => res.json());
 	}
 
 	update(model: CommentModel, options): Observable<Response> {
@@ -55,14 +51,5 @@ export class EventService {
 	async remove(eventId: string): Promise<any> {
 		const result = await this._http.delete('/event/' + eventId).toPromise();
 		return result;
-	}
-
-	async toggleLike(model: CommentModel) {
-		const result = await this._http.post('/comment/like/' + model.get('_id'), {})
-			.map(r => r.json())
-			.toPromise();
-
-		const newCount = model.get('likeCount') + (result.state ? 1 : -1);
-		model.set({ iLike: !!result.state, likeCount: newCount });
 	}
 }

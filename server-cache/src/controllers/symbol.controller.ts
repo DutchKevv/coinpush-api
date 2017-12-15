@@ -19,31 +19,27 @@ export const symbolController = {
 
 	update() {
 		return Promise.all([
-			this.update1HourStartPrice(),
-			this.update24HourStartPrice(),
+			this.updateStartPrices(),
 			this.updateHighLow()
 		]);
 	},
 
-	async update1HourStartPrice() {
+	async updateStartPrices() {
 		app.broker.symbols.forEach(async symbol => {
-			const candle = await cacheController.find({ symbol: symbol.name, timeFrame: 'H1', count: 1, toArray: true });
+			const results = await Promise.all([
+				cacheController.find({ symbol: symbol.name, timeFrame: 'H1', count: 1, toArray: true }), // 1 h
+				cacheController.find({ symbol: symbol.name, timeFrame: 'D', count: 1, toArray: true }) // 24 h
+			]);
 
 			symbol.marks.H = {
-				time: candle[0],
-				price: candle[1]
+				time: results[0][0],
+				price: results[0][1]
 			}
-		});
-	},
-
-	async update24HourStartPrice() {
-		app.broker.symbols.forEach(async symbol => {
-			const candle = await cacheController.find({ symbol: symbol.name, timeFrame: 'D', count: 1, toArray: true });
 
 			symbol.marks.D = {
-				time: candle[0],
-				price: candle[1]
-			};
+				time: results[1][0],
+				price: results[1][1]
+			}
 		});
 	},
 

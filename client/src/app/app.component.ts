@@ -57,7 +57,7 @@ export class AppComponent implements OnInit {
 
 	ngOnInit() {
 		this._routerEventsSub = this.router.events.subscribe((val) => {
-			if (val instanceof NavigationStart)
+			if (val instanceof NavigationEnd)
 				this.toggleNav(undefined, false);
 		});
 	}

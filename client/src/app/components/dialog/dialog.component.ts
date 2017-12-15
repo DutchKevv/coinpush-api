@@ -1,9 +1,10 @@
-import {Component, ElementRef, EventEmitter, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnInit, ViewEncapsulation, ChangeDetectionStrategy} from '@angular/core';
 
 @Component({
 	selector: 'dlg',
 	templateUrl: './dialog.component.html',
 	styleUrls: ['./dialog.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 	// encapsulation: ViewEncapsulation.Native
 })
 

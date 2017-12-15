@@ -75,6 +75,9 @@ export const app = {
 			try {
 				await cacheController.sync();
 				await symbolController.update();
+				
+				this.broker.symbols
+				client.set('symbols', JSON.stringify(this.broker.symbols));
 			} catch (error) {
 				console.error(error);
 			} finally {
@@ -93,8 +96,10 @@ export const app = {
 			if (!Object.keys(cacheController.tickBuffer).length)
 				return;
 
-			this.io.sockets.emit('ticks', cacheController.tickBuffer);
-			// client.publish('ticks', JSON.stringify(cacheController.tickBuffer));
+			const JSONString = JSON.stringify(cacheController.tickBuffer);
+
+			this.io.sockets.emit('ticks', JSONString);
+			// client.publish('ticks', JSONString);
 
 			cacheController.tickBuffer = {};
 		}, this._socketTickIntervalTime);

@@ -7,7 +7,7 @@ export class SymbolModel {
 	public price$: Observable<any> = new Observable();
 
 	constructor(public options) {
-
+		
 	}
 
 	public tick(ticks) {
