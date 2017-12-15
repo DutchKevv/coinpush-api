@@ -41,8 +41,8 @@ export class BrokerMiddleware extends EventEmitter {
             return a.displayName.localeCompare(b.displayName);
         });
 
-        if (process.env.NODE_ENV !== 'production')
-            this.symbols = this.symbols.slice(0, 50);
+        // if (process.env.NODE_ENV !== 'production')
+            // this.symbols = this.symbols.slice(0, 50);
 
         // add marker placeholders (Hour / Day)
         this.symbols.forEach(symbol => {

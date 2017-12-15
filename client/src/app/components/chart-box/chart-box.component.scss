@@ -10,69 +10,15 @@
 :host {
     height: 100%;
     width: 100%;
-line-height: 24px;
-    // position: absolute;
-    // top: 0;
-    // left: 0;
-    // z-index: 1;
-    // border: 1px solid #999999;
-    // overflow: hidden;
-    background: black; // rgba(0,0,0,0.7);
-    // contain: layout;
-    display: flex;
-    flex-flow: column;
-    flex-shrink: 0;
+    background: $background-dark;
+    display: block;
 }
 
 .fa-close {
     color: $font-color-dark;
 }
 
-:host(.stretched) {
-    transform: translate(0, 0) !important;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    height: 100% !important;
-    width: 100% !important;
-    border: none;
-}
-
-:host(.minimized) {
-    display: none !important;
-}
-
-:host table th,
-:host table td {
-    padding: 0 !important;
-    font-size: 10px !important;
-}
-
-:host(.focused) {
-    border-color: #ad8f79;
-
-    .chart-header {
-        background: $chart-header-background-focus;
-    }
-
-    .chart-title {
-        color: $font-color-light;
-
-    }
-}
-
-// .chart-header {
-//     background: $chart-header-background-blur;
-//     display: flex;
-
-//     h5 {
-//         margin-right: auto;
-//     }
-// }
-
 .chart-header {
-    background: $background-dark;
     display: flex;
     padding-left: 10px;
     height: 24px;
@@ -88,10 +34,10 @@ line-height: 24px;
         list-style: none;
         margin: 0;
         padding: 0;
-        width: 100%;
         display: flex;
         justify-content: flex-end;
         flex-shrink: 0;
+        margin-left: auto;
 
         @media screen and (min-width: 768px) {
             &:first-child {

@@ -37,7 +37,7 @@ import '../../style/highcharts/highstock.theme.dark';
 	styleUrls: [
 		'./chart-box.component.scss'
 	],
-	encapsulation: ViewEncapsulation.None,
+	// encapsulation: ViewEncapsulation.None,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	entryComponents: [DialogComponent]
 })
