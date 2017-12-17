@@ -63,14 +63,11 @@ const config = {
         }
     },
     image: {
+        maxUploadSize: 10 * 1024 * 1024,
         profilePath: path.join(__dirname, 'images', 'images', 'profile'),
         profileBaseUrl: '/images/profile/',
         profileDefaultPath: path.join(__dirname, 'images', 'images', 'default', 'profile', 'nl.png'),
-        profileDefaultUrl: '/images/default/profile/nl.png',
-        channelPath: path.join(__dirname, 'images', 'images', 'channel'),
-        channelBaseUrl: '/images/profile/',
-        channelDefaultPath: path.join(__dirname, 'images', 'images', 'default', 'profile', 'nl.png'),
-        channelDefaultUrl: '/images/default/channel/channel.jpeg'
+        profileDefaultUrl: '/images/default/profile/nl.png'
     },
     redis: {
         host: '127.0.0.1',

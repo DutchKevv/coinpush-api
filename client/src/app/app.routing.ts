@@ -17,8 +17,8 @@ import { EventOverviewComponent } from './components/event-overview/event-overvi
 
 const routes: Routes = [
 	{ path: '', redirectTo: 'charts', pathMatch: 'full', canActivate: [AuthGuard] },
-	{ path: 'login', component: LoginComponent },
-	{ path: 'register', component: RegisterComponent },
+	// { path: 'login', component: LoginComponent },
+	// { path: 'register', component: RegisterComponent },
 	{ path: 'password-reset', component: PasswordResetComponent },
 	{ path: 'request-password-reset', component: RequestPasswordResetComponent },
 

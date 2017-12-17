@@ -1,7 +1,7 @@
-import {Directive, ComponentFactoryResolver, ComponentRef, ViewContainerRef} from '@angular/core';
+import { Directive, ComponentFactoryResolver, ComponentRef, ViewContainerRef } from '@angular/core';
 
-import {ModalComponent} from '../components/modal/modal.component';
-import {ModalService} from '../services/modal.service';
+import { ModalComponent } from '../components/modal/modal.component';
+import { ModalService } from '../services/modal.service';
 
 declare let $: any;
 
@@ -14,16 +14,17 @@ export class ModalAnchorDirective {
 	public modalComponentRef;
 	public options;
 
+	private _$el;
+
 	constructor(private viewContainer: ViewContainerRef,
-				private componentFactoryResolver: ComponentFactoryResolver,
-				private _modalService: ModalService) {
+		private componentFactoryResolver: ComponentFactoryResolver,
+		private _modalService: ModalService) {
 		_modalService.directive = this;
 	}
 
 	create(modalComponent: any, options = <any>{}): ComponentRef<ModalComponent> {
 		this.options = options;
 
-		console.log(this.viewContainer.element);
 		this.viewContainer.clear();
 
 		let modalComponentFactory = this.componentFactoryResolver.resolveComponentFactory(modalComponent);
@@ -31,14 +32,13 @@ export class ModalAnchorDirective {
 		this.modalComponentRef.instance.model = options.model;
 		this.modalComponentRef.instance.options = options;
 
-		// console.log(this.modalComponentRef.instance);
-		// window['test'] = this.modalComponentRef.instance.elementRef.nativeElement;
-
 		if (this.modalComponentRef.instance.close) {
-			this.modalComponentRef.instance.close.subscribe(() => this.destroy(this.modalComponentRef));
+			this.modalComponentRef.instance.close.subscribe(() => this.destroy());
 		}
 
-		this.modalComponentRef.changeDetectorRef.detectChanges();
+		this._$el = $(this.modalComponentRef.instance.elementRef.nativeElement.querySelector('.modal'));
+
+		this._$el.on('hidden.bs.modal', () => this.destroy());
 
 		this.show();
 
@@ -51,14 +51,13 @@ export class ModalAnchorDirective {
 	}
 
 	hide() {
-
+		$(this.modalComponentRef.instance.elementRef.nativeElement.querySelector('.modal')).modal('hide');
 	}
 
-	destroy(modalComponentRef) {
-		let $el = $(this.modalComponentRef.instance.elementRef.nativeElement.firstElementChild);
-
-		$el.on('hidden.bs.modal', () => {
+	destroy() {
+		if (this.modalComponentRef.instance && this.modalComponentRef.instance.destroy)
 			this.modalComponentRef.instance.destroy();
-		}).modal('hide');
+			
+		this.viewContainer.clear();
 	}
 }

@@ -47,12 +47,12 @@ export class AppComponent implements OnInit {
 	}
 
 	constructor(
+		public http: Http,
 		public router: Router,
 		public userService: UserService,
 		public authenticationService: AuthenticationService,
-		private _http: Http,
 		private _cacheService: CacheService) {
-			this.authenticationService.authenticate();
+			// this.authenticationService.authenticate();
 		 }
 
 	ngOnInit() {
@@ -71,7 +71,7 @@ export class AppComponent implements OnInit {
 		}
 
 		const symbols = this._cacheService.getByText(value).slice(0, 5);
-		console.log(symbols);
+		// console.log(symbols);
 		const currentResult = {
 			users: [],
 			symbols: symbols,
@@ -81,7 +81,7 @@ export class AppComponent implements OnInit {
 		this.toggleDropdownVisibility(true);
 		this.searchResults$.next(currentResult);
 
-		this._http.get('/search/', { params: { limit: 5, text: value } }).map(res => res.json()).subscribe((result: any) => {
+		this.http.get('/search/', { params: { limit: 5, text: value } }).map(res => res.json()).subscribe((result: any) => {
 			currentResult.users = result.users;
 			this.searchResults$.next(currentResult);
 		});

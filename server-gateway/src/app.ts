@@ -103,6 +103,7 @@ app.use(expressJwt({
 		req.originalUrl === '/' ||
 		req.originalUrl.startsWith('/ws/') ||
 		req.originalUrl.startsWith('/assets/') ||
+		req.method === 'GET' ||
 		(req.originalUrl === '/api/v1/authenticate' && (['POST', 'PUT', 'OPTIONS'].includes(req.method) && !req.headers.authorization)) ||
 		req.originalUrl === '/api/v1/authenticate/request-password-reset' ||
 		(req.originalUrl === '/api/v1/user' && (req.method === 'POST' || req.method === 'OPTIONS'))

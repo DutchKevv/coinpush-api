@@ -3,27 +3,15 @@
 @import '~bootstrap/scss/_grid';
 @import '~bootstrap/scss/_buttons';
 @import '~bootstrap/scss/_forms';
-@import '~bootstrap/scss/_jumbotron';
+@import '~bootstrap/scss/_modal';
+@import '~bootstrap/scss/_transitions';
+@import '~bootstrap/scss/utilities/_visibility';
+
 @import '../../style/variables/variables';
 @import '../../style/helpers/normalize';
 
 label {
     font-size: 12px;
-}
-
-.simpleHeader {
-    height: 50px;
-    background: white;
-    margin-bottom: 20px;
-    text-align: center;
-    padding: 10px 0;
-
-    img {
-        height: 100%;
-    }
-}
-
-label {
     color: $font-color-dark;
     margin-right: 10px;
     margin-left: 10px;

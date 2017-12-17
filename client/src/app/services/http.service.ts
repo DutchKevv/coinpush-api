@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { ConnectionBackend, XHRBackend, RequestOptions, Request, RequestOptionsArgs, Response, Http, Headers } from '@angular/http';
 import { appConfig } from '../app.config';
 
@@ -7,13 +7,19 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw';
 import { Router } from '@angular/router';
+import { AuthenticationService } from './authenticate.service';
+import { ModalService } from './modal.service';
+import { LoginComponent } from '../components/login/login.component';
 
 @Injectable()
 export class CustomHttp extends Http {
+	private _authenticationService: AuthenticationService;
+
 	constructor(
 		backend: ConnectionBackend,
 		defaultOptions: RequestOptions,
-		router: Router
+		router: Router,
+		// authenticationService: AuthenticationService
 	) {
 		super(backend, defaultOptions);
 	}
@@ -70,7 +76,7 @@ export class CustomHttp extends Http {
 	private handleError(error: any) {
 		switch (error.status) {
 			case 401:
-				window.location.hash = '#/login';
+				// this._authenticationService.showLoginRegisterPopup();
 				break;
 			case 424:
 				if (confirm('New version available. Download now?')) {
@@ -85,13 +91,3 @@ export class CustomHttp extends Http {
 		return Observable.throw(error._body);
 	}
 }
-
-// export function customHttpFactory(xhrBackend: XHRBackend, requestOptions: RequestOptions): Http {
-// 	return new CustomHttp(xhrBackend, requestOptions);
-// }
-
-// export let customHttpProvider = {
-// 	provide: Http,
-// 	useFactory: customHttpFactory,
-// 	deps: [XHRBackend, RequestOptions]
-// };

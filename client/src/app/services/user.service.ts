@@ -6,6 +6,8 @@ import { USER_FETCH_TYPE_SLIM } from '../../../../shared/constants/constants';
 // import {StartupService} from './startup.service';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { SymbolModel } from "../models/symbol.model";
+import { ModalService } from './modal.service';
+import { LoginComponent } from '../components/login/login.component';
 
 export interface IAccountStatus {
 	available: number,
@@ -17,7 +19,7 @@ export interface IAccountStatus {
 @Injectable()
 export class UserService {
 
-	public model: UserModel = new UserModel(this.loadCurrentUser());
+	public model: UserModel;
 
 	public accountStatus$: BehaviorSubject<IAccountStatus> = new BehaviorSubject({
 		available: 0,
@@ -28,7 +30,10 @@ export class UserService {
 
 	constructor(
 		private _http: Http,
-		private _alertService: AlertService) { }
+		private _modalService: ModalService,
+		private _alertService: AlertService) {
+		this.setCurrentUser();
+	}
 
 	findById(id: string, options: any = {}): Promise<UserModel> {
 		return this._http.get('/user/' + id, { params: options }).map((res: Response) => new UserModel(res.json())).toPromise();
@@ -67,12 +72,13 @@ export class UserService {
 
 	async toggleFavoriteSymbol(symbol: SymbolModel) {
 		try {
-			const result = await this._http.post('/favorite', { symbol: symbol.options.name }).map((res: Response) => res.json()).toPromise();
-
-			if (result.state)
-				this.model.options.favorites.push(symbol.options.name);
-			else
-				this.model.options.favorites.splice(this.model.options.favorites.indexOf(symbol.options.name), 1);
+			symbol.options.iFavorite = !symbol.options.iFavorite;
+			
+			const result = await this._http.post('/favorite', {
+				symbol: symbol.options.name,
+				state: symbol.options.iFavorite 
+			}).toPromise();
+			
 		} catch (error) {
 			console.error(error);
 		}
@@ -115,18 +121,22 @@ export class UserService {
 		}
 	}
 
-	loadCurrentUser() {
-		const localUserString = localStorage.getItem('currentUser');
+	setCurrentUser() {
+		try {
+			const user = JSON.parse(localStorage.getItem('currentUser'));
+			console.log(user._id);
 
-		if (localUserString) {
-			try {
-				return JSON.parse(localUserString);
-			} catch (error) {
-				console.error('Could not load stored user, returning empty object!');
-				return {};
+			if (user && user._id) {
+				this.model = new UserModel(user);
+				return;
 			}
-		} else {
-			return {}
+		} catch (error) {
+			console.warn('Could not load stored user');
+		} finally {
+			if (!this.model)
+				this.model = new UserModel({
+					name: 'Anonymous'
+				});
 		}
 	}
 
@@ -141,5 +151,31 @@ export class UserService {
 		} catch (error) {
 			console.error(error);
 		}
+	}
+
+	public async showLoginRegisterPopup() {
+		return new Promise((resolve) => {
+
+			let self = this;
+			console.log(this._modalService);
+			let dialogComponentRef = this._modalService.create(LoginComponent, {
+				type: 'dialog',
+				title: 'Login / Register',
+				showBackdrop: true,
+				showCloseButton: true,
+				model: {},
+				buttons: [
+					{ text: 'cancel', type: 'candel' },
+					{ value: 'add', text: 'add', type: 'primary' }
+				],
+				onClickButton(value) {
+					if (value === 'add') {
+						self._modalService.destroy(dialogComponentRef);
+						resolve(true);
+					} else
+						self._modalService.destroy(dialogComponentRef);
+				}
+			});
+		});
 	}
 }

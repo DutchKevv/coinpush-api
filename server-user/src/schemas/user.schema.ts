@@ -186,17 +186,13 @@ UserSchema.statics.normalizeProfileImg = function (doc) {
 	doc.img = domainPrefix + join(config.image.profileBaseUrl, doc.img);
 };
 
-UserSchema.statics.toggleFavorite = async function (userId: string, symbol: string): Promise<boolean> {
-	const user = await this.findById(userId, { favorites: 1 });
+UserSchema.statics.setFavorite = async function (userId: string, symbol: string): Promise<void> {
+	console.log(userId, symbol);
+	await (<any>User).updateOne({_id: userId}, { $addToSet: { favorites: symbol }});
+};
 
-	if (!user)
-		return;
-
-	const isFavorite = user.favorites.includes(symbol);
-
-	await user.update(isFavorite ? { $pull: { favorites: symbol } } : { $addToSet: { favorites: symbol } });
-
-	return !isFavorite;
+UserSchema.statics.unsetFavorite = async function (userId: string, symbol: string): Promise<void> {
+	await (<any>User).updateOne({_id: userId}, {$pull: { favorites: symbol } });
 };
 
 export const User = model('User', UserSchema);

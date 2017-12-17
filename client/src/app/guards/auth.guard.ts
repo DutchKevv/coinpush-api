@@ -13,12 +13,12 @@ export class AuthGuard implements CanActivate {
 
 	async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
 
-		const isValidUser = this._authenticationService.isValidStoredUser();
+		// const isValidUser = this._authenticationService.isValidStoredUser();
 
-		if (!isValidUser) {
-			this._router.navigate(['/login'], {queryParams: {returnUrl: state.url}});
-			return false;
-		}
+		// if (!isValidUser) {
+			// this._router.navigate(['/login'], {queryParams: {returnUrl: state.url}});
+			// return false;
+		// }
 
 		if (!this._bootstrapService.isReady)
 			await this._bootstrapService.loadAppData();

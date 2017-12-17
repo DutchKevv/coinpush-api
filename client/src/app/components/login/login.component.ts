@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation, ElementRef} from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
 import {AuthenticationService} from '../../services/authenticate.service';
 import {AlertService} from '../../services/alert.service';
@@ -15,7 +15,8 @@ export class LoginComponent implements OnInit {
 	loading = false;
 	returnUrl: string;
 
-	constructor(private route: ActivatedRoute,
+	constructor(public elementRef: ElementRef,
+				private route: ActivatedRoute,
 				private router: Router,
 				private authenticationService: AuthenticationService,
 				private alertService: AlertService) {}
@@ -29,13 +30,10 @@ export class LoginComponent implements OnInit {
 		e.preventDefault();
 
 		this.loading = true;
-
 		const result = await this.authenticationService.authenticate(this.model.email, this.model.password);
 	
 		if (result)
 			return this.router.navigate([this.returnUrl]);
-
-			console.error(result);
 			
 		this.alertService.error('Invalid username / password');
 		this.loading = false;

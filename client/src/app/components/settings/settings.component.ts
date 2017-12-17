@@ -5,10 +5,11 @@ import {
 import {UserService} from '../../services/user.service';
 import {Http} from '@angular/http';
 import {FormBuilder} from '@angular/forms';
-import {USER_FETCH_TYPE_PROFILE_SETTINGS} from '../../../../../shared/constants/constants';
+import {USER_FETCH_TYPE_PROFILE_SETTINGS, G_ERROR_MAX_SIZE} from '../../../../../shared/constants/constants';
 import {UserModel} from '../../models/user.model';
 import { AuthenticationService } from '../../services/authenticate.service';
 import countries from '../../../../../shared/data/countries';
+import { AlertService } from '../../services/alert.service';
 
 declare let $: any;
 
@@ -34,7 +35,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
 	constructor(private _http: Http,
 				private _formBuilder: FormBuilder,
 				private _authenticationService: AuthenticationService,
-				private _userService: UserService) {
+				private _userService: UserService,
+				private _alertService: AlertService) {
 	}
 
 	// TODO: Gets called twice!
@@ -109,7 +111,20 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
 		this._http.post('/upload/profile', data).map(res => res.json()).subscribe((result) => {
 			this._userService.update({img: result.url}, false);
-		}, (error) => console.error(error));
+		}, (result) => {
+
+			try {
+				const error = JSON.parse(result).error;
+
+				switch (error.code) {
+					case G_ERROR_MAX_SIZE:
+						this._alertService.error('Max file size is 10MB');
+						break;
+				}
+			} catch(catchError) {
+				console.error(result)
+			}
+		});
 	}
 
 	resetProfileImg() {

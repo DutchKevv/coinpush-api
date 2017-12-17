@@ -7,7 +7,7 @@ interface IModal {
 }
 
 @Injectable()
-export class ModalService {
+export class DialogService {
 
 	public directive: ModalAnchorDirective = null;
 
@@ -22,7 +22,7 @@ export class ModalService {
 		return this.directive.create(Component, options);
 	}
 
-	destroy(component) {
-		return this.directive.destroy(component);
+	destroy(component?: any) {
+		return this.directive.destroy();
 	}
 }
