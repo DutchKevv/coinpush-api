@@ -3,11 +3,12 @@ import { IReqUser } from "../../../shared/interfaces/IReqUser.interface";
 
 export const favoriteController = {
 
-    async toggle(reqUser: IReqUser, symbol: string): Promise<{ state: boolean }> {
+    async set(reqUser: IReqUser, symbol: string): Promise<void> {
+        await (<any>User).setFavorite(reqUser.id, symbol);
+    },
 
-        const state = await (<any>User).toggleFavorite(reqUser.id, symbol);
-
-        return { state };
+    async unset(reqUser: IReqUser, symbol: string): Promise<void> {
+        await (<any>User).unsetFavorite(reqUser.id, symbol);
     }
 };
 

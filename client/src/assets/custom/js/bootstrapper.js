@@ -34,6 +34,10 @@
 
         }
 
+        async _loadSymbols() {
+
+        }
+
         _setPlatformData() {
             this.platform = {
                 isApp: !!window['_cordovaNative'],

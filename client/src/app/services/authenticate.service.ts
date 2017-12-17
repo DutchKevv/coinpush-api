@@ -9,6 +9,8 @@ import {SocketService} from "./socket.service";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {AlertService} from "./alert.service";
 import { UserModel } from '../models/user.model';
+import { ModalService } from './modal.service';
+import { LoginComponent } from '../components/login/login.component';
 
 @Injectable()
 export class AuthenticationService {
@@ -18,6 +20,7 @@ export class AuthenticationService {
 	constructor(private _router: Router,
 				private _userService: UserService,
 				private _alertService: AlertService,
+				private _modalService: ModalService,
 				private _http: Http) {
 	}
 
@@ -95,14 +98,12 @@ export class AuthenticationService {
 				.toPromise();
 			
 			if (!user || !user.token) {
-				this.logout();
 				return false;
 			}
 
 			this._userService.update(user, false, false)
-
-			this.loggedIn$.emit(true);
-
+			window.location.reload();
+			
 			return true;
 		} catch (error) {
 			console.error(error);
@@ -111,17 +112,9 @@ export class AuthenticationService {
 		}
 	}
 
-	logout(): void {
+	public logout(): void {
 		this.removeStoredUser();
-		this.loggedIn$.emit(false);
-
-		// Stay on register page
-		if (window.location.hash.startsWith('#/register')) {
-				
-		} else {
-			this._userService.model = new UserModel();
-			this._router.navigate(['/login']);
-		}
+		window.location.reload();
 	}
 
 	private _getDeviceToken() {
@@ -137,6 +130,33 @@ export class AuthenticationService {
 			});
 		});
 	}
+
+	public async showLoginRegisterPopup() {
+		return new Promise((resolve) => {
+
+			let self = this;
+			console.log(this._modalService);
+			let dialogComponentRef = this._modalService.create(LoginComponent, {
+				type: 'dialog',
+				title: 'Login / Register',
+				showBackdrop: true,
+				showCloseButton: true,
+				model: {},
+				buttons: [
+					{text: 'cancel', type: 'candel'},
+					{value: 'add', text: 'add', type: 'primary'}
+				],
+				onClickButton(value) {
+					if (value === 'add') {
+						self._modalService.destroy(dialogComponentRef);
+						resolve(true);
+					} else
+						self._modalService.destroy(dialogComponentRef);
+				}
+			});
+		});
+	}
+
 
 	/**
 	 * Only required in Cordova

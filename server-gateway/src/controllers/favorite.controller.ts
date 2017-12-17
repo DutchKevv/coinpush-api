@@ -4,7 +4,7 @@ const config = require('../../../tradejs.config');
 
 export const favoriteController = {
 
-	async toggle(reqUser, params?): Promise<any> {
+	async toggle(reqUser, params): Promise<any> {
 		return request({
             uri: config.server.user.apiUrl + '/favorite',
             method: 'post',

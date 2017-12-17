@@ -1,6 +1,6 @@
 // Lib
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, Injector } from '@angular/core';
 import { SocketService } from './services/socket.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -87,14 +87,15 @@ import { EventService } from './services/event.service';
 	providers: [
 		AuthGuard,
 		AlertService,
-		AuthenticationService,
 		UserService,
 		CommentService,
 		BootstrapService,
 		NewsService,
 		EventService,
+		{ provide: AuthenticationService, useClass: AuthenticationService },
 		{
-			provide: Http, useFactory: (backend: XHRBackend, options: RequestOptions, route: Router) => {
+			provide: Http,
+			useFactory: (backend: XHRBackend, options: RequestOptions, route: Router) => {
 				return new CustomHttp(backend, options, route);
 			},
 			deps: [XHRBackend, RequestOptions, Router]
@@ -110,7 +111,7 @@ import { EventService } from './services/event.service';
 		AppComponent
 	],
 
-	entryComponents: [DialogComponent]
+	entryComponents: [DialogComponent, LoginComponent]
 })
 
 export class AppModule {

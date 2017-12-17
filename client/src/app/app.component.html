@@ -1,7 +1,7 @@
 <div modalAnchor></div>
 <app-alert></app-alert>
 
-<nav [ngClass]="{visible: !router.url.startsWith('/login') && !router.url.startsWith('/register')}" class="nav-main" id="sidebar" #navbar>
+<nav class="nav-main" id="sidebar" #navbar>
     <a [routerLink]="['/user/', userService.model.options._id]" [routerLinkActive]="['active']" class="profile">
         <img class="logo" width="70" height="70" [attr.src]="userService.model.options.img ? userService.model.options.img : undefined">
         <h4>{{userService.model.options.name || '&nbsp;'}}</h4>
@@ -10,10 +10,10 @@
             <i class="fa fa-handshake-o"></i>
             <span>Portfolio</span>
         </a> -->
-    <a [routerLink]="['/news']" [routerLinkActive]="['active']">
+    <!-- <a [routerLink]="['/news']" [routerLinkActive]="['active']">
         <i class="fa fa-newspaper-o"></i>
         <span>News feed</span>
-    </a>
+    </a> -->
     <a [routerLink]="['/calendar']" [routerLinkActive]="['active']">
         <i class="fa fa-calendar"></i>
         <span>Calender</span>
@@ -30,17 +30,21 @@
             <i class="fa fa-flash"></i>
             <span>Backtest</span>
         </a> -->
-    <a [routerLink]="['/editor']" [routerLinkActive]="['active']">
+    <!-- <a [routerLink]="['/editor']" [routerLinkActive]="['active']">
         <i class="fa fa-code"></i>
         <span>Editor</span>
-    </a>
+    </a> -->
     <a [routerLink]="['/settings']" [routerLinkActive]="['active']">
         <i class="fa fa-gears"></i>
         <span>Settings</span>
     </a>
-    <a (click)="logout()">
+    <a *ngIf="userService.model.options._id" (click)="authenticationService.logout()">
         <i class="fa fa-sign-out"></i>
         <span>Logout</span>
+    </a>
+    <a *ngIf="!userService.model.options._id" (click)="authenticationService.showLoginRegisterPopup()">
+        <i class="fa fa-sign-out"></i>
+        <span>Login</span>
     </a>
 
 </nav>
@@ -48,7 +52,7 @@
 <div (click)="onClickOverlay()" class="nav-overlay"></div>
 
 <main class="main-container">
-    <header [ngClass]="{visible: !router.url.startsWith('/login') && !router.url.startsWith('/register')}">
+    <header>
         <i (click)="toggleNav($event)" class="fa fa-navicon hidden-lg-up"></i>
         <i  *ngIf="router.url.startsWith('/charts') || ['/user'].includes(router.url)" (click)="onClickFilter($event)" class="fa fa-filter hidden-lg-up"></i>
         

@@ -20,9 +20,13 @@ router.get('/', async (req: any, res, next) => {
  * toggle
  */
 router.post('/', async (req: any, res, next) => {
-	console.log('favorite!');
 	try {
-		res.send(await favoriteController.toggle(req.user, req.body.symbol));
+		if (req.body.state)
+			await favoriteController.set(req.user, req.body.symbol);
+		else
+			await favoriteController.unset(req.user, req.body.symbol);
+
+		res.sendStatus(200);
 	} catch (error) {
 		next(error);
 	}
