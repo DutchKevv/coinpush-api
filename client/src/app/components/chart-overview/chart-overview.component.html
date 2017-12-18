@@ -34,54 +34,65 @@
         </a>
     </div>
 
-    <div class="instrument-list">
-        <div class="table-header hidden-xs-down">
-            <div>Instrument</div>
-            <div>Diff</div>
-            <div>Price</div>
-            <div>H / L</div>
-            <div></div>
-            <div></div>
-        </div>
-
-        <ul>
-            <li *ngFor="let symbol of symbols; trackBy:trackByFunc" [ngClass]="{'active': activeSymbol === symbol}" (click)="setActiveSymbol($event, symbol)">
-
-                <div>
-                    <img src="{{symbol.options.img}}" />
-                    <span>{{symbol.options.displayName}}</span>
+    <ul class="instrument-list">
+        <li class="table-header">
+            <div class="col-bookmark"></div>
+            <div class="col-1">
+                <div class="col-instrument">Instrument</div>
+                <div class="col-price hidden-sm-down">Price</div>
+            </div>
+            <div class="col-2">
+                <div class="col-changes">1h / 24h</div>
+                <div class="col-hl hidden-sm-down">H/L</div>
+            </div>
+            <div class="col-alert"></div>
+        </li>
+        <li *ngFor="let symbol of symbols; trackBy:trackByFunc" [ngClass]="{'active': activeSymbol === symbol}" (click)="setActiveSymbol($event, symbol)">
+            <div class="col-bookmark">
+                <i (click)="onClickToggleFavorite($event, symbol);" [ngClass]="{'active-icon': userService.model.options.favorites.includes(symbol.options.name)}" class="fa fa-star"></i>
+            </div>
+            <div class="col-1">
+                <div class="col-instrument">
+                    <img src="{{symbol.options.img}}" class="instrument-image" />
+                    <span class="instrument-title">{{symbol.options.displayName}}</span>
                 </div>
-                <div>
-                    <span>1h</span>
-                    <span [ngClass]="{'text-positive': symbol.options.changedHAmount > 0, 'text-negative': symbol.options.changedHAmount < 0}"
-                        class="changed-amount">
-                        {{symbol.options.changedHAmount}} %
-                    </span>
-                    <span>24h</span>
-                    <span [ngClass]="{'text-positive': symbol.options.changedDAmount > 0, 'text-negative': symbol.options.changedDAmount < 0}"
-                        class="changed-amount">
-                        {{symbol.options.changedDAmount}} %
-                    </span>
-                </div>
-                <div>
+                <div class="col-price">
                     <span>{{symbol.options.bid || 0}}</span>
                 </div>
-
-                <div *ngIf="symbol.options.halted">
-                    <span>Market closed</span>
+            </div>
+            <div class="col-2">
+                <div class="col-changes">
+                    <div class="col-1h">
+                        <span [ngClass]="{'text-positive': symbol.options.changedHAmount > 0, 'text-negative': symbol.options.changedHAmount < 0}"
+                              class="changed-amount">
+                            {{symbol.options.changedHAmount | number : '1.2-2'}}%
+                        </span>
+                    </div>
+                    <div class="col-24h">
+                        <span [ngClass]="{'text-positive': symbol.options.changedDAmount > 0, 'text-negative': symbol.options.changedDAmount < 0}"
+                              class="changed-amount">
+                            {{symbol.options.changedDAmount | number : '1.2-2'}}%
+                        </span>
+                    </div>
                 </div>
-                <div *ngIf="!symbol.options.halted">
-                    <span>H {{symbol.options.high | number : '1.2-2'}} / L {{symbol.options.low | number : '1.2-2'}}</span>
+                <div class="col-hl">
+                    <div *ngIf="symbol.options.halted">
+                        <span>Market closed</span>
+                    </div>
+                    <div *ngIf="!symbol.options.halted">
+                        <span class="value-bid">
+                            {{symbol.options.high | number : '1.2-2'}}
+                            <span class="fa fa-exchange"></span>
+                            {{symbol.options.low | number : '1.2-2'}}
+                        </span>
+                    </div>
                 </div>
-                <i class="fa fa-arrow-right more-arrow hidden-lg-up" (click)="onClickMore($event)"></i>
-                <div class="more-container" #more>
-                    <i (click)="onClickToggleFavorite($event, symbol);" [ngClass]="{'active-icon': symbol.options.iFavorite}" class="fa fa-star"></i>
-                    <i (click)="onClickAlarm($event)" class="fa fa-bell"></i>
-                    <i class="fa fa-info-circle"></i>
-                </div>
-            </li>
-        </ul>
-    </div>
+            </div>
+            <div class="col-alert">
+                <i (click)="onClickAlarm($event)" class="fa fa-bell"></i>
+            </div>
+        </li>
+    </ul>
 
     <div class="side-menu" [ngClass]="{'open': activeMenu !== null}">
         <header>
