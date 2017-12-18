@@ -4,9 +4,7 @@ import { LoginComponent } from './components/login/login.component';
 import { AuthGuard } from './guards/auth.guard';
 import { RegisterComponent } from './components/register/register.component';
 import { UserOverviewComponent } from './components/user-overview/user.overview.component';
-import { PortfolioComponent } from './components/portfolio/portfolio.component';
 import { ChartOverviewComponent } from './components/chart-overview/chart-overview.component';
-import { BacktestComponent } from './components/backtest/backtest.component';
 import { JSEditorComponent } from './components/jseditor/jseditor.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { SettingsComponent } from './components/settings/settings.component';
@@ -23,7 +21,6 @@ const routes: Routes = [
 	{ path: 'request-password-reset', component: RequestPasswordResetComponent },
 
 	{ path: 'comment/:id', component: SocialFeedComponent, canActivate: [AuthGuard] },
-	{ path: 'portfolio', component: PortfolioComponent, canActivate: [AuthGuard] },
 	{ path: 'user', component: UserOverviewComponent, canActivate: [AuthGuard] },
 	{ path: 'calendar', component: EventOverviewComponent, canActivate: [AuthGuard] },
 	{
@@ -34,7 +31,6 @@ const routes: Routes = [
 			]
 	},
 	{ path: 'charts', component: ChartOverviewComponent, canActivate: [AuthGuard] },
-	{ path: 'backtest', component: BacktestComponent, canActivate: [AuthGuard] },
 	{ path: 'editor', loadChildren: './components/jseditor/jseditor.module#JSEditorModule', canActivate: [AuthGuard] },
 	{ path: 'settings', component: SettingsComponent, canActivate: [AuthGuard] },
 ];

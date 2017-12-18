@@ -3,7 +3,6 @@ import {Http, Response} from '@angular/http';
 import 'rxjs/add/operator/map'
 import {Router} from '@angular/router';
 import {UserService} from './user.service';
-import {OrderService} from "./order.service";
 import {CacheService} from "./cache.service";
 import {SocketService} from "./socket.service";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";

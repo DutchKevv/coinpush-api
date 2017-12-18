@@ -72,12 +72,12 @@ export class UserService {
 
 	async toggleFavoriteSymbol(symbol: SymbolModel) {
 		try {
-			symbol.options.iFavorite = !symbol.options.iFavorite;
-			
 			const result = await this._http.post('/favorite', {
 				symbol: symbol.options.name,
-				state: symbol.options.iFavorite 
+				state: !symbol.options.iFavorite 
 			}).toPromise();
+
+			symbol.options.iFavorite = !symbol.options.iFavorite;
 			
 		} catch (error) {
 			console.error(error);

@@ -1,12 +1,11 @@
-import {debounce} from 'lodash';
+import { debounce } from 'lodash';
 import {
 	Component, OnInit, OnDestroy, ChangeDetectionStrategy,
 	AfterViewChecked, ViewEncapsulation, Output
 } from '@angular/core';
-import {InstrumentsService} from '../../services/instruments.service';
-import {UserService} from '../../services/user.service';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {UserModel} from '../../models/user.model';
+import { UserService } from '../../services/user.service';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { UserModel } from '../../models/user.model';
 import countries from '../../../../../shared/data/countries';
 import { CacheService } from '../../services/cache.service';
 
@@ -30,14 +29,14 @@ export class UserOverviewComponent implements OnInit, OnDestroy, AfterViewChecke
 
 	public countries: any[] = countries;
 	public symbols: any[] = this._cacheService.symbols;
-	
+
 	public selfId = this.userService.model.options._id;
 
 	private _moveInterval;
 
-	constructor(public instrumentsService: InstrumentsService,
-				public userService: UserService,
-				private _cacheService: CacheService) {
+	constructor(
+		public userService: UserService,
+		private _cacheService: CacheService) {
 	}
 
 	ngOnInit() {

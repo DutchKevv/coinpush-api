@@ -5,14 +5,11 @@ import {
 } from '@angular/core';
 
 import { DialogComponent } from '../dialog/dialog.component';
-import { InstrumentsService } from '../../services/instruments.service';
 import { DialogAnchorDirective } from '../../directives/dialoganchor.directive';
-import { InstrumentModel } from '../../models/instrument.model';
 import * as interact from 'interactjs';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { CacheService } from '../../services/cache.service';
 import * as moment from 'moment';
-import { OrderService } from '../../services/order.service';
 import { ConstantsService } from '../../services/constants.service';
 import { BaseModel } from '../../models/base.model';
 import { SymbolModel } from "../../models/symbol.model";
@@ -45,7 +42,6 @@ import '../../style/highcharts/highstock.theme.dark';
 
 export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
 
-	@Input() instrumentModel: InstrumentModel;
 	@Input() symbolModel: SymbolModel;
 
 	@Input() showBox: Boolean = false;
@@ -116,35 +112,31 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		};
 	}
 
-	constructor(public instrumentsService: InstrumentsService,
+	constructor(
 		public constantsService: ConstantsService,
 		private _zone: NgZone,
 		private _cacheService: CacheService,
-		private _elementRef: ElementRef,
-		private _orderService: OrderService) {
+		private _elementRef: ElementRef) {
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
+		if (changes.symbolModel && changes.symbolModel.currentValue) {
+			if (!this._chart)
+				this._createChart();
 
-		if (!this._chart)
-			this._createChart();
+			this.init();
 
-		this.init();
-
-		if (changes.symbolModel) {
-			this.instrumentModel = null;
 			this.symbolModel = changes.symbolModel.currentValue;
 		}
 	}
 
 	ngOnInit() {
 		this._changeSubscription = this._cacheService.changed$.subscribe(symbols => {
-			if (symbols.includes(this.symbolModel.options.name)) {
+			if (this.symbolModel && symbols.includes(this.symbolModel.options.name)) {
 				this._onPriceChange(false);
 				this._updateCurrentPricePlot();
 			}
 		});
-		// this._createChart();
 	}
 
 	ngAfterViewInit() {
@@ -156,22 +148,10 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	init() {
 		this.toggleLoading(true);
 
-		if (!this.symbolModel && !this.instrumentModel)
+		if (!this.symbolModel)
 			return;
 
-		if (this.instrumentModel) {
-			if (!this.symbolModel)
-				this.symbolModel = this._cacheService.getBySymbol(this.instrumentModel.options.symbol);
-
-		} else {
-			this.instrumentModel = new InstrumentModel({
-				symbol: this.symbolModel.options.name
-			});
-		}
-
 		this._fetchCandles();
-
-		// this._clearData(true);
 
 		this._chart.series[0].name = this.symbolModel.options.displayName;
 	}
@@ -205,22 +185,12 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 	}
 
-	public reflow() {
-		if (!this._chart)
-			return;
-
-		this._zone.runOutsideAngular(() => {
-			this._chart.options.height = this.chartRef.nativeElement.clientHeight;
-			this._chart.options.width = this.chartRef.nativeElement.clientWidth;
-			this._updateViewPort();
-		});
-	}
-
 	public toggleLoading(state?: boolean) {
 		// this.loadingRef.nativeElement.classList.toggle('active', !!state);
 	}
 
 	private _createChart() {
+
 		this._zone.runOutsideAngular(() => {
 			var self = this;
 
@@ -404,7 +374,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 				let data: any = this._prepareData(await this._cacheService.read({
 					symbol: this.symbolModel.options.name,
 					timeFrame: this.timeFrame,
-					until: this.instrumentModel.options.type === 'backtest' && this.instrumentModel.options.status.progress < 1 ? this.instrumentModel.options.from : this.instrumentModel.options.until,
 					count: ChartBoxComponent.DEFAULT_CHUNK_LENGTH,
 					offset: this._offset
 				}));
@@ -428,7 +397,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 	private _updateCurrentPricePlot(render: boolean = false) {
 		return this._zone.runOutsideAngular(() => {
-	
+
 			const price = this._priceToFixed(this.symbolModel.options.bid);
 
 			const options = {
@@ -452,190 +421,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		});
 	}
 
-	private _fetchIndicators(count: number, offset: number) {
-		this._zone.runOutsideAngular(async () => {
-			try {
-				let data;
-
-				if (this.instrumentModel.options.type === 'backtest' && this.instrumentModel.options.status.progress < 1)
-					data = await this.instrumentsService.fetch(this.instrumentModel, count, offset, undefined, this.instrumentModel.options.from);
-				else
-					data = await this.instrumentsService.fetch(this.instrumentModel, count, offset);
-
-
-				if (!data.indicators.length)
-					return;
-
-				this._data.indicators = data.indicators;
-
-				this._updateIndicators();
-
-			} catch (error) {
-				console.error(error);
-			}
-		});
-	}
-
-	private _updateIndicators() {
-		if (!this._chart)
-			return;
-		//
-		this._zone.runOutsideAngular(() => {
-
-			this.instrumentModel.options.indicators.forEach(indicator => {
-				indicator.buffers.forEach(drawBuffer => {
-					// New series
-					let series = null; // this._chart.get(unique);
-
-					// Update
-					if (series) {
-						console.log('SERIES!!!!', series);
-					}
-
-					// Create
-					else {
-						switch (drawBuffer.type) {
-							case 'line':
-								this._chart.options.data.push({
-									type: drawBuffer.type,
-									lineThickness: 0.5,
-									bevelEnabled: false,
-									connectNullData: false,
-									color: drawBuffer.style.color,
-									valueFormatString: ' ',
-									name: indicator.id,
-									axisYType: 'secondary',
-									markerType: 'circle',
-									markerSize: 0,
-									dataPoints: drawBuffer.data.map((point, i) => ({
-										// label: moment(point[0]).format('DD-MM hh:mm'),
-										// x: i,
-										y: point[1]
-									}))
-								});
-								break;
-							case 'arrow':
-								alert('cannot yet draw arrow');
-								break;
-						}
-					}
-				});
-			});
-		});
-	}
-
-	private _updateOrders(orders: any[] = this.instrumentModel.options.orders) {
-		if (!this._chart)
-			return;
-
-		this._zone.runOutsideAngular(() => {
-
-			orders.filter(order => !order.options.closed && order.options.symbol === this.instrumentModel.options.symbol).forEach((order: any) => {
-
-				// if (order.closeTime < this._data.candles[0])
-				// 	return;
-
-				// draw openings price
-				this._chart.yAxis[0].addPlotLine({
-					id: 'order_' + order.options._id,
-					color: '#00FF00',
-					width: 1,
-					value: order.options.openBid,
-					label: {
-						text: order.options.openBid,
-						align: 'right',
-						x: 40,
-						y: 2,
-						style: {
-							// 'font-size': '9px',
-							// padding: '1px',
-
-							// 'background': '#0059de',
-							// color: 'white',
-							// 'border-radius': '2px',
-							// 'text-align': 'center',
-							// position: 'relative',
-
-							// after: {
-							// 	height: 0,
-							// 	width: 0,
-							// 	position: 'absolute',
-							// 	left: '-11px',
-							// 	top: 0,
-							// 	border: '6px solid transparent',
-							// 	'border-right-color': '#0059de',
-							// 	padding: '0px',
-							// 	'z-index': 101,
-							// 	content: '',
-							// }
-						}
-					}
-				});
-
-				// this._chart.options.data[1].dataPoints.push(...[
-				// 		{
-				// 			// label: moment(order.openTime).format('DD-MM hh:mm'),
-				// 			// x: this._chart.options.data[0].dataPoints.find(point => point.time === order.openTime).x,
-				// 			y: null,
-				// 			lineColor: order.side === 'sell' ? '#ff00e1' : '#007fff',
-				// 			color: order.profit > 0 ? '#01ff00' : 'red',
-				// 			id: order.id,
-				// 			profit: order.profit
-				// 			// lineColor: 'red'
-				// 		},
-				// 		{
-				// 			// label: moment(order.openTime).format('DD-MM hh:mm'),
-				// 			x: this._chart.options.data[0].dataPoints.findIndex(point => point.time === order.openTime),
-				// 			y: order.openBid,
-				// 			lineColor: order.side === 'sell' ? '#ff00e1' : '#007fff',
-				// 			color: order.profit > 0 ? '#01ff00' : 'red',
-				// 			id: order.id,
-				// 			profit: order.profit
-				// 		},
-				// 		{
-				// 			// label: moment(order.closeTime).format('DD-MM hh:mm'),
-				// 			x: this._chart.options.data[0].dataPoints.findIndex(point => point.time === order.closeTime),
-				// 			y: order.closeBid,
-				// 			id: order.id,
-				// 			profit: order.profit,
-				// 			// lineColor: order.type === 'sell' ? '#ff00e1' : '#007fff',
-				// 			color: order.profit > 0 ? '#01ff00' : 'red'
-				// 			// lineColor: 'red'
-				// 		}
-				// 	]
-				// );
-			});
-		});
-	}
-
-	/*
-	 Stop highchart from moving the Y axis so much
-	 TODO: improve
-	 */
-	private _getSurroundingPriceRange(padding = 200, viewable) {
-		let data = this._chart.series[0].yData,
-			i = data.length - this._scrollOffset - viewable - padding,
-			len = (data.length - this._scrollOffset) + padding,
-			price, low, high;
-
-		if (i < 0)
-			i = 0;
-
-		if (len > data.length)
-			len = data.length;
-
-		for (; i < len; ++i) {
-			price = data[i][0];
-			if (!high || price > high) {
-				high = price;
-			} else if (!low || price < low) {
-				low = price;
-			}
-		}
-
-		return { low, high };
-	}
-
 	private _calculateViewableBars(checkParent = true) {
 		let el = this._elementRef.nativeElement,
 			barW = 6 * this.zoom;
@@ -645,7 +430,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 	private _onPriceChange(render: boolean = false) {
 		if (this._chart && this._chart.series[0].data.length)
-			this._chart.series[0].data[this._chart.series[0].data.length - 1].update(this.symbolModel.options.bid, render, false); 
+			this._chart.series[0].data[this._chart.series[0].data.length - 1].update(this.symbolModel.options.bid, render, false);
 	}
 
 	private _onScroll(event: MouseWheelEvent): boolean {

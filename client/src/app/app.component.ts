@@ -2,7 +2,6 @@ import { Component, ChangeDetectionStrategy, ViewEncapsulation, AfterViewInit, O
 import { AuthenticationService } from "./services/authenticate.service";
 import { SocketService } from "./services/socket.service";
 import { CacheService } from "./services/cache.service";
-import { OrderService } from "./services/order.service";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { Subject } from "rxjs/Subject";
 import { Router, NavigationEnd, NavigationStart } from '@angular/router';

@@ -60,6 +60,9 @@
             const script = document.createElement('script');
             script.src = url;
             document.head.appendChild(script);
+        },
+        async loadScriptAsync(url) {
+
         }
     };
 
@@ -72,28 +75,32 @@
     // load cordova before app starts
     if (app.platform.isApp) {
         app.helpers.loadScriptSync('cordova.js');
-        
+        document.body.querySelector('app').classList.add('app')
+
         function onDeviceReady() {
-            var admobid = {};
-            if (/(android)/i.test(navigator.userAgent)) { // for android & amazon-fireos
-                admobid = {
-                    banner: 'ca-app-pub-1181429338292864/7213864636',
-                    interstitial: 'ca-app-pub-1181429338292864/7213864636'
-                };
-            } else if (/(ipod|iphone|ipad)/i.test(navigator.userAgent)) { // for ios
-                admobid = {
-                    banner: 'ca-app-pub-1181429338292864/7213864636',
-                    interstitial: 'ca-app-pub-1181429338292864/7213864636'
-                };
-            } else { // for windows phone
-                admobid = {
-                    banner: 'ca-app-pub-1181429338292864/7213864636',
-                    interstitial: 'ca-app-pub-1181429338292864/7213864636'
-                };
-            }
 
             if (window.AdMob) {
+
+                var admobid = {};
+                if (/(android)/i.test(navigator.userAgent)) { // for android & amazon-fireos
+                    admobid = {
+                        banner: 'ca-app-pub-1181429338292864/7213864636',
+                        interstitial: 'ca-app-pub-1181429338292864/7213864636'
+                    };
+                } else if (/(ipod|iphone|ipad)/i.test(navigator.userAgent)) { // for ios
+                    admobid = {
+                        banner: 'ca-app-pub-1181429338292864/7213864636',
+                        interstitial: 'ca-app-pub-1181429338292864/7213864636'
+                    };
+                } else { // for windows phone
+                    admobid = {
+                        banner: 'ca-app-pub-1181429338292864/7213864636',
+                        interstitial: 'ca-app-pub-1181429338292864/7213864636'
+                    };
+                }
+
                 window.AdMob.createBanner({
+                    adId: admobid.banner,
                     adSize: 'BANNER',
                     overlap: true,
                     height: 60, // valid when set adSize 'CUSTOM'
@@ -103,7 +110,9 @@
                     isTesting: false
                 });
 
-                // window.AdMob.showBannerAtXY(0, window.innerHeight - 50)
+                document.addEventListener('onAdFailLoad', function (error) {
+                    console.error(error);
+                });
             }
 
             cordova.getAppVersion.getVersionNumber().then(function (version) {
@@ -117,7 +126,7 @@
 
             window.FirebasePlugin.onNotificationOpen(function (notification) {
                 notification.body = JSON.parse(notification.body);
-              
+
                 switch (notification.body.type) {
                     case 'post-comment':
                         window.location.hash = '#/comment/' + notification.body.parentId + '?focus=' + notification.body.commentId;
@@ -129,7 +138,7 @@
                         window.location.hash = '#/comment/' + notification.body.parentId + '?focus=' + notification.body.commentId;
                         break
                 }
-               
+
             }, function (error) {
                 console.error(error);
             });
@@ -145,7 +154,7 @@
         }
 
         document.addEventListener("deviceready", onDeviceReady, false);
-        
+
         // window.FirebasePlugin.getToken(function (token) {
         //     // save this server-side and use it to push notifications to this device
         //     console.log(token);

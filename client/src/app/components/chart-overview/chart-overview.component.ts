@@ -9,16 +9,13 @@ import {
 	DoCheck
 } from '@angular/core';
 
-import { InstrumentsService } from '../../services/instruments.service';
 import { ChartBoxComponent } from '../chart-box/chart-box.component';
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { SymbolModel } from "../../models/symbol.model";
-import { InstrumentModel } from "../../models/instrument.model";
 import { Subject } from 'rxjs/Subject';
 import { ConstantsService } from '../../services/constants.service';
 import { UserService } from '../../services/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { OrderService } from '../../services/order.service';
 import { CacheService } from '../../services/cache.service';
 import { SYMBOL_CAT_TYPE_FOREX, SYMBOL_CAT_TYPE_RESOURCE, SYMBOL_CAT_TYPE_CRYPTO, CUSTOM_EVENT_TYPE_ALARM, ALARM_TRIGGER_DIRECTION_DOWN, ALARM_TRIGGER_DIRECTION_UP } from "../../../../../shared/constants/constants";
 import { EventService } from '../../services/event.service';
@@ -35,7 +32,7 @@ declare let $: any;
 	preserveWhitespaces: false
 })
 
-export class ChartOverviewComponent implements OnInit, OnDestroy, DoCheck {
+export class ChartOverviewComponent implements OnInit, OnDestroy {
 
 	@ViewChild('filter') filterRef: ElementRef;
 
@@ -62,7 +59,6 @@ export class ChartOverviewComponent implements OnInit, OnDestroy, DoCheck {
 	private _changeDetectionInterval;
 
 	constructor(
-		public instrumentsService: InstrumentsService,
 		public constantsService: ConstantsService,
 		public userService: UserService,
 		public cacheService: CacheService,
@@ -71,40 +67,43 @@ export class ChartOverviewComponent implements OnInit, OnDestroy, DoCheck {
 		private _elementRef: ElementRef,
 		private _route: ActivatedRoute,
 		private _router: Router,
-		private _orderService: OrderService,
 		private _applicationRef: ApplicationRef
 	) {
+
 	}
 
 	ngOnInit() {
-		// this._changeDetectorRef.detach();
-		// this._changeDetectionInterval = setInterval(() => this._changeDetectorRef.detectChanges(), 500);
-
+		this._changeDetectorRef.detach();
 		this._filterSub = this._applicationRef.components[0].instance.filterClick$.subscribe(() => this.toggleFilterNav());
 		this._priceChangeSub = this.cacheService.changed$.subscribe(changedSymbols => this._onPriceChange(changedSymbols));
 
-		this.toggleActiveFilter('all popular');
-
-		// Because the page is slow, this hack will first show the 'skeleton' of the page, so it feels a bit less slow
 		setTimeout(() => {
+			if (!this._route.snapshot.queryParams['symbol'])
+				this.toggleActiveFilter('rise and fall');
 
 			this._routeSub = this._route.queryParams.subscribe(params => {
-				if (this.activeSymbol && this.activeSymbol.options.name === params['symbol']) {
-					this._scrollIntoView(this.activeSymbol);
+				// // if its the same as the current, do nothing
+				if (this.activeSymbol && this.activeSymbol.options.name === params['symbol'])
 					return;
+
+				// only continue if symbol is known (could be old bookmark)
+				if (params['symbol']) {
+					const symbol = this.cacheService.getBySymbol(params['symbol']);
+					if (!symbol) {
+						return;
+					}
+
+					// showing a specific symbol, so no active filter
+					this.toggleActiveFilter('', false);
+
+					// set symbol
+					this.symbols = [symbol];
+					this.setActiveSymbol(null, this.symbols[0]);
+				} else {
+					this.toggleActiveFilter('rise and fall');
 				}
-
-				const symbol = this.cacheService.getBySymbol(params['symbol']);
-				this.setActiveSymbol(undefined, symbol || this.symbols[0]);
-				this._scrollIntoView(this.activeSymbol);
-				this._changeDetectorRef.detectChanges();
 			});
-
 		}, 0);
-	}
-
-	ngDoCheck() {
-		console.log('check!');
 	}
 
 	public toggleFilterNav(event?, state?: boolean) {
@@ -116,27 +115,31 @@ export class ChartOverviewComponent implements OnInit, OnDestroy, DoCheck {
 		this.filterRef.nativeElement.classList.toggle('show', state);
 	}
 
-	public toggleActiveFilter(filter: string) {
+	public toggleActiveFilter(filter: string, removeSymbolFromUrl = true) {
+
+		// remove specific symbol in url
+		if (removeSymbolFromUrl && this._route.snapshot.queryParams['symbol']) {
+			this._router.navigate(['/charts'], { skipLocationChange: false, queryParams: {} });
+		}
+
 		this.activeFilter = filter;
 		this.activeMenu = null;
 
 		this.toggleFilterNav(undefined, false);
+
 		switch (filter) {
 			case 'all':
 				this.symbols = this.cacheService.symbols;
 				break;
-			case 'all open':
-				this.symbols = this.cacheService.symbols.filter(s => !s.options.halted);
-				break;
 			case 'all popular':
-				this.symbols = this.cacheService.symbols.sort((a, b) => a.options.volume - b.options.volume).slice(0, 40);
+				this.symbols = this.cacheService.symbols.sort((a, b) => a.options.volume - b.options.volume).slice(-40).reverse();
 				break;
 			case 'rise and fall':
 				const sorted = this.cacheService.symbols.sort((a, b) => a.options.changedDAmount - b.options.changedDAmount);
 				this.symbols = [].concat(sorted.slice(-20).reverse(), sorted.slice(0, 20));
 				break;
 			case 'favorite':
-				this.symbols = this.cacheService.symbols.filter(s => this.symbols.filter(symbol => symbol.options.iFavorite));
+				this.symbols = this.cacheService.symbols.filter(symbol => symbol.options.iFavorite);
 				break;
 			case 'forex':
 				this.symbols = this.cacheService.symbols.filter(s => s.options.type === SYMBOL_CAT_TYPE_FOREX);
@@ -150,43 +153,42 @@ export class ChartOverviewComponent implements OnInit, OnDestroy, DoCheck {
 			case 'resources':
 				this.symbols = this.cacheService.symbols.filter(s => s.options.type === SYMBOL_CAT_TYPE_RESOURCE);
 				break;
+			default:
+				this.symbols = [];
 		}
 
-		this.setActiveSymbol(undefined, this.symbols[0]);
+		if (this.symbols.length)
+			this.setActiveSymbol(undefined, this.symbols[0]);
 	}
 
-	onClickToggleFavorite(event, symbol: SymbolModel) {
+	async onClickToggleFavorite(event, symbol: SymbolModel) {
 		event.preventDefault();
 		event.stopPropagation();
 
-		this.userService.toggleFavoriteSymbol(symbol);
+		await this.userService.toggleFavoriteSymbol(symbol);
+		this._changeDetectorRef.detectChanges();
 	}
 
-	onClickAlarm(event) {
+	toggleAlarmMenu() {
 		if (this.activeMenu === 'alarm') {
 			this.activeMenu = this.activeAlarmMenu = null;
 		} else {
 			this.activeMenu = 'alarm';
 			this.activeAlarmMenu = 'new'
 		}
-
+		this._changeDetectorRef.detectChanges();
 	}
 
-	onClickMore(event) {
-		event.preventDefault();
-		event.stopPropagation();
-
-		event.currentTarget.parentNode.classList.toggle('open');
-	}
-
-	setActiveSymbol(event, symbol: SymbolModel, navigate: boolean = true) {
+	setActiveSymbol(event, symbol: SymbolModel): void {
 		if (event) {
 			event.preventDefault();
 			event.stopPropagation();
 		}
 
-		if (symbol === this.activeSymbol)
+		if (symbol === this.activeSymbol) {
+			this._changeDetectorRef.detectChanges();
 			return;
+		}
 
 		// reset side-menu form model
 		this.formModel = {
@@ -198,23 +200,17 @@ export class ChartOverviewComponent implements OnInit, OnDestroy, DoCheck {
 		};
 
 		this.activeSymbol = symbol;
+
+		if (this.activeEvents$ && this.activeEvents$.unsubscribe)
+			this.activeEvents$.unsubscribe();
+
+		if (this.historyEvents$ && this.historyEvents$.unsubscribe)
+			this.historyEvents$.unsubscribe();
+
 		this.activeEvents$ = this.eventService.findBySymbol(this.activeSymbol.options.name, 0, 50);
 		this.historyEvents$ = this.eventService.findBySymbol(this.activeSymbol.options.name, 0, 50, true);
 
-		this._router.navigate(['/charts'], { skipLocationChange: true, queryParams: { symbol: symbol.options.name } });
-
-		const el = this._elementRef.nativeElement.querySelector(`[data-symbol=${symbol.options.name}]`);
-		if (!el || isAnyPartOfElementInViewport(el))
-			return
-
-		el.scrollIntoView();
-	}
-
-	placeOrder(event, side, symbol) {
-		event.preventDefault();
-		event.stopPropagation();
-
-		this._orderService.create({ symbol, side, amount: 1 });
+		this._changeDetectorRef.detectChanges();
 	}
 
 	public onCreateFormSubmit(form: NgForm) {
@@ -241,20 +237,6 @@ export class ChartOverviewComponent implements OnInit, OnDestroy, DoCheck {
 
 	public trackByFunc(index, item) {
 		return item.options.name;
-	}
-
-	private _scrollIntoView(symbol: SymbolModel) {
-		if (!symbol)
-			return;
-
-		const el = this._elementRef.nativeElement.querySelector(`[data-symbol=${symbol.options.name}]`);
-
-		// Already in viewport
-		if (!el || isAnyPartOfElementInViewport(el))
-			return;
-
-		if (el)
-			el.scrollIntoView();
 	}
 
 	onSymbolChange(symbolModel: SymbolModel): void {

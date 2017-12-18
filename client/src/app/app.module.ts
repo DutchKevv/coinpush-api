@@ -18,13 +18,9 @@ import { ModalComponent } from './components/modal/modal.component';
 import { DialogAnchorDirective } from './directives/dialoganchor.directive';
 import { ModalAnchorDirective } from './directives/modalanchor.directive';
 import { ModalService } from './services/modal.service';
-import { InstrumentsService } from './services/instruments.service';
 import { ResizableDirective } from './directives/resizable.directive';
 import { ChartBoxComponent } from './components/chart-box/chart-box.component';
-import { BacktestSettingsComponent } from './components/backtest-settings/backtest-settings.component';
-import { BacktestReportComponent } from './components/backtest-report/backtest-report.component';
 import { CacheService } from './services/cache.service';
-import { BacktestComponent, GroupIdsPipe } from './components/backtest/backtest.component';
 import { AuthenticationService } from './services/authenticate.service';
 import { CustomHttp } from './services/http.service';
 import { AlertService } from './services/alert.service';
@@ -32,8 +28,6 @@ import { AlertComponent } from './components/alert/alert.component';
 import { RegisterComponent } from './components/register/register.component';
 import { HttpModule, XHRBackend, RequestOptions, Http } from '@angular/http';
 import { UserOverviewComponent } from './components/user-overview/user.overview.component';
-import { OrderService } from './services/order.service';
-import { GroupByPipe, PortfolioComponent } from './components/portfolio/portfolio.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { ParseCommentContentPipe, SocialFeedComponent } from './components/social-feed/social.feed.component';
@@ -50,15 +44,11 @@ import { EventService } from './services/event.service';
 @NgModule({
 	declarations: [
 		AppComponent,
-		BacktestComponent,
-		BacktestReportComponent,
-		BacktestSettingsComponent,
 		ChartBoxComponent,
 		ChartOverviewComponent,
 		DialogAnchorDirective,
 		DialogComponent,
 		EventOverviewComponent,
-		GroupIdsPipe,
 		ParseCommentContentPipe,
 		SocialFeedComponent,
 		LoginComponent,
@@ -70,8 +60,6 @@ import { EventService } from './services/event.service';
 		ResizableDirective,
 		AlertComponent,
 		UserOverviewComponent,
-		PortfolioComponent,
-		GroupByPipe,
 		ProfileComponent,
 		SettingsComponent,
 		CommentBoxComponent
@@ -100,11 +88,9 @@ import { EventService } from './services/event.service';
 			},
 			deps: [XHRBackend, RequestOptions, Router, Injector]
 		},
-		{ provide: OrderService, useClass: OrderService },
 		{ provide: ConstantsService, useClass: ConstantsService },
 		{ provide: SocketService, useClass: SocketService },
 		{ provide: ModalService, useClass: ModalService },
-		{ provide: InstrumentsService, useClass: InstrumentsService },
 		{ provide: CacheService, useClass: CacheService }
 	],
 	bootstrap: [

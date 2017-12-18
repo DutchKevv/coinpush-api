@@ -3,7 +3,6 @@ import * as io from 'socket.io-client';
 import { SymbolModel } from "../models/symbol.model";
 import { SocketService } from "./socket.service";
 import { CacheService } from "./cache.service";
-import { OrderService } from "./order.service";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 
 @Injectable()
@@ -13,8 +12,7 @@ export class BootstrapService {
 
 	constructor(
 		private _socketService: SocketService,
-		private _cacheService: CacheService,
-		private _orderService: OrderService) {
+		private _cacheService: CacheService) {
 	}
 
 	public async loadAppData() {
