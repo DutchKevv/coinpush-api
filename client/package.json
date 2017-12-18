@@ -39,7 +39,6 @@
     "@types/jquery": "^3.2.16",
     "@types/lodash": "^4.14.88",
     "@types/node": "8.0.58",
-    "angular-2-dropdown-multiselect": "^1.6.3",
     "bootstrap": "4.0.0-alpha.6",
     "cordova-android": "^7.0.0",
     "cordova-browser": "^5.0.1",

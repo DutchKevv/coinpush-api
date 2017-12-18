@@ -9,8 +9,6 @@ import {
 	DoCheck
 } from '@angular/core';
 
-import { ChartBoxComponent } from '../chart-box/chart-box.component';
-import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { SymbolModel } from "../../models/symbol.model";
 import { Subject } from 'rxjs/Subject';
 import { ConstantsService } from '../../services/constants.service';
@@ -20,8 +18,6 @@ import { CacheService } from '../../services/cache.service';
 import { SYMBOL_CAT_TYPE_FOREX, SYMBOL_CAT_TYPE_RESOURCE, SYMBOL_CAT_TYPE_CRYPTO, CUSTOM_EVENT_TYPE_ALARM, ALARM_TRIGGER_DIRECTION_DOWN, ALARM_TRIGGER_DIRECTION_UP } from "../../../../../shared/constants/constants";
 import { EventService } from '../../services/event.service';
 import { NgForm } from '@angular/forms';
-
-declare let $: any;
 
 @Component({
 	selector: 'chart-overview',
@@ -119,7 +115,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 
 		// remove specific symbol in url
 		if (removeSymbolFromUrl && this._route.snapshot.queryParams['symbol']) {
-			this._router.navigate(['/charts'], { skipLocationChange: false, queryParams: {} });
+			this._router.navigate(['/symbols'], { skipLocationChange: false, queryParams: {} });
 		}
 
 		this.activeFilter = filter;

@@ -5,7 +5,6 @@ import { AuthGuard } from './guards/auth.guard';
 import { RegisterComponent } from './components/register/register.component';
 import { UserOverviewComponent } from './components/user-overview/user.overview.component';
 import { ChartOverviewComponent } from './components/chart-overview/chart-overview.component';
-import { JSEditorComponent } from './components/jseditor/jseditor.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { SocialFeedComponent } from './components/social-feed/social.feed.component';
@@ -30,8 +29,7 @@ const routes: Routes = [
 				{ path: 'feed', component: SocialFeedComponent }
 			]
 	},
-	{ path: 'charts', component: ChartOverviewComponent, canActivate: [AuthGuard] },
-	{ path: 'editor', loadChildren: './components/jseditor/jseditor.module#JSEditorModule', canActivate: [AuthGuard] },
+	{ path: 'symbols', component: ChartOverviewComponent, canActivate: [AuthGuard] },
 	{ path: 'settings', component: SettingsComponent, canActivate: [AuthGuard] },
 ];
 

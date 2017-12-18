@@ -62,7 +62,7 @@
             document.head.appendChild(script);
         },
         async loadScriptAsync(url) {
-
+            
         }
     };
 

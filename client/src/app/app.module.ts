@@ -7,7 +7,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { AppRouter } from './app.routing';
 
-import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
 import { ChartOverviewComponent } from './components/chart-overview/chart-overview.component';
 import { AuthGuard } from './guards/auth.guard';
 import { UserService } from './services/user.service';
@@ -70,7 +69,6 @@ import { EventService } from './services/event.service';
 		FormsModule,
 		ReactiveFormsModule,
 		HttpModule,
-		MultiselectDropdownModule,
 	],
 	providers: [
 		AuthGuard,
