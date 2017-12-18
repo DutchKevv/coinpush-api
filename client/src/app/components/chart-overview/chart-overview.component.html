@@ -2,36 +2,22 @@
     <div class="filter-list" #filter>
         <h4>Popular</h4>
         <a [ngClass]="{active: activeFilter === 'all'}" (click)="toggleActiveFilter('all')">All</a>
-        <a [ngClass]="{active: activeFilter === 'all popular'}" (click)="toggleActiveFilter('all popular')">All popular
-            <sup>(not implement)</sup>
-        </a>
+        <a [ngClass]="{active: activeFilter === 'all popular'}" (click)="toggleActiveFilter('all popular')">All popular</a>
         <a [ngClass]="{active: activeFilter === 'all open'}" (click)="toggleActiveFilter('all open')">All open</a>
-        <a [ngClass]="{active: activeFilter === 'rise and fall'}" (click)="toggleActiveFilter('rise and fall')">Risers and fallers
-            <sup>(not implement)</sup>
-        </a>
+        <a [ngClass]="{active: activeFilter === 'rise and fall'}" (click)="toggleActiveFilter('rise and fall')">Risers and fallers</a>
         <a [ngClass]="{active: activeFilter === 'favorite'}" (click)="toggleActiveFilter('favorite')">My favorites</a>
         <h4>Resources</h4>
         <a [ngClass]="{active: activeFilter === 'resources'}" (click)="toggleActiveFilter('resources')">All resources</a>
-        <a [ngClass]="{active: activeFilter === 'resources popular'}" (click)="toggleActiveFilter('resources popular')">Popular resources
-            <sup>(not implement)</sup>
-        </a>
+        <a [ngClass]="{active: activeFilter === 'resources popular'}" (click)="toggleActiveFilter('resources popular')">Popular resources (ni)</a>
         <h4>Indices</h4>
-        <a [ngClass]="{active: activeFilter === 'all2'}" (click)="toggleActiveFilter('all2')">All indices
-            <sup>(not implement)</sup>
-        </a>
-        <a [ngClass]="{active: activeFilter === 'all2'}" (click)="toggleActiveFilter('all2')">Popular indices
-            <sup>(not implement)</sup>
-        </a>
+        <a [ngClass]="{active: activeFilter === 'all2'}" (click)="toggleActiveFilter('all2')">All indices (ni)</a>
+        <a [ngClass]="{active: activeFilter === 'all2'}" (click)="toggleActiveFilter('all2')">Popular indices (ni)</a>
         <h4>Crypto</h4>
         <a [ngClass]="{active: activeFilter === 'crypto all'}" (click)="toggleActiveFilter('crypto all')">All crypto</a>
-        <a [ngClass]="{active: activeFilter === 'crypto popular'}" (click)="toggleActiveFilter('crypto popular')">Popular crypto
-            <sup>(not implement)</sup>
-        </a>
+        <a [ngClass]="{active: activeFilter === 'crypto popular'}" (click)="toggleActiveFilter('crypto popular')">Popular crypto (ni)</a>
         <h4>Forex</h4>
         <a [ngClass]="{active: activeFilter === 'forex'}" (click)="toggleActiveFilter('forex')">All forex</a>
-        <a [ngClass]="{active: activeFilter === 'forex popular'}" (click)="toggleActiveFilter('forex popular')">Popular forex
-            <sup>(not implement)</sup>
-        </a>
+        <a [ngClass]="{active: activeFilter === 'forex popular'}" (click)="toggleActiveFilter('forex popular')">Popular forex (ni)</a>
     </div>
 
     <ul class="instrument-list">

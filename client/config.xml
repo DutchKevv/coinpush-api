@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.ff.coinpush" version="0.0.14" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.ff.coinpush" version="0.0.17" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
 	<name>CoinPush</name>
 	<description>
         Stock trading application with custom alarams
@@ -8,6 +8,7 @@
         Apache Cordova Team
     </author>
 	<preference name="StatusBarOverlaysWebView" value="false"/>
+	<preference name="SplashScreenDelay" value="10000"/>
 	<content src="index.html"/>
 	<access origin="*"/>
 	<allow-navigation href="*"/>
@@ -20,18 +21,39 @@
 	<icon src="res/icon/icon.png"/>
 	<platform name="android">
 		<allow-intent href="market:*"/>
-	</platform>
-	<platform name="ios">
-		<allow-intent href="itms:*"/>
-		<allow-intent href="itms-apps:*"/>
-	</platform>
-	<platform name="android">
-		<allow-intent href="market:*"/>
 		<icon qualifier="mdpi" src="res/icon/android/icon-48-mdpi.png"/>
 		<icon qualifier="hdpi" src="res/icon/android/icon-72-hdpi.png"/>
 		<icon qualifier="xhdpi" src="res/icon/android/icon-96-xhdpi.png"/>
 		<icon qualifier="xxhdpi" src="res/icon/android/icon-120-xxhdpi.png"/>
 		<icon qualifier="xxxhdpi" src="res/icon/android/icon-144-xxxhdpi.png"/>
+		<splash density="land-hdpi" src="res/screen/android/screen-hdpi-landscape.png"/>
+		<splash density="land-ldpi" src="res/screen/android/screen-hdpi-landscape.png"/>
+		<splash density="land-mdpi" src="res/screen/android/screen-hdpi-landscape.png"/>
+		<splash density="land-xhdpi" src="res/screen/android/screen-hdpi-landscape.png"/>
+		<splash density="port-hdpi" src="res/screen/android/screen-hdpi-portrait.png"/>
+		<splash density="port-ldpi" src="res/screen/android/screen-hdpi-portrait.png"/>
+		<splash density="port-mdpi" src="res/screen/android/screen-hdpi-portrait.png"/>
+		<splash density="port-xhdpi" src="res/screen/android/screen-hdpi-portrait.png"/>
+	</platform>
+	<platform name="ios">
+		<allow-intent href="itms:*"/>
+		<allow-intent href="itms-apps:*"/>
+		<splash height="480" src="res/screen/ios/Default~iphone.png" width="320"/>
+		<splash height="960" src="res/screen/ios/Default@2x~iphone.png" width="640"/>
+		<splash height="1024" src="res/screen/ios/Default-Portrait~ipad.png" width="768"/>
+		<splash height="2048" src="res/screen/ios/Default-Portrait@2x~ipad.png" width="1536"/>
+		<splash height="768" src="res/screen/ios/Default-Landscape~ipad.png" width="1024"/>
+		<splash height="1536" src="res/screen/ios/Default-Landscape@2x~ipad.png" width="2048"/>
+		<splash height="1136" src="res/screen/ios/Default-568h@2x~iphone.png" width="640"/>
+		<splash height="1334" src="res/screen/ios/Default-667h.png" width="750"/>
+		<splash height="2208" src="res/screen/ios/Default-736h.png" width="1242"/>
+		<splash height="1242" src="res/screen/ios/Default-Landscape-736h.png" width="2208"/>
+		<splash src="res/screen/ios/Default@2x~universal~anyany.png"/>
+		<splash src="res/screen/ios/Default@2x~universal~comany.png"/>
+		<splash src="res/screen/ios/Default@2x~universal~comcom.png"/>
+		<splash src="res/screen/ios/Default@3x~universal~anyany.png"/>
+		<splash src="res/screen/ios/Default@3x~universal~anycom.png"/>
+		<splash src="res/screen/ios/Default@3x~universal~comany.png"/>
 	</platform>
 	<hook src="scripts/incrementBuildNum.js" type="after_build"/>
 	<engine name="browser" spec="^5.0.1"/>
@@ -42,4 +64,5 @@
 	<plugin name="cordova-plugin-firebase" spec="^0.1.25"/>
 	<plugin name="cordova-plugin-app-version" spec="^0.1.9"/>
 	<plugin name="cordova-plugin-fileopener" spec="^1.0.5"/>
+	<plugin name="cordova-plugin-splashscreen" spec="^4.1.0"/>
 </widget>

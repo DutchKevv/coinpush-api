@@ -20,7 +20,7 @@ export const symbolController = {
 	update() {
 		return Promise.all([
 			this.updateStartPrices(),
-			this.updateHighLow()
+			this.updateHighLowPopular()
 		]);
 	},
 
@@ -43,7 +43,7 @@ export const symbolController = {
 		});
 	},
 
-	async updateHighLow() {
+	async updateHighLowPopular() {
 		const now = new Date();
 		now.setHours(0);
 		now.setMinutes(0);
@@ -56,17 +56,20 @@ export const symbolController = {
 			const barsAmount = 60 * 24; // 1440 M1 bars
 			const candles = await cacheController.find({ symbol: symbol.name, timeFrame: 'M1', count: barsAmount, toArray: true });
 
-			// set high and low of the day
+			// set high / low of the day
 			let high = 0;
-			let low = 100000000000000;
+			let low = 0;
+			let volume = 0;
+			
 			for (let i = 0, len = candles.length; i < len; i += 10) {
 				let candle = candles[i + 1];
 
 				if (candle > high)
 					high = candle;
-				if (candle < low)
+				if (!low || candle < low)
 					low = candle;
 			}
+			symbol.volume = volume;
 			symbol.high = high;
 			symbol.low = low;
 		});

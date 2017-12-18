@@ -42,7 +42,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy, DoCheck {
 	public activeSymbol: SymbolModel;
 	public activeSymbol$: Subject<SymbolModel> = new Subject();
 	public symbols = [];
-	public activeFilter: string = 'all';
+	public activeFilter: string = '';
 	public activeMenu: string = null;
 	public activeAlarmMenu: string = null;
 	public activeEvents$;
@@ -83,12 +83,10 @@ export class ChartOverviewComponent implements OnInit, OnDestroy, DoCheck {
 		this._filterSub = this._applicationRef.components[0].instance.filterClick$.subscribe(() => this.toggleFilterNav());
 		this._priceChangeSub = this.cacheService.changed$.subscribe(changedSymbols => this._onPriceChange(changedSymbols));
 
-		this.setActiveSymbol(undefined, this.cacheService.getBySymbol(this._route.snapshot.queryParams['symbol']) || this.cacheService.symbols[0], false);
+		this.toggleActiveFilter('all popular');
 
+		// Because the page is slow, this hack will first show the 'skeleton' of the page, so it feels a bit less slow
 		setTimeout(() => {
-
-			this.symbols = this.cacheService.symbols;
-			this._changeDetectorRef.detectChanges();
 
 			this._routeSub = this._route.queryParams.subscribe(params => {
 				if (this.activeSymbol && this.activeSymbol.options.name === params['symbol']) {
@@ -123,7 +121,6 @@ export class ChartOverviewComponent implements OnInit, OnDestroy, DoCheck {
 		this.activeMenu = null;
 
 		this.toggleFilterNav(undefined, false);
-
 		switch (filter) {
 			case 'all':
 				this.symbols = this.cacheService.symbols;
@@ -132,10 +129,14 @@ export class ChartOverviewComponent implements OnInit, OnDestroy, DoCheck {
 				this.symbols = this.cacheService.symbols.filter(s => !s.options.halted);
 				break;
 			case 'all popular':
-				this.symbols = this.cacheService.symbols;
+				this.symbols = this.cacheService.symbols.sort((a, b) => a.options.volume - b.options.volume).slice(0, 40);
+				break;
+			case 'rise and fall':
+				const sorted = this.cacheService.symbols.sort((a, b) => a.options.changedDAmount - b.options.changedDAmount);
+				this.symbols = [].concat(sorted.slice(-20).reverse(), sorted.slice(0, 20));
 				break;
 			case 'favorite':
-				this.symbols = this.cacheService.symbols.filter(s => this.userService.model.options.favorites.includes(s.options.name));
+				this.symbols = this.cacheService.symbols.filter(s => this.symbols.filter(symbol => symbol.options.iFavorite));
 				break;
 			case 'forex':
 				this.symbols = this.cacheService.symbols.filter(s => s.options.type === SYMBOL_CAT_TYPE_FOREX);
@@ -198,7 +199,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy, DoCheck {
 
 		this.activeSymbol = symbol;
 		this.activeEvents$ = this.eventService.findBySymbol(this.activeSymbol.options.name, 0, 50);
-		this.historyEvents$ =  this.eventService.findBySymbol(this.activeSymbol.options.name, 0, 50, true);
+		this.historyEvents$ = this.eventService.findBySymbol(this.activeSymbol.options.name, 0, 50, true);
 
 		this._router.navigate(['/charts'], { skipLocationChange: true, queryParams: { symbol: symbol.options.name } });
 
@@ -274,6 +275,10 @@ export class ChartOverviewComponent implements OnInit, OnDestroy, DoCheck {
 
 		let n = Math.max(Math.min(number.toString().length, 2), 6);
 		return number.toFixed(n);
+	}
+
+	private _sortByValue(array, key) {
+
 	}
 
 	ngOnDestroy() {

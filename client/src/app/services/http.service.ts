@@ -80,6 +80,7 @@ export class CustomHttp extends Http {
 		switch (error.status) {
 			case 401:
 				this._authenticationService.showLoginRegisterPopup();
+
 				break;
 			case 424:
 				if (confirm('New version available. Download now?')) {
