@@ -49,7 +49,7 @@
         </li>
         <li *ngFor="let symbol of symbols; trackBy:trackByFunc" [ngClass]="{'active': activeSymbol === symbol}" (click)="setActiveSymbol($event, symbol)">
             <div class="col-bookmark">
-                <i (click)="onClickToggleFavorite($event, symbol);" [ngClass]="{'active-icon': userService.model.options.favorites.includes(symbol.options.name)}" class="fa fa-star"></i>
+                <i (click)="onClickToggleFavorite($event, symbol);" [ngClass]="{'active-icon': symbol.options.iFavorite}" class="fa fa-star"></i>
             </div>
             <div class="col-1">
                 <div class="col-instrument">
