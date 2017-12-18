@@ -95,10 +95,10 @@ import { EventService } from './services/event.service';
 		{ provide: AuthenticationService, useClass: AuthenticationService },
 		{
 			provide: Http,
-			useFactory: (backend: XHRBackend, options: RequestOptions, route: Router) => {
-				return new CustomHttp(backend, options, route);
+			useFactory: (backend: XHRBackend, options: RequestOptions, route: Router, inj: Injector) => {
+				return new CustomHttp(backend, options, route, inj);
 			},
-			deps: [XHRBackend, RequestOptions, Router]
+			deps: [XHRBackend, RequestOptions, Router, Injector]
 		},
 		{ provide: OrderService, useClass: OrderService },
 		{ provide: ConstantsService, useClass: ConstantsService },

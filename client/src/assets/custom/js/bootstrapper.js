@@ -26,16 +26,22 @@
             super();
 
             this.version = null;
-
             this._setPlatformData();
         }
 
-        init() {
+        async init() {
+            return Promise.all([
+                this._loadConfig(),
+                this._loadSymbols()
+            ]);
+        }
 
+        async _loadConfig() {
+            // this.config = await fetch();
         }
 
         async _loadSymbols() {
-
+            // this.symbols = await fetch()
         }
 
         _setPlatformData() {
@@ -49,12 +55,24 @@
 
     const app = window.app = new App();
 
+    app.helpers = {
+        loadScriptSync(url) {
+            const script = document.createElement('script');
+            script.src = url;
+            document.head.appendChild(script);
+        }
+    };
+
+    app.init().catch(console.error);
+
+    /**
+     * ANDROID IOS ANDROID IOS ANDROID IOS ANDROID IOS
+     * MOBILE MOBILE MOBILE MOBILE MOBILE MOBILE MOBILE
+     */
     // load cordova before app starts
     if (app.platform.isApp) {
-        var script = document.createElement('script');
-        script.src = 'cordova.js';
-        document.head.appendChild(script); //or something of the likes
-
+        app.helpers.loadScriptSync('cordova.js');
+        
         function onDeviceReady() {
             var admobid = {};
             if (/(android)/i.test(navigator.userAgent)) { // for android & amazon-fireos
@@ -82,7 +100,7 @@
                     adId: admobid.banner,
                     position: window.AdMob.AD_POSITION.BOTTOM_CENTER,
                     autoShow: true,
-                    isTesting: true
+                    isTesting: false
                 });
 
                 // window.AdMob.showBannerAtXY(0, window.innerHeight - 50)
@@ -126,9 +144,8 @@
 
         }
 
-        document.addEventListener("deviceready", (onDeviceReady), false);
-
-        app.init();
+        document.addEventListener("deviceready", onDeviceReady, false);
+        
         // window.FirebasePlugin.getToken(function (token) {
         //     // save this server-side and use it to push notifications to this device
         //     console.log(token);

@@ -4,7 +4,7 @@ import { app } from '../app';
 
 const router = Router();
 
-router.get('/symbols', (req, res, next) => {
+router.get('/', (req, res, next) => {
 	try {
 		res.send(app.broker.symbols);
 	} catch (error) {

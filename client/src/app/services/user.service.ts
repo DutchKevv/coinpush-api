@@ -121,10 +121,9 @@ export class UserService {
 		}
 	}
 
-	setCurrentUser() {
+	public setCurrentUser() {
 		try {
 			const user = JSON.parse(localStorage.getItem('currentUser'));
-			console.log(user._id);
 
 			if (user && user._id) {
 				this.model = new UserModel(user);

@@ -19,25 +19,28 @@ export class CustomHttp extends Http {
 		backend: ConnectionBackend,
 		defaultOptions: RequestOptions,
 		router: Router,
-		// authenticationService: AuthenticationService
+		injector: Injector
 	) {
 		super(backend, defaultOptions);
+		setTimeout(() => {
+			this._authenticationService = injector.get(AuthenticationService);
+		}, 0);
 	}
 
 	get(url: string, options?: RequestOptionsArgs): Observable<Response> {
-		return super.get(this._normalizeUrl(url), this._addHeaders(options)).catch(this.handleError);
+		return super.get(this._normalizeUrl(url), this._addHeaders(options)).catch(error => this.handleError(error));
 	}
 
 	post(url: string, body: string, options?: RequestOptionsArgs): Observable<Response> {
-		return super.post(this._normalizeUrl(url), body, this._addHeaders(options)).catch(this.handleError);
+		return super.post(this._normalizeUrl(url), body, this._addHeaders(options)).catch(error => this.handleError(error));
 	}
 
 	put(url: string, body: string, options?: RequestOptionsArgs): Observable<Response> {
-		return super.put(this._normalizeUrl(url), body, this._addHeaders(options)).catch(this.handleError);
+		return super.put(this._normalizeUrl(url), body, this._addHeaders(options)).catch(error => this.handleError(error));
 	}
 
 	delete(url: string, options?: RequestOptionsArgs): Observable<Response> {
-		return super.delete(this._normalizeUrl(url), this._addHeaders(options)).catch(this.handleError);
+		return super.delete(this._normalizeUrl(url), this._addHeaders(options)).catch(error => this.handleError(error));
 	}
 
 	private _normalizeUrl(url: string) {
@@ -76,7 +79,7 @@ export class CustomHttp extends Http {
 	private handleError(error: any) {
 		switch (error.status) {
 			case 401:
-				// this._authenticationService.showLoginRegisterPopup();
+				this._authenticationService.showLoginRegisterPopup();
 				break;
 			case 424:
 				if (confirm('New version available. Download now?')) {
@@ -87,7 +90,7 @@ export class CustomHttp extends Http {
 				break;
 
 		}
-		console.log(error);
+
 		return Observable.throw(error._body);
 	}
 }

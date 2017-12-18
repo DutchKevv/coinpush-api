@@ -44,9 +44,6 @@ export class CacheService {
 
 		return new Promise((resolve, reject) => {
 
-			if (unload)
-				this.unload();
-
 			this._socket.emit('symbol:list', {}, (err, symbols) => {
 				if (err)
 					return reject(err);

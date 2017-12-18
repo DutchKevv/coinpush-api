@@ -52,7 +52,7 @@ export class AppComponent implements OnInit {
 		public userService: UserService,
 		public authenticationService: AuthenticationService,
 		private _cacheService: CacheService) {
-			// this.authenticationService.authenticate();
+			this.authenticationService.authenticate();
 		 }
 
 	ngOnInit() {

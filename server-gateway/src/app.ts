@@ -149,15 +149,16 @@ app.use((req, res, next) => {
 	next();
 });
 
-/**
- * root (index.html)
- */
-app.get('/', (req, res) => proxy.web(req, res, { target: config.server.fe.apiUrl }));
+// /**
+//  * image
+//  */
+// app.get('/images/*', (req, res) => proxy.web(req, res, { target: config.server.fe.apiUrl }));
 
 /**
  * image
  */
-app.get('/images/*', (req, res) => proxy.web(req, res, { target: config.server.fe.apiUrl }));
+
+app.use('/api/v1/symbols', require('./api/symbol.api'));
 
 /**
  * favorite

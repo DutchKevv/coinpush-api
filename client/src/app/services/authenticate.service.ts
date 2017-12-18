@@ -73,7 +73,7 @@ export class AuthenticationService {
 		return result.status === 200;
 	}
 
-	async authenticate(email?: string, password?: string, token?: string, profile = true): Promise<boolean> {
+	async authenticate(email?: string, password?: string, token?: string, profile = false, reload = false): Promise<boolean> {
 		if (!email && !password && !token) {
 			token = this.getStoredToken();
 			if (!token) {
@@ -102,7 +102,9 @@ export class AuthenticationService {
 			}
 
 			this._userService.update(user, false, false)
-			window.location.reload();
+			
+			if (reload)
+				window.location.reload();
 			
 			return true;
 		} catch (error) {
@@ -113,8 +115,10 @@ export class AuthenticationService {
 	}
 
 	public logout(): void {
-		this.removeStoredUser();
-		window.location.reload();
+		if (this._userService.model.options._id) {
+			this.removeStoredUser();
+			window.location.reload();
+		}
 	}
 
 	private _getDeviceToken() {

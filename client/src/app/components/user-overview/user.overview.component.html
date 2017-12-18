@@ -9,35 +9,6 @@
         </select>
     </li>
     <li class="form-group">
-        <label for="whoInvested">WHO INVESTED IN</label>
-        <select class="form-control" id="whoInvested" (change)="onChangeCountry($event.target.value)">
-            <option value="">Any</option>
-            <optgroup>
-                <option *ngFor="let symbol of symbols" [attr.value]="symbol.options.name">{{symbol.options.name}}</option>
-            </optgroup>
-        </select>
-    </li>
-    <li class="form-group">
-        <label for="gainedMin">GAINED AT LEAST</label>
-        <select class="form-control" id="gainedMin">
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-        </select>
-    </li>
-    <li class="form-group">
-        <label for="duringTime">DURING THE</label>
-        <select class="form-control" id="duringTime">
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-        </select>
-    </li>
-    <li class="form-group">
         <button class="btn btn-sm btn-success">Go !</button>
     </li>
 </ul>
