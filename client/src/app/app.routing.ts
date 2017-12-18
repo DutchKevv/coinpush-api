@@ -13,7 +13,7 @@ import { RequestPasswordResetComponent } from "./components/request-password-res
 import { EventOverviewComponent } from './components/event-overview/event-overview.component';
 
 const routes: Routes = [
-	{ path: '', redirectTo: 'charts', pathMatch: 'full', canActivate: [AuthGuard] },
+	{ path: '', redirectTo: 'symbols', pathMatch: 'full', canActivate: [AuthGuard] },
 	// { path: 'login', component: LoginComponent },
 	// { path: 'register', component: RegisterComponent },
 	{ path: 'password-reset', component: PasswordResetComponent },
