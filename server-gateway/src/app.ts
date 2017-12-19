@@ -4,6 +4,7 @@ import * as semver from 'semver';
 const path = require('path');
 const express = require('express');
 const httpProxy = require('http-proxy');
+const jwt = require('jsonwebtoken');
 const expressJwt = require('express-jwt');
 const config = require('../../tradejs.config');
 const app = express();
@@ -79,33 +80,31 @@ app.use((req, res, next) => {
 // 	const appVersion = req.headers['app-version'];
 // 	console.log(appVersion);
 
-// 	if (!appVersion)
+// 	if (!appVersion || !config.app.version)
 // 		return next();
 
-// 	if (semver.lt(appVersion, config.appVersion))
+// 	if (semver.lt(appVersion, config.app.version))
 // 		return res.status(424)
-		
+
 // 	next();
 // });
 
 // use JWT auth to secure the api, the token can be passed in the authorization header or query string
-app.use(expressJwt({
-	secret: config.token.secret,
-	getToken(req) {
-		if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer')
-			return req.headers.authorization.split(' ')[1];
+const getToken = function (req) {
+	if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer')
+		return req.headers.authorization.split(' ')[1];
+};
 
-		return null;
-	}
-}).unless((req) => {
+app.use(expressJwt({ secret: config.token.secret, getToken }).unless((req) => {
 	return (
 		(/\.(gif|jpg|jpeg|tiff|png|ico)$/i).test(req.originalUrl) ||
-		req.originalUrl === '/' ||
-		req.originalUrl.startsWith('/ws/') ||
-		req.originalUrl.startsWith('/assets/') ||
+		// req.originalUrl === '/' ||
+		// req.originalUrl.startsWith('/ws/') ||
+		// req.originalUrl.startsWith('/assets/') ||
+		// req.originalUrl.startsWith('/api/v1/symbols') ||
 		req.method === 'GET' ||
 		(req.originalUrl === '/api/v1/authenticate' && (['POST', 'PUT', 'OPTIONS'].includes(req.method) && !req.headers.authorization)) ||
-		req.originalUrl === '/api/v1/authenticate/request-password-reset' ||
+		// req.originalUrl === '/api/v1/authenticate/request-password-reset' ||
 		(req.originalUrl === '/api/v1/user' && (req.method === 'POST' || req.method === 'OPTIONS'))
 	);
 }));
@@ -114,7 +113,7 @@ app.use(expressJwt({
 /**
  * websocket
  */
-server.on('upgrade', (req, socket, head) => {	
+server.on('upgrade', (req, socket, head) => {
 	switch (parse(req.url).pathname) {
 		case '/ws/general/':
 			proxy.ws(req, socket, head, { target: config.server.oldApi.apiUrl });
@@ -141,12 +140,26 @@ app.use((err, req, res, next) => {
  * set client user id for upcoming (proxy) requests
  */
 app.use((req, res, next) => {
-	if (req.user)
+	if (req.user) {
 		req.headers._id = req.user.id;
-	else
-		req.user = {};
+		next();
+	} else {
+		const token = getToken(req);
 
-	next();
+		if (token) {
+			jwt.verify(token, config.token.secret, {}, (err, decoded) => {
+				if (err) {
+					res.status(401);
+				} else {
+					req.user = decoded;
+					next();
+				}
+			});
+		} else {
+			req.user = {};
+			next();
+		}
+	}
 });
 
 // /**

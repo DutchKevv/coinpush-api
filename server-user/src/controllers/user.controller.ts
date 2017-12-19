@@ -67,9 +67,7 @@ export const userController = {
 
 		fields.followers = 1;
 		const users = <Array<IUser>>await User.find(where, fields).sort({ _id: sort }).limit(limit).lean();
-		// console.log(users[1]);
 		users.forEach((user) => {
-			
 			(<any>User).normalize(reqUser, user);
 			delete user['followers'];
 		});
