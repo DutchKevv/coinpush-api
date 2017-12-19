@@ -24,30 +24,6 @@
     "instances": 1
   },
   {
-    "script": "server-order/index.js",
-    "name": "order",
-    "exec_mode": "fork",
-    "env_production" : {
-      "NODE_ENV": "production"
-    },
-    "env_development" : {
-      "NODE_ENV": "development"
-    },
-    "instances": 1
-  },
-  {
-    "script": "server-broker/index.js",
-    "name": "broker",
-    "exec_mode": "fork",
-    "env_production" : {
-      "NODE_ENV": "production"
-    },
-    "env_development" : {
-      "NODE_ENV": "development"
-    },
-    "instances": 1
-  },
-  {
     "script": "server-user/index.js",
     "name": "user",
     "exec_mode": "fork",
@@ -86,18 +62,6 @@
   {
     "script": "server-event/index.js",
     "name": "event",
-    "exec_mode": "fork",
-    "env_production" : {
-      "NODE_ENV": "production"
-    },
-    "env_development" : {
-      "NODE_ENV": "development"
-    },
-    "instances": 1
-  },
-  {
-    "script": "server/bootstrapper.js",
-    "name": "legacy",
     "exec_mode": "fork",
     "env_production" : {
       "NODE_ENV": "production"

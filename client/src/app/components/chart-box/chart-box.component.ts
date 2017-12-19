@@ -1,29 +1,21 @@
-import { forEach, random, throttle } from 'lodash';
+import { throttle } from 'lodash';
 import {
 	Component, OnDestroy, ElementRef, Input, ViewChild,
-	OnInit, AfterViewInit, ViewEncapsulation, NgZone, Output, SimpleChanges, OnChanges, ChangeDetectionStrategy
+	OnInit, AfterViewInit, NgZone, Output, SimpleChanges, OnChanges, ChangeDetectionStrategy
 } from '@angular/core';
 
 import { DialogComponent } from '../dialog/dialog.component';
 import { DialogAnchorDirective } from '../../directives/dialoganchor.directive';
-import * as interact from 'interactjs';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { CacheService } from '../../services/cache.service';
-import * as moment from 'moment';
 import { ConstantsService } from '../../services/constants.service';
-import { BaseModel } from '../../models/base.model';
 import { SymbolModel } from "../../models/symbol.model";
 
-const Highcharts = require('highcharts');
 const Highstock = require('highcharts/highstock');
 require('highcharts/modules/exporting');
 require('../../../assets/vendor/js/highcharts/indicators/indicators.js');
 require('../../../assets/vendor/js/highcharts/indicators/macd.js');
 require('../../../assets/vendor/js/highcharts/indicators/ema');
 // require('../../../assets/vendor/js/highcharts/indicators/sma');
-// import Highstock from 'highcharts/highstock';
-
-declare let $: any;
 
 import '../../style/highcharts/highstock.theme.dark';
 
@@ -33,7 +25,6 @@ import '../../style/highcharts/highstock.theme.dark';
 	styleUrls: [
 		'./chart-box.component.scss'
 	],
-	// encapsulation: ViewEncapsulation.None,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	entryComponents: [DialogComponent]
 })

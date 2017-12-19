@@ -74,7 +74,7 @@
                 </div>
             </div>
             <div class="col-alert">
-                <i (click)="toggleAlarmMenu()" class="fa fa-bell"></i>
+                <i (click)="toggleAlarmMenuVisibility()" class="fa fa-bell"></i>
             </div>
         </li>
     </ul>
@@ -83,13 +83,13 @@
         <header>
             <i class="fa fa-bell"></i>
             <h5>{{activeSymbol?.options.displayName}}</h5>
-            <i (click)="toggleAlarmMenu()" class="fa fa-close"></i>
+            <i (click)="toggleAlarmMenuVisibility()" class="fa fa-close"></i>
         </header>
         <main>
             <ul class="side-menu-top-nav">
-                <li [ngClass]="{active: activeAlarmMenu === 'new'}" (click)="activeAlarmMenu = 'new'">New</li>
-                <li [ngClass]="{active: activeAlarmMenu === 'active'}" (click)="activeAlarmMenu = 'active'">Active</li>
-                <li [ngClass]="{active: activeAlarmMenu === 'history'}" (click)="activeAlarmMenu = 'history'">History</li>
+                <li [ngClass]="{active: activeAlarmMenu === 'new'}" (click)="toggleAlarmMenuTab('new')">New</li>
+                <li [ngClass]="{active: activeAlarmMenu === 'active'}" (click)="toggleAlarmMenuTab('active')">Active</li>
+                <li [ngClass]="{active: activeAlarmMenu === 'history'}" (click)="toggleAlarmMenuTab('history')">History</li>
             </ul>
             <ng-container *ngIf="activeAlarmMenu === 'new'">
                 <form class="form" (ngSubmit)="onCreateFormSubmit(alarmForm)" #alarmForm="ngForm">
@@ -118,7 +118,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <span class="muted">Diff: {{(((sideMenuNumberInput.value / activeSymbol.options.bid) * 100) - 100).toFixed(2)}}%</span>
+                        <span class="muted">Diff: {{(((formModel.amount / activeSymbol.options.bid) * 100) - 100).toFixed(2)}}%</span>
                         <p>Current price: {{activeSymbol.options.bid}}</p>
                     </div>
                     <div class="form-check form-check-inline">

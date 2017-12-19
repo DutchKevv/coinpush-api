@@ -34,7 +34,6 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 	@ViewChild('filter') filterRef: ElementRef;
 
 	public activeSymbol: SymbolModel;
-	public activeSymbol$: Subject<SymbolModel> = new Subject();
 	public symbols = [];
 	public activeFilter: string = '';
 	public activeMenu: string = null;
@@ -167,13 +166,18 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 		this._changeDetectorRef.detectChanges();
 	}
 
-	toggleAlarmMenu() {
+	toggleAlarmMenuVisibility() {
 		if (this.activeMenu === 'alarm') {
 			this.activeMenu = this.activeAlarmMenu = null;
 		} else {
 			this.activeMenu = 'alarm';
 			this.activeAlarmMenu = 'new'
 		}
+		this._changeDetectorRef.detectChanges();
+	}
+
+	toggleAlarmMenuTab(tab: string) {
+		this.activeAlarmMenu = tab;
 		this._changeDetectorRef.detectChanges();
 	}
 
@@ -231,6 +235,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 			newValue -= inc;
 
 		this.formModel.amount = parseFloat(this._priceToFixed(newValue));
+		this._changeDetectorRef.detectChanges();
 	}
 
 	public trackByFunc(index, item) {

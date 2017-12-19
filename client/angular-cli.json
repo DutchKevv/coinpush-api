@@ -19,8 +19,7 @@
         "../node_modules/jquery/dist/jquery.min.js",
         "../node_modules/jquery-touchswipe/jquery.touchSwipe.js",
         "../node_modules/tether/dist/js/tether.min.js",
-        "../node_modules/bootstrap/dist/js/bootstrap.min.js",
-        "../node_modules/jstree/dist/jstree.js"
+        "../node_modules/bootstrap/dist/js/bootstrap.min.js"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {
@@ -32,8 +31,7 @@
   "defaults": {
     "styleExt": "css",
     "component": {
-      "spec": true,
-      "inlineTemplate": false
+      "inlineTemplate": true
     }
   },
   "warnings": {
