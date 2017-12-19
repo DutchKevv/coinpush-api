@@ -18,6 +18,7 @@ import { CacheService } from '../../services/cache.service';
 import { SYMBOL_CAT_TYPE_FOREX, SYMBOL_CAT_TYPE_RESOURCE, SYMBOL_CAT_TYPE_CRYPTO, CUSTOM_EVENT_TYPE_ALARM, ALARM_TRIGGER_DIRECTION_DOWN, ALARM_TRIGGER_DIRECTION_UP } from "../../../../../shared/constants/constants";
 import { EventService } from '../../services/event.service';
 import { NgForm } from '@angular/forms';
+import { app } from '../../../assets/custom/js/core/app';
 
 @Component({
 	selector: 'chart-overview',
@@ -52,8 +53,6 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 	private _filterSub;
 	private _priceChangeSub;
 
-	private _changeDetectionInterval;
-
 	constructor(
 		public constantsService: ConstantsService,
 		public userService: UserService,
@@ -70,8 +69,11 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this._changeDetectorRef.detach();
+		
 		this._filterSub = this._applicationRef.components[0].instance.filterClick$.subscribe(() => this.toggleFilterNav());
 		this._priceChangeSub = this.cacheService.changed$.subscribe(changedSymbols => this._onPriceChange(changedSymbols));
+
+		// app.on('symbols-update', this._onSymbolUpdate, this);
 
 		setTimeout(() => {
 			if (!this._route.snapshot.queryParams['symbol'])
@@ -84,7 +86,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 
 				// only continue if symbol is known (could be old bookmark)
 				if (params['symbol']) {
-					const symbol = this.cacheService.getBySymbol(params['symbol']);
+					const symbol = this.cacheService.getSymbolByName(params['symbol']);
 					if (!symbol) {
 						return;
 					}
@@ -255,11 +257,21 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 		return number.toFixed(n);
 	}
 
-	private _sortByValue(array, key) {
-
+	private _onSymbolUpdate() {
+		if (!this._route.snapshot.queryParams['symbol']) {
+			this.toggleActiveFilter('rise and fall')
+		} else {
+			const symbol = this.cacheService.getSymbolByName(this._route.snapshot.queryParams['symbol']);
+			if (symbol) {
+				this.symbols = [symbol];
+				this.setActiveSymbol(null, symbol);
+			}
+		}
 	}
 
 	ngOnDestroy() {
+		app.off('symbols-update', this._onSymbolUpdate);
+
 		if (this._priceChangeSub)
 			this._priceChangeSub.unsubscribe();
 
@@ -268,8 +280,6 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 
 		if (this._routeSub)
 			this._routeSub.unsubscribe();
-
-		clearInterval(this._changeDetectionInterval);
 	}
 }
 
