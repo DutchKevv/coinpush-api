@@ -1,6 +1,5 @@
 import { Injectable, Injector } from '@angular/core';
 import { ConnectionBackend, XHRBackend, RequestOptions, Request, RequestOptionsArgs, Response, Http, Headers } from '@angular/http';
-import { appConfig } from '../app.config';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
@@ -10,6 +9,8 @@ import { Router } from '@angular/router';
 import { AuthenticationService } from './authenticate.service';
 import { ModalService } from './modal.service';
 import { LoginComponent } from '../components/login/login.component';
+import { app } from '../../assets/custom/js/core/app';
+
 
 @Injectable()
 export class CustomHttp extends Http {
@@ -44,7 +45,7 @@ export class CustomHttp extends Http {
 	}
 
 	private _normalizeUrl(url: string) {
-		url = appConfig.apiUrl + url;
+		url = app.address.apiUrl + url;
 		url = url.replace(/([^:]\/)\/+/g, "$1");
 		return url;
 	}
@@ -62,9 +63,8 @@ export class CustomHttp extends Http {
 
 	private _addHeaderJwt(options: RequestOptionsArgs): RequestOptionsArgs {
 		// add authorization header with jwt token
-		let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-		if (currentUser && currentUser.token)
-			options.headers.append('Authorization', 'Bearer ' + currentUser.token);
+		if (app.user && app.user.token)
+			options.headers.append('Authorization', 'Bearer ' + app.user.token);
 
 		return options;
 	}
@@ -84,9 +84,9 @@ export class CustomHttp extends Http {
 				break;
 			case 424:
 				if (confirm('New version available. Download now?')) {
-					
+
 				} else {
-					
+
 				}
 				break;
 

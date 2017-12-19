@@ -1,7 +1,6 @@
 // Lib
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, Injector } from '@angular/core';
-import { SocketService } from './services/socket.service';
+import { NgModule, Injector, APP_INITIALIZER } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
@@ -71,13 +70,14 @@ import { EventService } from './services/event.service';
 		HttpModule,
 	],
 	providers: [
+		BootstrapService,
 		AuthGuard,
 		AlertService,
 		UserService,
 		CommentService,
-		BootstrapService,
 		NewsService,
 		EventService,
+		{ provide: APP_INITIALIZER, useFactory: (config: BootstrapService) => () => config.load(), deps: [BootstrapService], multi: true },
 		{ provide: AuthenticationService, useClass: AuthenticationService },
 		{
 			provide: Http,
@@ -87,7 +87,6 @@ import { EventService } from './services/event.service';
 			deps: [XHRBackend, RequestOptions, Router, Injector]
 		},
 		{ provide: ConstantsService, useClass: ConstantsService },
-		{ provide: SocketService, useClass: SocketService },
 		{ provide: ModalService, useClass: ModalService },
 		{ provide: CacheService, useClass: CacheService }
 	],

@@ -8,6 +8,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { SymbolModel } from "../models/symbol.model";
 import { ModalService } from './modal.service';
 import { LoginComponent } from '../components/login/login.component';
+import { app } from '../../assets/custom/js/core/app';
 
 export interface IAccountStatus {
 	available: number,
@@ -19,7 +20,7 @@ export interface IAccountStatus {
 @Injectable()
 export class UserService {
 
-	public model: UserModel;
+	public model: UserModel = new UserModel(app.user);
 
 	public accountStatus$: BehaviorSubject<IAccountStatus> = new BehaviorSubject({
 		available: 0,
@@ -31,9 +32,7 @@ export class UserService {
 	constructor(
 		private _http: Http,
 		private _modalService: ModalService,
-		private _alertService: AlertService) {
-		this.setCurrentUser();
-	}
+		private _alertService: AlertService) {}
 
 	findById(id: string, options: any = {}): Promise<UserModel> {
 		return this._http.get('/user/' + id, { params: options }).map((res: Response) => new UserModel(res.json())).toPromise();
@@ -49,11 +48,12 @@ export class UserService {
 
 	async update(changes, toServer = true, showAlert: boolean = true) {
 		this.model.set(changes);
+		app.user = this.model.options;
 
 		if (toServer) {
 			try {
 				await this._http.put('/user/' + this.model.get('_id'), changes).toPromise();
-				this.storeCurrentUser();
+				await app.storeUser();
 
 				if (showAlert)
 					this._alertService.success('Settings saved');
@@ -63,7 +63,7 @@ export class UserService {
 			}
 		}
 		else {
-			this.storeCurrentUser();
+			await app.storeUser();
 
 			if (showAlert)
 				this._alertService.success('Settings saved');
@@ -119,28 +119,6 @@ export class UserService {
 			this._alertService.error(`An error occurred when following ${model.options.username}...`);
 			return false;
 		}
-	}
-
-	public setCurrentUser() {
-		try {
-			const user = JSON.parse(localStorage.getItem('currentUser'));
-
-			if (user && user._id) {
-				this.model = new UserModel(user);
-				return;
-			}
-		} catch (error) {
-			console.warn('Could not load stored user');
-		} finally {
-			if (!this.model)
-				this.model = new UserModel({
-					name: 'Anonymous'
-				});
-		}
-	}
-
-	storeCurrentUser() {
-		localStorage.setItem('currentUser', JSON.stringify(this.model.options));
 	}
 
 	async remove() {
