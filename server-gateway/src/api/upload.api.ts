@@ -10,7 +10,7 @@ const config = require('../../../tradejs.config');
 const router = Router();
 
 const IMAGE_DIR = join(__dirname, '..', '..', '..', 'images', 'images', 'profile');
-const domainPrefix = 'http://' + (process.env.NODE_ENV === 'prod' ? config.ip.prod : config.ip.local) + ':' + config.port;
+const domainPrefix = 'http://' + (process.env.NODE_ENV === 'production' ? config.ip.prod : config.ip.local) + ':' + config.port;
 
 const upload = multer({ storage: multer.memoryStorage({}) });
 
