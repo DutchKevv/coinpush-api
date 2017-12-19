@@ -25,7 +25,6 @@ require('../../../assets/vendor/js/highcharts/indicators/ema');
 
 declare let $: any;
 
-import { HighchartsDefaultTheme } from '../../style/highcharts/highstock.theme.default';
 import '../../style/highcharts/highstock.theme.dark';
 
 @Component({
@@ -196,40 +195,12 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 			// create the chart
 			this._chart = Highstock.chart(this.chartRef.nativeElement, {
+				
 				chart: {
 					pinchType: 'x',
 					marginLeft: 4,
 					marginTop: 1,
-					marginBottom: 25,
-
-					resetZoomButton: {
-						theme: {
-							display: 'none'
-						}
-					}
-				},
-
-				title: {
-					text: ''
-				},
-
-				subtitle: {
-					text: '',
-					style: {
-						display: 'none'
-					}
-				},
-
-				credits: {
-					enabled: false
-				},
-
-				legend: {
-					enabled: false
-				},
-
-				tooltip: {
-					split: true
+					marginBottom: 25
 				},
 
 				xAxis: [{
@@ -253,11 +224,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 					ordinal: true
 				},
 				{
-					// labels: {
-					// 	step: 1, // Disable label rotating when there is not enough space
-					// 	staggerLines: false,
-					// 	y: 0
-					// },
 					lineWidth: 0,
 					gridLineWidth: 1,
 					gridLineDashStyle: 'dot',
@@ -305,34 +271,18 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 					lineWidth: 1
 				}],
 
-				plotOptions: {
-					candles: {
-						pointPadding: 0,
-						borderWidth: 0,
-						groupPadding: 0,
-						shadow: false,
-						stacking: 'percent'
-					}
-				},
-
 				series: [
 					{
 						id: 'main-series',
 						type: this.graphType,
 						name: this.symbolModel.options.displayName,
-						data: this._data.candles,
-						// dataGrouping: {
-						// 	enabled: false
-						// }
+						data: this._data.candles
 					},
 					{
 						type: 'column',
 						name: 'Volume',
 						data: this._data.volume,
-						yAxis: 1,
-						// dataGrouping: {
-						// 	units: groupingUnits
-						// }
+						yAxis: 1
 					},
 				]
 			}, false);
