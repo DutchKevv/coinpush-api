@@ -8,7 +8,7 @@
 @import '../../style/helpers/normalize';
 @import '../../style/components/dropdown';
 
-
+@import '../../../assets/sprite/spritesheet.css';
 
 :host {
     display: flex;
@@ -22,13 +22,15 @@
 }
 
 .instrument-list-outer {
-    height: 55%;
+    height: 50%;
     width: 100%;
-    display: flex;
     background: $background-light;
-    position: relative;
-    flex-shrink: 0;
 	font-size: 12px;
+    position: relative;
+    
+    @media only screen and (min-width : 992px) { 
+        display: flex;
+    }
 
     ul {
         overflow-y: auto;
@@ -38,7 +40,6 @@
 
         li {
             border-bottom: 1px solid $border-color-grey;
-            position: relative;
             cursor: pointer;
 	        padding: 6px 0;
 	        line-height: 18px;
@@ -366,7 +367,7 @@ button.btn-sm {
 }
 
 .chart-container {
-    height: 45%;
+    height: 50%;
 }
 
 .chart-no-charts {

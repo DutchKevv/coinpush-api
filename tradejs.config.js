@@ -23,6 +23,7 @@ const config = {
     server: {
         gateway: {
             port: 3100,
+            protocol: 'https'
         },
         oldApi: {
             port: 3000,
@@ -106,18 +107,50 @@ const config = {
         key: "" // Your firebase accound id (push messages)
     },
     port: 3100,
-    appVersion: "0.0.1"
+    app: {
+        version: "0.0.1",
+        ip: {
+            local: '192.168.178.12',
+            live: '149.210.227.14',
+            devLocal: '127.0.0.1',
+            devApp: '10.0.2.2'
+        }
+    }
 };
 
-// merge config with custom config
-// TODO: Deep merge, but prever no global node_modules folder..
-const customConfig = require('./tradejs.config.custom.json');
-Object.assign(config, customConfig);
+// deepmerge config with custom config
+mergeDeep(config, require('./tradejs.config.custom.json'));
 
-// build domain url strings
-for (let name in config.server) {
-    const server = config.server[name];
-    server.apiUrl = domain.host + ':' + server.port;
-};
+// build full domain urls (ex: http://123.123.123.123:9999)
+for (let name in config.server)
+    config.server[name].apiUrl = domain.host + ':' + config.server[name].port;
+
+/**
+ * Simple is object check.
+ * @param item
+ * @returns {boolean}
+ */
+function isObject(item) {
+    return (item && typeof item === 'object' && !Array.isArray(item) && item !== null);
+}
+
+/**
+ * Deep merge two objects.
+ * @param target
+ * @param source
+*/
+function mergeDeep(target, source) {
+    if (isObject(target) && isObject(source)) {
+        Object.keys(source).forEach(key => {
+            if (isObject(source[key])) {
+                if (!target[key]) Object.assign(target, { [key]: {} });
+                mergeDeep(target[key], source[key]);
+            } else {
+                Object.assign(target, { [key]: source[key] });
+            }
+        });
+    }
+    return target;
+}
 
 module.exports = config;

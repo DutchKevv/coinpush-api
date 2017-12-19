@@ -14,6 +14,7 @@
 
 @import './style/components/contextmenu';
 
+
 ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
     color: $input-color-text;
 }
@@ -211,6 +212,8 @@ header {
 .main-container {
     width: 100%;
     height: 100%;
+    display: flex;
+    flex-flow: column;
 }
 
 .ad-container {

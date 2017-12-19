@@ -1,14 +1,11 @@
-import { Component, ChangeDetectionStrategy, ViewEncapsulation, AfterViewInit, OnInit, Output, ViewChild, ElementRef, EventEmitter, HostListener } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Output, ViewChild, ElementRef, EventEmitter, HostListener, ChangeDetectorRef } from '@angular/core';
 import { AuthenticationService } from "./services/authenticate.service";
-import { SocketService } from "./services/socket.service";
 import { CacheService } from "./services/cache.service";
-import { OrderService } from "./services/order.service";
-import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { Subject } from "rxjs/Subject";
 import { Router, NavigationEnd, NavigationStart } from '@angular/router';
 import { UserService } from './services/user.service';
 import { Http } from '@angular/http';
-import { SymbolModel } from './models/symbol.model';
+import { app } from '../assets/custom/js/core/app';
 
 declare let Module: any;
 
@@ -16,16 +13,14 @@ declare let Module: any;
 	selector: 'app',
 	templateUrl: './app.component.html',
 	styleUrls: ['./app.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	// encapsulation: ViewEncapsulation.None
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class AppComponent implements OnInit {
 
 	@Output() public filterClick$: EventEmitter<boolean> = new EventEmitter();
-
 	@Output() public searchResults$: Subject<any> = new Subject();
-	@ViewChild('input') public input;
+
 	@ViewChild('dropdown') public dropdown;
 	@ViewChild('navbar') navbar: ElementRef;
 
@@ -51,13 +46,14 @@ export class AppComponent implements OnInit {
 		public router: Router,
 		public userService: UserService,
 		public authenticationService: AuthenticationService,
-		private _cacheService: CacheService) {
-			// this.authenticationService.authenticate();
-		 }
+		private _changeDetectorRef: ChangeDetectorRef,
+		private _cacheService: CacheService) {}
 
 	ngOnInit() {
+		this.authenticationService.authenticate();
+		
 		this._routerEventsSub = this.router.events.subscribe((val) => {
-			if (val instanceof NavigationEnd)
+			if (val instanceof NavigationStart)
 				this.toggleNav(undefined, false);
 		});
 	}

@@ -1,7 +1,7 @@
 <div class="chart-header">
-	<h5 class="chart-title">{{symbolModel.options.name}}</h5>
+	<h5 class="chart-title">{{symbolModel?.options.name}}</h5>
 
-	<ul class="header-buttons">
+	<ul class="header-buttons" *ngIf="symbolModel">
 		<li class="hidden-lg-down">
 			<button (click)="setZoom(-1)" [ngClass]="{'active': symbolModel.options.zoom === 1}" type="button" class="text-dark button-zoom-out btn-menu"
 			 aria-expanded="false">

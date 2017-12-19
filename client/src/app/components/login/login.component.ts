@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit {
 		e.preventDefault();
 
 		this.loading = true;
-		const result = await this.authenticationService.authenticate(this.model.email, this.model.password);
+		const result = await this.authenticationService.authenticate(this.model.email, this.model.password, null, false, true);
 	
 		if (result)
 			return this.router.navigate([this.returnUrl]);

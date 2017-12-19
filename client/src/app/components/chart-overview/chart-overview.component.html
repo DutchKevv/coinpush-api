@@ -1,37 +1,22 @@
 <div class="instrument-list-outer">
     <div class="filter-list" #filter>
         <h4>Popular</h4>
-        <a [ngClass]="{active: activeFilter === 'all'}" (click)="toggleActiveFilter('all')">All</a>
-        <a [ngClass]="{active: activeFilter === 'all popular'}" (click)="toggleActiveFilter('all popular')">All popular
-            <sup>(not implement)</sup>
-        </a>
-        <a [ngClass]="{active: activeFilter === 'all open'}" (click)="toggleActiveFilter('all open')">All open</a>
-        <a [ngClass]="{active: activeFilter === 'rise and fall'}" (click)="toggleActiveFilter('rise and fall')">Risers and fallers
-            <sup>(not implement)</sup>
-        </a>
+        <a [ngClass]="{active: activeFilter === 'all popular'}" (click)="toggleActiveFilter('all popular')">All popular</a>
+        <a [ngClass]="{active: activeFilter === 'rise and fall'}" (click)="toggleActiveFilter('rise and fall')">Risers and fallers</a>
         <a [ngClass]="{active: activeFilter === 'favorite'}" (click)="toggleActiveFilter('favorite')">My favorites</a>
+        <a [ngClass]="{active: activeFilter === 'all'}" (click)="toggleActiveFilter('all')">All</a>
         <h4>Resources</h4>
         <a [ngClass]="{active: activeFilter === 'resources'}" (click)="toggleActiveFilter('resources')">All resources</a>
-        <a [ngClass]="{active: activeFilter === 'resources popular'}" (click)="toggleActiveFilter('resources popular')">Popular resources
-            <sup>(not implement)</sup>
-        </a>
+        <a [ngClass]="{active: activeFilter === 'resources popular'}" (click)="toggleActiveFilter('resources popular')">Popular resources (ni)</a>
         <h4>Indices</h4>
-        <a [ngClass]="{active: activeFilter === 'all2'}" (click)="toggleActiveFilter('all2')">All indices
-            <sup>(not implement)</sup>
-        </a>
-        <a [ngClass]="{active: activeFilter === 'all2'}" (click)="toggleActiveFilter('all2')">Popular indices
-            <sup>(not implement)</sup>
-        </a>
+        <a [ngClass]="{active: activeFilter === 'all2'}" (click)="toggleActiveFilter('all2')">All indices (ni)</a>
+        <a [ngClass]="{active: activeFilter === 'all2'}" (click)="toggleActiveFilter('all2')">Popular indices (ni)</a>
         <h4>Crypto</h4>
         <a [ngClass]="{active: activeFilter === 'crypto all'}" (click)="toggleActiveFilter('crypto all')">All crypto</a>
-        <a [ngClass]="{active: activeFilter === 'crypto popular'}" (click)="toggleActiveFilter('crypto popular')">Popular crypto
-            <sup>(not implement)</sup>
-        </a>
+        <a [ngClass]="{active: activeFilter === 'crypto popular'}" (click)="toggleActiveFilter('crypto popular')">Popular crypto (ni)</a>
         <h4>Forex</h4>
         <a [ngClass]="{active: activeFilter === 'forex'}" (click)="toggleActiveFilter('forex')">All forex</a>
-        <a [ngClass]="{active: activeFilter === 'forex popular'}" (click)="toggleActiveFilter('forex popular')">Popular forex
-            <sup>(not implement)</sup>
-        </a>
+        <a [ngClass]="{active: activeFilter === 'forex popular'}" (click)="toggleActiveFilter('forex popular')">Popular forex (ni)</a>
     </div>
 
     <ul class="instrument-list">
@@ -49,11 +34,12 @@
         </li>
         <li *ngFor="let symbol of symbols; trackBy:trackByFunc" [ngClass]="{'active': activeSymbol === symbol}" (click)="setActiveSymbol($event, symbol)">
             <div class="col-bookmark">
-                <i (click)="onClickToggleFavorite($event, symbol);" [ngClass]="{'active-icon': userService.model.options.favorites.includes(symbol.options.name)}" class="fa fa-star"></i>
+                <i (click)="onClickToggleFavorite($event, symbol);" [ngClass]="{'active-icon': symbol.options.iFavorite}" class="fa fa-star"></i>
             </div>
             <div class="col-1">
                 <div class="col-instrument">
-                    <img src="{{symbol.options.img}}" class="instrument-image" />
+                    <span class="instrument-image symbol-img-{{symbol.options.name}}"></span>
+                    <!-- <img src="./assets/sprite/images/{{symbol.options.name}}.png" class="instrument-image" /> -->
                     <span class="instrument-title">{{symbol.options.displayName}}</span>
                 </div>
                 <div class="col-price">
@@ -89,7 +75,7 @@
                 </div>
             </div>
             <div class="col-alert">
-                <i (click)="onClickAlarm($event)" class="fa fa-bell"></i>
+                <i (click)="toggleAlarmMenuVisibility()" class="fa fa-bell"></i>
             </div>
         </li>
     </ul>
@@ -98,13 +84,13 @@
         <header>
             <i class="fa fa-bell"></i>
             <h5>{{activeSymbol?.options.displayName}}</h5>
-            <i (click)="activeMenu = null" class="fa fa-close"></i>
+            <i (click)="toggleAlarmMenuVisibility()" class="fa fa-close"></i>
         </header>
         <main>
             <ul class="side-menu-top-nav">
-                <li [ngClass]="{active: activeAlarmMenu === 'new'}" (click)="activeAlarmMenu = 'new'">New</li>
-                <li [ngClass]="{active: activeAlarmMenu === 'active'}" (click)="activeAlarmMenu = 'active'">Active</li>
-                <li [ngClass]="{active: activeAlarmMenu === 'history'}" (click)="activeAlarmMenu = 'history'">History</li>
+                <li [ngClass]="{active: activeAlarmMenu === 'new'}" (click)="toggleAlarmMenuTab('new')">New</li>
+                <li [ngClass]="{active: activeAlarmMenu === 'active'}" (click)="toggleAlarmMenuTab('active')">Active</li>
+                <li [ngClass]="{active: activeAlarmMenu === 'history'}" (click)="toggleAlarmMenuTab('history')">History</li>
             </ul>
             <ng-container *ngIf="activeAlarmMenu === 'new'">
                 <form class="form" (ngSubmit)="onCreateFormSubmit(alarmForm)" #alarmForm="ngForm">
@@ -133,7 +119,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <span class="muted">Diff: {{(((sideMenuNumberInput.value / activeSymbol.options.bid) * 100) - 100).toFixed(2)}}%</span>
+                        <span class="muted">Diff: {{(((formModel.amount / activeSymbol.options.bid) * 100) - 100).toFixed(2)}}%</span>
                         <p>Current price: {{activeSymbol.options.bid}}</p>
                     </div>
                     <div class="form-check form-check-inline">

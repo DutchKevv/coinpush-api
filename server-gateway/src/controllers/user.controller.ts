@@ -18,8 +18,6 @@ export const userController = {
 
 		const results = await Promise.all(pList);
 
-		console.log('asdff', results);
-
 		return Object.assign(results[0] || {}, results[1] || {});
 	},
 
@@ -58,7 +56,7 @@ export const userController = {
 				},
 				json: true
 			});
-			console.log(1);
+
 			// notify
 			notify = await emailController.addUser({ id: user._id }, {
 				_id: user._id,
@@ -66,7 +64,7 @@ export const userController = {
 				email: user.email,
 				language: user.language
 			});
-			console.log(12);
+
 			// comment
 			await request({
 				uri: config.server.comment.apiUrl + '/user',
@@ -79,7 +77,7 @@ export const userController = {
 				},
 				json: true
 			});
-			console.log(120000);
+
 			// send newMember email
 			await request({
 				uri: config.server.notify.apiUrl + '/mail/new-member',
@@ -159,8 +157,6 @@ export const userController = {
 			},
 			json: true
 		});
-
-		console.log('UDPATE ERSULT', result);
 	},
 
 	updateBalance(reqUser: IReqUser, params) {

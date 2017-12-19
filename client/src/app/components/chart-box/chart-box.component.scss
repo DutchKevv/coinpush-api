@@ -11,7 +11,8 @@
     height: 100%;
     width: 100%;
     background: $background-dark;
-    display: block;
+    display: flex;
+    flex-flow: column;
 }
 
 .fa-close {
@@ -134,7 +135,8 @@
 
 .chart-content {
     position: relative;
-    height: calc(100% - 58px); // TODO : SHOULD NOT BE NEEDED
+    height: 100%;
+    // height: calc(100% - 58px); // TODO : SHOULD NOT BE NEEDED
 }
 
 .spinner-container {

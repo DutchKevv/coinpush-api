@@ -1,6 +1,5 @@
 import { Injectable, Injector } from '@angular/core';
 import { ConnectionBackend, XHRBackend, RequestOptions, Request, RequestOptionsArgs, Response, Http, Headers } from '@angular/http';
-import { appConfig } from '../app.config';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
@@ -10,6 +9,8 @@ import { Router } from '@angular/router';
 import { AuthenticationService } from './authenticate.service';
 import { ModalService } from './modal.service';
 import { LoginComponent } from '../components/login/login.component';
+import { app } from '../../assets/custom/js/core/app';
+
 
 @Injectable()
 export class CustomHttp extends Http {
@@ -19,29 +20,32 @@ export class CustomHttp extends Http {
 		backend: ConnectionBackend,
 		defaultOptions: RequestOptions,
 		router: Router,
-		// authenticationService: AuthenticationService
+		injector: Injector
 	) {
 		super(backend, defaultOptions);
+		setTimeout(() => {
+			this._authenticationService = injector.get(AuthenticationService);
+		}, 0);
 	}
 
 	get(url: string, options?: RequestOptionsArgs): Observable<Response> {
-		return super.get(this._normalizeUrl(url), this._addHeaders(options)).catch(this.handleError);
+		return super.get(this._normalizeUrl(url), this._addHeaders(options)).catch(error => this.handleError(error));
 	}
 
 	post(url: string, body: string, options?: RequestOptionsArgs): Observable<Response> {
-		return super.post(this._normalizeUrl(url), body, this._addHeaders(options)).catch(this.handleError);
+		return super.post(this._normalizeUrl(url), body, this._addHeaders(options)).catch(error => this.handleError(error));
 	}
 
 	put(url: string, body: string, options?: RequestOptionsArgs): Observable<Response> {
-		return super.put(this._normalizeUrl(url), body, this._addHeaders(options)).catch(this.handleError);
+		return super.put(this._normalizeUrl(url), body, this._addHeaders(options)).catch(error => this.handleError(error));
 	}
 
 	delete(url: string, options?: RequestOptionsArgs): Observable<Response> {
-		return super.delete(this._normalizeUrl(url), this._addHeaders(options)).catch(this.handleError);
+		return super.delete(this._normalizeUrl(url), this._addHeaders(options)).catch(error => this.handleError(error));
 	}
 
 	private _normalizeUrl(url: string) {
-		url = appConfig.apiUrl + url;
+		url = app.address.apiUrl + url;
 		url = url.replace(/([^:]\/)\/+/g, "$1");
 		return url;
 	}
@@ -59,9 +63,8 @@ export class CustomHttp extends Http {
 
 	private _addHeaderJwt(options: RequestOptionsArgs): RequestOptionsArgs {
 		// add authorization header with jwt token
-		let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-		if (currentUser && currentUser.token)
-			options.headers.append('Authorization', 'Bearer ' + currentUser.token);
+		if (app.user && app.user.token)
+			options.headers.append('Authorization', 'Bearer ' + app.user.token);
 
 		return options;
 	}
@@ -76,18 +79,19 @@ export class CustomHttp extends Http {
 	private handleError(error: any) {
 		switch (error.status) {
 			case 401:
-				// this._authenticationService.showLoginRegisterPopup();
+				this._authenticationService.showLoginRegisterPopup();
+
 				break;
 			case 424:
 				if (confirm('New version available. Download now?')) {
-					
+
 				} else {
-					
+
 				}
 				break;
 
 		}
-		console.log(error);
+
 		return Observable.throw(error._body);
 	}
 }

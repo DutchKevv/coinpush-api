@@ -10,7 +10,7 @@ const config = require('../../../tradejs.config');
 const router = Router();
 
 const IMAGE_DIR = join(__dirname, '..', '..', '..', 'images', 'images', 'profile');
-const domainPrefix = 'http://' + (process.env.NODE_ENV === 'prod' ? config.ip.prod : config.ip.local) + ':' + config.port;
+const domainPrefix = 'http://' + (process.env.NODE_ENV === 'production' ? config.ip.prod : config.ip.local) + ':' + config.port;
 
 const upload = multer({ storage: multer.memoryStorage({}) });
 
@@ -35,26 +35,17 @@ router.post('/profile', upload.single('image'), async (req: any, res, next) => {
 				message: 'max file size is 10MB' // TODO hardcoded text
 			});
 
-		// Resize img
-		sharp(req.file.buffer)
-			.resize(1000)
-			.max()
-			.toBuffer(async (err, buffer) => {
-				if (err) return next(err);
+		const fileName = req.user.id + '_' + Date.now() + extname(req.file.originalname);
+		const fullPath = join(IMAGE_DIR, fileName);
 
-				const fileName = req.user.id + '_' + Date.now() + extname(req.file.originalname);
-				const fullPath = join(IMAGE_DIR, fileName);
+		// resize and save
+		await sharp(req.file.buffer).resize(1000).max().toFile(fullPath);
 
-				fs.writeFile(fullPath, buffer, async (err) => {
-					if (err) return next(err)
+		// update user
+		await userController.update(req.user, req.user.id, { img: fileName });
 
-					const result = await userController.update(req.user, req.user.id, { img: fileName });
-
-					res.send({ url: normalizeProfileImg(fileName) });
-
-				});
-			});
-
+		// return full img url to client
+		res.send({ url: normalizeProfileImg(fileName) });
 	} catch (error) {
 		next(error);
 	}

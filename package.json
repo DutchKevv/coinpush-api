@@ -33,6 +33,8 @@
     "clean-db": "",
     "clean-all": "npm run clean-client && npm run clean-server",
     "start-redis": "redis-server --maxmemory 10mb --maxmemory-policy allkeys-lru",
+    "install-all": "npm run install-server && npm run install-client",
+    "build-all": "npm run build-server && npm run build-client",
     "install-client": "cd ./client && npm i",
     "install-server": "npm run install-gateway && npm run install-cache && npm run install-user && npm run install-order && npm run install-old-server && npm run install-shared && npm run install-broker && npm run install-comment && npm run install-notify && npm run install-event",
     "install-broker": "cd ./server-broker && npm i",
@@ -65,5 +67,6 @@
     "build-ios-release": "cd client && npm run build-ios-release",
     "run-client": "cd ./client && npm start",
     "klabam": "npm i && npm run build && npm run prod"
-  }
+  },
+  "dependencies": {}
 }

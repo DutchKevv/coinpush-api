@@ -7,7 +7,7 @@ export class SymbolModel {
 	public price$: Observable<any> = new Observable();
 
 	constructor(public options) {
-		
+
 	}
 
 	public tick(ticks) {
@@ -33,23 +33,8 @@ export class SymbolModel {
 
 		const startHPrice = this.options.marks.H.price;
 		const startDPrice = this.options.marks.D.price;
-		const nowPrice = this.options.bid;
 
-		const percH = Number(((nowPrice - startHPrice) / startHPrice * 100).toFixed(2));
-		const percD = Number(((nowPrice - startDPrice) / startDPrice * 100).toFixed(2));
-
-		// Only update if changed
-		if (this.options.changedHAmount !== percH)
-			this.options.changedHAmount = percH;
-
-		if (this.options.changedDAmount !== percD)
-			this.options.changedDAmount = percD;
-	}
-
-	/**
-	 * TEMP!! to fix AOT
-	 */
-	setZoom(step: Number) {
-
+		this.options.changedHAmount = Number(((this.options.bid - startHPrice) / startHPrice * 100).toFixed(2));
+		this.options.changedDAmount = Number(((this.options.bid - startDPrice) / startDPrice * 100).toFixed(2));
 	}
 }
