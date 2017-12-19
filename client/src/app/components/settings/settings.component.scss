@@ -12,7 +12,6 @@
 	font-style: italic;
 }
 
-
 :host {
 	background-color: $background-light2;
 	height: 100%;
@@ -21,10 +20,6 @@
 	display: flex;
 	flex-flow: column;
 	overflow: auto;
-}
-
-form.container {
-	margin: 0;
 }
 
 .headline-header {
@@ -74,7 +69,6 @@ form.container {
 		width: 100%;
 		font-size: 14px;
 		border-radius: 5px;
-		background: #888;
 		border: 1px solid $border-color-grey;
 
 		&:focus {
@@ -138,11 +132,11 @@ form.container {
 		width: 300px;
 		background-size: cover !important;
 		cursor: pointer;
-		border: 2px solid transparent;
+		border: 1px solid white;
 		background-color: transparent;
 
 		&:hover {
-			border: 2px solid blue;
+			border: 1px solid black;
 		}
 	}
 
