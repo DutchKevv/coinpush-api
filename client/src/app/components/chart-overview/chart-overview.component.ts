@@ -25,8 +25,7 @@ import { app } from '../../../assets/custom/js/core/app';
 	templateUrl: './chart-overview.component.html',
 	styleUrls: ['./chart-overview.component.scss'],
 	// encapsulation: ViewEncapsulation.Native,
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	preserveWhitespaces: false
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class ChartOverviewComponent implements OnInit, OnDestroy {
@@ -68,7 +67,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this._changeDetectorRef.detach();
-		
+
 		this._filterSub = this._applicationRef.components[0].instance.filterClick$.subscribe(() => this.toggleFilterNav());
 		this._priceChangeSub = this.cacheService.changed$.subscribe(changedSymbols => this._onPriceChange(changedSymbols));
 
@@ -146,6 +145,13 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 				break;
 			case 'crypto all':
 				this.symbols = this.cacheService.symbols.filter(s => s.options.type === SYMBOL_CAT_TYPE_CRYPTO);
+				break;
+			case 'crypto popular':
+				this.symbols = this.cacheService.symbols
+					.filter(s => s.options.type === SYMBOL_CAT_TYPE_CRYPTO)
+					.sort((a, b) => a.options.volume - b.options.volume)
+					.slice(-40)
+					.reverse();
 				break;
 			case 'resources':
 				this.symbols = this.cacheService.symbols.filter(s => s.options.type === SYMBOL_CAT_TYPE_RESOURCE);

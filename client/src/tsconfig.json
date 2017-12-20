@@ -2,17 +2,20 @@
   "compilerOptions": {
     "allowJs": false,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
+    "emitDecoratorMetadata": false,
     "lib": [
       "es2017",
       "dom"
     ],
-    "sourceMap": true,
-    "target": "es5",
+    "sourceMap": false,
+    "target": "es2015",
     "module": "commonjs",
     "moduleResolution": "node"
   },
   "exclude": [
     "node_modules"
-  ]
+  ],
+  "angularCompilerOptions": {
+    "preserveWhitespaces": false
+  }
 }

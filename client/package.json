@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "start": "npm run build-spritesheet && ng build --watch --aot --no-sourcemaps",
-    "build": "npm run load-symbol-images && npm run build-spritesheet && ng build --prod --env=prod",
+    "build": "npm run build-spritesheet && ng build --prod --env=prod",
     "build-verbose": "ng build --prod --env=prod --verbose > build.txt",
     "build-mobile": "cordova build --no-inc",
     "build-android": "cordova build android --no-inc",

@@ -1,9 +1,9 @@
 import './vendor';
 
-import {AppModule} from './app/app.module';
-import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
-import {environment} from './environments/environment';
-import {enableProdMode} from '@angular/core';
+import { AppModule } from './app/app.module';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { environment } from './environments/environment';
+import { enableProdMode } from '@angular/core';
 
 if (environment.production) {
 	enableProdMode();
@@ -13,6 +13,8 @@ if (environment.production) {
 	require('zone.js/dist/long-stack-trace-zone');
 }
 
-platformBrowserDynamic().bootstrapModule(AppModule).catch(console.error);
+platformBrowserDynamic().bootstrapModule(AppModule, {
+	preserveWhitespaces: false
+}).catch(console.error);
 
 export default {};
