@@ -3,16 +3,16 @@
     <!-- Profile -->
     <h2 class="headline-header">Profile</h2>
 
-    <div class="row">
+    <div class="form-box">
 
-        <div class="form-group col-sm-12 col-lg-4">
+        <div class="form-group">
             <label for="country" class="form-control-label">Country</label>
             <select id="country" formControlName="country" class="form-control">
                 <option *ngFor="let country of countries" [attr.value]="country.code" [innerHTML]="country.name"></option>
             </select>
         </div>
 
-        <div class="form-group col-sm-12 col-lg-4">
+        <div class="form-group">
             <label for="gender" class="form-control-label">Gender</label>
             <select id="gender" formControlName="gender" class="form-control">
                 <option value="0">Unknown</option>
@@ -21,13 +21,15 @@
                 <option value="3">Highly confused</option>
             </select>
         </div>
+    </div>
 
-        <div class="form-group col-sm-12 col-lg-4 profile-image-box">
+    <div class="form-box">
+        <div class="form-group profile-image-box">
             <div class="profileImg">
 
                 <input accept="image/*" class="uploadInput" id="uploadProfileImg" type="file" #uploadBtn (change)="onChangeFileInput($event)">
                 <label class="uploadInputBtn" for="uploadProfileImg" [ngStyle]="{'background-image': 'url(' + model.options.img + ')'}"
-                    #uploadImageHolder></label>
+                       #uploadImageHolder></label>
                 <div class="saveOptions hidden" #saveOptions>
                     <span>save?</span>
                     <a (click)="saveProfileImg()">Yes</a>
@@ -40,106 +42,6 @@
     <div class="form-box">
         <label for="description">About you</label>
         <textarea id="description" formControlName="description" placeholder="Come on.. Give a nice description"></textarea>
-    </div>
-
-    <!-- Privacy -->
-    <h2 class="headline-header">Email</h2>
-    <div class="form-box form-box-radio">
-        <label>Margin low</label>
-        <div class="form-radio-options">
-            <input formControlName="settings.lowMargin" type="radio" name="settings.lowMargin" [value]="1">
-            <span>Yes</span>
-            <br>
-            <input formControlName="settings.lowMargin" type="radio" name="settings.lowMargin" [value]="0">
-            <span>No</span>
-            <br>
-        </div>
-    </div>
-    <div class="form-box form-box-radio">
-        <label>Order closed by broker through profit / loss</label>
-        <div class="form-radio-options">
-            <input formControlName="settings.orderClosedByMarket" type="radio" name="settings.orderClosedByMarket" [value]="1">
-            <span>Yes</span>
-            <br>
-            <input formControlName="settings.orderClosedByMarket" type="radio" name="settings.orderClosedByMarket" [value]="0">
-            <span>No</span>
-            <br>
-        </div>
-    </div>
-    <div class="form-box form-box-radio">
-        <label>User follows me</label>
-        <div class="form-radio-options">
-            <input formControlName="settings.userFollowsMe" type="radio" name="settings.userFollowsMe" [value]="1">
-            <span>Yes</span>
-            <br>
-            <input formControlName="settings.userFollowsMe" type="radio" name="settings.userFollowsMe" [value]="0">
-            <span>No</span>
-            <br>
-        </div>
-    </div>
-    <div class="form-box form-box-radio">
-        <label>User copies me</label>
-        <div class="form-radio-options">
-            <input formControlName="settings.userCopiesMe" type="radio" name="settings.userCopiesMe" [value]="1">
-            <span>Yes</span>
-            <br>
-            <input formControlName="settings.userCopiesMe" type="radio" name="settings.userCopiesMe" [value]="0">
-            <span>No</span>
-            <br>
-        </div>
-    </div>
-    <div class="form-box form-box-radio">
-        <label>Comment like</label>
-        <div class="form-radio-options">
-            <input formControlName="settings.like" type="radio" name="settings.like" [value]="1">
-            <span>Yes</span>
-            <br>
-            <input formControlName="settings.like" type="radio" name="settings.like" [value]="0">
-            <span>No</span>
-            <br>
-        </div>
-    </div>
-    <div class="form-box form-box-radio">
-        <label>Comment reaction</label>
-        <div class="form-radio-options">
-            <input formControlName="settings.comment" type="radio" name="settings.comment" [value]="1">
-            <span>Yes</span>
-            <br>
-            <input formControlName="settings.comment" type="radio" name="settings.comment" [value]="0">
-            <span>No</span>
-            <br>
-        </div>
-    </div>
-    <div class="form-box form-box-radio">
-        <label>Receive summary</label>
-        <div class="form-radio-options">
-            <input formControlName="settings.summary" type="radio" name="settings.summary" [value]="0">
-            <span>Daily</span>
-            <br>
-            <input formControlName="settings.summary" type="radio" name="settings.summary" [value]="1">
-            <span>Weekly</span>
-            <br>
-            <input formControlName="settings.summary" type="radio" name="settings.summary" [value]="2">
-            <span>Monthly</span>
-            <br>
-            <input formControlName="settings.summary" type="radio" name="settings.summary" [value]="3">
-            <span>Never</span>
-            <br>
-        </div>
-    </div>
-
-    <!-- Privacy -->
-    <h2 class="headline-header">Privacy</h2>
-    <div class="form-box form-box-radio">
-        <label>People can find me through search</label>
-        <div class="form-radio-options">
-            <input type="radio" name="findable" [value]="1">
-            <span>Yes</span>
-            <br>
-            <input type="radio" name="findable" [value]="0">
-            <span>No</span>
-            <br>
-        </div>
     </div>
 
     <!-- Account -->
