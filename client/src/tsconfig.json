@@ -9,13 +9,17 @@
     ],
     "sourceMap": false,
     "target": "es2015",
-    "module": "commonjs",
+    "module": "es2015",
     "moduleResolution": "node"
   },
   "exclude": [
     "node_modules"
   ],
   "angularCompilerOptions": {
-    "preserveWhitespaces": false
+    "genDir": "./aot",
+    "comments": false,
+    "entryModule": "./app/app.module#AppModule",
+    "preserveWhitespaces": false,
+    "skipMetadataEmit" : true
   }
 }

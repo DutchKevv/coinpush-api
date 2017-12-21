@@ -12,7 +12,6 @@
       ],
       "index": "index.html",
       "main": "main.ts",
-      "polyfills": "polyfills.ts",
       "tsconfig": "tsconfig.json",
       "prefix": "app",
       "scripts": [

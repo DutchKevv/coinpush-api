@@ -6,13 +6,7 @@ import { getAddress } from './app.address';
 
 export class App extends MicroEvent {
 
-    public platform = {
-        version: '',
-        isApp: !!window['_cordovaNative'],
-        isEmulator: navigator.platform === 'Linux i686',
-        isLocal: document.URL.indexOf('file://') > -1
-    };
-
+    public platform = window['platform'];
     public user: any = {
         name: 'Anonymous'
     }
@@ -25,24 +19,33 @@ export class App extends MicroEvent {
 
     constructor() {
         super();
+        this.init();
     }
 
-    public async init(): Promise<void> {
+    public init(): void {
         this.address = getAddress();
 
-        if (app.platform.isApp)
-            await loadCordova();
+        Promise.all(
+            [
+                this._loadSymbols(),
+                Promise.resolve().then(async () => {
 
-        await this.storage.init();
+                    if (app.platform.isApp)
+                        await loadCordova();
 
-        await Promise.all([
-            this._loadUser(),
-            this._loadConfig(),
-            this._loadSymbols()
-        ]);
+                    await this.storage.init();
 
-        this.isReady = true;
-        this.emit('ready', true)
+                    await Promise.all([
+                        this._loadUser(),
+                        this._loadConfig()
+                    ]);
+                })
+            ]
+        )
+            .then(() => this.emit('ready', this.isReady = true))
+            .catch(error => {
+                console.error(error);
+            })
     }
 
     public async storeUser() {
@@ -54,10 +57,9 @@ export class App extends MicroEvent {
     }
 
     private async _loadUser(): Promise<void> {
-        const user = await this.storage.get('current-user');
-        console.log('USER USER USER', user, typeof user);
+        const user: any = await this.storage.get('current-user');
         if (user && user.token)
-            this.user = user;
+            this.user = user
     }
 
     private async _loadConfig() {
@@ -71,5 +73,3 @@ export class App extends MicroEvent {
 }
 
 export const app = window['app'] = new App();
-
-app.init().catch(console.error);

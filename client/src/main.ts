@@ -1,9 +1,11 @@
+import './polyfills';
 import './vendor';
 
-import { AppModule } from './app/app.module';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { platformBrowser } from '@angular/platform-browser';
 import { environment } from './environments/environment';
 import { enableProdMode } from '@angular/core';
+import { AppModuleNgFactory } from './app/app.module.ngfactory';
+console.log(AppModuleNgFactory)
 
 if (environment.production) {
 	enableProdMode();
@@ -13,8 +15,7 @@ if (environment.production) {
 	require('zone.js/dist/long-stack-trace-zone');
 }
 
-platformBrowserDynamic().bootstrapModule(AppModule, {
-	preserveWhitespaces: false
-}).catch(console.error);
+platformBrowser().bootstrapModuleFactory(AppModuleNgFactory).catch(console.error);
+// platformBrowser().bootstrapModule(AppModule).catch(console.error);
 
-export default {};
+export {};

@@ -13,7 +13,6 @@
     <!-- <base href="./"> -->
 
     <style>
-
         html,
         body {
             height: 100%;
@@ -129,6 +128,36 @@
             <div class="dot2"></div>
         </div>
     </app>
+
+    <script>
+        window.platform = {
+            isReady: false,
+            isReady$: Promise.resolve(),
+            version: '',
+            isApp: !!window['_cordovaNative'],
+            isEmulator: navigator.platform === 'Linux i686',
+            isLocal: document.URL.indexOf('file://') > -1
+        };
+
+        // load cordova
+        if (window.platform.isApp) {
+            document.body.querySelector('app').classList.add('app');
+
+            window.platform.isReady$ = new Promise((resolve, reject) => {
+                let fc = function () {
+                    document.removeEventListener('deviceready', fc, false);
+                    window.platform.isReady = true;
+                    resolve();   
+                };
+                document.addEventListener("deviceready", fc, false);
+            });
+            let script = document.createElement('script');
+            script.src = 'cordova.js';
+            document.head.appendChild(script);
+        } else {
+            window.platform.isReady = true;
+        }
+    </script>
 </body>
 
 </html>

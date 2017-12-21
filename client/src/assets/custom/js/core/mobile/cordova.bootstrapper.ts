@@ -1,17 +1,13 @@
 import { app } from '../app';
 
-export function loadCordova(): Promise<void> {
-    return new Promise((resolve, reject) => {
-        app.helpers.loadScript('cordova.js', true);
-        window.document.body.querySelector('app').classList.add('app')
-        document.addEventListener("deviceready", () => {
-            onDeviceReady();
-            resolve();
-        }, false);
-    });
+export async function loadCordova(): Promise<void> {
+    if (!app.platform.isReady)
+        await app.platform.isReady$;
+
+    setAppFunctions();
 }
 
-function onDeviceReady() {
+function setAppFunctions() {
 
     if (window['AdMob']) {
 

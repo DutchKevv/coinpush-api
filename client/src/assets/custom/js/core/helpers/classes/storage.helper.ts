@@ -1,4 +1,4 @@
-import { app } from '../../app';
+const platform = window['platform'];
 
 export class StorageHelper {
 
@@ -9,16 +9,16 @@ export class StorageHelper {
     constructor() { }
 
     async init() {
-        if (app.platform.isApp)
+        if (platform.isApp)
             await this._initAppStorage();
     }
 
     public get(key: string) {
-        return app.platform.isApp ? this._getApp(key) : this._getWeb(key);
+        return platform.isApp ? this._getApp(key) : this._getWeb(key);
     }
 
     public set(key: string, value: any) {
-        return app.platform.isApp ? this._setApp(key, value) : this._setWeb(key, value);
+        return platform.isApp ? this._setApp(key, value) : this._setWeb(key, value);
     }
 
     public update(key: string, value: any, deep: boolean = false) {
@@ -26,7 +26,7 @@ export class StorageHelper {
     }
 
     public remove(key: string) {
-        return app.platform.isApp ? this._removeApp(key) : this._removeWeb(key);
+        return platform.isApp ? this._removeApp(key) : this._removeWeb(key);
     }
 
     private _getWeb(key: string) {

@@ -16,7 +16,6 @@ import { ModalComponent } from './components/modal/modal.component';
 import { DialogAnchorDirective } from './directives/dialoganchor.directive';
 import { ModalAnchorDirective } from './directives/modalanchor.directive';
 import { ModalService } from './services/modal.service';
-import { ResizableDirective } from './directives/resizable.directive';
 import { ChartBoxComponent } from './components/chart-box/chart-box.component';
 import { CacheService } from './services/cache.service';
 import { AuthenticationService } from './services/authenticate.service';
@@ -55,7 +54,6 @@ import { EventService } from './services/event.service';
 		RegisterComponent,
 		ModalComponent,
 		ModalAnchorDirective,
-		ResizableDirective,
 		AlertComponent,
 		UserOverviewComponent,
 		ProfileComponent,

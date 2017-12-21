@@ -1,5 +1,3 @@
-import { app } from './app';
-
 const localIp = '192.168.178.12';
 const liveIp = '149.210.227.14';
 const devLocalIp = '127.0.0.1';
@@ -8,6 +6,8 @@ const emulatorIp = '10.0.2.2';
 let host: string = 'http:';
 let ip: string = liveIp;
 let port: number | string = 3100;
+
+declare let window: any;
 
 // dev environment
 // if (!environment.production) {
@@ -29,9 +29,9 @@ let port: number | string = 3100;
 
 export const getAddress = function () {
 	let apiUrl = '';
-
-	if (app.platform.isApp) {
-		if (app.platform.isEmulator) {
+	
+	if (window.platform.isApp) {
+		if (window.platform.isEmulator) {
 			ip = emulatorIp;
 		} else {
 	
