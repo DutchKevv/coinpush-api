@@ -1,0 +1,101 @@
+@import '~bootstrap/scss/_functions';
+@import '~bootstrap/scss/_variables';
+@import '~bootstrap/scss/_mixins';
+@import '~bootstrap/scss/_buttons';
+@import '~bootstrap/scss/_forms';
+@import '~bootstrap/scss/utilities/_visibility';
+
+@import '../../style/variables/variables';
+@import '../../style/helpers/normalize';
+
+:host {
+    display: none;
+
+    &.open {
+        display: block;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background: black;
+    }
+
+    @media only screen and (min-width : 992px) { 
+        &.open {
+            position: static;
+            min-width: 400px;
+            width: 400px;
+        }
+    }
+}
+
+header {
+    padding: 4px 10px;
+    display: flex;
+    
+    i {
+        font-size: 20px;
+    }
+
+    .fa-close {
+        margin-left: auto;
+        cursor: pointer;
+    }
+
+    .fa-bell {
+        font-size: 16px;
+        margin-top: 2px;
+        margin-right: 10px;
+    }
+
+    h5 {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+main > form {
+    padding: 6px;
+}
+
+.side-menu-top-nav {
+    display: flex;
+
+    li {
+        padding: 4px 4px;
+        width: 100%;
+        cursor: pointer;
+    }
+}
+
+.btn-number {
+    border-radius: 0;
+    border: none;
+}
+
+.form-control {
+    padding: 4px 8px;
+    border-radius: 0;
+    border: none;
+}
+
+.alarm-row {
+    padding: 4px;
+    border-bottom: 1px solid white;
+
+    > * {
+        padding-right: 10px;
+    }
+
+    .fa {
+        margin: 0 10px;
+        cursor: pointer;
+        padding-right: 0;
+
+        &:first-child {
+            margin-left: 0;
+        }
+    }
+}
