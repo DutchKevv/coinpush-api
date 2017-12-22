@@ -10,14 +10,7 @@ import { CacheService } from '../../services/cache.service';
 import { ConstantsService } from '../../services/constants.service';
 import { SymbolModel } from "../../models/symbol.model";
 
-const Highstock = require('highcharts/highstock');
-require('highcharts/modules/exporting');
-require('../../../assets/vendor/js/highcharts/indicators/indicators.js');
-require('../../../assets/vendor/js/highcharts/indicators/macd.js');
-require('../../../assets/vendor/js/highcharts/indicators/ema');
-// require('../../../assets/vendor/js/highcharts/indicators/sma');
-
-import '../../style/highcharts/highstock.theme.dark';
+declare let Highcharts: any;
 
 @Component({
 	selector: 'chart-box',
@@ -185,8 +178,8 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 			var self = this;
 
 			// create the chart
-			this._chart = Highstock.chart(this.chartRef.nativeElement, {
-				
+			this._chart = Highcharts.stockChart(this.chartRef.nativeElement, {
+
 				chart: {
 					pinchType: 'x',
 					marginLeft: 4,

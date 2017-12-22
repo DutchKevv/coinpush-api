@@ -1,6 +1,3 @@
-// import * as Highcharts from 'highcharts';
-import * as Highstock from 'highcharts/highstock';
-
 const HighstockTheme = {
     title: {
         text: ''
@@ -11,6 +8,18 @@ const HighstockTheme = {
         style: {
             display: 'none'
         }
+    },
+
+    rangeSelector:{
+        enabled:false
+    },
+
+    navigator: {
+        enabled: false
+    },
+
+    exporting: { 
+        enabled: false 
     },
 
     credits: {
@@ -169,4 +178,5 @@ const HighstockTheme = {
     maskColor: 'rgba(255,255,255,0.3)'
 };
 
-Highstock.setOptions(HighstockTheme);
+// console.log(window.Highcharts);
+Highcharts.setOptions(HighstockTheme);

@@ -1,8 +1,6 @@
 import { RouterModule, Routes } from '@angular/router';
 import { ModuleWithProviders } from '@angular/core';
-import { LoginComponent } from './components/login/login.component';
 import { AuthGuard } from './guards/auth.guard';
-import { RegisterComponent } from './components/register/register.component';
 import { UserOverviewComponent } from './components/user-overview/user.overview.component';
 import { ChartOverviewComponent } from './components/chart-overview/chart-overview.component';
 import { ProfileComponent } from './components/profile/profile.component';
@@ -14,8 +12,6 @@ import { EventOverviewComponent } from './components/event-overview/event-overvi
 
 const routes: Routes = [
 	{ path: '', redirectTo: 'symbols', pathMatch: 'full', canActivate: [AuthGuard] },
-	// { path: 'login', component: LoginComponent },
-	// { path: 'register', component: RegisterComponent },
 	{ path: 'password-reset', component: PasswordResetComponent },
 	{ path: 'request-password-reset', component: RequestPasswordResetComponent },
 

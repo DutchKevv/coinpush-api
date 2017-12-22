@@ -1,8 +1,9 @@
 @import '../../style/variables/variables';
 @import '../../style/helpers/normalize';
+@import '~bootstrap/scss/_functions';
 @import '~bootstrap/scss/_variables';
 @import '~bootstrap/scss/_mixins';
-@import '~bootstrap/scss/utilities/_visibility';
+@import '~bootstrap/scss/utilities/_display';
 
 .g-username,
 .g-link {
@@ -260,41 +261,5 @@ app-comment-box {
 	@media screen and (min-width: 768px) {
 		border-radius: 5px;
 		max-width: 500px;
-	}
-}
-
-@-webkit-keyframes fadeIn {
-	0% {
-		opacity: 0;
-	}
-	100% {
-		opacity: 1;
-	}
-}
-
-@-moz-keyframes fadeIn {
-	0% {
-		opacity: 0;
-	}
-	100% {
-		opacity: 1;
-	}
-}
-
-@-o-keyframes fadeIn {
-	0% {
-		opacity: 0;
-	}
-	100% {
-		opacity: 1;
-	}
-}
-
-@keyframes fadeIn {
-	0% {
-		opacity: 0;
-	}
-	100% {
-		opacity: 1;
 	}
 }

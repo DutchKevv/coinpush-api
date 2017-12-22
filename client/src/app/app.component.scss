@@ -1,23 +1,10 @@
-
-
-@import 'style/helpers/normalize';
-
+@import '~bootstrap/scss/_functions';
 @import '~bootstrap/scss/_variables';
 @import '~bootstrap/scss/_mixins';
-@import '~bootstrap/scss/_forms';
-@import '~bootstrap/scss/_modal';
-@import '~bootstrap/scss/_nav';
-@import '~bootstrap/scss/_buttons';
-@import '~bootstrap/scss/utilities/_clearfix';
-@import '~bootstrap/scss/utilities/visibility';
+@import '~bootstrap/scss/utilities/_display';
+
 @import 'style/variables/variables';
-
-@import './style/components/contextmenu';
-
-
-::-webkit-input-placeholder { /* WebKit, Blink, Edge */
-    color: $input-color-text;
-}
+@import 'style/helpers/normalize';
 
 :host {
     display: flex;
@@ -155,12 +142,15 @@ header {
         transform: translateX(-250px);
         bottom: 0;
         z-index: 1001;
+        animation: fadeOut .3s;
 
         &.show {
             transform: translateX(0);
 
             + .nav-overlay {
                 display: block;
+                
+                animation: fadeIn .3s;
             }
         }
     }

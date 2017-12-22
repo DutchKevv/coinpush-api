@@ -24,11 +24,11 @@
             <div class="col-bookmark"></div>
             <div class="col-1">
                 <div class="col-instrument">Instrument</div>
-                <div class="col-price hidden-sm-down">Price</div>
+                <div class="col-price d-none d-md-block">Price</div>
             </div>
             <div class="col-2">
                 <div class="col-changes">1h / 24h</div>
-                <div class="col-hl hidden-sm-down">H/L</div>
+                <div class="col-hl d-none d-md-block">H/L</div>
             </div>
             <div class="col-alert"></div>
         </li>
@@ -39,7 +39,6 @@
             <div class="col-1">
                 <div class="col-instrument">
                     <span class="instrument-image symbol-img-{{symbol.options.name}}"></span>
-                    <!-- <img src="./assets/sprite/images/{{symbol.options.name}}.png" class="instrument-image" /> -->
                     <span class="instrument-title">{{symbol.options.displayName}}</span>
                 </div>
                 <div class="col-price">

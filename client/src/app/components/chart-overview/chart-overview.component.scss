@@ -1,8 +1,9 @@
+@import '~bootstrap/scss/_functions';
 @import '~bootstrap/scss/_variables';
 @import '~bootstrap/scss/_mixins';
 @import '~bootstrap/scss/_forms';
 @import '~bootstrap/scss/_buttons';
-@import '~bootstrap/scss/utilities/_visibility';
+@import '~bootstrap/scss/utilities/_display';
 
 @import '../../style/variables/variables';
 @import '../../style/helpers/normalize';
@@ -368,14 +369,5 @@ button.btn-sm {
 
 .chart-container {
     height: 50%;
-}
-
-.chart-no-charts {
-    text-align:center;
-    padding: 20px;
-
-    p {
-        font-size: 20px;
-        color: $font-color-light-gray;
-    }
+    background: black;
 }

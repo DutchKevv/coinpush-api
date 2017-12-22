@@ -1,17 +1,12 @@
 @import '../../style/variables/variables';
 @import '../../style/helpers/normalize';
 
+@import '~bootstrap/scss/_functions';
 @import '~bootstrap/scss/_variables';
 @import '~bootstrap/scss/_mixins';
 @import '~bootstrap/scss/_buttons';
 @import '~bootstrap/scss/_forms';
-@import '~bootstrap/scss/utilities/_visibility';
-// @import '~bootstrap/scss/utilities/_clearfix';
-
-::-webkit-input-placeholder { /* WebKit, Blink, Edge */
-    color:    #909;
-}
-
+@import '~bootstrap/scss/utilities/_display';
 
 :host {
     height: 100%;

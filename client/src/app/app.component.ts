@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, OnInit, Output, ViewChild, ElementR
 import { AuthenticationService } from "./services/authenticate.service";
 import { CacheService } from "./services/cache.service";
 import { Subject } from "rxjs/Subject";
-import { Router, NavigationEnd, NavigationStart } from '@angular/router';
+import { Router, NavigationEnd, NavigationStart, ActivatedRoute } from '@angular/router';
 import { UserService } from './services/user.service';
 import { Http } from '@angular/http';
 import { app } from '../assets/custom/js/core/app';
@@ -27,35 +27,71 @@ export class AppComponent implements OnInit {
 	private _sub: any;
 	private _routerEventsSub: any;
 	private _isNavOpen: boolean = false;
+	private _navBarWidth: number = 250;
+	private _navBarPosition: number = -this._navBarWidth;
+	private _touchStartX = 0;
 
+	/**
+	 * mobile nav menu back press close
+	 * @param event 
+	 */
 	@HostListener('window:popstate', ['$event'])
 	onPopState(event) {
+		this.toggleNav(false);
+		return false;
+	}
+
+	/**
+	 * mobile nav menu touch swipe
+	 * @param event
+	 */
+	@HostListener('touchstart', ['$event'])
+	onTouchStart(event) {
 		if (!this._isNavOpen)
 			return;
 
-		event.preventDefault();
-		event.stopPropagation();
+		this._touchStartX = event.touches[0].clientX;
+	}
 
-		this.toggleNav(undefined, false);
+	/**
+	 * mobile nav menu touch swipe
+	 * @param event 
+	 */
+	@HostListener('touchmove', ['$event'])
+	onTouchMove(event) {
+		if (!this._isNavOpen)
+			return;
 
-		return false;
+		const diff = event.touches[0].clientX - this._touchStartX;
+
+		this._updateNavPosition(diff * 2);
+	}
+
+	/**
+	 * mobile nav menu touch swipe
+	 * @param event 
+	 */
+	@HostListener('touchend', ['$event'])
+	onTouchEnd(event) {
+		if (!this._isNavOpen)
+			return;
+
+		this._touchStartX = 0;
+
+		this.toggleNav(this._navBarPosition > -(this._navBarWidth / 2));
 	}
 
 	constructor(
 		public http: Http,
 		public router: Router,
+		public activatedRoute: ActivatedRoute,
 		public userService: UserService,
 		public authenticationService: AuthenticationService,
 		private _changeDetectorRef: ChangeDetectorRef,
-		private _cacheService: CacheService) {}
+		private _cacheService: CacheService) { }
 
 	ngOnInit() {
 		this.authenticationService.authenticate();
-		
-		this._routerEventsSub = this.router.events.subscribe((val) => {
-			if (val instanceof NavigationStart)
-				this.toggleNav(undefined, false);
-		});
 	}
 
 	public onSearchKeyUp(event): void {
@@ -95,31 +131,36 @@ export class AppComponent implements OnInit {
 		}
 	}
 
-	public toggleNav(event?, state?: boolean) {
-		if (event) {
-			event.preventDefault();
-			event.stopPropagation();
-		}
+	public toggleNav(state?: boolean) {
+		// state = typeof state === 'boolean' ? state : false;
+		// if (state === this._isNavOpen)
+		// 	return;
 
 		this.navbar.nativeElement.classList.toggle('show', state);
-
 		this._isNavOpen = typeof state === 'boolean' ? state : !this._isNavOpen;
+
+		this._navBarPosition = this._isNavOpen ? 0 : -this._navBarWidth;
+		this.navbar.nativeElement.removeAttribute('style');
+
+		setTimeout(() => {
+			if (this._isNavOpen)
+				this.router.navigate(this.activatedRoute.snapshot.url, { relativeTo: this.activatedRoute, queryParams: { menu: 1 } })
+			else {
+				this.router.navigate(this.activatedRoute.snapshot.url, { relativeTo: this.activatedRoute, queryParams: { menu: 0 }, replaceUrl: true })
+			}
+		}, 0);
 	}
 
 	public onClickFilter(event?, state?: boolean) {
-		if (event) {
-			event.preventDefault();
-			event.stopPropagation();
-		}
-
 		this.filterClick$.emit(true);
-	}
-
-	public onClickOverlay() {
-		this.toggleNav(undefined, false);
 	}
 
 	public logout(): void {
 		this.authenticationService.logout();
+	}
+
+	private _updateNavPosition(distance: number) {
+		this._navBarPosition = Math.max(-this._navBarWidth, Math.min(0, distance));
+		this.navbar.nativeElement.style.transform = `translateX(${this._navBarPosition}px)`;
 	}
 }

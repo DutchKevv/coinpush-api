@@ -16,9 +16,14 @@
       "prefix": "app",
       "scripts": [
         "../node_modules/jquery/dist/jquery.min.js",
-        "../node_modules/jquery-touchswipe/jquery.touchSwipe.js",
-        "../node_modules/tether/dist/js/tether.min.js",
-        "../node_modules/bootstrap/dist/js/bootstrap.min.js"
+        "../node_modules/bootstrap/js/dist/index.js",
+        "../node_modules/bootstrap/js/dist/modal.js",
+        "../node_modules/highcharts/highstock.js",
+        "../node_modules/highcharts/modules/exporting.js",
+        "./assets/vendor/js/highcharts/indicators/indicators.js",
+        "./assets/vendor/js/highcharts/indicators/macd.js",
+        "./assets/vendor/js/highcharts/indicators/ema.js",
+        "./assets/custom/js/highcharts/highstock.theme.dark.js"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {
@@ -27,12 +32,6 @@
       }
     }
   ],
-  "defaults": {
-    "styleExt": "css",
-    "component": {
-      "inlineTemplate": true
-    }
-  },
   "warnings": {
     "typescriptMismatch": false
   }
