@@ -37,10 +37,12 @@ import { EventOverviewComponent } from './components/event-overview/event-overvi
 import { NewsService } from './services/news.service';
 import { Router } from '@angular/router';
 import { EventService } from './services/event.service';
+import { AlarmMenuComponent } from './components/alarm-menu/alarm-menu.component';
 
 @NgModule({
 	declarations: [
 		AppComponent,
+		AlarmMenuComponent,
 		ChartBoxComponent,
 		ChartOverviewComponent,
 		DialogAnchorDirective,

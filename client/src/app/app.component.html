@@ -6,14 +6,6 @@
         <img class="logo" width="70" height="70" [attr.src]="userService.model.options.img ? userService.model.options.img : undefined">
         <h4>{{userService.model.options.name || '&nbsp;'}}</h4>
     </a>
-    <!-- <a [routerLink]="['/portfolio']" [routerLinkActive]="['active']">
-            <i class="fa fa-handshake-o"></i>
-            <span>Portfolio</span>
-        </a> -->
-    <!-- <a [routerLink]="['/news']" [routerLinkActive]="['active']">
-        <i class="fa fa-newspaper-o"></i>
-        <span>News feed</span>
-    </a> -->
     <a (click)="toggleNav( false)" [routerLink]="['/calendar']" [routerLinkActive]="['active']">
         <i class="fa fa-calendar"></i>
         <span>Calender</span>
@@ -26,14 +18,6 @@
         <i class="fa fa-bar-chart"></i>
         <span>Stocks</span>
     </a>
-    <!-- <a [routerLink]="['/backtest']" [routerLinkActive]="['active']">
-            <i class="fa fa-flash"></i>
-            <span>Backtest</span>
-        </a> -->
-    <!-- <a [routerLink]="['/editor']" [routerLinkActive]="['active']">
-        <i class="fa fa-code"></i>
-        <span>Editor</span>
-    </a> -->
     <a (click)="toggleNav( false)" [routerLink]="['/settings']" [routerLinkActive]="['active']">
         <i class="fa fa-gears"></i>
         <span>Settings</span>
@@ -54,7 +38,7 @@
 <main class="main-container">
     <header>
         <i (click)="toggleNav(true)" class="fa fa-navicon d-lg-none"></i>
-        <i *ngIf="router.url.startsWith('/symbols') || ['/user'].includes(router.url)" (click)="onClickFilter($event)" class="fa fa-filter hidden-lg-up"></i>
+        <i *ngIf="router.url.startsWith('/symbols') || ['/user'].includes(router.url)" (click)="onClickFilter($event)" class="fa fa-filter d-lg-none"></i>
 
         <div class="header-search">
             <input (keyup)="onSearchKeyUp($event)" (focus)="onSearchKeyUp($event)" placeholder="Markets / People" #input>

@@ -144,9 +144,9 @@ export class AppComponent implements OnInit {
 
 		setTimeout(() => {
 			if (this._isNavOpen)
-				this.router.navigate(this.activatedRoute.snapshot.url, { relativeTo: this.activatedRoute, queryParams: { menu: 1 } })
+				this.router.navigate(this.activatedRoute.snapshot.url, { queryParamsHandling: 'merge', queryParams: { menu: 1 } })
 			else {
-				this.router.navigate(this.activatedRoute.snapshot.url, { relativeTo: this.activatedRoute, queryParams: { menu: 0 }, replaceUrl: true })
+				this.router.navigate(this.activatedRoute.snapshot.url, { queryParamsHandling: 'merge', queryParams: { menu: null }, replaceUrl: true })
 			}
 		}, 0);
 	}

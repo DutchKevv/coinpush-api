@@ -7,9 +7,7 @@
 
 @import '../../style/variables/variables';
 @import '../../style/helpers/normalize';
-@import '../../style/components/dropdown';
-
-@import '../../../assets/sprite/spritesheet.css';
+@import '../../style/sprite/spritesheet.css';
 
 :host {
     display: flex;
@@ -182,98 +180,6 @@
 	transform: rotate(90deg);
 }
 
-.side-menu {
-    display: none;
-
-    &.open {
-        display: block;
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        background: black;
-    }
-
-    @media only screen and (min-width : 992px) { 
-        &.open {
-            position: static;
-            min-width: 400px;
-            width: 400px;
-        }
-    }
-
-    header {
-        padding: 4px 10px;
-        display: flex;
-        
-        i {
-            font-size: 20px;
-        }
-
-        .fa-close {
-            margin-left: auto;
-            cursor: pointer;
-        }
-
-        .fa-bell {
-            font-size: 16px;
-            margin-top: 2px;
-            margin-right: 10px;
-        }
-
-        h5 {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-    }
-
-    main > form {
-        padding: 6px;
-    }
-
-    .side-menu-top-nav {
-        display: flex;
-
-        li {
-            padding: 4px 4px;
-            width: 100%;
-            cursor: pointer;
-        }
-    }
-
-    .btn-number {
-        border-radius: 0;
-        border: none;
-    }
-
-    .form-control {
-        padding: 4px 8px;
-        border-radius: 0;
-        border: none;
-    }
-
-    .alarm-row {
-        padding: 4px;
-        border-bottom: 1px solid white;
-
-        > * {
-            padding-right: 10px;
-        }
-
-        .fa {
-            margin: 0 10px;
-            cursor: pointer;
-            padding-right: 0;
-
-            &:first-child {
-                margin-left: 0;
-            }
-        }
-    }
-}
-
 // TODO - Move to general font file
 .font-color-up,
 .text-positive {
@@ -323,51 +229,6 @@
 	}
 }
 
-button.btn-sm {
-	padding: 0;
-	background: $background-light;
-	width: 150px;
-	border-radius: 4px;
-	border: 1px solid grey;
-	display: flex;
-	
-	&.positive {
-		animation: fade-positive 2s ease;
-
-		span {
-			color: $general-success;
-		}
-	}
-
-	&.negative {
-		animation: fade-negative 2s ease;
-
-		span {
-			color: $general-error;
-		}
-	}
-
-	span:first-child {
-		color: $font-color-light;
-		padding: 5px 10px;
-		font-size: 12px;
-		text-align: center;
-		border-radius: 4px 0 0 4px;
-	}
-
-	span:nth-child(2) {
-		background: #f8f8f8;
-		color: $font-color-dark;
-		padding: 5px;
-		display: block;
-		width: 100%;
-		text-align: right;
-		border-radius: 0 4px 4px 0;
-		font-size: 12px;
-	}
-}
-
-.chart-container {
+app-9chart-box {
     height: 50%;
-    background: black;
 }

@@ -13,7 +13,7 @@ import { SymbolModel } from "../../models/symbol.model";
 declare let Highcharts: any;
 
 @Component({
-	selector: 'chart-box',
+	selector: 'app-chart-box',
 	templateUrl: './chart-box.component.html',
 	styleUrls: [
 		'./chart-box.component.scss'
@@ -125,7 +125,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	ngAfterViewInit() {
 		this._onScrollBounced = throttle(this._onScroll.bind(this), 33);
 		this.chartRef.nativeElement.addEventListener('mousewheel', <any>this._onScrollBounced);
-		// this.chartRef.nativeElement.addEventListener('touchmove', <any>this._onScrollBounced);
 	}
 
 	init() {

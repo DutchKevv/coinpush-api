@@ -40,13 +40,6 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 	public activeEvents$;
 	public historyEvents$;
 
-	public formModel: any = {
-		alarmType: "1",
-		alarm: {
-
-		}
-	};
-
 	private _routeSub;
 	private _filterSub;
 	private _priceChangeSub;
@@ -70,8 +63,6 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 
 		this._filterSub = this._applicationRef.components[0].instance.filterClick$.subscribe(() => this.toggleFilterNav());
 		this._priceChangeSub = this.cacheService.changed$.subscribe(changedSymbols => this._onPriceChange(changedSymbols));
-
-		// app.on('symbols-update', this._onSymbolUpdate, this);
 
 		setTimeout(() => {
 			if (!this._route.snapshot.queryParams['symbol'])
@@ -172,21 +163,6 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 		this._changeDetectorRef.detectChanges();
 	}
 
-	toggleAlarmMenuVisibility() {
-		if (this.activeMenu === 'alarm') {
-			this.activeMenu = this.activeAlarmMenu = null;
-		} else {
-			this.activeMenu = 'alarm';
-			this.activeAlarmMenu = 'new'
-		}
-		this._changeDetectorRef.detectChanges();
-	}
-
-	toggleAlarmMenuTab(tab: string) {
-		this.activeAlarmMenu = tab;
-		this._changeDetectorRef.detectChanges();
-	}
-
 	setActiveSymbol(event, symbol: SymbolModel): void {
 		if (event) {
 			event.preventDefault();
@@ -197,15 +173,6 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 			this._changeDetectorRef.detectChanges();
 			return;
 		}
-
-		// reset side-menu form model
-		this.formModel = {
-			alarmType: "1",
-			amount: symbol.options.bid,
-			alarm: {
-
-			}
-		};
 
 		this.activeSymbol = symbol;
 
@@ -218,29 +185,6 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 		this.activeEvents$ = this.eventService.findBySymbol(this.activeSymbol.options.name, 0, 50);
 		this.historyEvents$ = this.eventService.findBySymbol(this.activeSymbol.options.name, 0, 50, true);
 
-		this._changeDetectorRef.detectChanges();
-	}
-
-	public onCreateFormSubmit(form: NgForm) {
-		if (!this.activeSymbol)
-			return;
-
-		this.formModel.symbol = this.activeSymbol.options.name;
-		this.formModel.type = CUSTOM_EVENT_TYPE_ALARM;
-		this.formModel.alarm.dir = this.formModel.amount < this.activeSymbol.options.bid ? ALARM_TRIGGER_DIRECTION_DOWN : ALARM_TRIGGER_DIRECTION_UP;
-		this.eventService.create(this.formModel);
-	}
-
-	public onClickSideMenuNumberInput(dir: number, inputEl: HTMLElement) {
-		let newValue = this.formModel.amount || this.activeSymbol.options.bid;
-		let inc = this.activeSymbol.options.bid / 700
-
-		if (dir > 0)
-			newValue += inc;
-		else
-			newValue -= inc;
-
-		this.formModel.amount = parseFloat(this._priceToFixed(newValue));
 		this._changeDetectorRef.detectChanges();
 	}
 

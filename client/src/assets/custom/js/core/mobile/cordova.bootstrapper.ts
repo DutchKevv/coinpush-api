@@ -4,47 +4,69 @@ export async function loadCordova(): Promise<void> {
     if (!app.platform.isReady)
         await app.platform.isReady$;
 
-    setAppFunctions();
+    setAppVersion();
+    setPushMessages();
+
+    // wait until everything else is loaded before loading in advertisements (can be slow)
+    // TODO: wait until angular is also ready, now only waiting for dom ready
+    if (document.readyState === "complete") {
+        setAdvertise();
+    }
+    else {
+        window.addEventListener("onload", function callback() {
+            setAdvertise();
+            window.removeEventListener('onload', callback, false);
+        }, false);
+    }
 }
 
-function setAppFunctions() {
+/**
+ * advertising
+ */
+function setAdvertise() {
+    let admobid: { banner?: string, interstitial?: string } = {};
 
-    if (window['AdMob']) {
-
-        let admobid: { banner?: string, interstitial?: string } = {};
-
-        if (/(android)/i.test(navigator.userAgent)) { // for android & amazon-fireos
-            admobid.banner = 'ca-app-pub-1181429338292864/7213864636';
-            admobid.interstitial = 'ca-app-pub-1181429338292864/7213864636';
-        } else if (/(ipod|iphone|ipad)/i.test(navigator.userAgent)) { // for ios
-            admobid.banner = 'ca-app-pub-1181429338292864/7213864636';
-            admobid.interstitial = 'ca-app-pub-1181429338292864/7213864636';
-        }
-
-        window['AdMob'].createBanner({
-            adSize: 'BANNER',
-            overlap: true,
-            height: 60, // valid when set adSize 'CUSTOM'
-            adId: admobid.banner,
-            position: window['AdMob'].AD_POSITION.BOTTOM_CENTER,
-            autoShow: true,
-            isTesting: false
-        });
-
-        document.addEventListener('onAdFailLoad', function (error) {
-            console.error(error);
-        });
+    if (/(android)/i.test(navigator.userAgent)) { // for android & amazon-fireos
+        admobid.banner = 'ca-app-pub-1181429338292864/7213864636';
+        admobid.interstitial = 'ca-app-pub-1181429338292864/7213864636';
+    } else if (/(ipod|iphone|ipad)/i.test(navigator.userAgent)) { // for ios
+        admobid.banner = 'ca-app-pub-1181429338292864/7213864636';
+        admobid.interstitial = 'ca-app-pub-1181429338292864/7213864636';
     }
 
+    window['AdMob'].createBanner({
+        adSize: 'BANNER',
+        overlap: true,
+        height: 60, // valid when set adSize 'CUSTOM'
+        adId: admobid.banner,
+        position: window['AdMob'].AD_POSITION.BOTTOM_CENTER,
+        autoShow: true,
+        isTesting: false
+    });
+
+    document.addEventListener('onAdFailLoad', function (error) {
+        console.error(error);
+    });
+}
+
+/**
+* app version
+* todo: really needed? could also make hardcoded api version
+*/
+function setAppVersion() {
     window['cordova'].getAppVersion.getVersionNumber().then(function (version) {
         app.platform.version = version;
     });
+}
 
+/**
+* push message
+*/
+function setPushMessages() {
     window['FirebasePlugin'].hasPermission(function (data) {
         if (!data.isEnabled)
             window['FirebasePlugin'].grantPermission();
     });
-
     window['FirebasePlugin'].onNotificationOpen(function (notification) {
         notification.body = JSON.parse(notification.body);
 
@@ -63,7 +85,6 @@ function setAppFunctions() {
     }, function (error) {
         console.error(error);
     });
-
     window['FirebasePlugin'].onTokenRefresh(function (token) {
         // save this server-side and use it to push notifications to this device
 
@@ -71,10 +92,3 @@ function setAppFunctions() {
         console.error(error);
     });
 }
-
-    // window.FirebasePlugin.getToken(function (token) {
-    //     // save this server-side and use it to push notifications to this device
-    //     console.log(token);
-    // }, function (error) {
-    //     console.error(error);
-    // });
