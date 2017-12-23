@@ -5,8 +5,8 @@
 @import '~bootstrap/scss/_buttons';
 @import '~bootstrap/scss/_forms';
 @import '~bootstrap/scss/_modal';
+@import '~bootstrap/scss/_close';
 @import '~bootstrap/scss/_transitions';
-@import '~bootstrap/scss/utilities/_visibility';
 
 @import '../../style/variables/variables';
 @import '../../style/helpers/normalize';
@@ -16,4 +16,8 @@ label {
     color: $font-color-dark;
     margin-right: 10px;
     margin-left: 10px;
+}
+
+.close span {
+    color: black;
 }
