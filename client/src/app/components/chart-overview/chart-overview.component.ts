@@ -1,5 +1,5 @@
 import {
-	Component, OnInit, ElementRef, QueryList, ViewChildren, ChangeDetectionStrategy, ViewEncapsulation, NgZone,
+	Component, OnInit, ElementRef, ViewChildren, ChangeDetectionStrategy, NgZone,
 	ViewChild,
 	ChangeDetectorRef,
 	AfterViewInit,
@@ -24,7 +24,6 @@ import { app } from '../../../assets/custom/js/core/app';
 	selector: 'chart-overview',
 	templateUrl: './chart-overview.component.html',
 	styleUrls: ['./chart-overview.component.scss'],
-	// encapsulation: ViewEncapsulation.Native,
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 
@@ -55,15 +54,13 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 		private _router: Router,
 		private _applicationRef: ApplicationRef
 	) {
-
+		this._changeDetectorRef.detach();
 	}
 
 	ngOnInit() {
-		this._changeDetectorRef.detach();
-
 		this._filterSub = this._applicationRef.components[0].instance.filterClick$.subscribe(() => this.toggleFilterNav());
 		this._priceChangeSub = this.cacheService.changed$.subscribe(changedSymbols => this._onPriceChange(changedSymbols));
-
+		
 		setTimeout(() => {
 			if (!this._route.snapshot.queryParams['symbol'])
 				this.toggleActiveFilter('rise and fall');
@@ -86,8 +83,6 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 					// set symbol
 					this.symbols = [symbol];
 					this.setActiveSymbol(null, this.symbols[0]);
-				} else {
-					this.toggleActiveFilter('rise and fall');
 				}
 			});
 		}, 0);
@@ -119,7 +114,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 				this.symbols = this.cacheService.symbols;
 				break;
 			case 'all popular':
-				this.symbols = this.cacheService.symbols.sort((a, b) => a.options.volume - b.options.volume).slice(-40).reverse();
+				this.symbols = this.cacheService.symbols.sort((a, b) => a.options.volume - b.options.volume).slice(-30).reverse();
 				break;
 			case 'rise and fall':
 				const sorted = this.cacheService.symbols.sort((a, b) => a.options.changedDAmount - b.options.changedDAmount);
@@ -151,8 +146,10 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 				this.symbols = [];
 		}
 
-		if (this.symbols.length)
-			this.setActiveSymbol(undefined, this.symbols[0]);
+		this._changeDetectorRef.detectChanges();
+
+		// if (this.symbols.length)
+		// this.setActiveSymbol(undefined, this.symbols[0]);
 	}
 
 	async onClickToggleFavorite(event, symbol: SymbolModel) {
@@ -164,14 +161,9 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 	}
 
 	setActiveSymbol(event, symbol: SymbolModel): void {
-		if (event) {
-			event.preventDefault();
-			event.stopPropagation();
-		}
 
 		if (symbol === this.activeSymbol) {
-			this._changeDetectorRef.detectChanges();
-			return;
+			symbol = null;
 		}
 
 		this.activeSymbol = symbol;
@@ -182,8 +174,10 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 		if (this.historyEvents$ && this.historyEvents$.unsubscribe)
 			this.historyEvents$.unsubscribe();
 
-		this.activeEvents$ = this.eventService.findBySymbol(this.activeSymbol.options.name, 0, 50);
-		this.historyEvents$ = this.eventService.findBySymbol(this.activeSymbol.options.name, 0, 50, true);
+		if (symbol) {
+			this.activeEvents$ = this.eventService.findBySymbol(this.activeSymbol.options.name, 0, 50);
+			this.historyEvents$ = this.eventService.findBySymbol(this.activeSymbol.options.name, 0, 50, true);
+		}
 
 		this._changeDetectorRef.detectChanges();
 	}
@@ -235,6 +229,8 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 
 		if (this._routeSub)
 			this._routeSub.unsubscribe();
+
+		this.symbols = null;
 	}
 }
 

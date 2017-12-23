@@ -10,12 +10,20 @@ const HighstockTheme = {
         }
     },
 
-    rangeSelector:{
+    legend: {
+        enabled: false
+    },
+
+    rangeSelector: {
         enabled:false
     },
 
     navigator: {
         enabled: false
+    },
+
+    scrollbar: {
+        enabled: false,
     },
 
     exporting: { 
@@ -24,6 +32,18 @@ const HighstockTheme = {
 
     credits: {
         enabled: false
+    },
+
+    tooltip: {
+        crosshairs: false
+    },
+
+    labels: {
+        style: {
+            color: '#707073',
+            fontSize: '12px',
+            rotation: 0
+        }
     },
 
     colors: ['#67C8FF', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066', '#eeaaee',
@@ -147,16 +167,6 @@ const HighstockTheme = {
             shadow: false
         }
     },
-    legend: {
-        enabled: false
-    },
-    labels: {
-        style: {
-            color: '#707073',
-            fontSize: '12px',
-            rotation: 0
-        }
-    },
 
     drilldown: {
         activeAxisLabelStyle: {
@@ -165,10 +175,6 @@ const HighstockTheme = {
         activeDataLabelStyle: {
             color: '#F0F0F3'
         }
-    },
-
-    scrollbar: {
-        enabled: false,
     },
 
     // special colors for some of the

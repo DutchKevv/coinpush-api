@@ -1,4 +1,4 @@
-<div class="instrument-list-outer">
+<div class="instrument-list-outer" [ngClass]="{split: !!activeSymbol}">
     <div class="filter-list" #filter>
         <h4>Popular</h4>
         <a [ngClass]="{active: activeFilter === 'all popular'}" (click)="toggleActiveFilter('all popular')">All popular</a>
@@ -19,67 +19,47 @@
         <a [ngClass]="{active: activeFilter === 'forex popular'}" (click)="toggleActiveFilter('forex popular')">Popular forex (ni)</a>
     </div>
 
-    <ul class="instrument-list">
-        <li class="table-header">
+    <div class="instrument-list">
+        <a class="table-header">
             <div class="col-bookmark"></div>
-            <div class="col-1">
-                <div class="col-instrument">Instrument</div>
-                <div class="col-price d-none d-md-block">Price</div>
-            </div>
-            <div class="col-2">
-                <div class="col-changes">1h / 24h</div>
-                <div class="col-hl d-none d-md-block">H/L</div>
-            </div>
+            <div class="col-instrument">Instrument Price</div>
+            <div class="col-changes">1h / 24h</div>
             <div class="col-alert"></div>
-        </li>
-        <li *ngFor="let symbol of symbols; trackBy:trackByFunc" [ngClass]="{'active': activeSymbol === symbol}" (click)="setActiveSymbol($event, symbol)">
-            <div class="col-bookmark">
-                <i (click)="onClickToggleFavorite($event, symbol);" [ngClass]="{'active-icon': symbol.options.iFavorite}" class="fa fa-star"></i>
+        </a>
+        <a *ngFor="let symbol of symbols; trackBy:trackByFunc" [ngClass]="{'active': activeSymbol === symbol}" (click)="setActiveSymbol($event, symbol)">
+            <i (click)="onClickToggleFavorite($event, symbol);" [ngClass]="{'active-icon': symbol.options.iFavorite}" class="fa fa-star col-bookmark"></i>
+            <div class="col-instrument">
+                <span class="instrument-image symbol-img-{{symbol.options.name}}"></span>
+                <p class="instrument-title">{{symbol.options.displayName}}</p>
+                <span>{{symbol.options.bid || 0}}</span>
             </div>
-            <div class="col-1">
-                <div class="col-instrument">
-                    <span class="instrument-image symbol-img-{{symbol.options.name}}"></span>
-                    <span class="instrument-title">{{symbol.options.displayName}}</span>
+            <div class="col-changes">
+                <div class="col-1h">
+                    <span [ngClass]="{'text-positive': symbol.options.changedHAmount > 0, 'text-negative': symbol.options.changedHAmount < 0}"
+                        class="changed-amount">
+                        {{symbol.options.changedHAmount | number : '1.2-2'}}%
+                    </span>
+                    <span [ngClass]="{'text-positive': symbol.options.changedDAmount > 0, 'text-negative': symbol.options.changedDAmount < 0}"
+                        class="changed-amount">
+                        {{symbol.options.changedDAmount | number : '1.2-2'}}%
+                    </span>
                 </div>
-                <div class="col-price">
-                    <span>{{symbol.options.bid || 0}}</span>
+                <div *ngIf="symbol.options.halted">
+                    <span>Market closed</span>
                 </div>
-            </div>
-            <div class="col-2">
-                <div class="col-changes">
-                    <div class="col-1h">
-                        <span [ngClass]="{'text-positive': symbol.options.changedHAmount > 0, 'text-negative': symbol.options.changedHAmount < 0}"
-                              class="changed-amount">
-                            {{symbol.options.changedHAmount | number : '1.2-2'}}%
-                        </span>
-                    </div>
-                    <div class="col-24h">
-                        <span [ngClass]="{'text-positive': symbol.options.changedDAmount > 0, 'text-negative': symbol.options.changedDAmount < 0}"
-                              class="changed-amount">
-                            {{symbol.options.changedDAmount | number : '1.2-2'}}%
-                        </span>
-                    </div>
-                </div>
-                <div class="col-hl">
-                    <div *ngIf="symbol.options.halted">
-                        <span>Market closed</span>
-                    </div>
-                    <div *ngIf="!symbol.options.halted">
-                        <span class="value-bid">
-                            {{symbol.options.high | number : '1.2-2'}}
-                            <span class="fa fa-exchange"></span>
-                            {{symbol.options.low | number : '1.2-2'}}
-                        </span>
-                    </div>
+                <div *ngIf="!symbol.options.halted">
+                    <span class="value-bid">
+                        {{symbol.options.high | number : '1.2-2'}}
+                        <i class="fa fa-exchange"></i>
+                        {{symbol.options.low | number : '1.2-2'}}
+                    </span>
                 </div>
             </div>
-            <div class="col-alert">
-                <i (click)="activeMenu = 'alarm'" class="fa fa-bell"></i>
-            </div>
-        </li>
-    </ul>
+            <i (click)="activeMenu = 'alarm'" class="fa fa-bell col-alert"></i>
+        </a>
+    </div>
 
     <app-alarm-menu *ngIf="activeMenu === 'alarm'" [symbol]="activeSymbol" class="side-menu" [ngClass]="{'open': activeMenu !== null}"></app-alarm-menu>
 </div>
 
-<app-chart-box #chart [symbolModel]="activeSymbol"></app-chart-box>
+<app-chart-box #chart [symbolModel]="activeSymbol" *ngIf="activeSymbol"></app-chart-box>

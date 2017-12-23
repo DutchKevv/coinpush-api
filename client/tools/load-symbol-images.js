@@ -12,9 +12,9 @@ const IMAGES_WRITE_PATH = path.join(__dirname, '..', 'images', 'symbols');
 
 const load = async function () {
     // load symbols
-    await broker.setSymbols();
+    const symbols = await broker.getSymbols();
 
-    await Promise.all(broker.symbols.map(symbol => {
+    await Promise.all(symbols.map(symbol => {
         const fullPath = path.join(IMAGES_WRITE_PATH, symbol.name + '.png');
         const writeStream = fs.createWriteStream(fullPath);
 
@@ -25,7 +25,7 @@ const load = async function () {
                     .pipe(sharp().resize(20).max())
                     .pipe(writeStream);
             } else {
-                https.get(symbol.img, response => response.pipe(sharp().resize(20).max())
+                https.get(symbol.img, response => response.pipe(sharp().resize(30))
                     .on('end', resolve)
                     .pipe(writeStream));
             }

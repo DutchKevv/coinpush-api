@@ -1,7 +1,7 @@
 @import '~bootstrap/scss/_functions';
 @import '~bootstrap/scss/_variables';
 @import '~bootstrap/scss/_mixins';
-@import '~bootstrap/scss/utilities/_visibility';
+@import '~bootstrap/scss/utilities/_display';
 
 @import '../../style/variables/variables';
 // @import '../../style/components/spinner';
@@ -20,140 +20,86 @@
     color: $font-color-dark;
 }
 
-.chart-header {
+.header-buttons {
+    list-style: none;
+    margin: 0;
+    padding: 0;
     display: flex;
-    padding-left: 10px;
-    height: 24px;
+    justify-content: flex-end;
     flex-shrink: 0;
-    
-    > h5 {
-        line-height: 24px;
-        color: white;
-        margin-right: 6px;
+    width: 100%;
+    padding-left: 6px;
+    background:black;
+
+    > li {
+        cursor: pointer;
     }
 
-    .header-buttons {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        justify-content: flex-end;
-        flex-shrink: 0;
-        margin-left: auto;
+    button {
+        padding: 0px 8px;
+        font-size: 16px;
+        cursor: pointer;
 
-        @media screen and (min-width: 768px) {
-            &:first-child {
-                width: 280px;
-            }
+        i.fa {
+            line-height: 24px;
+            font-size: 18px;
+            display: block;
         }
 
-        > li {
-            cursor: pointer;
-        }
-
-        .button-editor {
-            // margin-right: 225px;
-
-            @media screen and (max-width: 768px) {
-                margin-right: 0;
-            }
-        }
-
-        button {
-            padding: 0px 8px;
-            // margin: 0 10px;
-            font-size: 16px;
-            cursor: pointer;
-
-            i.fa {
-                line-height: 24px;
-                font-size: 18px;
-                display: block;
+        &.dropdown-toggle {
+            span {
+                padding-right: 5px;
+                line-height: 20px;
             }
 
-            // @media screen and (max-width: 768px) {
-            //     i.fa {
-            //         line-height: 25px;
-            //     }
-            // }
-
-            &.dropdown-toggle {
-                span {
-                    padding-right: 5px;
-                    line-height: 20px;
-                }
-
-                &:after {
-                    float: right;
-                    margin-top: 7px;
-                }
+            &:after {
+                float: right;
+                margin-top: 7px;
             }
-        }
-    }
-
-    //.dropdown-toggle:not([disabled]):hover + .dropdown-menu {
-    //	display: block;
-    //}
-
-    .dropdown-menu {
-        margin: 0;
-
-        a:hover {
-            background: white;
-            color: $font-color-dark;
-        }
-    }
-
-    .btn-menu {
-        background: black;
-        // background: #878787 linear-gradient(180deg, #6a6a6a, #000);
-        color: #fff;
-        text-decoration: none;
-        min-width: 30px;
-        text-align: center;
-        margin-right: 5px;
-        border: none;
-        border-radius: 0;
-        line-height: 24px;
-
-        &:hover,
-        &.active {
-            background: #878787 linear-gradient(180deg, #000, #6a6a6a);
-        }
-
-        &:focus {
-            outline: none;
         }
     }
 }
 
+.dropdown-menu {
+    margin: 0;
+
+    a:hover {
+        background: white;
+        color: $font-color-dark;
+    }
+}
+
+.btn-menu {
+    background: black;
+    color: #fff;
+    text-decoration: none;
+    min-width: 30px;
+    text-align: center;
+    margin-right: 5px;
+    border: none;
+    border-radius: 0;
+    line-height: 24px;
+
+    &:hover,
+    &.active {
+        background: #878787 linear-gradient(180deg, #000, #6a6a6a);
+    }
+
+    &:focus {
+        outline: none;
+    }
+}
+
 .chart-title {
-    color: $font-color-dark;
-    line-height: 22px;
-    margin-bottom: 0;
-    margin-top: 0;
+    font-size: 18px;
+    line-height: 24px;
+    text-align: left;
+    margin-right: auto;
 }
 
 .chart-content {
     position: relative;
     height: 100%;
-    // height: calc(100% - 58px); // TODO : SHOULD NOT BE NEEDED
-}
-
-.spinner-container {
-    background: black;
-    display: none;
-
-    &.active {
-        display: block;
-    }
-}
-
-.spinner {
-    position: absolute;
-    top: calc(66% - 20px);
-    left: calc(50% - 20px);
-    z-index: 2;
 }
 
 .plot-label {

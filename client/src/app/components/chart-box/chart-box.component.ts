@@ -104,9 +104,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 	ngOnChanges(changes: SimpleChanges) {
 		if (changes.symbolModel && changes.symbolModel.currentValue) {
-			if (!this._chart)
-				this._createChart();
-
+		
 			this.init();
 
 			this.symbolModel = changes.symbolModel.currentValue;
@@ -135,7 +133,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 		this._fetchCandles();
 
-		this._chart.series[0].name = this.symbolModel.options.displayName;
+		// this._chart.series[0].name = this.symbolModel.options.displayName;
 	}
 
 	public setZoom(amount) {
@@ -302,6 +300,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	}
 
 	private _fetchCandles() {
+		
 		this._zone.runOutsideAngular(async () => {
 			try {
 				let data: any = this._prepareData(await this._cacheService.read({
@@ -310,6 +309,9 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 					count: ChartBoxComponent.DEFAULT_CHUNK_LENGTH,
 					offset: this._offset
 				}));
+
+				if (!this._chart)
+					this._createChart();
 
 				this.toggleLoading(false);
 

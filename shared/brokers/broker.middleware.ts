@@ -35,22 +35,30 @@ export class BrokerMiddleware extends EventEmitter {
     }
 
     public async setSymbols(): Promise<void> {
+        this.symbols = await this.getSymbols();
+
+        // remove img url (only needed when building spritesheet in client)
+        this.symbols.forEach(symbol => {
+            delete symbol.img;
+        })
+    }
+
+    public async getSymbols(): Promise<Array<any>> {
         const results = await Promise.all([this._brokers.oanda.getSymbols(), this._brokers.cc.getSymbols()]);
 
-        this.symbols = [].concat(...results).sort((a, b) => {
+        const sorted = [].concat(...results).sort((a, b) => {
             return a.displayName.localeCompare(b.displayName);
         });
 
-        // if (process.env.NODE_ENV !== 'production')
-            // this.symbols = this.symbols.slice(0, 50);
-
         // add marker placeholders (Hour / Day)
-        this.symbols.forEach(symbol => {
+        sorted.forEach(symbol => {
             symbol.marks = {
                 H: undefined,
                 D: undefined
             }
-        })
+        });
+
+        return sorted;
     }
 
     public async getCurrentPrices(symbols: Array<any>): Promise<Array<any>> {
