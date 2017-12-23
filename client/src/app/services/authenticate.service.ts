@@ -3,6 +3,7 @@ import { Http, Response } from '@angular/http';
 import { UserService } from './user.service';
 import { AlertService } from "./alert.service";
 import { LoginComponent } from '../components/login/login.component';
+import { RegisterComponent } from '../components/register/register.component';
 import { app } from '../../assets/custom/js/core/app';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -105,6 +106,15 @@ export class AuthenticationService {
 	public async showLoginRegisterPopup() {
 		const modalRef = this._modalService.open(LoginComponent);
 		modalRef.componentInstance.name = 'World';
+	}
+
+	public async showRegisterPopup() {
+		const modalRef = this._modalService.open(RegisterComponent);
+		modalRef.componentInstance.name = 'World';
+	}
+
+	public async showForgotPasswordPopup() {
+
 	}
 
 

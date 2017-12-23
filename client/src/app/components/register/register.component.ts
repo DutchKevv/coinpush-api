@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation, EventEmitter, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { AlertService } from '../../services/alert.service';
 import { G_ERROR_DUPLICATE } from '../../../../../shared/constants/constants';
 import countries from '../../../../../shared/data/countries';
 import { UserModel } from '../../models/user.model';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 
 @Component({
@@ -14,20 +15,28 @@ import { UserModel } from '../../models/user.model';
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class RegisterComponent {
+export class RegisterComponent implements OnInit {
 
 	@Output() public loading$: EventEmitter<boolean> = new EventEmitter;
 
-	model: any = new UserModel;
+	model: any = {};
+	loading = false;
+	returnUrl: string;
 
 	countries = countries;
 
 	constructor(
+		public activeModal: NgbActiveModal,
 		private router: Router,
 		private userService: UserService,
 		private alertService: AlertService) { }
 
-	register() {
+	ngOnInit() {
+		// get return url from route parameters or default to '/'
+		//this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+	}
+
+	async register() {
 		this.loading$.emit(true);
 
 		this.userService.create(this.model.options)

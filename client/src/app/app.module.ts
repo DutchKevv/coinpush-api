@@ -84,7 +84,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 		AppComponent
 	],
 
-	entryComponents: [LoginComponent]
+	entryComponents: [LoginComponent, RegisterComponent]
 })
 
 export class AppModule {
