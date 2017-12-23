@@ -9,8 +9,6 @@ import { UserModel } from '../../models/user.model';
 import countries from '../../../../../shared/data/countries';
 import { CacheService } from '../../services/cache.service';
 
-declare let $: any;
-
 const shuffleArray = (arr) => arr.sort(() => (Math.random() - 0.5));
 
 @Component({
@@ -68,6 +66,5 @@ export class UserOverviewComponent implements OnInit, OnDestroy, AfterViewChecke
 	}
 
 	ngOnDestroy() {
-		$(window).off('resize.debugger');
 	}
 }

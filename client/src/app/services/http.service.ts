@@ -7,8 +7,6 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw';
 import { Router } from '@angular/router';
 import { AuthenticationService } from './authenticate.service';
-import { ModalService } from './modal.service';
-import { LoginComponent } from '../components/login/login.component';
 import { app } from '../../assets/custom/js/core/app';
 
 

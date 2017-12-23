@@ -1,21 +1,14 @@
-// Lib
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, Injector, APP_INITIALIZER } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { AppRouter } from './app.routing';
-
 import { ChartOverviewComponent } from './components/chart-overview/chart-overview.component';
 import { AuthGuard } from './guards/auth.guard';
 import { UserService } from './services/user.service';
 import { LoginComponent } from './components/login/login.component';
 import { ConstantsService } from './services/constants.service';
-import { DialogComponent } from './components/dialog/dialog.component';
-import { ModalComponent } from './components/modal/modal.component';
-import { DialogAnchorDirective } from './directives/dialoganchor.directive';
-import { ModalAnchorDirective } from './directives/modalanchor.directive';
-import { ModalService } from './services/modal.service';
 import { ChartBoxComponent } from './components/chart-box/chart-box.component';
 import { CacheService } from './services/cache.service';
 import { AuthenticationService } from './services/authenticate.service';
@@ -38,6 +31,7 @@ import { NewsService } from './services/news.service';
 import { Router } from '@angular/router';
 import { EventService } from './services/event.service';
 import { AlarmMenuComponent } from './components/alarm-menu/alarm-menu.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
 	declarations: [
@@ -45,8 +39,6 @@ import { AlarmMenuComponent } from './components/alarm-menu/alarm-menu.component
 		AlarmMenuComponent,
 		ChartBoxComponent,
 		ChartOverviewComponent,
-		DialogAnchorDirective,
-		DialogComponent,
 		EventOverviewComponent,
 		ParseCommentContentPipe,
 		SocialFeedComponent,
@@ -54,8 +46,6 @@ import { AlarmMenuComponent } from './components/alarm-menu/alarm-menu.component
 		PasswordResetComponent,
 		RequestPasswordResetComponent,
 		RegisterComponent,
-		ModalComponent,
-		ModalAnchorDirective,
 		AlertComponent,
 		UserOverviewComponent,
 		ProfileComponent,
@@ -68,6 +58,7 @@ import { AlarmMenuComponent } from './components/alarm-menu/alarm-menu.component
 		FormsModule,
 		ReactiveFormsModule,
 		HttpModule,
+		NgbModule.forRoot()
 	],
 	providers: [
 		BootstrapService,
@@ -87,14 +78,13 @@ import { AlarmMenuComponent } from './components/alarm-menu/alarm-menu.component
 			deps: [XHRBackend, RequestOptions, Router, Injector]
 		},
 		{ provide: ConstantsService, useClass: ConstantsService },
-		{ provide: ModalService, useClass: ModalService },
 		{ provide: CacheService, useClass: CacheService }
 	],
 	bootstrap: [
 		AppComponent
 	],
 
-	entryComponents: [DialogComponent, LoginComponent]
+	entryComponents: [LoginComponent]
 })
 
 export class AppModule {

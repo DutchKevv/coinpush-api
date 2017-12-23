@@ -3,9 +3,6 @@ import {
 	Component, OnDestroy, ElementRef, Input, ViewChild,
 	OnInit, AfterViewInit, NgZone, Output, SimpleChanges, OnChanges, ChangeDetectionStrategy
 } from '@angular/core';
-
-import { DialogComponent } from '../dialog/dialog.component';
-import { DialogAnchorDirective } from '../../directives/dialoganchor.directive';
 import { CacheService } from '../../services/cache.service';
 import { ConstantsService } from '../../services/constants.service';
 import { SymbolModel } from "../../models/symbol.model";
@@ -19,7 +16,6 @@ declare let Highcharts: any;
 		'./chart-box.component.scss'
 	],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	entryComponents: [DialogComponent]
 })
 
 
@@ -30,7 +26,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	@Input() showBox: Boolean = false;
 	@Input() quickBuy: Boolean = false;
 
-	@ViewChild(DialogAnchorDirective) private _dialogAnchor: DialogAnchorDirective;
 	@ViewChild('chart') private chartRef: ElementRef;
 	@ViewChild('loading') private loadingRef: ElementRef;
 

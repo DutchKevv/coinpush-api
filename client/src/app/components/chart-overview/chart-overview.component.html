@@ -44,16 +44,14 @@
                         {{symbol.options.changedDAmount | number : '1.2-2'}}%
                     </span>
                 </div>
-                <div *ngIf="symbol.options.halted">
-                    <span>Market closed</span>
-                </div>
-                <div *ngIf="!symbol.options.halted">
+                <div *ngIf="symbol.options.halted;else halted">
                     <span class="value-bid">
                         {{symbol.options.high | number : '1.2-2'}}
                         <i class="fa fa-exchange"></i>
                         {{symbol.options.low | number : '1.2-2'}}
                     </span>
                 </div>
+                <ng-template #halted>Market closed</ng-template>
             </div>
             <i (click)="activeMenu = 'alarm'" class="fa fa-bell col-alert"></i>
         </a>

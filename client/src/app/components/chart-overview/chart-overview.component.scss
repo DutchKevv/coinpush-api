@@ -32,35 +32,6 @@
     @media only screen and (min-width : 992px) { 
         display: flex;
     }
-
-
-    // ul {
-    //     overflow-y: auto;
-    //     overflow-x: hidden;
-    //     height: 100%;
-    //     width: 100%;
-
-    //     li {
-    //         border-bottom: 1px solid $border-color-grey;
-    //         cursor: pointer;
-	//         padding: 6px 0;
-	//         line-height: 18px;
-
-    //         &.active {
-    //             background: $border-color-grey;
-    //         }
-
-    //         @media only screen and (min-width : 992px) {
-    //             &:hover {
-    //                 background: $border-color-grey;
-    //             }
-    //         }
-
-    //         // > div {
-    //         //     display: inline-table;
-    //         // }
-    //     }
-    // }
 }
 
 .instrument-list {
@@ -170,7 +141,8 @@
 	a {
 		padding: 10px 20px;
 		display: block;
-
+        font-size: 14px;
+        
 		&:hover,
 		&.active {
 			background: $general-active;

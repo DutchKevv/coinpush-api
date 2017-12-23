@@ -2,36 +2,17 @@ import { Injectable, Output } from '@angular/core';
 import { UserModel } from '../models/user.model';
 import { Http, Response } from '@angular/http';
 import { AlertService } from './alert.service';
-import { USER_FETCH_TYPE_SLIM } from '../../../../shared/constants/constants';
-// import {StartupService} from './startup.service';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { SymbolModel } from "../models/symbol.model";
-import { ModalService } from './modal.service';
-import { LoginComponent } from '../components/login/login.component';
 import { app } from '../../assets/custom/js/core/app';
-
-export interface IAccountStatus {
-	available: number,
-	equity: number,
-	openMargin: number,
-	profit: number
-}
 
 @Injectable()
 export class UserService {
 
 	public model: UserModel = new UserModel(app.user);
 
-	public accountStatus$: BehaviorSubject<IAccountStatus> = new BehaviorSubject({
-		available: 0,
-		equity: 0,
-		openMargin: 0,
-		profit: 0
-	});
-
 	constructor(
 		private _http: Http,
-		private _modalService: ModalService,
 		private _alertService: AlertService) {}
 
 	findById(id: string, options: any = {}): Promise<UserModel> {
@@ -128,31 +109,5 @@ export class UserService {
 		} catch (error) {
 			console.error(error);
 		}
-	}
-
-	public async showLoginRegisterPopup() {
-		return new Promise((resolve) => {
-
-			let self = this;
-			console.log(this._modalService);
-			let dialogComponentRef = this._modalService.create(LoginComponent, {
-				type: 'dialog',
-				title: 'Login / Register',
-				showBackdrop: true,
-				showCloseButton: true,
-				model: {},
-				buttons: [
-					{ text: 'cancel', type: 'candel' },
-					{ value: 'add', text: 'add', type: 'primary' }
-				],
-				onClickButton(value) {
-					if (value === 'add') {
-						self._modalService.destroy(dialogComponentRef);
-						resolve(true);
-					} else
-						self._modalService.destroy(dialogComponentRef);
-				}
-			});
-		});
 	}
 }

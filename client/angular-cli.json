@@ -15,9 +15,6 @@
       "tsconfig": "tsconfig.json",
       "prefix": "app",
       "scripts": [
-        "../node_modules/jquery/dist/jquery.min.js",
-        "../node_modules/bootstrap/js/dist/index.js",
-        "../node_modules/bootstrap/js/dist/modal.js",
         "../node_modules/highcharts/highstock.js",
         "../node_modules/highcharts/modules/exporting.js",
         "./assets/vendor/js/highcharts/indicators/indicators.js",
