@@ -60,9 +60,9 @@ export const dataLayer = {
 		// log.info('DataLayer', `WRITING ${candles.length / 10} candles to ${collectionName} starting ${new Date(candles[0])} until ${new Date(candles[candles.length - 10])}`);
 
 		for (; i < candles.length;) {
-			const time = candles[i];
+			const time = Math.trunc(candles[i]);
 			const data = Buffer.from(candles.slice(i, i += rowLength).buffer);
-			bulk.find({ _id: time }).upsert().updateOne({ $set: { _id: time, data } });
+			bulk.find({ _id: time }).upsert().replaceOne({ $set: { _id: time, data } });
 		}
 
 		const bulkResult = await bulk.execute();

@@ -32,8 +32,6 @@ export class RegisterComponent implements OnInit {
 		private alertService: AlertService) { }
 
 	ngOnInit() {
-		// get return url from route parameters or default to '/'
-		//this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
 	}
 
 	async register() {

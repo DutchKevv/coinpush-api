@@ -1,8 +1,9 @@
-import {Schema, model} from 'mongoose';
+import { Schema, model } from 'mongoose';
+import { Long } from 'mongodb';
 
 export const CandleSchema = new Schema({
 	_id: {
-		type: Number,
+		type: Long,
 		required: true
 	},
 	data: {
