@@ -3,7 +3,7 @@ import { Long } from 'mongodb';
 
 export const CandleSchema = new Schema({
 	_id: {
-		type: Long,
+		type: Schema.Types.Date,
 		required: true
 	},
 	data: {
