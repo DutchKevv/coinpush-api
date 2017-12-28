@@ -57,6 +57,9 @@
     .col-1h {
         line-height: 13px;
         padding-bottom: 5px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .col-bookmark,
@@ -94,7 +97,7 @@
 	color: white;
 	padding: 6px 0;
     height: auto !important;
-    
+
 	> div {
         padding: 0 !important;
 	}
