@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, Input, Output, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, Input, Output, ChangeDetectorRef, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { AlertService } from '../../services/alert.service';
@@ -19,6 +19,7 @@ import { ALARM_TRIGGER_DIRECTION_DOWN, ALARM_TRIGGER_DIRECTION_UP, CUSTOM_EVENT_
 export class AlarmMenuComponent implements OnInit {
 
 	@Input() symbol: SymbolModel;
+	@Output() onDestroy: EventEmitter<boolean> = new EventEmitter;
 
 	public activeMenu = null;
 	public activeAlarmMenu = 'new';

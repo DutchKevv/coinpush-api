@@ -1,7 +1,7 @@
 <header>
         <i class="fa fa-bell"></i>
         <h5>{{symbol.options.displayName}}</h5>
-        <i (click)="toggleAlarmMenuVisibility()" class="fa fa-close"></i>
+        <i (click)="onDestroy.emit(true)" class="fa fa-close"></i>
     </header>
     <main>
         <ul class="side-menu-top-nav">

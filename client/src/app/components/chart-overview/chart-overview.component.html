@@ -1,20 +1,20 @@
 <div class="instrument-list-outer" [ngClass]="{split: !!activeSymbol}">
     <div class="filter-list" #filter>
-        <h4>Popular</h4>
+        <h2>Popular</h2>
         <a [ngClass]="{active: activeFilter === 'all popular'}" (click)="toggleActiveFilter('all popular')">All popular</a>
         <a [ngClass]="{active: activeFilter === 'rise and fall'}" (click)="toggleActiveFilter('rise and fall')">Risers and fallers</a>
         <a [ngClass]="{active: activeFilter === 'favorite'}" (click)="toggleActiveFilter('favorite')">My favorites</a>
         <a [ngClass]="{active: activeFilter === 'all'}" (click)="toggleActiveFilter('all')">All</a>
-        <h4>Resources</h4>
+        <h2>Resources</h2>
         <a [ngClass]="{active: activeFilter === 'resources'}" (click)="toggleActiveFilter('resources')">All resources</a>
         <a [ngClass]="{active: activeFilter === 'resources popular'}" (click)="toggleActiveFilter('resources popular')">Popular resources (ni)</a>
-        <h4>Indices</h4>
+        <h2>Indices</h2>
         <a [ngClass]="{active: activeFilter === 'all2'}" (click)="toggleActiveFilter('all2')">All indices (ni)</a>
         <a [ngClass]="{active: activeFilter === 'all2'}" (click)="toggleActiveFilter('all2')">Popular indices (ni)</a>
-        <h4>Crypto</h4>
+        <h2>Crypto</h2>
         <a [ngClass]="{active: activeFilter === 'crypto all'}" (click)="toggleActiveFilter('crypto all')">All crypto</a>
         <a [ngClass]="{active: activeFilter === 'crypto popular'}" (click)="toggleActiveFilter('crypto popular')">Popular crypto</a>
-        <h4>Forex</h4>
+        <h2>Forex</h2>
         <a [ngClass]="{active: activeFilter === 'forex'}" (click)="toggleActiveFilter('forex')">All forex (ni)</a>
         <a [ngClass]="{active: activeFilter === 'forex popular'}" (click)="toggleActiveFilter('forex popular')">Popular forex (ni)</a>
     </div>
@@ -44,7 +44,7 @@
                         {{symbol.options.changedDAmount | number : '1.2-2'}}%
                     </span>
                 </div>
-                <div *ngIf="symbol.options.halted;else halted">
+                <div *ngIf="!symbol.options.halted;else halted">
                     <span class="value-bid">
                         {{symbol.options.high | number : '1.2-2'}}
                         <i class="fa fa-exchange"></i>
@@ -57,7 +57,8 @@
         </a>
     </div>
 
-    <app-alarm-menu *ngIf="activeMenu === 'alarm'" [symbol]="activeSymbol" class="side-menu" [ngClass]="{'open': activeMenu !== null}"></app-alarm-menu>
+    <app-alarm-menu *ngIf="activeMenu === 'alarm'" class="side-menu" [symbol]="activeSymbol" [ngClass]="{'open': activeMenu !== null}"
+        (onDestroy)="onDestroyTriggerMenu()"></app-alarm-menu>
 </div>
 
 <app-chart-box #chart [symbolModel]="activeSymbol" *ngIf="activeSymbol"></app-chart-box>

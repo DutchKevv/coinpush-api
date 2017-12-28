@@ -60,7 +60,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 	ngOnInit() {
 		this._filterSub = this._applicationRef.components[0].instance.filterClick$.subscribe(() => this.toggleFilterNav());
 		this._priceChangeSub = this.cacheService.changed$.subscribe(changedSymbols => this._onPriceChange(changedSymbols));
-		
+
 		setTimeout(() => {
 			if (!this._route.snapshot.queryParams['symbol'])
 				this.toggleActiveFilter('rise and fall');
@@ -169,7 +169,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 		if (!this.activeSymbol) {
 			setTimeout(() => {
 				const el = this._elementRef.nativeElement.querySelector('.instrument-list a.active');
-				if (el)
+				if (el && !this.isElementInViewport(el))
 					el.scrollIntoView();
 			}, 0);
 		}
@@ -190,12 +190,18 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 		this._changeDetectorRef.detectChanges();
 	}
 
+	
 	public trackByFunc(index, item) {
 		return item.options.name;
 	}
 
-	onSymbolChange(symbolModel: SymbolModel): void {
+	public onSymbolChange(symbolModel: SymbolModel): void {
 		this.activeSymbol = symbolModel;
+	}
+
+	public onDestroyTriggerMenu() {
+		this.activeMenu = null;
+		this._changeDetectorRef.detectChanges();
 	}
 
 	private _onPriceChange(changedSymbols) {
@@ -224,6 +230,16 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 				this.setActiveSymbol(null, symbol);
 			}
 		}
+	}
+
+	private isElementInViewport(el) {
+		var rect = el.getBoundingClientRect();
+
+		return (
+			rect.top >= 0 &&
+			rect.left >= 0 &&
+			rect.bottom <= (el.parentNode.innerHeight)
+		);
 	}
 
 	ngOnDestroy() {
