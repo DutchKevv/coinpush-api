@@ -24,7 +24,7 @@
   "author": "Apache Cordova Team",
   "license": "Apache-2.0",
   "dependencies": {
-    "@angular/cli": "^1.6.2",
+    "@angular/cli": "^1.6.3",
     "@angular/common": "^5.1.2",
     "@angular/compiler": "^5.1.2",
     "@angular/compiler-cli": "^5.1.2",
@@ -44,7 +44,7 @@
     "android-versions": "^1.2.1",
     "bootstrap": "^4.0.0-beta.2",
     "cordova-android": "^7.0.0",
-    "cordova-browser": "^5.0.2",
+    "cordova-browser": "^5.0.3",
     "cordova-build-increment": "^0.1.0",
     "cordova-plugin-admobpro": "^2.29.29",
     "cordova-plugin-app-version": "^0.1.9",
@@ -64,7 +64,7 @@
     "socket.io-client": "2.0.4",
     "spritesheet-js": "^1.2.6",
     "typescript": "^2.6.2",
-    "zone.js": "^0.8.18"
+    "zone.js": "^0.8.19"
   },
   "cordova": {
     "plugins": {
