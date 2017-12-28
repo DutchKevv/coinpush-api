@@ -166,6 +166,14 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 			symbol = null;
 		}
 
+		if (!this.activeSymbol) {
+			setTimeout(() => {
+				const el = this._elementRef.nativeElement.querySelector('.instrument-list a.active');
+				if (el)
+					el.scrollIntoView();
+			}, 0);
+		}
+
 		this.activeSymbol = symbol;
 
 		if (this.activeEvents$ && this.activeEvents$.unsubscribe)

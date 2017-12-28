@@ -309,11 +309,16 @@ export default class CyrptoCompareApi extends EventEmitter {
         let p: any = Promise.reject(null);
 
         for (var i = 0; i < max; i++) {
-            p = p.catch(() => {
-                return request({
+            p = p.catch(async () => {
+                const result = await request({
                     uri: url + stringify(params),
                     json: true
-                })
+                });
+
+                if (!result || !result.Data)
+                    throw new Error('empty result');
+
+                return result;
             }).catch(error => {
                 console.log('reattempt', params);
                 console.error('status code', error.statusCode || error.httpCode);

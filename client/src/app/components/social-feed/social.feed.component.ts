@@ -175,11 +175,11 @@ export class SocialFeedComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 
 	private _bindScroll() {
-		$(this.elementRef.nativeElement.parentNode).on('scroll.feed', (event) => this._onScroll(event)).scroll();
+		// $(this.elementRef.nativeElement.parentNode).on('scroll.feed', (event) => this._onScroll(event)).scroll();
 	}
 
 	private _unbindScroll() {
-		$(this.elementRef.nativeElement.parentNode).off('scroll.feed');
+		// $(this.elementRef.nativeElement.parentNode).off('scroll.feed');
 	}
 
 	private _toggleScrollLoading(state: boolean) {

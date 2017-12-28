@@ -15,7 +15,6 @@ import { AuthenticationService } from './services/authenticate.service';
 import { CustomHttp } from './services/http.service';
 import { AlertService } from './services/alert.service';
 import { AlertComponent } from './components/alert/alert.component';
-import { RegisterComponent } from './components/register/register.component';
 import { HttpModule, XHRBackend, RequestOptions, Http } from '@angular/http';
 import { UserOverviewComponent } from './components/user-overview/user.overview.component';
 import { ProfileComponent } from './components/profile/profile.component';
@@ -45,7 +44,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 		LoginComponent,
 		PasswordResetComponent,
 		RequestPasswordResetComponent,
-		RegisterComponent,
 		AlertComponent,
 		UserOverviewComponent,
 		ProfileComponent,
@@ -84,7 +82,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 		AppComponent
 	],
 
-	entryComponents: [LoginComponent, RegisterComponent]
+	entryComponents: [LoginComponent]
 })
 
 export class AppModule {

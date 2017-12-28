@@ -92,13 +92,11 @@
 	font-size: 14px;
 	background: $background-th;
 	color: white;
-	justify-content: space-between;
-	display: flex;
 	padding: 6px 0;
-	flex-shrink: 0;
-
+    height: auto !important;
+    
 	> div {
-		align-items: left;
+        padding: 0 !important;
 	}
 
 	.col-2 {

@@ -29,7 +29,7 @@
             overflow: hidden;
         }
 
-        app > .spinner {
+        app>.spinner {
             margin: 0 calc(50% - 20px);
             position: absolute;
             top: calc(40% - 20px);
@@ -117,33 +117,45 @@
     <app></app>
 
     <script>
-        window.platform = {
-            isReady: false,
-            isReady$: Promise.resolve(),
-            version: '',
-            isApp: !!window['_cordovaNative'],
-            isEmulator: navigator.platform === 'Linux i686',
-            isLocal: document.URL.indexOf('file://') > -1
-        };
+        (function () {
+            // platform data
+            window.platform = {
+                isReady: false,
+                isReady$: Promise.resolve(),
+                version: '',
+                isApp: !!window['_cordovaNative'],
+                isEmulator: navigator.platform === 'Linux i686',
+                isLocal: document.URL.indexOf('file://') > -1
+            };
 
-        // load cordova
-        if (window.platform.isApp) {
+            if (!window.platform.isApp) {
+                window.platform.isReady = true;
+                return;
+            }
+
+            /**
+             * 
+             * app app app app app app app app app app app
+             * 
+             */
+
+            // special root class
             document.body.querySelector('app').classList.add('app');
 
+            // device ready listener
             window.platform.isReady$ = new Promise((resolve, reject) => {
-                let fc = function () {
-                    document.removeEventListener('deviceready', fc, false);
+                document.addEventListener("deviceready", function callback() {
+                    document.removeEventListener('deviceready', callback, false);
                     window.platform.isReady = true;
-                    resolve();   
-                };
-                document.addEventListener("deviceready", fc, false);
+                    resolve();
+                }, false);
             });
+
+            // cordova script
             let script = document.createElement('script');
             script.src = 'cordova.js';
             document.head.appendChild(script);
-        } else {
-            window.platform.isReady = true;
-        }
+        })();
     </script>
 </body>
 
