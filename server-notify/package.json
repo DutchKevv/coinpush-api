@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/mongoose": "^4.7.29",
+    "@types/mongoose": "^4.7.31",
     "@types/validator": "^6.3.0",
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
@@ -19,13 +19,13 @@
     "http-proxy": "^1.16.2",
     "jsonwebtoken": "^8.1.0",
     "minimist": "^1.2.0",
-    "mongoose": "^4.13.7",
+    "mongoose": "^5.0.0-rc0",
     "mongoose-beautiful-unique-validation": "^7.0.0",
     "morgan": "^1.9.0",
     "node-gcm": "^0.14.9",
     "nodemailer": "^4.4.1",
     "redis": "^2.8.0",
-    "tsc-watch": "^1.0.11",
+    "tsc-watch": "^1.0.13",
     "typescript": "^2.6.2",
     "validator": "^9.2.0"
   }

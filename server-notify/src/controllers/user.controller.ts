@@ -7,6 +7,7 @@ import {
 } from '../../../shared/constants/constants';
 import { IReqUser } from "../../../shared/interfaces/IReqUser.interface";
 import { IUser } from "../../../shared/interfaces/IUser.interface";
+import { deviceController } from './device.controller';
 
 const RESET_PASSWORD_TOKEN_EXPIRE = 1000 * 60 * 60 * 24; // 24 hour
 
@@ -48,11 +49,14 @@ export const userController = {
 
 	// TODO - Filter fields
 	async update(reqUser, userId, params): Promise<void> {
-		console.log(params);
 		if (params.device) {
 			if (params.device.token)
-				await (<any>User).addDevice(userId, params.device);
+				await deviceController.add(userId, params.device);
+
 			delete params.device;
+
+			if (Object.keys(params).length === 0)
+				return;
 		}
 
 		const user = await User.findByIdAndUpdate(userId, params);

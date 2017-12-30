@@ -110,6 +110,8 @@
     </style>
 </head>
 
+<script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
+
 <body>
     <div class="font-awesome-preload-trigger">
         <i class="fa fa-square-o fa-3x"></i>
@@ -128,6 +130,12 @@
                 isLocal: document.URL.indexOf('file://') > -1
             };
 
+            /**
+             * 
+             * 
+             * browser browser browser browser browser browser 
+             * 
+             */
             if (!window.platform.isApp) {
                 window.platform.isReady = true;
                 return;

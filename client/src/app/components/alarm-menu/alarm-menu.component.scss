@@ -2,14 +2,21 @@
 @import '~bootstrap/scss/_variables';
 @import '~bootstrap/scss/_mixins';
 @import '~bootstrap/scss/_buttons';
+@import '~bootstrap/scss/_grid';
 @import '~bootstrap/scss/_forms';
+@import '~bootstrap/scss/utilities/_sizing';
 @import '~bootstrap/scss/utilities/_visibility';
 
 @import '../../style/variables/variables';
 @import '../../style/helpers/normalize';
 
+.active {
+    background: $general-active;
+}
+
 :host {
     display: none;
+    overflow-y: auto;
 
     &.open {
         display: block;
@@ -49,22 +56,24 @@ header {
         margin-right: 10px;
     }
 
-    h5 {
+    h3 {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        line-height: 20px;
     }
 }
 
 main > form {
-    padding: 6px;
+    padding: 0 10px;
 }
 
 .side-menu-top-nav {
     display: flex;
+    margin-bottom: 10px;
 
     li {
-        padding: 4px 4px;
+        padding: 4px 8px;
         width: 100%;
         cursor: pointer;
     }
@@ -82,8 +91,10 @@ main > form {
 }
 
 .alarm-row {
-    padding: 4px;
-    border-bottom: 1px solid white;
+    padding: 8px;
+    border-bottom: 1px solid #444;
+    display: flex;
+    justify-content: space-between;
 
     > * {
         padding-right: 10px;
@@ -97,5 +108,9 @@ main > form {
         &:first-child {
             margin-left: 0;
         }
+    }
+
+    &:nth-child(even) {
+        background: #222122;
     }
 }

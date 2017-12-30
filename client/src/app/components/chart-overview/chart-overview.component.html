@@ -53,11 +53,11 @@
                 </div>
                 <ng-template #halted>Market closed</ng-template>
             </div>
-            <i (click)="activeMenu = 'alarm'" class="fa fa-bell col-alert"></i>
+            <i (click)="toggleAlarmMenu($event, symbol, true)" class="fa fa-bell col-alert"></i>
         </a>
     </div>
 
-    <app-alarm-menu *ngIf="activeMenu === 'alarm'" class="side-menu" [symbol]="activeSymbol" [ngClass]="{'open': activeMenu !== null}"
+    <app-alarm-menu *ngIf="activeMenu === 'alarm' && activeSymbol" class="side-menu" [symbol]="activeSymbol" [ngClass]="{'open': activeMenu !== null}"
         (onDestroy)="onDestroyTriggerMenu()"></app-alarm-menu>
 </div>
 

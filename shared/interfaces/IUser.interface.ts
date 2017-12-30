@@ -10,4 +10,5 @@ export interface IUser {
 	img?: string;
 	description?: string;
 	favorites?: Array<string>
+	device?: any;
 }

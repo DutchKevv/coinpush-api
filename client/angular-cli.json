@@ -7,6 +7,7 @@
       "root": "src",
       "outDir": "www",
       "assets": [
+        "firebase-messaging-sw.js",
         "assets",
         "favicon.ico"
       ],

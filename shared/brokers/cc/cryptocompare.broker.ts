@@ -7,7 +7,7 @@ import { EventEmitter } from 'events';
 import { Base } from '../../classes/Base';
 import * as Constants from '../../constants/constants';
 import { ORDER_TYPE_IF_TOUCHED, ORDER_TYPE_LIMIT, ORDER_TYPE_MARKET, ORDER_TYPE_STOP, BROKER_GENERAL_TYPE_CC, SYMBOL_CAT_TYPE_CRYPTO } from '../../constants/constants';
-import * as request from 'request-promise';
+import * as request from 'requestretry';
 import { symbols } from './symbols';
 import * as io from 'socket.io-client';
 import { CCC } from './util.cc';
@@ -103,10 +103,11 @@ export default class CyrptoCompareApi extends EventEmitter {
 
         try {
             const result = await request({
-                uri: 'https://www.cryptocompare.com/api/data/coinlist/',
+                uri: 'https://min-api.cryptocompare.com/data/all/coinlist',
+                fullResponse: false,
                 json: true
             });
-
+           
             const normalized = [];
             for (let key in result.Data) {
                 const coin = result.Data[key];
@@ -160,7 +161,7 @@ export default class CyrptoCompareApi extends EventEmitter {
                 tsym: 'USD',
                 toTs: until || undefined
             });
-           
+
             let candles = new Float64Array(result.Data.length * 10);
 
             result.Data.forEach((candle, index) => {
@@ -312,11 +313,12 @@ export default class CyrptoCompareApi extends EventEmitter {
             p = p.catch(async () => {
                 const result = await request({
                     uri: url + stringify(params),
-                    json: true
+                    json: true,
+                    fullResponse: false
                 });
 
                 if (!result || !result.Data)
-                    throw new Error('empty result');
+                    throw new Error('empty result!');
 
                 return result;
             }).catch(error => {
@@ -324,12 +326,17 @@ export default class CyrptoCompareApi extends EventEmitter {
                 console.error('status code', error.statusCode || error.httpCode);
             });
         }
-        
+
         try {
-            return await p;
+            const result = await p;
+
+            if (!result || !result.Data)
+                throw new Error('empty result!');
+
+            return result;
         } catch (error) {
-           console.error('5 attempts failed!', error);
-           throw new Error('Request could not be made')
+            console.error('5 attempts failed!', error);
+            throw new Error('Request could not be made')
         }
     }
 }

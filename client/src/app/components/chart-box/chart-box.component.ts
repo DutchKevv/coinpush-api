@@ -1,7 +1,7 @@
 import { throttle } from 'lodash';
 import {
 	Component, OnDestroy, ElementRef, Input, ViewChild,
-	OnInit, AfterViewInit, NgZone, Output, SimpleChanges, OnChanges, ChangeDetectionStrategy
+	OnInit, AfterViewInit, NgZone, Output, SimpleChanges, OnChanges, ChangeDetectionStrategy, ViewEncapsulation
 } from '@angular/core';
 import { CacheService } from '../../services/cache.service';
 import { ConstantsService } from '../../services/constants.service';
@@ -15,6 +15,7 @@ declare let Highcharts: any;
 	styleUrls: [
 		'./chart-box.component.scss'
 	],
+	encapsulation: ViewEncapsulation.None,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 

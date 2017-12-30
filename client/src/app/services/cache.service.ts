@@ -2,7 +2,7 @@ import { EventEmitter, Injectable, NgZone, Output } from '@angular/core';
 import * as io from 'socket.io-client';
 import { SymbolModel } from "../models/symbol.model";
 import { UserService } from './user.service';
-import { app } from '../../assets/custom/js/core/app';
+import { app } from '../../core/app';
 
 @Injectable()
 export class CacheService {
@@ -52,6 +52,14 @@ export class CacheService {
 				});
 			});
 		})
+	}
+
+	public priceToFixed(number, symbol: SymbolModel) {
+		if (symbol.options.precision > 0)
+			return number.toFixed(symbol.options.precision + 1 || 4);
+
+		let n = Math.max(Math.min(number.toString().length, 2), 6);
+		return number.toFixed(n);
 	}
 
 	public unload() {

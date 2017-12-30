@@ -3,7 +3,7 @@ import { generalHelpers } from './helpers/general';
 import { StorageHelper } from "./helpers/classes/storage.helper";
 import { loadCordova } from "./mobile/cordova.bootstrapper";
 import { getAddress } from './app.address';
-import { ChartRenderer } from "./ui/chart-renderer.core";
+import { NotificationHelper } from "./helpers/classes/notification.helper";
 
 export class App extends MicroEvent {
 
@@ -16,8 +16,8 @@ export class App extends MicroEvent {
     public symbols: Array<any> = [];
     public address;
     public storage = new StorageHelper();
+    public notification = new NotificationHelper();
     public helpers = generalHelpers;
-    public chartRenderer = new ChartRenderer();
 
     constructor() {
         super();
@@ -25,6 +25,7 @@ export class App extends MicroEvent {
     }
 
     public init(): void {
+        this._askNotificationPermission();
         this.address = getAddress();
 
         Promise.all(
@@ -38,6 +39,7 @@ export class App extends MicroEvent {
                     await this.storage.init();
 
                     await Promise.all([
+                        this.notification.init(),
                         this._loadUser(),
                         this._loadConfig()
                     ]);
@@ -75,6 +77,12 @@ export class App extends MicroEvent {
             this.symbols = symbols;
             
         this.emit('symbols-update')
+    }
+
+    private _askNotificationPermission() {
+        // Notification.requestPermission((status) => {
+        //     console.log('Notification permission status:', status);
+        // });
     }
 }
 

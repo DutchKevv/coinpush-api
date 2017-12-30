@@ -5,7 +5,7 @@ import { Subject } from "rxjs/Subject";
 import { Router, NavigationEnd, NavigationStart, ActivatedRoute } from '@angular/router';
 import { UserService } from './services/user.service';
 import { Http } from '@angular/http';
-import { app } from '../assets/custom/js/core/app';
+import { app } from '../core/app';
 
 declare let Module: any;
 

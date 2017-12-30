@@ -174,14 +174,14 @@ app.use((req, res, next) => {
 app.use('/api/v1/symbols', require('./api/symbol.api'));
 
 /**
- * favorite
- */
-app.use('/api/v1/favorite', require('./api/favorite.api'));
-
-/**
  * authenticate
  */
 app.use('/api/v1/authenticate', require('./api/authenticate.api'));
+
+/**
+ * device
+ */
+app.use('/api/v1/device', require('./api/device.api'));
 
 /**
  * upload
@@ -213,6 +213,11 @@ app.use('/api/v1/event', require('./api/event.api'));
  * search
  */
 app.use('/api/v1/search', require('./api/search.api'));
+
+/**
+ * favorite
+ */
+app.use('/api/v1/favorite', require('./api/favorite.api'));
 
 /**
  * error handling

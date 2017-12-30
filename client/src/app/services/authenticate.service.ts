@@ -3,7 +3,7 @@ import { Http, Response } from '@angular/http';
 import { UserService } from './user.service';
 import { AlertService } from "./alert.service";
 import { LoginComponent } from '../components/login/login.component';
-import { app } from '../../assets/custom/js/core/app';
+import { app } from '../../core/app';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 
@@ -51,15 +51,16 @@ export class AuthenticationService {
 		}
 
 		try {
-			const deviceToken = await this._getDeviceToken();
-
+			const deviceToken = app.notification.token;
+			
 			const user = await this._http.post('/authenticate', {
 				email,
 				password,
 				token,
 				profile,
 				device: {
-					token: deviceToken
+					token: deviceToken,
+					platformType: app.platform.isApp ? 'app' : 'browser'
 				}
 			})
 				.map((r: Response) => r.json())
@@ -79,6 +80,10 @@ export class AuthenticationService {
 			console.error(error);
 			return false;
 		}
+	}
+
+	public updateDeviceToken() {
+		
 	}
 
 	public async logout(): Promise<void> {

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, Input, Output, ChangeDetectorRef, EventEmitter } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, Input, Output, ChangeDetectorRef, EventEmitter, SimpleChanges, OnChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { AlertService } from '../../services/alert.service';
@@ -8,21 +8,24 @@ import { SymbolModel } from '../../models/symbol.model';
 import { EventService } from '../../services/event.service';
 import { NgForm } from '@angular/forms';
 import { ALARM_TRIGGER_DIRECTION_DOWN, ALARM_TRIGGER_DIRECTION_UP, CUSTOM_EVENT_TYPE_ALARM } from '../../../../../shared/constants/constants';
+import { CacheService } from '../../services/cache.service';
 
 @Component({
 	selector: 'app-alarm-menu',
 	templateUrl: './alarm-menu.component.html',
 	styleUrls: ['./alarm-menu.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush
+	// changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class AlarmMenuComponent implements OnInit {
+export class AlarmMenuComponent implements OnInit, OnChanges {
 
 	@Input() symbol: SymbolModel;
 	@Output() onDestroy: EventEmitter<boolean> = new EventEmitter;
 
-	public activeMenu = null;
-	public activeAlarmMenu = 'new';
+	public activeEvents$;
+	public historyEvents$;
+
+	public activeTab = 'new';
 	public formModel: any = {
 		alarmType: "1",
 		alarm: {
@@ -31,27 +34,40 @@ export class AlarmMenuComponent implements OnInit {
 	};
 
 	constructor(
-		private _eventService: EventService,
+		public _eventService: EventService,
+		private _cacheService: CacheService,
 		private _changeDetectorRef: ChangeDetectorRef,
 		private _changeRef: ChangeDetectorRef,
-		private _route: ActivatedRoute) {}
-
-	ngOnInit() {
-		
+		private _route: ActivatedRoute) {
+		// this._changeDetectorRef.detach();
 	}
 
-	toggleAlarmMenuVisibility() {
-		if (this.activeMenu === 'alarm') {
-			this.activeMenu = this.activeAlarmMenu = null;
-		} else {
-			this.activeMenu = 'alarm';
-			this.activeAlarmMenu = 'new'
-		}
+	ngAfterViewInit() {
 		this._changeDetectorRef.detectChanges();
 	}
 
-	toggleAlarmMenuTab(tab: string) {
-		this.activeAlarmMenu = tab;
+	ngOnChanges(changes: SimpleChanges) {
+		if (changes.symbol && changes.symbol.currentValue) {
+			this._unsubscribe();
+
+			if (this.symbol) {
+				this.formModel.amount = this.symbol.options.bid;
+
+				this.activeEvents$ = this._eventService.findBySymbol(this.symbol.options.name, 0, 50);
+				this.historyEvents$ = this._eventService.findBySymbol(this.symbol.options.name, 0, 50, true);
+			}
+
+			this._changeDetectorRef.detectChanges();
+		}
+	}
+
+	ngOnInit() {
+		this.formModel.amount = this.symbol.options.bid;
+		this._changeDetectorRef.detectChanges();
+	}
+
+	toggleTab(tab: string) {
+		this.activeTab = tab;
 		this._changeDetectorRef.detectChanges();
 	}
 
@@ -74,11 +90,19 @@ export class AlarmMenuComponent implements OnInit {
 		else
 			newValue -= inc;
 
-		// this.formModel.amount = parseFloat(this._priceToFixed(newValue));
-		// this._changeDetectorRef.detectChanges();
+		this.formModel.amount = parseFloat(this._cacheService.priceToFixed(newValue, this.symbol));
+		this._changeDetectorRef.detectChanges();
+	}
+
+	private _unsubscribe() {
+		if (this.activeEvents$ && this.activeEvents$.unsubscribe)
+			this.activeEvents$.unsubscribe();
+
+		if (this.historyEvents$ && this.historyEvents$.unsubscribe)
+			this.historyEvents$.unsubscribe();
 	}
 
 	ngOnDestroy() {
-	
+		this._unsubscribe();
 	}
 }

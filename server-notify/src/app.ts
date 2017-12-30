@@ -34,8 +34,17 @@ app.use((req, res, next) => {
 	next();
 });
 
+/**
+ * Add 'user' variable to request, holding userID
+ */
+app.use((req: any, res, next) => {
+	req.user = {id: req.headers['_id']};
+	next();
+});
+
 app.use('/mail', require('./api/email.api'));
 app.use('/user', require('./api/user.api'));
+app.use('/device', require('./api/device.api'));
 
 app.use((error, req, res, next) => {
 	console.error(error);

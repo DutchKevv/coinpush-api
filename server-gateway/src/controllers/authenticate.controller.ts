@@ -4,6 +4,7 @@ import { userController } from "./user.controller";
 import { G_ERROR_UNKNOWN } from "../../../shared/constants/constants";
 import { log } from '../../../shared/logger';
 import { IUser } from '../../../shared/interfaces/IUser.interface';
+import { deviceController } from './device.controller';
 
 const config = require('../../../tradejs.config');
 
@@ -27,11 +28,9 @@ export const authenticateController = {
 			return null;
 
 		if (params.device && params.device.token) {
-			userController
-				.update({ id: user._id }, user._id, <any>{ device: params.device })
-				.catch(error => {
-					console.error('TODO - FIX: could not set firebase device token for user: ', user._id);
-				})
+			deviceController.add({ id: user._id }, params.device).catch(error => {
+				console.error('TODO - FIX: could not set firebase device token for user: ', user._id);
+			})
 		}
 
 		return user;

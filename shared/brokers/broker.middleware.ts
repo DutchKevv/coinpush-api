@@ -163,7 +163,19 @@ export class BrokerMiddleware extends EventEmitter {
     }
 
     private _installBrokerOanda() {
+        if (this._brokers.oanda) {
+            try {
+                this._brokers.oanda.destroy();
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        
         this._brokers.oanda = new OandaApi(config.broker.oanda);
+
+        // handle tick stream timeout (the used oanda file does not reconnect for some reason)
+        this._brokers.oanda.on('stream-timeout', () => this._installBrokerOanda());
+
         this._brokers.oanda.init();
     }
 

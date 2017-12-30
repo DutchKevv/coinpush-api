@@ -95,11 +95,11 @@ app-comment-box {
 	background: white;
 	margin-bottom: 15px;
 	font-size: 12px;
-	transition: opacity 1s;
+	// transition: opacity 1s;
 
-	&.fade-in {
-		animation: fadeIn 1s; /* IE 10+, Fx 29+ */
-	}
+	// &.fade-in {
+	// 	animation: fadeIn 1s; /* IE 10+, Fx 29+ */
+	// }
 
 	header,
 	main,

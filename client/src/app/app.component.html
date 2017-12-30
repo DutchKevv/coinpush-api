@@ -29,7 +29,6 @@
         <i class="fa fa-sign-out"></i>
         <span>Login</span>
     </a>
-
 </nav>
 
 <div (click)="toggleNav(false)" class="nav-overlay"></div>
@@ -43,7 +42,7 @@
             <input (keyup)="onSearchKeyUp($event)" (focus)="onSearchKeyUp($event)" placeholder="Markets / People" #input>
             <div class="search-drop-down" *ngIf="(searchResults$ | async) as result" (click)="onClickDropdownItem()" #dropdown>
                 <a *ngFor="let symbol of result.symbols" [routerLink]="['/symbols']" [queryParams]="{symbol: symbol.options.name}">
-                    <img src="{{symbol.options.img}}">
+                    <span class="symbol-img-{{symbol.options.name}}"></span>
                     <span>{{symbol.options.displayName}}</span>
                 </a>
                 <a *ngFor="let user of result.users" [routerLink]="['/user/', user._id]">

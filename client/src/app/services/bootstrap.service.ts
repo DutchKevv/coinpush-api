@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { app } from '../../assets/custom/js/core/app';
+import { app } from '../../core/app';
 
 @Injectable()
 export class BootstrapService {

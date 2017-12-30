@@ -168,4 +168,9 @@
 
 app-chart-box {
     height: 50%;
+    // height: 100%;
+    width: 100%;
+    background: $background-dark;
+    display: flex;
+    flex-flow: column;
 }

@@ -4,7 +4,7 @@ import { Http, Response } from '@angular/http';
 import { AlertService } from './alert.service';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { SymbolModel } from "../models/symbol.model";
-import { app } from '../../assets/custom/js/core/app';
+import { app } from '../../core/app';
 
 @Injectable()
 export class UserService {

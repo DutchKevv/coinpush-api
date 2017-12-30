@@ -46,6 +46,7 @@
     "readable-timespan": "1.2.0",
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
+    "requestretry": "^1.12.2",
     "rxjs": "^5.5.2",
     "socket.io-client": "^2.0.4",
     "tsc-watch": "^1.0.8",

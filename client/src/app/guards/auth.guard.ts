@@ -5,6 +5,7 @@ import { CanActivate } from '@angular/router';
 export class AuthGuard implements CanActivate {
 
 	async canActivate(): Promise<boolean> {
+		
 		return true;
 	}
 }
