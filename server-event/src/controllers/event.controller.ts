@@ -19,9 +19,9 @@ export const eventController = {
 		};
 		const fields: any = {
 			createDate: 1,
-			symbol: 1, 
-			alarm: 1, 
-			type: 1 
+			symbol: 1,
+			alarm: 1,
+			type: 1
 		};
 
 		if (typeof params.symbol === 'string')
@@ -31,7 +31,7 @@ export const eventController = {
 			fields.triggeredDate = 1;
 		}
 
-		return Event.find(opt, fields).lean();
+		return Event.find(opt, fields).sort({[params.history ? 'triggeredDate' : '_id']: -1}).lean();
 	},
 
 	async create(reqUser, params: any = {}) {
@@ -66,22 +66,6 @@ export const eventController = {
 			throw new Error('EventController - remove: eventId required')
 
 		const result = await Event.remove({ _id: eventId });
-
-		console.log(result);
-	},
-
-	async onNewBars(bars: Array<any>) {
-		for (let i = 0, len = bars.length; i < len; i++) {
-			let bar = bars[i];
-			let events = [].concat(await Promise.all(
-				[
-					Event.find({ symbol: bar.symbol, 'alarm.dir': ALARM_TRIGGER_DIRECTION_UP, 'alarm.price': { $gt: bar.bid } }),
-					Event.find({ symbol: bar.symbol, 'alarm.dir': ALARM_TRIGGER_DIRECTION_DOWN, 'alarm.price': { $lt: bar.bid } }),
-				]
-			));
-
-			console.log(events);
-		}
 	},
 
 	async checkEvents() {
@@ -112,6 +96,20 @@ export const eventController = {
 							event.triggered = true;
 							event.triggeredDate = new Date();
 							event.save();
+
+							// notify
+							// if (parent.userId.toString() !== reqUser.id) {
+							let pubOptions = {
+								type: 'symbol-alarm',
+								data: {
+									toUserId: event.userId,
+									time: event.triggeredDate,
+									symbol: event.symbol,
+									target: event.alarm.price
+								}
+							};
+
+							client.publish("notify", JSON.stringify(pubOptions));
 						}
 					}
 				}

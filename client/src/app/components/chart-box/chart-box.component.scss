@@ -6,7 +6,6 @@
 @import '../../style/variables/variables';
 // @import '../../style/components/spinner';
 @import '../../style/helpers/normalize';
-@import '../../style/components/dropdown';
 
 :host {
     height: 100%;
@@ -60,13 +59,12 @@
     }
 }
 
-.dropdown-menu {
-    margin: 0;
-
-    a:hover {
-        background: white;
-        color: $font-color-dark;
-    }
+.dropdown select {
+    margin-left: 10px;
+    min-width: 80px;
+    max-width: 80px;
+    background-color: #000000;
+    color: white;
 }
 
 .btn-menu {

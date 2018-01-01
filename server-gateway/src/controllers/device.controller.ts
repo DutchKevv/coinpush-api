@@ -15,9 +15,9 @@ export const deviceController = {
 		});
 	},
 
-	remove(reqUser: IReqUser, commentId): Promise<any> {
+	remove(reqUser: IReqUser, token: string): Promise<any> {
 		return request({
-			uri: config.server.notify.apiUrl + '/device' + commentId,
+			uri: config.server.notify.apiUrl + '/device/' + token,
 			method: 'delete',
 			headers: {'_id': reqUser.id},
 			json: true

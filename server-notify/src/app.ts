@@ -60,6 +60,7 @@ app.use((error, req, res, next) => {
 
 redis.client.subscribe("notify");
 redis.client.on("message", function (channel, message) {
+    
     let data;
     try {
         data = JSON.parse(message);

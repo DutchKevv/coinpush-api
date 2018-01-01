@@ -16,6 +16,7 @@ export class AuthenticationService {
 		private _alertService: AlertService,
 		private _modalService: NgbModal,
 		private _http: Http) {
+			app.on('firebase-token-refresh', () => this.updateDeviceToken());
 	}
 
 	public async requestPasswordReset(email: string) {
@@ -82,8 +83,11 @@ export class AuthenticationService {
 		}
 	}
 
-	public updateDeviceToken() {
-		
+	public async updateDeviceToken() {
+		await this._http.post('/device', {
+			token: app.notification.token,
+			platformType: app.platform.isApp ? 'app' : 'browser'
+		}).toPromise();
 	}
 
 	public async logout(): Promise<void> {

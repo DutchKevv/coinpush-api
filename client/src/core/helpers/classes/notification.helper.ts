@@ -57,9 +57,9 @@ export class NotificationHelper {
      */
     private async _loadBrowser() {
         const config = {
-            apiKey: "AIzaSyBH22KVK0RDtxr1XuYPeQm1z5HamE-iV64",
-            authDomain: "<PROJECT_ID>.firebaseapp.com",
-            messagingSenderId: "<SENDER_ID>",
+            apiKey: "AAAAcOdrZII:APA91bHdt3bPaqUW4sWF7tht0xJs13B_X-4Svm4TlWeLnXXFoVsPxWRQGxUPdqudCP1OHkQ-IJCVO10DJKi8G2fLekqfpy0xAXGakQmj-7FZW3DwB18BxcHNIWlgNC9T3T1tbXEnbaxM",
+            // authDomain: "<PROJECT_ID>.firebaseapp.com",
+            messagingSenderId: "484918912130",
         };
 
         firebase.initializeApp(config);
@@ -72,7 +72,7 @@ export class NotificationHelper {
             app.emit('firebase-token-refresh', this._token);
         });
 
-        await this.askPermissionBrowser();
+        this.askPermissionBrowser().catch(console.error);
     }
 
     /**
@@ -83,14 +83,14 @@ export class NotificationHelper {
             if (!data.isEnabled)
                 FirebasePlugin.grantPermission((result) => {
                     FirebasePlugin.getToken(token => {
-                        alert(token);
                         this._token = token;
+                        
                     });
                 });
             else {
                 FirebasePlugin.getToken(token => {
-                    alert(token);
                     this._token = token;
+                   
                 });
             }
         });
@@ -100,8 +100,8 @@ export class NotificationHelper {
         });
 
         FirebasePlugin.onTokenRefresh(function (token) {
-            // save this server-side and use it to push notifications to this device
-
+            this._token = token;
+            app.emit('firebase-token-refresh', this._token);
         }, function (error) {
             console.error(error);
         });

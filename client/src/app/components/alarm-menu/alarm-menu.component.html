@@ -48,15 +48,15 @@
     </ng-container>
     <ng-container *ngIf="activeTab === 'active'" class="active-alarm-view" style="padding-top: 10px;">
         <div class="alarm-row" *ngFor="let event of this.activeEvents$ | async">
-            <span>{{event.alarm.dir === 1 ? 'U' : 'D'}}</span>
+            <i class="fa fa-arrow-{{event.alarm.dir === 1 ? 'up' : 'down'}}"></i>
             <span>{{event.alarm.price}}</span>
+            <span>{{event.createDate | date: 'dd/MM/yyyy HH:MM:SS'}}</span>
             <i (click)="eventService.remove(event._id)" class="fa fa-close" style="float: right"></i>
-            <i class="fa fa-pencil" style="float: right"></i>
         </div>
     </ng-container>
     <ng-container *ngIf="activeTab === 'history'" style="padding-top: 10px;">
         <div class="alarm-row" *ngFor="let event of this.historyEvents$ | async">
-            <span>{{event.alarm.dir === 1 ? 'U' : 'D'}}</span>
+            <i class="fa fa-arrow-{{event.alarm.dir === 1 ? 'up' : 'down'}}"></i>
             <span>{{event.alarm.price}}</span>
             <span>{{event.triggeredDate | date: 'dd/MM/yyyy HH:MM:SS'}}</span>
         </div>

@@ -166,13 +166,14 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 	}
 
 	setActiveSymbol(event, symbol: SymbolModel): void {
-		console.log('set!');
 		if (symbol === this.activeSymbol) {
 			if (event && event.target.classList.contains('fa-bell')) {
-				if (this.activeMenu)
-					this.toggleAlarmMenu(null, this.activeSymbol);
-				else 
-					this._changeDetectorRef.detectChanges();
+				// console.log('set22!');
+				// if (!this.activeMenu)
+					// this.toggleAlarmMenu(null, this.activeSymbol);
+					// this.toggleAlarmMenu(null, this.activeSymbol);
+				// else 
+					// this._changeDetectorRef.detectChanges();
 				return;
 			} else {
 				symbol = null;

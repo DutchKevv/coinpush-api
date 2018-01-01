@@ -153,7 +153,9 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	}
 
 	public toggleTimeFrame(timeFrame: string) {
+		this._destroyChart();
 		this.timeFrame = timeFrame;
+		this._createChart();
 		this.init();
 	}
 
@@ -402,6 +404,13 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		if (this._chart)
 			this._chart.destroy();
 
+		this._data = {
+			candles: [],
+			volume: [],
+			indicators: [],
+			orders: []
+		};
+		
 		this._chart = null;
 	}
 

@@ -100,4 +100,4 @@ UserSchema.statics.removeDevice = async function (userId, device) {
 
 UserSchema.plugin(beautifyUnique);
 
-export const User = model('User', UserSchema);
+export const User = model('User', UserSchema, 'users');

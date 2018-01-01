@@ -1,7 +1,6 @@
 import * as nodeMailer from 'nodemailer';
 import { userController } from './user.controller';
 import { IUser } from '../../../shared/interfaces/IUser.interface';
-import * as redis from '../modules/redis';
 import * as gcm from 'node-gcm';
 import { User } from '../schemas/user.schema';
 
@@ -82,6 +81,19 @@ export const notifyController = {
         });
     },
 
+    async sendTypeSymbolAlarm(toUserId, data) {
+        return notifyController.sendToUser(data.toUserId, {
+            title: `${data.symbolDisplayName} hit ${data.target}`,
+            label: 'blaldksldksd',
+            body: {
+                type: 'symbol-alarm',
+                symbol: data.symbol,
+                target: data.target,
+                time: data.time
+            }
+        });
+    },
+
     parseByType(type, data) {
         switch (type) {
             case 'post-comment':
@@ -90,6 +102,8 @@ export const notifyController = {
                 return this.sendTypePostLike(data.toUserId, data);
             case 'comment-like':
                 return this.sendTypeCommentLike(data.toUserId, data);
+            case 'symbol-alarm':
+                return this.sendTypeSymbolAlarm(data.toUserId, data);
 
         }
         console.log('nnnnnnn', type, data);

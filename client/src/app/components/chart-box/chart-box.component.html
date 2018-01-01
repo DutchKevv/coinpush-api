@@ -35,80 +35,17 @@
 			<i class="fa fa-area-chart"></i>
 		</button>
 	</li>
-	<li class="dropdown">
-		<button type="button" class="dropdown-toggle btn-menu" data-toggle="dropdown" aria-haspopup="true">
-			<span>{{timeFrame || 'H1'}}</span>
-		</button>
-
-		<ul class="dropdown-menu">
-			<li>
-				<a (click)="toggleTimeFrame('M1')">M1</a>
-			</li>
-			<!-- <li>
-					<a (click)="toggleTimeFrame('M5')">M5</a>
-				</li>
-				<li>
-					<a (click)="toggleTimeFrame('M15')">M15</a>
-				</li>
-				<li>
-					<a (click)="toggleTimeFrame('M30')">M30</a>
-				</li> -->
-			<li>
-				<a (click)="toggleTimeFrame('H1')">H1</a>
-			</li>
-			<!-- <li>
-					<a (click)="toggleTimeFrame('H4')">H4</a>
-				</li> -->
-			<li>
-				<a (click)="toggleTimeFrame('D')">D</a>
-			</li>
-			<!-- <li>
-					<a (click)="toggleTimeFrame('W')">W</a>
-				</li> -->
-		</ul>
+	<li class="dropdown" (change)="toggleTimeFrame($event.target.value)">
+		<select>
+			<option value="M1">M1</option>
+			<option value="H1">H1</option>
+			<option value="D">D1</option>
+		</select>
 	</li>
 	<li class="dropdown">
-		<button type="button" class="dropdown-toggle btn-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-			<span>Indicator</span>
-		</button>
-
-		<ul class="dropdown-menu">
-			<li class="dropdown-submenu">
-				<a tabindex="-1" href="#">Indicators</a>
-				<ul class="dropdown-menu">
-					<li class="dropdown-header">Custom</li>
-
-					<li role="separator" class="divider"></li>
-					<li class="dropdown-header">Default</li>
-
-					<li>
-						<a (click)="addIndicator('MA')">MA</a>
-					</li>
-
-					<li class="dropdown-submenu pull-left">
-						<a href="#">Even More..</a>
-						<ul class="dropdown-menu">
-							<li>
-								<a href="#">3rd level</a>
-							</li>
-							<li>
-								<a href="#">3rd level</a>
-							</li>
-						</ul>
-					</li>
-				</ul>
-			</li>
-			<li>
-				<a href="#">Another action</a>
-			</li>
-			<li>
-				<a href="#">Something else here</a>
-			</li>
-			<li role="separator" class="divider"></li>
-			<li>
-				<a href="#">Separated link</a>
-			</li>
-		</ul>
+		<select>
+			<option value="MA">MA</option>
+		</select>
 	</li>
 </ul>
 
