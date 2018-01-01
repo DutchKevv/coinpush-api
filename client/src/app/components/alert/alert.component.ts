@@ -1,6 +1,6 @@
-import {Component, OnInit, Output, ChangeDetectionStrategy} from '@angular/core';
-import {AlertService} from '../../services/alert.service';
-import { BehaviorSubject } from 'rxjs';
+import { Component, OnInit, Output, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { AlertService } from '../../services/alert.service';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Component({
 	selector: 'app-alert',
@@ -15,16 +15,28 @@ export class AlertComponent {
 	private _timer;
 	private _timeout = 7000;
 
-	constructor(private alertService: AlertService) { }
+	constructor(
+		private alertService: AlertService,
+		private _changeDetectorRef: ChangeDetectorRef
+	) { }
 
 	ngOnInit() {
-		this.alertService.getMessage().subscribe(message => { {
+		this.alertService.getMessage().subscribe(message => {
+			{
 
-			clearTimeout(this._timer);
+				setTimeout(() => {
+					this._changeDetectorRef.detectChanges();
+				});
+				
+				clearTimeout(this._timer);
 
-			this.message$.next(message);
+				this.message$.next(message);
 
-			this._timer = setTimeout(() => this.message$.next(null), this._timeout);
-		} });
+				this._timer = setTimeout(() => {
+					this.message$.next(null);
+					this._changeDetectorRef.detectChanges();
+				}, this._timeout);
+			}
+		});
 	}
 }

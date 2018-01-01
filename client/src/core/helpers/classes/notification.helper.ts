@@ -35,20 +35,24 @@ export class NotificationHelper {
     }
 
     private _onNotification(notification: any) {
-        alert('MESSAGE!@!' + notification);
-
-        notification.body = JSON.parse(notification.body);
-
-        switch (notification.body.type) {
+        console.log(notification);
+        const body = JSON.parse(notification.body);
+        switch (body.type) {
             case 'post-comment':
-                window.location.hash = '#/comment/' + notification.body.parentId + '?focus=' + notification.body.commentId;
+                window.location.hash = '#/comment/' + body.parentId + '?focus=' + body.commentId;
                 break;
             case 'post-like':
-                window.location.hash = '#/comment/' + notification.body.commentId;
+                window.location.hash = '#/comment/' + body.commentId;
                 break;
             case 'comment-like':
-                window.location.hash = '#/comment/' + notification.body.parentId + '?focus=' + notification.body.commentId;
+                window.location.hash = '#/comment/' + body.parentId + '?focus=' + body.commentId;
                 break
+            case 'symbol-alarm':
+                window.location.hash = '#/symbols/?symbol=' + body.symbol;
+                app.emit('event-triggered', Object.assign(body, {title: notification.title}));
+                break
+            default:
+                console.error('Uknown notification type: ' + body.type);
         }
     }
 
@@ -65,7 +69,7 @@ export class NotificationHelper {
         firebase.initializeApp(config);
         const messaging = firebase.messaging();
 
-        messaging.onMessage((message) => this._onNotification(message));
+        messaging.onMessage((message) => this._onNotification(message.notification));
 
         messaging.onTokenRefresh(async () => {
             this._token = await messaging.getToken();
@@ -84,13 +88,13 @@ export class NotificationHelper {
                 FirebasePlugin.grantPermission((result) => {
                     FirebasePlugin.getToken(token => {
                         this._token = token;
-                        
+
                     });
                 });
             else {
                 FirebasePlugin.getToken(token => {
                     this._token = token;
-                   
+
                 });
             }
         });
@@ -99,7 +103,7 @@ export class NotificationHelper {
             throw error;
         });
 
-        FirebasePlugin.onTokenRefresh(function (token) {
+        FirebasePlugin.onTokenRefresh((token) => {
             this._token = token;
             app.emit('firebase-token-refresh', this._token);
         }, function (error) {

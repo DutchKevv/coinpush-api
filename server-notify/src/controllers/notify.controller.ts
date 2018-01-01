@@ -21,13 +21,13 @@ export const notifyController = {
 
         var message = new gcm.Message({
             priority: 'high',
-            data: {
-                body: params.body,
-                contentAvailable: true,
-            },
+            // data: {
+            //     contentAvailable: true,
+            // },
             notification: {
+                body: params.body,
                 title: params.title,
-                body: ''
+                sound: "default"
             }
         });
 
@@ -83,7 +83,7 @@ export const notifyController = {
 
     async sendTypeSymbolAlarm(toUserId, data) {
         return notifyController.sendToUser(data.toUserId, {
-            title: `${data.symbolDisplayName} hit ${data.target}`,
+            title: `Alarm triggered on ${data.symbol} - ${data.target}`,
             label: 'blaldksldksd',
             body: {
                 type: 'symbol-alarm',

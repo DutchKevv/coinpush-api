@@ -5,6 +5,8 @@ import { Observable } from 'rxjs/Observable';
 import { CommentModel } from '../models/comment.model';
 import { AlertService } from './alert.service';
 import { UserService } from "./user.service";
+import { app } from '../../core/app';
+import { CacheService } from './cache.service';
 
 @Injectable()
 export class EventService {
@@ -12,9 +14,10 @@ export class EventService {
 	constructor(
         private _http: Http, 
         private _alertService: AlertService, 
+        private _cacheService: CacheService, 
         private _userService: UserService
     ) {
-
+		app.on('event-triggered', event => this._onEventTriggered(event));
 	}
 
 	async create(params: any): Promise<CommentModel> {
@@ -51,5 +54,16 @@ export class EventService {
 	async remove(eventId: string): Promise<any> {
 		const result = await this._http.delete('/event/' + eventId).toPromise();
 		return result;
+	}
+
+	private _onEventTriggered(event) {
+		console.log(event);
+		const symbol = this._cacheService.getSymbolByName(event.symbol);
+		if (symbol) {
+			this._alertService.success(event.title);
+			const audio = new Audio('./assets/sound/cow.mp3');
+			audio.play();
+		}
+			
 	}
 }
