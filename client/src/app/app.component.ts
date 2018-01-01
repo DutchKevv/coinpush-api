@@ -47,6 +47,16 @@ export class AppComponent implements OnInit {
 	}
 
 	/**
+	 * outside click for searchdropdown
+	 * @param event 
+	 */
+	@HostListener('window:click', ['$event'])
+	onWindowClick(event) {
+		if (this.dropdown)
+			this.searchResults$.next(null);
+	}
+
+	/**
 	 * mobile nav menu touch swipe
 	 * @param event
 	 */
@@ -130,9 +140,7 @@ export class AppComponent implements OnInit {
 
 	public toggleDropdownVisibility(state) {
 		if (this.dropdown) {
-			requestAnimationFrame(() => {
-				this.dropdown.nativeElement.classList.toggle('hidden', !state)
-			})
+			this.dropdown.nativeElement.classList.toggle('hidden', !state)
 		}
 	}
 
@@ -159,8 +167,13 @@ export class AppComponent implements OnInit {
 	public toggleSearch() {
 		this.notificationOpen = false; 
 		this.searchOpen = !this.searchOpen;
+
+		// wait until visible
 		setTimeout(() => {
-			this.inputRef.nativeElement.focus();
+			// extra loop for android
+			// requestAnimationFrame(() => {
+				this.inputRef.nativeElement.focus();
+			// });
 		})
 	}
 

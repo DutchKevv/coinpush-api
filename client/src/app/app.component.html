@@ -36,13 +36,14 @@
 <main class="main-container">
     <header [ngClass]="{searchOpen: searchOpen}">
         <i (click)="toggleNav(true)" class="fa fa-navicon d-lg-none"></i>
-        <div class="notification-container">
-            <i (click)="searchOpen = false; notificationOpen = !notificationOpen;" class="fa fa-globe d-lg-none"></i>
+        <div class="notification-container" (click)="searchOpen = false; notificationOpen = !notificationOpen;">
+            <i class="fa fa-globe d-lg-none"></i>
+            <span *ngIf="true" class="notification-unread-circle">2</span>
             <div class="search-drop-down" *ngIf="notificationOpen" #dropdown>
                 <p class="dropdown-no-results-text">No notifications</p>
             </div>
         </div>
-        <i *ngIf="router.url.startsWith('/symbols') || router.url === '/user'" (click)="onClickFilter($event)" class="fa fa-filter d-lg-none"></i>
+        <i *ngIf="router.url.startsWith('/symbols')" (click)="onClickFilter($event)" class="fa fa-filter d-lg-none"></i>
 
         <div class="search-container">
             <input (keyup)="onSearchKeyUp($event)" (focus)="onSearchKeyUp($event)" placeholder="Markets / People" #input>

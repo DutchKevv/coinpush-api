@@ -57,9 +57,6 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 		this._priceChangeSub = this.cacheService.changed$.subscribe(changedSymbols => this._onPriceChange(changedSymbols));
 
 		setTimeout(() => {
-			if (!this._route.snapshot.queryParams['symbol'])
-				this.toggleActiveFilter('rise and fall');
-
 			this._routeSub = this._route.queryParams.subscribe(params => {
 				// // if its the same as the current, do nothing
 				if (this.activeSymbol && this.activeSymbol.options.name === params['symbol'])
@@ -78,9 +75,11 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 					// set symbol
 					this.symbols = [symbol];
 					this.setActiveSymbol(null, this.symbols[0]);
+				} else {
+					this.toggleActiveFilter('rise and fall');
 				}
 			});
-		}, 0);
+		});
 	}
 
 	public toggleAlarmMenu(event: any, symbol: SymbolModel, state?: boolean) {
