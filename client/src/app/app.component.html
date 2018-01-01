@@ -58,7 +58,7 @@
                 <p class="dropdown-no-results-text" *ngIf="!result.symbols.length && !result.users.length">No results</p>
             </div>
         </div>
-        <i (click)="notificationOpen = false; searchOpen = !searchOpen" class="fa fa-search d-lg-none"></i>
+        <i (click)="toggleSearch()" class="fa fa-search d-lg-none"></i>
         <!-- <i (click)="toggleSearch()" class="fa fa-ellipsis-v d-lg-none"></i> -->
     </header>
     <router-outlet></router-outlet>

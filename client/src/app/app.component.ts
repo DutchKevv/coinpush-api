@@ -24,6 +24,7 @@ export class AppComponent implements OnInit {
 
 	@ViewChild('dropdown') public dropdown;
 	@ViewChild('navbar') navbar: ElementRef;
+	@ViewChild('input') inputRef: ElementRef;
 
 	public searchOpen = false;
 	public notificationOpen = false;
@@ -153,6 +154,14 @@ export class AppComponent implements OnInit {
 				this.router.navigate(this.activatedRoute.snapshot.url, { queryParamsHandling: 'merge', queryParams: { menu: null }, replaceUrl: true })
 			}
 		}, 0);
+	}
+
+	public toggleSearch() {
+		this.notificationOpen = false; 
+		this.searchOpen = !this.searchOpen;
+		setTimeout(() => {
+			this.inputRef.nativeElement.focus();
+		})
 	}
 
 	public onClickFilter(event?, state?: boolean) {
