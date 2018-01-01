@@ -35,11 +35,11 @@
 			<i class="fa fa-area-chart"></i>
 		</button>
 	</li>
-	<li class="dropdown" (change)="toggleTimeFrame($event.target.value)">
-		<select>
-			<option value="M1">M1</option>
-			<option value="H1">H1</option>
-			<option value="D">D1</option>
+	<li class="dropdown">
+		<select (change)="toggleTimeFrame($event.target.value)">
+			<option value="M1" [selected]="timeFrame === 'M1'">Minute</option>
+			<option value="H1" [selected]="timeFrame === 'H1'">Hour</option>
+			<option value="D" [selected]="timeFrame === 'D'">Day</option>
 		</select>
 	</li>
 	<li class="dropdown">

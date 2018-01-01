@@ -84,6 +84,10 @@ export class AuthenticationService {
 	}
 
 	public async updateDeviceToken() {
+		// only continue if user is loggedin
+		if (!this._userService.model.options._id)
+			return;
+
 		await this._http.post('/device', {
 			token: app.notification.token,
 			platformType: app.platform.isApp ? 'app' : 'browser'

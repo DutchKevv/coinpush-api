@@ -34,11 +34,17 @@
 <div (click)="toggleNav(false)" class="nav-overlay"></div>
 
 <main class="main-container">
-    <header>
+    <header [ngClass]="{searchOpen: searchOpen}">
         <i (click)="toggleNav(true)" class="fa fa-navicon d-lg-none"></i>
-        <i *ngIf="router.url.startsWith('/symbols') || ['/user'].includes(router.url)" (click)="onClickFilter($event)" class="fa fa-filter d-lg-none"></i>
+        <div class="notification-container">
+            <i (click)="searchOpen = false; notificationOpen = !notificationOpen;" class="fa fa-globe d-lg-none"></i>
+            <div class="search-drop-down" *ngIf="notificationOpen" #dropdown>
+                <p class="dropdown-no-results-text">No notifications</p>
+            </div>
+        </div>
+        <i *ngIf="router.url.startsWith('/symbols') || router.url === '/user'" (click)="onClickFilter($event)" class="fa fa-filter d-lg-none"></i>
 
-        <div class="header-search">
+        <div class="search-container">
             <input (keyup)="onSearchKeyUp($event)" (focus)="onSearchKeyUp($event)" placeholder="Markets / People" #input>
             <div class="search-drop-down" *ngIf="(searchResults$ | async) as result" (click)="onClickDropdownItem()" #dropdown>
                 <a *ngFor="let symbol of result.symbols" [routerLink]="['/symbols']" [queryParams]="{symbol: symbol.options.name}">
@@ -49,8 +55,11 @@
                     <img src="{{user.img}}">
                     <span>{{user.name}}</span>
                 </a>
+                <p class="dropdown-no-results-text" *ngIf="!result.symbols.length && !result.users.length">No results</p>
             </div>
         </div>
+        <i (click)="notificationOpen = false; searchOpen = !searchOpen" class="fa fa-search d-lg-none"></i>
+        <!-- <i (click)="toggleSearch()" class="fa fa-ellipsis-v d-lg-none"></i> -->
     </header>
     <router-outlet></router-outlet>
 </main>

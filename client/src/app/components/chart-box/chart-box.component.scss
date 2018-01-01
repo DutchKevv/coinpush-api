@@ -60,11 +60,15 @@
 }
 
 .dropdown select {
-    margin-left: 10px;
+    margin-right: 10px;
     min-width: 80px;
     max-width: 80px;
     background-color: #000000;
     color: white;
+    height: 20px;
+    line-height: 20px;
+    margin-top: 2px;
+    font-size: 13px;
 }
 
 .btn-menu {

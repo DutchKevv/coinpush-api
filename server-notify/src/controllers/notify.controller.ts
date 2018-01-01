@@ -83,7 +83,7 @@ export const notifyController = {
 
     async sendTypeSymbolAlarm(toUserId, data) {
         return notifyController.sendToUser(data.toUserId, {
-            title: `Alarm triggered on ${data.symbol} - ${data.target}`,
+            title: `Price alarm triggered on ${data.symbol} - ${data.target}`,
             label: 'blaldksldksd',
             body: {
                 type: 'symbol-alarm',

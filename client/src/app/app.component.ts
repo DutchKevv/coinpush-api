@@ -20,9 +20,13 @@ export class AppComponent implements OnInit {
 
 	@Output() public filterClick$: EventEmitter<boolean> = new EventEmitter();
 	@Output() public searchResults$: Subject<any> = new Subject();
+	@Output() public searchOpen$: EventEmitter<boolean> = new EventEmitter();
 
 	@ViewChild('dropdown') public dropdown;
 	@ViewChild('navbar') navbar: ElementRef;
+
+	public searchOpen = false;
+	public notificationOpen = false;
 
 	private _sub: any;
 	private _routerEventsSub: any;

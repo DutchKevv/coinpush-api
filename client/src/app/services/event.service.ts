@@ -12,23 +12,27 @@ import { CacheService } from './cache.service';
 export class EventService {
 
 	constructor(
-        private _http: Http, 
-        private _alertService: AlertService, 
-        private _cacheService: CacheService, 
-        private _userService: UserService
-    ) {
+		private _http: Http,
+		private _alertService: AlertService,
+		private _cacheService: CacheService,
+		private _userService: UserService
+	) {
 		app.on('event-triggered', event => this._onEventTriggered(event));
 	}
 
-	async create(params: any): Promise<CommentModel> {
-		const event = await this._http.post('/event', params)
-			.map(res => res.json())
-			.toPromise();
+	async create(params: any): Promise<any> {
+		try {
+			const event = await this._http.post('/event', params)
+				.map(res => res.json())
+				.toPromise();
+			console.log(params);
+			this._alertService.success(`Price alarm set on ${params.symbol} - Price ${params.amount}`)
 
-		if (!event)
-			return;
-
-		return event;
+			return event;
+		} catch (error) {
+			console.error(error);
+			return null
+		}	
 	}
 
 	async findById(id: string): Promise<Array<CommentModel>> {
@@ -64,6 +68,6 @@ export class EventService {
 			const audio = new Audio('./assets/sound/cow.mp3');
 			audio.play();
 		}
-			
+
 	}
 }

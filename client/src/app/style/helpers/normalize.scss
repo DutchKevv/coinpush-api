@@ -35,6 +35,11 @@ textarea {
 	}
 }
 
+select {
+	-webkit-appearance: none;
+	border-radius: 0px;
+}
+
 ul {
 	list-style: none;
 	margin: 0;
