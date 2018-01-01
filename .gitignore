@@ -27,8 +27,6 @@ tradejs.config.custom.json
 !/custom/tsconfig.json
 !/custom/ea/example/*
 !/custom/indicator/example/*
-images/images/profile
-images/images/channel
 
 # Server
 /server/config/tradejs.config.json
