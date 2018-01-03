@@ -75,7 +75,7 @@ UserSchema.statics.addDevice = async function (userId, device): Promise<void> {
         if (user._id !== userId)
             return UserSchema.statics.removeDevice(userId, device);
     }));
-    console.log('userId', userId);
+
     const user = await User.findByIdAndUpdate(
         Types.ObjectId(userId),
         {
@@ -90,8 +90,6 @@ UserSchema.statics.addDevice = async function (userId, device): Promise<void> {
 
     if (!user)
         throw ({ code: G_ERROR_USER_NOT_FOUND });
-
-    console.log(await User.findById(userId));
 }
 
 UserSchema.statics.removeDevice = async function (userId, device) {

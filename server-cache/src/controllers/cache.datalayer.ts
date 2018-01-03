@@ -67,17 +67,18 @@ export const dataLayer = {
 
 		const bulkResult = await bulk.execute();
 
-		if (candles.length) {
-			const lastCandleTime = candles[candles.length - 10];
-			const lastCloseBidPrice = candles[candles.length - 3];
+		const lastCandleTime = candles[candles.length - 10];
+		const lastCloseBidPrice = candles[candles.length - 3];
 
-			const result = await Status.update({ collectionName }, { lastSync: lastCandleTime, lastPrice: lastCloseBidPrice });
-		}
+		const result = await Status.update({ collectionName, timeFrame }, { lastSync: lastCandleTime, lastPrice: lastCloseBidPrice });
+
+		if (!result.nModified)
+			throw new Error('could not update status');
 
 		return bulkResult;
 	},
 
-	async setModels(symbols: Array<any>) {
+	async createCollections(symbols: Array<any>) {
 		const now = Date.now();
 		const timeFrames = Object.keys(timeFrameSteps);
 		const existingModels = mongoose.modelNames();

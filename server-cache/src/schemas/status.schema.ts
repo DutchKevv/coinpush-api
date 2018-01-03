@@ -9,7 +9,7 @@ export const StatusSchema = new Schema({
 		type: String,
 		required: true
 	},
-	timeframe: {
+	timeFrame: {
 		type: String,
 		required: true
 	},

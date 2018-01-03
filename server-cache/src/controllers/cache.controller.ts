@@ -3,6 +3,8 @@ import * as redis from '../modules/redis';
 
 const config = require('../../../tradejs.config');
 
+var offset = new Date().getTimezoneOffset();
+
 import { log } from '../../../shared/logger';
 import OandaApi from '../../../shared/brokers/oanda';
 import CacheMapper from '../../../shared/classes/cache/CacheMap';
@@ -15,8 +17,8 @@ import { timeFrameSteps } from '../../../shared/util/util.date';
 import * as ProgressBar from 'progress';
 import { client } from '../modules/redis';
 
-const READ_COUNT_DEFAULT = 500;
-const HISTORY_COUNT_DEFAULT = 500;
+const READ_COUNT_DEFAULT = 2000;
+const HISTORY_COUNT_DEFAULT = 2000;
 
 const dataMapper = new CacheMapper({
 	path: path.join(__dirname, '..', '..', '_data')
@@ -48,8 +50,8 @@ export const cacheController = {
 		if (!timeFrame || typeof timeFrame !== 'string')
 			throw new Error('Cache -> Read : No timeFrame given');
 
-		if (count && from && until)
-			throw new Error('Cache -> Read : Only from OR until can be given when using count, not both');
+		// if (count && from && until)
+		// 	throw new Error('Cache -> Read : Only from OR until can be given when using count, not both');
 
 		// if ((!from && !until))
 		// 	until = params.until = Date.now();
@@ -78,7 +80,9 @@ export const cacheController = {
 
 			app.broker.getCandles(params.symbol, params.timeFrame, params.from, params.until, params.count, async (candles: Float64Array) => {
 
-				// Store candles in DB
+				// Store candles in DB, wait until finished before continueing to the next, 
+				// prevents 'holes' in data when 1 failed in between
+				// TODO: Better way? This makes it slow
 				await dataLayer.write(params.symbol, params.timeFrame, candles);
 
 			}, err => {
@@ -108,67 +112,94 @@ export const cacheController = {
 	/**
 	 * sync all symbols with there corresponding brokers.
 	 * it will create (if not exists) the DB collections for each symbol
-	 * and fetch the (missing) candles required to set a minimum number until now (Date.now)
+	 * and for every timeFrame (collection) fetch the (missing) candles required to set a minimum number until now (Date.now)
 	 * @param silent 
 	 */
 	async sync(silent: boolean = true): Promise<void> {
 		const now = Date.now();
-
 		const bulkCount = 10;
 		const timeFrames = Object.keys(timeFrameSteps);
-		const total = app.broker.symbols.length * timeFrames.length;
-		let bar;
+		let progressBar, statuses = [];
 
+		// create collections for all symbols
+		await dataLayer.createCollections(app.broker.symbols);
+
+		// get all collection statuses
+		const rawStatuses = <Array<any>>await Status.find({ timeFrame: { $in: timeFrames } }, { symbol: 1, lastSync: 1, timeFrame: 1 }).lean();
+
+		rawStatuses.forEach(status => {
+			const lastSyncTimestamp = new Date(status.lastSync).getTime();
+
+			// only continue if a new bar is there
+			if (!lastSyncTimestamp || lastSyncTimestamp + timeFrameSteps[status.timeFrame] <= now) {
+				status.lastSyncTimestamp = lastSyncTimestamp || undefined; // remove NaN
+				statuses.push(status);
+			}
+		});
+
+		// progress bar
 		if (!silent) {
-			bar = new ProgressBar(`syncing ${total} symbols [:bar] :rate/ps :percent :etas`, {
+			progressBar = new ProgressBar(`syncing ${statuses.length} symbols [:bar] :rate/ps :percent :etas`, {
 				complete: '=',
 				incomplete: ' ',
-				width: 20,
-				total
+				width: 30,
+				total: statuses.length
 			});
 		}
 
-		await dataLayer.setModels(app.broker.symbols);
+		log.info('cache', `updating ${statuses.length} collections`);
 
-		let statuses = <Array<any>>await Status.find({ timeFrame: { $in: timeFrames } }, { symbol: 1, lastSync: 1, timeFrame: 1 }).lean();
-
+		// loop over each symbol (in bulk)
 		for (let i = 0, len = app.broker.symbols.length; i < len; i += bulkCount) {
 
-			// Get a group of symbols
-			let symbols = app.broker.symbols.slice(i, i + bulkCount);
+			// create bulk of symbols
+			const symbols = app.broker.symbols.slice(i, i + bulkCount);
 
-			// Create multi promise for each symbol * timeFrames
-			let pMultiList = symbols.map(symbol => {
+			// create multi promise of bulk
+			const pMultiList = symbols.map(symbol => {
 
+				// get every status that belongs to current symbol
 				const statusArr = statuses.filter(status => status.symbol === symbol.name);
 
-				return statusArr.map(status => {
-					const from = status.lastSync ? (new Date(status.lastSync)).getTime() : undefined;
-					const until = Date.now();
-					const count = status.lastSync ? undefined : HISTORY_COUNT_DEFAULT;
+				const pMultiSubList = [];
+				const now = Date.now();
 
-					return this
+				// for every status (symbol + time frame) create multiple fetch promises
+				statusArr.forEach(status => {
+					const from = status.lastSyncTimestamp;
+					const until = Date.now();
+					const count = status.lastSync ? Math.ceil((until - from) / timeFrameSteps[status.timeFrame]) : HISTORY_COUNT_DEFAULT;
+
+					// the fetch promise, catches errors so the entire loop will not break if one fails
+					const p = this
 						.fetch({ symbol: symbol.name, timeFrame: status.timeFrame, from, until, count })
-						.then(() => !silent && bar.tick());
-				})
+						.catch(console.error)
+						.then(() => progressBar && progressBar.tick());
+
+					pMultiSubList.push(p);
+				});
+
+				return pMultiSubList;
 			});
 
-			// Flatten promise list
-			let pList = [].concat(...pMultiList);
-
-			await Promise.all(pList);
+			// flatten & execute
+			const result = await Promise.all([].concat(...pMultiList));
 		}
 
-		// set last price on symbols
-		statuses = await Status.find({ timeFrame: 'M1' });
-		app.broker.symbols.forEach(symbol => {
-			const status = statuses.find(status => status.symbol === symbol.name);
+		// set last known price on symbols
+		// TODO: should be done while fetching / writing or in the tick stream
+		statuses = await Status.find({ symbol: { $in: app.broker.symbols.map(symbol => symbol.name) }, timeFrame: 'M1' }, { lastPrice: 1, symbol: 1 });
 
-			if (!status)
-				return;
-
-			symbol.bid = status.lastPrice;
+		statuses.forEach(status => {
+			const symbol = app.broker.symbols.find(symbol => symbol.name === status.symbol);
+			if (symbol)
+				symbol.bid = status.lastPrice;
 		});
+
+		// destroy progress bar
+		progressBar = null;
+
+		log.info('cache', `updating collections took ${Date.now() - now}ms`);
 	},
 
 	/**

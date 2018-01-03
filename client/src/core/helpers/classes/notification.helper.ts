@@ -34,9 +34,13 @@ export class NotificationHelper {
         }
     }
 
-    private _onNotification(notification: any) {
-        console.log(notification);
+    private _onNotification(notification: any): void {
         const body = JSON.parse(notification.body);
+        
+        if (notification.userId !== app.user._id) {
+            return console.warn('notification userId mismatch')
+        }
+
         switch (body.type) {
             case 'post-comment':
                 window.location.hash = '#/comment/' + body.parentId + '?focus=' + body.commentId;

@@ -22,8 +22,8 @@
     <div class="instrument-list">
         <a class="table-header">
             <div class="col-bookmark"></div>
-            <div class="col-instrument">Instrument Price</div>
-            <div class="col-changes">1h / 24h</div>
+            <h4 class="col-instrument">Instrument Price</h4>
+            <h4 class="col-changes">1h / 24h</h4>
             <div class="col-alert"></div>
         </a>
         <a *ngFor="let symbol of symbols; trackBy:trackByFunc" [ngClass]="{'active': activeSymbol === symbol}" (click)="setActiveSymbol($event, symbol)">

@@ -32,6 +32,7 @@ header {
     flex-shrink: 0;
     border-bottom: 1px solid grey;
     height: 40px;
+    background: black;
 
     &.searchOpen {
         .fa-filter,
@@ -147,6 +148,12 @@ header {
             top: 35px;
         } 
 
+        h4 {
+            padding-left: 10px;
+            background: $background-th;;
+            line-height: 30px;
+        }
+
         a {
             padding: 10px;
             border-bottom: $border-color-grey;
@@ -167,6 +174,7 @@ header {
     }
 
     @media only screen and (min-width : 768px) {
+        background: transparent;
         text-align: center;
 
         .search-container {

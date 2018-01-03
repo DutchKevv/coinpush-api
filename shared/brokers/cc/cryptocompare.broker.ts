@@ -1,6 +1,6 @@
 import { readFileSync } from 'fs';
 import * as Stream from 'stream';
-import { splitToChunks } from '../../util/util.date';
+import { splitToChunks, timeFrameSteps } from '../../util/util.date';
 import { stringify } from 'querystring';
 import { log } from '../../logger';
 import { EventEmitter } from 'events';
@@ -107,7 +107,7 @@ export default class CyrptoCompareApi extends EventEmitter {
                 fullResponse: false,
                 json: true
             });
-           
+
             const normalized = [];
             for (let key in result.Data) {
                 const coin = result.Data[key];
@@ -132,7 +132,8 @@ export default class CyrptoCompareApi extends EventEmitter {
     }
 
     public getCandles(symbol: string, timeFrame: string, from: number, until: number, count: number, onData: Function, onDone: Function): void {
-        let countChunks = splitToChunks(timeFrame, from, until, count, CyrptoCompareApi.FETCH_CHUNK_LIMIT),
+        let countChunks = [{from: from, until: until, count: count}],
+        // let countChunks = splitToChunks(timeFrame, from, until, count, CyrptoCompareApi.FETCH_CHUNK_LIMIT),
             writeChunks = 0,
             finished = 0,
             url = '';
@@ -149,39 +150,49 @@ export default class CyrptoCompareApi extends EventEmitter {
                 break;
         }
 
+        // console.log(from, until, count, countChunks.length);
+
         countChunks.forEach(async chunk => {
             let arr = [];
             let leftOver = '';
             let startFound = false;
             let now = Date.now();
+            // let maxRequiredCandles = Math.ceil((chunk.until - chunk.from) / timeFrameSteps[timeFrame]);
+            // // console.log(chunk, Math.ceil((chunk.until - chunk.from) / timeFrameSteps[timeFrame]));
+            // console.log(maxRequiredCandles);
+            // if (maxRequiredCandles === 0) {
+            //     if (++finished === countChunks.length)
+            //         onDone();
+            // }
 
             const result: any = await this._doRequest(url, {
-                limit: count || 2000,
+                limit: count,
                 fsym: symbol,
                 tsym: 'USD',
-                toTs: until || undefined
+                toTs: chunk.until
             });
 
-            let candles = new Float64Array(result.Data.length * 10);
+            if (result.Data.length) {
+                let candles = new Float64Array(result.Data.length * 10);
 
-            result.Data.forEach((candle, index) => {
-                const startIndex = index * 10;
+                result.Data.forEach((candle, index) => {
+                    const startIndex = index * 10;
+                    const time = candle.time * 1000;
 
-                candles[startIndex] = candle.time * 1000;
-                candles[startIndex + 1] = candle.open;
-                candles[startIndex + 2] = candle.open;
-                candles[startIndex + 3] = candle.high;
-                candles[startIndex + 4] = candle.high;
-                candles[startIndex + 5] = candle.low;
-                candles[startIndex + 6] = candle.low;
-                candles[startIndex + 7] = candle.close;
-                candles[startIndex + 8] = candle.close;
-                candles[startIndex + 9] = candle.volumeto;
-            });
+                    candles[startIndex] = candle.time * 1000;
+                    candles[startIndex + 1] = candle.open;
+                    candles[startIndex + 2] = candle.open;
+                    candles[startIndex + 3] = candle.high;
+                    candles[startIndex + 4] = candle.high;
+                    candles[startIndex + 5] = candle.low;
+                    candles[startIndex + 6] = candle.low;
+                    candles[startIndex + 7] = candle.close;
+                    candles[startIndex + 8] = candle.close;
+                    candles[startIndex + 9] = Math.ceil(candle.volumefrom);
+                });
 
-            await onData(candles);
-
-            candles = null;
+                await onData(candles);
+            }
 
             if (++finished === countChunks.length)
                 onDone();
@@ -305,38 +316,47 @@ export default class CyrptoCompareApi extends EventEmitter {
         }
     }
 
-    private async _doRequest(url, params: any, attemptNr: number = 0) {
-        let max = 5;
-        let p: any = Promise.reject(null);
-
-        for (var i = 0; i < max; i++) {
-            p = p.catch(async () => {
-                const result = await request({
-                    uri: url + stringify(params),
-                    json: true,
-                    fullResponse: false
-                });
-
-                if (!result || !result.Data)
-                    throw new Error('empty result!');
-
-                return result;
-            }).catch(error => {
-                console.log('reattempt', params);
-                console.error('status code', error.statusCode || error.httpCode);
-            });
-        }
-
+    private async _doRequest(url, params: any) {
         try {
-            const result = await p;
+            const result = await request({
+                uri: url + stringify(params),
+                json: true,
+                maxAttempts: 3,   // (default) try 5 times 
+                retryDelay: 2000,  // (default) wait for 5s before trying again 
+                fullResponse: false
+            });
 
             if (!result || !result.Data)
                 throw new Error('empty result!');
 
             return result;
         } catch (error) {
-            console.error('5 attempts failed!', error);
-            throw new Error('Request could not be made')
+            const calls = await this._getCallsInMinute();
+
+            if (!calls.callsLeft.Histo) {
+                return await new Promise((resolve) => {
+                    setTimeout(async () => {
+                        resolve(await this._doRequest(url, params));
+                    }, 0);
+                })
+            }
+            console.log('available request', calls);
+            throw error;
+        }
+    }
+
+    private async _getCallsInMinute() {
+        try {
+            const result = await request({
+                uri: 'https://min-api.cryptocompare.com/stats/rate/minute/limit',
+                json: true
+            });
+
+            console.log(result);
+
+            return result;
+        } catch (error) {
+            console.error(error);
         }
     }
 }
@@ -348,7 +368,6 @@ function dataUnpack(data) {
     var fsym = CCC.STATIC.CURRENCY.getSymbol(from);
     var tsym = CCC.STATIC.CURRENCY.getSymbol(to);
     var pair = from + to;
-    console.log(data);
 
     if (!currentPrice.hasOwnProperty(pair)) {
         currentPrice[pair] = {};

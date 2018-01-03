@@ -71,7 +71,7 @@ export class CacheService {
 
 		this._zone.runOutsideAngular(() => {
 			this._socket = io('http://' + app.address.ip + ':' + app.address.port, {
-				'reconnectionAttempts': 1000, // avoid having user reconnect manually in order to prevent dead clients after a server restart
+				'reconnectionAttempts': 10000, // avoid having user reconnect manually in order to prevent dead clients after a server restart
 				'timeout': 10000, // before connect_error and connect_timeout are emitted.
 				'transports': ['websocket'],
 				path: '/ws/candles/'

@@ -10,7 +10,7 @@ const sender = new gcm.Sender(config.firebase.key);
 
 export const notifyController = {
 
-    async sendToUser(userId, params) {
+    async sendToUser(userId, title, body, data, params?: any) {
 
         const user: any = await userController.findById({ id: userId }, userId);
 
@@ -21,13 +21,12 @@ export const notifyController = {
 
         var message = new gcm.Message({
             priority: 'high',
-            // data: {
-            //     contentAvailable: true,
-            // },
+            data: data,
             notification: {
-                body: params.body,
-                title: params.title,
-                sound: "default"
+                title,
+                body,
+                sound: "default",
+                userId
             }
         });
 
@@ -40,58 +39,55 @@ export const notifyController = {
         });
     },
 
-    async sendTypePostComment(toUserId, data) {
-        const fromUser: any = await User.findById(data.fromUserId, { name: 1 });
+    async sendTypePostComment(toUserId, params) {
+        const fromUser: any = await User.findById(params.fromUserId, { name: 1 });
 
-        return notifyController.sendToUser(data.toUserId, {
-            title: `${fromUser.name} responded on your post`,
-            label: 'blaldksldksd',
-            body: {
-                type: 'post-comment',
-                commentId: data.commentId,
-                parentId: data.parentId
-            }
-        });
+        const title = `${fromUser.name} responded on your post`;
+        const body = params.content;
+        const data = {
+            type: 'post-comment',
+            commentId: params.commentId,
+            parentId: params.parentId
+        }
+
+        return notifyController.sendToUser(params.toUserId, title, body, data);
     },
 
-    async sendTypePostLike(toUserId, data) {
-        const fromUser: any = await User.findById(data.fromUserId, { name: 1 });
+    async sendTypePostLike(toUserId, params) {
+        const fromUser: any = await User.findById(params.fromUserId, { name: 1 });
 
-        return notifyController.sendToUser(data.toUserId, {
-            title: `${fromUser.name} liked your post`,
-            label: 'blaldksldksd',
-            body: {
-                type: 'post-like',
-                commentId: data.commentId,
-            }
-        });
+        const title = `${fromUser.name} liked your post`;
+        const data = {
+            type: 'post-like',
+            commentId: params.commentId,
+        }
+
+        return notifyController.sendToUser(params.toUserId, title, '', data);
     },
 
-    async sendTypeCommentLike(toUserId, data) {
-        const fromUser: any = await User.findById(data.fromUserId, { name: 1 });
+    async sendTypeCommentLike(toUserId, params) {
+        const fromUser: any = await User.findById(params.fromUserId, { name: 1 });
 
-        return notifyController.sendToUser(data.toUserId, {
-            title: `${fromUser.name} liked your comment`,
-            label: 'blaldksldksd',
-            body: {
-                type: 'comment-like',
-                commentId: data.commentId,
-                parentId: data.parentId
-            }
-        });
+        const title = `${fromUser.name} liked your comment`;
+        const data = {
+            type: 'comment-like',
+            commentId: params.commentId,
+            parentId: params.parentId
+        }
+
+        return notifyController.sendToUser(params.toUserId, title, '', data);
     },
 
-    async sendTypeSymbolAlarm(toUserId, data) {
-        return notifyController.sendToUser(data.toUserId, {
-            title: `Price alarm triggered on ${data.symbol} - ${data.target}`,
-            label: 'blaldksldksd',
-            body: {
-                type: 'symbol-alarm',
-                symbol: data.symbol,
-                target: data.target,
-                time: data.time
-            }
-        });
+    async sendTypeSymbolAlarm(toUserId, params) {
+        const title = `Price alarm triggered on ${params.symbol} - ${params.target}`;
+        const data = {
+            type: 'symbol-alarm',
+            symbol: params.symbol,
+            target: params.target,
+            time: params.time
+        };
+
+        return notifyController.sendToUser(params.toUserId, title, '', data);
     },
 
     parseByType(type, data) {
@@ -106,6 +102,5 @@ export const notifyController = {
                 return this.sendTypeSymbolAlarm(data.toUserId, data);
 
         }
-        console.log('nnnnnnn', type, data);
     }
 };

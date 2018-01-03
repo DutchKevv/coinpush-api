@@ -48,12 +48,14 @@
         <div class="search-container">
             <input (keyup)="onSearchKeyUp($event)" (focus)="onSearchKeyUp($event)" placeholder="Markets / People" #input>
             <div class="search-drop-down" *ngIf="(searchResults$ | async) as result" (click)="onClickDropdownItem()" #dropdown>
+                <h4 *ngIf="result.symbols.length">Symbols</h4>
                 <a *ngFor="let symbol of result.symbols" [routerLink]="['/symbols']" [queryParams]="{symbol: symbol.options.name}">
                     <span class="symbol-img-{{symbol.options.name}}"></span>
                     <span>{{symbol.options.displayName}}</span>
                 </a>
+                <h4 *ngIf="result.users.length">Users</h4>
                 <a *ngFor="let user of result.users" [routerLink]="['/user/', user._id]">
-                    <img src="{{user.img}}">
+                    <img width="30" height="30" style="margin-right: 10px;" src="{{user.img}}">
                     <span>{{user.name}}</span>
                 </a>
                 <p class="dropdown-no-results-text" *ngIf="!result.symbols.length && !result.users.length">No results</p>
