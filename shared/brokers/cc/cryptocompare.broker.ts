@@ -131,12 +131,15 @@ export default class CyrptoCompareApi extends EventEmitter {
         }
     }
 
-    public getCandles(symbol: string, timeFrame: string, from: number, until: number, count: number, onData: Function, onDone: Function): void {
-        let countChunks = [{from: from, until: until, count: count}],
-        // let countChunks = splitToChunks(timeFrame, from, until, count, CyrptoCompareApi.FETCH_CHUNK_LIMIT),
+    public async getCandles(symbol: string, timeFrame: string, from: number, until: number, count: number, onData: Function): Promise<void> {
+        // let countChunks = [{from: from, until: until, count: count}],
+        let chunks = splitToChunks(timeFrame, from, until, count, CyrptoCompareApi.FETCH_CHUNK_LIMIT),
             writeChunks = 0,
             finished = 0,
             url = '';
+
+        if (!chunks.length)
+            return;
 
         switch (timeFrame) {
             case 'M1':
@@ -150,29 +153,18 @@ export default class CyrptoCompareApi extends EventEmitter {
                 break;
         }
 
-        // console.log(from, until, count, countChunks.length);
-        countChunks.forEach(async chunk => {
-            let arr = [];
-            let leftOver = '';
-            let startFound = false;
-            let now = Date.now();
-
-            let maxRequiredCandles = Math.floor(((chunk.until || Date.now()) - chunk.from) / timeFrameSteps[timeFrame]);
-            // console.log(chunk, Math.ceil((chunk.until - chunk.from) / timeFrameSteps[timeFrame]));
-
-            if (!count  && maxRequiredCandles === 0) {
-                if (finished + 1 >= countChunks.length)
-                    return onDone();
-            }
+        for (let i = 0, len = chunks.length; i < len; i++) {
+            const chunk = chunks[i];
+            const now = Date.now();
 
             const result: any = await this._doRequest(url, {
-                limit: count || maxRequiredCandles,
+                limit: count,
                 fsym: symbol,
                 tsym: 'USD',
                 toTs: chunk.until || Date.now()
             });
 
-            if (result.Data.length) {
+            if (result.Data && result.Data.length) {
                 let candles = new Float64Array(result.Data.length * 10);
 
                 result.Data.forEach((candle, index) => {
@@ -193,10 +185,7 @@ export default class CyrptoCompareApi extends EventEmitter {
 
                 await onData(candles);
             }
-
-            if (++finished >= countChunks.length)
-                onDone();
-        });
+        }
     }
 
     public getCurrentPrices(symbols: Array<string>): Promise<Array<any>> {

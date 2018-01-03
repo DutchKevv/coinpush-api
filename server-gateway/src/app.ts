@@ -171,7 +171,7 @@ app.use((req, res, next) => {
  * image
  */
 
-app.use('/api/v1/symbols', require('./api/symbol.api'));
+app.use('/api/v1/symbol', require('./api/symbol.api'));
 
 /**
  * authenticate

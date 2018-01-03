@@ -11,13 +11,4 @@ module.exports = (socket) => {
 			cb(error);
 		}
 	});
-
-	socket.on('symbol:list', async (params, cb: Function) => {
-		try {
-			cb(null, app.broker.symbols);
-		} catch (error) {
-			console.error(error);
-			cb(error);
-		}
-	});
 };

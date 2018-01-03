@@ -1,13 +1,18 @@
 import * as request from 'request-promise';
+import { client } from '../modules/redis';
 
 const config = require('../../../tradejs.config');
 
 export const symbolController = {
 
-	getAll(reqUser): Promise<any> {
-		return request({
-            uri: config.server.cache.apiUrl + '/symbols',
-            headers: {_id: reqUser.id}
-        })
+	getPublicList(reqUser): Promise<any> {
+		return new Promise((resolve, reject) => {
+            client.get('symbols', (err, symbols) => {
+                if (err)
+                    return reject(err);
+
+                resolve(symbols || []);
+            });
+        });
 	}
 };

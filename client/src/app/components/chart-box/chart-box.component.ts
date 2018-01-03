@@ -382,7 +382,10 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		return false;
 	}
 
-	private _priceToFixed(number) {
+	private _priceToFixed(number: Number): string {
+		if (!number)
+			return '';
+
 		if (this.symbolModel.options.precision > 0)
 			return number.toFixed(this.symbolModel.options.precision || 4);
 

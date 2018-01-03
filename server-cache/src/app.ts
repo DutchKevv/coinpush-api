@@ -10,6 +10,7 @@ import { symbolController } from './controllers/symbol.controller';
 import { BrokerMiddleware } from '../../shared/brokers/broker.middleware';
 import { clearInterval } from 'timers';
 import { client } from './modules/redis';
+import { log } from '../../shared/logger';
 
 // error catching
 process.on('unhandledRejection', (reason, p) => {
@@ -43,16 +44,15 @@ export const app = {
 		// cache + symbols syncing
 		await cacheController.sync(false);
 		await symbolController.update();
-		
+
 		this._toggleSymbolUpdateInterval(true);
+		this._toggleWebSocketTickInterval(true);
+
+		// this.broke;
+		await this.broker.on('tick', cacheController.onTick.bind(cacheController)).openTickStream(app.broker.symbols.map(symbol => symbol.name));
 
 		// http / websocket api
 		this._setupApi();
-
-		// ticks interval
-		this._toggleWebSocketTickInterval(true);
-
-		await cacheController.openTickStream();
 	},
 
 	_setupApi(): void {
@@ -73,14 +73,31 @@ export const app = {
 			next();
 		});
 
-		this.api.use('/symbols', require('./api/symbol.api'));
+		/**
+		 * error handling
+		 */
+		this.api.use((error, req, res, next) => {
+			if (res.headersSent)
+				return next(error);
+
+			if (error && error.statusCode) {
+				res.status(error.statusCode).send(error.error);
+
+				if (error.message)
+					console.error(error.message);
+
+				return;
+			}
+
+			res.status(500).send({ error });
+		});
 	},
 
 	_connectMongo() {
 		return new Promise((resolve, reject) => {
 			// mongoose.set('debug', process.env.NODE_ENV === 'development');
 			(<any>mongoose).Promise = global.Promise; // Typescript quirk
-			
+
 			this.db = mongoose.connection;
 			this.db.on('error', error => {
 				console.error('connection error:', error);
@@ -102,9 +119,7 @@ export const app = {
 		const timeoutFunc = async function () {
 			try {
 				await cacheController.sync();
-				await symbolController.update();
 
-				this.broker.symbols
 				client.set('symbols', JSON.stringify(this.broker.symbols));
 			} catch (error) {
 				console.error(error);

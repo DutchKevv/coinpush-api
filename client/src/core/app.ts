@@ -71,7 +71,7 @@ export class App extends MicroEvent {
     }
 
     private async _loadSymbols() {
-        const symbols = await (await fetch(this.address.apiUrl + 'symbols')).json();
+        const symbols = await (await fetch(this.address.apiUrl + 'symbol')).json();
 
         if (symbols && symbols.length)
             this.symbols = symbols;

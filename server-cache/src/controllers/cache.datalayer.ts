@@ -8,15 +8,26 @@ import { BulkWriteResult } from 'mongodb';
 
 const config = require('../../../tradejs.config');
 
+const READ_COUNT_DEFAULT = 2000;
+
 export const dataLayer = {
 
-	async read(params: { symbol: string, timeFrame: string, from?: number, until?: number, count?: number, fields?: any }): Promise<NodeBuffer> {
+	async read(params: { symbol: string, timeFrame: string, from?: number, until?: number, count?: number, fields?: any, toArray?: boolean }): Promise<NodeBuffer | Float64Array> {
+
+		// symbol required
+		if (!params.symbol || typeof params.symbol !== 'string')
+			throw new Error('Cache -> Read : No symbol given');
+
+		// timeFrame required
+		if (!params.timeFrame || typeof params.timeFrame !== 'string')
+			throw new Error('Cache -> Read : No timeFrame given');
 
 		let symbol = params.symbol,
 			timeFrame = params.timeFrame,
 			from = params.from,
 			until = params.until,
-			count = params.count;
+			count = params.count || READ_COUNT_DEFAULT;
+
 
 		if (from && until)
 			throw new Error('dataLayer: "from" and "until" cannot both pe passes as params');
@@ -39,8 +50,8 @@ export const dataLayer = {
 
 		const rows = <Array<any>>await model.find({}).limit(count || 1000).sort({ _id: -1 });
 		const buffer = Buffer.concat(rows.reverse().map(row => row.data), rows.length * Float64Array.BYTES_PER_ELEMENT * 10);
-		// console.log('afetr concat', new Float64Array(buffer.buffer));
-		return buffer;
+
+		return params.toArray ? new Float64Array(buffer.buffer, buffer.byteOffset, buffer.length / Float64Array.BYTES_PER_ELEMENT) : buffer;
 	},
 
 	async write(symbol, timeFrame, candles: Float64Array): Promise<BulkWriteResult> {
@@ -71,17 +82,16 @@ export const dataLayer = {
 		const lastCloseBidPrice = candles[candles.length - 3];
 
 		const result = await Status.update({ collectionName, timeFrame }, { lastSync: lastCandleTime, lastPrice: lastCloseBidPrice });
-		
+
 		if (!result.n)
 			throw new Error(`Status not found! [${symbol}]`);
-			
+
 		return bulkResult;
 	},
 
-	async createCollections(symbols: Array<any>) {
+	async createCollections(symbols: Array<any>): Promise<void> {
 		const now = Date.now();
 		const timeFrames = Object.keys(timeFrameSteps);
-		const existingModels = mongoose.modelNames();
 		const bulk = Status.collection.initializeUnorderedBulkOp();
 
 		log.info('DataLayer', 'Creating ' + symbols.length * timeFrames.length + ' collections');
@@ -98,11 +108,11 @@ export const dataLayer = {
 			}
 		}
 
-		// Mongo crashes if bulk is empty
-		// if (bulk.length > 0)
-		await bulk.execute();
+		// mongo crashes on empty bulk
+		if (bulk.length)
+			await bulk.execute();
 
-		log.info('CacheController', `Creating collections took ${Date.now() - now}ms`);
+		log.info('CacheController', `Creating ${symbols.length * timeFrames.length} collections took ${Date.now() - now}ms`);
 	},
 
 	getCollectionName(symbol, timeFrame): string {

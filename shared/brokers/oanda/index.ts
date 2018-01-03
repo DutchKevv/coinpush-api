@@ -132,16 +132,16 @@ export default class OandaApi extends EventEmitter {
 		});
 	}
 
-	public async getCandles(symbol: string, timeFrame: string, from: number, until: number, count: number, onData: Function, onDone: Function): Promise<void> {
-		let countChunks = splitToChunks(timeFrame, from, until, count, OandaApi.FETCH_CHUNK_LIMIT),
+	public async getCandles(symbol: string, timeFrame: string, from: number, until: number, count: number, onData: Function): Promise<void> {
+		let chunks = splitToChunks(timeFrame, from, until, count, OandaApi.FETCH_CHUNK_LIMIT),
 			writeChunks = 0,
 			finished = 0;
 
-		if (!countChunks.length)
-			return onDone();
+		if (!chunks.length)
+			return;
 
-		for (let i = 0, len = countChunks.length; i < len; i++) {
-			let chunk = countChunks[i];
+		for (let i = 0, len = chunks.length; i < len; i++) {
+			let chunk = chunks[i];
 
 			await new Promise((resolve, reject) => {
 				
@@ -170,13 +170,7 @@ export default class OandaApi extends EventEmitter {
 					resolve();
 				});
 			});
-			
 		}
-		
-		countChunks.forEach(chunk => {
-			
-
-		});
 	}
 
 	public getCurrentPrices(symbols: Array<any>): Promise<Array<any>> {

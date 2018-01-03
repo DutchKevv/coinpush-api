@@ -8,7 +8,7 @@ const router = Router();
  */
 router.get('/', async (req, res, next) => {
 	try {
-		res.send(await symbolController.getAll(req.user));
+		res.send(await symbolController.getPublicList(req.user));
 	} catch (error) {
 		console.error(error);
 		next(error);
