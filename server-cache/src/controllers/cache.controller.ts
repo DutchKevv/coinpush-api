@@ -12,9 +12,10 @@ import { dataLayer } from './cache.datalayer';
 import { symbolController } from './symbol.controller';
 import { app } from '../app';
 import { Status } from '../schemas/status.schema';
-import { BROKER_GENERAL_TYPE_CC } from '../../../shared/constants/constants';
+import { BROKER_GENERAL_TYPE_CC, BROKER_GENERAL_TYPE_OANDA } from '../../../shared/constants/constants';
 import { timeFrameSteps } from '../../../shared/util/util.date';
 import * as ProgressBar from 'progress';
+import * as moment from 'moment-timezone';
 import { client } from '../modules/redis';
 
 const READ_COUNT_DEFAULT = 2000;
@@ -117,25 +118,14 @@ export const cacheController = {
 	 */
 	async sync(silent: boolean = true): Promise<void> {
 		const now = Date.now();
-		const bulkCount = 10;
 		const timeFrames = Object.keys(timeFrameSteps);
-		let progressBar, statuses = [];
+		let progressBar, statuses;
 
 		// create collections for all symbols
 		await dataLayer.createCollections(app.broker.symbols);
 
 		// get all collection statuses
-		const rawStatuses = <Array<any>>await Status.find({ timeFrame: { $in: timeFrames } }, { symbol: 1, lastSync: 1, timeFrame: 1 }).lean();
-
-		rawStatuses.forEach(status => {
-			const lastSyncTimestamp = new Date(status.lastSync).getTime();
-
-			// only continue if a new bar is there
-			if (!lastSyncTimestamp || lastSyncTimestamp + timeFrameSteps[status.timeFrame] <= now) {
-				status.lastSyncTimestamp = lastSyncTimestamp || undefined; // remove NaN
-				statuses.push(status);
-			}
-		});
+		statuses = <Array<any>>await Status.find({ timeFrame: { $in: timeFrames } }).lean();
 
 		// progress bar
 		if (!silent) {
@@ -147,44 +137,10 @@ export const cacheController = {
 			});
 		}
 
-		log.info('cache', `updating ${statuses.length} collections`);
-
-		// loop over each symbol (in bulk)
-		for (let i = 0, len = app.broker.symbols.length; i < len; i += bulkCount) {
-
-			// create bulk of symbols
-			const symbols = app.broker.symbols.slice(i, i + bulkCount);
-
-			// create multi promise of bulk
-			const pMultiList = symbols.map(symbol => {
-
-				// get every status that belongs to current symbol
-				const statusArr = statuses.filter(status => status.symbol === symbol.name);
-
-				const pMultiSubList = [];
-				const now = Date.now();
-
-				// for every status (symbol + time frame) create multiple fetch promises
-				statusArr.forEach(status => {
-					const from = status.lastSyncTimestamp;
-					const until = Date.now();
-					const count = status.lastSync ? Math.ceil((until - from) / timeFrameSteps[status.timeFrame]) : HISTORY_COUNT_DEFAULT;
-
-					// the fetch promise, catches errors so the entire loop will not break if one fails
-					const p = this
-						.fetch({ symbol: symbol.name, timeFrame: status.timeFrame, from, until, count })
-						.catch(console.error)
-						.then(() => progressBar && progressBar.tick());
-
-					pMultiSubList.push(p);
-				});
-
-				return pMultiSubList;
-			});
-
-			// flatten & execute
-			const result = await Promise.all([].concat(...pMultiList));
-		}
+		await Promise.all([
+			this._syncByStatuses(statuses.filter(status => status.broker === BROKER_GENERAL_TYPE_CC), progressBar),
+			this._syncByStatuses(statuses.filter(status => status.broker === BROKER_GENERAL_TYPE_OANDA), progressBar),
+		]);
 
 		// set last known price on symbols
 		// TODO: should be done while fetching / writing or in the tick stream
@@ -200,6 +156,49 @@ export const cacheController = {
 		progressBar = null;
 
 		log.info('cache', `updating collections took ${Date.now() - now}ms`);
+	},
+
+	async _syncByStatuses(statuses: Array<any>, progressBar?: ProgressBar): Promise<void> {
+		if (!statuses.length)
+			return;
+
+		log.info('cache', `updating ${statuses.length} collections for broker ${statuses[0].broker}`);
+
+		const bulkCount = 10;
+
+		// loop over each symbol (in bulk)
+		for (let i = 0, len = statuses.length; i < len; i += bulkCount) {
+			const now = moment().tz('Europe/London');
+
+			// create multi promise of bulk
+			const pMultiList = statuses.slice(i, i + bulkCount).map(status => {
+				let lastSyncTimestamp;
+				
+				// only continue if a new bar is there
+				if (status.lastSync) {
+					lastSyncTimestamp = moment(status.lastSync).tz('Europe/London');
+
+					if (status.lastSync.getTime() + timeFrameSteps[status.timeFrame] <= now) {
+						progressBar.tick();
+						return;
+					}	
+				}
+					
+				// the fetch promise, catches errors so the entire loop will not break if one fails
+				return this
+					.fetch({ 
+						symbol: status.symbol, 
+						timeFrame: status.timeFrame, 
+						from: lastSyncTimestamp.unix(), 
+						count: status.lastSync ? undefined : HISTORY_COUNT_DEFAULT
+					})
+					.catch(console.error)
+					.then(() => progressBar && progressBar.tick());
+			});
+		
+			// flatten & execute
+			const result = await Promise.all(pMultiList);
+		}		
 	},
 
 	/**

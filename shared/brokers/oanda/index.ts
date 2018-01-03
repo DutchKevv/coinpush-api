@@ -132,43 +132,49 @@ export default class OandaApi extends EventEmitter {
 		});
 	}
 
-	public getCandles(symbol: string, timeFrame: string, from: number, until: number, count: number, onData: Function, onDone: Function): void {
+	public async getCandles(symbol: string, timeFrame: string, from: number, until: number, count: number, onData: Function, onDone: Function): Promise<void> {
 		let countChunks = splitToChunks(timeFrame, from, until, count, OandaApi.FETCH_CHUNK_LIMIT),
 			writeChunks = 0,
 			finished = 0;
 
-		countChunks.forEach(chunk => {
-			let arr = [];
-			let leftOver = '';
-			let startFound = false;
-			let now = Date.now();
+		if (!countChunks.length)
+			return onDone();
 
-			this._client.getCandles(symbol, chunk.from, chunk.until, timeFrame, chunk.count, async (error, data: any) => {
-				if (error)
-					return console.error(error);
+		for (let i = 0, len = countChunks.length; i < len; i++) {
+			let chunk = countChunks[i];
 
-				const candles = new Float64Array(data.candles.length * 10);
-
-				data.candles.forEach((candle, index) => {
-					const startIndex = index * 10;
-
-					candles[startIndex] = candle.time / 1000;
-					candles[startIndex + 1] = candle.openBid;
-					candles[startIndex + 2] = candle.openAsk;
-					candles[startIndex + 3] = candle.highBid;
-					candles[startIndex + 4] = candle.highAsk;
-					candles[startIndex + 5] = candle.lowBid;
-					candles[startIndex + 6] = candle.lowAsk;
-					candles[startIndex + 7] = candle.closeBid;
-					candles[startIndex + 8] = candle.closeAsk;
-					candles[startIndex + 9] = candle.volume;
+			await new Promise((resolve, reject) => {
+				
+				this._client.getCandles(symbol, chunk.from, chunk.until, timeFrame, chunk.count, async (error, data: any) => {
+					if (error)
+						return console.error(error);
+	
+					const candles = new Float64Array(data.candles.length * 10);
+	
+					data.candles.forEach((candle, index) => {
+						const startIndex = index * 10;
+	
+						candles[startIndex] = candle.time / 1000;
+						candles[startIndex + 1] = candle.openBid;
+						candles[startIndex + 2] = candle.openAsk;
+						candles[startIndex + 3] = candle.highBid;
+						candles[startIndex + 4] = candle.highAsk;
+						candles[startIndex + 5] = candle.lowBid;
+						candles[startIndex + 6] = candle.lowAsk;
+						candles[startIndex + 7] = candle.closeBid;
+						candles[startIndex + 8] = candle.closeAsk;
+						candles[startIndex + 9] = candle.volume;
+					});
+					
+					await onData(candles);
+					resolve();
 				});
-
-				await onData(candles);
-
-				if (++finished === countChunks.length)
-					onDone();
 			});
+			
+		}
+		
+		countChunks.forEach(chunk => {
+			
 
 		});
 	}

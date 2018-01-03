@@ -151,25 +151,25 @@ export default class CyrptoCompareApi extends EventEmitter {
         }
 
         // console.log(from, until, count, countChunks.length);
-
         countChunks.forEach(async chunk => {
             let arr = [];
             let leftOver = '';
             let startFound = false;
             let now = Date.now();
-            // let maxRequiredCandles = Math.ceil((chunk.until - chunk.from) / timeFrameSteps[timeFrame]);
-            // // console.log(chunk, Math.ceil((chunk.until - chunk.from) / timeFrameSteps[timeFrame]));
-            // console.log(maxRequiredCandles);
-            // if (maxRequiredCandles === 0) {
-            //     if (++finished === countChunks.length)
-            //         onDone();
-            // }
+
+            let maxRequiredCandles = Math.floor(((chunk.until || Date.now()) - chunk.from) / timeFrameSteps[timeFrame]);
+            // console.log(chunk, Math.ceil((chunk.until - chunk.from) / timeFrameSteps[timeFrame]));
+
+            if (!count  && maxRequiredCandles === 0) {
+                if (finished + 1 >= countChunks.length)
+                    return onDone();
+            }
 
             const result: any = await this._doRequest(url, {
-                limit: count,
+                limit: count || maxRequiredCandles,
                 fsym: symbol,
                 tsym: 'USD',
-                toTs: chunk.until
+                toTs: chunk.until || Date.now()
             });
 
             if (result.Data.length) {
@@ -194,7 +194,7 @@ export default class CyrptoCompareApi extends EventEmitter {
                 await onData(candles);
             }
 
-            if (++finished === countChunks.length)
+            if (++finished >= countChunks.length)
                 onDone();
         });
     }

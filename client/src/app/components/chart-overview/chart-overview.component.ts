@@ -121,8 +121,8 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 				this.symbols = this.cacheService.symbols.sort((a, b) => a.options.volume - b.options.volume).slice(-30).reverse();
 				break;
 			case 'rise and fall':
-				const sorted = this.cacheService.symbols.sort((a, b) => a.options.changedDAmount - b.options.changedDAmount);
-				this.symbols = [].concat(sorted.slice(-20).reverse(), sorted.slice(0, 20));
+				const sortedByDayAmount = this.cacheService.symbols.sort((a, b) => a.options.changedDAmount - b.options.changedDAmount);
+				this.symbols = [].concat(sortedByDayAmount.slice(-20).reverse(), sortedByDayAmount.slice(0, 20));
 				break;
 			case 'favorite':
 				this.symbols = this.cacheService.symbols.filter(symbol => symbol.options.iFavorite);

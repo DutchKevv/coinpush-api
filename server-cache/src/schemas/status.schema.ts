@@ -9,6 +9,10 @@ export const StatusSchema = new Schema({
 		type: String,
 		required: true
 	},
+	broker: {
+		type: Number,
+		required: true
+	},
 	timeFrame: {
 		type: String,
 		required: true

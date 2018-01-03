@@ -71,10 +71,10 @@ export const dataLayer = {
 		const lastCloseBidPrice = candles[candles.length - 3];
 
 		const result = await Status.update({ collectionName, timeFrame }, { lastSync: lastCandleTime, lastPrice: lastCloseBidPrice });
-
-		if (!result.nModified)
-			throw new Error('could not update status');
-
+		
+		if (!result.n)
+			throw new Error(`Status not found! [${symbol}]`);
+			
 		return bulkResult;
 	},
 
