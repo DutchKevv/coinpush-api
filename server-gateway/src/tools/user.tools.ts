@@ -26,7 +26,7 @@ module.exports = {
 					description: faker.lorem.sentence()
 				});
 
-				console.log(i, 'user-id:', user._id);
+				console.log(i, 'user-id:', user);
 
 			} catch (error) {
 				console.error('USER ERROR', error);

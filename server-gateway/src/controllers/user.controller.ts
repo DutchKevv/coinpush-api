@@ -47,6 +47,7 @@ export const userController = {
 				headers: { '_id': reqUser.id },
 				method: 'POST',
 				body: {
+					img: params.img,
 					name: params.name,
 					gender: params.gender,
 					email: params.email,
@@ -60,6 +61,7 @@ export const userController = {
 			// notify
 			notify = await emailController.addUser({ id: user._id }, {
 				_id: user._id,
+				img: user.img,
 				name: user.name,
 				email: user.email,
 				language: user.language

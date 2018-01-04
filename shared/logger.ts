@@ -22,10 +22,10 @@ const logger = new win.Logger({
 	transports: [
 		new win.transports.File({
 			level: 'info',
-			filename: 'server.txt',
+			filename: 'log.txt',
 			json: false,
 			maxsize: 5242880, // 5MB
-			maxFiles: 2,
+			maxFiles: 1,
 			colorize: false
 		}).on('error', function(err) {
 			console.error(err.stack);

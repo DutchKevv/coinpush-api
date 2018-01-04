@@ -100,6 +100,7 @@ export const userController = {
 			params.password = bcrypt.hashSync(params.password, 10);
 
 		let userData = {
+			img: params.img,
 			email: params.email,
 			name: params.name,
 			password: params.password,
