@@ -1,13 +1,6 @@
 import * as path from 'path';
-import * as redis from '../modules/redis';
-
-const config = require('../../../tradejs.config');
-
-var offset = new Date().getTimezoneOffset();
-
 import { log } from '../../../shared/logger';
 import OandaApi from '../../../shared/brokers/oanda';
-import CacheMapper from '../../../shared/classes/cache/CacheMap';
 import { dataLayer } from './cache.datalayer';
 import { symbolController } from './symbol.controller';
 import { app } from '../app';
@@ -18,11 +11,9 @@ import * as ProgressBar from 'progress';
 import * as moment from 'moment-timezone';
 import { client } from '../modules/redis';
 
-const HISTORY_COUNT_DEFAULT = 2000;
+const config = require('../../../tradejs.config');
 
-const dataMapper = new CacheMapper({
-	path: path.join(__dirname, '..', '..', '_data')
-});
+const HISTORY_COUNT_DEFAULT = 2000;
 
 export const cacheController = {
 
@@ -117,7 +108,6 @@ export const cacheController = {
 		// update symbols
 		now = Date.now();
 		await symbolController.update();
-
 		log.info('cache', `updating statistics took ${Date.now() - now}ms`);
 
 		// destroy? progress bar
@@ -135,9 +125,9 @@ export const cacheController = {
 			return;
 
 		const now = Date.now();
+		// TODO: get broker names from somewhere else then hardcoded
 		const brokerName = statuses[0].broker === BROKER_GENERAL_TYPE_CC ? 'CryptoCompare' : 'Oanda';
 
-		// TODO: get broker names from somewhere else then hardcoded
 		log.info('cache', `syncing ${statuses.length} collections for broker ${brokerName}`);
 
 		const bulkCount = 10;

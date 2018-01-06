@@ -23,8 +23,6 @@ export class SymbolModel {
 		});
 
 		this._updateChangedAmount();
-
-		// this.price$.
 	}
 
 	private _updateChangedAmount() {
@@ -34,6 +32,7 @@ export class SymbolModel {
 		const startHPrice = this.options.marks.H.price;
 		const startDPrice = this.options.marks.D.price;
 
+		;
 		this.options.changedHAmount = Number(((this.options.bid - startHPrice) / startHPrice * 100).toFixed(2));
 		this.options.changedDAmount = Number(((this.options.bid - startDPrice) / startDPrice * 100).toFixed(2));
 	}

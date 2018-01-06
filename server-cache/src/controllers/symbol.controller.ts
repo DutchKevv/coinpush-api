@@ -13,10 +13,17 @@ const metaData = require('../../../shared/brokers/oanda/symbols-meta').meta;
 
 export const symbolController = {
 
+	/**
+	 * return symbol by name
+	 * @param name 
+	 */
 	findByName(name: string) {
 		return app.broker.symbols.find(symbol => symbol.name === name);
 	},
 
+	/**
+	 * TODO: refactor to run non-stop
+	 */
 	update() {
 		return Promise.all([
 			this.updateStartPrices(),
@@ -24,8 +31,12 @@ export const symbolController = {
 		]);
 	},
 
+	/**
+	 * set start time and price for 1H/24H (percentage) diffs
+	 * TODO: only needed after 1H/24 (not every minute)
+	 */
 	async updateStartPrices() {
-		app.broker.symbols.forEach(async symbol => {
+		await Promise.all(app.broker.symbols.map(async symbol => {
 			const results = await Promise.all([
 				cacheController.find({ symbol: symbol.name, timeFrame: 'H1', count: 1, toArray: true }), // 1 h
 				cacheController.find({ symbol: symbol.name, timeFrame: 'D', count: 1, toArray: true }) // 24 h
@@ -40,9 +51,12 @@ export const symbolController = {
 				time: results[1][0],
 				price: results[1][1]
 			}
-		});
+		}))
 	},
 
+	/**
+	 * set high lows
+	 */
 	async updateHighLowPopular() {
 		const now = new Date();
 		now.setHours(0);
@@ -50,8 +64,7 @@ export const symbolController = {
 		now.setSeconds(0);
 		now.setMilliseconds(0);
 
-		app.broker.symbols.forEach(async symbol => {
-
+		await Promise.all(app.broker.symbols.map(async symbol => {
 			// find last 24 hours of bars
 			const barsAmount = 60 * 24; // 1440 M1 bars
 			const candles = await cacheController.find({ symbol: symbol.name, timeFrame: 'M1', count: barsAmount, toArray: true });
@@ -60,7 +73,7 @@ export const symbolController = {
 			let high = 0;
 			let low = 0;
 			let volume = 0;
-			
+
 			for (let i = 0, len = candles.length; i < len; i += 10) {
 				let candle = candles[i + 1];
 
@@ -72,6 +85,20 @@ export const symbolController = {
 			symbol.volume = volume;
 			symbol.high = high;
 			symbol.low = low;
-		});
+		}));
+	},
+
+	/**
+	 * set last known prices from DB so 
+	 */
+	async setLastKnownPrices() {
+		await Promise.all(app.broker.symbols.map(async symbol => {
+			const results = await cacheController.find({ symbol: symbol.name, timeFrame: 'M1', count: 1, toArray: true })
+		
+			if (results.length)
+				symbol.bid = results[7]
+			else
+				console.warn('unknown symbol: ' + symbol.displayName);
+		}));
 	}
 };

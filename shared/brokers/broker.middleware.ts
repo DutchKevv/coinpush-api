@@ -17,10 +17,6 @@ export class BrokerMiddleware extends EventEmitter {
         return this._symbols;
     }
 
-    set symbols(symbols) {
-        this._symbols = symbols;
-    }
-
     constructor() {
         super();
 
@@ -54,8 +50,8 @@ export class BrokerMiddleware extends EventEmitter {
     }
 
     public async setSymbols(): Promise<void> {
-        this.symbols = await this.getSymbols();
-
+        this._symbols = await this.getSymbols();
+        
         // remove img url (only needed when building spritesheet in client)
         this.symbols.forEach(symbol => {
             delete symbol.img;

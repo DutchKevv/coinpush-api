@@ -43,6 +43,7 @@ export const app = {
 
 		// cache + symbols syncing
 		await cacheController.sync(false);
+		await symbolController.setLastKnownPrices(); // only needed at start
 		await symbolController.update();
 
 		this._toggleSymbolUpdateInterval(true);
@@ -120,7 +121,9 @@ export const app = {
 			try {
 				await cacheController.sync();
 
-				client.set('symbols', JSON.stringify(this.broker.symbols));
+				client.set('symbols', JSON.stringify(this.broker.symbols), err => {
+					console.log(err)
+				});
 			} catch (error) {
 				console.error(error);
 			} finally {
