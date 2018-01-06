@@ -121,8 +121,8 @@ export const app = {
 			try {
 				await cacheController.sync();
 
-				client.set('symbols', JSON.stringify(this.broker.symbols), err => {
-					console.log(err)
+				client.set('symbols', JSON.stringify(this.broker.symbols), error => {
+					if (error) console.error(error)
 				});
 			} catch (error) {
 				console.error(error);

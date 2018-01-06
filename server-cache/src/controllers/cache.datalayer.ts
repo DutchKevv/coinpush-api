@@ -10,6 +10,9 @@ const config = require('../../../tradejs.config');
 
 const READ_COUNT_DEFAULT = 2000;
 
+/**
+ * handle all symbol specific actions that do concern writing data
+ */
 export const dataLayer = {
 
 	async read(params: { symbol: string, timeFrame: string, from?: number, until?: number, count?: number, fields?: any, toArray?: boolean }): Promise<NodeBuffer | Float64Array> {

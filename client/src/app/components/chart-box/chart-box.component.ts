@@ -85,10 +85,10 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 			];
 		}
 
-		return {
-			candles: candles,
-			volume: volume
-		};
+		if (candles.length)
+			candles[candles.length - 1][1] = this.symbolModel.options.bid;
+
+		return {candles, volume};
 	}
 
 	constructor(
@@ -293,7 +293,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 			if (this._chart)
 				this._chart.xAxis[0].setExtremes(firstBar[0], lastBar[0], render, false);
-			// this._chart.redraw();
 		});
 	}
 
@@ -321,7 +320,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 				this._updateCurrentPricePlot();
 				this._updateViewPort(0, true);
-				// this._onPriceChange(true); // TODO renders 2 times
 			} catch (error) {
 				console.log('error error error', error);
 			}
@@ -348,7 +346,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 					y: 4
 				}
 			};
-
+			
 			this._chart.yAxis[0].removePlotLine('cPrice', false, false);
 			this._chart.yAxis[0].addPlotLine(options, render, false);
 		});
@@ -363,7 +361,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 	private _onPriceChange(render: boolean = false) {
 		if (this._chart && this._chart.series[0].data.length)
-			this._chart.series[0].data[this._chart.series[0].data.length - 1].update(this.symbolModel.options.bid, render, false);
+			this._chart.series[0].data[this._chart.series[0].data.length - 1].update(this.symbolModel.options.bid, true, false);
 	}
 
 	private _onScroll(event: MouseWheelEvent): boolean {

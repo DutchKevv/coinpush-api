@@ -40,7 +40,7 @@ export const cacheController = {
 	 */
 	async fetch(params: { symbol: string, timeFrame: string, from: number, until: number, count: number }, emitStatus?: boolean): Promise<void | any> {
 
-		await app.broker.getCandles(params.symbol, params.timeFrame, params.from, params.until, params.count, async (candles: Float64Array) => {
+		await app.broker.getCandles(params.symbol, params.from, params.until, params.timeFrame, params.count, async (candles: Float64Array) => {
 
 			// Store candles in DB, wait until finished before continueing to the next, 
 			// prevents 'holes' in data when 1 failed in between
@@ -141,9 +141,9 @@ export const cacheController = {
 
 				// only continue if a new bar is there
 				if (status.lastSync) {
-					lastSyncTimestamp = moment(status.lastSync).tz('Europe/London');
+					lastSyncTimestamp = (new Date(status.lastSync)).getTime();
 
-					if (status.lastSync.getTime() + timeFrameSteps[status.timeFrame] > now) {
+					if (lastSyncTimestamp + timeFrameSteps[status.timeFrame] > now) {
 						progressBar && progressBar.tick();
 						return;
 					}
@@ -154,7 +154,7 @@ export const cacheController = {
 					.fetch({
 						symbol: status.symbol,
 						timeFrame: status.timeFrame,
-						from: lastSyncTimestamp ? lastSyncTimestamp.unix() : undefined,
+						from: lastSyncTimestamp || undefined,
 						count: status.lastSync ? undefined : HISTORY_COUNT_DEFAULT
 					})
 					.catch(console.error)

@@ -133,11 +133,12 @@ export default class CyrptoCompareApi extends EventEmitter {
 
     public async getCandles(symbol: string, timeFrame: string, from: number, until: number, count: number, onData: Function): Promise<void> {
         // let countChunks = [{from: from, until: until, count: count}],
+        until = until || Date.now() + (1000 * 60 * 60 * 24);
         let chunks = splitToChunks(timeFrame, from, until, count, CyrptoCompareApi.FETCH_CHUNK_LIMIT),
             writeChunks = 0,
             finished = 0,
             url = '';
-
+        
         if (!chunks.length)
             return;
 
@@ -156,35 +157,36 @@ export default class CyrptoCompareApi extends EventEmitter {
         for (let i = 0, len = chunks.length; i < len; i++) {
             const chunk = chunks[i];
             const now = Date.now();
-
+            console.log(chunk.count);
             const result: any = await this._doRequest(url, {
-                limit: count,
+                limit: 2000,
                 fsym: symbol,
                 tsym: 'USD',
-                toTs: chunk.until || Date.now()
+                toTs: chunk.until
             });
+            console.log(chunk.until, result.Data);
+            if (!result.Data || !result.Data.length)
+                continue;
+                
+            let candles = new Float64Array(result.Data.length * 10);
 
-            if (result.Data && result.Data.length) {
-                let candles = new Float64Array(result.Data.length * 10);
+            result.Data.forEach((candle, index) => {
+                const startIndex = index * 10;
+                const time = candle.time * 1000;
 
-                result.Data.forEach((candle, index) => {
-                    const startIndex = index * 10;
-                    const time = candle.time * 1000;
-
-                    candles[startIndex] = candle.time * 1000;
-                    candles[startIndex + 1] = candle.open;
-                    candles[startIndex + 2] = candle.open;
-                    candles[startIndex + 3] = candle.high;
-                    candles[startIndex + 4] = candle.high;
-                    candles[startIndex + 5] = candle.low;
-                    candles[startIndex + 6] = candle.low;
-                    candles[startIndex + 7] = candle.close;
-                    candles[startIndex + 8] = candle.close;
-                    candles[startIndex + 9] = Math.ceil(candle.volumefrom);
-                });
-
-                await onData(candles);
-            }
+                candles[startIndex] = candle.time * 1000;
+                candles[startIndex + 1] = candle.open;
+                candles[startIndex + 2] = candle.open;
+                candles[startIndex + 3] = candle.high;
+                candles[startIndex + 4] = candle.high;
+                candles[startIndex + 5] = candle.low;
+                candles[startIndex + 6] = candle.low;
+                candles[startIndex + 7] = candle.close;
+                candles[startIndex + 8] = candle.close;
+                candles[startIndex + 9] = Math.ceil(candle.volumefrom);
+            });
+            
+            await onData(candles);
         }
     }
 
@@ -305,7 +307,7 @@ export default class CyrptoCompareApi extends EventEmitter {
         }
     }
 
-    private async _doRequest(url, params: any) {
+    private async _doRequest(url, params: any, reattempt = 0) {
         try {
             const result = await request({
                 uri: url + stringify(params),
@@ -322,14 +324,14 @@ export default class CyrptoCompareApi extends EventEmitter {
         } catch (error) {
             const calls = await this._getCallsInMinute();
 
-            if (!calls.callsLeft.Histo) {
+            if (!calls.CallsLeft.Histo) {
                 return await new Promise((resolve) => {
                     setTimeout(async () => {
-                        resolve(await this._doRequest(url, params));
-                    }, 0);
+                        resolve(await this._doRequest(url, params, ++reattempt));
+                    }, 1000);
                 })
             }
-            console.log('available request', calls);
+            
             throw error;
         }
     }
@@ -338,7 +340,8 @@ export default class CyrptoCompareApi extends EventEmitter {
         try {
             const result = await request({
                 uri: 'https://min-api.cryptocompare.com/stats/rate/minute/limit',
-                json: true
+                json: true,
+                fullResponse: false
             });
 
             console.log(result);

@@ -2,7 +2,7 @@ import * as IB from 'ib';
 import * as fs from 'fs';
 import * as parser from 'xml2json';
 import { EventEmitter } from 'events';
-import {log} from '../logger';
+import { log } from '../logger';
 import OandaApi from './oanda/index';
 import CyrptoCompareApi from './cc/cryptocompare.broker';
 import { BROKER_GENERAL_TYPE_CC, BROKER_GENERAL_TYPE_OANDA } from '../constants/constants';
@@ -51,7 +51,7 @@ export class BrokerMiddleware extends EventEmitter {
 
     public async setSymbols(): Promise<void> {
         this._symbols = await this.getSymbols();
-        
+
         // remove img url (only needed when building spritesheet in client)
         this.symbols.forEach(symbol => {
             delete symbol.img;
@@ -73,19 +73,19 @@ export class BrokerMiddleware extends EventEmitter {
         return
     }
 
-    public getCandles(symbolName, from, until, granularity, count, onData): Promise<void> {
+    public getCandles(symbolName, from, until, timeFrame, count, onData): Promise<void> {
         const symbol = this.symbols.find(symbol => symbol.name === symbolName);
-
-        if (!symbol) {
+       
+        if (!symbol)
             throw new Error('Symbol not found: ' + symbolName);
-        }
 
         if (symbol.broker === BROKER_GENERAL_TYPE_CC)
-            return this._brokers.cc.getCandles(symbolName, from, until, granularity, count, onData);
-        else if (symbol.broker === BROKER_GENERAL_TYPE_OANDA)
-            return this._brokers.oanda.getCandles(symbolName, from, until, granularity, count, onData);
-        else
-            throw new Error('UNKOWN BROKER: ' + JSON.stringify(symbol, null, 2));
+            return this._brokers.cc.getCandles(symbolName, timeFrame, from, until, count, onData);
+
+        if (symbol.broker === BROKER_GENERAL_TYPE_OANDA)
+            return this._brokers.oanda.getCandles(symbolName, timeFrame, from, until, count, onData);
+
+        throw new Error('UNKOWN BROKER: ' + JSON.stringify(symbol, null, 2));
     }
 
     public openTickStream(symbols: Array<string>): void {
@@ -169,7 +169,7 @@ export class BrokerMiddleware extends EventEmitter {
                 console.error(error);
             }
         }
-        
+
         this._brokers.oanda = new OandaApi(config.broker.oanda);
 
         // handle tick stream timeout (the used oanda file does not reconnect for some reason)

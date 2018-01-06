@@ -11,10 +11,13 @@ import { app } from '../app';
 
 const metaData = require('../../../shared/brokers/oanda/symbols-meta').meta;
 
+/**
+ * handle all symbol specific actions that do not concern fetching or writing data
+ */
 export const symbolController = {
 
 	/**
-	 * return symbol by name
+	 * find symbol by name
 	 * @param name 
 	 */
 	findByName(name: string) {
@@ -36,7 +39,9 @@ export const symbolController = {
 	 * TODO: only needed after 1H/24 (not every minute)
 	 */
 	async updateStartPrices() {
-		await Promise.all(app.broker.symbols.map(async symbol => {
+		for (let i = 0, len = app.broker.symbols.length; i < len; i++) {
+			const symbol = app.broker.symbols[i];
+
 			const results = await Promise.all([
 				cacheController.find({ symbol: symbol.name, timeFrame: 'H1', count: 1, toArray: true }), // 1 h
 				cacheController.find({ symbol: symbol.name, timeFrame: 'D', count: 1, toArray: true }) // 24 h
@@ -51,7 +56,7 @@ export const symbolController = {
 				time: results[1][0],
 				price: results[1][1]
 			}
-		}))
+		}
 	},
 
 	/**
@@ -64,7 +69,9 @@ export const symbolController = {
 		now.setSeconds(0);
 		now.setMilliseconds(0);
 
-		await Promise.all(app.broker.symbols.map(async symbol => {
+		for (let i = 0, len = app.broker.symbols.length; i < len; i++) {
+			const symbol = app.broker.symbols[i];
+
 			// find last 24 hours of bars
 			const barsAmount = 60 * 24; // 1440 M1 bars
 			const candles = await cacheController.find({ symbol: symbol.name, timeFrame: 'M1', count: barsAmount, toArray: true });
@@ -82,23 +89,25 @@ export const symbolController = {
 				if (!low || candle < low)
 					low = candle;
 			}
+
 			symbol.volume = volume;
 			symbol.high = high;
 			symbol.low = low;
-		}));
+		}
 	},
 
 	/**
 	 * set last known prices from DB so 
 	 */
 	async setLastKnownPrices() {
-		await Promise.all(app.broker.symbols.map(async symbol => {
+		for (let i = 0, len = app.broker.symbols.length; i < len; i++) {
+			const symbol = app.broker.symbols[i];
 			const results = await cacheController.find({ symbol: symbol.name, timeFrame: 'M1', count: 1, toArray: true })
-		
+
 			if (results.length)
 				symbol.bid = results[7]
 			else
 				console.warn('unknown symbol: ' + symbol.displayName);
-		}));
+		}
 	}
 };
