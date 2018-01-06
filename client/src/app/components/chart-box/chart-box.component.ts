@@ -85,10 +85,15 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 			];
 		}
 
-		if (candles.length)
-			candles[candles.length - 1][1] = this.symbolModel.options.bid;
+		if (candles.length) {
+			if (this.symbolModel.options.bid) {
+				candles[candles.length - 1][1] = this.symbolModel.options.bid;
+			} else {
+				console.log('no current price for symbol!', this.symbolModel.options.name);
+			}
+		}
 
-		return {candles, volume};
+		return { candles, volume };
 	}
 
 	constructor(
@@ -100,7 +105,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 	ngOnChanges(changes: SimpleChanges) {
 		if (changes.symbolModel && changes.symbolModel.currentValue) {
-		
+
 			this.init();
 
 			this.symbolModel = changes.symbolModel.currentValue;
@@ -182,37 +187,86 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 					marginBottom: 25
 				},
 
-				xAxis: [{
-					labels: {
-						step: 1, // Disable label rotating when there is not enough space
-						staggerLines: false,
-						y: 16
+				indicators: [
+					{
+						id: 'main-series',
+						type: 'sma',
+						params: {
+							period: 5,
+						},
+						tooltip: {
+							pointFormat: '<span style="color: {point.color}; ">pointFormat SMA: </span> {point.y}<br>'
+						},
 					},
-					minorGridLineWidth: 0,
-					lineColor: '#d2d2d5',
-					lineWidth: 1,
-					gridLineWidth: 1,
-					gridLineDashStyle: 'dot',
-					gridZIndex: -1,
-					tickPixelInterval: 80,
-					minorTickLength: 0,
-					minPadding: 0,
-					maxPadding: 0,
-
-					// Fill empty time gaps (when there are no bars)
-					ordinal: true
+					// {
+					// 	id: 'main-series',
+					// 	type: 'ema',
+					// 	params: {
+					// 		period: 5,
+					// 		index: 0
+					// 	},
+					// 	styles: {
+					// 		strokeWidth: 2,
+					// 		stroke: 'green',
+					// 		dashstyle: 'solid'
+					// 	}
+					// },
+					// {
+					// 	id: 'main-series',
+					// 	type: 'atr',
+					// 	params: {
+					// 		period: 14,
+					// 	},
+					// 	styles: {
+					// 		strokeWidth: 2,
+					// 		stroke: 'orange',
+					// 		dashstyle: 'solid'
+					// 	},
+					// 	yAxis: {
+					// 		lineWidth: 2,
+					// 		title: {
+					// 			text: 'My ATR title'
+					// 		}
+					// 	}
+					// },
+					// {
+					// 	id: 'main-series',
+					// 	type: 'rsi',
+					// 	params: {
+					// 		period: 14,
+					// 		overbought: 70,
+					// 		oversold: 30
+					// 	},
+					// 	styles: {
+					// 		strokeWidth: 2,
+					// 		stroke: 'black',
+					// 		dashstyle: 'solid'
+					// 	},
+					// 	yAxis: {
+					// 		lineWidth: 2,
+					// 		title: {
+					// 			text: 'My RSI title'
+					// 		}
+					// 	}
+					// }
+				],
+				tooltip: {
+					enabledIndicators: true
 				},
-				{
-					lineWidth: 0,
-					gridLineWidth: 1,
-					gridLineDashStyle: 'dot',
-					gridZIndex: -1,
-					minPadding: 0,
-					maxPadding: 0,
 
-					// Fill empty time gaps (when there are no bars)
-					ordinal: true
-				}],
+				xAxis: [
+					{},
+					{
+						lineWidth: 0,
+						gridLineWidth: 1,
+						gridLineDashStyle: 'dot',
+						gridZIndex: -1,
+						minPadding: 0,
+						maxPadding: 0,
+
+						// Fill empty time gaps (when there are no bars)
+						ordinal: true
+					}],
 
 				yAxis: [{
 					opposite: true,
@@ -297,7 +351,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	}
 
 	private _fetchCandles() {
-		
+
 		this._zone.runOutsideAngular(async () => {
 			try {
 				let data: any = this._prepareData(await this._cacheService.read({
@@ -346,7 +400,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 					y: 4
 				}
 			};
-			
+
 			this._chart.yAxis[0].removePlotLine('cPrice', false, false);
 			this._chart.yAxis[0].addPlotLine(options, render, false);
 		});
@@ -411,7 +465,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 			indicators: [],
 			orders: []
 		};
-		
+
 		this._chart = null;
 	}
 

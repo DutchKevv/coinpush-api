@@ -132,7 +132,6 @@ export default class CyrptoCompareApi extends EventEmitter {
     }
 
     public async getCandles(symbol: string, timeFrame: string, from: number, until: number, count: number, onData: Function): Promise<void> {
-        // let countChunks = [{from: from, until: until, count: count}],
         until = until || Date.now() + (1000 * 60 * 60 * 24);
         let chunks = splitToChunks(timeFrame, from, until, count, CyrptoCompareApi.FETCH_CHUNK_LIMIT),
             writeChunks = 0,

@@ -37,9 +37,11 @@
     <header [ngClass]="{searchOpen: searchOpen}">
         <i (click)="toggleNav(true)" class="fa fa-navicon d-lg-none"></i>
         <div class="notification-container" (click)="searchOpen = false; notificationOpen = !notificationOpen;">
-            <i class="fa fa-globe d-lg-none"></i>
-            <span *ngIf="true" class="notification-unread-circle">2</span>
-            <div class="search-drop-down" *ngIf="notificationOpen" #dropdown>
+            <a class="globe-container">
+                <i class="fa fa-globe d-lg-none"></i>
+                <span *ngIf="true" class="notification-unread-circle">2</span>
+            </a>
+            <div class="notification-drop-down header-drop-down" *ngIf="notificationOpen" #dropdown>
                 <p class="dropdown-no-results-text">No notifications</p>
             </div>
         </div>
@@ -47,7 +49,7 @@
 
         <div class="search-container">
             <input (keyup)="onSearchKeyUp($event)" (focus)="onSearchKeyUp($event)" placeholder="Markets / People" #input>
-            <div class="search-drop-down" *ngIf="(searchResults$ | async) as result" (click)="onClickDropdownItem()" #dropdown>
+            <div class="header-drop-down" *ngIf="(searchResults$ | async) as result" (click)="onClickDropdownItem()" #dropdown>
                 <h4 *ngIf="result.symbols.length">Symbols</h4>
                 <a *ngFor="let symbol of result.symbols" [routerLink]="['/symbols']" [queryParams]="{symbol: symbol.options.name}">
                     <span class="symbol-img-{{symbol.options.name}}"></span>

@@ -27,7 +27,7 @@
 
 header {
     width: 100%;
-    padding: 4px;
+    padding: 4px 0;
     display: flex;
     flex-shrink: 0;
     border-bottom: 1px solid grey;
@@ -66,10 +66,6 @@ header {
         font-size: 35px;
     }
 
-    .fa-globe {
-        font-size: 28px;
-    }
-
     .fa-filter {
         font-size: 32px;
     }
@@ -80,6 +76,27 @@ header {
         text-align: right;
     }
 
+    .globe-container {
+        position: relative;
+        display: block;
+
+        .fa-globe {
+            font-size: 28px;
+        }
+    }
+
+    .notification-unread-circle {
+        background: red;
+        border-radius: 50%;
+        position: absolute;
+        padding: 2px 6px;
+        font-size: 14px;
+        left: 26px;
+        top: 0;
+        line-height: 16px;
+        font-weight: bold;
+    }
+
     .search-container {
         width: 100%;
         display: none;
@@ -88,24 +105,7 @@ header {
             display: block;
         }
     }
-
-    .notification-container {
-        position: relative;
-
-        .notification-unread-circle {
-            background: red;
-            border-radius: 50%;
-            position: absolute;
-            padding: 2px 6px;
-            font-size: 14px;
-            left: 26px;
-            top: 0;
-            line-height: 16px;
-            font-weight: bold;
-        }
-    }
     
-
     input {
         padding: 5px;
         line-height: 16px;
@@ -121,16 +121,12 @@ header {
         &:focus {
             outline: none;
         }
-
-        @media only screen and (min-width : 768px) {
-            width: 400px;
-        }
     }
 
-    .search-drop-down {
+    .header-drop-down {
         position: absolute;
         z-index: 122;
-        top: 40px;
+        top: 39px;
         left: 0;
         width: 100%;
         background: $background-light;
@@ -173,6 +169,11 @@ header {
         }
     }
 
+    .header-drop-down.notification-drop-down {
+        bottom: calc(50% - 20px);
+        height: auto;
+    }
+
     @media only screen and (min-width : 768px) {
         background: transparent;
         text-align: center;
@@ -182,9 +183,19 @@ header {
             width: 100%;
         }
 
+        input {
+            width: 400px;
+        }
+
         .notification-container,
         .search-container  {
             position: relative;
+        }
+
+        .notification-drop-down {
+            left: 0;
+            min-height: 100px;
+            box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7);
         }
 
         span {

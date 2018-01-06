@@ -1,5 +1,5 @@
 {
-  "name": "com.example.app",
+  "name": "coinpush",
   "displayName": "App",
   "version": "1.0.0",
   "description": "A sample Apache Cordova application that responds to the deviceready event.",
@@ -43,6 +43,7 @@
     "@types/node": "^8.5.7",
     "android-versions": "^1.2.2",
     "bootstrap": "^4.0.0-beta.3",
+    "cordova": "^8.0.0",
     "cordova-android": "^7.0.0",
     "cordova-browser": "^5.0.3",
     "cordova-build-increment": "^0.1.0",

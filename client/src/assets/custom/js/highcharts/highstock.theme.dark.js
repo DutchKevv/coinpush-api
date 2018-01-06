@@ -65,7 +65,14 @@ const HighstockTheme = {
     },
 
     chart: {
-        backgroundColor: '#000',
+        // backgroundColor: '#000',
+        backgroundColor: {
+            linearGradient: [0, '70%', '70%', '20%'],
+            stops: [
+                [0, 'rgb(48, 96, 48)'],
+                [1, 'rgb(0, 0, 0)']
+            ]
+        },
         style: {
             fontFamily: '\'Unica One\', sans-serif'
         },
@@ -79,11 +86,14 @@ const HighstockTheme = {
     xAxis: {
         gridLineColor: '#707073',
         labels: {
+            step: 1, // Disable label rotating when there is not enough space
+            staggerLines: false,
+            y: 16,
             style: {
                 color: '#E0E0E3'
             }
         },
-        lineColor: '#707073',
+        // lineColor: '#707073',
         tickColor: '#707073',
         tickLength: 0,
         minorTickLength: 0,
@@ -94,6 +104,19 @@ const HighstockTheme = {
 
             }
         },
+        minorGridLineWidth: 0,
+        lineColor: '#d2d2d5',
+        lineWidth: 1,
+        gridLineWidth: 1,
+        gridLineDashStyle: 'dot',
+        gridZIndex: -1,
+        tickPixelInterval: 80,
+        minorTickLength: 0,
+        minPadding: 0,
+        maxPadding: 0,
+
+        // Fill empty time gaps (when there are no bars)
+        ordinal: true,
         type: 'datetime'
     },
     yAxis: {

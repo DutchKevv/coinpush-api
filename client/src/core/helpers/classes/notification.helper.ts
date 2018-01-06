@@ -35,7 +35,7 @@ export class NotificationHelper {
     }
 
     private _onNotification(notification: any): void {
-        const body = JSON.parse(notification.body);
+        const body = typeof notification.body === 'string' ? JSON.parse(notification.body) : notification.body;
         
         if (notification.userId !== app.user._id) {
             return console.warn('notification userId mismatch')
