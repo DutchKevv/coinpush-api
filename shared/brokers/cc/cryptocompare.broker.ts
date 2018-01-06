@@ -157,14 +157,14 @@ export default class CyrptoCompareApi extends EventEmitter {
         for (let i = 0, len = chunks.length; i < len; i++) {
             const chunk = chunks[i];
             const now = Date.now();
-            console.log(chunk.count);
+
             const result: any = await this._doRequest(url, {
                 limit: 2000,
                 fsym: symbol,
                 tsym: 'USD',
                 toTs: chunk.until
             });
-            console.log(chunk.until, result.Data);
+
             if (!result.Data || !result.Data.length)
                 continue;
                 

@@ -27,6 +27,7 @@ export function splitToChunks(timeFrame, from, until, count, chunkLimit) {
 				until: (from += timeStep) < until ? from : until
 			});
 	} else {
+		
 		while (count > 0) {
 			returnArr.push({
 				from: from,
