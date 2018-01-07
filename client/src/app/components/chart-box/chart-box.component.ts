@@ -62,9 +62,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	private _orderSubscription;
 
 	public static readonly DEFAULT_CHUNK_LENGTH = 300;
-	public static readonly VIEW_STATE_WINDOWED = 1;
-	public static readonly VIEW_STATE_STRETCHED = 2;
-	public static readonly VIEW_STATE_MINIMIZED = 3;
 
 	private _prepareData(data: any) {
 		let i = 0,
@@ -90,7 +87,11 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 		if (candles.length) {
 			if (this.symbolModel.options.bid) {
+				console.log('UPDATE!!');
 				candles[candles.length - 1][1] = this.symbolModel.options.bid;
+				candles[candles.length - 1][2] = this.symbolModel.options.bid;
+				candles[candles.length - 1][3] = this.symbolModel.options.bid;
+				candles[candles.length - 1][4] = this.symbolModel.options.bid;
 			} else {
 				console.log('no current price for symbol!', this.symbolModel.options.name);
 			}
@@ -303,16 +304,16 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 					offset: this._offset
 				}));
 
-				if (!this._chart)
-					this._createChart();
-
 				this.toggleLoading(false);
 
 				this._data.candles = data.candles;
 				this._data.volume = data.volume;
 
-				this._chart.series[0].setData(this._data.candles, false);
-				this._chart.series[1].setData(this._data.volume, false);
+				if (!this._chart)
+					this._createChart();
+
+				// this._chart.series[0].setData(this._data.candles, false);
+				// this._chart.series[1].setData(this._data.volume, false);
 
 				this._updateCurrentPricePlot();
 				this._updateViewPort(0, true);
