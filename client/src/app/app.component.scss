@@ -34,7 +34,7 @@ header {
     height: 40px;
     background: black;
     z-index: 2;
-    box-shadow: 3px 6px 6px rgba(0, 0, 0, 0.7);
+    box-shadow: 0 6px 6px rgba(0, 0, 0, 0.4);
 
     &.searchOpen {
         .fa-filter,
@@ -169,11 +169,6 @@ header {
                 margin-right: 10px;
             }
         }
-    }
-
-    .header-drop-down.notification-drop-down {
-        bottom: calc(50% - 20px);
-        height: auto;
     }
 
     @media only screen and (min-width : 768px) {

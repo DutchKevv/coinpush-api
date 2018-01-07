@@ -14,7 +14,7 @@ dump.rdb
 
 #### Log ####
 /_logs
-server.txt
+log.txt
 
 #### App ####
 tradejs.config.custom.json

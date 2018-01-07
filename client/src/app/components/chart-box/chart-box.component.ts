@@ -9,6 +9,9 @@ import { SymbolModel } from "../../models/symbol.model";
 
 declare let Highcharts: any;
 
+const SERIES_MAIN_NAME = 'main-series';
+const DEFAULT_GRAPHTYPE = 'ohlc';
+
 @Component({
 	selector: 'app-chart-box',
 	templateUrl: './chart-box.component.html',
@@ -30,7 +33,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	@ViewChild('chart') private chartRef: ElementRef;
 	@ViewChild('loading') private loadingRef: ElementRef;
 
-	public graphType = 'line';
+	public graphType = DEFAULT_GRAPHTYPE;
 	public zoom = 1;
 	public timeFrame = 'H1';
 
@@ -105,10 +108,9 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 	ngOnChanges(changes: SimpleChanges) {
 		if (changes.symbolModel && changes.symbolModel.currentValue) {
-
-			this.init();
-
+			this._destroyChart();
 			this.symbolModel = changes.symbolModel.currentValue;
+			this.init();
 		}
 	}
 
@@ -180,80 +182,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 			// create the chart
 			this._chart = Highcharts.stockChart(this.chartRef.nativeElement, {
 
-				chart: {
-					pinchType: 'x',
-					marginLeft: 4,
-					marginTop: 1,
-					marginBottom: 25
-				},
-
-				indicators: [
-					{
-						id: 'main-series',
-						type: 'sma',
-						params: {
-							period: 5,
-						},
-						tooltip: {
-							pointFormat: '<span style="color: {point.color}; ">pointFormat SMA: </span> {point.y}<br>'
-						},
-					},
-					// {
-					// 	id: 'main-series',
-					// 	type: 'ema',
-					// 	params: {
-					// 		period: 5,
-					// 		index: 0
-					// 	},
-					// 	styles: {
-					// 		strokeWidth: 2,
-					// 		stroke: 'green',
-					// 		dashstyle: 'solid'
-					// 	}
-					// },
-					// {
-					// 	id: 'main-series',
-					// 	type: 'atr',
-					// 	params: {
-					// 		period: 14,
-					// 	},
-					// 	styles: {
-					// 		strokeWidth: 2,
-					// 		stroke: 'orange',
-					// 		dashstyle: 'solid'
-					// 	},
-					// 	yAxis: {
-					// 		lineWidth: 2,
-					// 		title: {
-					// 			text: 'My ATR title'
-					// 		}
-					// 	}
-					// },
-					// {
-					// 	id: 'main-series',
-					// 	type: 'rsi',
-					// 	params: {
-					// 		period: 14,
-					// 		overbought: 70,
-					// 		oversold: 30
-					// 	},
-					// 	styles: {
-					// 		strokeWidth: 2,
-					// 		stroke: 'black',
-					// 		dashstyle: 'solid'
-					// 	},
-					// 	yAxis: {
-					// 		lineWidth: 2,
-					// 		title: {
-					// 			text: 'My RSI title'
-					// 		}
-					// 	}
-					// }
-				],
-				tooltip: {
-					enabledIndicators: true
-				},
-
 				xAxis: [
 					{},
 					{
@@ -268,48 +196,62 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 						ordinal: true
 					}],
 
-				yAxis: [{
-					opposite: true,
-					labels: {
-						align: 'left',
-						x: 6,
-						y: 8,
-						formatter: function () {
-							return self._priceToFixed(this.value);
-						}
+				yAxis: [
+					{
+						opposite: true,
+						labels: {
+							align: 'left',
+							x: 6,
+							y: 8,
+							formatter: function () {
+								return self._priceToFixed(this.value);
+							}
+						},
+						title: {
+							text: null
+						},
+						// offset: 10,
+						height: '75%',
+						lineWidth: 1,
+						resize: {
+							enabled: true
+						},
+						plotLines: []
 					},
-					title: {
-						text: null
-					},
-					// offset: 10,
-					height: '75%',
-					lineWidth: 1,
-					resize: {
-						enabled: true
-					},
-					plotLines: []
-				}, {
-					opposite: true,
-					labels: {
-						align: 'left',
-						x: 6,
-						y: 8
-					},
-					title: {
-						text: null
-					},
-					top: '80%',
-					height: '20%',
-					// offset: 10,
-					lineWidth: 1
-				}],
+					{
+						opposite: true,
+						labels: {
+							align: 'left',
+							x: 6,
+							y: 8
+						},
+						title: {
+							text: null
+						},
+						top: '80%',
+						height: '20%',
+						// offset: 10,
+						lineWidth: 1
+					}],
 
 				series: [
 					{
-						id: 'main-series',
+						id: SERIES_MAIN_NAME,
 						type: this.graphType,
 						name: this.symbolModel.options.displayName,
-						data: this._data.candles
+						data: this._data.candles,
+						cropThreshold: 0
+					},
+					{
+						type: 'ema',
+						linkedTo: SERIES_MAIN_NAME,
+						params: {
+							period: 7
+						}
+					},
+					{
+						type: 'bb',
+						linkedTo: SERIES_MAIN_NAME
 					},
 					{
 						type: 'column',

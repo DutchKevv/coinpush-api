@@ -1,5 +1,5 @@
 /**
- * @license  Highcharts JS v6.0.3 (2017-11-14)
+ * @license  Highcharts JS v6.0.4 (2017-12-15)
  *
  * Indicator series type for Highstock
  *
@@ -75,7 +75,7 @@
          * The IKH series type.
          *
          * @constructor seriesTypes.ikh
-         * @augments seriesTypes.line
+         * @augments seriesTypes.sma
          */
         seriesType('ikh', 'sma',
             /**
@@ -602,27 +602,22 @@
          * 
          * For options that apply to multiple series, it is recommended to add
          * them to the [plotOptions.series](#plotOptions.series) options structure.
-         * To apply to all series of this specific type, apply it to [plotOptions.
-         * sma](#plotOptions.ikh).
+         * To apply to all series of this specific type, apply it to 
+         * [plotOptions.ikh](#plotOptions.ikh).
          * 
          * @type {Object}
          * @since 6.0.0
-         * @extends series,plotOptions.sma
+         * @extends series,plotOptions.ikh
          * @excluding data,dataParser,dataURL
          * @product highstock
          * @apioption series.ikh
          */
 
-
         /**
-         * An array of data points for the series. For the `IKH` series type,
-         * points are calculated dynamically.
-         * 
-         * @type {Array<Object|Array>}
          * @since 6.0.0
-         * @extends series.line.data
+         * @extends series.sma.data
          * @product highstock
-         * @apioption series.sma.data
+         * @apioption series.ikh.data
          */
 
     }(Highcharts));

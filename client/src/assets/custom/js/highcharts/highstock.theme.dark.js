@@ -15,7 +15,7 @@ const HighstockTheme = {
     },
 
     rangeSelector: {
-        enabled:false
+        enabled: false
     },
 
     navigator: {
@@ -26,8 +26,8 @@ const HighstockTheme = {
         enabled: false,
     },
 
-    exporting: { 
-        enabled: false 
+    exporting: {
+        enabled: false
     },
 
     credits: {
@@ -65,6 +65,10 @@ const HighstockTheme = {
     },
 
     chart: {
+        pinchType: 'x',
+        marginLeft: 4,
+        marginTop: 1,
+        marginBottom: 25,
         // backgroundColor: '#000',
         backgroundColor: {
             linearGradient: [0, '70%', '70%', '20%'],
@@ -175,6 +179,14 @@ const HighstockTheme = {
             groupPadding: 0,
             shadow: false,
             stacking: 'percent'
+        },
+        ema: {
+            lineWidth: 1,
+            color: 'purple'
+        },
+        bb: {
+            lineWidth: 1,
+            color: 'pink'
         },
         candlestick: {
             lineColor: 'white',
