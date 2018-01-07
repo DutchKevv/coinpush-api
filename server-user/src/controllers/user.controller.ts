@@ -44,7 +44,7 @@ export const userController = {
 		if (user) {
 			UserSchema.statics.normalize(reqUser, user);
 		}
-			
+
 		return user;
 	},
 
@@ -61,7 +61,7 @@ export const userController = {
 			where.email = params.email;
 
 		if (params.text)
-			where.name = { "$regex": params.text, "$options": "i" } 
+			where.name = { "$regex": params.text, "$options": "i" }
 
 		console.log('where', where, params);
 
@@ -71,7 +71,7 @@ export const userController = {
 			(<any>User).normalize(reqUser, user);
 			delete user['followers'];
 		});
-		
+
 		return users;
 	},
 
@@ -82,7 +82,7 @@ export const userController = {
 		const user = await User.findOne({ email }, fields);
 
 		if (user)
-		(<any>User).normalize(reqUser, user)
+			(<any>User).normalize(reqUser, user)
 
 		return user;
 	},
@@ -90,7 +90,7 @@ export const userController = {
 	async findByText(reqUser: IReqUser, text: string): Promise<Array<IUser>> {
 		const users = await User.find({ $match: { name: new RegExp('.*' + text + '.*', 'i') } });
 
-		users.forEach(user =>(<any>User).normalize(reqUser, user));
+		users.forEach(user => (<any>User).normalize(reqUser, user));
 
 		return users;
 	},
@@ -166,20 +166,34 @@ export const userController = {
 		if (userId === reqUser.id)
 			throw new Error('Cannot follow self');
 
-		const user = await <any>User.findById(userId, {followers: 1});
+		const user = await <any>User.findById(userId, { followers: 1 });
 
-		// Validity checks
+		// TODO: validity checks
 		if (!user)
 			throw new Error('User not found');
 
-		const isFollowing = user.followers && user.followers.indexOf(reqUser.id) > -1;
+		const isCurrentlyFollowing = user.followers && user.followers.indexOf(reqUser.id) > -1;
 
-		if (isFollowing)
+		// unfollow
+		if (isCurrentlyFollowing) {
 			await user.update({ $pull: { followers: reqUser.id }, $inc: { followersCount: -1 } });
-		else
+		}
+		// follow
+		else {
 			await user.update({ $addToSet: { followers: reqUser.id }, $inc: { followersCount: 1 } });
 
-		return { state: !isFollowing };
+			// send notification
+			let pubOptions = {
+				type: 'user-follow',
+				toUserId: userId,
+				fromUserId: reqUser.id,
+				data: {}
+			};
+
+			client.publish("notify", JSON.stringify(pubOptions));
+		}
+
+		return { state: !isCurrentlyFollowing };
 	},
 
 	async remove(reqUser, id): Promise<any> {

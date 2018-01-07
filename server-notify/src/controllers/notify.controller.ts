@@ -3,12 +3,32 @@ import { userController } from './user.controller';
 import { IUser } from '../../../shared/interfaces/IUser.interface';
 import * as gcm from 'node-gcm';
 import { User } from '../schemas/user.schema';
+import { Notification } from '../schemas/notification.schema';
+import { IReqUser } from '../../../shared/interfaces/IReqUser.interface';
 
 const config = require('../../../tradejs.config');
 
 const sender = new gcm.Sender(config.firebase.key);
 
 export const notifyController = {
+
+    async findById(reqUser: IReqUser, id: string): Promise<any> {
+
+    },
+
+    async findMany(reqUser: IReqUser, params): Promise<any> {
+        const limit = parseInt(params.limit, 10) || 20;
+        const sort = params.sort || -1;
+
+        const notifications = await Notification.find({}, {}).sort({ _id: sort }).limit(limit).lean();
+
+        // notifications.forEach((user) => {
+        // 	(<any>User).normalize(reqUser, user);
+        // 	delete user['followers'];
+        // });
+
+        return notifications;
+    },
 
     async sendToUser(userId, title, body, data, params?: any) {
 
@@ -50,19 +70,22 @@ export const notifyController = {
             parentId: params.parentId
         }
 
-        return notifyController.sendToUser(params.toUserId, title, body, data);
+        return this.sendToUser(params.toUserId, title, body, data);
     },
 
-    async sendTypePostLike(toUserId, params) {
-        const fromUser: any = await User.findById(params.fromUserId, { name: 1 });
+    async sendTypePostLike(notification) {
+        const fromUser: any = await User.findById(notification.fromUserId, { name: 1 });
+
+        if (!fromUser)
+            throw new Error('could not find user');
 
         const title = `${fromUser.name} liked your post`;
         const data = {
             type: 'post-like',
-            commentId: params.commentId,
+            commentId: notification.data.commentId,
         }
 
-        return notifyController.sendToUser(params.toUserId, title, '', data);
+        return this.sendToUser(notification.toUserId, title, '', data);
     },
 
     async sendTypeCommentLike(toUserId, params) {
@@ -75,7 +98,7 @@ export const notifyController = {
             parentId: params.parentId
         }
 
-        return notifyController.sendToUser(params.toUserId, title, '', data);
+        return this.sendToUser(params.toUserId, title, '', data);
     },
 
     async sendTypeSymbolAlarm(toUserId, params) {
@@ -87,20 +110,41 @@ export const notifyController = {
             time: params.time
         };
 
-        return notifyController.sendToUser(params.toUserId, title, '', data);
+        return this.sendToUser(params.toUserId, title, '', data);
     },
 
-    parseByType(type, data) {
-        switch (type) {
+    async sendUserFollow(notification) {
+        const fromUser: any = await User.findById(notification.fromUserId, { name: 1 });
+
+        const title = `${fromUser.name} started following you!`;
+
+        const data = {
+            type: 'symbol-alarm'
+        };
+
+        return this.sendToUser(notification.toUserId, title, '', data);
+    },
+
+    async parse(notification) {
+        console.log(notification);
+        await this._store(notification);
+
+        switch (notification.type) {
             case 'post-comment':
-                return this.sendTypePostComment(data.toUserId, data);
+                return this.sendTypePostComment(notification.toUserId, notification.data);
             case 'post-like':
-                return this.sendTypePostLike(data.toUserId, data);
+                return this.sendTypePostLike(notification);
             case 'comment-like':
-                return this.sendTypeCommentLike(data.toUserId, data);
+                return this.sendTypeCommentLike(notification);
             case 'symbol-alarm':
-                return this.sendTypeSymbolAlarm(data.toUserId, data);
+                return this.sendTypeSymbolAlarm(notification.toUserId, notification.data);
+            case 'user-follow':
+                return this.sendUserFollow(notification);
 
         }
+    },
+
+    async _store(notification): Promise<any> {
+        const createResult = await Notification.create(notification);
     }
 };

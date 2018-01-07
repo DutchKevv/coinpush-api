@@ -63,65 +63,34 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 	public static readonly DEFAULT_CHUNK_LENGTH = 300;
 
-	private _prepareData(data: any) {
-		let i = 0,
-			rowLength = 10,
-			length = data.length,
-			volume = new Array(length / rowLength),
-			candles = new Array(length / rowLength);
-
-		for (; i < length; i += rowLength) {
-			candles[i / rowLength] = [
-				data[i],
-				data[i + 1], // open
-				data[i + 3], // high
-				data[i + 5], // low
-				data[i + 7] // close
-			];
-
-			volume[i / rowLength] = [
-				data[i],
-				data[i + 9] // the volume
-			];
-		}
-
-		if (candles.length) {
-			if (this.symbolModel.options.bid) {
-				console.log('UPDATE!!');
-				candles[candles.length - 1][1] = this.symbolModel.options.bid;
-				candles[candles.length - 1][2] = this.symbolModel.options.bid;
-				candles[candles.length - 1][3] = this.symbolModel.options.bid;
-				candles[candles.length - 1][4] = this.symbolModel.options.bid;
-			} else {
-				console.log('no current price for symbol!', this.symbolModel.options.name);
-			}
-		}
-
-		return { candles, volume };
-	}
-
 	constructor(
 		public constantsService: ConstantsService,
 		private _zone: NgZone,
 		private _cacheService: CacheService,
-		private _elementRef: ElementRef) {
-	}
+		private _elementRef: ElementRef) {}
 
 	ngOnChanges(changes: SimpleChanges) {
+		if (this._changeSubscription && this._changeSubscription.unsubscribe)
+			this._changeSubscription.unsubscribe();
+
 		if (changes.symbolModel && changes.symbolModel.currentValue) {
-			this._destroyChart();
-			this.symbolModel = changes.symbolModel.currentValue;
-			this.init();
+			
+			this._changeSubscription = this._cacheService.changed$.subscribe(symbols => {
+				if (this.symbolModel && symbols.includes(this.symbolModel.options.name)) {
+					this._onPriceChange(false);
+					this._updateCurrentPricePlot();
+				}
+			});
+
+			setTimeout(() => {
+				this._destroyChart();
+				this.init();
+			}, 0);
 		}
 	}
 
 	ngOnInit() {
-		this._changeSubscription = this._cacheService.changed$.subscribe(symbols => {
-			if (this.symbolModel && symbols.includes(this.symbolModel.options.name)) {
-				this._onPriceChange(false);
-				this._updateCurrentPricePlot();
-			}
-		});
+		
 	}
 
 	ngAfterViewInit() {
@@ -156,14 +125,14 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		}
 
 		this.graphType = type;
-
+		
 		this._chart.series[0].update({ type }, true, false);
 	}
 
 	public toggleTimeFrame(timeFrame: string) {
 		this._destroyChart();
 		this.timeFrame = timeFrame;
-		this._createChart();
+		// this._createChart();
 		this.init();
 	}
 
@@ -410,6 +379,43 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		};
 
 		this._chart = null;
+	}
+
+	private _prepareData(data: any) {
+		let i = 0,
+			rowLength = 10,
+			length = data.length,
+			volume = new Array(length / rowLength),
+			candles = new Array(length / rowLength);
+
+		for (; i < length; i += rowLength) {
+			candles[i / rowLength] = [
+				data[i],
+				data[i + 1], // open
+				data[i + 3], // high
+				data[i + 5], // low
+				data[i + 7] // close
+			];
+
+			volume[i / rowLength] = [
+				data[i],
+				data[i + 9] // the volume
+			];
+		}
+
+		if (candles.length) {
+			if (this.symbolModel.options.bid) {
+				console.log('UPDATE!!');
+				candles[candles.length - 1][1] = this.symbolModel.options.bid;
+				candles[candles.length - 1][2] = this.symbolModel.options.bid;
+				candles[candles.length - 1][3] = this.symbolModel.options.bid;
+				candles[candles.length - 1][4] = this.symbolModel.options.bid;
+			} else {
+				console.log('no current price for symbol!', this.symbolModel.options.name);
+			}
+		}
+
+		return { candles, volume };
 	}
 
 	private _destroy() {

@@ -49,7 +49,7 @@ export const commentController = {
 	},
 
 	async findChildren(reqUser: IReqUser, parentId: string, params: any = {}) {
-		
+
 		const children = await Comment
 			.find({ parentId: { $eq: Types.ObjectId(parentId) } })
 			.sort({ _id: -1 })
@@ -74,21 +74,21 @@ export const commentController = {
 		if (options.parentId) {
 			const parent = await Comment.findOneAndUpdate({ _id: comment.parentId }, { $inc: { childCount: 1 } });
 
-			// notify
-			// if (parent.userId.toString() !== reqUser.id) {
-			let pubOptions = {
-				type: 'post-comment',
-				data: {
+			// notify if not responding on self
+			if (parent.userId.toString() !== reqUser.id) {
+				let pubOptions = {
+					type: 'post-comment',
 					toUserId: parent.createUser,
 					fromUserId: reqUser.id,
-					parentId: parent._id,
-					commentId: comment._id,
-					content: options.content.substring(0, 100) // Don't send entire message (is only for notification label)
-				}
-			};
+					data: {
+						parentId: parent._id,
+						commentId: comment._id,
+						content: options.content.substring(0, 100) // Don't send entire message (is only for notification label)
+					}
+				};
 
-			redis.client.publish("notify", JSON.stringify(pubOptions));
-			// }
+				redis.client.publish("notify", JSON.stringify(pubOptions));
+			}
 		}
 
 		return { _id: comment._id };
@@ -98,11 +98,13 @@ export const commentController = {
 		const { iLike, comment } = await Comment.toggleLike(reqUser.id, commentId);
 
 		if (comment && iLike) {
+			console.log(comment);
+
 			let pubOptions = {
 				type: comment.parentId ? 'comment-like' : 'post-like',
+				toUserId: comment.createUser,
+				fromUserId: reqUser.id,
 				data: {
-					toUserId: comment.createUser,
-					fromUserId: reqUser.id,
 					commentId: commentId,
 					parentId: comment.parentId
 				}

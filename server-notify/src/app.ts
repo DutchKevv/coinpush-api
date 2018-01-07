@@ -42,6 +42,7 @@ app.use((req: any, res, next) => {
 	next();
 });
 
+app.use('/notify', require('./api/notify.api'));
 app.use('/mail', require('./api/email.api'));
 app.use('/user', require('./api/user.api'));
 app.use('/device', require('./api/device.api'));
@@ -70,7 +71,7 @@ redis.client.on("message", function (channel, message) {
 
     switch (channel) {
         case 'notify':
-            notifyController.parseByType(data.type, data.data);
+			notifyController.parse(data);
             break;
     }
 });

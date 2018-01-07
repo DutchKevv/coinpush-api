@@ -57,7 +57,7 @@ CommentSchema.statics.addILike = async function (userId, comments: Array<any>): 
 };
 
 CommentSchema.statics.toggleLike = async function (userId, commentId: string): Promise<any> {
-	const comment = await this.findById(commentId, {liked: 1, userId: 1, parentId: 1});
+	const comment = await this.findById(commentId, {liked: 1, createUser: 1, parentId: 1});
 
 	if (!comment)
 		return;

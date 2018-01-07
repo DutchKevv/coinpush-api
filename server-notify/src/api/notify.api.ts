@@ -1,29 +1,30 @@
 import {Router} from 'express';
 import {emailController} from '../controllers/email.controller';
+import { notifyController } from '../controllers/notify.controller';
 
 const router = Router();
 
 /**
- * Password reset
+ * get single
  */
-router.post('/request-password-reset', async (req, res, next) => {
+router.get('/:id', async (req, res, next) => {
 	console.log(req.body);
 
 	try {
-		res.send(await emailController.requestPasswordReset(req.user, req.body.user));
+		res.send(await notifyController.findById(req.user, req.params.id));
 	} catch (error) {
 		next(error);
 	}
 });
 
 /**
- * Password reset
+ * get multiple
  */
-router.post('/new-member', async (req, res, next) => {
+router.get('/', async (req, res, next) => {
 	console.log(req.body);
 
 	try {
-		res.send(await emailController.newMember(req.user, req.body));
+		res.send(await notifyController.findMany(req.user, req.query));
 	} catch (error) {
 		next(error);
 	}

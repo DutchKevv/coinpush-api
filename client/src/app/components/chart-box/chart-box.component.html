@@ -18,20 +18,19 @@
 		</button>
 	</li>
 	<li>
-		<button (click)="changeGraphType('line')" type="button" class="text-dark button-ohlc btn-menu" [ngClass]="{'active': symbolModel.options.graphType === 'line'}"
+		<button (click)="changeGraphType('line')" type="button" class="text-dark button-ohlc btn-menu" [ngClass]="{'active': graphType === 'line'}"
 		 aria-expanded="false">
 			<i class="fa fa-line-chart"></i>
 		</button>
 	</li>
 	<li>
-		<button (click)="changeGraphType('ohlc')" type="button" class="text-dark button-ohlc btn-menu" [ngClass]="{'active': symbolModel.options.graphType === 'ohlc'}"
+		<button (click)="changeGraphType('ohlc')" type="button" class="text-dark button-ohlc btn-menu" [ngClass]="{'active': graphType === 'ohlc'}"
 		 aria-expanded="false">
 			<i class="fa fa-bar-chart"></i>
 		</button>
 	</li>
 	<li>
-		<button (click)="changeGraphType('candlestick')" [ngClass]="{'active': symbolModel.options.graphType === 'candlestick'}"
-		 type="button" class="text-dark button-candlestick btn-menu">
+		<button (click)="changeGraphType('candlestick')" [ngClass]="{'active': graphType === 'candlestick'}" type="button" class="text-dark button-candlestick btn-menu">
 			<i class="fa fa-area-chart"></i>
 		</button>
 	</li>

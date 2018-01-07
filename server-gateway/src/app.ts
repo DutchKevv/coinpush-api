@@ -184,6 +184,11 @@ app.use('/api/v1/authenticate', require('./api/authenticate.api'));
 app.use('/api/v1/device', require('./api/device.api'));
 
 /**
+ * notification
+ */
+app.use('/api/v1/notify', require('./api/notify.api'));
+
+/**
  * upload
  */
 app.use('/api/v1/upload', require('./api/upload.api'));

@@ -101,8 +101,9 @@ export const eventController = {
 							// if (parent.userId.toString() !== reqUser.id) {
 							let pubOptions = {
 								type: 'symbol-alarm',
+								toUserId: event.userId,
+								fromUserId: event.userId,
 								data: {
-									toUserId: event.userId,
 									time: event.triggeredDate,
 									symbol: event.symbol,
 									target: event.alarm.price

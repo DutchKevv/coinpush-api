@@ -31,6 +31,7 @@ import { Router } from '@angular/router';
 import { EventService } from './services/event.service';
 import { AlarmMenuComponent } from './components/alarm-menu/alarm-menu.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NotificationService } from './services/notification.service';
 
 @NgModule({
 	declarations: [
@@ -66,6 +67,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 		CommentService,
 		NewsService,
 		EventService,
+		NotificationService,
 		{ provide: APP_INITIALIZER, useFactory: (config: BootstrapService) => () => config.load(), deps: [BootstrapService], multi: true },
 		{ provide: AuthenticationService, useClass: AuthenticationService },
 		{

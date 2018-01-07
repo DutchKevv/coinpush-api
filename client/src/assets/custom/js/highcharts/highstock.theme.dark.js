@@ -69,14 +69,14 @@ const HighstockTheme = {
         marginLeft: 4,
         marginTop: 1,
         marginBottom: 25,
-        // backgroundColor: '#000',
-        backgroundColor: {
-            linearGradient: [0, '70%', '70%', '20%'],
-            stops: [
-                [0, 'rgb(48, 96, 48)'],
-                [1, 'rgb(0, 0, 0)']
-            ]
-        },
+        backgroundColor: 'transparent',
+        // backgroundColor: {
+        //     linearGradient: [0, '70%', '70%', '20%'],
+        //     stops: [
+        //         [0, 'rgb(48, 96, 48)'],
+        //         [1, 'rgb(0, 0, 0)']
+        //     ]
+        // },
         style: {
             fontFamily: '\'Unica One\', sans-serif'
         },
@@ -182,7 +182,10 @@ const HighstockTheme = {
         },
         ema: {
             lineWidth: 1,
-            color: 'purple'
+            color: 'purple',
+            marker: {
+                enabled: false
+            }
         },
         bb: {
             lineWidth: 1,
@@ -200,6 +203,11 @@ const HighstockTheme = {
         },
         map: {
             shadow: false
+        },
+        line: {
+            marker: {
+                enabled: false
+            }
         }
     },
 

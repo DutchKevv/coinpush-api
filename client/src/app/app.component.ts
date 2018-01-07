@@ -6,6 +6,7 @@ import { Router, NavigationEnd, NavigationStart, ActivatedRoute } from '@angular
 import { UserService } from './services/user.service';
 import { Http } from '@angular/http';
 import { app } from '../core/app';
+import { NotificationService } from './services/notification.service';
 
 declare let Module: any;
 
@@ -25,7 +26,9 @@ export class AppComponent implements OnInit {
 	@ViewChild('dropdown') public dropdown;
 	@ViewChild('navbar') navbar: ElementRef;
 	@ViewChild('input') inputRef: ElementRef;
+	@ViewChild('globeContainer') globeContainerRef: ElementRef;
 
+	public notifications$;
 	public searchOpen = false;
 	public notificationOpen = false;
 
@@ -52,8 +55,9 @@ export class AppComponent implements OnInit {
 	 */
 	@HostListener('window:click', ['$event'])
 	onWindowClick(event) {
-		if (this.dropdown)
+		if (this.dropdown) {
 			this.searchResults$.next(null);
+		}
 	}
 
 	/**
@@ -103,10 +107,13 @@ export class AppComponent implements OnInit {
 		public userService: UserService,
 		public authenticationService: AuthenticationService,
 		private _changeDetectorRef: ChangeDetectorRef,
-		private _cacheService: CacheService) { }
+		private _notificationService: NotificationService,
+		private _cacheService: CacheService) {
+			this.authenticationService.authenticate();
+		 }
 
 	ngOnInit() {
-		this.authenticationService.authenticate();
+		this.notifications$ = this._notificationService.findMany();
 	}
 
 	public onSearchKeyUp(event): void {
@@ -145,10 +152,6 @@ export class AppComponent implements OnInit {
 	}
 
 	public toggleNav(state?: boolean) {
-		// state = typeof state === 'boolean' ? state : false;
-		// if (state === this._isNavOpen)
-		// 	return;
-
 		this.navbar.nativeElement.classList.toggle('show', state);
 		this._isNavOpen = typeof state === 'boolean' ? state : !this._isNavOpen;
 
@@ -165,14 +168,14 @@ export class AppComponent implements OnInit {
 	}
 
 	public toggleSearch() {
-		this.notificationOpen = false; 
+		this.notificationOpen = false;
 		this.searchOpen = !this.searchOpen;
 
 		// wait until visible
 		setTimeout(() => {
 			// extra loop for android
 			// requestAnimationFrame(() => {
-				this.inputRef.nativeElement.focus();
+			this.inputRef.nativeElement.focus();
 			// });
 		})
 	}

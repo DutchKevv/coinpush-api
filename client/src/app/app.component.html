@@ -37,12 +37,28 @@
     <header [ngClass]="{searchOpen: searchOpen}">
         <i (click)="toggleNav(true)" class="fa fa-navicon d-lg-none"></i>
         <div class="notification-container" (click)="searchOpen = false; notificationOpen = !notificationOpen;">
-            <a class="globe-container">
+            <a class="globe-container" #globeContainer>
                 <i class="fa fa-globe d-lg-none"></i>
                 <span *ngIf="true" class="notification-unread-circle">2</span>
             </a>
             <div class="notification-drop-down header-drop-down" *ngIf="notificationOpen" #dropdown>
-                <p class="dropdown-no-results-text">No notifications</p>
+                <ng-container *ngFor="let notification of notifications$ | async">
+                    <a *ngIf="notification.type === 'user-follow'">
+                        <b>???</b> started following you
+                    </a>
+                    <a *ngIf="notification.type === 'post-comment'">
+                        <b>???</b> commented on your post
+                    </a>
+                    <a *ngIf="notification.type === 'post-like'">
+                        <b>???</b> liked your post
+                    </a>
+                    <a *ngIf="notification.type === 'comment-like'">
+                        <b>???</b> liked your comment
+                    </a>
+                    <a *ngIf="notification.type === 'symbol-alarm'">
+                        Price alarm triggered on {{notification.symbol}} - {{notification.target}}
+                    </a>
+                </ng-container>
             </div>
         </div>
         <i *ngIf="router.url.startsWith('/symbols')" (click)="onClickFilter($event)" class="fa fa-filter d-lg-none"></i>
