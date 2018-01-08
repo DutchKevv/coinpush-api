@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, Output, ViewChild, ElementRef, EventEmitter, HostListener, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Output, ViewChild, ElementRef, EventEmitter, HostListener, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { AuthenticationService } from "./services/authenticate.service";
 import { CacheService } from "./services/cache.service";
 import { Subject } from "rxjs/Subject";
@@ -17,7 +17,7 @@ declare let Module: any;
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
 
 	@Output() public filterClick$: EventEmitter<boolean> = new EventEmitter();
 	@Output() public searchResults$: Subject<any> = new Subject();
@@ -108,12 +108,16 @@ export class AppComponent implements OnInit {
 		public authenticationService: AuthenticationService,
 		private _changeDetectorRef: ChangeDetectorRef,
 		private _notificationService: NotificationService,
-		private _cacheService: CacheService) {
-			this.authenticationService.authenticate();
-		 }
+		private _cacheService: CacheService) {}
 
 	ngOnInit() {
 		this.notifications$ = this._notificationService.findMany();
+	}
+
+	ngAfterViewInit() {
+		setTimeout(() => {
+			app.initNotifications().catch(console.error);
+		}, 2000);
 	}
 
 	public onSearchKeyUp(event): void {

@@ -5,8 +5,7 @@ const config = require('../../../tradejs.config');
 
 export const symbolController = {
 
-	getPublicList(reqUser): Promise<any> {
-
+	getPublicList(): Promise<any> {
 		return new Promise((resolve, reject) => {
             client.get('symbols', (err, symbols) => {
                 if (err)

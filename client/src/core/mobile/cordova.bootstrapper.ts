@@ -9,15 +9,7 @@ export async function loadCordova(): Promise<void> {
 
     // wait until everything else is loaded before loading in advertisements (can be slow)
     // TODO: wait until angular is also ready, now only waiting for dom ready
-    if (document.readyState === "complete") {
-        setAdvertise();
-    }
-    else {
-        window.addEventListener("onload", function callback() {
-            setAdvertise();
-            window.removeEventListener('onload', callback, false);
-        }, false);
-    }
+    setTimeout(setAdvertise, 2000);
 }
 
 /**

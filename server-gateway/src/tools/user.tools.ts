@@ -24,7 +24,7 @@ module.exports = {
 					password: password,
 					img: faker.image.avatar(),
 					description: faker.lorem.sentence()
-				});
+				}, false);
 
 				console.log(i, 'user-id:', user);
 

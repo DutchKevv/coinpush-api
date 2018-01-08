@@ -34,9 +34,10 @@ export const notifyController = {
 
         const user: any = await userController.findById({ id: userId }, userId);
 
-        if (!user)
+        if (!user) {
             throw new Error('Could not find user');
-
+        }
+           
         const tokens = (user.devices || []).map(device => device.token);
 
         var message = new gcm.Message({
@@ -59,18 +60,18 @@ export const notifyController = {
         });
     },
 
-    async sendTypePostComment(toUserId, params) {
-        const fromUser: any = await User.findById(params.fromUserId, { name: 1 });
+    async sendTypePostComment(notification) {
+        const fromUser: any = await User.findById(notification.fromUserId, { name: 1 });
 
         const title = `${fromUser.name} responded on your post`;
-        const body = params.content;
+        const body = notification.data.content;
         const data = {
             type: 'post-comment',
-            commentId: params.commentId,
-            parentId: params.parentId
+            commentId: notification.data.commentId,
+            parentId: notification.data.parentId
         }
 
-        return this.sendToUser(params.toUserId, title, body, data);
+        return this.sendToUser(notification.toUserId, title, body, data);
     },
 
     async sendTypePostLike(notification) {
@@ -88,29 +89,29 @@ export const notifyController = {
         return this.sendToUser(notification.toUserId, title, '', data);
     },
 
-    async sendTypeCommentLike(toUserId, params) {
-        const fromUser: any = await User.findById(params.fromUserId, { name: 1 });
+    async sendTypeCommentLike(notification) {
+        const fromUser: any = await User.findById(notification.fromUserId, { name: 1 });
 
         const title = `${fromUser.name} liked your comment`;
         const data = {
             type: 'comment-like',
-            commentId: params.commentId,
-            parentId: params.parentId
+            commentId: notification.data.commentId,
+            parentId: notification.data.parentId
         }
 
-        return this.sendToUser(params.toUserId, title, '', data);
+        return this.sendToUser(notification.toUserId, title, '', data);
     },
 
-    async sendTypeSymbolAlarm(toUserId, params) {
-        const title = `Price alarm triggered on ${params.symbol} - ${params.target}`;
+    async sendTypeSymbolAlarm(notification) {
+        const title = `Price alarm triggered on ${notification.data.symbol} - ${notification.data.target}`;
         const data = {
             type: 'symbol-alarm',
-            symbol: params.symbol,
-            target: params.target,
-            time: params.time
+            symbol: notification.data.symbol,
+            target: notification.data.target,
+            time: notification.data.time
         };
 
-        return this.sendToUser(params.toUserId, title, '', data);
+        return this.sendToUser(notification.toUserId, title, '', data);
     },
 
     async sendUserFollow(notification) {
@@ -131,13 +132,13 @@ export const notifyController = {
 
         switch (notification.type) {
             case 'post-comment':
-                return this.sendTypePostComment(notification.toUserId, notification.data);
+                return this.sendTypePostComment(notification);
             case 'post-like':
                 return this.sendTypePostLike(notification);
             case 'comment-like':
                 return this.sendTypeCommentLike(notification);
             case 'symbol-alarm':
-                return this.sendTypeSymbolAlarm(notification.toUserId, notification.data);
+                return this.sendTypeSymbolAlarm(notification);
             case 'user-follow':
                 return this.sendUserFollow(notification);
 

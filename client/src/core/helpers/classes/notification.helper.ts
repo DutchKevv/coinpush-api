@@ -15,7 +15,7 @@ export class NotificationHelper {
 
     }
 
-    public init() {
+    public init(): Promise<any> | void {
         if (app.platform.isApp) {
             return this._loadApp();
         } else {
@@ -36,7 +36,7 @@ export class NotificationHelper {
 
     private _onNotification(notification: any): void {
         const body = typeof notification.body === 'string' ? JSON.parse(notification.body) : notification.body;
-        
+
         if (notification.userId !== app.user._id) {
             return console.warn('notification userId mismatch')
         }
@@ -53,7 +53,7 @@ export class NotificationHelper {
                 break
             case 'symbol-alarm':
                 window.location.hash = '#/symbols/?symbol=' + body.symbol;
-                app.emit('event-triggered', Object.assign(body, {title: notification.title}));
+                app.emit('event-triggered', Object.assign(body, { title: notification.title }));
                 break
             default:
                 console.error('Uknown notification type: ' + body.type);
@@ -64,23 +64,36 @@ export class NotificationHelper {
      * browser (firebase)
      */
     private async _loadBrowser() {
-        const config = {
-            apiKey: "AAAAcOdrZII:APA91bHdt3bPaqUW4sWF7tht0xJs13B_X-4Svm4TlWeLnXXFoVsPxWRQGxUPdqudCP1OHkQ-IJCVO10DJKi8G2fLekqfpy0xAXGakQmj-7FZW3DwB18BxcHNIWlgNC9T3T1tbXEnbaxM",
-            // authDomain: "<PROJECT_ID>.firebaseapp.com",
-            messagingSenderId: "484918912130",
-        };
+        return new Promise((resolve, reject) => {
+            // firebase script
+            let script = document.createElement('script');
+            script.src = 'https://www.gstatic.com/firebasejs/4.8.1/firebase.js';
+            script.async = true;
+            script.onload = () => {
+                
+                const config = {
+                    apiKey: "AAAAcOdrZII:APA91bHdt3bPaqUW4sWF7tht0xJs13B_X-4Svm4TlWeLnXXFoVsPxWRQGxUPdqudCP1OHkQ-IJCVO10DJKi8G2fLekqfpy0xAXGakQmj-7FZW3DwB18BxcHNIWlgNC9T3T1tbXEnbaxM",
+                    // authDomain: "<PROJECT_ID>.firebaseapp.com",
+                    messagingSenderId: "484918912130",
+                };
 
-        firebase.initializeApp(config);
-        const messaging = firebase.messaging();
+                firebase.initializeApp(config);
+                const messaging = firebase.messaging();
 
-        messaging.onMessage((message) => this._onNotification(message.notification));
+                messaging.onMessage((message) => this._onNotification(message.notification));
 
-        messaging.onTokenRefresh(async () => {
-            this._token = await messaging.getToken();
-            app.emit('firebase-token-refresh', this._token);
+                messaging.onTokenRefresh(async () => {
+                    this._token = await messaging.getToken();
+                    app.emit('firebase-token-refresh', this._token);
+                });
+
+                this.askPermissionBrowser().catch(console.error);
+
+                resolve();
+            }
+
+            document.head.appendChild(script);
         });
-
-        this.askPermissionBrowser().catch(console.error);
     }
 
     /**

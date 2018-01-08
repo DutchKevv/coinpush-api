@@ -54,7 +54,7 @@ export class AuthenticationService {
 		try {
 			const deviceToken = app.notification.token;
 			
-			const user = await this._http.post('/authenticate', {
+			const result = await this._http.post('/authenticate', {
 				email,
 				password,
 				token,
@@ -67,11 +67,12 @@ export class AuthenticationService {
 				.map((r: Response) => r.json())
 				.toPromise();
 
-			if (!user || !user.token) {
+			if (!result.user || !result.user.token) {
 				return false;
 			}
 
-			await this._userService.update(user, false, false);
+			// does not save to server but updates localStorage
+			await this._userService.update(result.user, false, false);
 
 			if (reload)
 				window.location.reload();

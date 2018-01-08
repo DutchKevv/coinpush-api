@@ -9,47 +9,57 @@ export class App extends MicroEvent {
 
     public platform = window['platform'];
     public user: any = {
-        name: 'Anonymous'
+        name: 'Anonymous',
+        img: './assets/image/default-profile.jpg'
     }
 
-    public isReady = false;
     public symbols: Array<any> = [];
     public address;
     public storage = new StorageHelper();
     public notification = new NotificationHelper();
     public helpers = generalHelpers;
 
+    public isReady = false;
+    public angularReady = false;
+    public angularReady$ = Promise.resolve();
+
     constructor() {
         super();
         this.init();
     }
 
-    public init(): void {
-        this._askNotificationPermission();
+    public async init(): Promise<void> {
         this.address = getAddress();
 
-        Promise.all(
-            [
-                this._loadSymbols(),
-                Promise.resolve().then(async () => {
+        if (this.platform.isApp)
+            await loadCordova();
 
-                    if (app.platform.isApp)
-                        await loadCordova();
+        await this.storage.init();
+        await this._loadUser();
+        await this._loadData()
 
-                    await this.storage.init();
+        this.isReady = true;
+        this.emit('ready', true);
+        this._askNotificationPermission();
+    }
 
-                    await Promise.all([
-                        this.notification.init(),
-                        this._loadUser(),
-                        this._loadConfig()
-                    ]);
-                })
-            ]
-        )
-            .then(() => this.emit('ready', this.isReady = true))
-            .catch(error => {
-                console.error(error);
-            })
+    public async _loadData() {
+        const obj: any = {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }
+        };
+
+        if (this.user.token)
+            obj.headers.Authorization = 'Bearer ' + this.user.token;
+
+        const data = await fetch(this.address.apiUrl + 'authenticate', obj).then(res => res.json());
+
+        if (data.user)
+            this.user = data.user;
+        
+        this.symbols = JSON.parse(data.symbols);
     }
 
     public async storeUser() {
@@ -58,6 +68,10 @@ export class App extends MicroEvent {
 
     public async removeUser(): Promise<void> {
         await this.storage.remove('current-user');
+    }
+
+    public async initNotifications() {
+        await this.notification.init();
     }
 
     private async _loadUser(): Promise<void> {
@@ -75,7 +89,7 @@ export class App extends MicroEvent {
 
         if (symbols && symbols.length)
             this.symbols = symbols;
-            
+
         this.emit('symbols-update')
     }
 

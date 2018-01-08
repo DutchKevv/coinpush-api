@@ -37,7 +37,7 @@ export const userController = {
 		}
 	},
 
-	async create(reqUser: IReqUser, params: IUser): Promise<IUser> {
+	async create(reqUser: IReqUser, params: IUser, sendEmail = true): Promise<IUser> {
 		let user, notify;
 
 		try {
@@ -81,16 +81,18 @@ export const userController = {
 			});
 
 			// send newMember email
-			await request({
-				uri: config.server.notify.apiUrl + '/mail/new-member',
-				headers: { '_id': user._id },
-				method: 'POST',
-				body: {
-					userId: user._id
-				},
-				json: true
-			});
-
+			if (sendEmail) {
+				await request({
+					uri: config.server.notify.apiUrl + '/mail/new-member',
+					headers: { '_id': user._id },
+					method: 'POST',
+					body: {
+						userId: user._id
+					},
+					json: true
+				});
+			}
+			
 			return user;
 
 		} catch (error) {

@@ -5,6 +5,17 @@ import {userController} from "../controllers/user.controller";
 const router = Router();
 
 /**
+ * authenticate 
+ */
+router.get('/', async (req, res, next) => {
+	try {
+		res.send(await authenticateController.authenticate(req.user, req.query));
+	} catch (error) {
+		next(error);
+	}
+});
+
+/**
  * password reset request
  */
 router.post('/request-password-reset', async (req, res, next) => {

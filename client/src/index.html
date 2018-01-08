@@ -10,9 +10,6 @@
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="assets/vendor/font-awesome/css/font-awesome.min.css">
-    <!-- <script src="https://code.highcharts.com/stock/highstock.js"></script> -->
-    <!-- <base href="./"> -->
-
     <style>
         html,
         body {
@@ -111,7 +108,7 @@
     </style>
 </head>
 
-<script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
+<!-- <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script> -->
 
 <body>
     <div class="font-awesome-preload-trigger">
@@ -147,9 +144,6 @@
              * 
              */
 
-            // special root class
-            document.body.querySelector('app').classList.add('app');
-
             // device ready listener
             window.platform.isReady$ = new Promise((resolve, reject) => {
                 document.addEventListener("deviceready", function callback() {
@@ -163,6 +157,9 @@
             let script = document.createElement('script');
             script.src = 'cordova.js';
             document.head.appendChild(script);
+
+            // special root class
+            document.body.querySelector('app').classList.add('app');
         })();
     </script>
 </body>

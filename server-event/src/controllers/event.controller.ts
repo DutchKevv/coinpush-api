@@ -90,7 +90,7 @@ export const eventController = {
 					));
 
 					if (events.length) {
-						console.log('events', events);
+					
 						for (let k = 0, lenk = events.length; k < lenk; k++) {
 							const event = events[k];
 							event.triggered = true;

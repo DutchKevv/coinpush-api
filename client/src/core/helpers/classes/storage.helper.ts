@@ -1,7 +1,8 @@
+
 const platform = window['platform'];
+const cordova = window['cordova'];
 
 export class StorageHelper {
-
 
     private _nameSpace: string = 'CoinPush';
     private _ss: any;
@@ -78,7 +79,7 @@ export class StorageHelper {
 
     private _initAppStorage() {
         return new Promise((resolve, reject) => {
-            this._ss = new window['cordova'].plugins.SecureStorage(resolve, (error, message) => {
+            this._ss = new cordova.plugins.SecureStorage(resolve, (error, message) => {
                 console.log(error,typeof error, error.message);
                 if (!error || error.message !== 'Device is not secure')
                     return reject(error);

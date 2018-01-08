@@ -8,10 +8,6 @@ let domain = {
 
 const config = {
     domain,
-    system: {
-        'port': 3000,
-        'timezone': 'America/New_York'
-    },
     path: {
         'custom': path.join(__dirname, 'custom'),
         'config': path.join(__dirname, '_config')
@@ -110,10 +106,9 @@ const config = {
     app: {
         version: "0.0.1",
         ip: {
-            local: '192.168.178.12',
-            live: '149.210.227.14',
-            devLocal: '127.0.0.1',
-            devApp: '10.0.2.2'
+            local: '127.0.0.1', 
+            appEmulator: '10.0.2.2',
+            live: '**',
         }
     }
 };
