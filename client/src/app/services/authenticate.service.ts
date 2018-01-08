@@ -97,7 +97,7 @@ export class AuthenticationService {
 
 	public async logout(): Promise<void> {
 		if (this._userService.model.options._id) {
-			await app.removeUser();
+			await app.removeStoredUser();
 			window.location.reload();
 		}
 	}

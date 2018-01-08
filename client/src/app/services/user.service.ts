@@ -34,7 +34,7 @@ export class UserService {
 		if (toServer) {
 			try {
 				await this._http.put('/user/' + this.model.get('_id'), changes).toPromise();
-				await app.storeUser();
+				await app.updateStoredUser();
 
 				if (showAlert)
 					this._alertService.success('Settings saved');
@@ -44,7 +44,7 @@ export class UserService {
 			}
 		}
 		else {
-			await app.storeUser();
+			await app.updateStoredUser();
 
 			if (showAlert)
 				this._alertService.success('Settings saved');

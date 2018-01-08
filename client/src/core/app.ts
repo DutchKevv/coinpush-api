@@ -1,7 +1,6 @@
 import { MicroEvent } from "./helpers/classes/micro-event.helper";
 import { generalHelpers } from './helpers/general';
 import { StorageHelper } from "./helpers/classes/storage.helper";
-import { loadCordova } from "./mobile/cordova.bootstrapper";
 import { getAddress } from './app.address';
 import { NotificationHelper } from "./helpers/classes/notification.helper";
 
@@ -25,25 +24,51 @@ export class App extends MicroEvent {
 
     constructor() {
         super();
-        this.init();
     }
 
     public async init(): Promise<void> {
         this.address = getAddress();
 
-        if (this.platform.isApp)
-            await loadCordova();
-
-        await this.storage.init();
-        await this._loadUser();
+        await this._loadStoredUser();
         await this._loadData()
 
         this.isReady = true;
         this.emit('ready', true);
-        this._askNotificationPermission();
     }
 
-    public async _loadData() {
+    // TODO: move to helper class
+    public loadAds() {
+        
+        // TODO: Desktop ads
+        if (!this.platform.isApp)
+            return;
+
+        let admobid: { banner?: string, interstitial?: string } = {};
+        
+        if (/(android)/i.test(navigator.userAgent)) { // for android & amazon-fireos
+            admobid.banner = 'ca-app-pub-1181429338292864/7213864636';
+            admobid.interstitial = 'ca-app-pub-1181429338292864/7213864636';
+        } else if (/(ipod|iphone|ipad)/i.test(navigator.userAgent)) { // for ios
+            admobid.banner = 'ca-app-pub-1181429338292864/7213864636';
+            admobid.interstitial = 'ca-app-pub-1181429338292864/7213864636';
+        }
+    
+        window['AdMob'].createBanner({
+            adSize: 'BANNER',
+            overlap: true,
+            height: 60, // valid when set adSize 'CUSTOM'
+            adId: admobid.banner,
+            position: window['AdMob'].AD_POSITION.BOTTOM_CENTER,
+            autoShow: true,
+            isTesting: false
+        });
+    
+        document.addEventListener('onAdFailLoad', function (error) {
+            console.error(error);
+        });
+    }
+
+    private async _loadData() {
         const obj: any = {
             headers: {
                 'Accept': 'application/json',
@@ -58,30 +83,27 @@ export class App extends MicroEvent {
 
         if (data.user)
             this.user = data.user;
-        
+
         this.symbols = JSON.parse(data.symbols);
     }
 
-    public async storeUser() {
+    public async updateStoredUser() {
         await this.storage.set('current-user', this.user);
     }
 
-    public async removeUser(): Promise<void> {
+    public async removeStoredUser(): Promise<void> {
         await this.storage.remove('current-user');
     }
 
-    public async initNotifications() {
-        await this.notification.init();
-    }
+    private async _loadStoredUser(): Promise<any> {
+        const user = await this.storage.get('current-user')
 
-    private async _loadUser(): Promise<void> {
-        const user: any = await this.storage.get('current-user');
         if (user && user.token)
             this.user = user
     }
 
-    private async _loadConfig() {
-        // this.config = await fetch();
+    public async initNotifications() {
+        await this.notification.init();
     }
 
     private async _loadSymbols() {
@@ -92,12 +114,7 @@ export class App extends MicroEvent {
 
         this.emit('symbols-update')
     }
-
-    private _askNotificationPermission() {
-        // Notification.requestPermission((status) => {
-        //     console.log('Notification permission status:', status);
-        // });
-    }
 }
 
 export const app = window['app'] = new App();
+app.init().catch(console.error);

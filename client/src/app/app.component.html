@@ -1,7 +1,7 @@
 <app-alert></app-alert>
 
 <nav class="nav-main" id="sidebar" #navbar>
-    <h4 style="text-align: right; line-height: 40px; padding-right: 20px;"><i>v0.0.1-alpha</i></h4>
+    <h6 style="text-align: right; line-height: 40px; padding-right: 20px;"><i>v0.0.1-alpha</i></h6>
     <a (click)="toggleNav( false)" [routerLink]="['/user/', userService.model.options._id]" [routerLinkActive]="['active']" class="profile" style="padding-top: 0">
         <img class="logo" width="70" height="70" [attr.src]="userService.model.options.img ? userService.model.options.img : undefined">
         <h4>{{userService.model.options.name || '&nbsp;'}}</h4>

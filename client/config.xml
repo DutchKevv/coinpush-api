@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.ff.coinpush" version="0.0.90" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.ff.coinpush" version="0.0.93" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
 	<name>CoinPush</name>
 	<description>
         Stock trading application with custom alarams
@@ -7,10 +7,10 @@
 	<author email="kewin@frontend-freelance.com" href="">
         Apache Cordova Team
     </author>
-	<preference name="StatusBarOverlaysWebView" value="false"/>
 	<preference name="SplashScreenDelay" value="3000"/>
 	<preference name="ShowSplashScreenSpinner" value="false"/>
 	<preference name="BackgroundColor" value="0xff0000ff"/>
+	<preference name="fullscreen" value="true"/>
 	<icon src="res/icon/icon.png"/>
 	<content src="index.html"/>
 	<access origin="*"/>
@@ -55,12 +55,9 @@
 	<hook src="scripts/incrementBuildNum.js" type="after_build"/>
 	<plugin name="cordova-plugin-whitelist" spec="^1.3.3"/>
 	<plugin name="cordova-plugin-admobpro" spec="^2.29.29"/>
-	<plugin name="cordova-plugin-statusbar" spec="^2.4.0"/>
 	<plugin name="cordova-plugin-firebase" spec="^0.1.25"/>
-	<plugin name="cordova-plugin-app-version" spec="^0.1.9"/>
 	<plugin name="cordova-plugin-fileopener" spec="^1.0.5"/>
 	<plugin name="cordova-plugin-splashscreen" spec="^5.0.0"/>
-	<plugin name="cordova-plugin-secure-storage" spec="^2.6.8"/>
 	<engine name="browser" spec="^5.0.3"/>
 	<engine name="android" spec="^7.0.0"/>
 </widget>

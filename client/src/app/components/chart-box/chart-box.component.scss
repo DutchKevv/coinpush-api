@@ -96,6 +96,10 @@
     line-height: 24px;
     text-align: left;
     margin-right: auto;
+
+    @media only screen and (min-width : 992px) {
+        padding-left: 220px;
+	}
 }
 
 .chart-content {

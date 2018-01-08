@@ -28,16 +28,16 @@ const server = app.listen(config.server.gateway.port, () => {
  */
 const proxy = global['proxyHandler'] = httpProxy.createProxyServer({});
 
-proxy.on('proxyReq', function (proxyReq, req, res, options) {
-	if (req.body) {
-		let bodyData = JSON.stringify(req.body);
-		// in case if content-type is application/x-www-form-urlencoded -> we need to change to application/json
-		// proxyReq.setHeader('Content-Type', 'application/json');
-		// proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
-		// stream the content
-		// proxyReq.write(bodyData);
-	}
-});
+// proxy.on('proxyReq', function (proxyReq, req, res, options) {
+// 	if (req.body) {
+// 		let bodyData = JSON.stringify(req.body);
+// 		// in case if content-type is application/x-www-form-urlencoded -> we need to change to application/json
+// 		// proxyReq.setHeader('Content-Type', 'application/json');
+// 		// proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+// 		// stream the content
+// 		// proxyReq.write(bodyData);
+// 	}
+// });
 
 proxy.on('error', function (err, req, res) {
 	console.error(err);

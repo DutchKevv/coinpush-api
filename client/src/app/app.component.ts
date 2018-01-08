@@ -117,6 +117,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 	ngAfterViewInit() {
 		setTimeout(() => {
 			app.initNotifications().catch(console.error);
+			app.loadAds();
 		}, 2000);
 	}
 
