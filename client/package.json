@@ -41,7 +41,7 @@
     "@types/ace": "0.0.36",
     "@types/jquery": "^3.2.17",
     "@types/lodash": "^4.14.92",
-    "@types/node": "^8.5.7",
+    "@types/node": "^9.3.0",
     "android-versions": "^1.2.2",
     "bootstrap": "^4.0.0-beta.3",
     "cordova": "^8.0.0",

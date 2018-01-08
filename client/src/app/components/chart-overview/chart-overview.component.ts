@@ -15,7 +15,7 @@ import { ConstantsService } from '../../services/constants.service';
 import { UserService } from '../../services/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CacheService } from '../../services/cache.service';
-import { SYMBOL_CAT_TYPE_FOREX, SYMBOL_CAT_TYPE_RESOURCE, SYMBOL_CAT_TYPE_CRYPTO, CUSTOM_EVENT_TYPE_ALARM, ALARM_TRIGGER_DIRECTION_DOWN, ALARM_TRIGGER_DIRECTION_UP } from "../../../../../shared/constants/constants";
+import { SYMBOL_CAT_TYPE_FOREX, SYMBOL_CAT_TYPE_RESOURCE, SYMBOL_CAT_TYPE_CRYPTO, CUSTOM_EVENT_TYPE_ALARM, ALARM_TRIGGER_DIRECTION_DOWN, ALARM_TRIGGER_DIRECTION_UP, BROKER_GENERAL_TYPE_OANDA } from "../../../../../shared/constants/constants";
 import { NgForm } from '@angular/forms';
 import { app } from '../../../core/app';
 
@@ -128,10 +128,13 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 				this.symbols = this.cacheService.symbols.filter(symbol => symbol.options.iFavorite);
 				break;
 			case 'forex':
-				this.symbols = this.cacheService.symbols.filter(s => s.options.type === SYMBOL_CAT_TYPE_FOREX);
+				this.symbols = this.cacheService.symbols.filter(s => s.options.broker === BROKER_GENERAL_TYPE_OANDA);
 				break;
 			case 'forex popular':
-				this.symbols = this.cacheService.symbols.filter(s => s.options.type === SYMBOL_CAT_TYPE_FOREX);
+				this.symbols = this.cacheService.symbols.filter(s => s.options.broker === BROKER_GENERAL_TYPE_OANDA)
+					.sort((a, b) => a.options.volume - b.options.volume)
+					.slice(-40)
+					.reverse();
 				break;
 			case 'crypto all':
 				this.symbols = this.cacheService.symbols.filter(s => s.options.type === SYMBOL_CAT_TYPE_CRYPTO);
@@ -169,10 +172,10 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 			if (event && event.target.classList.contains('fa-bell')) {
 				// console.log('set22!');
 				// if (!this.activeMenu)
-					// this.toggleAlarmMenu(null, this.activeSymbol);
-					// this.toggleAlarmMenu(null, this.activeSymbol);
+				// this.toggleAlarmMenu(null, this.activeSymbol);
+				// this.toggleAlarmMenu(null, this.activeSymbol);
 				// else 
-					// this._changeDetectorRef.detectChanges();
+				// this._changeDetectorRef.detectChanges();
 				return;
 			} else {
 				symbol = null;
@@ -180,7 +183,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 		}
 
 		if (!this.activeSymbol) {
-			setTimeout(() => {	
+			setTimeout(() => {
 				const el = this._elementRef.nativeElement.querySelector('.instrument-list a.active');
 				if (el && !this.isElementInViewport(el))
 					el.scrollIntoView();
@@ -191,7 +194,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 		this._changeDetectorRef.detectChanges();
 	}
 
-	
+
 	public trackByFunc(index, item) {
 		return item.options.name;
 	}
@@ -206,7 +209,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 	}
 
 	private _onPriceChange(changedSymbols) {
-		// this._changeDetectorRef.detectChanges();
+		this._changeDetectorRef.detectChanges();
 	}
 
 	addIndicator(name: string) {

@@ -118,7 +118,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 		setTimeout(() => {
 			app.initNotifications().catch(console.error);
 			app.loadAds();
-		}, 2000);
+		}, 1000);
 	}
 
 	public onSearchKeyUp(event): void {

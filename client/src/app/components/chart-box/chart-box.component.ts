@@ -405,7 +405,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 		if (candles.length) {
 			if (this.symbolModel.options.bid) {
-				console.log('UPDATE!!');
+				console.log(candles[candles.length - 1] );
 				candles[candles.length - 1][1] = this.symbolModel.options.bid;
 				candles[candles.length - 1][2] = this.symbolModel.options.bid;
 				candles[candles.length - 1][3] = this.symbolModel.options.bid;

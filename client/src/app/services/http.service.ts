@@ -78,7 +78,6 @@ export class CustomHttp extends Http {
 		switch (error.status) {
 			case 401:
 				this._authenticationService.showLoginRegisterPopup();
-
 				break;
 			case 424:
 				if (confirm('New version available. Download now?')) {
@@ -86,10 +85,10 @@ export class CustomHttp extends Http {
 				} else {
 
 				}
-				break;
+			break;
 
 		}
 
-		return Observable.throw(error._body);
+		return Observable.throw(error);
 	}
 }

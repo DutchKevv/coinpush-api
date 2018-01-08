@@ -1,3 +1,31 @@
-.modal-title {
-    color: black;
+.modal-backdrop {
+    background: white;
+}
+
+.modal-content {
+    background: transparent;
+}
+
+.modal-header {
+    background: #151414;
+    padding: 10px;
+
+    .modal-title {
+        color: white;
+    }
+
+    .close {
+        padding: 10px;
+        span {
+            color: white;
+        }
+    }
+}
+
+.modal-body {
+    background: #252525;
+    
+    label {
+        color: #fff;
+    }
 }

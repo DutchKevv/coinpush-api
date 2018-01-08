@@ -26,6 +26,7 @@ export class CacheService {
 		app.on('symbols-update', () => this._updateSymbols());
 
 		this._socket.on('ticks', ticks => {
+			ticks = JSON.parse(ticks);
 
 			for (let _symbol in ticks) {
 				let symbol = this.getSymbolByName(_symbol);

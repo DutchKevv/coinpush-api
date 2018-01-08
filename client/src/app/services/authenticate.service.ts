@@ -11,12 +11,13 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 export class AuthenticationService {
 
 	@Output() public loggedIn$: EventEmitter<boolean> = new EventEmitter(false);
+	public loginOpen = false; // needed to prevent 401 request opening multiple login popups
 
 	constructor(private _userService: UserService,
 		private _alertService: AlertService,
 		private _modalService: NgbModal,
 		private _http: Http) {
-			app.on('firebase-token-refresh', () => this.updateDeviceToken());
+		app.on('firebase-token-refresh', () => this.updateDeviceToken());
 	}
 
 	public async requestPasswordReset(email: string) {
@@ -53,7 +54,7 @@ export class AuthenticationService {
 
 		try {
 			const deviceToken = app.notification.token;
-			
+
 			const result = await this._http.post('/authenticate', {
 				email,
 				password,
@@ -76,10 +77,22 @@ export class AuthenticationService {
 
 			if (reload)
 				window.location.reload();
-
-			return true;
 		} catch (error) {
-			console.error(error);
+			if (error.status) {
+				switch (error.status) {
+					case '401':
+						this._alertService.error('Invalid credentials');
+						break;
+					case '500':
+						this._alertService.error('Server error');
+						break;
+					default:
+						this._alertService.error('Unknown error');
+				}
+			} else {
+				console.error(error);
+			}
+			
 			return false;
 		}
 	}
@@ -117,8 +130,12 @@ export class AuthenticationService {
 	}
 
 	public async showLoginRegisterPopup() {
+		if (this.loginOpen)
+			return;
+
 		const modalRef = this._modalService.open(LoginComponent);
 		modalRef.componentInstance.name = 'World';
+		this.loginOpen = true;
 	}
 
 	public async showForgotPasswordPopup() {
