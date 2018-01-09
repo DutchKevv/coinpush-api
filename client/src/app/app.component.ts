@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, Output, ViewChild, ElementRef, EventEmitter, HostListener, ChangeDetectorRef, AfterViewInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Output, ViewChild, ElementRef, EventEmitter, HostListener, ChangeDetectorRef, AfterViewInit, Input } from '@angular/core';
 import { AuthenticationService } from "./services/authenticate.service";
 import { CacheService } from "./services/cache.service";
 import { Subject } from "rxjs/Subject";
@@ -22,6 +22,8 @@ export class AppComponent implements OnInit, AfterViewInit {
 	@Output() public filterClick$: EventEmitter<boolean> = new EventEmitter();
 	@Output() public searchResults$: Subject<any> = new Subject();
 	@Output() public searchOpen$: EventEmitter<boolean> = new EventEmitter();
+
+	@Input() public titleText$: Subject<string> = new Subject();
 
 	@ViewChild('dropdown') public dropdown;
 	@ViewChild('navbar') navbar: ElementRef;

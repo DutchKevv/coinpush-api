@@ -62,7 +62,7 @@
                     <a *ngIf="notification.type === 'comment-like'">
                         <b>???</b> liked your comment
                     </a>
-                    <a *ngIf="notification.type === 'symbol-alarm'">
+                    <a *ngIf="notification.type === 'symbol-alarm'" [routerLink]="['/symbols']" [queryParams]="{ symbol: notification.data[0].symbol }">
                         <span class="notification-image symbol-img-{{notification.data[0].symbol}}"></span>
                         <div class="notification-content">
                             <p>{{notification.data[0].symbol}} - alarm triggered - ${{notification.data[0].target}}</p>
@@ -73,7 +73,7 @@
             </div>
         </div>
         <i *ngIf="router.url.startsWith('/symbols')" (click)="onClickFilter($event)" class="fa fa-filter d-lg-none"></i>
-
+        <h3 class="d-lg-none header-title">{{titleText$ | async}}</h3>
         <div class="search-container">
             <input (keyup)="onSearchKeyUp($event)" (focus)="onSearchKeyUp($event)" placeholder="Markets / People" #input>
             <div class="header-drop-down" *ngIf="(searchResults$ | async) as result" (click)="onClickDropdownItem()" #dropdown>

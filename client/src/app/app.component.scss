@@ -36,9 +36,20 @@ header {
     z-index: 2;
     box-shadow: 0 6px 6px rgba(0, 0, 0, 0.4);
 
+    .header-title {
+        width: 100%;
+        text-align: center;
+        line-height: 30px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        font-size: 20px;
+    }
+
     &.searchOpen {
         .fa-filter,
-        .notification-container {
+        .notification-container,
+        .header-title {
             display: none;
         }
 
@@ -58,6 +69,7 @@ header {
         line-height: 31px;
         width: 50px;
         padding: 0 5px;
+        flex-shrink: 0;
     }
 
     .fa-navicon {

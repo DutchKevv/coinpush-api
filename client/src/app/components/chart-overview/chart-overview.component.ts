@@ -47,7 +47,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 		private _elementRef: ElementRef,
 		private _route: ActivatedRoute,
 		private _router: Router,
-		private _applicationRef: ApplicationRef
+		private _applicationRef: ApplicationRef,
 	) {
 		// this._changeDetectorRef.detach();
 	}
@@ -170,12 +170,6 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 	setActiveSymbol(event, symbol: SymbolModel): void {
 		if (symbol === this.activeSymbol) {
 			if (event && event.target.classList.contains('fa-bell')) {
-				// console.log('set22!');
-				// if (!this.activeMenu)
-				// this.toggleAlarmMenu(null, this.activeSymbol);
-				// this.toggleAlarmMenu(null, this.activeSymbol);
-				// else 
-				// this._changeDetectorRef.detectChanges();
 				return;
 			} else {
 				symbol = null;
@@ -189,6 +183,8 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 					el.scrollIntoView();
 			}, 0);
 		}
+
+		this._applicationRef.components[0].instance.titleText$.next(symbol.options.displayName);
 
 		this.activeSymbol = symbol;
 		this._changeDetectorRef.detectChanges();

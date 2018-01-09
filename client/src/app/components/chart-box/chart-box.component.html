@@ -1,5 +1,5 @@
 <ul class="header-buttons">
-	<li class="chart-title">
+	<li class="chart-title d-none d-xl-block">
 		{{symbolModel?.options.name}}
 	</li>
 
@@ -17,22 +17,12 @@
 			<i class="fa fa-search-plus"></i>
 		</button>
 	</li>
-	<li>
-		<button (click)="changeGraphType('line')" type="button" class="text-dark button-ohlc btn-menu" [ngClass]="{'active': graphType === 'line'}"
-		 aria-expanded="false">
-			<i class="fa fa-line-chart"></i>
-		</button>
-	</li>
-	<li>
-		<button (click)="changeGraphType('ohlc')" type="button" class="text-dark button-ohlc btn-menu" [ngClass]="{'active': graphType === 'ohlc'}"
-		 aria-expanded="false">
-			<i class="fa fa-bar-chart"></i>
-		</button>
-	</li>
-	<li>
-		<button (click)="changeGraphType('candlestick')" [ngClass]="{'active': graphType === 'candlestick'}" type="button" class="text-dark button-candlestick btn-menu">
-			<i class="fa fa-area-chart"></i>
-		</button>
+	<li class="dropdown">
+		<select (change)="changeGraphType($event.target.value)">
+			<option value="line" [selected]="graphType === 'line'">Line</option>
+			<option value="ohlc" [selected]="graphType === 'ohlc'">OHLC</option>
+			<option value="candlestick" [selected]="graphType === 'candlestick'">Candle</option>
+		</select>
 	</li>
 	<li class="dropdown">
 		<select (change)="toggleTimeFrame($event.target.value)">

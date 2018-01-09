@@ -59,14 +59,13 @@
 }
 
 .dropdown select {
-    margin-right: 10px;
+    margin: 2px 5px;
     min-width: 80px;
     max-width: 80px;
     background-color: #000000;
     color: white;
     height: 20px;
     line-height: 20px;
-    margin-top: 2px;
     font-size: 13px;
 }
 
@@ -96,10 +95,7 @@
     line-height: 24px;
     text-align: left;
     margin-right: auto;
-
-    @media only screen and (min-width : 992px) {
-        padding-left: 220px;
-	}
+    padding-left: 220px;
 }
 
 .chart-content {
