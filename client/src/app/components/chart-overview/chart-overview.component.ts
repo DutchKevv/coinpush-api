@@ -53,7 +53,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
-		this._filterSub = this._applicationRef.components[0].instance.filterClick$.subscribe(() => this.toggleFilterNav());
+		this._filterSub = this._applicationRef.components[0].instance.filterClick$.subscribe(state => this.toggleFilterNav(null, state));
 		this._priceChangeSub = this.cacheService.changed$.subscribe(changedSymbols => this._onPriceChange(changedSymbols));
 
 		setTimeout(() => {
@@ -98,7 +98,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 			event.stopPropagation();
 		}
 
-		this.filterRef.nativeElement.classList.toggle('show', state);
+		this.filterRef.nativeElement.classList.toggle('show', !!state);
 	}
 
 	public toggleActiveFilter(filter: string, removeSymbolFromUrl = true) {
@@ -184,7 +184,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 			}, 0);
 		}
 
-		this._applicationRef.components[0].instance.titleText$.next(symbol.options.displayName);
+		this._applicationRef.components[0].instance.titleText$.next(symbol ? symbol.options.displayName : '');
 
 		this.activeSymbol = symbol;
 		this._changeDetectorRef.detectChanges();

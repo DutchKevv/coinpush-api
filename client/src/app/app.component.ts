@@ -110,10 +110,17 @@ export class AppComponent implements OnInit, AfterViewInit {
 		public authenticationService: AuthenticationService,
 		private _changeDetectorRef: ChangeDetectorRef,
 		private _notificationService: NotificationService,
-		private _cacheService: CacheService) {}
+		private _cacheService: CacheService) { }
 
 	ngOnInit() {
 		this.notifications$ = this._notificationService.findMany();
+
+		this._routerEventsSub = this.router.events.subscribe((val) => {
+			if (val instanceof NavigationEnd) {
+				this.searchOpen = false;
+				this.notificationOpen = false;
+			}
+		});
 	}
 
 	ngAfterViewInit() {
@@ -188,6 +195,8 @@ export class AppComponent implements OnInit, AfterViewInit {
 	}
 
 	public onClickFilter(event?, state?: boolean) {
+		this.searchOpen = false;
+		this.notificationOpen = false;
 		this.filterClick$.emit(true);
 	}
 

@@ -40,7 +40,7 @@
 <main class="main-container">
     <header [ngClass]="{searchOpen: searchOpen}">
         <i (click)="toggleNav(true)" class="fa fa-navicon d-lg-none"></i>
-        <div class="notification-container" (click)="searchOpen = false; notificationOpen = !notificationOpen;">
+        <div class="notification-container" (click)="searchOpen = false; filterClick$.emit(false); notificationOpen = !notificationOpen;">
             <a class="globe-container" #globeContainer>
                 <i class="fa fa-globe d-lg-none"></i>
                 <span *ngIf="true" class="notification-unread-circle">2</span>
