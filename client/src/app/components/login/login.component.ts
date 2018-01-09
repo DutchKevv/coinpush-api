@@ -46,10 +46,8 @@ export class LoginComponent implements OnInit {
 		this.loading$.emit(true);
 		const result = await this.authenticationService.authenticate(this.loginModel.email, this.loginModel.password, null, false, true);
 
-		if (result)
-			return this.router.navigate([this.returnUrl]);
-
-		this.loading$.emit(false);
+		if (!result)
+			this.loading$.emit(false);
 	}
 
 	async register() {

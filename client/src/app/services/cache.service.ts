@@ -15,7 +15,7 @@ export class CacheService {
 	constructor(
 		private _zone: NgZone,
 		private _userService: UserService
-	) { 
+	) {
 		this.init();
 	}
 
@@ -55,7 +55,10 @@ export class CacheService {
 		})
 	}
 
-	public priceToFixed(number, symbol: SymbolModel) {
+	public priceToFixed(number: number | string, symbol: SymbolModel) {
+		if (typeof number === 'string')
+			number = parseFloat(number);
+
 		if (symbol.options.precision > 0)
 			return number.toFixed(symbol.options.precision + 1 || 4);
 

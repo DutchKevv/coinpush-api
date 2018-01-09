@@ -43,13 +43,16 @@ export const notifyController = {
 
         var message = new gcm.Message({
             priority: 'high',
-            data: data,
-            userId: userId,
-            notification: {
+            data: {
                 title,
                 body,
-                sound: "default"
-            }
+                data
+            },
+            // notification: {
+            //     title,
+            //     body,
+            //     sound: "default"
+            // }
         });
 
         // Actually send the message

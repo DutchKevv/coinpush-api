@@ -18,13 +18,6 @@
 		</button>
 	</li>
 	<li class="dropdown">
-		<select (change)="changeGraphType($event.target.value)">
-			<option value="line" [selected]="graphType === 'line'">Line</option>
-			<option value="ohlc" [selected]="graphType === 'ohlc'">OHLC</option>
-			<option value="candlestick" [selected]="graphType === 'candlestick'">Candle</option>
-		</select>
-	</li>
-	<li class="dropdown">
 		<select (change)="toggleTimeFrame($event.target.value)">
 			<option value="M1" [selected]="timeFrame === 'M1'">Minute</option>
 			<option value="H1" [selected]="timeFrame === 'H1'">Hour</option>
@@ -32,8 +25,18 @@
 		</select>
 	</li>
 	<li class="dropdown">
+		<select (change)="changeGraphType($event.target.value)">
+			<option value="line" [selected]="graphType === 'line'">Line</option>
+			<option value="ohlc" [selected]="graphType === 'ohlc'">OHLC</option>
+			<option value="candlestick" [selected]="graphType === 'candlestick'">Candle</option>
+		</select>
+	</li>
+	<li class="dropdown">
 		<select>
 			<option value="MA">MA</option>
+			<option value="SMA">SMA</option>
+			<option value="EMA">EMA</option>
+			<option value="BollingerBands">BollingerBands</option>
 		</select>
 	</li>
 </ul>

@@ -35,27 +35,36 @@ export class NotificationHelper {
     }
 
     private _onNotification(message: any): void {
-        const body = typeof message.data === 'string' ? JSON.parse(message.data) : message.data;
+        try {
+            console.log('messaasdfasfasddfge', message);
+            if (!message.data)
+                console.info('no-data', message);
 
-        if (body.__userId !== app.user._id)
-            return console.warn('notification __userId mismatch')
+            const body = typeof message.data === 'string' ? JSON.parse(message.data) : message.data;
+            console.log(message);
+            if (body.__userId !== app.user._id)
+                return console.warn('notification __userId mismatch')
 
-        switch (body.type) {
-            case 'post-comment':
-                window.location.hash = '#/comment/' + body.parentId + '?focus=' + body.commentId;
-                break;
-            case 'post-like':
-                window.location.hash = '#/comment/' + body.commentId;
-                break;
-            case 'comment-like':
-                window.location.hash = '#/comment/' + body.parentId + '?focus=' + body.commentId;
-                break
-            case 'symbol-alarm':
-                window.location.hash = '#/symbols/?symbol=' + body.symbol;
-                app.emit('event-triggered', Object.assign(body, { title: message.notification.title }));
-                break
-            default:
-                console.error('Uknown notification type: ' + body.type);
+            switch (body.type) {
+                case 'post-comment':
+                    window.location.hash = '#/comment/' + body.parentId + '?focus=' + body.commentId;
+                    break;
+                case 'post-like':
+                    window.location.hash = '#/comment/' + body.commentId;
+                    break;
+                case 'comment-like':
+                    window.location.hash = '#/comment/' + body.parentId + '?focus=' + body.commentId;
+                    break
+                case 'symbol-alarm':
+                    window.location.hash = '#/symbols/?symbol=' + body.symbol;
+                    app.emit('event-triggered', Object.assign(body, { title: message.title }));
+                    break
+                default:
+                    console.error('Uknown notification type: ' + body.type);
+            }
+        } catch (error) {
+            console.info('message', message);
+            console.error(error);
         }
     }
 
@@ -69,7 +78,7 @@ export class NotificationHelper {
             script.src = 'https://www.gstatic.com/firebasejs/4.8.1/firebase.js';
             script.async = true;
             script.onload = () => {
-                
+
                 const config = {
                     apiKey: "AAAAcOdrZII:APA91bHdt3bPaqUW4sWF7tht0xJs13B_X-4Svm4TlWeLnXXFoVsPxWRQGxUPdqudCP1OHkQ-IJCVO10DJKi8G2fLekqfpy0xAXGakQmj-7FZW3DwB18BxcHNIWlgNC9T3T1tbXEnbaxM",
                     // authDomain: "<PROJECT_ID>.firebaseapp.com",
@@ -78,8 +87,8 @@ export class NotificationHelper {
 
                 firebase.initializeApp(config);
                 const messaging = firebase.messaging();
-                
-                messaging.onMessage((message) => console.log('message', message) || this._onNotification(message));
+
+                messaging.onMessage((message) => this._onNotification(message.data));
 
                 messaging.onTokenRefresh(async () => {
                     this._token = await messaging.getToken();

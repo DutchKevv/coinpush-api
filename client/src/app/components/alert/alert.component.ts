@@ -39,4 +39,9 @@ export class AlertComponent {
 			}
 		});
 	}
+
+	onClickClose() {
+		clearTimeout(this._timer);
+		this.message$.next(null);
+	}
 }

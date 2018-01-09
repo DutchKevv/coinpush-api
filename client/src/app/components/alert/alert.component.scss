@@ -6,7 +6,6 @@
 @import '../../style/variables/variables';
 
 :host {
-	contain: layout;
 	position: absolute;
 	top: 40px;
 	z-index: 200000;
@@ -24,10 +23,26 @@
 }
 
 .alert {
-	// padding: 10px 100px;
 	border-radius: 0;
 	font-weight: bold;
 	text-align: center;
+	padding: 0px;
+
+	i {
+		color: white;
+	}
+
+	span {
+		line-height: 35px;
+	}
+
+	.fa-close {
+		float:right;
+		margin: 0 10px;
+		cursor: pointer;
+		font-size: 20px;
+    	line-height: 35px;
+	}
 }
 
 .alert-success {

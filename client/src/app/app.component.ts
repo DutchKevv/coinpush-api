@@ -195,9 +195,14 @@ export class AppComponent implements OnInit, AfterViewInit {
 	}
 
 	public onClickFilter(event?, state?: boolean) {
+		if (event) {
+			event.preventDefault();
+			event.stopPropagation();
+		}
+		
 		this.searchOpen = false;
 		this.notificationOpen = false;
-		this.filterClick$.emit(true);
+		this.filterClick$.emit(state);
 	}
 
 	public logout(): void {

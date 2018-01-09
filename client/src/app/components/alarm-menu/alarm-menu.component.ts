@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, Input, Output, ChangeDetectorRef, EventEmitter, SimpleChanges, OnChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, Output, ChangeDetectorRef, EventEmitter, SimpleChanges, OnChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { AlertService } from '../../services/alert.service';
@@ -17,7 +17,7 @@ import { CacheService } from '../../services/cache.service';
 	// changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class AlarmMenuComponent implements OnInit, OnChanges {
+export class AlarmMenuComponent implements OnChanges {
 
 	@Input() symbol: SymbolModel;
 	@Output() onDestroy: EventEmitter<boolean> = new EventEmitter;
@@ -51,7 +51,7 @@ export class AlarmMenuComponent implements OnInit, OnChanges {
 			this._unsubscribe();
 
 			if (this.symbol) {
-				this.formModel.amount = this.symbol.options.bid;
+				this.formModel.amount = parseFloat(this._cacheService.priceToFixed(this._toMinimumDuff(this.symbol.options.bid, 1), this.symbol)) ;
 
 				this.activeEvents$ = this._eventService.findBySymbol(this.symbol.options.name, 0, 50);
 				this.historyEvents$ = this._eventService.findBySymbol(this.symbol.options.name, 0, 50, true);
@@ -59,11 +59,6 @@ export class AlarmMenuComponent implements OnInit, OnChanges {
 
 			this._changeDetectorRef.detectChanges();
 		}
-	}
-
-	ngOnInit() {
-		this.formModel.amount = this.symbol.options.bid;
-		this._changeDetectorRef.detectChanges();
 	}
 
 	toggleTab(tab: string) {
@@ -90,8 +85,24 @@ export class AlarmMenuComponent implements OnInit, OnChanges {
 		else
 			newValue -= inc;
 
+		newValue = this._toMinimumDuff(newValue, dir);
+
 		this.formModel.amount = parseFloat(this._cacheService.priceToFixed(newValue, this.symbol));
 		this._changeDetectorRef.detectChanges();
+	}
+
+	private _toMinimumDuff(value: number, dir): number {
+		const percDiff = (value / this.symbol.options.bid * 100) - 100;
+
+		if (value >= this.symbol.options.bid && percDiff < 1) {
+			return this.symbol.options.bid * (dir > 0 ? 1.01 : 0.99)
+		} 
+
+		if (value < this.symbol.options.bid && percDiff > -1) {
+			return this.symbol.options.bid * (dir > 0 ? 1.01 : 0.99)
+		}
+
+		return value;
 	}
 
 	private _unsubscribe() {

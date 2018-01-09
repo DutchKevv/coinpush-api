@@ -13,7 +13,7 @@
     width: 100%;
 
     &.app {
-        padding-bottom: 50px;
+        padding-bottom: 52px;
     }
 }
 
@@ -39,7 +39,7 @@ header {
     .header-title {
         width: 100%;
         text-align: center;
-        line-height: 30px;
+        line-height: 32px;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
@@ -176,10 +176,9 @@ header {
     }
 
     .notification-drop-down {
-        padding: 0 5px;
-
         .notification-drop-down-header {
-            text-align: left;
+            text-align: right;
+            padding: 0 5px;
 
            a {
                display: inline-block;
@@ -217,7 +216,6 @@ header {
         
         .notification-image {
             margin-right: 10px;
-            margin-top: 2px;
         }
     }
 

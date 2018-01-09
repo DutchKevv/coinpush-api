@@ -71,13 +71,16 @@ export class AuthenticationService {
 			if (reload)
 				window.location.reload();
 
+			return true;
+
 		} catch (error) {
 			if (error.status) {
+				console.log(error.status);
 				switch (error.status) {
-					case '401':
+					case 401:
 						this._alertService.error('Invalid credentials');
 						break;
-					case '500':
+					case 500:
 						this._alertService.error('Server error');
 						break;
 					default:

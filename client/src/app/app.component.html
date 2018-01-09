@@ -47,7 +47,7 @@
             </a>
             <div class="notification-drop-down header-drop-down" *ngIf="notificationOpen" #dropdown>
                 <div class="notification-drop-down-header">
-                    <span>Notifications</span><a>mark all as read</a>
+                    <a>mark all as read</a>
                 </div>
                 <div class="notification-drop-down-list" *ngFor="let notification of notifications$ | async">
                     <a *ngIf="notification.type === 'user-follow'">
