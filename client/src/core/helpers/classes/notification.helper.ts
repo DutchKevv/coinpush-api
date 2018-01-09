@@ -34,12 +34,11 @@ export class NotificationHelper {
         }
     }
 
-    private _onNotification(notification: any): void {
-        const body = typeof notification.body === 'string' ? JSON.parse(notification.body) : notification.body;
+    private _onNotification(message: any): void {
+        const body = typeof message.data === 'string' ? JSON.parse(message.data) : message.data;
 
-        if (notification.userId !== app.user._id) {
-            return console.warn('notification userId mismatch')
-        }
+        if (body.__userId !== app.user._id)
+            return console.warn('notification __userId mismatch')
 
         switch (body.type) {
             case 'post-comment':
@@ -53,7 +52,7 @@ export class NotificationHelper {
                 break
             case 'symbol-alarm':
                 window.location.hash = '#/symbols/?symbol=' + body.symbol;
-                app.emit('event-triggered', Object.assign(body, { title: notification.title }));
+                app.emit('event-triggered', Object.assign(body, { title: message.notification.title }));
                 break
             default:
                 console.error('Uknown notification type: ' + body.type);
@@ -79,8 +78,8 @@ export class NotificationHelper {
 
                 firebase.initializeApp(config);
                 const messaging = firebase.messaging();
-
-                messaging.onMessage((message) => this._onNotification(message.notification));
+                
+                messaging.onMessage((message) => console.log('message', message) || this._onNotification(message));
 
                 messaging.onTokenRefresh(async () => {
                     this._token = await messaging.getToken();

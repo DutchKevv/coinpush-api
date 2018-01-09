@@ -41,7 +41,7 @@
 header {
     padding: 4px 10px;
     display: flex;
-    background: #085963;
+    background: $background-th;
     
     i {
         font-size: 20px;
@@ -91,7 +91,7 @@ main > form {
 }
 
 .form-control {
-    padding: 4px 8px;
+    padding: 2px 8px;
     border-radius: 0;
     border: none;
 }

@@ -12,6 +12,7 @@
     flex-flow: column;
     height: 100%;
     width: 100%;
+    position: relative;
 }
 
 .active {
@@ -23,7 +24,6 @@
     width: 100%;
     background: $background-light;
 	font-size: 12px;
-    position: relative;
 
     &.split {
         height: 50%;
@@ -101,7 +101,7 @@
 
     h4 {
         margin: 0;
-        padding: 0 !important;
+        padding: 2px !important;
     }
 
 	> div {

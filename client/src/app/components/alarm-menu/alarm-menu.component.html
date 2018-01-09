@@ -23,13 +23,13 @@
                 </label>
                 <div class="input-group" style="display: flex;">
                     <span class="input-group-btn">
-                        <button (click)="onClickSideMenuNumberInput(-1, sideMenuNumberInput)" type="button" class="btn btn-danger btn-number" data-type="minus">
+                        <button (click)="onClickSideMenuNumberInput(-1, sideMenuNumberInput)" type="button" class="btn btn-sm btn-danger btn-number" data-type="minus">
                             <i class="fa fa-minus"></i>
                         </button>
                     </span>
                     <input type="text" [(ngModel)]="formModel.amount" name="amount" class="form-control input-number" #sideMenuNumberInput>
                     <span class="input-group-btn">
-                        <button (click)="onClickSideMenuNumberInput(1, sideMenuNumberInput)" type="button" class="btn btn-success btn-number" data-type="plus">
+                        <button (click)="onClickSideMenuNumberInput(1, sideMenuNumberInput)" type="button" class="btn btn-sm btn-success btn-number" data-type="plus">
                             <i class="fa fa-plus"></i>
                         </button>
                     </span>
@@ -42,7 +42,7 @@
             <div class="form-group">
                 <label for="alarmName" style="width: 100%;">Name<sup>(optional)</sup></label>
                 <input class="form-control form-input w-50 p-3 d-inline-block" type="text" name="name" id="alarmName" [(ngModel)]="formModel.name" placeholder="name">
-                <button class="btn btn-primary pull-right">Add</button>
+                <button class="btn btn-sm btn-success pull-right">Add</button>
             </div>
         </form>
     </ng-container>

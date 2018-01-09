@@ -15,7 +15,7 @@ router.post('/', async (req, res, next) => {
 });
 
 /**
- * Delete
+ * delete device
  */
 router.delete('/:id', async (req, res, next) => {
 	try {

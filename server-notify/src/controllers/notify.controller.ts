@@ -30,7 +30,8 @@ export const notifyController = {
         return notifications;
     },
 
-    async sendToUser(userId, title, body, data, params?: any) {
+    async sendToUser(userId, title, body, data: any = {}, params?: any) {
+        data.__userId = userId;
 
         const user: any = await userController.findById({ id: userId }, userId);
 
@@ -43,11 +44,11 @@ export const notifyController = {
         var message = new gcm.Message({
             priority: 'high',
             data: data,
+            userId: userId,
             notification: {
                 title,
                 body,
-                sound: "default",
-                userId
+                sound: "default"
             }
         });
 

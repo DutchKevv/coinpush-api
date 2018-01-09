@@ -17,7 +17,7 @@ export class AuthenticationService {
 		private _alertService: AlertService,
 		private _modalService: NgbModal,
 		private _http: Http) {
-		app.on('firebase-token-refresh', () => this.updateDeviceToken());
+		app.on('firebase-token-refresh', () => this.saveDevice());
 	}
 
 	public async requestPasswordReset(email: string) {
@@ -47,36 +47,30 @@ export class AuthenticationService {
 			token = app.user.token;
 
 			if (!token) {
-				// this.logout();
 				return false;
 			}
 		}
 
-		try {
-			const deviceToken = app.notification.token;
+		const postData = {
+			email,
+			password,
+			token,
+			profile
+		};
 
-			const result = await this._http.post('/authenticate', {
-				email,
-				password,
-				token,
-				profile,
-				device: {
-					token: deviceToken,
-					platformType: app.platform.isApp ? 'app' : 'browser'
-				}
-			})
-				.map((r: Response) => r.json())
-				.toPromise();
+		try {
+			const result = await this._http.post('/authenticate', postData).map((r: Response) => r.json()).toPromise();
 
 			if (!result.user || !result.user.token) {
 				return false;
 			}
 
-			// does not save to server but updates localStorage
+			// does not save to server but updates persistant storage
 			await this._userService.update(result.user, false, false);
 
 			if (reload)
 				window.location.reload();
+
 		} catch (error) {
 			if (error.status) {
 				switch (error.status) {
@@ -92,12 +86,12 @@ export class AuthenticationService {
 			} else {
 				console.error(error);
 			}
-			
+
 			return false;
 		}
 	}
 
-	public async updateDeviceToken() {
+	public async saveDevice() {
 		// only continue if user is loggedin
 		if (!this._userService.model.options._id)
 			return;
@@ -106,6 +100,14 @@ export class AuthenticationService {
 			token: app.notification.token,
 			platformType: app.platform.isApp ? 'app' : 'browser'
 		}).toPromise();
+	}
+
+	public async removeDevice() {
+		// only continue if user is loggedin
+		if (!this._userService.model.options._id)
+			return;
+
+		await this._http.delete('/device/' + app.notification.token).toPromise();
 	}
 
 	public async logout(): Promise<void> {

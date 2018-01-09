@@ -293,8 +293,10 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	}
 
 	private _updateCurrentPricePlot(render: boolean = false) {
+		if (!this._chart)
+			return;
+			
 		return this._zone.runOutsideAngular(() => {
-
 			const price = this._priceToFixed(this.symbolModel.options.bid);
 
 			const options = {
@@ -405,7 +407,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 		if (candles.length) {
 			if (this.symbolModel.options.bid) {
-				console.log(candles[candles.length - 1] );
 				candles[candles.length - 1][1] = this.symbolModel.options.bid;
 				candles[candles.length - 1][2] = this.symbolModel.options.bid;
 				candles[candles.length - 1][3] = this.symbolModel.options.bid;
