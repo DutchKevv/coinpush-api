@@ -90,7 +90,7 @@ export const eventController = {
 					));
 
 					if (events.length) {
-					
+
 						for (let k = 0, lenk = events.length; k < lenk; k++) {
 							const event = events[k];
 							event.triggered = true;
@@ -110,7 +110,10 @@ export const eventController = {
 								}
 							};
 
-							client.publish("notify", JSON.stringify(pubOptions));
+							client.publish("notify", JSON.stringify(pubOptions), (error) => {
+								if (error)
+									console.error(error);
+							});
 						}
 					}
 				}

@@ -181,14 +181,14 @@ const HighstockTheme = {
             stacking: 'percent'
         },
         ema: {
-            lineWidth: 1,
-            color: 'purple',
+            lineWidth: 0.5,
+            color: 'grey',
             marker: {
                 enabled: false
             }
         },
         bb: {
-            lineWidth: 1,
+            lineWidth: 0.5,
             color: 'pink'
         },
         candlestick: {

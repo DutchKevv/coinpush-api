@@ -13,6 +13,7 @@
     height: 100%;
     width: 100%;
     position: relative;
+    border-left: 1px solid $border-color-grey;
 }
 
 .active {
@@ -129,9 +130,9 @@
 }
 
 .filter-list {
-	background: black;
+	background: $background-light;
 	overflow: auto;
-	padding: 6px;
+	padding: 6px 6px 6px 10px;
 
     display: none;
     position: absolute;
@@ -166,6 +167,7 @@
         max-width: 200px;
         display: block;
         z-index: auto;
+        box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.5) inset;
 
         a {
             padding: 4px 20px;

@@ -30,11 +30,11 @@ header {
     padding: 4px 0;
     display: flex;
     flex-shrink: 0;
-    border-bottom: 1px solid grey;
+    border-bottom: 1px solid $border-color-grey;
     height: 40px;
     background: black;
     z-index: 2;
-    box-shadow: 0 6px 6px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.4);
 
     .header-title {
         width: 100%;
