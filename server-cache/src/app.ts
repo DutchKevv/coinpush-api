@@ -40,7 +40,7 @@ export const app = {
 		// broker
 		this.broker = new BrokerMiddleware();
 		await this.broker.setSymbols()
-		await this.broker.setLastKnownPrices(); // only needed at start
+		// await this.broker.setLastKnownPrices(); // only needed at start
 
 		// cache + symbols syncing
 		await cacheController.sync(false);

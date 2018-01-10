@@ -4,7 +4,7 @@
 	</li>
 
 	<li class="d-none d-xl-block">
-		<button (click)="setZoom(-1)" [ngClass]="{'active': symbolModel.options.zoom === 1}" type="button" class="text-dark button-zoom-out btn-menu"
+		<button (click)="setZoom(-1)" type="button" class="text-dark button-zoom-out btn-menu"
 		 aria-expanded="false">
 			<i class="fa fa-search-minus">
 			</i>
@@ -12,7 +12,7 @@
 	</li>
 
 	<li class="d-none d-xl-block">
-		<button (click)="setZoom(1)" [ngClass]="{'active': symbolModel.options.zoom === 10}" type="button" class="text-dark btn-menu button-zoom-in"
+		<button (click)="setZoom(1)" type="button" class="text-dark btn-menu button-zoom-in"
 		 aria-expanded="false">
 			<i class="fa fa-search-plus"></i>
 		</button>

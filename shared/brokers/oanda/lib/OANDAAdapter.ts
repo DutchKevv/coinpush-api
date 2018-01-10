@@ -1,10 +1,11 @@
-import {Stream, PassThrough} from 'stream';
+import { Stream, PassThrough } from 'stream';
 import * as querystring from 'querystring';
 import * as constants from '../../../constants/constants';
 import * as Events from './Events';
 import * as httpClient from './httpClient';
 import * as utils from './utils';
-import {throttle} from 'lodash';
+import { throttle } from 'lodash';
+import * as request from 'requestretry';
 
 let environments = {
 	sandbox: {
@@ -44,7 +45,7 @@ function OandaAdapter(config) {
 	this.subscriptions = {};
 	this._eventsBuffer = [];
 	this._pricesBuffer = [];
-	this._sendRESTRequest = utils.rateLimit(this._sendRESTRequest, this, 1000 / maxRequestsPerSecond, maxRequestsWarningThreshold);
+	// this._sendRESTRequest = utils.rateLimit(this._sendRESTRequest, this, 1000 / maxRequestsPerSecond, maxRequestsWarningThreshold);
 }
 
 Events.mixin(OandaAdapter.prototype);
@@ -179,7 +180,7 @@ OandaAdapter.prototype.getInstruments = function (accountId, callback) {
 OandaAdapter.prototype.getPrices = function (symbol, callback) {
 	let multiple = Array.isArray(symbol);
 
-	
+
 	if (multiple)
 		symbol = symbol.join('%2C');
 
@@ -304,7 +305,7 @@ OandaAdapter.prototype._candlesJsonStringToArray = function (chunk) {
 };
 
 OandaAdapter.prototype.getCandles = function (symbol, start, end, granularity, count, callback) {
-	
+
 	this._sendRESTRequest({
 		method: 'GET',
 		path: '/v1/candles?' + querystring.stringify(JSON.parse(JSON.stringify({
@@ -404,6 +405,7 @@ OandaAdapter.prototype.createOrder = function (accountId, order, callback) {
 		},
 	}, callback);
 };
+
 OandaAdapter.prototype.closeOrder = function (accountId, tradeId, callback) {
 	this._sendRESTRequest({
 		method: 'DELETE',
@@ -418,7 +420,9 @@ OandaAdapter.prototype.closeOrder = function (accountId, tradeId, callback) {
 		callback('Unexpected response for close order');
 	});
 };
-OandaAdapter.prototype._sendRESTRequest = function (request, callback, onData) {
+
+// old
+OandaAdapter.prototype._sendRESTRequestStream = function (request, callback, onData) {
 	request.hostname = this.restHost;
 	request.headers = request.headers || {
 		Authorization: 'Bearer ' + this.accessToken
@@ -456,6 +460,48 @@ OandaAdapter.prototype._sendRESTRequest = function (request, callback, onData) {
 		callback(errorObject);
 	}, onData);
 };
+
+// new
+OandaAdapter.prototype._sendRESTRequest = function (params, callback) {
+	request({
+		uri: 'https://' + this.restHost + params.path,
+		headers: params.headers || {
+			Authorization: 'Bearer ' + this.accessToken
+		},
+		method: params.method,
+		body: params.data
+	})
+		.then(result => callback(null, JSON.parse(result.body)))
+		.catch((error) => {
+			console.log(error);
+
+			let errorObject = {
+				originalRequest: params.path,
+				code: constants.BROKER_ERROR_UNKNOWN,
+				httpCode: error.statusCode,
+				message: ''
+			};
+			if (error.statusCode !== 200) {
+				if (error.statusCode && error.body.disconnect) {
+					errorObject.message = error.body && error.body.message ? error.body.message : 'Disconnected';
+					errorObject.code = constants.BROKER_ERROR_DISCONNECT;
+				}
+				else {
+					switch (error.statusCode) {
+						case 401:
+							errorObject.message = error.body && error.body.message ? error.body.message : 'Unauthorized';
+							errorObject.code = constants.BROKER_ERROR_UNAUTHORIZED;
+							break;
+						default:
+							errorObject.message = error.body && error.body.message ? error.body.message : 'Unknown error';
+							errorObject.code = error.body && error.body.code ? error.body.code : constants.BROKER_ERROR_UNKNOWN;
+					}
+				}
+			}
+			this.trigger('error', errorObject);
+			callback(errorObject);
+		});
+}
 OandaAdapter.prototype.kill = function () {
 	if (this.pricesRequest) {
 		this.pricesRequest.abort();
@@ -467,3 +513,6 @@ OandaAdapter.prototype.kill = function () {
 };
 
 export const Adapter = OandaAdapter;
+
+
+

@@ -67,14 +67,14 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		public constantsService: ConstantsService,
 		private _zone: NgZone,
 		private _cacheService: CacheService,
-		private _elementRef: ElementRef) {}
+		private _elementRef: ElementRef) { }
 
 	ngOnChanges(changes: SimpleChanges) {
 		if (this._changeSubscription && this._changeSubscription.unsubscribe)
 			this._changeSubscription.unsubscribe();
 
 		if (changes.symbolModel && changes.symbolModel.currentValue) {
-			
+
 			this._changeSubscription = this._cacheService.changed$.subscribe(symbols => {
 				if (this.symbolModel && symbols.includes(this.symbolModel.options.name)) {
 					this._onPriceChange(false);
@@ -82,15 +82,15 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 				}
 			});
 
-			setTimeout(() => {
-				this._destroyChart();
-				this.init();
-			}, 0);
+			this._destroyChart();
+			this.init();
+		} else {
+			this._destroyChart();
 		}
 	}
 
 	ngOnInit() {
-		
+
 	}
 
 	ngAfterViewInit() {
@@ -106,7 +106,47 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 		this._fetchCandles();
 
+		if (!this._chart)
+			this._createChart();
+
 		// this._chart.series[0].name = this.symbolModel.options.displayName;
+	}
+
+	public removePlotLine(id, render: boolean = false) {
+		if (this._chart)
+			this._chart.yAxis[0].removePlotLine(id, render, false);
+	}
+
+	public updateChartAlarmPlotLine(value, id: string, render: boolean = true) {
+		if (!this._chart)
+			return;
+
+		return this._zone.runOutsideAngular(() => {
+			this.removePlotLine(id);
+
+			if (!value)
+				return;
+
+			const price = this._priceToFixed(this.symbolModel.options.bid);
+
+			const options = {
+				id: id,
+				color: 'yellow',
+				// color: '#FF0000',
+				width: 2,
+				dashStyle: 'solid',
+				value: value,
+				label: {
+					text: '<div class="plot-label plot-label-alarm">' + value + '</div>',
+					useHTML: true,
+					align: 'right',
+					x: (6 * price.toString().length),
+					y: 4
+				}
+			};
+
+			this._chart.yAxis[0].addPlotLine(options, render, false);
+		});
 	}
 
 	public setZoom(amount) {
@@ -125,14 +165,13 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		}
 
 		this.graphType = type;
-		
-		this._chart.series[0].update({ type }, true, false);
+
+		this._chart.series[0].update({ type }, true, true);
 	}
 
 	public toggleTimeFrame(timeFrame: string) {
 		this._destroyChart();
 		this.timeFrame = timeFrame;
-		// this._createChart();
 		this.init();
 	}
 
@@ -143,6 +182,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	public toggleLoading(state?: boolean) {
 		// this.loadingRef.nativeElement.classList.toggle('active', !!state);
 	}
+
 
 	private _createChart() {
 
@@ -278,11 +318,8 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 				this._data.candles = data.candles;
 				this._data.volume = data.volume;
 
-				if (!this._chart)
-					this._createChart();
-
-				// this._chart.series[0].setData(this._data.candles, false);
-				// this._chart.series[1].setData(this._data.volume, false);
+				this._chart.series[0].setData(this._data.candles, false);
+				this._chart.series[1].setData(this._data.volume, false);
 
 				this._updateCurrentPricePlot();
 				this._updateViewPort(0, true);
@@ -295,7 +332,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	private _updateCurrentPricePlot(render: boolean = false) {
 		if (!this._chart)
 			return;
-			
+
 		return this._zone.runOutsideAngular(() => {
 			const price = this._priceToFixed(this.symbolModel.options.bid);
 
@@ -329,7 +366,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 
 	private _onPriceChange(render: boolean = false) {
 		if (this._chart && this._chart.series[0].data.length)
-			this._chart.series[0].data[this._chart.series[0].data.length - 1].update(this.symbolModel.options.bid, true, false);
+			this._chart.series[0].data[this._chart.series[0].data.length - 1].update(this.symbolModel.options.bid, true, true);
 	}
 
 	private _onScroll(event: MouseWheelEvent): boolean {
@@ -403,17 +440,6 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 				data[i],
 				data[i + 9] // the volume
 			];
-		}
-
-		if (candles.length) {
-			if (this.symbolModel.options.bid) {
-				candles[candles.length - 1][1] = this.symbolModel.options.bid;
-				candles[candles.length - 1][2] = this.symbolModel.options.bid;
-				candles[candles.length - 1][3] = this.symbolModel.options.bid;
-				candles[candles.length - 1][4] = this.symbolModel.options.bid;
-			} else {
-				console.log('no current price for symbol!', this.symbolModel.options.name);
-			}
 		}
 
 		return { candles, volume };

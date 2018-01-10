@@ -6,14 +6,6 @@
 @import '../../style/variables/variables';
 @import '../../style/helpers/normalize';
 
-:host {
-    height: 100%;
-    width: 100%;
-    background: $background-dark;
-    display: flex;
-    flex-flow: column;
-}
-
 .fa-close {
     color: $font-color-dark;
 }
@@ -125,5 +117,14 @@
         padding: 0px;
         z-index: 101;
         content: '';
+    }
+  }
+
+  .plot-label-alarm {
+    background-color: yellow;
+    color: black;
+
+    &:after { 
+        border-right-color: yellow;
     }
   }

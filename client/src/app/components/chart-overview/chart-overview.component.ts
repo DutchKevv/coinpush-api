@@ -29,6 +29,7 @@ import { app } from '../../../core/app';
 export class ChartOverviewComponent implements OnInit, OnDestroy {
 
 	@ViewChild('filter') filterRef: ElementRef;
+	@ViewChild('chart') chartRef: ElementRef;
 
 	public activeSymbol: SymbolModel;
 	public symbols = [];

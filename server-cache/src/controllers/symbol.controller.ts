@@ -86,9 +86,9 @@ export const symbolController = {
 				low = price;
 		}
 
-		// set price if it wasn't known before
-		// if (!symbol.bid && candles.length)
-		// 	symbol.bid = candles[candles.length - 10]
+		// set price if it wasn't known before (closeBid price)
+		if (!symbol.bid && candles.length)
+			symbol.bid = candles[candles.length - 3]
 
 		symbol.volume = volume;
 		symbol.high = high;

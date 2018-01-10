@@ -21,7 +21,7 @@
                             <i class="fa fa-minus"></i>
                         </button>
                     </span>
-                    <input type="text" [(ngModel)]="formModel.amount" name="amount" class="form-control input-number" #sideMenuNumberInput>
+                    <input type="text" [(ngModel)]="formModel.amount" name="amount" class="form-control input-number" #sideMenuNumberInput (change)="onChangeInputValue()">
                     <span class="input-group-btn">
                         <button (click)="onClickSideMenuNumberInput(1, sideMenuNumberInput)" type="button" class="btn btn-sm btn-success btn-number" data-type="plus">
                             <i class="fa fa-plus"></i>

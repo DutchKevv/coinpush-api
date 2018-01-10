@@ -13,11 +13,18 @@
     height: 100%;
     width: 100%;
     position: relative;
-    border-left: 1px solid $border-color-grey;
+    
+    @media only screen and (min-width : 992px) { 
+        border-left: none;
+    }
 }
 
 .active {
     background: $general-active;
+}
+
+.hidden {
+    display: none;
 }
 
 .instrument-list-outer {
@@ -52,7 +59,7 @@
 
     .instrument-image {
         float: left;
-        margin-right: 10px;
+        margin-right: 6px;
     }
 
     .instrument-title,
@@ -66,16 +73,16 @@
 
     .col-bookmark,
     .col-alert {
-        flex: 0 10%;
+        flex: 0 8%;
     }
 
     .col-instrument {
-        flex: 0 50%;
+        flex: 0 47%;
         padding: 10px 0;
     }
 
     .col-changes {
-        flex: 0 30%;
+        flex: 0 37%;
         padding: 10px 0;
     }
 
@@ -91,6 +98,25 @@
 			color: #fff;
 		}
     }
+
+    @media only screen and (min-width : 768px) {
+        .instrument-image {
+            margin-right: 10px;
+        }
+
+        .col-bookmark,
+        .col-alert {
+            flex: 0 10%;
+        }
+
+        .col-changes {
+            flex: 0 30%;
+        }
+
+        .col-instrument {
+            flex: 0 50%;
+        }
+	}
 }
 
 .table-header {
@@ -182,4 +208,5 @@ app-chart-box {
     background: $background-dark;
     display: flex;
     flex-flow: column;
+    border-top: 1px solid $border-color-grey;
 }

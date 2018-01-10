@@ -20,6 +20,7 @@ import { CacheService } from '../../services/cache.service';
 export class AlarmMenuComponent implements OnChanges, OnDestroy {
 
 	@Input() symbol: SymbolModel;
+	@Output() inputValueChange: BehaviorSubject<number> = new BehaviorSubject(null);
 	@Output() onDestroy: EventEmitter<boolean> = new EventEmitter;
 
 	public activeEvents$;
@@ -47,14 +48,19 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 			this._unsubscribe();
 
 			if (this.symbol) {
-				this.formModel.amount = parseFloat(this._cacheService.priceToFixed(this._toMinimumDuff(this.symbol.options.bid, 1), this.symbol)) ;
+				this.formModel.amount = parseFloat(this._cacheService.priceToFixed(this._toMinimumDuff(this.symbol.options.bid, 1), this.symbol));
 
 				this.activeEvents$ = this._eventService.findBySymbol(this.symbol.options.name, 0, 50);
 				this.historyEvents$ = this._eventService.findBySymbol(this.symbol.options.name, 0, 50, true);
 			}
 
+			this.onChangeInputValue();
 			this._changeDetectorRef.detectChanges();
 		}
+	}
+
+	public onChangeInputValue() {
+		this.inputValueChange.next(this.formModel.amount);
 	}
 
 	toggleTab(tab: string) {
@@ -84,6 +90,7 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 		newValue = this._toMinimumDuff(newValue, dir);
 
 		this.formModel.amount = parseFloat(this._cacheService.priceToFixed(newValue, this.symbol));
+		this.inputValueChange.next(this.formModel.amount);
 		this._changeDetectorRef.detectChanges();
 	}
 
@@ -92,7 +99,7 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 
 		if (value >= this.symbol.options.bid && percDiff < 1) {
 			return this.symbol.options.bid * (dir > 0 ? 1.01 : 0.99)
-		} 
+		}
 
 		if (value < this.symbol.options.bid && percDiff > -1) {
 			return this.symbol.options.bid * (dir > 0 ? 1.01 : 0.99)
