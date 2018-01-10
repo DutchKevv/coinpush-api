@@ -1,5 +1,6 @@
 <app-alert></app-alert>
 
+<!-- left main navigation -->
 <nav class="nav-main" id="sidebar" #navbar>
     <h6 style="text-align: right; line-height: 40px; padding-right: 20px;">
         <i>v0.0.1-alpha</i>
@@ -38,45 +39,16 @@
 <div (click)="toggleNav(false)" class="nav-overlay"></div>
 
 <main class="main-container">
+
+    <!-- header -->
     <header [ngClass]="{searchOpen: searchOpen}">
 
         <!-- mobile nav button -->
         <i (click)="toggleNav(true)" class="fa fa-navicon d-lg-none"></i>
-
-        <!-- notification container -->
-        <div class="notification-container">
-            <a class="globe-container" #globeContainer (click)="toggleNotificationMenu()">
-                <i class="fa fa-globe d-lg-none"></i>
-                <span *ngIf="notificationService.unreadCount > 0" class="notification-unread-circle">{{notificationService.unreadCount}}</span>
-            </a>
-            <div class="notification-drop-down header-drop-down" *ngIf="notificationOpen" #dropdown>
-                <div class="notification-drop-down-header">
-                    <a (click)="onClickMarkAllAsRead($event)">mark all as read</a>
-                </div>
-                <div class="notification-drop-down-item" *ngFor="let notification of notifications$ | async" [ngClass]="{unread: !notification.isRead}">
-                    <a *ngIf="notification.type === 'user-follow'">
-                        <b>???</b> started following you
-                    </a>
-                    <a *ngIf="notification.type === 'post-comment'">
-                        <b>???</b> commented on your post
-                    </a>
-                    <a *ngIf="notification.type === 'post-like'">
-                        <b>???</b> liked your post
-                    </a>
-                    <a *ngIf="notification.type === 'comment-like'">
-                        <b>???</b> liked your comment
-                    </a>
-                    <a *ngIf="notification.type === 'symbol-alarm'" [routerLink]="['/symbols']" [queryParams]="{ symbol: notification.data[0].symbol }" (click)="onClickNotification($event, notification)">
-                        <span class="notification-image symbol-img-{{notification.data[0].symbol}}"></span>
-                        <div class="notification-content">
-                            <p>{{notification.data[0].symbol}} - alarm triggered - ${{notification.data[0].target}}</p>
-                            <p>{{notification.createDate | date:'medium'}}</p>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
-
+        
+        <!-- notifications -->
+        <app-notification-menu></app-notification-menu>
+       
         <!-- filter -->
         <i *ngIf="router.url.startsWith('/symbols')" (click)="onClickFilter($event)" class="fa fa-filter d-lg-none"></i>
 
@@ -104,5 +76,7 @@
         <!-- mobile search button -->
         <i (click)="toggleSearch()" class="fa fa-search d-lg-none"></i>
     </header>
+
+    <!-- page -->
     <router-outlet></router-outlet>
 </main>

@@ -6,7 +6,6 @@ import { Router, NavigationEnd, NavigationStart, ActivatedRoute } from '@angular
 import { UserService } from './services/user.service';
 import { Http } from '@angular/http';
 import { app } from '../core/app';
-import { NotificationService } from './services/notification.service';
 
 declare let Module: any;
 
@@ -30,9 +29,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 	@ViewChild('input') inputRef: ElementRef;
 	@ViewChild('globeContainer') globeContainerRef: ElementRef;
 
-	public notifications$;
 	public searchOpen = false;
-	public notificationOpen = false;
 
 	private _sub: any;
 	private _routerEventsSub: any;
@@ -108,27 +105,25 @@ export class AppComponent implements OnInit, AfterViewInit {
 		public activatedRoute: ActivatedRoute,
 		public userService: UserService,
 		public authenticationService: AuthenticationService,
-		public notificationService: NotificationService,
 		private _changeDetectorRef: ChangeDetectorRef,
 		private _cacheService: CacheService) { }
 
 	ngOnInit() {
-		this.notifications$ = this.notificationService.findMany();
 
 		this._routerEventsSub = this.router.events.subscribe((val) => {
 			if (val instanceof NavigationStart) {
 				this.searchOpen = false;
-				this.notificationOpen = false;
 				this.filterClick$.emit(false);
 			}
 		});
 	}
 
 	ngAfterViewInit() {
-		// setTimeout(() => {
-		app.initNotifications().catch(console.error);
-		app.loadAds();
-		// }, 1000);
+		// small break before loading ads and receiving for push messages
+		setTimeout(() => {
+			app.initNotifications().catch(console.error);
+			app.loadAds();
+		}, 20);
 	}
 
 	public onSearchKeyUp(event): void {
@@ -181,15 +176,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 		}, 0);
 	}
 
-	public toggleNotificationMenu(state?: boolean) {
-		this.searchOpen = false;
-		this.filterClick$.emit(false);
-		this.notificationOpen = typeof state === 'boolean' ? state : !this.notificationOpen;
-		this.notificationService.resetUnreadCounter();
-	}
-
 	public toggleSearch() {
-		this.notificationOpen = false;
 		this.searchOpen = !this.searchOpen;
 
 		// wait until visible
@@ -203,22 +190,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 		}
 
 		this.searchOpen = false;
-		this.notificationOpen = false;
 		this.filterClick$.emit(state);
-	}
-
-	public onClickMarkAllAsRead(event) {
-		event.preventDefault();
-		event.stopPropagation();
-
-		this.notificationService.markAllAsRead();
-	}
-
-	public onClickNotification(event, notification) {
-		this.notificationOpen = false;
-
-		if (!notification.isRead)
-			this.notificationService.markAsRead(notification._id);
 	}
 
 	public logout(): void {

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, Output, ChangeDetectorRef, EventEmitter, SimpleChanges, OnChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, Output, ChangeDetectorRef, EventEmitter, SimpleChanges, OnChanges, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { AlertService } from '../../services/alert.service';
@@ -17,7 +17,7 @@ import { CacheService } from '../../services/cache.service';
 	// changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class AlarmMenuComponent implements OnChanges {
+export class AlarmMenuComponent implements OnChanges, OnDestroy {
 
 	@Input() symbol: SymbolModel;
 	@Output() onDestroy: EventEmitter<boolean> = new EventEmitter;
@@ -40,10 +40,6 @@ export class AlarmMenuComponent implements OnChanges {
 		private _changeRef: ChangeDetectorRef,
 		private _route: ActivatedRoute) {
 		// this._changeDetectorRef.detach();
-	}
-
-	ngAfterViewInit() {
-		this._changeDetectorRef.detectChanges();
 	}
 
 	ngOnChanges(changes: SimpleChanges) {

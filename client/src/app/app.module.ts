@@ -32,11 +32,13 @@ import { EventService } from './services/event.service';
 import { AlarmMenuComponent } from './components/alarm-menu/alarm-menu.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from './services/notification.service';
+import { NotificationMenuComponent } from './components/notification-menu/notification-menu.component';
 
 @NgModule({
 	declarations: [
 		AppComponent,
 		AlarmMenuComponent,
+		NotificationMenuComponent,
 		ChartBoxComponent,
 		ChartOverviewComponent,
 		EventOverviewComponent,

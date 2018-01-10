@@ -133,10 +133,12 @@ export default class OandaApi extends EventEmitter {
 	}
 
 	public async getCandles(symbol: string, timeFrame: string, from: number, until: number, count: number, onData: Function): Promise<void> {
+		until = until || Date.now();
+
 		let chunks = splitToChunks(timeFrame, from, until, count, OandaApi.FETCH_CHUNK_LIMIT),
 			writeChunks = 0,
 			finished = 0;
-
+			
 		if (!chunks.length)
 			return;
 

@@ -48,7 +48,7 @@ header {
 
     &.searchOpen {
         .fa-filter,
-        .notification-container,
+        app-notification-menu,
         .header-title {
             display: none;
         }
@@ -84,27 +84,6 @@ header {
     .fa-search {
         margin-left: auto;
         text-align: right;
-    }
-
-    .globe-container {
-        position: relative;
-        display: block;
-
-        .fa-globe {
-            font-size: 28px;
-        }
-    }
-
-    .notification-unread-circle {
-        background: red;
-        border-radius: 50%;
-        position: absolute;
-        padding: 2px 6px;
-        font-size: 14px;
-        left: 26px;
-        top: 0;
-        line-height: 16px;
-        font-weight: bold;
     }
 
     .search-container {
@@ -157,7 +136,7 @@ header {
 
         h4 {
             padding-left: 10px;
-            background: $background-th;;
+            background: $background-th;
             line-height: 30px;
         }
 
@@ -175,55 +154,6 @@ header {
         }
     }
 
-    .notification-drop-down {
-        .notification-drop-down-header {
-            text-align: right;
-            padding: 0 5px;
-
-           a {
-               display: inline-block;
-               &:hover {
-                   color: blue;
-                   text-decoration: underline;
-               }
-           }
-        }
-
-        .notification-drop-down-item {
-
-            &.unread {
-                background: #444444;
-            }
-
-            a {
-                border-top: 1px solid grey;
-                padding: 5px;
-                font-size: 14px;
-    
-                &.unread {
-                    background: #6b6b6b
-                }
-
-                &:hover {
-                    background: $background-light2
-                }
-            }
-
-            p {
-                font-size: 12px;
-                line-height: 15px;
-            }
-
-            &:empty:before {
-                content: 'Empty'
-            }
-        }
-        
-        .notification-image {
-            margin-right: 10px;
-        }
-    }
-
     @media only screen and (min-width : 768px) {
         background: transparent;
         text-align: center;
@@ -231,22 +161,11 @@ header {
         .search-container {
             display: block;
             width: 100%;
+            position: relative;
         }
 
         input {
             width: 400px;
-        }
-
-        .notification-container,
-        .search-container  {
-            position: relative;
-        }
-       
-        .notification-drop-down {
-            left: 0;
-            min-height: 100px;
-            max-height: 300px;
-            overflow-y: auto;
         }
 
         span {

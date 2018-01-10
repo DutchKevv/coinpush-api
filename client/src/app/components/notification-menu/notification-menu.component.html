@@ -1,0 +1,32 @@
+<a class="globe-container" #globeContainer (click)="toggleNotificationMenu()">
+    <i class="fa fa-globe d-lg-none"></i>
+    <span *ngIf="notificationService.unreadCount > 0" class="notification-unread-circle">{{notificationService.unreadCount}}</span>
+</a>
+<div class="notification-drop-down" *ngIf="open">
+    <div class="notification-drop-down-header">
+        <a (click)="onClickMarkAllAsRead($event)">mark all as read</a>
+    </div>
+    <div class="notification-drop-down-item" *ngFor="let notification of notifications$ | async" [ngClass]="{unread: !notification.isRead}">
+        <a *ngIf="notification.type === 'user-follow'">
+            <b>???</b> started following you
+        </a>
+        <a *ngIf="notification.type === 'post-comment'">
+            <b>???</b> commented on your post
+        </a>
+        <a *ngIf="notification.type === 'post-like'">
+            <b>???</b> liked your post
+        </a>
+        <a *ngIf="notification.type === 'comment-like'">
+            <b>???</b> liked your comment
+        </a>
+        <a *ngIf="notification.type === 'symbol-alarm'" [routerLink]="['/symbols']" [queryParams]="{ symbol: notification.data[0].symbol }"
+            (click)="onClickNotification($event, notification)">
+            <span class="notification-image symbol-img-{{notification.data[0].symbol}}"></span>
+            <div class="notification-content">
+                <p>{{notification.data[0].symbol}} - ${{notification.data[0].target}}</p>
+                <p>
+                    <i class="fa fa-bell"></i>{{notification.createDate | date:'medium'}}</p>
+            </div>
+        </a>
+    </div>
+</div>

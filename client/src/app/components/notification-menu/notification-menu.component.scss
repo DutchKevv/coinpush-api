@@ -1,0 +1,129 @@
+@import '~bootstrap/scss/_functions';
+@import '~bootstrap/scss/_variables';
+@import '~bootstrap/scss/_mixins';
+@import '~bootstrap/scss/utilities/_display';
+
+@import '../../style/variables/variables';
+@import '../../style/helpers/normalize';
+@import '../../style/sprite/spritesheet.css';
+
+:host {
+    min-width: 36px;
+    text-align: left;
+}
+
+.globe-container {
+    position: relative;
+    display: block;
+
+    .fa-globe {
+        font-size: 28px;
+    }
+}
+
+.notification-unread-circle {
+    background: red;
+    border-radius: 50%;
+    position: absolute;
+    padding: 2px 6px;
+    font-size: 14px;
+    left: 14px;
+    top: 0;
+    line-height: 16px;
+    font-weight: bold;
+}
+
+.notification-drop-down {
+    position: absolute;
+    z-index: 122;
+    top: 39px;
+    left: 0;
+    width: 100%;
+    background: $background-light;
+    height: 100%;
+    overflow: auto;
+
+    &.hidden {
+        display: none;
+    }
+
+    @media only screen and (min-width : 768px) {
+        width: 400px;
+        left: calc(50% - 200px);
+        height: auto;
+        top: 35px;
+        box-shadow: -3px 4px 6px rgba(0, 0, 0, 0.6), 4px 3px 6px rgba(0, 0, 0, 0.6);
+    } 
+
+    .notification-drop-down-header {
+        text-align: right;
+        padding: 0 5px;
+
+       a {
+           display: inline-block;
+           line-height: 30px;
+            margin-right: 10px;
+
+           &:hover {
+               text-decoration: underline;
+           }
+       }
+    }
+
+    .notification-drop-down-item {
+
+        &.unread {
+            background: #444444;
+        }
+
+        a {
+            border-top: 1px solid grey;
+            padding: 5px;
+            font-size: 14px;
+            padding: 10px;
+            border-bottom: $border-color-grey;
+            color: $font-color-light;
+            text-align: left;
+            display: flex;
+
+            &.unread {
+                background: #6b6b6b
+            }
+
+            &:hover {
+                background: $background-light2
+            }
+        }
+
+        p {
+            font-size: 12px;
+            line-height: 15px;
+        }
+
+        .fa-bell {
+            margin-right: 6px;
+            color: #bfbfbf;
+        }
+    }
+    
+    .notification-image {
+        margin-right: 10px;
+    }
+}
+
+@media only screen and (min-width : 768px) {
+    :host {
+        position: relative;
+    }
+   
+    .notification-drop-down {
+        left: 0;
+        min-height: 100px;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    .fa-globe {
+        display: block !important;
+    }
+}
