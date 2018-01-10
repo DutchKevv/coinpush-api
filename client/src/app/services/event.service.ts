@@ -25,7 +25,7 @@ export class EventService {
 			const event = await this._http.post('/event', params)
 				.map(res => res.json())
 				.toPromise();
-			console.log(params);
+
 			this._alertService.success(`Price alarm set on ${params.symbol} - Price ${params.amount}`)
 
 			return event;

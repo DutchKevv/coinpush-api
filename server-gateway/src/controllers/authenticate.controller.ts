@@ -12,9 +12,7 @@ const config = require('../../../tradejs.config');
 
 export const authenticateController = {
 
-	async authenticate(reqUser: IReqUser, params: { email?: string, password?: string, token?: string, device?: any }): Promise<{ user: IUser, symbols: Array<any> }> {
-		params['fields'] = ['favorites', 'name', 'img'];
-
+	async authenticate(reqUser: IReqUser, params: { email?: string, password?: string, token?: string, device?: any }): Promise<any> {
 		if (params.token) {
 			if (reqUser.id && reqUser.id !== params.token)
 				throw new Error('header token and param token do not match');
@@ -23,22 +21,44 @@ export const authenticateController = {
 		}
 
 		let user: IUser;
-
-		if (params.email || params.password || params.token) {
-			user = await request({
-				uri: config.server.user.apiUrl + '/authenticate',
-				headers: {
-					_id: reqUser.id
-				},
-				method: 'POST',
-				body: params,
-				json: true
-			});
-		}
+		let event: IUser;
+		let unreadCount: number;
+		console.log('111111');
+		const results = await Promise.all([
+			symbolController.getPublicList(),
+			(async () => {
+				console.log('asfdsfasfdfsdf');
+				if (params.email || params.password || params.token) {
+					params['fields'] = ['favorites', 'name', 'img'];
+		
+					user = await request({
+						uri: config.server.user.apiUrl + '/authenticate',
+						headers: {
+							_id: reqUser.id
+						},
+						method: 'POST',
+						body: params,
+						json: true
+					});
+					
+					if (user && user._id) {
+						unreadCount = await request({
+							uri: config.server.notify.apiUrl + '/notify/unread',
+							headers: {
+								_id: user._id
+							}
+						});
+					}
+				}
+			})()
+		])
 
 		return {
-			user,
-			symbols: await symbolController.getPublicList()
+			symbols: results[0],
+			notifications: {
+				unreadCount: unreadCount
+			},
+			user
 		};
 	},
 

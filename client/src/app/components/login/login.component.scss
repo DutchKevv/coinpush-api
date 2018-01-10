@@ -19,6 +19,14 @@ label {
     margin-left: 10px;
 }
 
-.close span {
-    color: black;
+.close {
+    padding: 10px 20px;
+
+    span {
+        color: black;
+    }
+}
+
+.btn-link {
+    color: #fff;
 }

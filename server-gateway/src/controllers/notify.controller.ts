@@ -31,6 +31,32 @@ export const notifyController = {
             body: params,
             json: true
         })
+    },
+    
+    updateUnread(reqUser: IReqUser, notificationId: string, params) {
+		return request({
+            uri: config.server.notify.apiUrl + '/notify/unread',
+            method: 'put',
+            headers: {_id: reqUser.id},
+            body: params,
+            json: true
+        })
+    },
+    
+    updateAllUnread(reqUser: IReqUser) {
+		return request({
+            uri: config.server.notify.apiUrl + '/notify/unread',
+            method: 'put',
+            headers: {_id: reqUser.id}
+        })
+    },
+    
+    resetUnreadCount(reqUser: IReqUser) {
+		return request({
+            uri: config.server.notify.apiUrl + '/notify/reset-unread-counter',
+            method: 'put',
+            headers: {_id: reqUser.id},
+        })
 	},
 
 	remove(reqUser: IReqUser, eventId) {

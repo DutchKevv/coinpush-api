@@ -36,12 +36,11 @@ export class NotificationHelper {
 
     private _onNotification(message: any): void {
         try {
-            console.log('messaasdfasfasddfge', message);
             if (!message.data)
                 console.info('no-data', message);
 
             const body = typeof message.data === 'string' ? JSON.parse(message.data) : message.data;
-            console.log(message);
+
             if (body.__userId !== app.user._id)
                 return console.warn('notification __userId mismatch')
 

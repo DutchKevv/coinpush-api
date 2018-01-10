@@ -30,6 +30,28 @@ router.get('/', async (req, res, next) => {
 });
 
 /**
+ * update unread
+ */
+router.put('/unread', async (req, res, next) => {
+	try {
+		res.send(await notifyController.updateAllUnread(req.user));
+	} catch (error) {
+		next(error);
+	}
+});
+
+/**
+ * update unread
+ */
+router.put('/reset-unread-counter', async (req, res, next) => {
+	try {
+		res.send(await notifyController.resetUnreadCount(req.user));
+	} catch (error) {
+		next(error);
+	}
+});
+
+/**
  * Update
  */
 router.put('/:id', async (req, res, next) => {

@@ -1,15 +1,26 @@
-import {Router} from 'express';
-import {emailController} from '../controllers/email.controller';
+import { Router } from 'express';
+import { emailController } from '../controllers/email.controller';
 import { notifyController } from '../controllers/notify.controller';
+import { userController } from '../controllers/user.controller';
 
 const router = Router();
+
+/**
+ * get unread count
+ */
+router.get('/unread', async (req, res, next) => {
+	try {
+		const result = await userController.getUnreadCount(req.user);
+		res.send(result.toString());
+	} catch (error) {
+		next(error);
+	}
+});
 
 /**
  * get single
  */
 router.get('/:id', async (req, res, next) => {
-	console.log(req.body);
-
 	try {
 		res.send(await notifyController.findById(req.user, req.params.id));
 	} catch (error) {
@@ -18,13 +29,33 @@ router.get('/:id', async (req, res, next) => {
 });
 
 /**
- * get multiple
+ * get list
  */
 router.get('/', async (req, res, next) => {
-	console.log(req.body);
-
 	try {
 		res.send(await notifyController.findMany(req.user, req.query));
+	} catch (error) {
+		next(error);
+	}
+});
+
+/**
+ * update unread
+ */
+router.put('/unread', async (req, res, next) => {
+	try {
+		res.send(await notifyController.updateAllUnread(req.user));
+	} catch (error) {
+		next(error);
+	}
+});
+
+/**
+ * update unread
+ */
+router.put('/reset-unread-counter', async (req, res, next) => {
+	try {
+		res.send(await notifyController.resetUnreadCount(req.user));
 	} catch (error) {
 		next(error);
 	}

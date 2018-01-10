@@ -189,7 +189,12 @@ header {
            }
         }
 
-        .notification-drop-down-list {
+        .notification-drop-down-item {
+
+            &.unread {
+                background: #444444;
+            }
+
             a {
                 border-top: 1px solid grey;
                 padding: 5px;

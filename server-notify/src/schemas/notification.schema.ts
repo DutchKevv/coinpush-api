@@ -2,6 +2,10 @@ import { Schema, model } from 'mongoose';
 import * as beautifyUnique from 'mongoose-beautiful-unique-validation';
 
 export const NotificationSchema = new Schema({
+    createDate: {
+        type: Date,
+        default: Date.now
+    },
     toUserId: {
         type: Schema.Types.ObjectId,
         required: true,
@@ -19,12 +23,12 @@ export const NotificationSchema = new Schema({
     data: [
         Schema.Types.Mixed
     ],
-    createDate: {
-        type: Date,
-        default: Date.now
-    },
     sendDate: {
         type: Date
+    },
+    isRead: {
+        type: Boolean,
+        default: false
     },
     readDate: {
         type: Date

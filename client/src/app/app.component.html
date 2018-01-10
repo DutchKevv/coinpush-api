@@ -39,17 +39,21 @@
 
 <main class="main-container">
     <header [ngClass]="{searchOpen: searchOpen}">
+
+        <!-- mobile nav button -->
         <i (click)="toggleNav(true)" class="fa fa-navicon d-lg-none"></i>
-        <div class="notification-container" (click)="searchOpen = false; filterClick$.emit(false); notificationOpen = !notificationOpen;">
+
+        <!-- notification container -->
+        <div class="notification-container" (click)="toggleNotificationMenu()">
             <a class="globe-container" #globeContainer>
                 <i class="fa fa-globe d-lg-none"></i>
-                <span *ngIf="true" class="notification-unread-circle">2</span>
+                <span *ngIf="notificationService.unreadCount > 0" class="notification-unread-circle">{{notificationService.unreadCount}}</span>
             </a>
             <div class="notification-drop-down header-drop-down" *ngIf="notificationOpen" #dropdown>
                 <div class="notification-drop-down-header">
-                    <a>mark all as read</a>
+                    <a (click)="notificationService.markAllAsRead()">mark all as read</a>
                 </div>
-                <div class="notification-drop-down-list" *ngFor="let notification of notifications$ | async">
+                <div class="notification-drop-down-item" *ngFor="let notification of notifications$ | async" [ngClass]="{unread: !notification.isRead}">
                     <a *ngIf="notification.type === 'user-follow'">
                         <b>???</b> started following you
                     </a>
@@ -72,8 +76,14 @@
                 </div>
             </div>
         </div>
+
+        <!-- filter -->
         <i *ngIf="router.url.startsWith('/symbols')" (click)="onClickFilter($event)" class="fa fa-filter d-lg-none"></i>
+
+        <!-- title -->
         <h3 class="d-lg-none header-title">{{titleText$ | async}}</h3>
+
+        <!-- search container -->
         <div class="search-container">
             <input (keyup)="onSearchKeyUp($event)" (focus)="onSearchKeyUp($event)" placeholder="Markets / People" #input>
             <div class="header-drop-down" *ngIf="(searchResults$ | async) as result" (click)="onClickDropdownItem()" #dropdown>
@@ -90,8 +100,9 @@
                 <p class="dropdown-no-results-text" *ngIf="!result.symbols.length && !result.users.length">No results</p>
             </div>
         </div>
+
+        <!-- mobile search button -->
         <i (click)="toggleSearch()" class="fa fa-search d-lg-none"></i>
-        <!-- <i (click)="toggleSearch()" class="fa fa-ellipsis-v d-lg-none"></i> -->
     </header>
     <router-outlet></router-outlet>
 </main>

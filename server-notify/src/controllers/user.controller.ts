@@ -67,5 +67,14 @@ export const userController = {
 
 	remove(reqUser: IReqUser, userId: string) {
 		return User.findByIdAndRemove(userId);
+	},
+
+	async getUnreadCount(reqUser: IReqUser): Promise<number> {
+		const user = <any>await User.findById(reqUser.id, {unreadCount: 1});
+		console.log(reqUser);
+		if (!user)
+			throw ({code: 404});
+
+		return user.unreadCount
 	}
 };

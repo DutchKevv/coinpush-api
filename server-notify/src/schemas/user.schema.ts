@@ -34,6 +34,10 @@ export const UserSchema = new Schema({
             required: true
         }
     }],
+    unreadCount: {
+        type: Number,
+        default: 0
+    },
     settings: {
         lowMargin: {
             type: Boolean,

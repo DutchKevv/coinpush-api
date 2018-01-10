@@ -7,6 +7,9 @@ import { Observable } from 'rxjs/Observable';
 @Injectable()
 export class NotificationService {
 
+	public notifications = app.notificationsData.notifications;
+	public unreadCount = app.notificationsData.unreadCount || 0;
+
 	constructor(
 		private _http: Http) {}
 
@@ -16,7 +19,22 @@ export class NotificationService {
 
 	findMany(offset: number = 0, limit: number = 20): Observable<any> {
         return this._http.get('/notify', { params: { offset, limit } }).map(res => res.json());
-    }
+	}
+	
+	public markAsRead(): Promise<Response> {
+		return this._http.put('/notify/unread', {}).toPromise();
+	}
+
+	public markAllAsRead(): Promise<Response> {
+		return this._http.put('/notify/unread', {}).toPromise();
+	}
+
+	public async resetUnreadCounter(): Promise<void> {
+		if (this.unreadCount > 0) {
+			this.unreadCount = 0;
+			await this._http.put('/notify/reset-unread-counter', {}).toPromise();
+		}
+	}
 
 	async update(changes, toServer = true, showAlert: boolean = true) {
 		

@@ -108,12 +108,12 @@ export class AppComponent implements OnInit, AfterViewInit {
 		public activatedRoute: ActivatedRoute,
 		public userService: UserService,
 		public authenticationService: AuthenticationService,
+		public notificationService: NotificationService,
 		private _changeDetectorRef: ChangeDetectorRef,
-		private _notificationService: NotificationService,
 		private _cacheService: CacheService) { }
 
 	ngOnInit() {
-		this.notifications$ = this._notificationService.findMany();
+		this.notifications$ = this.notificationService.findMany();
 
 		this._routerEventsSub = this.router.events.subscribe((val) => {
 			if (val instanceof NavigationEnd) {
@@ -179,6 +179,13 @@ export class AppComponent implements OnInit, AfterViewInit {
 				this.router.navigate(this.activatedRoute.snapshot.url, { queryParamsHandling: 'merge', queryParams: { menu: null }, replaceUrl: true })
 			}
 		}, 0);
+	}
+
+	toggleNotificationMenu() {
+		this.searchOpen = false; 
+		this.filterClick$.emit(false); 
+		this.notificationOpen = !this.notificationOpen;
+		this.notificationService.resetUnreadCounter();
 	}
 
 	public toggleSearch() {

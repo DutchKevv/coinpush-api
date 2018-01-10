@@ -13,6 +13,7 @@ export class App extends MicroEvent {
     }
 
     public symbols: Array<any> = [];
+    public notificationsData: any = {};
     public address;
     public storage = new StorageHelper();
     public notification = new NotificationHelper();
@@ -83,6 +84,9 @@ export class App extends MicroEvent {
 
         if (data.user)
             this.user = data.user;
+            
+        if (data.notifications)
+            this.notificationsData = data.notifications;
 
         this.symbols = JSON.parse(data.symbols);
     }
