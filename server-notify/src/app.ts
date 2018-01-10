@@ -2,7 +2,7 @@ import * as express from 'express';
 import * as helmet from 'helmet';
 import * as morgan from 'morgan';
 import * as mongoose from 'mongoose';
-import {json, urlencoded} from 'body-parser';
+import { json, urlencoded } from 'body-parser';
 import { notifyController } from './controllers/notify.controller';
 import * as redis from './modules/redis';
 
@@ -27,7 +27,7 @@ mongoose.connect(config.server.notify.connectionString, { useMongoClient: true }
 app.use(morgan('dev'));
 app.use(helmet());
 app.use(json());
-app.use(urlencoded({extended: false}));
+app.use(urlencoded({ extended: false }));
 app.use((req, res, next) => {
 	res.header('Access-Control-Allow-Origin', '*');
 	res.header('Access-Control-Allow-Headers', '_id, Authorization, Origin, X-Requested-With, Content-Type, Accept');
@@ -38,7 +38,7 @@ app.use((req, res, next) => {
  * Add 'user' variable to request, holding userID
  */
 app.use((req: any, res, next) => {
-	req.user = {id: req.headers['_id']};
+	req.user = { id: req.headers['_id'] };
 	next();
 });
 
@@ -56,22 +56,19 @@ app.use((error, req, res, next) => {
 	if (error && error.statusCode === 401)
 		return res.send(401);
 
-	res.status(500).send({error});
+	res.status(500).send({ error });
 });
 
 redis.client.subscribe("notify");
 redis.client.on("message", function (channel, message) {
-    
-    let data;
-    try {
-        data = JSON.parse(message);
-    } catch (error) {
-        return console.error(error);
-    }
 
-    switch (channel) {
-        case 'notify':
-			notifyController.parse(data);
-            break;
-    }
+	try {
+		switch (channel) {
+			case 'notify':
+				notifyController.parse(JSON.parse(message));
+				break;
+		}
+	} catch (error) {
+		return console.error(error);
+	}
 });

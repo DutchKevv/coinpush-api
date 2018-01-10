@@ -23,11 +23,10 @@ export const authenticateController = {
 		let user: IUser;
 		let event: IUser;
 		let unreadCount: number;
-		console.log('111111');
+
 		const results = await Promise.all([
 			symbolController.getPublicList(),
 			(async () => {
-				console.log('asfdsfasfdfsdf');
 				if (params.email || params.password || params.token) {
 					params['fields'] = ['favorites', 'name', 'img'];
 		
@@ -40,7 +39,7 @@ export const authenticateController = {
 						body: params,
 						json: true
 					});
-					
+
 					if (user && user._id) {
 						unreadCount = await request({
 							uri: config.server.notify.apiUrl + '/notify/unread',

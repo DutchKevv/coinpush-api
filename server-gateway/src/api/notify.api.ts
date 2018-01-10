@@ -32,9 +32,20 @@ router.get('/', async (req, res, next) => {
 /**
  * update unread
  */
+router.put('/unread/:id', async (req, res, next) => {
+	try {
+		res.send(await notifyController.markUnread(req.user, req.params.id));
+	} catch (error) {
+		next(error);
+	}
+});
+
+/**
+ * update unread
+ */
 router.put('/unread', async (req, res, next) => {
 	try {
-		res.send(await notifyController.updateAllUnread(req.user));
+		res.send(await notifyController.markAllUnread(req.user));
 	} catch (error) {
 		next(error);
 	}

@@ -21,8 +21,8 @@ export class NotificationService {
         return this._http.get('/notify', { params: { offset, limit } }).map(res => res.json());
 	}
 	
-	public markAsRead(): Promise<Response> {
-		return this._http.put('/notify/unread', {}).toPromise();
+	public markAsRead(notificationId: string): Promise<Response> {
+		return this._http.put('/notify/unread/' + notificationId, {}).toPromise();
 	}
 
 	public markAllAsRead(): Promise<Response> {
@@ -30,7 +30,7 @@ export class NotificationService {
 	}
 
 	public async resetUnreadCounter(): Promise<void> {
-		if (this.unreadCount > 0) {
+		if (this.unreadCount != 0) {
 			this.unreadCount = 0;
 			await this._http.put('/notify/reset-unread-counter', {}).toPromise();
 		}

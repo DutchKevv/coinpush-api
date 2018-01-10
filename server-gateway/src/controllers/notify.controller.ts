@@ -33,17 +33,15 @@ export const notifyController = {
         })
     },
     
-    updateUnread(reqUser: IReqUser, notificationId: string, params) {
+    markUnread(reqUser: IReqUser, notificationId: string) {
 		return request({
-            uri: config.server.notify.apiUrl + '/notify/unread',
+            uri: config.server.notify.apiUrl + '/notify/unread/' + notificationId,
             method: 'put',
-            headers: {_id: reqUser.id},
-            body: params,
-            json: true
+            headers: {_id: reqUser.id}
         })
     },
     
-    updateAllUnread(reqUser: IReqUser) {
+    markAllUnread(reqUser: IReqUser) {
 		return request({
             uri: config.server.notify.apiUrl + '/notify/unread',
             method: 'put',

@@ -112,6 +112,7 @@ export const notifyController = {
     },
 
     async sendTypeSymbolAlarm(notification, user) {
+        console.log('asdfasdfdsfsaf');
         const title = `Price alarm triggered on ${notification.data.symbol} - ${notification.data.target}`;
         const data = {
             type: 'symbol-alarm',
@@ -137,7 +138,7 @@ export const notifyController = {
 
     async parse(notification) {
         const document = await this.create(notification);
-        const user = await User.findByIdAndUpdate(notification.toUserId, { $inc: { unreadCount: 1 } });
+        const user = await User.findOneAndUpdate({_id: notification.toUserId}, { $inc: { unreadCount: 1 } });
 
         switch (notification.type) {
             case 'post-comment':
@@ -158,34 +159,32 @@ export const notifyController = {
         }
     },
 
-    async updateUnread(reqUser: IReqUser, notificationId: string) {
+    async markUnread(reqUser: IReqUser, notificationId: string) {
         const notification = <any>await Notification.findById(notificationId);
 
         if (!notification)
-            throw ({ code: 404 });
+            throw ({ statusCode: 404 });
 
-        if (notification.toUserId !== reqUser.id)
-            throw ({ code: 401 });
+        if (notification.toUserId.toString() !== reqUser.id)
+            throw ({ statusCode: 401 });
 
         if (notification.readDate)
             return;
 
-        notification.readDate = Date.now;
+        notification.readDate = new Date;
         notification.isRead = true;
 
         await Promise.all([
             notification.save(),
-            User.update({ _id: reqUser.id }, { $inc: { unreadCount: -1 } })
+            User.update({_id: reqUser.id, unreadCount: {$gt: 0}}, { $inc: { unreadCount: -1 } })
         ])
     },
 
-    async updateAllUnread(reqUser: IReqUser) {
+    async markAllUnread(reqUser: IReqUser) {
         const results = await Promise.all([
-            Notification.update({ toUserId: reqUser.id}, { readDate: new Date, isRead: true }),
+            (<any>Notification).updateMany({ toUserId: reqUser.id }, { $set: { readDate: new Date, isRead: true } }),
             this.resetUnreadCount(reqUser)
         ]);
-
-        console.log(results);
     },
 
     async resetUnreadCount(reqUser: IReqUser) {

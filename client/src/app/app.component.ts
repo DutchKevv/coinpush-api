@@ -181,10 +181,10 @@ export class AppComponent implements OnInit, AfterViewInit {
 		}, 0);
 	}
 
-	toggleNotificationMenu() {
-		this.searchOpen = false; 
-		this.filterClick$.emit(false); 
-		this.notificationOpen = !this.notificationOpen;
+	public toggleNotificationMenu(state?: boolean) {
+		this.searchOpen = false;
+		this.filterClick$.emit(false);
+		this.notificationOpen = typeof state ==='boolean' ? state : !this.notificationOpen;
 		this.notificationService.resetUnreadCounter();
 	}
 
@@ -193,12 +193,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 		this.searchOpen = !this.searchOpen;
 
 		// wait until visible
-		setTimeout(() => {
-			// extra loop for android
-			// requestAnimationFrame(() => {
-			this.inputRef.nativeElement.focus();
-			// });
-		})
+		setTimeout(() => this.inputRef.nativeElement.focus())
 	}
 
 	public onClickFilter(event?, state?: boolean) {
@@ -206,10 +201,24 @@ export class AppComponent implements OnInit, AfterViewInit {
 			event.preventDefault();
 			event.stopPropagation();
 		}
-		
+
 		this.searchOpen = false;
 		this.notificationOpen = false;
 		this.filterClick$.emit(state);
+	}
+
+	public onClickMarkAllAsRead(event) {
+		event.preventDefault();
+		event.stopPropagation();
+
+		this.notificationService.markAllAsRead();
+	}
+
+	public onClickNotification(event, notification) {
+		this.notificationOpen = false;
+			
+		if (!notification.isRead)
+			this.notificationService.markAsRead(notification._id);
 	}
 
 	public logout(): void {
