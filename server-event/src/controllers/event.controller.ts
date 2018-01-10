@@ -31,7 +31,7 @@ export const eventController = {
 			fields.triggeredDate = 1;
 		}
 
-		return Event.find(opt, fields).sort({[params.history ? 'triggeredDate' : '_id']: -1}).lean();
+		return Event.find(opt, fields).sort({ [params.history ? 'triggeredDate' : '_id']: -1 }).lean();
 	},
 
 	async create(reqUser, params: any = {}) {
@@ -71,17 +71,16 @@ export const eventController = {
 	async checkEvents() {
 		return new Promise((resolve, reject) => {
 
-			client.get('symbols', async (err, symbols) => {
+			client.hgetall('symbols', async (err, symbols) => {
 				if (err)
 					return reject(err);
 
 				if (!symbols)
 					return resolve();
 
-				symbols = JSON.parse(symbols);
+				for (let key in symbols) {
+					let symbol = JSON.parse(symbols[key]);
 
-				for (let i = 0, len = symbols.length; i < len; i++) {
-					let symbol = symbols[i];
 					let events = <any>flatten(await Promise.all(
 						[
 							Event.find({ triggered: false, symbol: symbol.name, 'alarm.dir': ALARM_TRIGGER_DIRECTION_UP, 'alarm.price': { $gt: symbol.high } }),
