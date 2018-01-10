@@ -116,18 +116,19 @@ export class AppComponent implements OnInit, AfterViewInit {
 		this.notifications$ = this.notificationService.findMany();
 
 		this._routerEventsSub = this.router.events.subscribe((val) => {
-			if (val instanceof NavigationEnd) {
+			if (val instanceof NavigationStart) {
 				this.searchOpen = false;
 				this.notificationOpen = false;
+				this.filterClick$.emit(false);
 			}
 		});
 	}
 
 	ngAfterViewInit() {
-		setTimeout(() => {
-			app.initNotifications().catch(console.error);
-			app.loadAds();
-		}, 1000);
+		// setTimeout(() => {
+		app.initNotifications().catch(console.error);
+		app.loadAds();
+		// }, 1000);
 	}
 
 	public onSearchKeyUp(event): void {
@@ -171,12 +172,11 @@ export class AppComponent implements OnInit, AfterViewInit {
 
 		this._navBarPosition = this._isNavOpen ? 0 : -this._navBarWidth;
 		this.navbar.nativeElement.removeAttribute('style');
-
 		setTimeout(() => {
 			if (this._isNavOpen)
-				this.router.navigate(this.activatedRoute.snapshot.url, { queryParamsHandling: 'merge', queryParams: { menu: 1 } })
+				this.router.navigate(this.activatedRoute.snapshot.url, { queryParamsHandling: 'merge', queryParams: { menu: 1 }, relativeTo: this.activatedRoute })
 			else {
-				this.router.navigate(this.activatedRoute.snapshot.url, { queryParamsHandling: 'merge', queryParams: { menu: null }, replaceUrl: true })
+				this.router.navigate(this.activatedRoute.snapshot.url, { queryParamsHandling: 'merge', queryParams: { menu: null }, replaceUrl: true, relativeTo: this.activatedRoute })
 			}
 		}, 0);
 	}
@@ -184,7 +184,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 	public toggleNotificationMenu(state?: boolean) {
 		this.searchOpen = false;
 		this.filterClick$.emit(false);
-		this.notificationOpen = typeof state ==='boolean' ? state : !this.notificationOpen;
+		this.notificationOpen = typeof state === 'boolean' ? state : !this.notificationOpen;
 		this.notificationService.resetUnreadCounter();
 	}
 
@@ -216,7 +216,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
 	public onClickNotification(event, notification) {
 		this.notificationOpen = false;
-			
+
 		if (!notification.isRead)
 			this.notificationService.markAsRead(notification._id);
 	}

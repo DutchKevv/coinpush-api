@@ -235,7 +235,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy() {
-		app.off('symbols-update', this._onSymbolUpdate);
+		this._applicationRef.components[0].instance.titleText$.next('');
 
 		if (this._priceChangeSub)
 			this._priceChangeSub.unsubscribe();
