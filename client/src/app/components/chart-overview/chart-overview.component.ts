@@ -15,7 +15,7 @@ import { ConstantsService } from '../../services/constants.service';
 import { UserService } from '../../services/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CacheService } from '../../services/cache.service';
-import { SYMBOL_CAT_TYPE_FOREX, SYMBOL_CAT_TYPE_RESOURCE, SYMBOL_CAT_TYPE_CRYPTO, CUSTOM_EVENT_TYPE_ALARM, ALARM_TRIGGER_DIRECTION_DOWN, ALARM_TRIGGER_DIRECTION_UP, BROKER_GENERAL_TYPE_OANDA } from "../../../../../shared/constants/constants";
+import { SYMBOL_CAT_TYPE_FOREX, SYMBOL_CAT_TYPE_RESOURCE, SYMBOL_CAT_TYPE_CRYPTO, CUSTOM_EVENT_TYPE_ALARM, ALARM_TRIGGER_DIRECTION_DOWN, ALARM_TRIGGER_DIRECTION_UP, BROKER_GENERAL_TYPE_OANDA, BROKER_GENERAL_TYPE_CC } from "../../../../../shared/constants/constants";
 import { NgForm } from '@angular/forms';
 import { app } from '../../../core/app';
 
@@ -32,6 +32,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 
 	public activeSymbol: SymbolModel;
 	public symbols = [];
+	public defaultActiveFilter: string = 'all popular';
 	public activeFilter: string = '';
 	public activeMenu: string = null;
 
@@ -49,7 +50,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 		private _router: Router,
 		private _applicationRef: ApplicationRef,
 	) {
-		// this._changeDetectorRef.detach();
+		this._changeDetectorRef.detach();
 	}
 
 	ngOnInit() {
@@ -76,7 +77,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 					this.symbols = [symbol];
 					this.setActiveSymbol(null, this.symbols[0]);
 				} else {
-					this.toggleActiveFilter('rise and fall');
+					this.toggleActiveFilter(this.defaultActiveFilter);
 				}
 			});
 		});
@@ -118,7 +119,18 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 				this.symbols = this.cacheService.symbols;
 				break;
 			case 'all popular':
-				this.symbols = this.cacheService.symbols.sort((a, b) => a.options.volume - b.options.volume).slice(-30).reverse();
+				const sorted = this.cacheService.symbols.sort((a, b) => a.options.volume - b.options.volume).reverse()
+				const cc = sorted.filter(symbol => symbol.options.broker === BROKER_GENERAL_TYPE_CC).slice(0, 20);
+				const oanda = sorted.filter(symbol => symbol.options.broker === BROKER_GENERAL_TYPE_OANDA).slice(0, 20);
+
+				const mixedArr = [];
+				let max = cc.length + oanda.length;
+				let i2 = 0;
+				for (let i = 0; i < max; i += 2) {
+					mixedArr[i] = cc[i2];
+					mixedArr[i + 1] = oanda[i2++];
+				}
+				this.symbols = mixedArr;
 				break;
 			case 'rise and fall':
 				const sortedByDayAmount = this.cacheService.symbols.sort((a, b) => a.options.changedDAmount - b.options.changedDAmount);
@@ -214,7 +226,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 
 	private _onSymbolUpdate() {
 		if (!this._route.snapshot.queryParams['symbol']) {
-			this.toggleActiveFilter('rise and fall')
+			this.toggleActiveFilter(this.defaultActiveFilter)
 		} else {
 			const symbol = this.cacheService.getSymbolByName(this._route.snapshot.queryParams['symbol']);
 			if (symbol) {

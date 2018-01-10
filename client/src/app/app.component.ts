@@ -106,7 +106,9 @@ export class AppComponent implements OnInit, AfterViewInit {
 		public userService: UserService,
 		public authenticationService: AuthenticationService,
 		private _changeDetectorRef: ChangeDetectorRef,
-		private _cacheService: CacheService) { }
+		private _cacheService: CacheService) { 
+			// this._changeDetectorRef.detach();
+		}
 
 	ngOnInit() {
 

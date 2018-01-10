@@ -39,13 +39,13 @@ export class App extends MicroEvent {
 
     // TODO: move to helper class
     public loadAds() {
-        
+
         // TODO: Desktop ads
         if (!this.platform.isApp)
             return;
 
         let admobid: { banner?: string, interstitial?: string } = {};
-        
+
         if (/(android)/i.test(navigator.userAgent)) { // for android & amazon-fireos
             admobid.banner = 'ca-app-pub-1181429338292864/7213864636';
             admobid.interstitial = 'ca-app-pub-1181429338292864/7213864636';
@@ -53,7 +53,7 @@ export class App extends MicroEvent {
             admobid.banner = 'ca-app-pub-1181429338292864/7213864636';
             admobid.interstitial = 'ca-app-pub-1181429338292864/7213864636';
         }
-    
+
         window['AdMob'].createBanner({
             adSize: 'BANNER',
             overlap: true,
@@ -63,32 +63,34 @@ export class App extends MicroEvent {
             autoShow: true,
             isTesting: false
         });
-    
+
         document.addEventListener('onAdFailLoad', function (error) {
             console.error(error);
         });
     }
 
     private async _loadData() {
-        const obj: any = {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            }
-        };
+        const headers = new Headers();
+        headers.append('pragma', 'no-cache');
+        headers.append('cache-control', 'no-cache');
+        headers.append('Accept', 'application/json');
 
         if (this.user.token)
-            obj.headers.Authorization = 'Bearer ' + this.user.token;
+            headers.append('Authorization', 'Bearer ' + this.user.token);
 
-        const data = await fetch(this.address.apiUrl + 'authenticate', obj).then(res => res.json());
+        const fetchOptions: any = {
+            headers
+        };
+
+        const data = await fetch(this.address.apiUrl + 'authenticate', fetchOptions).then(res => res.json());
 
         if (data.user)
             this.user = data.user;
-            
+
         if (data.notifications)
             this.notificationsData = data.notifications;
 
-        this.symbols = JSON.parse(data.symbols);
+        this.symbols = data.symbols;
     }
 
     public async updateStoredUser() {
@@ -110,15 +112,6 @@ export class App extends MicroEvent {
         // only load when user is loggedin
         if (this.user._id)
             await this.notification.init();
-    }
-
-    private async _loadSymbols() {
-        const symbols = await (await fetch(this.address.apiUrl + 'symbol')).json();
-
-        if (symbols && symbols.length)
-            this.symbols = symbols;
-
-        this.emit('symbols-update')
     }
 }
 

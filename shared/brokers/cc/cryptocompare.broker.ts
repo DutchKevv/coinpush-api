@@ -76,11 +76,18 @@ export default class CyrptoCompareApi extends EventEmitter {
             var res: any = {};
 
             if (messageType == CCC.STATIC.TYPE.CURRENTAGG) {
-                // if (messageType == CCC.STATIC.TYPE.CURRENTAGG) { 
+               
                 res = CCC.CURRENT.unpack(message);
+                
+                if (res.LASTMARKET === 'Yobit')
+                    return;
+                
+                // console.log(res);
                 // console.log(typeof res, res);
+                // dataUnpack(res);
+                // console.log(res);
+                if (res.PRICE) {
 
-                if (res.PRICE && res.LASTUPDATE) {
                     this.emit('tick', {
                         time: res.LASTUPDATE * 1000,
                         instrument: res.FROMSYMBOL,
@@ -88,7 +95,7 @@ export default class CyrptoCompareApi extends EventEmitter {
                         ask: res.PRICE,
                     })
                 }
-                // dataUnpack(res);
+
             }
         });
 
@@ -137,7 +144,7 @@ export default class CyrptoCompareApi extends EventEmitter {
             writeChunks = 0,
             finished = 0,
             url = '';
-        
+
         if (!chunks.length)
             return;
 
@@ -166,7 +173,7 @@ export default class CyrptoCompareApi extends EventEmitter {
 
             if (!result.Data || !result.Data.length)
                 continue;
-                
+
             let candles = new Float64Array(result.Data.length * 10);
 
             result.Data.forEach((candle, index) => {
@@ -182,23 +189,22 @@ export default class CyrptoCompareApi extends EventEmitter {
                 candles[startIndex + 6] = candle.low;
                 candles[startIndex + 7] = candle.close;
                 candles[startIndex + 8] = candle.close;
-                candles[startIndex + 9] = Math.ceil(candle.volumefrom);
+                candles[startIndex + 9] = Math.ceil(candle.volumeto - candle.volumefrom);
             });
-            
+
             await onData(candles);
         }
     }
 
-    public getCurrentPrices(symbols: Array<string>): Promise<Array<any>> {
-        return new Promise((resolve, reject) => {
+    public async getCurrentPrices(symbols: Array<string>, toSymbol = 'USD'): Promise<Array<any>> {
+        const priceArr = [];
 
-            this._client.getPrices(symbols, (err, prices) => {
-                if (err)
-                    return reject(err);
-
-                resolve(prices);
-            });
-        });
+        for (let i = 0, len = symbols.length; i < len; i++) {
+            const result = await this._doRequest('https://min-api.cryptocompare.com/data/price?', { fsym: symbols[i], tsyms: toSymbol });
+            priceArr.push({instrument: symbols[i], bid: result[toSymbol]});
+        }
+        
+        return priceArr;
     }
 
     public getOpenPositions() {
@@ -316,8 +322,8 @@ export default class CyrptoCompareApi extends EventEmitter {
                 fullResponse: false
             });
 
-            if (!result || !result.Data)
-                throw new Error('empty result!');
+            // if (!result || !result.Data)
+            //     throw new Error('empty result!');
 
             return result;
         } catch (error) {
@@ -330,7 +336,7 @@ export default class CyrptoCompareApi extends EventEmitter {
                     }, 1000);
                 })
             }
-            
+
             throw error;
         }
     }
@@ -342,8 +348,6 @@ export default class CyrptoCompareApi extends EventEmitter {
                 json: true,
                 fullResponse: false
             });
-
-            console.log(result);
 
             return result;
         } catch (error) {

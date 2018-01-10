@@ -7,7 +7,7 @@ export const symbolController = {
 
 	getPublicList(): Promise<any> {
 		return new Promise((resolve, reject) => {
-            client.get('symbols', (err, symbols) => {
+            client.hgetall('symbols', (err, symbols) => {
                 if (err)
                     return reject(err);
 

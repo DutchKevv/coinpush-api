@@ -64,6 +64,9 @@ export const cacheController = {
 
 		this.tickBuffer[tick.instrument] = [tick.time, tick.bid, tick.ask];
 
+		if (tick.instrument === 'BTS') {
+			console.log('asfasasfsdfsadf', tick);
+		}
 		symbolObj.bid = tick.bid;
 		symbolObj.ask = tick.ask;
 		symbolObj.lastTick = tick.time;
@@ -103,12 +106,6 @@ export const cacheController = {
 		]);
 
 		log.info('cache', `syncing took ${Date.now() - now}ms (oanda: ${results[0].time - now}ms | CC: ${results[1].time - now}ms)`);
-		log.info('cache', `updating statistics`);
-
-		// update symbols
-		now = Date.now();
-		await symbolController.update();
-		log.info('cache', `updating statistics took ${Date.now() - now}ms`);
 
 		// destroy? progress bar
 		progressBar = null;
@@ -120,7 +117,7 @@ export const cacheController = {
 	 * @param statuses 
 	 * @param progressBar 
 	 */
-	async _syncByStatuses(statuses: Array<any>, progressBar?: ProgressBar): Promise<{time: Number}> {
+	async _syncByStatuses(statuses: Array<any>, progressBar?: ProgressBar): Promise<{ time: Number }> {
 		if (!statuses.length)
 			return;
 
@@ -130,39 +127,42 @@ export const cacheController = {
 
 		log.info('cache', `syncing ${statuses.length} collections for broker ${brokerName}`);
 
-		const bulkCount = 10;
-
 		// loop over each symbol (in bulk)
-		for (let i = 0, len = statuses.length; i < len; i += bulkCount) {
+		for (let i = 0, len = statuses.length; i < len; i++) {
 			const now = Date.now();
-			// create multi promise of bulk
-			const pMultiList = statuses.slice(i, i + bulkCount).map(status => {
-				let lastSyncTimestamp;
+			const status = statuses[i];
 
-				// only continue if a new bar is there
-				if (status.lastSync) {
-					lastSyncTimestamp = (new Date(status.lastSync)).getTime();
+			let lastSyncTimestamp;
 
-					if (lastSyncTimestamp + timeFrameSteps[status.timeFrame] > now) {
-						progressBar && progressBar.tick();
-						return;
-					}
+			// only continue if a new bar is there
+			if (status.lastSync) {
+				lastSyncTimestamp = (new Date(status.lastSync)).getTime();
+
+				if (lastSyncTimestamp + timeFrameSteps[status.timeFrame] > now) {
+					progressBar && progressBar.tick();
+					continue;
 				}
+			}
 
-				// the fetch promise, catches errors so the entire loop will not break if one fails
-				return this
-					.fetch({
-						symbol: status.symbol,
-						timeFrame: status.timeFrame,
-						from: lastSyncTimestamp || undefined,
-						count: status.lastSync ? undefined : HISTORY_COUNT_DEFAULT
-					})
-					.catch(console.error)
-					.then(() => progressBar && progressBar.tick());
-			});
+			// the fetch promise, catches errors so the entire loop will not break if one fails
+			try {
+				await this.fetch({
+					symbol: status.symbol,
+					timeFrame: status.timeFrame,
+					from: lastSyncTimestamp || undefined,
+					count: status.lastSync ? undefined : HISTORY_COUNT_DEFAULT
+				});
 
-			// flatten & execute
-			const result = await Promise.all(pMultiList);
+				await symbolController.updateSymbol(status.symbol);
+
+				client.HMSET('symbols', {
+					[status.symbol]: JSON.stringify(app.broker.symbols.find(symbol => symbol.name === status.symbol))
+				});
+			} catch (error) {
+				console.error(error);
+			} finally {
+				progressBar && progressBar.tick()
+			}
 		}
 
 		return {

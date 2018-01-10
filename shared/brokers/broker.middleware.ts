@@ -21,7 +21,6 @@ export class BrokerMiddleware extends EventEmitter {
         super();
 
         this._installBrokerOanda();
-        // this._installBrokerIb();
         this._installBrokerCC();
     }
 
@@ -51,11 +50,25 @@ export class BrokerMiddleware extends EventEmitter {
 
     public async setSymbols(): Promise<void> {
         this._symbols = await this.getSymbols();
+        // this._symbols = [this._symbols[0]];
 
         // remove img url (only needed when building spritesheet in client)
         this.symbols.forEach(symbol => {
             delete symbol.img;
         })
+    }
+
+    async setLastKnownPrices() {
+        const prices = await this.getCurrentPrices(this.symbols.map(symbol => symbol.name));
+
+        prices.forEach(priceObj => {
+            const symbol = this.symbols.find(symbol => symbol.name === priceObj.instrument);
+            
+            if (symbol)
+                symbol.bid = priceObj.bid;
+            else
+                console.warn('symbol not found for priceObj: ' + priceObj);
+        });
     }
 
     public async getCurrentPrices(symbols: Array<any>): Promise<Array<any>> {
@@ -70,14 +83,16 @@ export class BrokerMiddleware extends EventEmitter {
 
         const result = [].concat(...(await Promise.all(pList)));
 
-        return
+        return result;
     }
 
-    public getCandles(symbolName, from, until, timeFrame, count, onData): Promise<void> {
+    public getCandles(symbolName, from, until, timeFrame, count, onData): Promise<any> {
         const symbol = this.symbols.find(symbol => symbol.name === symbolName);
-       
-        if (!symbol)
-            throw new Error('Symbol not found: ' + symbolName);
+
+        if (!symbol) {
+            console.warn('Unkown symbol: ' + symbolName);
+            return Promise.resolve([]);
+        }
 
         if (symbol.broker === BROKER_GENERAL_TYPE_CC)
             return this._brokers.cc.getCandles(symbolName, timeFrame, from, until, count, onData);

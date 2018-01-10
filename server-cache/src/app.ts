@@ -40,11 +40,10 @@ export const app = {
 		// broker
 		this.broker = new BrokerMiddleware();
 		await this.broker.setSymbols()
+		await this.broker.setLastKnownPrices(); // only needed at start
 
 		// cache + symbols syncing
 		await cacheController.sync(false);
-		await symbolController.setLastKnownPrices(); // only needed at start
-		await symbolController.update();
 
 		this._toggleSymbolUpdateInterval(true);
 		this._toggleWebSocketTickInterval(true);
@@ -120,10 +119,6 @@ export const app = {
 		const timeoutFunc = async function () {
 			try {
 				await cacheController.sync();
-
-				client.set('symbols', JSON.stringify(this.broker.symbols), error => {
-					if (error) console.error(error)
-				});
 			} catch (error) {
 				console.error(error);
 			} finally {
