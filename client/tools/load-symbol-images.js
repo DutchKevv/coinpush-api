@@ -22,10 +22,10 @@ const load = async function () {
             if (symbol.img.startsWith('/images/')) {
                 fs.createReadStream(DEFAULT_IMG_PATH)
                     .on('end', resolve)
-                    .pipe(sharp().resize(20).max())
+                    .pipe(sharp().resize(30).max())
                     .pipe(writeStream);
             } else {
-                https.get(symbol.img, response => response.pipe(sharp().min(30).resize(30))
+                https.get(symbol.img, response => response.pipe(sharp().resize(30))
                     .on('end', resolve)
                     .pipe(writeStream));
             }
