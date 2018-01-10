@@ -107,7 +107,9 @@ export class App extends MicroEvent {
     }
 
     public async initNotifications() {
-        await this.notification.init();
+        // only load when user is loggedin
+        if (this.user._id)
+            await this.notification.init();
     }
 
     private async _loadSymbols() {
