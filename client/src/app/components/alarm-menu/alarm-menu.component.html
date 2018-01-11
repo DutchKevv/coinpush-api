@@ -10,32 +10,37 @@
         <li [ngClass]="{active: activeTab === 'history'}" (click)="toggleTab('history')">History</li>
     </ul>
     <ng-container *ngIf="activeTab === 'new'">
-        <form class="form" (ngSubmit)="onCreateFormSubmit(alarmForm)" #alarmForm="ngForm">
+        <form class="form" (ngSubmit)="onFormSubmit()">
             <div class="form-group">
                 <label for="amount">Amount
                     <sup>(minimum 1% difference)</sup>
                 </label>
                 <div class="input-group" style="display: flex;">
-                    <span class="input-group-btn">
-                        <button (click)="onClickSideMenuNumberInput(-1, sideMenuNumberInput)" type="button" class="btn btn-sm btn-danger btn-number" data-type="minus">
+                    <span class="input-group-btn" (mousedown)="onMouseDownNumberInput(-1)" (mouseout)="onMouseUpNumberInput(-1)" (mouseup)="onMouseUpNumberInput(-1)">
+                        <button type="button" class="btn btn-sm btn-danger btn-number" data-type="minus">
                             <i class="fa fa-minus"></i>
                         </button>
                     </span>
-                    <input type="text" [(ngModel)]="formModel.amount" name="amount" class="form-control input-number" #sideMenuNumberInput (change)="onChangeInputValue()">
-                    <span class="input-group-btn">
-                        <button (click)="onClickSideMenuNumberInput(1, sideMenuNumberInput)" type="button" class="btn btn-sm btn-success btn-number" data-type="plus">
+                    <input type="text" [(ngModel)]="formModel.amount" name="amount" class="form-control input-number" (change)="onChangeInputValue()">
+                    <span class="input-group-btn" (mousedown)=" onMouseDownNumberInput(1) " (mouseout)="onMouseUpNumberInput(1)" (mouseup)="onMouseUpNumberInput(1)">
+                        <button type="button" class="btn btn-sm btn-success btn-number" data-type="plus">
                             <i class="fa fa-plus"></i>
                         </button>
                     </span>
                 </div>
             </div>
             <div class="form-group">
-                <span class="muted">Diff: {{(((formModel.amount / symbol.options.bid) * 100) - 100).toFixed(2)}}% <i class="fa fa-arrow-{{formModel.amount > symbol.options.bid ? 'up' : 'down'}}"></i></span>
+                <span class="muted">Diff: {{(((formModel.amount / symbol.options.bid) * 100) - 100).toFixed(2)}}%
+                    <i class="fa fa-arrow-{{formModel.amount > symbol.options.bid ? 'up' : 'down'}}"></i>
+                </span>
                 <p>Current price: {{symbol.options.bid}}</p>
             </div>
             <div class="form-group">
-                <label for="alarmName" style="width: 100%;">Name<sup>(optional)</sup></label>
-                <input class="form-control form-input w-50 p-3 d-inline-block" type="text" name="name" id="alarmName" [(ngModel)]="formModel.name" placeholder="name">
+                <label for="alarmName" style="width: 100%;">Name
+                    <sup>(optional)</sup>
+                </label>
+                <input class="form-control form-input w-50 p-3 d-inline-block" type="text" name="name" id="alarmName" [(ngModel)]="formModel.name"
+                    placeholder="name">
                 <button class="btn btn-sm btn-success pull-right">Add</button>
             </div>
         </form>

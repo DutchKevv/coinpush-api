@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, Output, OnDestroy } from '@angular/core';
 import { NotificationService } from '../../services/notification.service';
 import { Router, NavigationStart } from '@angular/router';
+import { AuthenticationService } from '../../services/authenticate.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
 	selector: 'app-notification-menu',
@@ -17,7 +19,9 @@ export class NotificationMenuComponent implements OnDestroy {
 
 	constructor(
 		public notificationService: NotificationService,
-		public router: Router
+		public router: Router,
+		private _authenticationSerice: AuthenticationService,
+		private _userService: UserService
 	) {
 		this.notifications$ = this.notificationService.findMany();
 
@@ -28,6 +32,12 @@ export class NotificationMenuComponent implements OnDestroy {
 	}
 
 	public toggleNotificationMenu(state?: boolean) {
+		// Show login screen on open
+		if ((state === true || typeof state === 'undefined' && !this.open) && !this._userService.model.options._id) {
+			this._authenticationSerice.showLoginRegisterPopup();
+			return;
+		}
+
 		this.open = typeof state === 'boolean' ? state : !this.open;
 		this.notificationService.resetUnreadCounter();
 	}

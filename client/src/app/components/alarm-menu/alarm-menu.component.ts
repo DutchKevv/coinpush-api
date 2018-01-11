@@ -9,6 +9,7 @@ import { EventService } from '../../services/event.service';
 import { NgForm } from '@angular/forms';
 import { ALARM_TRIGGER_DIRECTION_DOWN, ALARM_TRIGGER_DIRECTION_UP, CUSTOM_EVENT_TYPE_ALARM } from '../../../../../shared/constants/constants';
 import { CacheService } from '../../services/cache.service';
+import { AuthenticationService } from '../../services/authenticate.service';
 
 @Component({
 	selector: 'app-alarm-menu',
@@ -34,8 +35,13 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 		}
 	};
 
+	private _mouseDownTimeout = null;
+	private _mouseDownSpeedUp = 2;
+	
 	constructor(
 		public _eventService: EventService,
+		private _authenticationService: AuthenticationService,
+		private _userService: UserService,
 		private _cacheService: CacheService,
 		private _changeDetectorRef: ChangeDetectorRef,
 		private _changeRef: ChangeDetectorRef,
@@ -59,6 +65,14 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 		}
 	}
 
+	public onMouseDownNumberInput(dir) {
+		this.updateSideMenuNumberInput(dir, true);
+	}
+
+	public onMouseUpNumberInput() {
+		clearTimeout(this._mouseDownTimeout);
+	}
+
 	public onChangeInputValue() {
 		this.inputValueChange.next(this.formModel.amount);
 	}
@@ -68,7 +82,12 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 		this._changeDetectorRef.detectChanges();
 	}
 
-	public onCreateFormSubmit(form: NgForm) {
+	public onFormSubmit() {
+		if (!this._userService.model.options._id) {
+			this._authenticationService.showLoginRegisterPopup();
+			return;
+		}
+			
 		if (!this.symbol)
 			return;
 
@@ -78,7 +97,9 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 		this._eventService.create(this.formModel);
 	}
 
-	public onClickSideMenuNumberInput(dir: number, inputEl: HTMLElement) {
+	public updateSideMenuNumberInput(dir: number, setRepeat: boolean = false, repeatTime: number = 1000) {
+		clearTimeout(this._mouseDownTimeout);
+
 		let newValue = this.formModel.amount || this.symbol.options.bid;
 		let inc = this.symbol.options.bid / 700
 
@@ -92,6 +113,11 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 		this.formModel.amount = parseFloat(this._cacheService.priceToFixed(newValue, this.symbol));
 		this.inputValueChange.next(this.formModel.amount);
 		this._changeDetectorRef.detectChanges();
+
+		if (setRepeat) {
+			repeatTime = repeatTime / this._mouseDownSpeedUp;
+			this._mouseDownTimeout = setTimeout(() => this.updateSideMenuNumberInput(dir, true, repeatTime), repeatTime);
+		}
 	}
 
 	private _toMinimumDuff(value: number, dir): number {

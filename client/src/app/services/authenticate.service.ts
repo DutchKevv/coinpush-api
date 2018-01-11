@@ -11,13 +11,15 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 export class AuthenticationService {
 
 	@Output() public loggedIn$: EventEmitter<boolean> = new EventEmitter(false);
+	public loggedIn: boolean = false;
 	public loginOpen = false; // needed to prevent 401 request opening multiple login popups
 
-	constructor(private _userService: UserService,
+	constructor(
+		private _userService: UserService,
 		private _alertService: AlertService,
 		private _modalService: NgbModal,
 		private _http: Http) {
-		app.on('firebase-token-refresh', () => this.saveDevice());
+			app.on('firebase-token-refresh', () => this.saveDevice());
 	}
 
 	public async requestPasswordReset(email: string) {
