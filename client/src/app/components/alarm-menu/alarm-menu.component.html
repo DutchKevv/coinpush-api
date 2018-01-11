@@ -16,13 +16,17 @@
                     <sup>(minimum 1% difference)</sup>
                 </label>
                 <div class="input-group" style="display: flex;">
-                    <span class="input-group-btn" (mousedown)="onMouseDownNumberInput(-1)" (mouseout)="onMouseUpNumberInput(-1)" (mouseup)="onMouseUpNumberInput(-1)">
+                    <span class="input-group-btn" (touchstart)="onMouseDownNumberInput($event, -1)" (mousedown)="onMouseDownNumberInput($event, -1)"
+                        (mouseout)="onMouseUpNumberInput($event, -1)" (touchend)="onMouseUpNumberInput($event, -1)"
+                        (mouseup)="onMouseUpNumberInput($event, -1)">
                         <button type="button" class="btn btn-sm btn-danger btn-number" data-type="minus">
                             <i class="fa fa-minus"></i>
                         </button>
                     </span>
                     <input type="text" [(ngModel)]="formModel.amount" name="amount" class="form-control input-number" (change)="onChangeInputValue()">
-                    <span class="input-group-btn" (mousedown)=" onMouseDownNumberInput(1) " (mouseout)="onMouseUpNumberInput(1)" (mouseup)="onMouseUpNumberInput(1)">
+                    <span class="input-group-btn" (touchstart)="onMouseDownNumberInput($event, 1)" (mousedown)=" onMouseDownNumberInput($event, 1) "
+                        (mouseout)="onMouseUpNumberInput($event, 1)" (touchend)="onMouseUpNumberInput($event, 1)"
+                        (mouseup)="onMouseUpNumberInput($event, 1)">
                         <button type="button" class="btn btn-sm btn-success btn-number" data-type="plus">
                             <i class="fa fa-plus"></i>
                         </button>

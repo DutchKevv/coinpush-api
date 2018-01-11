@@ -7,20 +7,26 @@ import { Observable } from 'rxjs/Observable';
 @Injectable()
 export class NotificationService {
 
-	public notifications = app.notificationsData.notifications;
-	public unreadCount = app.notificationsData.unreadCount || 0;
+	public notifications = app.data.notifications;
 
-	constructor(
-		private _http: Http) {}
+	public get unreadCount() {
+		return this._unreadCount;
+	}
+
+	private _unreadCount = parseInt(app.data.notifications.unreadCount, 10) || 0;
+
+	constructor(private _http: Http) {
+		
+	}
 
 	findById(id: string, options: any = {}): Promise<any> {
 		return this._http.get('/notify/' + id, { params: options }).map((res: Response) => res.json()).toPromise();
 	}
 
 	findMany(offset: number = 0, limit: number = 20): Observable<any> {
-        return this._http.get('/notify', { params: { offset, limit } }).map(res => res.json());
+		return this._http.get('/notify', { params: { offset, limit } }).map(res => res.json());
 	}
-	
+
 	public markAsRead(notificationId: string): Promise<Response> {
 		return this._http.put('/notify/unread/' + notificationId, {}).toPromise();
 	}
@@ -31,12 +37,13 @@ export class NotificationService {
 
 	public async resetUnreadCounter(): Promise<void> {
 		if (this.unreadCount != 0) {
-			this.unreadCount = 0;
+			this._unreadCount = 0;
+			app.notification.updateBadgeCounter(0);
 			await this._http.put('/notify/reset-unread-counter', {}).toPromise();
 		}
 	}
 
 	async update(changes, toServer = true, showAlert: boolean = true) {
-		
+
 	}
 }

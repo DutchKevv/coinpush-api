@@ -11,6 +11,8 @@ import { CacheService } from './cache.service';
 @Injectable()
 export class EventService {
 
+	public events = app.data.events
+
 	constructor(
 		private _http: Http,
 		private _alertService: AlertService,

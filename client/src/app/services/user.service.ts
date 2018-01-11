@@ -9,7 +9,10 @@ import { app } from '../../core/app';
 @Injectable()
 export class UserService {
 
-	public model: UserModel = new UserModel(app.user);
+	public model: UserModel = new UserModel(app.user || {
+        name: 'Anonymous',
+        img: './assets/image/default-profile.jpg'
+    });
 
 	constructor(
 		private _http: Http,
@@ -29,7 +32,6 @@ export class UserService {
 
 	async update(changes, toServer = true, showAlert: boolean = true) {
 		this.model.set(changes);
-		app.user = this.model.options;
 
 		if (toServer) {
 			try {

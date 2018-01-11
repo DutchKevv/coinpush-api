@@ -55,7 +55,7 @@ export class LoginComponent implements OnInit {
 
 		try {
 			await this._userService.create(this.registerModel).toPromise();
-			this._alertService.success('Registration successful, check your email', true);
+			this._alertService.success('Registration successful, check your mail', true);
 
 			// pre-set login values
 			this.loginModel.email = this.registerModel.email;

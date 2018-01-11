@@ -123,7 +123,9 @@ export class AppComponent implements OnInit, AfterViewInit {
 	ngAfterViewInit() {
 		// small break before loading ads and receiving for push messages
 		setTimeout(() => {
-			app.initNotifications().catch(console.error);
+			if (this.userService.model.options._id)
+				app.initNotifications().catch(console.error);
+				
 			app.loadAds();
 		}, 500);
 	}

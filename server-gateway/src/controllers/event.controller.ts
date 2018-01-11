@@ -15,7 +15,7 @@ export const eventController = {
         })
     },
     
-    findMany(reqUser: IReqUser, params) {
+    findMany(reqUser: IReqUser, params?: any) {
         return request({
             uri: config.server.event.apiUrl + '/event',
             headers: {_id: reqUser.id},

@@ -1,28 +1,54 @@
+import { app } from '../../app';
+
 declare let firebase: any;
 declare let FirebasePlugin: any;
-
-import { app } from '../../app';
+declare let cordova: any;
 
 export class NotificationHelper {
 
     private _token: string = null;
+    private _originalTitle = document.title;
 
     get token() {
         return this._token;
     }
 
-    constructor() {
-
-    }
-
-    public init(): Promise<any> | void {
+    public async init(): Promise<void> {
         if (app.platform.isApp) {
-            return this._loadApp();
+            await this._loadApp();
         } else {
-            return this._loadBrowser();
+            await this._loadBrowser();
         }
     }
 
+    /**
+     * update the badge or tab title counter
+     * @param newValue 
+     */
+    public updateBadgeCounter(newValue: number) {
+        try {
+            if (newValue) {
+                if (app.platform.isApp) {
+                    cordova.plugins.notification.badge.set(newValue);
+                } else {
+                    document.title = this._originalTitle + `(${newValue})`;
+                }
+            }
+            else {
+                if (app.platform.isApp) {
+                    cordova.plugins.notification.badge.clear();
+                } else {
+                    document.title = this._originalTitle;
+                }
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    /**
+     * ask user to allow push messages on browser
+     */
     public async askPermissionBrowser() {
         try {
             const messaging = firebase.messaging();
@@ -34,6 +60,10 @@ export class NotificationHelper {
         }
     }
 
+    /**
+     * handle notification
+     * @param message 
+     */
     private _onNotification(message: any): void {
         try {
             if (!message.data)
@@ -41,7 +71,7 @@ export class NotificationHelper {
 
             const body = typeof message.data === 'string' ? JSON.parse(message.data) : message.data;
 
-            if (body.__userId !== app.user._id)
+            if (!app.data.user || !app.data.user._id || app.data.user._id !== body.__userId)
                 return console.warn('notification __userId mismatch')
 
             switch (body.type) {
@@ -107,6 +137,9 @@ export class NotificationHelper {
      * app (cordova + firebase)
      */
     private _loadApp() {
+        // set badge style 
+        cordova.plugins.notification.badge.configure({ indicator: 'circular', autoClear: false });
+
         FirebasePlugin.hasPermission((data) => {
             if (!data.isEnabled)
                 FirebasePlugin.grantPermission((result) => {

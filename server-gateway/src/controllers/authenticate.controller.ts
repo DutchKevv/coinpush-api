@@ -7,6 +7,8 @@ import { IUser } from '../../../shared/interfaces/IUser.interface';
 import { deviceController } from './device.controller';
 import { symbolController } from './symbol.controller';
 import { IReqUser } from '../../../shared/interfaces/IReqUser.interface';
+import { notifyController } from './notify.controller';
+import { eventController } from './event.controller';
 
 const config = require('../../../tradejs.config');
 
@@ -21,15 +23,15 @@ export const authenticateController = {
 		}
 
 		let user: IUser;
-		let event: IUser;
-		let unreadCount: number;
-
+		let userData: any = [];
+		
 		const results = await Promise.all([
 			symbolController.getPublicList(),
 			(async () => {
+				
 				if (params.email || params.password || params.token) {
 					params['fields'] = ['favorites', 'name', 'img'];
-		
+
 					user = await request({
 						uri: config.server.user.apiUrl + '/authenticate',
 						headers: {
@@ -39,14 +41,13 @@ export const authenticateController = {
 						body: params,
 						json: true
 					});
-
+					console.log(user);
 					if (user && user._id) {
-						unreadCount = await request({
-							uri: config.server.notify.apiUrl + '/notify/unread',
-							headers: {
-								_id: user._id
-							}
-						});
+						// get unread notification counter and active events (alarms) 
+						userData = await Promise.all([
+							notifyController.getUnreadCount({id: user._id}),
+							eventController.findMany({id: user._id})
+						]);
 					}
 				}
 			})()
@@ -55,8 +56,9 @@ export const authenticateController = {
 		return {
 			symbols: results[0],
 			notifications: {
-				unreadCount: unreadCount
+				unreadCount: userData[0]
 			},
+			events: userData[1],
 			user
 		};
 	},

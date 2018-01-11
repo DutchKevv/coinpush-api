@@ -49,6 +49,7 @@
     "cordova-browser": "^5.0.3",
     "cordova-build-increment": "^0.1.0",
     "cordova-plugin-admobpro": "^2.29.29",
+    "cordova-plugin-badge": "^0.8.6",
     "cordova-plugin-extension": "^1.5.3",
     "cordova-plugin-fileopener": "^1.0.5",
     "cordova-plugin-firebase": "^0.1.25",
@@ -72,7 +73,8 @@
       "cordova-plugin-admobpro": {},
       "cordova-plugin-firebase": {},
       "cordova-plugin-fileopener": {},
-      "cordova-plugin-splashscreen": {}
+      "cordova-plugin-splashscreen": {},
+      "cordova-plugin-badge": {}
     },
     "platforms": [
       "browser",

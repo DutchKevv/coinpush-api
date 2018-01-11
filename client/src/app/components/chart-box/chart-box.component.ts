@@ -6,6 +6,8 @@ import {
 import { CacheService } from '../../services/cache.service';
 import { ConstantsService } from '../../services/constants.service';
 import { SymbolModel } from "../../models/symbol.model";
+import { EventService } from '../../services/event.service';
+import { CUSTOM_EVENT_TYPE_ALARM, CUSTOM_EVENT_TYPE_PRICE, CUSTOM_EVENT_TYPE_ALARM_NEW } from '../../../../../shared/constants/constants';
 
 declare let Highcharts: any;
 
@@ -18,12 +20,16 @@ const DEFAULT_GRAPHTYPE = 'ohlc';
 	styleUrls: [
 		'./chart-box.component.scss'
 	],
-	encapsulation: ViewEncapsulation.None,
+	// encapsulation: ViewEncapsulation.None,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 
-export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
+export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
+	static PLOTLINE_TYPE_DEFAULT = 0;
+	static PLOTLINE_TYPE_NEW_ALARM = 1;
+	static PLOTLINE_TYPE_ALARM = 2;
+	static PLOTLINE_TYPE_PRICE = 100;
 
 	@Input() symbolModel: SymbolModel;
 
@@ -42,8 +48,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	private _data = {
 		candles: [],
 		volume: [],
-		indicators: [],
-		orders: []
+		indicators: []
 	};
 
 	private minimized = false;
@@ -60,6 +65,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	private _changeSubscription;
 	private _priceSubscription;
 	private _orderSubscription;
+	private _labelEl: any;
 
 	public static readonly DEFAULT_CHUNK_LENGTH = 500;
 
@@ -67,7 +73,10 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		public constantsService: ConstantsService,
 		private _zone: NgZone,
 		private _cacheService: CacheService,
-		private _elementRef: ElementRef) { }
+		private _eventService: EventService,
+		private _elementRef: ElementRef) {
+		this._buildLabelEl();
+	}
 
 	ngOnChanges(changes: SimpleChanges) {
 		if (this._changeSubscription && this._changeSubscription.unsubscribe)
@@ -76,21 +85,14 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		if (changes.symbolModel && changes.symbolModel.currentValue) {
 
 			this._changeSubscription = this._cacheService.changed$.subscribe(symbols => {
-				if (this.symbolModel && symbols.includes(this.symbolModel.options.name)) {
+				if (this.symbolModel && symbols.includes(this.symbolModel.options.name))
 					this._onPriceChange(false);
-					this._updateCurrentPricePlot();
-				}
 			});
 
-			this._destroyChart();
 			this.init();
 		} else {
 			this._destroyChart();
 		}
-	}
-
-	ngOnInit() {
-
 	}
 
 	ngAfterViewInit() {
@@ -105,19 +107,10 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 			return;
 
 		this._fetchCandles();
-
-		if (!this._chart)
-			this._createChart();
-
-		// this._chart.series[0].name = this.symbolModel.options.displayName;
+		this._createChart();
 	}
 
-	public removePlotLine(id, render: boolean = false) {
-		if (this._chart)
-			this._chart.yAxis[0].removePlotLine(id, render, false);
-	}
-
-	public updateChartAlarmPlotLine(value, id: string, render: boolean = true) {
+	public updatePlotLine(id: string, value: number, type: number, render: boolean = false) {
 		if (!this._chart)
 			return;
 
@@ -127,26 +120,65 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 			if (!value)
 				return;
 
-			const price = this._priceToFixed(this.symbolModel.options.bid);
+			const price = this._cacheService.priceToFixed(this.symbolModel.options.bid, this.symbolModel);
+			const labelEl = this._labelEl;
 
 			const options = {
 				id: id,
 				color: 'yellow',
 				// color: '#FF0000',
-				width: 2,
+				width: 1,
 				dashStyle: 'solid',
 				value: value,
+				textAlign: 'left',
 				label: {
-					text: '<div class="plot-label plot-label-alarm">' + value + '</div>',
+					text: '',
+					// text: '<div class="plot-label plot-label-alarm"><span style="background: red !important;">' + value + '</span></div>',
 					useHTML: true,
 					align: 'right',
-					x: (6 * price.toString().length),
-					y: 4
+					textAlign: 'left',
+					y: 6,
+					x: 2
 				}
 			};
 
+			labelEl.children[1].innerText = value;
+
+			switch (type) {
+				case CUSTOM_EVENT_TYPE_ALARM:
+					labelEl.children[0].style.borderRightColor = 'yellow';
+					labelEl.children[1].style.background = 'yellow';
+					labelEl.children[0].style.zIndex = labelEl.children[1].style.zIndex = 1;
+					options.color = 'yellow';
+					options.dashStyle = 'dashed';
+					break;
+				case CUSTOM_EVENT_TYPE_ALARM_NEW:
+					labelEl.children[0].style.borderRightColor = 'orange';
+					labelEl.children[1].style.background = 'orange';
+					labelEl.children[0].style.zIndex = labelEl.children[1].style.zIndex = 11;
+					options.color = 'orange';
+					options.dashStyle = 'solid';
+					options.width = 2;
+					break;
+				case CUSTOM_EVENT_TYPE_PRICE:
+					labelEl.children[0].style.borderRightColor = '#67C8FF';
+					labelEl.children[1].style.background = '#67C8FF';
+					labelEl.children[0].style.zIndex = labelEl.children[1].style.zIndex = 10;
+					options.color = '#67C8FF';
+					options.dashStyle = 'dot';
+					break
+			}
+
+			options.label.text = labelEl.innerHTML;
+
 			this._chart.yAxis[0].addPlotLine(options, render, false);
 		});
+
+	}
+
+	public removePlotLine(id, render: boolean = false) {
+		if (this._chart)
+			this._chart.yAxis[0].removePlotLine(id, render, false);
 	}
 
 	public setZoom(amount) {
@@ -187,6 +219,9 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	private _createChart() {
 
 		this._zone.runOutsideAngular(() => {
+			if (this._chart)
+				this._destroyChart();
+
 			var self = this;
 
 			// create the chart
@@ -214,7 +249,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 							x: 6,
 							y: 8,
 							formatter: function () {
-								return self._priceToFixed(this.value);
+								return self._cacheService.priceToFixed(this.value, self.symbolModel);
 							}
 						},
 						title: {
@@ -322,6 +357,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 				this._chart.series[1].setData(this._data.volume, false);
 
 				this._updateCurrentPricePlot();
+				this._updateAlarms();
 				this._updateViewPort(0, true);
 			} catch (error) {
 				console.log('error error error', error);
@@ -329,34 +365,31 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		});
 	}
 
-	private _updateCurrentPricePlot(render: boolean = false) {
-		if (!this._chart)
-			return;
+	private _updateAlarms() {
+		this._eventService.events.forEach(event => {
+			if (event.symbol !== this.symbolModel.options.name)
+				return;
 
-		return this._zone.runOutsideAngular(() => {
-			const price = this._priceToFixed(this.symbolModel.options.bid);
-
-			const options = {
-				id: 'cPrice',
-				color: '#67C8FF',
-				// color: '#FF0000',
-				width: 1,
-				dashStyle: 'dot',
-				value: price,
-				label: {
-					text: '<div class="plot-label">' + price + '</div>',
-					useHTML: true,
-					align: 'right',
-					x: (6 * price.toString().length),
-					y: 4
-				}
-			};
-
-			this._chart.yAxis[0].removePlotLine('cPrice', false, false);
-			this._chart.yAxis[0].addPlotLine(options, render, false);
+			switch (event.type) {
+				case CUSTOM_EVENT_TYPE_ALARM:
+					this.updatePlotLine(event._id, event.alarm.price, CUSTOM_EVENT_TYPE_ALARM);
+					break;
+			}
 		});
 	}
 
+	/**
+	 * update current price plotline
+	 * @param render 
+	 */
+	private _updateCurrentPricePlot(render: boolean = false) {
+		this.updatePlotLine('cPrice', this.symbolModel.options.bid, CUSTOM_EVENT_TYPE_PRICE, render);
+	}
+
+	/**
+	 * check how many candlesticks fit into current chart width
+	 * @param checkParent 
+	 */
 	private _calculateViewableBars(checkParent = true) {
 		let el = this._elementRef.nativeElement,
 			barW = 6 * this.zoom;
@@ -364,11 +397,21 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		return Math.floor(el.clientWidth / barW);
 	}
 
+	/**
+	 * execute on price changes
+	 * @param render 
+	 */
 	private _onPriceChange(render: boolean = false) {
-		if (this._chart && this._chart.series[0].data.length)
+		if (this._chart && this._chart.series[0].data.length) {
+			this._updateCurrentPricePlot(false);
 			this._chart.series[0].data[this._chart.series[0].data.length - 1].update(this.symbolModel.options.bid, true, true);
+		}
 	}
 
+	/**
+	 * execute on scroll
+	 * @param event 
+	 */
 	private _onScroll(event: MouseWheelEvent): boolean {
 		event.stopPropagation();
 		event.preventDefault();
@@ -385,15 +428,13 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		return false;
 	}
 
-	private _priceToFixed(number: Number): string {
-		if (!number)
-			return '';
-
-		if (this.symbolModel.options.precision > 0)
-			return number.toFixed(this.symbolModel.options.precision || 4);
-
-		let n = Math.min(Math.max(number.toString().length, 2), 6);
-		return number.toFixed(Math.max(number.toString().length, 4));
+	private _buildLabelEl() {
+		const labelHTML = `
+				<div style="position: absolute; left: 0; float: left; width: 0; height: 0; border-top: 6px solid transparent; border-bottom: 6px solid transparent; border-right: 6px solid blue;"></div>
+				<span style="position: absolute; left: 6px; color: black; font-size: 10px; padding-right: 2px;"></span>
+		`
+		this._labelEl = document.createElement('div');
+		this._labelEl.innerHTML = labelHTML;
 	}
 
 	private _clearData(render: boolean = false) {
@@ -413,8 +454,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 		this._data = {
 			candles: [],
 			volume: [],
-			indicators: [],
-			orders: []
+			indicators: []
 		};
 
 		this._chart = null;
@@ -456,16 +496,10 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 			this._orderSubscription.unsubscribe();
 
 		this._destroyChart();
-
-		this._data = {
-			candles: [],
-			volume: [],
-			indicators: [],
-			orders: []
-		};
 	}
 
 	async ngOnDestroy() {
+		this._labelEl = null;
 		this.chartRef.nativeElement.removeEventListener('mousewheel', <any>this._onScrollBounced);
 
 		this._destroy();

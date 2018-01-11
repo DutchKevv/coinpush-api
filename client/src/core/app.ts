@@ -7,18 +7,13 @@ import { NotificationHelper } from "./helpers/classes/notification.helper";
 export class App extends MicroEvent {
 
     public platform = window['platform'];
-    public user: any = {
-        name: 'Anonymous',
-        img: './assets/image/default-profile.jpg'
-    }
-
-    public symbols: Array<any> = [];
-    public notificationsData: any = {};
     public address;
     public storage = new StorageHelper();
     public notification = new NotificationHelper();
     public helpers = generalHelpers;
 
+    public user;
+    public data: any = {};
     public isReady = false;
     public angularReady = false;
     public angularReady$ = Promise.resolve();
@@ -32,6 +27,10 @@ export class App extends MicroEvent {
 
         await this._loadStoredUser();
         await this._loadData()
+
+        // set initial unread notification badge count
+        if (this.data.notifications)
+            this.notification.updateBadgeCounter(parseInt(this.data.notifications.unreadCount, 10));
 
         this.isReady = true;
         this.emit('ready', true);
@@ -75,26 +74,18 @@ export class App extends MicroEvent {
         headers.append('cache-control', 'no-cache');
         headers.append('Accept', 'application/json');
 
-        if (this.user.token)
+        if (this.user)
             headers.append('Authorization', 'Bearer ' + this.user.token);
 
-        const fetchOptions: any = {
-            headers
-        };
-
-        const data = await fetch(this.address.apiUrl + 'authenticate', fetchOptions).then(res => res.json());
-
-        if (data.user)
-            this.user = data.user;
-
-        if (data.notifications)
-            this.notificationsData = data.notifications;
-
-        this.symbols = data.symbols;
+        this.data = await fetch(this.address.apiUrl + 'authenticate', { headers }).then(res => res.json());
+        if (this.data.user) {
+            this.user = this.data.user;
+            delete this.data.user;
+        }   
     }
 
-    public async updateStoredUser() {
-        await this.storage.set('current-user', this.user);
+    public async updateStoredUser(): Promise<void> {
+        // await this.storage.set('current-user', this.user);
     }
 
     public async removeStoredUser(): Promise<void> {
@@ -108,10 +99,8 @@ export class App extends MicroEvent {
             this.user = user
     }
 
-    public async initNotifications() {
-        // only load when user is loggedin
-        if (this.user._id)
-            await this.notification.init();
+    public initNotifications(): Promise<void> {
+        return this.notification.init();
     }
 }
 

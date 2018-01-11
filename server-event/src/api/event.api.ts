@@ -4,6 +4,9 @@ import { app } from '../app';
 
 const router = Router();
 
+/**
+ * single
+ */
 router.get('/:id', async (req, res, next) => {
 	try {
 		// res.send(await eventController.findMany(req.user, req.req.query));
@@ -12,15 +15,21 @@ router.get('/:id', async (req, res, next) => {
 	}
 });
 
+/**
+ * list
+ */
 router.get('/', async (req, res, next) => {
 	try {
-		console.log('asdfasfasdfsdfasdfasdfasfsffdsf', req.query);
+		console.log(await eventController.findMany(req.user, req.query));
 		res.send(await eventController.findMany(req.user, req.query));
 	} catch (error) {
 		next(error);
 	}
 });
 
+/**
+ * create
+ */
 router.post('/', async (req, res, next) => {
 	try {
 		res.send(await eventController.create(req.user, req.body));
@@ -29,6 +38,9 @@ router.post('/', async (req, res, next) => {
 	}
 });
 
+/**
+ * update
+ */
 router.put('/', (req, res, next) => {
 	try {
 		
@@ -37,6 +49,9 @@ router.put('/', (req, res, next) => {
 	}
 });
 
+/**
+ * delete
+ */
 router.delete('/:id', async (req, res, next) => {
 	try {
 		res.send(await eventController.remove(req.user, req.params.id));

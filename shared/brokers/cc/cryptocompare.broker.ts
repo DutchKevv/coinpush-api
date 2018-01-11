@@ -189,7 +189,8 @@ export default class CyrptoCompareApi extends EventEmitter {
                 candles[startIndex + 6] = candle.low;
                 candles[startIndex + 7] = candle.close;
                 candles[startIndex + 8] = candle.close;
-                candles[startIndex + 9] = Math.ceil(candle.volumeto - candle.volumefrom);
+                candles[startIndex + 9] = Math.ceil(Math.abs(candle.volumeto - candle.volumefrom)); // TODO: can't be right but places BTC -> ETC -> LTC nice in order for some reason..
+                // candles[startIndex + 9] = Math.ceil(Math.abs(candle.volumeto - candle.volumefrom));
             });
 
             await onData(candles);

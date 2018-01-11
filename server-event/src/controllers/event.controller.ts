@@ -21,15 +21,12 @@ export const eventController = {
 			createDate: 1,
 			symbol: 1,
 			alarm: 1,
-			type: 1
+			type: 1,
+			triggeredDate: 1
 		};
 
 		if (typeof params.symbol === 'string')
 			opt.symbol = params.symbol.toUpperCase();
-
-		if (params.history) {
-			fields.triggeredDate = 1;
-		}
 
 		return Event.find(opt, fields).sort({ [params.history ? 'triggeredDate' : '_id']: -1 }).lean();
 	},

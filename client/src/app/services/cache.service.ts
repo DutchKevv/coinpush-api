@@ -91,8 +91,8 @@ export class CacheService {
 	private _updateSymbols() {
 
 		this._zone.runOutsideAngular(() => {
-			for (let key in app.symbols) {
-				const symbol = JSON.parse(app.symbols[key]);
+			for (let key in app.data.symbols) {
+				const symbol = JSON.parse(app.data.symbols[key]);
 
 				const storedSymbol = this.getSymbolByName(symbol.name);
 
@@ -108,6 +108,8 @@ export class CacheService {
 					this.symbols.push(symbolModel);
 				}
 			}
+
+			delete app.data.symbols;
 		});
 	}
 

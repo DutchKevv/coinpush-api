@@ -65,12 +65,25 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 		}
 	}
 
-	public onMouseDownNumberInput(dir) {
-		this.updateSideMenuNumberInput(dir, true);
+	public onMouseDownNumberInput(event, dir: number) {
+		if (event) {
+			event.preventDefault();
+			event.stopPropagation();
+		}
+
+		// ensure touchstart and mousedown don't both trigger
+		if (!this._mouseDownTimeout)
+			this.updateSideMenuNumberInput(dir, true);
 	}
 
-	public onMouseUpNumberInput() {
+	public onMouseUpNumberInput(event) {
+		if (event) {
+			event.preventDefault();
+			event.stopPropagation();
+		}
+
 		clearTimeout(this._mouseDownTimeout);
+		this._mouseDownTimeout = null;
 	}
 
 	public onChangeInputValue() {
@@ -99,9 +112,10 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 
 	public updateSideMenuNumberInput(dir: number, setRepeat: boolean = false, repeatTime: number = 1000) {
 		clearTimeout(this._mouseDownTimeout);
+		this._mouseDownTimeout = null;
 
 		let newValue = this.formModel.amount || this.symbol.options.bid;
-		let inc = this.symbol.options.bid / 700
+		let inc = this.symbol.options.bid / 800
 
 		if (dir > 0)
 			newValue += inc;

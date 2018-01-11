@@ -15,7 +15,7 @@ import { ConstantsService } from '../../services/constants.service';
 import { UserService } from '../../services/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CacheService } from '../../services/cache.service';
-import { SYMBOL_CAT_TYPE_FOREX, SYMBOL_CAT_TYPE_RESOURCE, SYMBOL_CAT_TYPE_CRYPTO, CUSTOM_EVENT_TYPE_ALARM, ALARM_TRIGGER_DIRECTION_DOWN, ALARM_TRIGGER_DIRECTION_UP, BROKER_GENERAL_TYPE_OANDA, BROKER_GENERAL_TYPE_CC } from "../../../../../shared/constants/constants";
+import { SYMBOL_CAT_TYPE_FOREX, SYMBOL_CAT_TYPE_RESOURCE, SYMBOL_CAT_TYPE_CRYPTO, CUSTOM_EVENT_TYPE_ALARM, ALARM_TRIGGER_DIRECTION_DOWN, ALARM_TRIGGER_DIRECTION_UP, BROKER_GENERAL_TYPE_OANDA, BROKER_GENERAL_TYPE_CC, CUSTOM_EVENT_TYPE_ALARM_NEW } from "../../../../../shared/constants/constants";
 import { NgForm } from '@angular/forms';
 import { app } from '../../../core/app';
 
@@ -31,6 +31,8 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 	@ViewChild('filter') filterRef: ElementRef;
 	@ViewChild('chart') chartRef: ElementRef;
 
+	public CUSTOM_EVENT_TYPE_ALARM_NEW = CUSTOM_EVENT_TYPE_ALARM_NEW;
+	
 	public activeSymbol: SymbolModel;
 	public symbols = [];
 	public defaultActiveFilter: string = 'all popular';
