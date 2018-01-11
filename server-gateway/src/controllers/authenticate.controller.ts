@@ -14,7 +14,7 @@ const config = require('../../../tradejs.config');
 
 export const authenticateController = {
 
-	async authenticate(reqUser: IReqUser, params: { email?: string, password?: string, token?: string, device?: any }): Promise<any> {
+	async authenticate(reqUser: IReqUser, params: { email?: string, password?: string, token?: string, device?: any}, options: {profile?: boolean} = {}): Promise<any> {
 		if (params.token) {
 			if (reqUser.id && reqUser.id !== params.token)
 				throw new Error('header token and param token do not match');
@@ -24,7 +24,7 @@ export const authenticateController = {
 
 		let user: IUser;
 		let userData: any = [];
-		
+
 		const results = await Promise.all([
 			symbolController.getPublicList(),
 			(async () => {
@@ -42,11 +42,11 @@ export const authenticateController = {
 						json: true
 					});
 					console.log(user);
-					if (user && user._id) {
+					if (options.profile && user && user._id) {
 						// get unread notification counter and active events (alarms) 
 						userData = await Promise.all([
-							notifyController.getUnreadCount({id: user._id}),
-							eventController.findMany({id: user._id})
+							notifyController.getUnreadCount({ id: user._id }),
+							eventController.findMany({ id: user._id })
 						]);
 					}
 				}

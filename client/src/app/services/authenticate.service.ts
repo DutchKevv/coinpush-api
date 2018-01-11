@@ -56,12 +56,11 @@ export class AuthenticationService {
 		const postData = {
 			email,
 			password,
-			token,
-			profile
+			token
 		};
 
 		try {
-			const result = await this._http.post('/authenticate', postData).map((r: Response) => r.json()).toPromise();
+			const result = await this._http.post('/authenticate', postData, {params: {profile: 0}}).map((r: Response) => r.json()).toPromise();
 
 			if (!result.user || !result.user.token) {
 				return false;

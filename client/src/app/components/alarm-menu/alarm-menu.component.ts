@@ -24,7 +24,7 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 	@Output() inputValueChange: BehaviorSubject<number> = new BehaviorSubject(null);
 	@Output() onDestroy: EventEmitter<boolean> = new EventEmitter;
 
-	public activeEvents$;
+	public activeEvents = [];
 	public historyEvents$;
 
 	public activeTab = 'new';
@@ -46,6 +46,7 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 		private _changeDetectorRef: ChangeDetectorRef,
 		private _changeRef: ChangeDetectorRef,
 		private _route: ActivatedRoute) {
+			this.activeEvents = this._eventService.events.filter(event => event.symbol === this.symbol.options.name);
 		// this._changeDetectorRef.detach();
 	}
 
@@ -56,7 +57,6 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 			if (this.symbol) {
 				this.formModel.amount = parseFloat(this._cacheService.priceToFixed(this._toMinimumDuff(this.symbol.options.bid, 1), this.symbol));
 
-				this.activeEvents$ = this._eventService.findBySymbol(this.symbol.options.name, 0, 50);
 				this.historyEvents$ = this._eventService.findBySymbol(this.symbol.options.name, 0, 50, true);
 			}
 
@@ -149,9 +149,6 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 	}
 
 	private _unsubscribe() {
-		if (this.activeEvents$ && this.activeEvents$.unsubscribe)
-			this.activeEvents$.unsubscribe();
-
 		if (this.historyEvents$ && this.historyEvents$.unsubscribe)
 			this.historyEvents$.unsubscribe();
 	}

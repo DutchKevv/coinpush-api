@@ -77,15 +77,16 @@ export class App extends MicroEvent {
         if (this.user)
             headers.append('Authorization', 'Bearer ' + this.user.token);
 
-        this.data = await fetch(this.address.apiUrl + 'authenticate', { headers }).then(res => res.json());
+        this.data = await fetch(this.address.apiUrl + 'authenticate?profile=true', { headers }).then(res => res.json());
         if (this.data.user) {
             this.user = this.data.user;
             delete this.data.user;
-        }   
+        }
     }
 
-    public async updateStoredUser(): Promise<void> {
-        // await this.storage.set('current-user', this.user);
+    public async updateStoredUser(user = this.user): Promise<void> {
+        this.user = user;
+        await this.storage.set('current-user', user);
     }
 
     public async removeStoredUser(): Promise<void> {

@@ -32,7 +32,7 @@ router.post('/request-password-reset', async (req, res, next) => {
  */
 router.post('/', async (req, res, next) => {
 	try {
-		res.send(await authenticateController.authenticate(req.user, req.body));
+		res.send(await authenticateController.authenticate(req.user, req.body, req.query));
 	} catch (error) {
 		next(error);
 	}

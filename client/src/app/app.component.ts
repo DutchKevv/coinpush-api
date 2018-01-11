@@ -113,7 +113,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 	ngOnInit() {
 
 		this._routerEventsSub = this.router.events.subscribe((val) => {
-			if (val instanceof NavigationStart) {
+			if (val instanceof NavigationEnd) {
 				this.searchOpen = false;
 				this.filterClick$.emit(false);
 			}
