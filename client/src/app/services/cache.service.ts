@@ -55,15 +55,16 @@ export class CacheService {
 		})
 	}
 
-	public priceToFixed(number: number | string, symbol: SymbolModel) {
+	/**
+	 * ensure number is x digits long
+	 * @param number 
+	 * @param symbol 
+	 */
+	public priceToFixed(number: number | string, symbol: SymbolModel): string {
 		if (typeof number === 'string')
 			number = parseFloat(number);
-
-		if (symbol.options.precision > 0)
-			return number.toFixed(symbol.options.precision + 1 || 4);
-
-		let n = Math.max(Math.min(number.toString().length, 2), 6);
-		return number.toFixed(n);
+		
+		return number.toPrecision(8);
 	}
 
 	public unload() {

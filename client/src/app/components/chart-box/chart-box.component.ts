@@ -138,12 +138,12 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 					useHTML: true,
 					align: 'right',
 					textAlign: 'left',
-					y: 5,
+					y: 4,
 					x: 2
 				}
 			};
 
-			labelEl.children[1].innerText = value;
+			labelEl.children[1].innerText = this._cacheService.priceToFixed(value, this.symbolModel);
 
 			switch (type) {
 				case CUSTOM_EVENT_TYPE_ALARM:
@@ -453,8 +453,8 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 
 	private _buildLabelEl() {
 		const labelHTML = `
-				<div style="position: absolute; left: 0; float: left; width: 0; height: 0; border-top: 6px solid transparent; border-bottom: 6px solid transparent; border-right: 6px solid blue;"></div>
-				<span style="position: absolute; left: 6px; color: black; font-size: 10px; padding-right: 2px;"></span>
+				<div style="position: absolute; left: 0; float: left; width: 0; height: 0; border-top: 7px solid transparent; border-bottom: 7px solid transparent; border-right: 7px solid blue;"></div>
+				<span style="position: absolute; left: 7px; color: black; font-size: 12px; padding-right: 2px;"></span>
 		`
 		this._labelEl = document.createElement('div');
 		this._labelEl.innerHTML = labelHTML;
