@@ -122,7 +122,6 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 			if (!value)
 				return;
 
-			const price = this._cacheService.priceToFixed(this.symbolModel.options.bid, this.symbolModel);
 			const labelEl = this._labelEl;
 
 			const options = {
@@ -161,6 +160,13 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 					options.color = 'orange';
 					options.dashStyle = 'solid';
 					options.width = 2;
+
+					if (this._chart.yAxis[0].max < value) {
+						this._chart.yAxis[0].update({max: value, min: null}, true); 
+					}
+					if (this._chart.yAxis[0].min > value) {
+						this._chart.yAxis[0].update({min:  value, max: null}, true); 
+					}	
 					break;
 				case CUSTOM_EVENT_TYPE_PRICE:
 					labelEl.children[0].style.borderRightColor = '#67C8FF';

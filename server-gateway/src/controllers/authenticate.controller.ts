@@ -41,7 +41,7 @@ export const authenticateController = {
 						body: params,
 						json: true
 					});
-					console.log(user);
+
 					if (options.profile && user && user._id) {
 						// get unread notification counter and active events (alarms) 
 						userData = await Promise.all([

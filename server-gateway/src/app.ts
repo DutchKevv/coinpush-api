@@ -98,12 +98,8 @@ const getToken = function (req) {
 app.use(expressJwt({ secret: config.token.secret, getToken }).unless((req) => {
 	return (
 		(/\.(gif|jpg|jpeg|tiff|png|ico)$/i).test(req.originalUrl) ||
-		// req.originalUrl === '/' ||
-		// req.originalUrl.startsWith('/ws/') ||
-		// req.originalUrl.startsWith('/assets/') ||
-		// req.originalUrl.startsWith('/api/v1/symbols') ||
 		req.method === 'GET' ||
-		(req.originalUrl.startsWith('/api/v1/authenticate') && (['POST', 'PUT', 'OPTIONS'].includes(req.method) && !req.headers.authorization)) ||
+		req.originalUrl.startsWith('/api/v1/authenticate')
 		// req.originalUrl === '/api/v1/authenticate/request-password-reset' ||
 		(req.originalUrl === '/api/v1/user' && (req.method === 'POST' || req.method === 'OPTIONS'))
 	);

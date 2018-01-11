@@ -9,7 +9,7 @@ const router = Router();
  */
 router.get('/', async (req, res, next) => {
 	try {
-		res.send(await authenticateController.authenticate(req.user, req.query));
+		res.send(await authenticateController.authenticate(req.user, {}, req.query));
 	} catch (error) {
 		next(error);
 	}

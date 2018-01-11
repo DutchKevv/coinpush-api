@@ -135,6 +135,9 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 	}
 
 	private _toMinimumDuff(value: number, dir): number {
+		if (value < 0)
+			return 0;
+			
 		const percDiff = (value / this.symbol.options.bid * 100) - 100;
 
 		if (value >= this.symbol.options.bid && percDiff < 1) {

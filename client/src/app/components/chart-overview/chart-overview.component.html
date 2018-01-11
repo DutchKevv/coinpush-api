@@ -58,7 +58,7 @@
     </div>
 
     <app-alarm-menu #alarmMenu *ngIf="activeMenu === 'alarm' && activeSymbol" class="side-menu" [symbol]="activeSymbol" [ngClass]="{'open': activeMenu !== null}"
-        (onDestroy)="onDestroyTriggerMenu(); chart.removePlotLine('new-alarm')" (inputValueChange)="chart.updatePlotLine('new-alarm', $event, CUSTOM_EVENT_TYPE_ALARM_NEW)"></app-alarm-menu>
+        (onDestroy)="onDestroyTriggerMenu(); chart.removePlotLine('new-alarm')" (inputValueChange)="chart.updatePlotLine('new-alarm', $event, CUSTOM_EVENT_TYPE_ALARM_NEW, true)"></app-alarm-menu>
 </div>
 
 <app-chart-box #chart [symbolModel]="activeSymbol" class="hidden" [ngClass]="{hidden: !activeSymbol}"></app-chart-box>
