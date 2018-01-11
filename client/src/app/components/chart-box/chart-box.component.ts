@@ -288,6 +288,12 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 						cropThreshold: 0
 					},
 					{
+						type: 'column',
+						name: 'Volume',
+						data: this._data.volume,
+						yAxis: 1
+					},
+					{
 						type: 'ema',
 						linkedTo: SERIES_MAIN_NAME,
 						params: {
@@ -297,13 +303,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 					{
 						type: 'bb',
 						linkedTo: SERIES_MAIN_NAME
-					},
-					{
-						type: 'column',
-						name: 'Volume',
-						data: this._data.volume,
-						yAxis: 1
-					},
+					}
 				]
 			}, false);
 		});

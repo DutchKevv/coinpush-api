@@ -20,7 +20,6 @@ router.get('/:id', async (req, res, next) => {
  */
 router.get('/', async (req, res, next) => {
 	try {
-		console.log(await eventController.findMany(req.user, req.query));
 		res.send(await eventController.findMany(req.user, req.query));
 	} catch (error) {
 		next(error);
