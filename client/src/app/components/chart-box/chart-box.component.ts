@@ -11,8 +11,9 @@ import { CUSTOM_EVENT_TYPE_ALARM, CUSTOM_EVENT_TYPE_PRICE, CUSTOM_EVENT_TYPE_ALA
 
 declare let Highcharts: any;
 
-const SERIES_MAIN_NAME = 'main-series';
-const DEFAULT_GRAPHTYPE = 'ohlc';
+const SERIES_MAIN_NAME = 'main';
+const SERIES_VOLUME_NAME = 'volume';
+const DEFAULT_GRAPHTYPE = 'line';
 
 @Component({
 	selector: 'app-chart-box',
@@ -86,7 +87,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 
 			this._changeSubscription = this._cacheService.changed$.subscribe(symbols => {
 				if (this.symbolModel && symbols.includes(this.symbolModel.options.name))
-					this._onPriceChange(false);
+					this._onPriceChange(true);
 			});
 
 			this.init();
@@ -108,6 +109,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 
 		this._fetchCandles();
 		this._createChart();
+		this._onPriceChange(false); // aligns last pricess
 	}
 
 	public updatePlotLine(id: string, value: number, type: number, render: boolean = false) {
@@ -137,7 +139,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 					useHTML: true,
 					align: 'right',
 					textAlign: 'left',
-					y: 6,
+					y: 5,
 					x: 2
 				}
 			};
@@ -150,7 +152,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 					labelEl.children[1].style.background = 'yellow';
 					labelEl.children[0].style.zIndex = labelEl.children[1].style.zIndex = 1;
 					options.color = 'yellow';
-					options.dashStyle = 'dashed';
+					options.dashStyle = 'dash';
 					break;
 				case CUSTOM_EVENT_TYPE_ALARM_NEW:
 					labelEl.children[0].style.borderRightColor = 'orange';
@@ -190,15 +192,17 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 		if (!this._chart)
 			return;
 
-		if (type === 'line') {
-			this._chart.series[0].setData(this._data.candles.map(candle => [candle[0], candle[1]]), false);
-		} else if (this.graphType === 'line') {
-			this._chart.series[0].setData(this._data.candles, false);
-		}
+		// this._chart.series[0].update({ type }, false, false);
+
+		// if (type === 'line') {
+		// 	this._chart.series[0].setData(this._data.candles.map(candle => [candle[0], candle[1]]), true);
+		// } else if (this.graphType === 'line') {
+		// 	this._chart.series[0].setData(this._data.candles, true);
+		// }
 
 		this.graphType = type;
 
-		this._chart.series[0].update({ type }, true, true);
+		this.init();
 	}
 
 	public toggleTimeFrame(timeFrame: string) {
@@ -289,7 +293,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 					},
 					{
 						type: 'column',
-						name: 'Volume',
+						name: SERIES_VOLUME_NAME,
 						data: this._data.volume,
 						yAxis: 1
 					},
@@ -404,7 +408,20 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	private _onPriceChange(render: boolean = false) {
 		if (this._chart && this._chart.series[0].data.length) {
 			this._updateCurrentPricePlot(false);
-			this._chart.series[0].data[this._chart.series[0].data.length - 1].update(this.symbolModel.options.bid, true, true);
+
+			const lastPoint = this._chart.series[0].data[this._chart.series[0].data.length - 1];
+			if (lastPoint.clientX === null)
+				return;
+				
+			if (this.graphType === 'line') {
+				this._chart.series[0].data[this._chart.series[0].data.length - 1].update({
+					y: this.symbolModel.options.bid
+				}, render, false);
+			} else {
+				this._chart.series[0].data[this._chart.series[0].data.length - 1].update({
+					close: this.symbolModel.options.bid
+				}, render, false);
+			}
 		}
 	}
 
