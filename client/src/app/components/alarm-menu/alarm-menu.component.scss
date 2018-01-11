@@ -29,6 +29,8 @@ sup {
 :host {
     display: none;
     overflow-y: auto;
+    background: black;
+    // background: $background-light;
 
     &.open {
         display: flex;
@@ -38,7 +40,6 @@ sup {
         right: 0;
         top: 0;
         bottom: 50%;
-        background: black;
     }
 
     @media only screen and (min-width : 992px) { 

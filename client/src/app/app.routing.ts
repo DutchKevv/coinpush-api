@@ -19,7 +19,7 @@ const routes: Routes = [
 	{ path: 'user', component: UserOverviewComponent, canActivate: [AuthGuard] },
 	{ path: 'calendar', component: EventOverviewComponent, canActivate: [AuthGuard] },
 	{
-		path: 'user/:id', component: ProfileComponent, children:
+		path: 'user/:id', component: ProfileComponent, canActivate: [AuthGuard], children:
 			[
 				{ path: '', redirectTo: 'feed', pathMatch: 'full' },
 				{ path: 'feed', component: SocialFeedComponent }

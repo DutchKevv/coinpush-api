@@ -49,9 +49,9 @@ export class ProfileComponent implements OnInit {
 	}
 
 	private async _loadUser(userId: string) {
-		this.user = await this.userService.findById(userId, { followers: 5, copiers: 5 });
-		this.isSelf = userId === this.userService.model.options._id;
-		this._changeRef.detectChanges();
+		// this.user = await this.userService.findById(userId, { followers: 5, copiers: 5 });
+		// this.isSelf = userId === this.userService.model.options._id;
+		// this._changeRef.detectChanges();
 	}
 
 	ngOnDestroy() {

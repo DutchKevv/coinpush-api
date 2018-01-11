@@ -1,11 +1,42 @@
 import { Injectable } from '@angular/core';
-import { CanActivate } from '@angular/router';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, CanActivateChild } from '@angular/router';
+import { UserService } from '../services/user.service';
+import { AuthenticationService } from '../services/authenticate.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
 
-	async canActivate(): Promise<boolean> {
-		
-		return true;
+	constructor(
+		private _userService: UserService,
+		private _authenticationService: AuthenticationService
+	) {
+
 	}
+
+	async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+		switch (state.url) {
+			case '/settings':
+			case '/user/undefined/feed':
+				if (!this._userService.model.options._id) {
+					this._authenticationService.showLoginRegisterPopup();
+					return false;
+				}
+			default:
+				return true;
+		}
+
+	}
+
+	// async canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+	// 	console.log(state);//'candidates'
+	// 	switch (state.url) {
+	// 		case '/settings':
+	// 			if (!this._userService.model.options._id) {
+	// 				this._authenticationService.showLoginRegisterPopup();
+	// 				return false;
+	// 			}
+	// 	}
+	// 	console.log(state);//'candidates'
+	// 	return true;
+	// }
 }

@@ -61,7 +61,7 @@ export class ChartBoxComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
 	private _priceSubscription;
 	private _orderSubscription;
 
-	public static readonly DEFAULT_CHUNK_LENGTH = 300;
+	public static readonly DEFAULT_CHUNK_LENGTH = 500;
 
 	constructor(
 		public constantsService: ConstantsService,
