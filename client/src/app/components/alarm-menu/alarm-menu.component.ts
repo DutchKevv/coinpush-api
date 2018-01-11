@@ -46,7 +46,6 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 		private _changeDetectorRef: ChangeDetectorRef,
 		private _changeRef: ChangeDetectorRef,
 		private _route: ActivatedRoute) {
-			this.activeEvents = this._eventService.events.filter(event => event.symbol === this.symbol.options.name);
 		// this._changeDetectorRef.detach();
 	}
 
@@ -58,6 +57,7 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 				this.formModel.amount = parseFloat(this._cacheService.priceToFixed(this._toMinimumDuff(this.symbol.options.bid, 1), this.symbol));
 
 				this.historyEvents$ = this._eventService.findBySymbol(this.symbol.options.name, 0, 50, true);
+				this.activeEvents = this._eventService.events.filter(event => event.symbol === this.symbol.options.name);
 			}
 
 			this.onChangeInputValue();
@@ -137,7 +137,7 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 	private _toMinimumDuff(value: number, dir): number {
 		if (value < 0)
 			return 0;
-			
+
 		const percDiff = (value / this.symbol.options.bid * 100) - 100;
 
 		if (value >= this.symbol.options.bid && percDiff < 1) {

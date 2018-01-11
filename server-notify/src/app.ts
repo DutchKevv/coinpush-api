@@ -19,7 +19,7 @@ mongoose.connection.on('error', console.error.bind(console, 'connection error:')
 mongoose.connection.once('open', function () {
 	console.log('DB connected');
 });
-mongoose.connect(config.server.notify.connectionString, { useMongoClient: true });
+mongoose.connect(config.server.notify.connectionString);
 
 /**
  * express
