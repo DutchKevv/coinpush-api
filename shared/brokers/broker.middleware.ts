@@ -32,7 +32,7 @@ export class BrokerMiddleware extends EventEmitter {
 
     public async getSymbols(): Promise<Array<any>> {
         const results = await Promise.all([this._brokers.oanda.getSymbols(), this._brokers.cc.getSymbols()]);
-
+        
         const sorted = [].concat(...results).sort((a, b) => {
             return a.displayName.localeCompare(b.displayName);
         });
@@ -63,7 +63,7 @@ export class BrokerMiddleware extends EventEmitter {
 
         prices.forEach(priceObj => {
             const symbol = this.symbols.find(symbol => symbol.name === priceObj.instrument);
-            
+
             if (symbol)
                 symbol.bid = priceObj.bid;
             else
@@ -103,16 +103,20 @@ export class BrokerMiddleware extends EventEmitter {
         throw new Error('UNKOWN BROKER: ' + JSON.stringify(symbol, null, 2));
     }
 
-    public openTickStream(symbols: Array<string>): void {
+    public openTickStream(symbols: Array<string> = this.symbols, brokerNames: Array<string> = []): void {
         const brokers = this.splitSymbolsToBrokers(symbols);
 
-        this._brokers.oanda.on('tick', tick => this.emit('tick', tick));
-        this._brokers.oanda.subscribePriceStream(brokers.oanda);
+        if (!brokerNames.length || brokerNames.indexOf('oanda') > -1) {
+            this._brokers.oanda.on('tick', tick => this.emit('tick', tick));
+            this._brokers.oanda.subscribePriceStream(brokers.oanda);
+            log.info('Cache', 'oanda tick streams active');
+        }
 
-        this._brokers.cc.on('tick', tick => this.emit('tick', tick));
-        this._brokers.cc.subscribePriceStream(brokers.cc);
-
-        log.info('Cache', 'tick streams active');
+        if (!brokerNames.length || brokerNames.indexOf('cc') > -1) {
+            this._brokers.cc.on('tick', tick => this.emit('tick', tick));
+            this._brokers.cc.subscribePriceStream(brokers.cc);
+            log.info('Cache', 'cryptocompare tick streams active');
+        }
     }
 
     public splitSymbolsToBrokers(symbols: Array<string>): { oanda: Array<string>, cc: Array<string> } {
@@ -136,46 +140,6 @@ export class BrokerMiddleware extends EventEmitter {
         }
     }
 
-    private _installBrokerIb() {
-        const ib = new IB({
-            // clientId: 0,
-            // host: '127.0.0.1',
-            port: 7497
-        })
-            .on('error', function (err) {
-                console.error('error --- %s', err.message);
-            })
-            .on('result', function (event, args) {
-                // console.log('%s --- %s', event, JSON.stringify(args));
-            })
-            .once('nextValidId', function (orderId) {
-                // ib.placeOrder(
-                // 	orderId,
-                // 	ib.contract.stock('AAPL'),
-                // 	ib.order.limit('BUY', 1, 0.01)  // safe, unreal value used for demo
-                // );
-                ib.reqScannerParameters();
-                ib.reqOpenOrders();
-                ib.reqHistoricalData(4001, ib.contract.forex('EUR', 'USD'), '20170408 12:00:00', '1 M', '1 day', 'TRADES', 1, 1, false);
-            })
-            .on('scannerParameters', data => {
-                var json = parser.toJson(data, { object: true });
-                fs.writeFileSync('temp.json', JSON.stringify(json.ScanParameterResponse, null, 2));
-            })
-            .on('historicalData', (reqId, data) => {
-                console.log(data);
-                var json = parser.toJson(data, { object: true });
-                fs.writeFileSync('temp.json', JSON.stringify(json.ScanParameterResponse, null, 2));
-            })
-            .once('openOrderEnd', function () {
-                // ib.disconnect();
-            });
-
-        ib.connect().reqIds(1);
-
-        this._brokers.ib = ib;
-    }
-
     private _installBrokerOanda() {
         if (this._brokers.oanda) {
             try {
@@ -188,7 +152,10 @@ export class BrokerMiddleware extends EventEmitter {
         this._brokers.oanda = new OandaApi(config.broker.oanda);
 
         // handle tick stream timeout (the used oanda file does not reconnect for some reason)
-        this._brokers.oanda.on('stream-timeout', () => this._installBrokerOanda());
+        this._brokers.oanda.once('stream-timeout', () => {
+            this._installBrokerOanda();
+            this.openTickStream(this.symbols, ['oanda'])
+        });
 
         this._brokers.oanda.init();
     }

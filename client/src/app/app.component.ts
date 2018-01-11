@@ -123,11 +123,13 @@ export class AppComponent implements OnInit, AfterViewInit {
 	ngAfterViewInit() {
 		// small break before loading ads and receiving for push messages
 		setTimeout(() => {
+			this._cacheService.connect();
+			
 			if (this.userService.model.options._id)
 				app.initNotifications().catch(console.error);
 				
 			app.loadAds();
-		}, 500);
+		}, 300);
 	}
 
 	public onSearchKeyUp(event): void {

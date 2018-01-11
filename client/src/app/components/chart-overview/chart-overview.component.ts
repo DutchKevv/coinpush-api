@@ -32,7 +32,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 	@ViewChild('chart') chartRef: ElementRef;
 
 	public CUSTOM_EVENT_TYPE_ALARM_NEW = CUSTOM_EVENT_TYPE_ALARM_NEW;
-	
+
 	public activeSymbol: SymbolModel;
 	public symbols = [];
 	public defaultActiveFilter: string = 'all popular';
@@ -60,29 +60,27 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 		this._filterSub = this._applicationRef.components[0].instance.filterClick$.subscribe(state => this.toggleFilterNav(null, state));
 		this._priceChangeSub = this.cacheService.changed$.subscribe(changedSymbols => this._onPriceChange(changedSymbols));
 
-		setTimeout(() => {
-			this._routeSub = this._route.queryParams.subscribe(params => {
-				// // if its the same as the current, do nothing
-				if (this.activeSymbol && this.activeSymbol.options.name === params['symbol'])
+		this._routeSub = this._route.queryParams.subscribe(params => {
+			// // if its the same as the current, do nothing
+			if (this.activeSymbol && this.activeSymbol.options.name === params['symbol'])
+				return;
+
+			// only continue if symbol is known (could be old bookmark)
+			if (params['symbol']) {
+				const symbol = this.cacheService.getSymbolByName(params['symbol']);
+				if (!symbol) {
 					return;
-
-				// only continue if symbol is known (could be old bookmark)
-				if (params['symbol']) {
-					const symbol = this.cacheService.getSymbolByName(params['symbol']);
-					if (!symbol) {
-						return;
-					}
-
-					// showing a specific symbol, so no active filter
-					this.toggleActiveFilter('', false);
-
-					// set symbol
-					this.symbols = [symbol];
-					this.setActiveSymbol(null, this.symbols[0]);
-				} else {
-					this.toggleActiveFilter(this.defaultActiveFilter);
 				}
-			});
+
+				// showing a specific symbol, so no active filter
+				this.toggleActiveFilter('', false);
+
+				// set symbol
+				this.symbols = [symbol];
+				this.setActiveSymbol(null, this.symbols[0]);
+			} else {
+				this.toggleActiveFilter(this.defaultActiveFilter);
+			}
 		});
 	}
 

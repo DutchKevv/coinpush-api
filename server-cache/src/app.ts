@@ -53,6 +53,7 @@ export const app = {
 
 		// http / websocket api
 		this._setupApi();
+		
 	},
 
 	_setupApi(): void {

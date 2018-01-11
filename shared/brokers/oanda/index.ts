@@ -113,7 +113,7 @@ export default class OandaApi extends EventEmitter {
 			this._client.getInstruments(this.options.accountId, (err, symbols) => {
 				if (err)
 					return reject(err);
-				
+
 				const normalized = symbols.map(symbol => {
 					const meta = metaData.find(m => m.name === symbol.name);
 				

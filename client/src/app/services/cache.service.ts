@@ -20,7 +20,15 @@ export class CacheService {
 	}
 
 	init() {
-		this._connect();
+		this._socket = io(app.address.host + '://' + app.address.ip + (app.address.port ? ':' + app.address.port : ''), {
+			reconnectionAttempts: 10000, // avoid having user reconnect manually in order to prevent dead clients after a server restart
+			timeout: 10000, // before connect_error and connect_timeout are emitted.
+			transports: ['websocket'],
+			path: '/ws/candles/',
+			secure: true,
+			autoConnect: false
+		});
+
 		this._updateSymbols();
 
 		app.on('symbols-update', () => this._updateSymbols());
@@ -63,30 +71,16 @@ export class CacheService {
 	public priceToFixed(number: number | string, symbol: SymbolModel): string {
 		if (typeof number === 'string')
 			number = parseFloat(number);
-		
+
 		return number.toPrecision(8);
 	}
 
-	public unload() {
-		this._disconnect();
-		// this.symbolList$.next([]);
+	public connect() {
+		this._socket.open();
 	}
 
-	private _connect() {
-
-		this._zone.runOutsideAngular(() => {
-			this._socket = io(app.address.host + '://' + app.address.ip + (app.address.port ? ':' + app.address.port : ''), {
-				reconnectionAttempts: 10000, // avoid having user reconnect manually in order to prevent dead clients after a server restart
-				timeout: 10000, // before connect_error and connect_timeout are emitted.
-				transports: ['websocket'],
-				path: '/ws/candles/',
-				secure: true
-			});
-		});
-	}
-
-	private _disconnect() {
-		// this._socket.destroy();
+	public disconnect() {
+		this._socket.close();
 	}
 
 	private _updateSymbols() {

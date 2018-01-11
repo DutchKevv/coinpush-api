@@ -64,8 +64,6 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	private _onScrollBounced: Function = null;
 	private _mouseActive = true;
 	private _changeSubscription;
-	private _priceSubscription;
-	private _orderSubscription;
 	private _labelEl: any;
 
 	public static readonly DEFAULT_CHUNK_LENGTH = 500;
@@ -84,12 +82,6 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 			this._changeSubscription.unsubscribe();
 
 		if (changes.symbolModel && changes.symbolModel.currentValue) {
-
-			this._changeSubscription = this._cacheService.changed$.subscribe(symbols => {
-				if (this.symbolModel && symbols.includes(this.symbolModel.options.name))
-					this._onPriceChange(true);
-			});
-
 			this.init();
 		} else {
 			this._destroyChart();
@@ -97,6 +89,11 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	}
 
 	ngAfterViewInit() {
+		this._changeSubscription = this._cacheService.changed$.subscribe(symbols => {
+			if (this.symbolModel && symbols.includes(this.symbolModel.options.name))
+				this._onPriceChange(true);
+		});
+
 		this._onScrollBounced = throttle(this._onScroll.bind(this), 33);
 		this.chartRef.nativeElement.addEventListener('mousewheel', <any>this._onScrollBounced);
 	}
@@ -109,7 +106,6 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 
 		this._fetchCandles();
 		this._createChart();
-		this._onPriceChange(false); // aligns last pricess
 	}
 
 	public updatePlotLine(id: string, value: number, type: number, render: boolean = false) {
@@ -162,11 +158,11 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 					options.width = 2;
 
 					if (this._chart.yAxis[0].max < value) {
-						this._chart.yAxis[0].update({max: value, min: null}, true); 
+						this._chart.yAxis[0].update({ max: value, min: null }, true);
 					}
 					if (this._chart.yAxis[0].min > value) {
-						this._chart.yAxis[0].update({min:  value, max: null}, true); 
-					}	
+						this._chart.yAxis[0].update({ min: value, max: null }, true);
+					}
 					break;
 				case CUSTOM_EVENT_TYPE_PRICE:
 					labelEl.children[0].style.borderRightColor = '#67C8FF';
@@ -194,27 +190,19 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 		this._updateViewPort(0, true);
 	}
 
-	public changeGraphType(type) {
+	public changeGraphType(type, render: boolean = true) {
 		if (!this._chart)
 			return;
 
-		// this._chart.series[0].update({ type }, false, false);
-
-		// if (type === 'line') {
-		// 	this._chart.series[0].setData(this._data.candles.map(candle => [candle[0], candle[1]]), true);
-		// } else if (this.graphType === 'line') {
-		// 	this._chart.series[0].setData(this._data.candles, true);
-		// }
-
 		this.graphType = type;
 
-		this.init();
+		this._chart.series[0].update({ type }, render, false);
 	}
 
 	public toggleTimeFrame(timeFrame: string) {
-		this._destroyChart();
 		this.timeFrame = timeFrame;
-		this.init();
+		this._fetchCandles();
+		this._chart.series.forEach(serie => serie.setData([], false));
 	}
 
 	public addIndicator(name: string) {
@@ -351,7 +339,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 
 		this._zone.runOutsideAngular(async () => {
 			try {
-				let data: any = this._prepareData(await this._cacheService.read({
+				this._prepareData(await this._cacheService.read({
 					symbol: this.symbolModel.options.name,
 					timeFrame: this.timeFrame,
 					count: ChartBoxComponent.DEFAULT_CHUNK_LENGTH,
@@ -360,8 +348,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 
 				this.toggleLoading(false);
 
-				this._data.candles = data.candles;
-				this._data.volume = data.volume;
+				this._onPriceChange(false); // asign current price to latest candle
 
 				this._chart.series[0].setData(this._data.candles, false);
 				this._chart.series[1].setData(this._data.volume, false);
@@ -412,13 +399,17 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	 * @param render 
 	 */
 	private _onPriceChange(render: boolean = false) {
+		if (this._data && this._data.candles && this._data.candles.length) {
+			this._data.candles[this._data.candles.length - 1][4] = this.symbolModel.options.bid;
+		}
+
 		if (this._chart && this._chart.series[0].data.length) {
 			this._updateCurrentPricePlot(false);
 
 			const lastPoint = this._chart.series[0].data[this._chart.series[0].data.length - 1];
 			if (lastPoint.clientX === null)
 				return;
-				
+
 			if (this.graphType === 'line') {
 				this._chart.series[0].data[this._chart.series[0].data.length - 1].update({
 					y: this.symbolModel.options.bid
@@ -470,28 +461,31 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 		this._chart.series[1].setData([], render, false);
 	}
 
-	private _destroyChart() {
+	private _destroyChart(destroyData: boolean = true) {
 		if (this._chart)
 			this._chart.destroy();
 
-		this._data = {
-			candles: [],
-			volume: [],
-			indicators: []
-		};
-
 		this._chart = null;
+		this._scrollOffset = -1;
+
+		if (destroyData) {
+			this._data = null;
+			this._data = {
+				candles: [],
+				volume: [],
+				indicators: []
+			};
+		}
 	}
 
-	private _prepareData(data: any) {
-		let i = 0,
-			rowLength = 10,
-			length = data.length,
-			volume = new Array(length / rowLength),
-			candles = new Array(length / rowLength);
+	private _prepareData(data: any): void {
+		let i = 0, rowLength = 10, length = data.length;
+
+		this._data.volume = new Array(length / rowLength),
+		this._data.candles = new Array(length / rowLength);
 
 		for (; i < length; i += rowLength) {
-			candles[i / rowLength] = [
+			this._data.candles[i / rowLength] = [
 				data[i],
 				data[i + 1], // open
 				data[i + 3], // high
@@ -499,32 +493,18 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 				data[i + 7] // close
 			];
 
-			volume[i / rowLength] = [
+			this._data.volume[i / rowLength] = [
 				data[i],
 				data[i + 9] // the volume
 			];
 		}
-
-		return { candles, volume };
-	}
-
-	private _destroy() {
-		if (this._changeSubscription)
-			this._changeSubscription.unsubscribe();
-
-		if (this._priceSubscription)
-			this._priceSubscription.unsubscribe();
-
-		if (this._orderSubscription)
-			this._orderSubscription.unsubscribe();
-
-		this._destroyChart();
 	}
 
 	async ngOnDestroy() {
 		this._labelEl = null;
 		this.chartRef.nativeElement.removeEventListener('mousewheel', <any>this._onScrollBounced);
 
-		this._destroy();
+		if (this._changeSubscription && this._changeSubscription.unsubscribe)
+			this._changeSubscription.unsubscribe();
 	}
 }
