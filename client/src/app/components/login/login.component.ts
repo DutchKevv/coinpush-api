@@ -5,7 +5,6 @@ import { AlertService } from '../../services/alert.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from '../../services/user.service';
 import { G_ERROR_DUPLICATE } from '../../../../../shared/constants/constants';
-import countries from '../../../../../shared/data/countries';
 
 @Component({
 	styleUrls: ['./login.component.scss'],
@@ -23,7 +22,7 @@ export class LoginComponent implements OnInit {
 	loading = false;
 	returnUrl: string;
 
-	countries = countries;
+	countries = window['countries'];
 
 	constructor(
 		public authenticationService: AuthenticationService,

@@ -13,26 +13,71 @@
     <link rel="stylesheet" href="assets/vendor/font-awesome/css/font-awesome.min.css">
 
     <style>
-        html,
-        body {
+        html {
             height: 100%;
         }
 
-        html {
-            touch-action: manipulation;
-        }
-
         body {
+            height: 100%;
             background: #222122;
             margin: 0;
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
             overflow: hidden;
         }
 
-        app >.spinner {
-            margin: 0 calc(50% - 20px);
+        /* browser not supported */
+
+        #bns-container {
+            background: white;
+            max-width: 800px;
+            padding: 100px 20px;
+            margin: 50px auto;
+            box-shadow: 0px 0px 40px rgba(255, 255, 255, 0.5);
+            text-align: center;
+            border-radius: 50%;
+        }
+
+        /* initial preload box */
+
+        #initialProgressBar {
+            border-radius: 4px;
+            border-bottom: 1px solid white;
+            border-top: 1px solid white;
+            width: 100%;
+            background: black;
+            margin-top: 40px;
+            position: relative;
+        }
+
+        #initialProgressBar span {
+            color: white;
             position: absolute;
-            top: calc(40% - 20px);
+            top: 0;
+            left: calc(50% - 20px);
+            bottom: 0;
+        }
+
+        #initialProgressBar div {
+            background: #0e474e;
+            width: 0;
+            transition: width .5s ease;
+            box-shadow: 0px 0px 30px rgba(255, 255, 255, 0.8);
+        }
+
+        #preload-box {
+            color: white;
+            text-align: center;
+        }
+
+        #preload-box .spinner {
+            margin: 60px auto;
+            width: 40px;
+            height: 40px;
+            position: relative;
+            text-align: center;
+
+            -webkit-animation: sk-rotate 2.0s infinite linear;
+            animation: sk-rotate 2.0s infinite linear;
         }
 
         .dot1,
@@ -110,16 +155,41 @@
     </style>
 </head>
 
-<!-- <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script> -->
-
 <body>
-    <div class="font-awesome-preload-trigger">
-        <i class="fa fa-square-o fa-3x"></i>
-    </div>
-    <app></app>
+    <app>
+        <i class="font-awesome-preload-trigger fa fa-square-o"></i>
+        <div id="preload-box">
+            <div class="spinner">
+                <div class="dot1"></div>
+                <div class="dot2"></div>
+            </div>
+            <h4>Just a moment, loading data ...</h4>
+            <div id="initialProgressBar">
+                <span>0%</span>
+                <div>&nbsp;</div>
+            </div>
+        </div>
+    </app>
 
     <script>
+        // check if browser is supported
         (function () {
+            window.BROWSERSUPPORTED = function () {
+                try {
+                    return !!class test { };
+                } catch (err) {
+                    return false;
+                }
+            }();
+
+            if (!window.BROWSERSUPPORTED)
+                document.body.innerHTML = '<div id="bns-container"><h2>Whoops! Your browser is not supported.</h2><p>Please update to a more recent version of Chrome, Firefox or Edge</p></div>';
+        })();
+
+        (function () {
+            if (!window.BROWSERSUPPORTED)
+                return;
+
             // platform data
             window.platform = {
                 isReady: false,

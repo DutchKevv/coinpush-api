@@ -4,8 +4,8 @@ import { app } from '../../core/app';
 @Injectable()
 export class BootstrapService {
 
-	public async load() {
+	public load() {
 		if (!app.isReady)
-			await new Promise((resolve, reject) => app.once('ready', resolve));
+			return new Promise((resolve, reject) => app.once('ready', resolve));
 	}
 }

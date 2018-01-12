@@ -6,7 +6,6 @@ import {
 import { UserService } from '../../services/user.service';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { UserModel } from '../../models/user.model';
-import countries from '../../../../../shared/data/countries';
 import { CacheService } from '../../services/cache.service';
 
 const shuffleArray = (arr) => arr.sort(() => (Math.random() - 0.5));
@@ -25,7 +24,7 @@ export class UserOverviewComponent implements OnInit, OnDestroy, AfterViewChecke
 	@Output() public editorChoice$: BehaviorSubject<any[]> = new BehaviorSubject([]);
 	@Output() public topInvestors$: BehaviorSubject<any[]> = new BehaviorSubject([]);
 
-	public countries: any[] = countries;
+	public countries: any[] = window['countries'];
 	public symbols: any[] = this._cacheService.symbols;
 
 	public selfId = this.userService.model.options._id;

@@ -11,17 +11,15 @@ const app = express();
 const morgan = require('morgan');
 const helmet = require('helmet');
 const { json } = require('body-parser');
-const PATH_PUBLIC_PROD = path.join(__dirname, '../../client/www');
-const PATH_PUBLIC_DEV = path.join(__dirname, '../../client/www');
-const PATH_IMAGES_PROD = path.join(__dirname, '../../images');
-const PATH_IMAGES_DEV = path.join(__dirname, '../../images');
+
+const PATH_WWW_ROOT = path.join(__dirname, '../../client/www');
+const PATH_WWW_BROWSER_NOT_SUPPORTED_FILE = path.join(__dirname, '../public/index.legacy.browser.html');
+const PATH_IMAGES = path.join(__dirname, '../../images');
 
 /**
  * http
  */
-const server = app.listen(config.server.gateway.port, () => {
-	console.log('Gateway listening on port : ' + config.server.gateway.port);
-});
+const server = app.listen(config.server.gateway.port, () => console.info('Gateway listening on port : ' + config.server.gateway.port));
 
 /**
  * proxy
@@ -66,9 +64,6 @@ app.use(bodyParserJsonMiddleware());
 app.use(morgan('dev'));
 app.use(helmet());
 
-app.use(express.static(process.env.NODE_ENV === 'production' ? PATH_PUBLIC_PROD : PATH_PUBLIC_DEV));
-app.use(express.static(process.env.NODE_ENV === 'production' ? PATH_IMAGES_PROD : PATH_IMAGES_DEV));
-
 app.use((req, res, next) => {
 	res.header('Access-Control-Allow-Origin', '*');
 	res.header('Access-Control-Allow-Headers', 'App verion', 'Authorization, Origin, X-Requested-With, Content-Type, Accept');
@@ -89,6 +84,13 @@ app.use((req, res, next) => {
 // 	next();
 // });
 
+// public assets
+app.use(express.static(PATH_WWW_ROOT));
+
+// images 
+// TODO: should be on CDN
+app.use(express.static(PATH_IMAGES));
+
 // use JWT auth to secure the api, the token can be passed in the authorization header or query string
 const getToken = function (req) {
 	if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer')
@@ -97,11 +99,9 @@ const getToken = function (req) {
 
 app.use(expressJwt({ secret: config.token.secret, getToken }).unless((req) => {
 	return (
-		(/\.(gif|jpg|jpeg|tiff|png|ico)$/i).test(req.originalUrl) ||
-		req.method === 'GET' ||
-		req.originalUrl.startsWith('/api/v1/authenticate')
-		// req.originalUrl === '/api/v1/authenticate/request-password-reset' ||
-		(req.originalUrl === '/api/v1/user' && (req.method === 'POST' || req.method === 'OPTIONS'))
+		req.method === 'GET' || 
+		req.originalUrl.startsWith('/api/v1/authenticate') || 
+		(req.originalUrl === '/api/v1/user' && req.method === 'POST')
 	);
 }));
 
@@ -131,6 +131,7 @@ app.use((err, req, res, next) => {
 
 	next();
 });
+
 
 /**
  * set client user id for upcoming (proxy) requests

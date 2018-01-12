@@ -12,6 +12,7 @@ import { EventOverviewComponent } from './components/event-overview/event-overvi
 
 const routes: Routes = [
 	{ path: '', redirectTo: 'symbols', pathMatch: 'full', canActivate: [AuthGuard] },
+	// { path: '**', redirectTo: 'symbols', pathMatch: 'full' },
 	{ path: 'password-reset', component: PasswordResetComponent },
 	{ path: 'request-password-reset', component: RequestPasswordResetComponent },
 

@@ -8,7 +8,6 @@ import {FormBuilder} from '@angular/forms';
 import {USER_FETCH_TYPE_PROFILE_SETTINGS, G_ERROR_MAX_SIZE} from '../../../../../shared/constants/constants';
 import {UserModel} from '../../models/user.model';
 import { AuthenticationService } from '../../services/authenticate.service';
-import countries from '../../../../../shared/data/countries';
 import { AlertService } from '../../services/alert.service';
 
 declare let $: any;
@@ -30,7 +29,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 	@ViewChild('uploadImageHolder') uploadImageHolder: ElementRef;
 	@ViewChild('saveOptions') saveOptions: ElementRef;
 
-	countries = countries;
+	countries = window['countries'];
 
 	constructor(private _http: Http,
 				private _formBuilder: FormBuilder,

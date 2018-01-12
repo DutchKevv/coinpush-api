@@ -23,9 +23,13 @@ export class App extends MicroEvent {
     }
 
     public async init(): Promise<void> {
-        this.address = getAddress();
+        this._updateInitialProgressBar(5);
 
+        this.address = getAddress();
         await this._loadStoredUser();
+
+        this._updateInitialProgressBar(10);
+
         await this._loadData()
 
         // set initial unread notification badge count
@@ -68,20 +72,40 @@ export class App extends MicroEvent {
         });
     }
 
-    private async _loadData() {
-        const headers = new Headers();
-        headers.append('pragma', 'no-cache');
-        headers.append('cache-control', 'no-cache');
-        headers.append('Accept', 'application/json');
+    private _loadData(): Promise<void> {
+        return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', this.address.apiUrl + 'authenticate?profile=true', true);
 
-        if (this.user)
-            headers.append('Authorization', 'Bearer ' + this.user.token);
+            // set auth token
+            if (this.user)
+                xhr.setRequestHeader('Authorization', 'Bearer ' + this.user.token);
 
-        this.data = await fetch(this.address.apiUrl + 'authenticate?profile=true', { headers }).then(res => res.json());
-        if (this.data.user) {
-            this.user = this.data.user;
-            delete this.data.user;
-        }
+            // update progress bar
+            xhr.onprogress = event => {
+                this._updateInitialProgressBar(((event.loaded / event.total) * 70) + 20);
+            };
+
+            // ready
+            xhr.onload = () => {
+                this.data = JSON.parse(xhr.response);
+
+                if (this.data.user) {
+                    this.user = this.data.user;
+                    delete this.data.user;
+                }
+
+                if (document.readyState === 'complete')
+                    return resolve();
+
+                document.addEventListener('DOMContentLoaded', function callback() {
+                    document.removeEventListener('DOMContentLoaded', callback, false);
+                    resolve();
+                }, false);
+            }
+
+            xhr.send();
+        });
     }
 
     public async updateStoredUser(user = this.user): Promise<void> {
@@ -102,6 +126,14 @@ export class App extends MicroEvent {
 
     public initNotifications(): Promise<void> {
         return this.notification.init();
+    }
+
+    private _updateInitialProgressBar(amount) {
+        const progressBarEl: any = document.getElementById('initialProgressBar');
+        if (progressBarEl) {
+            progressBarEl.children[0].innerHTML = amount.toFixed(0) + '%';
+            progressBarEl.children[1].style.width = amount + '%';
+        }
     }
 }
 

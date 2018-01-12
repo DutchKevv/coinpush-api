@@ -13,9 +13,11 @@
       ],
       "index": "index.html",
       "main": "main.ts",
+      "polyfills": "polyfills.ts",
       "tsconfig": "tsconfig.json",
       "prefix": "app",
       "scripts": [
+        "../../shared/data/countries.js",
         "./assets/vendor/js/highcharts/highstock.js",
         "./assets/vendor/js/highcharts/modules/exporting.js",
         "./assets/vendor/js/highcharts/indicators/indicators.js",
