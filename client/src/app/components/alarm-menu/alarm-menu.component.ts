@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, Output, ChangeDetectorRef, EventEmitter, SimpleChanges, OnChanges, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, Output, ChangeDetectorRef, EventEmitter, SimpleChanges, OnChanges, OnDestroy, Pipe, PipeTransform } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { AlertService } from '../../services/alert.service';
@@ -10,6 +10,14 @@ import { NgForm } from '@angular/forms';
 import { ALARM_TRIGGER_DIRECTION_DOWN, ALARM_TRIGGER_DIRECTION_UP, CUSTOM_EVENT_TYPE_ALARM } from '../../../../../shared/constants/constants';
 import { CacheService } from '../../services/cache.service';
 import { AuthenticationService } from '../../services/authenticate.service';
+import { EventModel } from '../../models/event.model';
+
+@Pipe({name: 'alarmMenuActiveSymbolEvent'})
+export class AlarmMenuActiveSymbolEventPipe implements PipeTransform {
+    transform(items: any[], symbolName: string): any {
+        return items.filter(item => item.symbol === symbolName && !item.triggered);
+    }
+}
 
 @Component({
 	selector: 'app-alarm-menu',
@@ -24,7 +32,6 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 	@Output() inputValueChange: BehaviorSubject<number> = new BehaviorSubject(null);
 	@Output() onDestroy: EventEmitter<boolean> = new EventEmitter;
 
-	public activeEvents = [];
 	public historyEvents$;
 
 	public activeTab = 'new';
@@ -37,9 +44,11 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 
 	private _mouseDownTimeout = null;
 	private _mouseDownSpeedUp = 2;
-	
+
+	private eventsSub;
+
 	constructor(
-		public _eventService: EventService,
+		public eventService: EventService,
 		private _authenticationService: AuthenticationService,
 		private _userService: UserService,
 		private _cacheService: CacheService,
@@ -56,8 +65,7 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 			if (this.symbol) {
 				this.formModel.amount = parseFloat(this._cacheService.priceToFixed(this._toMinimumDuff(this.symbol.options.bid, 1), this.symbol));
 
-				this.historyEvents$ = this._eventService.findBySymbol(this.symbol.options.name, 0, 50, true);
-				this.activeEvents = this._eventService.events.filter(event => event.symbol === this.symbol.options.name);
+				this.historyEvents$ = this.eventService.findBySymbol(this.symbol.options.name, 0, 50, true);
 			}
 
 			this.onChangeInputValue();
@@ -90,24 +98,35 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 		this.inputValueChange.next(this.formModel.amount);
 	}
 
-	toggleTab(tab: string) {
+	public toggleTab(tab: string) {
 		this.activeTab = tab;
 		this._changeDetectorRef.detectChanges();
 	}
 
-	public onFormSubmit() {
+	public onClickRemoveEvent(event) {
+		this.eventService.remove(event);
+		this._changeDetectorRef.detectChanges();
+	}
+
+	public async onFormSubmit() {
 		if (!this._userService.model.options._id) {
 			this._authenticationService.showLoginRegisterPopup();
 			return;
 		}
-			
+
 		if (!this.symbol)
 			return;
 
 		this.formModel.symbol = this.symbol.options.name;
 		this.formModel.type = CUSTOM_EVENT_TYPE_ALARM;
 		this.formModel.alarm.dir = this.formModel.amount < this.symbol.options.bid ? ALARM_TRIGGER_DIRECTION_DOWN : ALARM_TRIGGER_DIRECTION_UP;
-		this._eventService.create(this.formModel);
+
+		try {
+			await this.eventService.create(this.formModel);
+			// this.onDestroy.emit(true);
+		} catch (error) {
+			console.error(error);
+		}
 	}
 
 	public updateSideMenuNumberInput(dir: number, setRepeat: boolean = false, repeatTime: number = 1000) {
@@ -154,6 +173,9 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 	private _unsubscribe() {
 		if (this.historyEvents$ && this.historyEvents$.unsubscribe)
 			this.historyEvents$.unsubscribe();
+
+		if (this.eventsSub && this.eventsSub.unsubscribe)
+			this.eventsSub.unsubscribe();
 	}
 
 	ngOnDestroy() {

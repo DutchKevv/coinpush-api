@@ -31,7 +31,7 @@ export class NotificationHelper {
                 if (app.platform.isApp) {
                     cordova.plugins.notification.badge.set(newValue);
                 } else {
-                    document.title = this._originalTitle + `(${newValue})`;
+                    document.title = this._originalTitle + ` (${newValue})`;
                 }
             }
             else {

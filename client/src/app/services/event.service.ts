@@ -7,11 +7,13 @@ import { AlertService } from './alert.service';
 import { UserService } from "./user.service";
 import { app } from '../../core/app';
 import { CacheService } from './cache.service';
+import { EventModel } from '../models/event.model';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Injectable()
 export class EventService {
 
-	public events = app.data.events || [];
+	public events$: BehaviorSubject<Array<EventModel>> = new BehaviorSubject([]);
 
 	constructor(
 		private _http: Http,
@@ -19,22 +21,37 @@ export class EventService {
 		private _cacheService: CacheService,
 		private _userService: UserService
 	) {
+		this._initializeEvents();
 		app.on('event-triggered', event => this._onEventTriggered(event));
 	}
 
-	async create(params: any): Promise<any> {
+	async create(params: any): Promise<EventModel> {
 		try {
-			const event = await this._http.post('/event', params)
+			const result = await this._http.post('/event', params)
 				.map(res => res.json())
 				.toPromise();
 
-			this._alertService.success(`Price alarm set on ${params.symbol} - Price ${params.amount}`)
+			this._alertService.success(`Alarm set on ${params.symbol} - Price ${params.amount}`);
 
-			return event;
+			const eventModel = new EventModel(
+				result._id,
+				result.createDate,
+				result.symbol,
+				result.type,
+				result.alarm,
+				result.triggered,
+				result.triggeredDate
+			);
+
+			const events = this.events$.getValue();
+			events.unshift(eventModel);
+			this.events$.next(events);
+
+			return eventModel;
 		} catch (error) {
 			console.error(error);
 			return null
-		}	
+		}
 	}
 
 	async findById(id: string): Promise<Array<CommentModel>> {
@@ -57,19 +74,33 @@ export class EventService {
 		return this._http.put('/event/' + model.get('_id'), options);
 	}
 
-	async remove(eventId: string): Promise<any> {
-		const result = await this._http.delete('/event/' + eventId).toPromise();
-		return result;
+	remove(eventModel: EventModel): Promise<any> {
+		const events = this.events$.getValue();
+		events.splice(events.indexOf(eventModel), 1);
+		this.events$.next(events);
+		return this._http.delete('/event/' + eventModel._id).toPromise();
 	}
 
 	private _onEventTriggered(event) {
-		console.log(event);
 		const symbol = this._cacheService.getSymbolByName(event.symbol);
 		if (symbol) {
 			this._alertService.success(event.title);
 			const audio = new Audio('./assets/sound/cow.mp3');
 			audio.play();
 		}
+	}
 
+	private _initializeEvents() {
+		this.events$.next((app.data.events || []).map(event => new EventModel(
+			event._id,
+			event.createDate,
+			event.symbol,
+			event.type,
+			event.alarm,
+			event.triggered,
+			event.triggeredDate
+		)));
+
+		delete app.data.events
 	}
 }

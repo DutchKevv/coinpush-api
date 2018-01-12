@@ -29,7 +29,7 @@ import { EventOverviewComponent } from './components/event-overview/event-overvi
 import { NewsService } from './services/news.service';
 import { Router } from '@angular/router';
 import { EventService } from './services/event.service';
-import { AlarmMenuComponent } from './components/alarm-menu/alarm-menu.component';
+import { AlarmMenuComponent, AlarmMenuActiveSymbolEventPipe } from './components/alarm-menu/alarm-menu.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from './services/notification.service';
 import { NotificationMenuComponent } from './components/notification-menu/notification-menu.component';
@@ -51,7 +51,8 @@ import { NotificationMenuComponent } from './components/notification-menu/notifi
 		UserOverviewComponent,
 		ProfileComponent,
 		SettingsComponent,
-		CommentBoxComponent
+		CommentBoxComponent,
+		AlarmMenuActiveSymbolEventPipe
 	],
 	imports: [
 		BrowserModule,

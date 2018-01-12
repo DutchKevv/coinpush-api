@@ -8,6 +8,7 @@ import { ConstantsService } from '../../services/constants.service';
 import { SymbolModel } from "../../models/symbol.model";
 import { EventService } from '../../services/event.service';
 import { CUSTOM_EVENT_TYPE_ALARM, CUSTOM_EVENT_TYPE_PRICE, CUSTOM_EVENT_TYPE_ALARM_NEW } from '../../../../../shared/constants/constants';
+import { EventModel } from '../../models/event.model';
 
 declare let Highcharts: any;
 
@@ -64,6 +65,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	private _onScrollBounced: Function = null;
 	private _mouseActive = true;
 	private _changeSubscription;
+	private _eventsSubscribtion;
 	private _labelEl: any;
 
 	public static readonly DEFAULT_CHUNK_LENGTH = 500;
@@ -92,6 +94,10 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 		this._changeSubscription = this._cacheService.changed$.subscribe(symbols => {
 			if (this.symbolModel && symbols.includes(this.symbolModel.options.name))
 				this._onPriceChange(true);
+		});
+
+		this._eventsSubscribtion = this._eventService.events$.subscribe(events => {
+			this._updateAlarms(events, true);
 		});
 
 		this._onScrollBounced = throttle(this._onScroll.bind(this), 33);
@@ -362,14 +368,25 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 		});
 	}
 
-	private _updateAlarms() {
-		this._eventService.events.forEach(event => {
-			if (event.symbol !== this.symbolModel.options.name)
-				return;
+	private _updateAlarms(events: Array<EventModel> = this._eventService.events$.getValue(), render: boolean = false) {
+		if (!this._chart)
+			return;
 
+		// filter events with correct symbol
+		const selfEvents = events.filter(event => event.symbol === this.symbolModel.options.name);
+
+		this._chart.yAxis[0].plotLinesAndBands.forEach(plot => {
+			if (plot.id === 'new-alarm' || plot.id === 'cPrice')
+				return;
+				
+			if (!selfEvents.find(event => event._id === plot.id))
+				this.removePlotLine(plot.id, true);
+		})
+		
+		selfEvents.forEach(event => {
 			switch (event.type) {
 				case CUSTOM_EVENT_TYPE_ALARM:
-					this.updatePlotLine(event._id, event.alarm.price, CUSTOM_EVENT_TYPE_ALARM);
+					this.updatePlotLine(event._id, event.alarm.price, CUSTOM_EVENT_TYPE_ALARM, render);
 					break;
 			}
 		});
@@ -482,7 +499,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 		let i = 0, rowLength = 10, length = data.length;
 
 		this._data.volume = new Array(length / rowLength),
-		this._data.candles = new Array(length / rowLength);
+			this._data.candles = new Array(length / rowLength);
 
 		for (; i < length; i += rowLength) {
 			this._data.candles[i / rowLength] = [
@@ -506,5 +523,8 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 
 		if (this._changeSubscription && this._changeSubscription.unsubscribe)
 			this._changeSubscription.unsubscribe();
+
+		if (this._eventsSubscribtion && this._eventsSubscribtion.unsubscribe)
+			this._eventsSubscribtion.unsubscribe();
 	}
 }

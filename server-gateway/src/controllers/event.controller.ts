@@ -34,7 +34,7 @@ export const eventController = {
         })
 	},
 
-	remove(reqUser: IReqUser, eventId) {
+	remove(reqUser: IReqUser, eventId: string) {
         return request({
             uri: config.server.event.apiUrl + '/event/' + eventId,
             method: 'delete',

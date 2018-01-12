@@ -50,8 +50,7 @@ export const eventController = {
 			});
 		}
 
-		if (result)
-			return { _id: result._id };
+		return result;
 	},
 
 	update(reqUser, params) {
