@@ -12,7 +12,6 @@ import { EventOverviewComponent } from './components/event-overview/event-overvi
 
 const routes: Routes = [
 	{ path: '', redirectTo: 'symbols', pathMatch: 'full', canActivate: [AuthGuard] },
-	// { path: '**', redirectTo: 'symbols', pathMatch: 'full' },
 	{ path: 'password-reset', component: PasswordResetComponent },
 	{ path: 'request-password-reset', component: RequestPasswordResetComponent },
 
@@ -28,6 +27,7 @@ const routes: Routes = [
 	},
 	{ path: 'symbols', component: ChartOverviewComponent, canActivate: [AuthGuard] },
 	{ path: 'settings', component: SettingsComponent, canActivate: [AuthGuard] },
+	{ path: '**', redirectTo: 'symbols', pathMatch: 'full' }
 ];
 
 export const AppRouter: ModuleWithProviders = RouterModule.forRoot(routes, {

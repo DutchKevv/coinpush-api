@@ -23,18 +23,20 @@ export class App extends MicroEvent {
     }
 
     public async init(): Promise<void> {
-        this._updateInitialProgressBar(5);
+        this._updateInitialProgressBar(5, 'config');
 
         this.address = getAddress();
         await this._loadStoredUser();
 
-        this._updateInitialProgressBar(10);
+        this._updateInitialProgressBar(10, 'data');
 
         await this._loadData()
 
         // set initial unread notification badge count
         if (this.data.notifications)
             this.notification.updateBadgeCounter(parseInt(this.data.notifications.unreadCount, 10));
+
+        this._updateInitialProgressBar(100);
 
         this.isReady = true;
         this.emit('ready', true);
@@ -72,40 +74,62 @@ export class App extends MicroEvent {
         });
     }
 
-    private _loadData(): Promise<void> {
-        return new Promise((resolve, reject) => {
-            const xhr = new XMLHttpRequest();
-            xhr.open('GET', this.address.apiUrl + 'authenticate?profile=true', true);
+    /**
+     * preload
+     */
+    private _loadData(): Promise<Array<any>> {
+        const imageUrls = ['./spritesheet.png'];
 
-            // set auth token
-            if (this.user)
-                xhr.setRequestHeader('Authorization', 'Bearer ' + this.user.token);
+        return Promise.all([
 
-            // update progress bar
-            xhr.onprogress = event => {
-                this._updateInitialProgressBar(((event.loaded / event.total) * 70) + 20);
-            };
+            // images
+            ...imageUrls.map(imageUrl => {
+                return new Promise(resolve => {
+                    let img = new Image();
+                    img.src = imageUrl;
+                    img.onload = img.onerror = () => (img = null) || resolve();
+                });
+            }),
 
-            // ready
-            xhr.onload = () => {
-                this.data = JSON.parse(xhr.response);
+            // app data (user, symbols etc)
+            new Promise((resolve, reject) => {
+                const xhr = new XMLHttpRequest();
+                xhr.open('GET', this.address.apiUrl + 'authenticate?profile=true', true);
 
-                if (this.data.user) {
-                    this.user = this.data.user;
-                    delete this.data.user;
+                // user authentication token
+                xhr.setRequestHeader('Authorization', this.user ? 'Bearer ' + this.user.token : '');
+
+                // on progress
+                xhr.onprogress = event => this._updateInitialProgressBar(((event.loaded / event.total) * 70) + 20, 'data');
+
+                // on finish
+                xhr.onload = () => {
+                    this.data = JSON.parse(xhr.response);
+
+                    if (this.data.user) {
+                        this.user = this.data.user;
+                        delete this.data.user;
+                    }
+
+                    this._updateInitialProgressBar(95, 'statics');
+
+                    // all scripts loaded
+                    if (document.readyState !== 'loading')
+                        return resolve();
+
+                    // wait for scripts
+                    document.addEventListener('DOMContentLoaded', function callback() {
+                        document.removeEventListener('DOMContentLoaded', callback, false);
+                        resolve();
+                    }, false);
                 }
 
-                if (document.readyState === 'complete')
-                    return resolve();
+                // on error
+                xhr.onerror = reject;
 
-                document.addEventListener('DOMContentLoaded', function callback() {
-                    document.removeEventListener('DOMContentLoaded', callback, false);
-                    resolve();
-                }, false);
-            }
-
-            xhr.send();
-        });
+                xhr.send();
+            })
+        ]);
     }
 
     public async updateStoredUser(user = this.user): Promise<void> {
@@ -128,11 +152,11 @@ export class App extends MicroEvent {
         return this.notification.init();
     }
 
-    private _updateInitialProgressBar(amount) {
+    private _updateInitialProgressBar(amount, text: string = '') {
         const progressBarEl: any = document.getElementById('initialProgressBar');
         if (progressBarEl) {
-            progressBarEl.children[0].innerHTML = amount.toFixed(0) + '%';
-            progressBarEl.children[1].style.width = amount + '%';
+            progressBarEl.children[0].innerHTML = `${amount.toFixed(0)}% ${text}`;
+            progressBarEl.children[1].style.width = `${amount}%`;
         }
     }
 }

@@ -1,17 +1,15 @@
 import {
-	Component, OnInit, ElementRef, ViewChildren, ChangeDetectionStrategy, NgZone,
+	Component, OnInit, ElementRef, ChangeDetectionStrategy,
 	ViewChild,
 	ChangeDetectorRef,
 	AfterViewInit,
 	Output,
 	OnDestroy,
 	ApplicationRef,
-	DoCheck
 } from '@angular/core';
 
 import { SymbolModel } from "../../models/symbol.model";
 import { Subject } from 'rxjs/Subject';
-import { ConstantsService } from '../../services/constants.service';
 import { UserService } from '../../services/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CacheService } from '../../services/cache.service';
@@ -23,7 +21,7 @@ import { app } from '../../../core/app';
 	selector: 'chart-overview',
 	templateUrl: './chart-overview.component.html',
 	styleUrls: ['./chart-overview.component.scss'],
-	// changeDetection: ChangeDetectionStrategy.OnPush
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class ChartOverviewComponent implements OnInit, OnDestroy {
@@ -44,7 +42,6 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 	private _priceChangeSub;
 
 	constructor(
-		public constantsService: ConstantsService,
 		public userService: UserService,
 		public cacheService: CacheService,
 		private _changeDetectorRef: ChangeDetectorRef,

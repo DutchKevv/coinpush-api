@@ -16,16 +16,8 @@
       "polyfills": "polyfills.ts",
       "tsconfig": "tsconfig.json",
       "prefix": "app",
-      "scripts": [
-        "../../shared/data/countries.js",
-        "./assets/vendor/js/highcharts/highstock.js",
-        "./assets/vendor/js/highcharts/modules/exporting.js",
-        "./assets/vendor/js/highcharts/indicators/indicators.js",
-        "./assets/vendor/js/highcharts/indicators/ema.js",
-        "./assets/vendor/js/highcharts/indicators/bollinger-bands.js",
-        "./assets/vendor/js/highcharts/indicators/atr.js",
-        "./assets/vendor/js/highcharts/indicators/rsi.js",
-        "./assets/custom/js/highcharts/highstock.theme.dark.js"
+      "styles": [
+        "./app/style/sprite/spritesheet.css"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {

@@ -5,9 +5,10 @@
   "description": "A sample Apache Cordova application that responds to the deviceready event.",
   "main": "index.js",
   "scripts": {
-    "start": "npm run build-spritesheet && ng build --watch --aot --no-sourcemaps",
-    "build": "npm run build-spritesheet && ng build --prod --aot --env=prod",
-    "build-verbose": "ng build --prod --env=prod --verbose > build.txt",
+    "start": "ng build --watch --aot --no-sourcemaps --output-hashing none",
+    "build": "ng build --prod --aot --env=prod --output-hashing none",
+    "build-stats": "ng build --prod --aot --env=prod --stats-json --output-hashing none",
+    "build-verbose": "ng build --prod --env=prod --stats-json --output-hashing none --verbose > build.txt",
     "build-mobile": "npm run clean && cordova build --no-inc",
     "build-android": "npm run clean && cordova build android --no-inc",
     "build-ios": "npm run clean && cordova build ios --no-inc",
@@ -20,21 +21,21 @@
     "run-ios": "cordova run android",
     "load-symbol-images": "node ./tools/load-symbol-images.js",
     "build-spritesheet": "node ./tools/build-spritesheet.js",
-    "clean": "cordova clean"
+    "clean": "cordova clean",
+    "bundle-report": "webpack-bundle-analyzer www/stats.json"
   },
   "author": "Apache Cordova Team",
   "license": "Apache-2.0",
   "dependencies": {
-    "@angular/cli": "^1.6.3",
-    "@angular/common": "^5.1.3",
-    "@angular/compiler": "^5.1.3",
-    "@angular/compiler-cli": "^5.1.3",
-    "@angular/core": "^5.1.3",
-    "@angular/forms": "^5.1.3",
-    "@angular/http": "^5.1.3",
-    "@angular/language-service": "^5.1.3",
-    "@angular/platform-browser": "^5.1.3",
-    "@angular/router": "^5.1.3",
+    "@angular/cli": "^1.6.4",
+    "@angular/common": "^5.2.0",
+    "@angular/compiler": "^5.2.0",
+    "@angular/compiler-cli": "^5.2.0",
+    "@angular/core": "^5.2.0",
+    "@angular/forms": "^5.2.0",
+    "@angular/http": "^5.2.0",
+    "@angular/platform-browser": "^5.2.0",
+    "@angular/router": "^5.2.0",
     "@ng-bootstrap/ng-bootstrap": "^1.0.0-beta.9",
     "@ngrx/core": "1.2.0",
     "@ngrx/store": "^4.1.1",
@@ -53,19 +54,16 @@
     "cordova-plugin-extension": "^1.5.3",
     "cordova-plugin-fileopener": "^1.0.5",
     "cordova-plugin-firebase": "^0.1.25",
-    "cordova-plugin-splashscreen": "^5.0.1",
     "cordova-plugin-whitelist": "^1.3.3",
     "core-js": "^2.5.3",
-    "deepmerge": "^2.0.1",
     "highcharts": "^6.0.4",
-    "jquery-resizable-dom": "0.20.0",
     "jquery-touchswipe": "1.6.18",
     "localforage": "^1.5.5",
-    "sharp": "^0.18.4",
+    "sharp": "^0.19.0",
     "socket.io-client": "2.0.4",
     "spritesheet-js": "^1.2.6",
     "typescript": "^2.6.2",
-    "zone.js": "^0.8.19"
+    "zone.js": "^0.8.20"
   },
   "cordova": {
     "plugins": {
@@ -73,12 +71,14 @@
       "cordova-plugin-admobpro": {},
       "cordova-plugin-firebase": {},
       "cordova-plugin-fileopener": {},
-      "cordova-plugin-splashscreen": {},
       "cordova-plugin-badge": {}
     },
     "platforms": [
       "browser",
       "android"
     ]
+  },
+  "devDependencies": {
+    "webpack-bundle-analyzer": "^2.9.2"
   }
 }

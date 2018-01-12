@@ -8,7 +8,6 @@ import { ChartOverviewComponent } from './components/chart-overview/chart-overvi
 import { AuthGuard } from './guards/auth.guard';
 import { UserService } from './services/user.service';
 import { LoginComponent } from './components/login/login.component';
-import { ConstantsService } from './services/constants.service';
 import { ChartBoxComponent } from './components/chart-box/chart-box.component';
 import { CacheService } from './services/cache.service';
 import { AuthenticationService } from './services/authenticate.service';
@@ -80,7 +79,6 @@ import { NotificationMenuComponent } from './components/notification-menu/notifi
 			},
 			deps: [XHRBackend, RequestOptions, Router, Injector]
 		},
-		{ provide: ConstantsService, useClass: ConstantsService },
 		{ provide: CacheService, useClass: CacheService }
 	],
 	bootstrap: [

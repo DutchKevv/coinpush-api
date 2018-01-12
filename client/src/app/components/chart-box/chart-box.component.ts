@@ -1,14 +1,29 @@
-import { throttle } from 'lodash';
+// import * as throttle from 'lodash/throttle';
 import {
 	Component, OnDestroy, ElementRef, Input, ViewChild,
 	OnInit, AfterViewInit, NgZone, Output, SimpleChanges, OnChanges, ChangeDetectionStrategy, ViewEncapsulation
 } from '@angular/core';
 import { CacheService } from '../../services/cache.service';
-import { ConstantsService } from '../../services/constants.service';
 import { SymbolModel } from "../../models/symbol.model";
 import { EventService } from '../../services/event.service';
 import { CUSTOM_EVENT_TYPE_ALARM, CUSTOM_EVENT_TYPE_PRICE, CUSTOM_EVENT_TYPE_ALARM_NEW } from '../../../../../shared/constants/constants';
 import { EventModel } from '../../models/event.model';
+
+
+import * as HighStock from "highcharts/highstock";
+import 'highcharts/modules/exporting';
+import 'highcharts/indicators/indicators';
+import 'highcharts/indicators/ema';
+import 'highcharts/indicators/bollinger-bands';
+import 'highcharts/indicators/atr';
+import 'highcharts/indicators/rsi';
+import '../../..//etc/custom/js/highcharts/highstock.theme.dark.js';
+// "./etc/vendor/js/highcharts/indicators/indicators.js",
+// "./etc/vendor/js/highcharts/indicators/ema.js",
+// "./etc/vendor/js/highcharts/indicators/bollinger-bands.js",
+// "./etc/vendor/js/highcharts/indicators/atr.js",
+// "./etc/vendor/js/highcharts/indicators/rsi.js",
+// "./etc/custom/js/highcharts/highstock.theme.dark.js"
 
 declare let Highcharts: any;
 
@@ -22,7 +37,6 @@ const DEFAULT_GRAPHTYPE = 'line';
 	styleUrls: [
 		'./chart-box.component.scss'
 	],
-	// encapsulation: ViewEncapsulation.None,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
@@ -71,7 +85,6 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	public static readonly DEFAULT_CHUNK_LENGTH = 500;
 
 	constructor(
-		public constantsService: ConstantsService,
 		private _zone: NgZone,
 		private _cacheService: CacheService,
 		private _eventService: EventService,
@@ -100,7 +113,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 			this._updateAlarms(events, true);
 		});
 
-		this._onScrollBounced = throttle(this._onScroll.bind(this), 33);
+		this._onScrollBounced = this._onScroll.bind(this);
 		this.chartRef.nativeElement.addEventListener('mousewheel', <any>this._onScrollBounced);
 	}
 
@@ -229,7 +242,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 			var self = this;
 
 			// create the chart
-			this._chart = Highcharts.stockChart(this.chartRef.nativeElement, {
+			this._chart = HighStock.chart(this.chartRef.nativeElement, {
 
 				xAxis: [
 					{},
@@ -297,17 +310,17 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 						data: this._data.volume,
 						yAxis: 1
 					},
-					{
-						type: 'ema',
-						linkedTo: SERIES_MAIN_NAME,
-						params: {
-							period: 7
-						}
-					},
-					{
-						type: 'bb',
-						linkedTo: SERIES_MAIN_NAME
-					}
+					// {
+					// 	type: 'ema',
+					// 	linkedTo: SERIES_MAIN_NAME,
+					// 	params: {
+					// 		period: 7
+					// 	}
+					// },
+					// {
+					// 	type: 'bb',
+					// 	linkedTo: SERIES_MAIN_NAME
+					// }
 				]
 			}, false);
 		});

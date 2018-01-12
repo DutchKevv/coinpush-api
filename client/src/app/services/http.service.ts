@@ -4,7 +4,7 @@ import { ConnectionBackend, XHRBackend, RequestOptions, Request, RequestOptionsA
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
-import 'rxjs/add/observable/throw';
+// import 'rxjs/add/observable/throw';
 import { Router } from '@angular/router';
 import { AuthenticationService } from './authenticate.service';
 import { app } from '../../core/app';
@@ -85,7 +85,7 @@ export class CustomHttp extends Http {
 				} else {
 
 				}
-			break;
+				break;
 
 		}
 

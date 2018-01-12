@@ -2,11 +2,11 @@ import {
 	ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild,
 	ViewEncapsulation
 } from '@angular/core';
-import {UserService} from '../../services/user.service';
-import {Http} from '@angular/http';
-import {FormBuilder} from '@angular/forms';
-import {USER_FETCH_TYPE_PROFILE_SETTINGS, G_ERROR_MAX_SIZE} from '../../../../../shared/constants/constants';
-import {UserModel} from '../../models/user.model';
+import { UserService } from '../../services/user.service';
+import { Http } from '@angular/http';
+import { FormBuilder } from '@angular/forms';
+import { USER_FETCH_TYPE_PROFILE_SETTINGS, G_ERROR_MAX_SIZE } from '../../../../../shared/constants/constants';
+import { UserModel } from '../../models/user.model';
 import { AuthenticationService } from '../../services/authenticate.service';
 import { AlertService } from '../../services/alert.service';
 
@@ -32,10 +32,10 @@ export class SettingsComponent implements OnInit, OnDestroy {
 	countries = window['countries'];
 
 	constructor(private _http: Http,
-				private _formBuilder: FormBuilder,
-				private _authenticationService: AuthenticationService,
-				private _userService: UserService,
-				private _alertService: AlertService) {
+		private _formBuilder: FormBuilder,
+		private _authenticationService: AuthenticationService,
+		private _userService: UserService,
+		private _alertService: AlertService) {
 	}
 
 	// TODO: Gets called twice!
@@ -57,7 +57,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 			'settings.summary': 0,
 		});
 
-		this._userService.findById(this._userService.model.get('_id'), {type: USER_FETCH_TYPE_PROFILE_SETTINGS}).then((user: UserModel) => {
+		this._userService.findById(this._userService.model.get('_id'), { type: USER_FETCH_TYPE_PROFILE_SETTINGS }).then((user: UserModel) => {
 			console.log(user.options);
 
 			this.form.setValue({
@@ -73,7 +73,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 				'settings.like': +user.options.settings.like,
 				'settings.comment': +user.options.settings.like,
 				'settings.summary': +user.options.settings.summary,
-			}, {onlySelf: true});
+			}, { onlySelf: true });
 
 			this.form.valueChanges.subscribe(data => {
 				const changes = {};
@@ -109,7 +109,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 		data.append('image', this.uploadBtn.nativeElement.files.item(0));
 
 		this._http.post('/upload/profile', data).map(res => res.json()).subscribe((result) => {
-			this._userService.update({img: result.url}, false);
+			this._userService.update({ img: result.url }, false);
 		}, (result) => {
 
 			try {
@@ -120,7 +120,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 						this._alertService.error('Max file size is 10MB');
 						break;
 				}
-			} catch(catchError) {
+			} catch (catchError) {
 				console.error(result)
 			}
 		});
