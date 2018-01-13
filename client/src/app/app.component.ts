@@ -110,10 +110,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 			// this._changeDetectorRef.detach();
 		}
 
-	ngOnInit() {
-		// boot progressbar removal
-		clearTimeout(app.platform.prettyBootTimeout);
-		
+	ngOnInit() {	
 		this._routerEventsSub = this.router.events.subscribe((val) => {
 			if (val instanceof NavigationEnd) {
 				this.searchOpen = false;
@@ -123,18 +120,18 @@ export class AppComponent implements OnInit, AfterViewInit {
 	}
 
 	ngAfterViewInit() {
-		app.prettyBootty.step('done');
 
 		// small break before loading ads and receiving for push messages
 		setTimeout(() => {
-
+			app.prettyBootty.step('done');
+			
 			this._cacheService.connect();
 			
 			if (this.userService.model.options._id)
 				app.initNotifications().catch(console.error);
 				
 			app.loadAds();
-		}, 300);
+		}, 0);
 	}
 
 	public onSearchKeyUp(event): void {

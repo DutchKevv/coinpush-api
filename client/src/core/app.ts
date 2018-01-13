@@ -26,15 +26,30 @@ class PrettyBootty {
 
         this._updateEl(total, step.text);
 
-        if (total >= 100)
+        if (id === 'done' || total >= 100)
             this.destroy();
+    }
 
+    public fakeProgress(id, time: number, start = 0, end = 0) {
+        const step = this._steps.find(step => step.id === id);
+        const startTime = Date.now();
+
+        const interval = setInterval(() => {
+            const timeDone = Date.now() - startTime;
+            this.step(step.id, (timeDone / time) * 100);
+        }, 100);
     }
 
     public destroy() {
+        if (!this._progressBarEl || !this._progressBarEl.parentNode)
+            return;
+
         this._progressBarEl.parentNode.style.opacity = 0;
 
         setTimeout(() => {
+            if (!this._progressBarEl || !this._progressBarEl.parentNode || !this._progressBarEl.parentNode.parentNode)
+                return;
+
             this._progressBarEl.parentNode.parentNode.removeChild(this._progressBarEl.parentNode);
         }, 500)
     }
@@ -80,12 +95,12 @@ export class App extends MicroEvent {
         },
         {
             id: 'statics',
-            value: 40,
+            value: 48,
             text: 'statics'
         },
         {
             id: 'done',
-            value: 10,
+            value: 2,
             text: 'done'
         }
     ];
@@ -106,7 +121,7 @@ export class App extends MicroEvent {
 
         this.prettyBootty.step('data', 0);
 
-        await this._loadData()
+        await this._preload()
 
         // set initial unread notification badge count
         if (this.data.notifications)
@@ -114,64 +129,14 @@ export class App extends MicroEvent {
 
         await this._waitUntilAllScriptsLoaded();
 
-        this.prettyBootty.step('statics');
-
         this.isReady = true;
         this.emit('ready', true);
-    }
-
-    // TODO: move to helper class
-    public loadAds() {
-
-        // TODO: Desktop ads
-        if (!this.platform.isApp)
-            return;
-
-        let admobid: { banner?: string, interstitial?: string } = {};
-
-        if (/(android)/i.test(navigator.userAgent)) { // for android & amazon-fireos
-            admobid.banner = 'ca-app-pub-1181429338292864/7213864636';
-            admobid.interstitial = 'ca-app-pub-1181429338292864/7213864636';
-        } else if (/(ipod|iphone|ipad)/i.test(navigator.userAgent)) { // for ios
-            admobid.banner = 'ca-app-pub-1181429338292864/7213864636';
-            admobid.interstitial = 'ca-app-pub-1181429338292864/7213864636';
-        }
-
-        window['AdMob'].createBanner({
-            adSize: 'BANNER',
-            overlap: true,
-            height: 60, // valid when set adSize 'CUSTOM'
-            adId: admobid.banner,
-            position: window['AdMob'].AD_POSITION.BOTTOM_CENTER,
-            autoShow: true,
-            isTesting: false
-        });
-
-        document.addEventListener('onAdFailLoad', function (error) {
-            console.error(error);
-        });
-    }
-
-    private _waitUntilAllScriptsLoaded() {
-        return new Promise((resolve, reject) => {
-            this.prettyBootty.step('statics', 0);
-
-            // all scripts loaded
-            if (document.readyState !== 'loading')
-                return resolve();
-
-            // wait for scripts
-            document.addEventListener('DOMContentLoaded', function callback() {
-                document.removeEventListener('DOMContentLoaded', callback, false);
-                resolve();
-            }, false);
-        });
     }
 
     /**
      * preload
      */
-    private _loadData(): Promise<Array<any>> {
+    private _preload(): Promise<Array<any>> {
         const imageUrls = ['./spritesheet.png'];
 
         return Promise.all([
@@ -214,6 +179,55 @@ export class App extends MicroEvent {
                 xhr.send();
             })
         ]);
+    }
+
+    // TODO: move to helper class
+    public loadAds() {
+
+        // TODO: Desktop ads
+        if (!this.platform.isApp)
+            return;
+
+        let admobid: { banner?: string, interstitial?: string } = {};
+
+        if (/(android)/i.test(navigator.userAgent)) { // for android & amazon-fireos
+            admobid.banner = 'ca-app-pub-1181429338292864/7213864636';
+            admobid.interstitial = 'ca-app-pub-1181429338292864/7213864636';
+        } else if (/(ipod|iphone|ipad)/i.test(navigator.userAgent)) { // for ios
+            admobid.banner = 'ca-app-pub-1181429338292864/7213864636';
+            admobid.interstitial = 'ca-app-pub-1181429338292864/7213864636';
+        }
+
+        window['AdMob'].createBanner({
+            adSize: 'BANNER',
+            overlap: true,
+            height: 60, // valid when set adSize 'CUSTOM'
+            adId: admobid.banner,
+            position: window['AdMob'].AD_POSITION.BOTTOM_CENTER,
+            autoShow: true,
+            isTesting: false
+        });
+
+        document.addEventListener('onAdFailLoad', function (error) {
+            console.error(error);
+        });
+    }
+
+    private _waitUntilAllScriptsLoaded() {
+        return new Promise((resolve, reject) => {
+            const estimatedTime = (Date.now() - this.platform.startTime.getTime()) * 2.5;
+            this.prettyBootty.fakeProgress('statics', estimatedTime);
+
+            // all scripts loaded
+            if (document.readyState !== 'loading')
+                return resolve();
+
+            // wait for scripts
+            document.addEventListener('DOMContentLoaded', function callback() {
+                document.removeEventListener('DOMContentLoaded', callback, false);
+                resolve();
+            }, false);
+        });
     }
 
     public async updateStoredUser(user = this.user): Promise<void> {

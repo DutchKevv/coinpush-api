@@ -5,6 +5,10 @@ import { app } from '../../core/app';
 export class BootstrapService {
 
 	public load() {
+		// boot progressbar removal
+		app.prettyBootty.step('done');
+		clearTimeout(app.platform.prettyBootTimeout);
+
 		if (!app.isReady)
 			return new Promise((resolve, reject) => app.once('ready', resolve));
 	}

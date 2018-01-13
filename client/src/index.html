@@ -10,7 +10,7 @@
 
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <!-- <link rel="stylesheet" href="assets/font-awesome/css/font-awesome.min.css"> -->
+    <link rel="stylesheet" href="assets/font-awesome/css/font-awesome.min.css">
 
     <style>
         html {
@@ -112,7 +112,7 @@
 
 <body>
     <div id="preload-box" class="fade-out">
-        <h4>Fetching crypto, forex, raw materials, boobies, etc...</h4>
+        <h4>Crypto, Forex, Resources, Wobly titties, you name it...</h4>
         <div id="initialProgressBar">
             <span>2% init</span>
             <div>&nbsp;</div>
@@ -143,7 +143,7 @@
 
             // platform data
             window.platform = {
-                startTime: new Date,
+                startTime: new Date(),
                 prettyBootTimeout: null,
                 isReady: false,
                 isReady$: Promise.resolve(),
@@ -159,7 +159,7 @@
                 if (!el)
                     return;
             // }, 0);
-            }, 400);
+            }, 600);
 
             /**
              * 
