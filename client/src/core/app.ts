@@ -50,7 +50,7 @@ class PrettyBootty {
             if (!this._progressBarEl || !this._progressBarEl.parentNode || !this._progressBarEl.parentNode.parentNode)
                 return;
 
-            // this._progressBarEl.parentNode.parentNode.removeChild(this._progressBarEl.parentNode);
+            this._progressBarEl.parentNode.parentNode.removeChild(this._progressBarEl.parentNode);
         }, 500)
     }
 
