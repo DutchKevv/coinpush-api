@@ -57,6 +57,8 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 		this._filterSub = this._applicationRef.components[0].instance.filterClick$.subscribe(state => this.toggleFilterNav(null, state));
 		this._priceChangeSub = this.cacheService.changed$.subscribe(changedSymbols => this._onPriceChange(changedSymbols));
 
+		this.toggleActiveFilter(this.defaultActiveFilter);
+
 		this._routeSub = this._route.queryParams.subscribe(params => {
 			// // if its the same as the current, do nothing
 			if (this.activeSymbol && this.activeSymbol.options.name === params['symbol'])
@@ -101,7 +103,9 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 	}
 
 	public toggleActiveFilter(filter: string, removeSymbolFromUrl = true) {
-
+		if (filter === this.activeFilter)
+			return;
+			
 		// remove specific symbol in url
 		if (removeSymbolFromUrl && this._route.snapshot.queryParams['symbol']) {
 			this._router.navigate(['/symbols'], { skipLocationChange: false, queryParams: {} });

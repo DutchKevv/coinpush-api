@@ -124,7 +124,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 		// small break before loading ads and receiving for push messages
 		setTimeout(() => {
 			app.prettyBootty.step('done');
-			
+
 			this._cacheService.connect();
 			
 			if (this.userService.model.options._id)

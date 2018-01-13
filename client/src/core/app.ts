@@ -22,11 +22,11 @@ class PrettyBootty {
         step.perc = typeof percentage === 'number' && percentage < 100 ? percentage : 100;
 
         let total = 0;
-        this._steps.forEach(step => step.perc && (total += (step.value / 100) * step.perc));
+        this._steps.forEach(step => step.perc && (total += step.perc / this._steps.length));
 
         this._updateEl(total, step.text);
 
-        if (id === 'done' || total >= 100)
+        if (id === 'done')
             this.destroy();
     }
 
@@ -50,7 +50,7 @@ class PrettyBootty {
             if (!this._progressBarEl || !this._progressBarEl.parentNode || !this._progressBarEl.parentNode.parentNode)
                 return;
 
-            this._progressBarEl.parentNode.parentNode.removeChild(this._progressBarEl.parentNode);
+            // this._progressBarEl.parentNode.parentNode.removeChild(this._progressBarEl.parentNode);
         }, 500)
     }
 
