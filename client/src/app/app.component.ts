@@ -111,6 +111,9 @@ export class AppComponent implements OnInit, AfterViewInit {
 		}
 
 	ngOnInit() {
+		// boot progressbar removal
+		clearTimeout(app.platform.prettyBootTimeout);
+		
 		this._routerEventsSub = this.router.events.subscribe((val) => {
 			if (val instanceof NavigationEnd) {
 				this.searchOpen = false;
@@ -120,9 +123,11 @@ export class AppComponent implements OnInit, AfterViewInit {
 	}
 
 	ngAfterViewInit() {
-		this._removePreloadBox();
+		app.prettyBootty.step('done');
+
 		// small break before loading ads and receiving for push messages
 		setTimeout(() => {
+
 			this._cacheService.connect();
 			
 			if (this.userService.model.options._id)
@@ -206,15 +211,5 @@ export class AppComponent implements OnInit, AfterViewInit {
 	private _updateNavPosition(distance: number) {
 		this._navBarPosition = Math.max(-this._navBarWidth, Math.min(0, distance));
 		this.navbar.nativeElement.style.transform = `translateX(${this._navBarPosition}px)`;
-	}
-
-	private _removePreloadBox() {
-		const preloadBoxEl: any = document.getElementById('preload-box');
-		if (preloadBoxEl) {
-			preloadBoxEl.classList.add('fade-out');
-			setTimeout(() => {
-				preloadBoxEl.parentNode.removeChild(preloadBoxEl);
-			}, 400)
-		}
 	}
 }

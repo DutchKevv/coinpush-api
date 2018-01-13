@@ -4,6 +4,49 @@ import { StorageHelper } from "./helpers/classes/storage.helper";
 import { getAddress } from './app.address';
 import { NotificationHelper } from "./helpers/classes/notification.helper";
 
+class PrettyBootty {
+
+    public progress: number = 0;
+
+    constructor(
+        private _steps: Array<any>,
+        private _progressBarEl: any
+    ) { }
+
+    step(id: string, percentage?: number) {
+        const step = this._steps.find(step => step.id === id);
+
+        if (!step)
+            throw new Error(`step not found: ${id}`);
+
+        step.perc = typeof percentage === 'number' && percentage < 100 ? percentage : 100;
+
+        let total = 0;
+        this._steps.forEach(step => step.perc && (total += (step.value / 100) * step.perc));
+
+        this._updateEl(total, step.text);
+
+        if (total >= 100)
+            this.destroy();
+
+    }
+
+    public destroy() {
+        this._progressBarEl.parentNode.style.opacity = 0;
+
+        setTimeout(() => {
+            this._progressBarEl.parentNode.parentNode.removeChild(this._progressBarEl.parentNode);
+        }, 500)
+    }
+
+    private _updateEl(progress, text) {
+        if (this._progressBarEl) {
+            this._progressBarEl.children[0].innerHTML = `${progress.toFixed(0)}% ${text}`;
+            this._progressBarEl.children[1].style.width = `${progress}%`;
+        }
+    }
+}
+
 export class App extends MicroEvent {
 
     public platform = window['platform'];
@@ -18,17 +61,50 @@ export class App extends MicroEvent {
     public angularReady = false;
     public angularReady$ = Promise.resolve();
 
+
+    private _boottySteps = [
+        {
+            id: 'init',
+            value: 5,
+            text: 'booting'
+        },
+        {
+            id: 'config',
+            value: 5,
+            text: 'config'
+        },
+        {
+            id: 'data',
+            value: 40,
+            text: 'data'
+        },
+        {
+            id: 'statics',
+            value: 40,
+            text: 'statics'
+        },
+        {
+            id: 'done',
+            value: 10,
+            text: 'done'
+        }
+    ];
+
+    public prettyBootty: PrettyBootty = new PrettyBootty(this._boottySteps, document.getElementById('initialProgressBar'));
+
     constructor() {
         super();
+        this.prettyBootty.step('init');
     }
 
     public async init(): Promise<void> {
-        this._updateInitialProgressBar(5, 'config');
+        this.prettyBootty.step('config');
 
         this.address = getAddress();
         await this._loadStoredUser();
 
-        this._updateInitialProgressBar(10, 'data');
+
+        this.prettyBootty.step('data', 0);
 
         await this._loadData()
 
@@ -36,7 +112,9 @@ export class App extends MicroEvent {
         if (this.data.notifications)
             this.notification.updateBadgeCounter(parseInt(this.data.notifications.unreadCount, 10));
 
-        this._updateInitialProgressBar(100);
+        await this._waitUntilAllScriptsLoaded();
+
+        this.prettyBootty.step('statics');
 
         this.isReady = true;
         this.emit('ready', true);
@@ -74,6 +152,22 @@ export class App extends MicroEvent {
         });
     }
 
+    private _waitUntilAllScriptsLoaded() {
+        return new Promise((resolve, reject) => {
+            this.prettyBootty.step('statics', 0);
+
+            // all scripts loaded
+            if (document.readyState !== 'loading')
+                return resolve();
+
+            // wait for scripts
+            document.addEventListener('DOMContentLoaded', function callback() {
+                document.removeEventListener('DOMContentLoaded', callback, false);
+                resolve();
+            }, false);
+        });
+    }
+
     /**
      * preload
      */
@@ -87,7 +181,7 @@ export class App extends MicroEvent {
                 return new Promise(resolve => {
                     let img = new Image();
                     img.src = imageUrl;
-                    img.onload = img.onerror = () => (img = null) || resolve();
+                    img.onload = img.onerror = resolve;
                 });
             }),
 
@@ -100,7 +194,7 @@ export class App extends MicroEvent {
                 xhr.setRequestHeader('Authorization', this.user ? 'Bearer ' + this.user.token : '');
 
                 // on progress
-                xhr.onprogress = event => this._updateInitialProgressBar(((event.loaded / event.total) * 70) + 20, 'data');
+                xhr.onprogress = event => this.prettyBootty.step('data', (event.loaded / event.total) * 100);
 
                 // on finish
                 xhr.onload = () => {
@@ -111,17 +205,7 @@ export class App extends MicroEvent {
                         delete this.data.user;
                     }
 
-                    this._updateInitialProgressBar(95, 'statics');
-
-                    // all scripts loaded
-                    if (document.readyState !== 'loading')
-                        return resolve();
-
-                    // wait for scripts
-                    document.addEventListener('DOMContentLoaded', function callback() {
-                        document.removeEventListener('DOMContentLoaded', callback, false);
-                        resolve();
-                    }, false);
+                    resolve();
                 }
 
                 // on error
@@ -150,14 +234,6 @@ export class App extends MicroEvent {
 
     public initNotifications(): Promise<void> {
         return this.notification.init();
-    }
-
-    private _updateInitialProgressBar(amount, text: string = '') {
-        const progressBarEl: any = document.getElementById('initialProgressBar');
-        if (progressBarEl) {
-            progressBarEl.children[0].innerHTML = `${amount.toFixed(0)}% ${text}`;
-            progressBarEl.children[1].style.width = `${amount}%`;
-        }
     }
 }
 

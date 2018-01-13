@@ -10,7 +10,7 @@
 
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="assets/font-awesome/css/font-awesome.min.css">
+    <!-- <link rel="stylesheet" href="assets/font-awesome/css/font-awesome.min.css"> -->
 
     <style>
         html {
@@ -44,22 +44,21 @@
             color: white;
             text-align: center;
             position: absolute;
-            top: calc(50% - 120px);
+            top: 0;
+            bottom: 0;
+            display: flex;
+            flex-flow: column;
+            justify-content: center;
+            /* top: calc(50% - 120px); */
             left: 0;
             right: 0;
             z-index: 100000000;
             transition: opacity .4s ease;
+            opacity: 1;
         }
 
-        #preload-box .spinner {
-            margin: 60px auto;
-            width: 40px;
-            height: 40px;
-            position: relative;
-            text-align: center;
-
-            -webkit-animation: sk-rotate 2.0s infinite linear;
-            animation: sk-rotate 2.0s infinite linear;
+        #preload-box.fade-in {
+            opacity: 1;
         }
 
         #preload-box.fade-out {
@@ -112,10 +111,10 @@
 </head>
 
 <body>
-    <div id="preload-box">
-        <h4>loading ...</h4>
+    <div id="preload-box" class="fade-out">
+        <h4>Fetching crypto, forex, raw materials, boobies, etc...</h4>
         <div id="initialProgressBar">
-            <span>0%</span>
+            <span>2% init</span>
             <div>&nbsp;</div>
         </div>
     </div>
@@ -144,6 +143,8 @@
 
             // platform data
             window.platform = {
+                startTime: new Date,
+                prettyBootTimeout: null,
                 isReady: false,
                 isReady$: Promise.resolve(),
                 version: '',
@@ -151,6 +152,14 @@
                 isEmulator: navigator.platform === 'Linux i686',
                 isLocal: document.URL.indexOf('file://') > -1
             };
+
+            window.platform.prettyBootTimeout = setTimeout(() => {
+                const el = document.getElementById('preload-box').classList.remove('fade-out');
+
+                if (!el)
+                    return;
+            // }, 0);
+            }, 400);
 
             /**
              * 

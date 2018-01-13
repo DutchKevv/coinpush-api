@@ -1,3 +1,6 @@
+// TODO: quick hack
+import '../../shared/data/countries.js';
+
 import { platformBrowser } from '@angular/platform-browser';
 import { environment } from './environments/environment';
 import { enableProdMode } from '@angular/core';
