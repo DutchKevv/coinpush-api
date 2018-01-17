@@ -76,15 +76,15 @@ export const eventController = {
 
 				for (let key in symbols) {
 					let symbol = JSON.parse(symbols[key]);
-					
-					if (symbol.name === 'BTC') {
-						// console.log(symbol);
-					}
+
+					// HIGH / LOW MUST BE SET (otherwise all alarms trigger)
+					if (!symbol.highM || !symbol.lowM)
+						continue;
 
 					let events = <any>flatten(await Promise.all(
 						[
-							Event.find({ triggered: false, symbol: symbol.name, 'alarm.dir': ALARM_TRIGGER_DIRECTION_UP, 'alarm.price': { $lt: symbol.high } }),
-							Event.find({ triggered: false, symbol: symbol.name, 'alarm.dir': ALARM_TRIGGER_DIRECTION_DOWN, 'alarm.price': { $lt: symbol.low } }),
+							Event.find({ triggered: false, symbol: symbol.name, 'alarm.dir': ALARM_TRIGGER_DIRECTION_UP, 'alarm.price': { $lt: symbol.highM } }),
+							Event.find({ triggered: false, symbol: symbol.name, 'alarm.dir': ALARM_TRIGGER_DIRECTION_DOWN, 'alarm.price': { $gt: symbol.lowM } }),
 						]
 					));
 

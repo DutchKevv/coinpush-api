@@ -93,9 +93,6 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
-		if (this._changeSubscription && this._changeSubscription.unsubscribe)
-			this._changeSubscription.unsubscribe();
-
 		if (changes.symbolModel && changes.symbolModel.currentValue) {
 			this.init();
 		} else {
@@ -105,8 +102,9 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 
 	ngAfterViewInit() {
 		this._changeSubscription = this._cacheService.changed$.subscribe(symbols => {
-			if (this.symbolModel && symbols.includes(this.symbolModel.options.name))
+			if (this.symbolModel && symbols.indexOf(this.symbolModel.options.name) > -1) {
 				this._onPriceChange(true);
+			}
 		});
 
 		this._eventsSubscribtion = this._eventService.events$.subscribe(events => {

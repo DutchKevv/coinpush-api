@@ -58,7 +58,7 @@ export const symbolController = {
 	},
 
 	/**
-	 * set high lows
+	 * set high lows and 24h volume
 	 */
 	async updateHighLowPopular(symbol) {
 		const now = new Date();
@@ -71,19 +71,25 @@ export const symbolController = {
 		const barsAmount = 60 * 24; // 1440 M1 bars
 		const candles = await cacheController.find({ symbol: symbol.name, timeFrame: 'M1', count: barsAmount, toArray: true });
 
+		if (!candles.length)
+			return;
+
 		// set high / low of the day
 		let high = 0;
 		let low = 0;
 		let volume = 0;
+		let last = candles.slice(candles.length - 10, candles.length);
+		
 
 		for (let i = 0, len = candles.length; i < len; i += 10) {
-			let price = candles[i + 1];
+			let cHigh = candles[i + 3];
+			let cLow = candles[i + 5];
 			volume += candles[i + 9];
 
-			if (price > high)
-				high = price;
-			if (!low || price < low)
-				low = price;
+			if (cHigh > high)
+				high = cHigh;
+			if (!low || cLow < low)
+				low = cLow;
 		}
 
 		// set price if it wasn't known before (closeBid price)
@@ -91,8 +97,10 @@ export const symbolController = {
 			symbol.bid = candles[candles.length - 3]
 
 		symbol.volume = volume;
-		symbol.high = high;
-		symbol.low = low;
+		symbol.highD = high;
+		symbol.highM = last[3]; // last candle high
+		symbol.lowD = low;
+		symbol.lowM = last[5]; // last candle low
 	},
 
 	/**

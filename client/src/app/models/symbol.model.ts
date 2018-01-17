@@ -15,11 +15,11 @@ export class SymbolModel {
 		ticks.forEach(tick => {
 			this.options.bid = tick[1];
 
-			if (tick[1] > this.options.high)
-				this.options.high = tick[1];
+			if (tick[1] > this.options.highD)
+				this.options.highD = tick[1];
 
-			else if (tick[1] < this.options.low)
-				this.options.low = tick[1];
+			else if (tick[1] < this.options.lowD)
+				this.options.lowD = tick[1];
 		});
 
 		this._updateChangedAmount();
