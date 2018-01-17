@@ -122,9 +122,8 @@ export const cacheController = {
 			return;
 
 		const now = Date.now();
-		// TODO: get broker names from somewhere else then hardcoded
+		// TODO: get broker names from somewhere else then hardcoded (constants?)
 		const brokerName = statuses[0].broker === BROKER_GENERAL_TYPE_CC ? 'CryptoCompare' : 'Oanda';
-		let done = 0;
 		log.info('cache', `syncing ${statuses.length} collections for broker ${brokerName}`);
 
 		// loop over each symbol (in bulk)
@@ -162,7 +161,6 @@ export const cacheController = {
 				console.error(error);
 			} finally {
 				progressBar && progressBar.tick();
-				done++;
 			}
 		}
 

@@ -64,7 +64,11 @@ export default class CyrptoCompareApi extends EventEmitter {
     }
 
     public subscribePriceStream(symbols: Array<string>): void {
-        this._socket = io.connect('https://streamer.cryptocompare.com/');
+        this._socket = io.connect('https://streamer.cryptocompare.com/', {
+            reconnectionAttempts: 10000, // avoid having user reconnect manually in order to prevent dead clients after a server restart
+			timeout: 1000, // before connect_error and connect_timeout are emitted.
+        });
+
         //Format: {SubscriptionId}~{ExchangeName}~{FromSymbol}~{ToSymbol}
         //Use SubscriptionId 0 for TRADE, 2 for CURRENT and 5 for CURRENTAGG
         //For aggregate quote updates use CCCAGG as market
@@ -76,12 +80,12 @@ export default class CyrptoCompareApi extends EventEmitter {
             var res: any = {};
 
             if (messageType == CCC.STATIC.TYPE.CURRENTAGG) {
-               
+
                 res = CCC.CURRENT.unpack(message);
-                
+
                 if (res.LASTMARKET === 'Yobit')
                     return;
-                
+
                 // console.log(res);
                 // console.log(typeof res, res);
                 // dataUnpack(res);
@@ -99,11 +103,19 @@ export default class CyrptoCompareApi extends EventEmitter {
             }
         });
 
-        this._socket.emit('SubAdd', { subs });
+        this._socket.on('connect', () => {
+            console.info('CryptoCompare socket connected');
+            this._socket.emit('SubAdd', { subs });
+        });
+
+        this._socket.on("disconnect", (message) => {
+            console.warn('CryptoCompare socket disconnected');
+        });
     }
 
     public unsubscribePriceStream(instruments) {
-
+        this._socket.disconnect();
+        this._socket = null;
     }
 
     public async getSymbols(): Promise<Array<any>> {
@@ -202,9 +214,9 @@ export default class CyrptoCompareApi extends EventEmitter {
 
         for (let i = 0, len = symbols.length; i < len; i++) {
             const result = await this._doRequest('https://min-api.cryptocompare.com/data/price?', { fsym: symbols[i], tsyms: toSymbol });
-            priceArr.push({instrument: symbols[i], bid: result[toSymbol]});
+            priceArr.push({ instrument: symbols[i], bid: result[toSymbol] });
         }
-        
+
         return priceArr;
     }
 

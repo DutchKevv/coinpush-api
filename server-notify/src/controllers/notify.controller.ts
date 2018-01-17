@@ -112,7 +112,6 @@ export const notifyController = {
     },
 
     async sendTypeSymbolAlarm(notification, user) {
-        console.log('asdfasdfdsfsaf');
         const title = `Price alarm triggered on ${notification.data.symbol} - ${notification.data.target}`;
         const data = {
             type: 'symbol-alarm',
