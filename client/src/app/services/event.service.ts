@@ -18,13 +18,18 @@ export class EventService {
 	constructor(
 		private _http: Http,
 		private _alertService: AlertService,
-		private _userService: UserService
-	) {
+		private _userService: UserService,
+		private _cacheService: CacheService
+	) {}
+
+	public init() {
 		this._initializeEvents();
+		this._updateSymbolIAlarms();
+
 		app.on('event-triggered', event => this._onEventTriggered(event));
 	}
 
-	async create(params: any): Promise<EventModel> {
+	public async create(params: any): Promise<EventModel> {
 		try {
 			const result = await this._http.post('/event', params)
 				.map(res => res.json())
@@ -44,6 +49,7 @@ export class EventService {
 
 			const events = this.events$.getValue();
 			events.unshift(eventModel);
+			this._updateSymbolIAlarms(events);
 			this.events$.next(events);
 
 			return eventModel;
@@ -53,7 +59,7 @@ export class EventService {
 		}
 	}
 
-	async findById(id: string): Promise<Array<CommentModel>> {
+	public async findById(id: string): Promise<Array<CommentModel>> {
 		const result = await this._http.get('/event/' + id)
 			.map(res => [res.json()].map(r => {
 				const model = new CommentModel(r);
@@ -65,17 +71,20 @@ export class EventService {
 		return result;
 	}
 
-	findBySymbol(symbol: string, offset: number = 0, limit: number = 5, history?: boolean): any {
+	public findBySymbol(symbol: string, offset: number = 0, limit: number = 5, history?: boolean): any {
 		return this._http.get('/event', { params: { symbol, offset, limit, history } }).map(res => res.json());
 	}
 
-	update(model: CommentModel, options): Observable<Response> {
+	public update(model: CommentModel, options): Observable<Response> {
 		return this._http.put('/event/' + model.get('_id'), options);
 	}
 
-	remove(eventModel: EventModel): Promise<any> {
+	public remove(eventModel: EventModel): Promise<any> {
 		const events = this.events$.getValue();
 		events.splice(events.indexOf(eventModel), 1);
+
+		this._updateSymbolIAlarms(events);
+
 		this.events$.next(events);
 		return this._http.delete('/event/' + eventModel._id).toPromise();
 	}
@@ -84,6 +93,14 @@ export class EventService {
 		this._alertService.success(event.title);
 		const audio = new Audio('./assets/sound/cow.mp3');
 		audio.play();
+	}
+
+	private _updateSymbolIAlarms(events?: Array<EventModel>) {
+		events = events || this.events$.getValue();
+
+		this._cacheService.symbols.forEach(symbol => {
+			symbol.options.iAlarm = !!events.find(event => event.symbol === symbol.options.name);
+		});
 	}
 
 	private _initializeEvents() {

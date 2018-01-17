@@ -1,8 +1,8 @@
 import { Event } from '../schemas/event.schema';
 import * as mongoose from 'mongoose';
 import { CUSTOM_EVENT_TYPE_ALARM, ALARM_TRIGGER_TYPE_PRICE, ALARM_TRIGGER_TYPE_PERCENTAGE, ALARM_TRIGGER_DIRECTION_DOWN, ALARM_TRIGGER_DIRECTION_UP } from '../../../shared/constants/constants';
-import { client } from '../modules/redis';
 import { flatten } from 'lodash';
+import { pubClient } from '../modules/redis';
 
 const config = require('../../../tradejs.config');
 
@@ -67,7 +67,7 @@ export const eventController = {
 	async checkEvents() {
 		return new Promise((resolve, reject) => {
 
-			client.hgetall('symbols', async (err, symbols) => {
+			pubClient.hgetall('symbols', async (err, symbols) => {
 				if (err)
 					return reject(err);
 
@@ -109,7 +109,7 @@ export const eventController = {
 								}
 							};
 
-							client.publish("notify", JSON.stringify(pubOptions), (error) => {
+							pubClient.publish("notify", JSON.stringify(pubOptions), (error) => {
 								if (error)
 									console.error(error);
 							});

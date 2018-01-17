@@ -16,6 +16,7 @@ import { CacheService } from '../../services/cache.service';
 import { SYMBOL_CAT_TYPE_FOREX, SYMBOL_CAT_TYPE_RESOURCE, SYMBOL_CAT_TYPE_CRYPTO, CUSTOM_EVENT_TYPE_ALARM, ALARM_TRIGGER_DIRECTION_DOWN, ALARM_TRIGGER_DIRECTION_UP, BROKER_GENERAL_TYPE_OANDA, BROKER_GENERAL_TYPE_CC, CUSTOM_EVENT_TYPE_ALARM_NEW } from "../../../../../shared/constants/constants";
 import { NgForm } from '@angular/forms';
 import { app } from '../../../core/app';
+import { EventService } from '../../services/event.service';
 
 @Component({
 	selector: 'chart-overview',
@@ -40,6 +41,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 	private _routeSub;
 	private _filterSub;
 	private _priceChangeSub;
+	private _eventSub;
 
 	constructor(
 		public userService: UserService,
@@ -49,6 +51,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 		private _route: ActivatedRoute,
 		private _router: Router,
 		private _applicationRef: ApplicationRef,
+		private _eventService: EventService
 	) {
 		this._changeDetectorRef.detach();
 	}
@@ -56,6 +59,9 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 	ngOnInit() {
 		this._filterSub = this._applicationRef.components[0].instance.filterClick$.subscribe(state => this.toggleFilterNav(null, state));
 		this._priceChangeSub = this.cacheService.changed$.subscribe(changedSymbols => this._onPriceChange(changedSymbols));
+		this._eventSub = this._eventService.events$.subscribe(() => {
+			this._changeDetectorRef.detectChanges();
+		});
 
 		this.toggleActiveFilter(this.defaultActiveFilter);
 
@@ -105,7 +111,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 	public toggleActiveFilter(filter: string, removeSymbolFromUrl = true) {
 		if (filter === this.activeFilter)
 			return;
-			
+
 		// remove specific symbol in url
 		if (removeSymbolFromUrl && this._route.snapshot.queryParams['symbol']) {
 			this._router.navigate(['/symbols'], { skipLocationChange: false, queryParams: {} });
@@ -259,6 +265,9 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 
 		if (this._routeSub)
 			this._routeSub.unsubscribe();
+
+		if (this._eventSub)
+			this._eventSub.unsubscribe();
 
 		this.symbols = null;
 	}

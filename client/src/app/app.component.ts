@@ -6,6 +6,7 @@ import { Router, NavigationEnd, NavigationStart, ActivatedRoute } from '@angular
 import { UserService } from './services/user.service';
 import { Http } from '@angular/http';
 import { app } from '../core/app';
+import { EventService } from './services/event.service';
 
 declare let Module: any;
 
@@ -106,11 +107,15 @@ export class AppComponent implements OnInit, AfterViewInit {
 		public userService: UserService,
 		public authenticationService: AuthenticationService,
 		private _changeDetectorRef: ChangeDetectorRef,
+		private _eventService: EventService,
 		private _cacheService: CacheService) { 
 			// this._changeDetectorRef.detach();
 		}
 
-	ngOnInit() {	
+	ngOnInit() {
+		this._cacheService.init(); // cacheService must init before eventService
+		this._eventService.init();
+		
 		this._routerEventsSub = this.router.events.subscribe((val) => {
 			if (val instanceof NavigationEnd) {
 				this.searchOpen = false;

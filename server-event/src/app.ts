@@ -3,7 +3,7 @@ import * as express from 'express';
 import * as helmet from 'helmet';
 import * as morgan from 'morgan';
 import * as mongoose from 'mongoose';
-import { client } from './modules/redis';
+import { pubClient, subClient } from './modules/redis';
 import { eventController } from './controllers/event.controller';
 // error catching
 process.on('unhandledRejection', (reason, p) => {
@@ -30,9 +30,9 @@ export const app = {
     },
 
     _setRedisListener() {
-        // client.subscribe("symbols");
+        subClient.subscribe("ticks");
 
-        client.on("message", (channel, message) => {
+        subClient.on("message", (channel, message) => {
             let data;
             
             try {
@@ -42,10 +42,8 @@ export const app = {
             }
 
             switch (channel) {
-                case 'symbols':
-                    console.log(data);
                 case 'ticks':
-                   
+                    // eventController.checkEvents();
                     break;
                 case 'bar':
                     break;
