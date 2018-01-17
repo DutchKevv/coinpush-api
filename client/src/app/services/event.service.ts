@@ -18,7 +18,6 @@ export class EventService {
 	constructor(
 		private _http: Http,
 		private _alertService: AlertService,
-		private _cacheService: CacheService,
 		private _userService: UserService
 	) {
 		this._initializeEvents();
@@ -82,12 +81,9 @@ export class EventService {
 	}
 
 	private _onEventTriggered(event) {
-		const symbol = this._cacheService.getSymbolByName(event.symbol);
-		if (symbol) {
-			this._alertService.success(event.title);
-			const audio = new Audio('./assets/sound/cow.mp3');
-			audio.play();
-		}
+		this._alertService.success(event.title);
+		const audio = new Audio('./assets/sound/cow.mp3');
+		audio.play();
 	}
 
 	private _initializeEvents() {

@@ -3,6 +3,7 @@ import * as io from 'socket.io-client';
 import { SymbolModel } from "../models/symbol.model";
 import { UserService } from './user.service';
 import { app } from '../../core/app';
+import { EventService } from './event.service';
 
 @Injectable()
 export class CacheService {
@@ -14,6 +15,7 @@ export class CacheService {
 
 	constructor(
 		private _zone: NgZone,
+		private _eventService: EventService,
 		private _userService: UserService
 	) {
 		this.init();
@@ -86,6 +88,8 @@ export class CacheService {
 	private _updateSymbols() {
 
 		this._zone.runOutsideAngular(() => {
+			const events = this._eventService.events$.getValue();
+
 			for (let key in app.data.symbols) {
 				const symbol = JSON.parse(app.data.symbols[key]);
 
@@ -97,6 +101,7 @@ export class CacheService {
 
 				} else {
 					symbol.iFavorite = this._userService.model.options.favorites.includes(symbol.name);
+					symbol.iAlarm = !!events.find(event => event.symbol === symbol.name);
 
 					const symbolModel = new SymbolModel(symbol);
 					symbolModel.tick([]);

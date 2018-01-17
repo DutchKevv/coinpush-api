@@ -102,7 +102,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 
 	ngAfterViewInit() {
 		this._changeSubscription = this._cacheService.changed$.subscribe(symbols => {
-			if (this.symbolModel && symbols.indexOf(this.symbolModel.options.name) > -1) {
+			if (this.symbolModel && symbols.includes(this.symbolModel.options.name)) {
 				this._onPriceChange(true);
 			}
 		});
@@ -428,7 +428,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	 */
 	private _onPriceChange(render: boolean = false) {
 		if (this._data && this._data.candles && this._data.candles.length) {
-			this._data.candles[this._data.candles.length - 1][4] = this.symbolModel.options.bid;
+			this._data.candles[this._data.candles.length - 1][1] = this.symbolModel.options.bid;
 		}
 
 		if (this._chart && this._chart.series[0].data.length) {
@@ -509,8 +509,8 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	private _prepareData(data: any): void {
 		let i = 0, rowLength = 10, length = data.length;
 
-		this._data.volume = new Array(length / rowLength),
-			this._data.candles = new Array(length / rowLength);
+		this._data.volume = new Array(length / rowLength);
+		this._data.candles = new Array(length / rowLength);
 
 		for (; i < length; i += rowLength) {
 			this._data.candles[i / rowLength] = [

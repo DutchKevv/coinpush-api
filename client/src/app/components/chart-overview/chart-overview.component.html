@@ -53,7 +53,7 @@
                 </div>
                 <ng-template #halted>Market closed</ng-template>
             </div>
-            <i (click)="toggleAlarmMenu($event, symbol, true)" class="fa fa-bell col-alert"></i>
+            <i (click)="toggleAlarmMenu($event, symbol, true)" class="fa fa-bell col-alert" [ngClass]="{'active-icon': symbol.options.iFavorite}"></i>
         </a>
     </div>
 
