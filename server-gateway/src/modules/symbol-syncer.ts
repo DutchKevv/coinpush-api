@@ -1,34 +1,62 @@
 
-export const syncer = function (redisClient) {
-    redisClient
-}
+import { pubClient, subClient } from './redis';
+import { EventEmitter } from 'events';
 
-module.exports = {
+export class SymbolSyncer extends EventEmitter {
 
-    symbols: [],
+    private _symbols = [];
 
-    start(redisClient) {
-        redisClient.subscribe("symbol-update");
-        redisClient.subscribe("symbol-tick");
+    get symbols() {
+        return this._symbols;
+    }
 
-        redisClient.on("message", (channel, message) => {
-            let data;
+    constructor() {
+        super();
+    }
 
-            try {
-                data = JSON.parse(message);
-            } catch (error) {
-                return console.error(error);
-            }
+    async start() {
+        await this._loadSymbols();
 
-            switch (channel) {
-                case 'symbol-update':
-                    console.log(data);
-                case 'ticks':
-                    console.log(data);
-                    break;
-                case 'bar':
-                    break;
-            }
+        subClient.subscribe("symbol-update");
+        subClient.subscribe("ticks");
+
+        subClient.on("message", this._onMessage.bind(this));
+    }
+
+    stop() {
+        // subClient.off('message', this._onMessage);
+    }
+
+    private _loadSymbols(): Promise<void> {
+        return new Promise((resolve, reject) => {
+            pubClient.hgetall('symbols', (err, redisSymbols) => {
+                if (err)
+                    return reject(err);
+
+                this._symbols = redisSymbols;
+
+                resolve();
+            });
         });
+    }
+
+    private _onMessage(channel, message) {
+        let data;
+
+        try {
+            data = JSON.parse(message);
+        } catch (error) {
+            return console.error(error);
+        }
+    
+        switch (channel) {
+            case 'symbol-update':
+                console.log(data);
+            case 'ticks':
+                this.emit('ticks', data);
+                break;
+            case 'bar':
+                break;
+        }
     }
 }

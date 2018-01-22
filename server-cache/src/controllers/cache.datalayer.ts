@@ -15,7 +15,7 @@ const READ_COUNT_DEFAULT = 2000;
  */
 export const dataLayer = {
 
-	async read(params: { symbol: string, timeFrame: string, from?: number, until?: number, count?: number, fields?: any, toArray?: boolean }): Promise<NodeBuffer | Float64Array> {
+	async read(params: {symbol: string, timeFrame: string, from?: number, until?: number, count?: number | string, fields?: any, toArray?: boolean }): Promise<NodeBuffer | Float64Array> {
 
 		// symbol required
 		if (!params.symbol || typeof params.symbol !== 'string')
@@ -25,17 +25,16 @@ export const dataLayer = {
 		if (!params.timeFrame || typeof params.timeFrame !== 'string')
 			throw new Error('Cache -> Read : No timeFrame given');
 
-		let symbol = params.symbol,
-			timeFrame = params.timeFrame,
+		let timeFrame = params.timeFrame,
 			from = params.from,
 			until = params.until,
-			count = params.count || READ_COUNT_DEFAULT;
+			count = parseInt((<any>params.count), 10) || READ_COUNT_DEFAULT;
 
 
 		if (from && until)
 			throw new Error('dataLayer: "from" and "until" cannot both pe passes as params');
 
-		const collectionName = this.getCollectionName(symbol, timeFrame);
+		const collectionName = this.getCollectionName(params.symbol, timeFrame);
 		const model = mongoose.model(collectionName, CandleSchema);
 		const qs: any = {};
 

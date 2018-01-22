@@ -64,9 +64,6 @@ export const cacheController = {
 
 		this.tickBuffer[tick.instrument] = [tick.time, tick.bid, tick.ask];
 
-		if (tick.instrument === 'BTS') {
-			console.log('asfasasfsdfsadf', tick);
-		}
 		symbolObj.bid = tick.bid;
 		symbolObj.ask = tick.ask;
 		symbolObj.lastTick = tick.time;

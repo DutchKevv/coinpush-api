@@ -1,6 +1,5 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import * as redis from '../modules/redis';
 import OandaApi from "../../../shared/brokers/oanda/index";
 import { cacheController } from './cache.controller';
 import { Status } from '../schemas/status.schema';

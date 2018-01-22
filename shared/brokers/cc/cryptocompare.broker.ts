@@ -342,7 +342,7 @@ export default class CyrptoCompareApi extends EventEmitter {
         } catch (error) {
             const calls = await this._getCallsInMinute();
 
-            if (!calls.CallsLeft.Histo) {
+            if (!calls || !calls.CallsLeft.Histo) {
                 return await new Promise((resolve) => {
                     setTimeout(async () => {
                         resolve(await this._doRequest(url, params, ++reattempt));

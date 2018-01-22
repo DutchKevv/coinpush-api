@@ -3,6 +3,7 @@ import * as io from 'socket.io-client';
 import { SymbolModel } from "../models/symbol.model";
 import { UserService } from './user.service';
 import { app } from '../../core/app';
+import { Http, Response, ResponseContentType } from '@angular/http';
 
 @Injectable()
 export class CacheService {
@@ -14,9 +15,10 @@ export class CacheService {
 
 	constructor(
 		private _zone: NgZone,
-		private _userService: UserService
+		private _userService: UserService,
+		private _http: Http
 	) {
-		
+
 	}
 
 	public init() {
@@ -24,7 +26,7 @@ export class CacheService {
 			reconnectionAttempts: 10000, // avoid having user reconnect manually in order to prevent dead clients after a server restart
 			timeout: 10000, // before connect_error and connect_timeout are emitted.
 			transports: ['websocket'],
-			path: '/ws/candles/',
+			// path: '/ws/candles/',
 			secure: true,
 			autoConnect: false
 		});
@@ -34,8 +36,6 @@ export class CacheService {
 		app.on('symbols-update', () => this._updateSymbols());
 
 		this._socket.on('ticks', ticks => {
-			ticks = JSON.parse(ticks);
-
 			for (let _symbol in ticks) {
 				let symbol = this.getSymbolByName(_symbol);
 
@@ -47,20 +47,17 @@ export class CacheService {
 		});
 	}
 
-	public read(params) {
+	public async read(params) {
+		const headers = new Headers;
+		headers.append('Content-Type', 'application/octet-stream');
 
-		return new Promise((resolve, reject) => {
-			this._zone.runOutsideAngular(() => {
-				this._socket.emit('read', params, (err, buffer: Uint8Array) => {
-					if (err)
-						return reject(err);
-
-					let arr = new Float64Array(buffer);
-
-					resolve(arr);
-				});
-			});
+		return (<any>this._http).get('/cache', {
+			headers,
+			params,
+			responseType: ResponseContentType.ArrayBuffer
 		})
+			.map(res => new Float64Array(res._body))
+			.toPromise();
 	}
 
 	/**
@@ -98,7 +95,7 @@ export class CacheService {
 
 				} else {
 					symbol.iFavorite = this._userService.model.options.favorites.includes(symbol.name);
-		
+
 					const symbolModel = new SymbolModel(symbol);
 					symbolModel.tick([]);
 					this.symbols.push(symbolModel);

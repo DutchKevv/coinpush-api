@@ -1,18 +1,17 @@
-import * as request from 'request-promise';
-import { client } from '../modules/redis';
+import { SymbolSyncer } from '../modules/symbol-syncer';
 
 const config = require('../../../tradejs.config');
 
 export const symbolController = {
 
-	getPublicList(): Promise<any> {
-		return new Promise((resolve, reject) => {
-            client.hgetall('symbols', (err, symbols) => {
-                if (err)
-                    return reject(err);
+    symbolSyncer: null,
 
-                resolve(symbols || []);
-            });
-        });
+    async init() {
+        this.symbolSyncer = new SymbolSyncer();
+        await this.symbolSyncer.start();
+    },
+
+	getPublicList(): Array<any> {
+		return this.symbolSyncer.symbols;
 	}
 };

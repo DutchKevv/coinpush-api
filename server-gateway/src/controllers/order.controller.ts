@@ -1,7 +1,6 @@
 import * as request from 'request-promise';
 import {BROKER_ERROR_NOT_ENOUGH_FUNDS} from '../../../shared/constants/constants';
 import {userController} from './user.controller';
-import * as redis from '../modules/redis';
 
 const config = require('../../../tradejs.config');
 
@@ -95,16 +94,5 @@ export const orderController = {
 
 	async _copyOrder(order): Promise<Boolean> {
 		return true;
-	},
-
-	_getCurrentPrice(symbolName) {
-		return new Promise((resolve, reject) => {
-			redis.client.get('symbol-' + symbolName, (err, symbol) => {
-				if (err)
-					return reject(err);
-
-				resolve(JSON.parse(symbol));
-			});
-		});
 	}
 };

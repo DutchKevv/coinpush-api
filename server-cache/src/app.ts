@@ -4,11 +4,9 @@ import * as express from 'express';
 import * as helmet from 'helmet';
 import * as mongoose from 'mongoose';
 import * as morgan from 'morgan';
-import * as io from 'socket.io';
 import { cacheController } from './controllers/cache.controller';
 import { symbolController } from './controllers/symbol.controller';
 import { BrokerMiddleware } from '../../shared/brokers/broker.middleware';
-import { clearInterval } from 'timers';
 import { client } from './modules/redis';
 import { log } from '../../shared/logger';
 
@@ -42,28 +40,23 @@ export const app = {
 		await this.broker.setSymbols()
 		// await this.broker.setLastKnownPrices(); // only needed at start
 
+		// http api
+		this._setupApi();
+
 		// cache + symbols syncing
 		await cacheController.sync(false);
 
 		this._toggleSymbolUpdateInterval(true);
 		this._toggleWebSocketTickInterval(true);
 
-		// this.broke;
 		await this.broker.on('tick', cacheController.onTick.bind(cacheController)).openTickStream(app.broker.symbols.map(symbol => symbol.name));
 
-		// http / websocket api
-		this._setupApi();
-		
 	},
 
 	_setupApi(): void {
 		// http 
 		this.api = express();
 		const server = this.api.listen(config.server.cache.port, () => console.log(`\n Cache service started on      : 127.0.0.1:${config.server.cache.port}`));
-
-		// websocket
-		this.io = io(server, { path: '/ws/candles' }).listen(server);
-		this.io.on('connection', socket => require('./api/cache.socket')(socket));
 
 		this.api.use(morgan('dev'));
 		this.api.use(helmet());
@@ -73,6 +66,8 @@ export const app = {
 			res.header('Access-Control-Allow-Headers', '_id, Authorization, Origin, X-Requested-With, Content-Type, Accept');
 			next();
 		});
+
+		this.api.use('/cache', require('./api/cache.api'));
 
 		/**
 		 * error handling
@@ -138,10 +133,18 @@ export const app = {
 			if (!Object.keys(cacheController.tickBuffer).length)
 				return;
 
-			const JSONString = JSON.stringify(cacheController.tickBuffer);
+			client.publish('ticks', JSON.stringify(cacheController.tickBuffer));
 
-			this.io.sockets.emit('ticks', JSONString);
-			client.publish('ticks', JSONString);
+			const symbolData = {};
+			for (let symbolName in cacheController.tickBuffer) {
+				const symbol = app.broker.symbols.find(symbol => symbol.name === symbolName);
+
+				if (symbol)
+					symbolData[symbolName] = JSON.stringify(symbol);
+			}
+
+			if (Object.keys(symbolData).length)
+				client.HMSET('symbols', symbolData);
 
 			cacheController.tickBuffer = {};
 		}, this._socketTickIntervalTime);

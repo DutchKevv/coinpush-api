@@ -35,7 +35,7 @@ export class EventService {
 				.map(res => res.json())
 				.toPromise();
 
-			this._alertService.success(`Alarm set on ${params.symbol} - Price ${params.amount}`);
+			this._alertService.success(`Alarm set on ${params.symbol} - Price $${params.amount}`);
 
 			const eventModel = new EventModel(
 				result._id,
