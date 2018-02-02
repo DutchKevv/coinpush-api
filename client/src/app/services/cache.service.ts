@@ -26,7 +26,7 @@ export class CacheService {
 			reconnectionAttempts: 10000, // avoid having user reconnect manually in order to prevent dead clients after a server restart
 			timeout: 10000, // before connect_error and connect_timeout are emitted.
 			transports: ['websocket'],
-			// path: '/ws/candles/',
+			query: 'userId=' + this._userService.model.options._id,
 			secure: true,
 			autoConnect: false
 		});
@@ -34,6 +34,10 @@ export class CacheService {
 		this._updateSymbols();
 
 		app.on('symbols-update', () => this._updateSymbols());
+
+		this._socket.on('notification', notification => {
+			alert('notificaoitn!!!');
+		})
 
 		this._socket.on('ticks', ticks => {
 			for (let _symbol in ticks) {

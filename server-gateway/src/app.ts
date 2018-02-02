@@ -9,6 +9,7 @@ import * as io from 'socket.io';
 import { symbolController } from './controllers/symbol.controller';
 import { BrokerMiddleware } from '../../shared/brokers/broker.middleware';
 import { log } from '../../shared/logger';
+import { subClient } from './modules/redis';
 
 const path = require('path');
 const httpProxy = require('http-proxy');
@@ -44,16 +45,38 @@ export const app = {
 	_socketTickIntervalTime: 500,
 
 	async init(): Promise<void> {
+		this._setRedisListeners();
 
 		// load symbols
 		await symbolController.init();
-
-		symbolController.symbolSyncer.on('ticks', ticks => this.io.sockets.emit('ticks', ticks));
 
 		this._toggleWebSocketTickInterval();
 
 		// http / websocket api
 		this._setupApi();
+	},
+
+	_setRedisListeners() {
+		subClient.subscribe('ticks');
+		subClient.subscribe('socket-notification');
+
+		subClient.on('message', (channel, message) => {
+			const object = JSON.parse(message);
+
+			switch (channel) {
+				case 'socket-notification':
+					const clients = this.io.sockets.sockets;
+					for (let key in clients) {
+						if (clients[key].userId === object.data.__userId)
+							clients[key].emit('notification', object.data);
+					}
+					break;
+				case 'ticks':
+					symbolController.symbolSyncer.tick(object);
+					this.io.sockets.emit('ticks', object);
+					break;
+			}
+		});
 	},
 
 	_setupApi(): void {
@@ -63,6 +86,16 @@ export const app = {
 
 		// websocket
 		this.io = io(server).listen(server);
+		this.io.use((socket, next) => {
+			socket.userId = socket.handshake.query.userId;
+
+			// return the result of next() to accept the connection.
+			// if (socket.handshake.query.foo == "bar") {
+			return next();
+			// }
+			// call next() with an Error if you need to reject the connection.
+			// next(new Error('Authentication error'));
+		});
 		// this.io.on('connection', socket => require('./api/cache.socket')(socket));
 
 		/**

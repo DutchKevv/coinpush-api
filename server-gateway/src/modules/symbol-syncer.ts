@@ -14,13 +14,12 @@ export class SymbolSyncer extends EventEmitter {
         super();
     }
 
-    async start() {
+    async tick() {
+
+    }
+
+    async load() {
         await this._loadSymbols();
-
-        subClient.subscribe("symbol-update");
-        subClient.subscribe("ticks");
-
-        subClient.on("message", this._onMessage.bind(this));
     }
 
     stop() {
@@ -38,25 +37,5 @@ export class SymbolSyncer extends EventEmitter {
                 resolve();
             });
         });
-    }
-
-    private _onMessage(channel, message) {
-        let data;
-
-        try {
-            data = JSON.parse(message);
-        } catch (error) {
-            return console.error(error);
-        }
-    
-        switch (channel) {
-            case 'symbol-update':
-                console.log(data);
-            case 'ticks':
-                this.emit('ticks', data);
-                break;
-            case 'bar':
-                break;
-        }
     }
 }

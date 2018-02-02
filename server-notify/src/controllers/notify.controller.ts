@@ -5,6 +5,7 @@ import * as gcm from 'node-gcm';
 import { User } from '../schemas/user.schema';
 import { Notification } from '../schemas/notification.schema';
 import { IReqUser } from '../../../shared/interfaces/IReqUser.interface';
+import { pubClient } from '../modules/redis';
 
 const config = require('../../../tradejs.config');
 
@@ -23,6 +24,14 @@ export const notifyController = {
         return Notification.find({ toUserId: reqUser.id }).sort({ _id: sort }).limit(limit).lean();
     },
 
+    /**
+     * TODO: check if user has GCM enabled, otherwhise send through websocket
+     * @param userId 
+     * @param title 
+     * @param body 
+     * @param data 
+     * @param user 
+     */
     async sendToUser(userId, title, body, data: any = {}, user?: any) {
         data.__userId = userId;
 
@@ -32,14 +41,18 @@ export const notifyController = {
 
         const registrationTokens = (user.devices || []).map(device => device.token);
 
-        const message = new gcm.Message({
+        const messageObj = {
             priority: 'high',
             data: {
                 title,
                 body,
                 data
             }
-        });
+        };
+
+        const message = new gcm.Message(messageObj);
+
+        pubClient.publish('socket-notification', JSON.stringify(messageObj.data));
 
         // actually send the message
         const sendResult = await new Promise((resolve, reject) => {

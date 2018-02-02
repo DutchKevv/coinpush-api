@@ -5,6 +5,7 @@ import * as mongoose from 'mongoose';
 import { json, urlencoded } from 'body-parser';
 import { notifyController } from './controllers/notify.controller';
 import * as redis from './modules/redis';
+import { subClient } from './modules/redis';
 
 const config = require('../../tradejs.config');
 const app = express();
@@ -59,8 +60,8 @@ app.use((error, req, res, next) => {
 	res.status(500).send({ error });
 });
 
-redis.client.subscribe("notify");
-redis.client.on("message", function (channel, message) {
+subClient.subscribe("notify");
+subClient.on("message", function (channel, message) {
 
 	try {
 		switch (channel) {
