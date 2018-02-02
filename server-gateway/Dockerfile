@@ -1,5 +1,5 @@
 # Create image based on the official Node 6 image from dockerhub
-FROM node:8
+FROM node:9
 
 # Create a directory where our app will be placed
 RUN mkdir -p /usr/src/app/server-gateway
@@ -22,4 +22,4 @@ COPY /shared /usr/src/app/shared
 EXPOSE 3100
 
 # Serve the app
-CMD ["npm", "start"]
+# CMD ["npm", "start"]

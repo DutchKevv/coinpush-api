@@ -7,6 +7,26 @@ services:
       dockerfile: server-gateway/Dockerfile
     ports:
       - "3100:3100"
+  nginx:
+    build: ./server-nginx
+    image: app_nginx
+    # env_file: docker_env.env
+    ports:
+        - 5000:80
+    links:
+        - gateway:gateway
+    # volumes_from:
+    #     - node_demo
+    #     - jekyll_demo
+  # redis:
+  #   build: ./redis-server
+  #   image: dockerdemo_redis
+  #   env_file: docker_env.env
+  #   ports:
+  #       - 6379:6379
+  #   volumes_from:
+  #       - node_demo
+  #       - jekyll_demo
 
 #  client:
 #    build:

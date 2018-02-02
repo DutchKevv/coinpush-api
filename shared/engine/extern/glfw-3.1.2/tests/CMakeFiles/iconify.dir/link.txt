@@ -1,1 +1,0 @@
-/Library/Developer/CommandLineTools/usr/bin/cc -g -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/iconify.dir/iconify.c.o CMakeFiles/iconify.dir/__/deps/getopt.c.o  -o iconify ../src/libglfw3.a -framework Cocoa -framework IOKit -framework CoreFoundation -framework CoreVideo 

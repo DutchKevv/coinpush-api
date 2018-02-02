@@ -1,4 +1,5 @@
 const path = require('path');
+const fs = require('fs');
 
 let domain = {
     host: 'http://localhost',
@@ -114,7 +115,11 @@ const config = {
 };
 
 // deepmerge config with custom config
-mergeDeep(config, require('./tradejs.config.custom.json'));
+try {
+    mergeDeep(config, require('./tradejs.config.custom.json'));
+} catch (error) {
+    console.error('missing or corrupt \'/tradjs.config.custom.json\'!');
+}
 
 // build full domain urls (ex: http://123.123.123.123:9999)
 for (let name in config.server)
