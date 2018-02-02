@@ -45,7 +45,6 @@
     "@types/node": "^9.3.0",
     "android-versions": "^1.2.2",
     "bootstrap": "^4.0.0-beta.3",
-    "cordova": "^8.0.0",
     "cordova-android": "^7.0.0",
     "cordova-browser": "^5.0.3",
     "cordova-build-increment": "^0.1.0",
