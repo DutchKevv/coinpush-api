@@ -1,6 +1,7 @@
 node_modules
 *.js
 *.map
+!data/**/*.js
 
 engine/cmake-build-debug
 engine/CMakeFiles
