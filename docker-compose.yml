@@ -1,32 +1,54 @@
 version: '2'
 
 services:
-  gateway:
+  client: # name of the first service
+    container_name: client
     build:
       context: .
-      dockerfile: server-gateway/Dockerfile
+      dockerfile: client/Dockerfile
+    volumes:
+      - ./client:/usr/src/app/client
+      - /usr/src/app/client/node_modules
+  gateway:
+    container_name: gateway
+    build:
+      context: ./
+      dockerfile: ./server-gateway/Dockerfile
     ports:
       - "3100:3100"
+    # volumes:
+    #   - ./server-gateway:/usr/src/server-gateway
+    #   - /usr/src/server-gateway/node_modules
+    # depends_on:
+      # - nginx
+      # - redis
+    links:
+      - nginx
   nginx:
     build: ./server-nginx
-    image: app_nginx
+    # image: nginx
+    container_name: nginx
     # env_file: docker_env.env
     ports:
-        - 5000:80
-    links:
-        - gateway:gateway
+      - "80:80"
+    # links:
+        # - gateway:gateway
+    # volumes_from:
+    #     - client
+    # links:
+      # - client:client
+  redis:
+    image: "redis:alpine"
+    ports:
+        - "6379"
+    # build: ./server-redis/
+    container_name: redis
+    # env_file: docker_env.env
+    # ports:
+        # - "6379:6379"
     # volumes_from:
     #     - node_demo
     #     - jekyll_demo
-  # redis:
-  #   build: ./redis-server
-  #   image: dockerdemo_redis
-  #   env_file: docker_env.env
-  #   ports:
-  #       - 6379:6379
-  #   volumes_from:
-  #       - node_demo
-  #       - jekyll_demo
 
 #  client:
 #    build:

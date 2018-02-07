@@ -1,25 +1,51 @@
-# Create image based on the official Node 6 image from dockerhub
-FROM node:9
+FROM mhart/alpine-node:8.9.4
+
+ENV APP_LOCATION=/usr/src
+ENV SERVER_LOCATION=$APP_LOCATION/server-gateway
+ENV SHARED_LOCATION=$APP_LOCATION/shared
 
 # Create a directory where our app will be placed
-RUN mkdir -p /usr/src/app/server-gateway
-RUN mkdir -p /usr/src/app/shared
+RUN mkdir -p $SERVER_LOCATION/
+RUN mkdir -p $SHARED_LOCATION/
 
-# Change directory so that our commands run inside this new directory
-WORKDIR /usr/src/app/server-gateway
+# config
+COPY /tradejs.config.js /tradejs.config.custom.js $APP_LOCATION/
 
-# Copy dependency definitions
-COPY /server-gateway/package.json /usr/src/app/server-gateway
+# shared
+# Install Python.
+RUN apk --no-cache add --virtual native-deps \
+  g++ gcc libgcc libstdc++ linux-headers make python && \
+  npm install --quiet node-gyp -g
+#   npm install --quiet && \
+#   apk del native-deps
 
-# Install dependecies
-RUN npm install
+# sharp image processing
+RUN apk add --update \
+    --repository http://dl-3.alpinelinux.org/alpine/edge/testing \
+    vips-tools vips-dev fftw-dev \
+    && rm -rf /var/cache/apk/*
 
-# Get all the code needed to run the app
-COPY /server-gateway /usr/src/app/server-gateway
-COPY /shared /usr/src/app/shared
+WORKDIR $SHARED_LOCATION/
+COPY /shared/package.json ./
+RUN npm i
+COPY /shared ./
+RUN npm run build
 
-# Expose the port the app runs in
+RUN ls
+
+# server
+WORKDIR $SERVER_LOCATION/
+COPY /server-gateway/package.json ./
+RUN npm i
+COPY server-gateway .
+# RUN npm start
+RUN npm run build
+
+RUN ls
+
+# port
 EXPOSE 3100
 
 # Serve the app
 # CMD ["npm", "start"]
+CMD npm run prod

@@ -5,7 +5,9 @@
   "description": "A sample Apache Cordova application that responds to the deviceready event.",
   "main": "index.js",
   "scripts": {
-    "start": "ng build --watch --aot --no-sourcemaps --output-hashing none",
+    "start": "npm run build-spritesheet && node ./node_modules/.bin/ng build --watch --aot --no-sourcemaps --output-hashing none",
+    "docker-build-dev": "docker build -t client:dev .",
+    "docker-run-dev": "docker run -d --name client -p 4200:4200 client:dev",
     "build": "ng build --prod --aot --env=prod --output-hashing none",
     "build-stats": "ng build --prod --aot --env=prod --stats-json --output-hashing none",
     "build-verbose": "ng build --prod --env=prod --stats-json --output-hashing none --verbose > build.txt",

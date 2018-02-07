@@ -45,8 +45,8 @@ export const app = {
 	_socketTickIntervalTime: 500,
 
 	async init(): Promise<void> {
-		this._setRedisListeners();
-
+		await this._setRedisListeners();
+		
 		// load symbols
 		await symbolController.init();
 
@@ -56,7 +56,15 @@ export const app = {
 		this._setupApi();
 	},
 
-	_setRedisListeners() {
+	async _setRedisListeners() {
+		if (!subClient.isConnected) {
+			await new Promise((resolve, reject) => {
+				subClient.on("connect", function () {
+					resolve();
+				});
+			});	
+		}
+		
 		subClient.subscribe('ticks');
 		subClient.subscribe('socket-notification');
 
@@ -82,7 +90,7 @@ export const app = {
 	_setupApi(): void {
 		// http 
 		this.api = express();
-		const server = this.api.listen(config.server.gateway.port, () => console.log(`\n Gateway service started on      : 127.0.0.1:${config.server.gateway.port}`));
+		const server = this.api.listen(config.server.gateway.port, '0.0.0.0', () => console.log(`\n Gateway service started on      : 127.0.0.1:${config.server.gateway.port}`));
 
 		// websocket
 		this.io = io(server).listen(server);

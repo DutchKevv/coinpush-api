@@ -2,8 +2,8 @@ const path = require('path');
 const fs = require('fs');
 
 let domain = {
-    host: 'http://localhost',
-    apiUrl: 'http://localhost:3100',
+    host: '0.0.0.0',
+    apiUrl: 'http://0.0.0.0:3100',
     port: 3100
 };
 
@@ -97,7 +97,7 @@ const config = {
     ip: {
         local: "",
         prod: "",
-        devLocal: "127.0.0.1",
+        devLocal: "0.0.0.0",
         devApp: "10.0.2.2"
     },
     firebase: {
@@ -107,7 +107,7 @@ const config = {
     app: {
         version: "0.0.1",
         ip: {
-            local: '127.0.0.1', 
+            local: '0.0.0.0', 
             appEmulator: '10.0.2.2',
             live: '**',
         }
@@ -116,9 +116,14 @@ const config = {
 
 // deepmerge config with custom config
 try {
-    mergeDeep(config, require('./tradejs.config.custom.json'));
+    if (fs.existsSync(path.join(__dirname, 'tradejs.config.custom.js'))) {
+        mergeDeep(config, require('./tradejs.config.custom'));
+    } else {
+        console.error('WARNING: missing \'tradejs.config.custom.js\'! \n');
+    }     
 } catch (error) {
-    console.error('missing or corrupt \'/tradjs.config.custom.json\'!');
+    console.error('WARNING: corrupt \'tradejs.config.custom.js\'! \n');
+    throw error;
 }
 
 // build full domain urls (ex: http://123.123.123.123:9999)

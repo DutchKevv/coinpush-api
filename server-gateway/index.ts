@@ -1,3 +1,5 @@
 import {app} from './src/app';
 
-app.init().catch(console.error);
+// setTimeout(() => {
+    app.init().catch(console.error);
+// }, 5000);

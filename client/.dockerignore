@@ -1,0 +1,6 @@
+.git
+.gitignore
+
+npm-debug.log
+node_modules/
+*.map
