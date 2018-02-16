@@ -9,7 +9,7 @@ import { BROKER_GENERAL_TYPE_CC, BROKER_GENERAL_TYPE_OANDA } from '../../../shar
 import { timeFrameSteps } from '../../../shared/util/util.date';
 import * as ProgressBar from 'progress';
 import * as moment from 'moment-timezone';
-import { client } from '../modules/redis';
+import { pubClient } from '../modules/redis';
 
 const config = require('../../../tradejs.config');
 
@@ -124,11 +124,14 @@ export const cacheController = {
 		log.info('cache', `syncing ${statuses.length} collections for broker ${brokerName}`);
 
 		// loop over each symbol (in bulk)
-		for (let i = 0, len = statuses.length; i < len; i++) {
+		// for (let i = 0, len = statuses.length; i < len; i++) {
+		statuses.forEach(async (status, i) => {
 			const now = Date.now();
-			const status = statuses[i];
+			// const status = statuses[i];
 
 			let lastSyncTimestamp;
+
+			log.info('cache', 'syncing: ' + brokerName + ' |  ' + i);
 
 			// only continue if a new bar is there
 			if (status.lastSync) {
@@ -136,7 +139,8 @@ export const cacheController = {
 
 				if (lastSyncTimestamp + timeFrameSteps[status.timeFrame] > now) {
 					progressBar && progressBar.tick();
-					continue;
+					// continue;
+					return;
 				}
 			}
 
@@ -151,7 +155,7 @@ export const cacheController = {
 
 				await symbolController.updateSymbol(status.symbol);
 
-				client.HMSET('symbols', {
+				pubClient.HMSET('symbols', {
 					[status.symbol]: JSON.stringify(app.broker.symbols.find(symbol => symbol.name === status.symbol))
 				});
 			} catch (error) {
@@ -159,7 +163,8 @@ export const cacheController = {
 			} finally {
 				progressBar && progressBar.tick();
 			}
-		}
+		// }
+		});
 
 		return {
 			time: Date.now()

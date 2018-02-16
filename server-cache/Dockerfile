@@ -1,24 +1,36 @@
-# Create image based on the official Node 6 image from dockerhub
-FROM node:8
+FROM node:8-alpine
+
+ENV APP_LOCATION=/usr/src/app
+ENV CACHE_LOCATION=$APP_LOCATION/server-cache
+ENV SHARED_LOCATION=$APP_LOCATION/shared
+
+RUN npm config set registry http://registry.npmjs.org/
 
 # Create a directory where our app will be placed
-RUN mkdir -p /usr/src/app/server-cache
-RUN mkdir -p /usr/src/app/shared
+RUN mkdir -p $SERVER_LOCATION/
+RUN mkdir -p $SERVER_LOCATION/node_modules/
+RUN mkdir -p $SHARED_LOCATION/
 
-# Change directory so that our commands run inside this new directory
-WORKDIR /usr/src/app/server-cache
+# config
+COPY /tradejs.config.js /tradejs.config.custom.js $APP_LOCATION/
 
-# Copy dependency definitions
-COPY /server-cache/package.json /usr/src/app/server-cache
+RUN apk add --no-cache make gcc g++ python
 
-# Install dependecies
-RUN npm install
+# shared
+WORKDIR $SHARED_LOCATION/
+COPY /shared/package.json .
+RUN npm i
+COPY /shared .
+RUN npm run build
 
-# Get all the code needed to run the app
-COPY /server-cache /usr/src/app/server-cache
-COPY /shared /usr/src/app/shared
+# server
+WORKDIR $CACHE_LOCATION/
+COPY /server-cache/package.json .
+RUN npm i
+COPY /server-cache .
+RUN npm run build
 
-# Expose the port the app runs in
+# port
 EXPOSE 3001
 
 # Serve the app

@@ -74,7 +74,7 @@ export const dataLayer = {
 
 		for (; i < candles.length;) {
 			const time = Math.trunc(candles[i]);
-			const data = Buffer.from(candles.slice(i, i += rowLength).buffer);
+			const data = Buffer.from(<any>candles.slice(i, i += rowLength).buffer);
 			bulk.find({ _id: time }).upsert().replaceOne({ $set: { _id: time, data } });
 		}
 

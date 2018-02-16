@@ -108,6 +108,8 @@ export class CacheService {
 
 			delete app.data.symbols;
 		});
+
+		console.log(this.symbols)
 	}
 
 	public add(model) {

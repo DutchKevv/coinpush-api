@@ -29,6 +29,7 @@ process.on('unhandledRejection', (reason, p) => {
 	throw reason;
 });
 
+
 // configuration
 const config = require('../../tradejs.config');
 
@@ -45,8 +46,10 @@ export const app = {
 	_socketTickIntervalTime: 500,
 
 	async init(): Promise<void> {
-		await this._setRedisListeners();
 		
+		
+		await this._setRedisListeners();
+
 		// load symbols
 		await symbolController.init();
 
@@ -62,9 +65,9 @@ export const app = {
 				subClient.on("connect", function () {
 					resolve();
 				});
-			});	
+			});
 		}
-		
+
 		subClient.subscribe('ticks');
 		subClient.subscribe('socket-notification');
 
@@ -223,6 +226,11 @@ export const app = {
 				}
 			}
 		});
+
+		this.api.get('/', function (req, res, next) {
+			res.send('This page has been viewed ' + 3 + ' times!');
+		});
+
 
 		// /**
 		//  * image

@@ -26,7 +26,7 @@ export class SymbolModel {
 	}
 
 	private _updateChangedAmount() {
-		if (!this.options.marks)
+		if (!this.options.marks.H)
 			return console.warn('Symbol ' + this.options.name + ' is incomplete');
 
 		const startHPrice = this.options.marks.H.price;

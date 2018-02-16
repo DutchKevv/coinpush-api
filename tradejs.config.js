@@ -27,7 +27,7 @@ const config = {
         },
         cache: {
             port: 3001,
-            connectionString: 'mongodb://localhost:27017/tradejs-cache'
+            connectionString: 'mongodb://mongodb:27017/tradejs-cache'
         },
         order: {
             port: 3005,

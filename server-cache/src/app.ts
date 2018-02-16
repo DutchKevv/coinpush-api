@@ -7,7 +7,7 @@ import * as morgan from 'morgan';
 import { cacheController } from './controllers/cache.controller';
 import { symbolController } from './controllers/symbol.controller';
 import { BrokerMiddleware } from '../../shared/brokers/broker.middleware';
-import { client } from './modules/redis';
+import { pubClient } from './modules/redis';
 import { log } from '../../shared/logger';
 
 // error catching
@@ -33,7 +33,8 @@ export const app = {
 
 	async init(): Promise<void> {
 		// database
-		await this._connectMongo();
+		this._connectMongo();
+		// await this._connectMongo();
 
 		// broker
 		this.broker = new BrokerMiddleware();
@@ -95,16 +96,13 @@ export const app = {
 			(<any>mongoose).Promise = global.Promise; // Typescript quirk
 
 			this.db = mongoose.connection;
-			this.db.on('error', error => {
-				console.error('connection error:', error);
-				reject();
-			});
-			this.db.once('open', () => {
-				console.log('Cache DB connected');
+
+			mongoose.connect(config.server.cache.connectionString, (error) => {
+				if (error)
+					return reject(error);
+				
 				resolve();
 			});
-
-			mongoose.connect(config.server.cache.connectionString, { useMongoClient: true });
 		});
 	},
 
@@ -133,7 +131,7 @@ export const app = {
 			if (!Object.keys(cacheController.tickBuffer).length)
 				return;
 
-			client.publish('ticks', JSON.stringify(cacheController.tickBuffer));
+			pubClient.publish('ticks', JSON.stringify(cacheController.tickBuffer));
 
 			const symbolData = {};
 			for (let symbolName in cacheController.tickBuffer) {
@@ -144,7 +142,7 @@ export const app = {
 			}
 
 			if (Object.keys(symbolData).length)
-				client.HMSET('symbols', symbolData);
+				pubClient.HMSET('symbols', symbolData);
 
 			cacheController.tickBuffer = {};
 		}, this._socketTickIntervalTime);

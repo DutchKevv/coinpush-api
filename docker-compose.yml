@@ -1,96 +1,102 @@
-version: '2'
+version: '3.3'
 
 services:
-  client: # name of the first service
-    container_name: client
-    build:
-      context: .
-      dockerfile: client/Dockerfile
+  mongodb:
+    restart: always
+    image: mongo:latest
+    container_name: "mongodb"
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/dev/null
     volumes:
-      - ./client:/usr/src/app/client
-      - /usr/src/app/client/node_modules
+      - ./data/db:/data/db
+    ports:
+      - 27017:27017
+    command: mongod --smallfiles --logpath=/dev/null # --quiet
+    # networks:
+      # - backend
+    configs:
+    # to avoid changes to the original mongo image, we import the healthcheck script using configs
+      - mongo-healthcheck
+    # it simply checks that the client can connect to mongo. No test is run w.r.t. the cluster.
+    healthcheck:
+        test: ["CMD", "bash", "/mongo-healthcheck"]
+        interval: 1m
+        timeout: 10s
+        retries: 3
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 1m30s
+  cache:
+    restart: always
+    image: cache
+    container_name: "cache"
+    build:
+      context: ./
+      dockerfile: server-cache/Dockerfile
+    ports:
+      - "3001"
+    volumes:
+      - ./server-cache:/usr/src/app/server-cache
+      - /usr/src/app/server-cache/node_modules
+    depends_on:
+      - nginx
+      - redis
+      - mongodb
+  nginx:
+    restart: always
+    build: ./server-nginx
+    image: nginx
+    container_name: nginx
+    ports:
+      - "80:80"
+  redis:
+    restart: always
+    image: "redis:alpine"
+    ports:
+        - "6379"
+    container_name: redis
   gateway:
+    restart: always
+    image: mhart/alpine-node:8.9.4
     container_name: gateway
     build:
       context: ./
       dockerfile: ./server-gateway/Dockerfile
     ports:
-      - "3100:3100"
-    # volumes:
-    #   - ./server-gateway:/usr/src/server-gateway
-    #   - /usr/src/server-gateway/node_modules
-    # depends_on:
-      # - nginx
-      # - redis
-    links:
+      - "3100"
+    volumes:
+      - ./client:/usr/src/app/client
+      - ./server-gateway:/usr/src/app/server-gateway
+      - /usr/src/app/server-gateway/node_modules
+    depends_on:
       - nginx
-  nginx:
-    build: ./server-nginx
-    # image: nginx
-    container_name: nginx
-    # env_file: docker_env.env
+      - redis
+      - client
+      - mongodb
+  client:
+    restart: always
+    image: client
+    container_name: client
+    build:
+      context: ./
+      dockerfile: /client/Dockerfile
     ports:
-      - "80:80"
-    # links:
-        # - gateway:gateway
-    # volumes_from:
-    #     - client
-    # links:
-      # - client:client
-  redis:
-    image: "redis:alpine"
-    ports:
-        - "6379"
-    # build: ./server-redis/
-    container_name: redis
-    # env_file: docker_env.env
-    # ports:
-        # - "6379:6379"
-    # volumes_from:
-    #     - node_demo
-    #     - jekyll_demo
-
-#  client:
-#    build:
-#      context: .
-#      dockerfile: client/Dockerfile
-#    ports:
-#      - "4200:4200"
-#
-#  cache:
-#    build:
-#      context: .
-#      dockerfile: server-cache/Dockerfile
-#    ports:
-#      - "3001:3001"
-#
+      - "4200:4200"
+    volumes:
+      - ./client:/usr/src/app/client
+      - /usr/src/app/client/node_modules
+      - /usr/src/app/client/dist
 #  user:
 #    build:
 #      context: .
 #      dockerfile: server-user/Dockerfile
 #    ports:
 #     - "3008:3008"
-#
-#  channel:
-#    build:
-#      context: .
-#      dockerfile: server-channel/Dockerfile
-#    ports:
-#     - "3007:3007"
-#
-#  order:
-#    build:
-#      context: .
-#      dockerfile: server-order/Dockerfile
-#    ports:
-#      - "3005:3005"
-#
-#  broker:
-#    build:
-#      context: .
-#      dockerfile: server-broker/Dockerfile
-#    ports:
-#      - "3006:3006"
 #
 #  old:
 #    build:
@@ -99,7 +105,3 @@ services:
 #    ports:
 #      - "3000:3000"
 #
-#  database:
-#    image: mongo
-#    ports:
-#      - "27017:27017"

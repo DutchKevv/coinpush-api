@@ -3,6 +3,6 @@
 
 npm-debug.log
 node_modules
-src/**/*.js
-src/**/*.map
+*.js
+*.map
 !data/**/*.js
