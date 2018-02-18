@@ -3,27 +3,30 @@ import * as mongoose from 'mongoose';
 import * as helmet from 'helmet';
 import * as morgan from 'morgan';
 import {json, urlencoded} from 'body-parser';
-import {client} from './modules/redis';
 
 const config = require('../../tradejs.config');
 const app = express();
-app.listen(config.server.user.port, () => console.log(`\n User service started on      : 127.0.0.1:${config.server.channel.port}`));
+app.listen(config.server.user.port, '0.0.0.0', () => console.log(`\n User service started on      : 0.0.0.0:${config.server.user.port}`));
 
-mongoose.set('debug', process.env.NODE_ENV === 'development');
-(<any>mongoose).Promise = global.Promise;
-mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
-mongoose.connection.once('open', function () {
-	console.log('DB connected');
-});
-mongoose.connect(config.server.user.connectionString);
+var connectMongo = () => {
+	return new Promise((resolve, reject) => {
+		// mongoose.set('debug', process.env.NODE_ENV === 'development');
+		(<any>mongoose).Promise = global.Promise; // Typescript quirk
 
-/**
- * redis events
- */
-client.on('order-closed', (order) => {
-	console.log('ORDER RECEIVED!!!!', JSON.parse(order));
-});
+		this.db = mongoose.connection;
 
+		mongoose.connect(config.server.user.connectionString, (error) => {
+			if (error) {
+				console.error(error);
+				return reject(error);
+			}
+			
+			resolve();
+		});
+	});
+};
+
+connectMongo();
 
 /**
  * Express
@@ -47,7 +50,6 @@ app.use((req: any, res, next) => {
 });
 
 app.use('/user', require('./api/user.api'));
-app.use('/wallet', require('./api/wallet.api'));
 app.use('/favorite', require('./api/favorite.api'));
 app.use('/authenticate', require('./api/authenticate.api'));
 

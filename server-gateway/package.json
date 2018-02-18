@@ -1,7 +1,11 @@
 {
   "name": "tradejs-gateway",
   "version": "0.0.1",
-  "description": "gateway for tradejs",
+  "description": "Javascript Trading Client and Server",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DutchKevv/TradeJS.git"
+  },
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

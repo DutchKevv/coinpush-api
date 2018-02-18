@@ -131,7 +131,7 @@ export const cacheController = {
 
 			let lastSyncTimestamp;
 
-			log.info('cache', 'syncing: ' + brokerName + ' |  ' + i);
+			// log.info('cache', 'syncing: ' + brokerName + ' |  ' + i);
 
 			// only continue if a new bar is there
 			if (status.lastSync) {

@@ -31,6 +31,7 @@ router.get('/', async (req: any, res, next) => {
  */
 router.post('/', async (req: any, res, next) => {
 	try {
+		console.log('create user');
 		res.send(await userController.create(req.user, req.body, req.query));
 	} catch (error) {
 		if (error) {

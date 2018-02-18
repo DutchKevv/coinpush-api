@@ -1,7 +1,11 @@
 {
   "name": "tradejs-comment-server",
   "version": "0.0.1",
-  "description": "",
+  "description": "Javascript Trading Client and Server",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DutchKevv/TradeJS.git"
+  },
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -19,8 +23,10 @@
     "mongoose-beautiful-unique-validation": "^7.0.0",
     "morgan": "^1.9.0",
     "redis": "^2.8.0",
-    "tsc-watch": "^1.0.8",
     "typescript": "^2.6.2",
     "validator": "^9.2.0"
+  },
+  "devDependencies": {
+    "tsc-watch": "^1.0.8"
   }
 }

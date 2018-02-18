@@ -1,6 +1,6 @@
 import { Comment } from '../schemas/comment.schema';
 import { Types } from 'mongoose';
-import * as redis from '../modules/redis';
+import { pubClient } from '../modules/redis';
 import { User } from '../schemas/user.schema';
 import { IReqUser } from '../../../shared/interfaces/IReqUser.interface';
 
@@ -87,7 +87,7 @@ export const commentController = {
 					}
 				};
 
-				redis.client.publish("notify", JSON.stringify(pubOptions));
+				pubClient.publish("notify", JSON.stringify(pubOptions));
 			}
 		}
 
@@ -110,7 +110,7 @@ export const commentController = {
 				}
 			};
 
-			redis.client.publish("notify", JSON.stringify(pubOptions));
+			pubClient.publish("notify", JSON.stringify(pubOptions));
 		}
 
 		return { state: iLike };

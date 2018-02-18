@@ -116,9 +116,9 @@ export default class OandaApi extends EventEmitter {
 
 				const normalized = symbols.map(symbol => {
 					const meta = metaData.find(m => m.name === symbol.name);
-				
+
 					return {
-						precision: -Math.floor( Math.log(symbol.precision,) / Math.log(10) + 1),
+						precision: -Math.floor(Math.log(symbol.precision, ) / Math.log(10) + 1),
 						img: '/images/default/symbol/spx500-70x70.png',
 						name: symbol.instrument,
 						displayName: symbol.displayName,
@@ -132,6 +132,15 @@ export default class OandaApi extends EventEmitter {
 		});
 	}
 
+	/**
+	 * 
+	 * @param symbol 
+	 * @param timeFrame 
+	 * @param from 
+	 * @param until 
+	 * @param count 
+	 * @param onData 
+	 */
 	public async getCandles(symbol: string, timeFrame: string, from: number, until: number, count: number, onData: Function): Promise<void> {
 		if (!count && !until)
 			until = Date.now();
@@ -147,35 +156,42 @@ export default class OandaApi extends EventEmitter {
 			let chunk = chunks[i];
 
 			await new Promise((resolve, reject) => {
-				
+
 				this._client.getCandles(symbol, chunk.from, chunk.until, timeFrame, chunk.count, async (error, data: any) => {
 					if (error)
 						return console.error(error);
-	
-					const candles = new Float64Array(data.candles.length * 10);
-	
-					data.candles.forEach((candle, index) => {
-						const startIndex = index * 10;
-	
-						candles[startIndex] = candle.time / 1000;
-						candles[startIndex + 1] = candle.openBid;
-						candles[startIndex + 2] = candle.openAsk;
-						candles[startIndex + 3] = candle.highBid;
-						candles[startIndex + 4] = candle.highAsk;
-						candles[startIndex + 5] = candle.lowBid;
-						candles[startIndex + 6] = candle.lowAsk;
-						candles[startIndex + 7] = candle.closeBid;
-						candles[startIndex + 8] = candle.closeAsk;
-						candles[startIndex + 9] = candle.volume;
-					});
-					
-					await onData(candles);
+
+					if (data.candles && data.candles.length) {
+						const candles = new Float64Array(data.candles.length * 10);
+
+						data.candles.forEach((candle, index) => {
+							const startIndex = index * 10;
+
+							candles[startIndex] = candle.time / 1000;
+							candles[startIndex + 1] = candle.openBid;
+							candles[startIndex + 2] = candle.openAsk;
+							candles[startIndex + 3] = candle.highBid;
+							candles[startIndex + 4] = candle.highAsk;
+							candles[startIndex + 5] = candle.lowBid;
+							candles[startIndex + 6] = candle.lowAsk;
+							candles[startIndex + 7] = candle.closeBid;
+							candles[startIndex + 8] = candle.closeAsk;
+							candles[startIndex + 9] = candle.volume;
+						});
+
+						await onData(candles);
+					}
+
 					resolve();
 				});
 			});
 		}
 	}
 
+	/**
+	 * 
+	 * @param symbols 
+	 */
 	public getCurrentPrices(symbols: Array<any>): Promise<Array<any>> {
 		return new Promise((resolve, reject) => {
 

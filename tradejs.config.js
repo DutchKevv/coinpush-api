@@ -3,8 +3,8 @@ const fs = require('fs');
 
 let domain = {
     host: '0.0.0.0',
-    apiUrl: 'http://0.0.0.0:3100',
-    port: 3100
+    apiUrl: 'http://0.0.0.0:4000',
+    port: 4000
 };
 
 const config = {
@@ -31,29 +31,25 @@ const config = {
         },
         order: {
             port: 3005,
-            connectionString: 'mongodb://localhost:27017/tradejs-orders'
+            connectionString: 'mongodb://mongodb:27017/tradejs-orders'
         },
         broker: {
             port: 3006,
         },
-        channel: {
-            port: 3007,
-            connectionString: 'mongodb://localhost:27017/tradejs-channels'
-        },
         user: {
             port: 3008,
-            connectionString: 'mongodb://localhost:27017/tradejs-user'
+            connectionString: 'mongodb://mongodb:27017/tradejs-user'
         },
         comment: {
             port: 3009,
-            connectionString: 'mongodb://localhost:27017/tradejs-comment'
+            connectionString: 'mongodb://mongodb:27017/tradejs-comment'
         },
         notify: {
             port: 3010,
-            connectionString: 'mongodb://localhost:27017/tradejs-notify'
+            connectionString: 'mongodb://mongodb:27017/tradejs-notify'
         },
         event: {
-            connectionString: 'mongodb://localhost:27017/tradejs-event',
+            connectionString: 'mongodb://mongodb:27017/tradejs-event',
             port: 3011,
         },
         fe: {
@@ -62,9 +58,9 @@ const config = {
     },
     image: {
         maxUploadSize: 10 * 1024 * 1024,
-        profilePath: path.join(__dirname, 'images', 'images', 'profile'),
+        profilePath: path.join(__dirname, 'images', 'profile'),
         profileBaseUrl: '/images/profile/',
-        profileDefaultPath: path.join(__dirname, 'images', 'images', 'default', 'profile', 'nl.png'),
+        profileDefaultPath: path.join(__dirname, 'images', 'default', 'profile', 'nl.png'),
         profileDefaultUrl: '/images/default/profile/nl.png'
     },
     redis: {
@@ -103,7 +99,7 @@ const config = {
     firebase: {
         key: "" // Your firebase accound id (push messages)
     },
-    port: 3100,
+    port: 4000,
     app: {
         version: "0.0.1",
         ip: {
@@ -128,7 +124,7 @@ try {
 
 // build full domain urls (ex: http://123.123.123.123:9999)
 for (let name in config.server)
-    config.server[name].apiUrl = domain.host + ':' + config.server[name].port;
+    config.server[name].apiUrl = 'http://' + name + ':' + config.server[name].port;
 
 /**
  * Simple is object check.

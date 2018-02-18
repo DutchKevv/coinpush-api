@@ -1,7 +1,11 @@
 {
   "name": "tradejs-user-server",
   "version": "0.0.1",
-  "description": "",
+  "description": "Javascript Trading Client and Server",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DutchKevv/TradeJS.git"
+  },
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -16,7 +20,7 @@
     "@types/mongoose": "^4.7.29",
     "@types/node": "^8.5.1",
     "@types/validator": "^6.3.0",
-    "bcrypt": "^1.0.3",
+    "bcryptjs": "*",
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
     "faker": "^4.1.0",

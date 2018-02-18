@@ -3,7 +3,7 @@ module.exports =
     "server": {
         "gateway": {
             "port": 3100,
-            "protocol": "https"
+            "protocol": "http"
         }
     },
 
@@ -30,11 +30,11 @@ module.exports =
         }
     },
     "ip": {
-        "local": "192.168.178.12",
+        "local": "127.0.0.1",
         "prod": "frontend-freelance.com",
         "devLocal": "127.0.0.1",
         "devApp": "10.0.2.2"
     },
-    "port": 3100,
+    "port": 4000,
     "appVersion": "0.0.1"
 };

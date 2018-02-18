@@ -1,6 +1,6 @@
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { Types } from 'mongoose';
-import { client } from '../modules/redis';
+import { pubClient } from '../modules/redis';
 import { User, UserSchema } from '../schemas/user.schema';
 import {
 	G_ERROR_EXPIRED,
@@ -96,8 +96,19 @@ export const userController = {
 	},
 
 	async create(params) {
+
 		if (params.password)
-			params.password = bcrypt.hashSync(params.password, 10);
+			await new Promise((resolve, reject) => {
+				// resolve();
+				bcrypt.hash(params.password, 10, (error, password) => {
+					if (error) {
+						console.error(error);
+						return reject(error);
+					}
+					params.password = password;
+					resolve();
+				});
+			});
 
 		let userData = {
 			img: params.img,
@@ -107,7 +118,9 @@ export const userController = {
 			country: params.country
 		};
 
-		return User.create(userData);
+		const user = await User.create(userData);
+		console.log(user);
+		return user;
 	},
 
 	// TODO - Filter fields
@@ -124,7 +137,7 @@ export const userController = {
 
 		// Update redis and other micro services
 		if (user)
-			client.publish('user-updated', JSON.stringify(user));
+			pubClient.publish('user-updated', JSON.stringify(user));
 	},
 
 	// TODO - Filter fields
@@ -190,7 +203,7 @@ export const userController = {
 				data: {}
 			};
 
-			client.publish("notify", JSON.stringify(pubOptions));
+			pubClient.publish("notify", JSON.stringify(pubOptions));
 		}
 
 		return { state: !isCurrentlyFollowing };

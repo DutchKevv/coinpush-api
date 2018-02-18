@@ -21,7 +21,7 @@ const { json } = require('body-parser');
 
 const PATH_WWW_ROOT = path.join(__dirname, '../../client/www');
 const PATH_WWW_BROWSER_NOT_SUPPORTED_FILE = path.join(__dirname, '../public/index.legacy.browser.html');
-const PATH_IMAGES = path.join(__dirname, '../../images');
+const PATH_IMAGES = path.join('/usr/src/app');
 
 // error catching
 process.on('unhandledRejection', (reason, p) => {
@@ -93,7 +93,7 @@ export const app = {
 	_setupApi(): void {
 		// http 
 		this.api = express();
-		const server = this.api.listen(config.server.gateway.port, '0.0.0.0', () => console.log(`\n Gateway service started on      : 127.0.0.1:${config.server.gateway.port}`));
+		const server = this.api.listen(config.server.gateway.port, '0.0.0.0', () => console.log(`\n Gateway service started on      : 0.0.0.0:${config.server.gateway.port}`));
 
 		// websocket
 		this.io = io(server).listen(server);
@@ -158,6 +158,10 @@ export const app = {
 		// images 
 		// TODO: should be on CDN
 		this.api.use(express.static(PATH_IMAGES));
+
+		// this.api.use('/images/', (req, res) => {
+		// 	console.log('IMAGSFDSDF');
+		// })
 
 		// use JWT auth to secure the api, the token can be passed in the authorization header or query string
 		const getToken = function (req) {
@@ -230,12 +234,6 @@ export const app = {
 		this.api.get('/', function (req, res, next) {
 			res.send('This page has been viewed ' + 3 + ' times!');
 		});
-
-
-		// /**
-		//  * image
-		//  */
-		// app.get('/images/*', (req, res) => proxy.web(req, res, { target: config.server.fe.apiUrl }));
 
 		/**
 		 * symbol

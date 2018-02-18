@@ -12,7 +12,7 @@ export const authenticateController = {
 
 		let fieldsObj = {};
 		fields.forEach(field => fieldsObj[field] = 1);
-		console.log(reqUser);
+		
 		if (reqUser.id)
 			user = <IUser>await (<any>User).findById(reqUser.id, fieldsObj).lean();
 		else
@@ -20,7 +20,8 @@ export const authenticateController = {
 
 		if (user) {
 			user.token = jwt.sign({id: user._id}, config.token.secret);
-			(<any>User).normalizeProfileImg(user);			
+			(<any>User).normalizeProfileImg(user);
+				
 		}
 		
 		return user;

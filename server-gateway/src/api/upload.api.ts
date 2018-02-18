@@ -24,7 +24,6 @@ function normalizeProfileImg(filename) {
 };
 
 router.post('/profile', upload.single('image'), async (req: any, res, next) => {
-
 	try {
 		// Check max file size (in bytes)
 		if (req.file.size > config.image.maxUploadSize)
@@ -35,7 +34,7 @@ router.post('/profile', upload.single('image'), async (req: any, res, next) => {
 
 		const fileName = req.user.id + '_' + Date.now() + extname(req.file.originalname);
 		const fullPath = join(config.image.profilePath, fileName);
-
+		
 		// resize and save
 		await sharp(req.file.buffer).resize(1000).max().toFile(fullPath);
 
@@ -45,6 +44,7 @@ router.post('/profile', upload.single('image'), async (req: any, res, next) => {
 		// return full img url to client
 		res.send({ url: normalizeProfileImg(fileName) });
 	} catch (error) {
+		console.error(error);
 		next(error);
 	}
 });

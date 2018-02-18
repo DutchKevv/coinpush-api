@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { isEmail } from 'validator';
 import { join } from 'path';
 import { BROKER_GENERAL_TYPE_OANDA, LEVERAGE_TYPE_1 } from '../../../shared/constants/constants';
@@ -124,7 +124,6 @@ UserSchema.statics.authenticate = async (params: IUser, fields = []) => {
 		return null;
 
 	return new Promise((resolve, reject) => {
-		console.log(params, user);
 		bcrypt.compare(params.password, user.password, (err, result) => {
 			if (err)
 				return reject(err);

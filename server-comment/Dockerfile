@@ -1,25 +1,37 @@
-# Create image based on the official Node 6 image from dockerhub
-FROM node:8
+FROM node:8-alpine
+
+ENV APP_LOCATION=/usr/src/app
+ENV COMMENT_LOCATION=$APP_LOCATION/server-comment
+ENV SHARED_LOCATION=$APP_LOCATION/shared
+
+RUN npm config set registry http://registry.npmjs.org/
 
 # Create a directory where our app will be placed
-RUN mkdir -p /usr/src/app/server-user
-RUN mkdir -p /usr/src/app/shared
+RUN mkdir -p $COMMENT_LOCATION/
+RUN mkdir -p $COMMENT_LOCATION/node_modules/
+RUN mkdir -p $SHARED_LOCATION/
 
-# Change directory so that our commands run inside this new directory
-WORKDIR /usr/src/app/server-user
+RUN apk add --no-cache make gcc g++ python
 
-# Copy dependency definitions
-COPY /server-user/package.json /usr/src/app/server-user
+# config
+COPY /tradejs.config.js /tradejs.config.custom.js $APP_LOCATION/
 
-# Install dependecies
-RUN npm install
+# shared
+WORKDIR $SHARED_LOCATION/
+COPY /shared/package.json .
+RUN npm i
+COPY /shared .
+RUN npm run build
 
-# Get all the code needed to run the app
-COPY /server-user /usr/src/app/server-user
-COPY /shared /usr/src/app/shared
+# server
+WORKDIR $COMMENT_LOCATION/
+COPY /server-comment/package.json .
+COPY /server-comment .
+RUN npm i
+RUN npm run build
 
-# Expose the port the app runs in
-EXPOSE 3008
+# port
+EXPOSE 3009
 
 # Serve the app
-CMD ["npm", "start"]
+CMD npm i && npm start

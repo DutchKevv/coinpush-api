@@ -58,6 +58,8 @@ export const userController = {
 				json: true
 			});
 
+			console.log(2);
+
 			// notify
 			notify = await emailController.addUser({ id: user._id }, {
 				_id: user._id,
@@ -66,6 +68,8 @@ export const userController = {
 				email: user.email,
 				language: user.language
 			});
+
+			console.log(3);
 
 			// comment
 			await request({
@@ -96,6 +100,8 @@ export const userController = {
 			return user;
 
 		} catch (error) {
+			console.error(error);
+
 			if (user && user._id) {
 				try {
 					await this.remove({ id: user._id }, user._id)

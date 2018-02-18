@@ -1,25 +1,37 @@
-# Create image based on the official Node 6 image from dockerhub
-FROM node:8
+FROM node:8-alpine
+
+ENV APP_LOCATION=/usr/src/app
+ENV EVENT_LOCATION=$APP_LOCATION/server-event
+ENV SHARED_LOCATION=$APP_LOCATION/shared
+
+RUN npm config set registry http://registry.npmjs.org/
 
 # Create a directory where our app will be placed
-RUN mkdir -p /usr/src/app/server-mail
-RUN mkdir -p /usr/src/app/shared
+RUN mkdir -p $EVENT_LOCATION/
+RUN mkdir -p $EVENT_LOCATION/node_modules/
+RUN mkdir -p $SHARED_LOCATION/
 
-# Change directory so that our commands run inside this new directory
-WORKDIR /usr/src/app/server-mail
+# config
+COPY /tradejs.config.js /tradejs.config.custom.js $APP_LOCATION/
 
-# Copy dependency definitions
-COPY /server-mail/package.json /usr/src/app/server-mail
+RUN apk add --no-cache make gcc g++ python
 
-# Install dependecies
-RUN npm install
+# shared
+WORKDIR $SHARED_LOCATION/
+COPY /shared/package.json .
+RUN npm i
+COPY /shared .
+RUN npm run build
 
-# Get all the code needed to run the app
-COPY /server-mail /usr/src/app/server-mail
-COPY /shared /usr/src/app/shared
+# server
+WORKDIR $EVENT_LOCATION/
+COPY /server-event/package.json .
+COPY /server-event .
+RUN npm i
+RUN npm run build
 
-# Expose the port the app runs in
-EXPOSE 3100
+# port
+EXPOSE 3011
 
 # Serve the app
-CMD ["npm", "start"]
+CMD npm i && npm start

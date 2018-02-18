@@ -53,7 +53,7 @@ export const app = {
 
     _setupApi(): void {
         this.api = express();
-        const server = this.api.listen(config.server.event.port, () => console.log(`\n Event service started on      : 127.0.0.1:${config.server.event.port}`));
+        const server = this.api.listen(config.server.event.port, '0.0.0.0', () => console.log(`\n Event service started on      : 0.0.0.0:${config.server.event.port}`));
 
         this.api.use(morgan('dev'));
         this.api.use(helmet());

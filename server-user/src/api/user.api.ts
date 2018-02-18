@@ -42,8 +42,12 @@ router.post('/:id/follow', async (req: any, res, next) => {
  */
 router.post('/', async (req, res, next) => {
 	try {
+		console.log('asdf');
 		res.send(await userController.create(req.body));
+		// res.send(await userController.create(req.body));
+		
 	} catch (error) {
+		
 		if (error) {
 			if (error.name === 'ValidationError') {
 				res.status(409).send({ code: G_ERROR_DUPLICATE, field: Object.keys(error.errors)[0] });

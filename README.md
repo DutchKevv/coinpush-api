@@ -19,24 +19,14 @@ Can be run as
 - Standalone server running elastic in the cloud (with a custom client)
 
 ## Installation
-Switch to NodeJS 8.8.1
+Make sure you have Docker installed
 ```
 git clone https://github.com/DutchKevv/TradeJS.git
 cd TradeJS
-npm run install-all
+npm run d-up
 ```
 
-## Building
-```
-npm run build-all
-```
-## Running (remember, alpha)
-1. mongodb needs to be installed (and running) https://docs.mongodb.com/manual/installation/
-2. pm2 is required as global package (to install, run: npm i -g pm2)
-```
-npm start
-```
-Go to localhost:3100 in chrome (only newest versions of chrome are supported cause of shadow DOM)
+Go to localhost:4000 in chrome (only newest versions of chrome are supported cause of shadow DOM)
 
  ## Dashboard
  ![Alt text](doc/screenshot/charts.png?raw=true "Title")

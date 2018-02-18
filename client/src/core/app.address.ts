@@ -16,7 +16,7 @@ if (window.platform.isApp) {
 		ip = emulatorIp;
 		host = 'http';
 		ws = 'ws';
-		port = 3100;
+		port = 4000;
 	} else {
 		ip = liveIp;
 		host = 'https';

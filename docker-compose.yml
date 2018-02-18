@@ -19,11 +19,10 @@ services:
     # to avoid changes to the original mongo image, we import the healthcheck script using configs
       - mongo-healthcheck
     # it simply checks that the client can connect to mongo. No test is run w.r.t. the cluster.
-    healthcheck:
-        test: ["CMD", "bash", "/mongo-healthcheck"]
-        interval: 1m
-        timeout: 10s
-        retries: 3
+    # healthcheck:
+    #   interval: 1m
+    #   timeout: 10s
+    #   retries: 3
     deploy:
       mode: global
       restart_policy:
@@ -43,7 +42,7 @@ services:
     volumes:
       - ./server-cache:/usr/src/app/server-cache
       - /usr/src/app/server-cache/node_modules
-    depends_on:
+    links:
       - nginx
       - redis
       - mongodb
@@ -52,8 +51,10 @@ services:
     build: ./server-nginx
     image: nginx
     container_name: nginx
-    ports:
-      - "80:80"
+    # ports:
+    #   - "80:80"
+    volumes:
+      - ./images:/usr/src/images
   redis:
     restart: always
     image: "redis:alpine"
@@ -70,14 +71,19 @@ services:
     ports:
       - "3100"
     volumes:
+      - ./tradejs.config.js:/usr/src/app/tradejs.config.js
+      - ./tradejs.config.custom.js:/usr/src/app/tradejs.config.custom.js
       - ./client:/usr/src/app/client
+      - ./images:/usr/src/app/images
       - ./server-gateway:/usr/src/app/server-gateway
       - /usr/src/app/server-gateway/node_modules
     depends_on:
       - nginx
       - redis
       - client
-      - mongodb
+    links:
+      - user
+      - cache
   client:
     restart: always
     image: client
@@ -91,12 +97,68 @@ services:
       - ./client:/usr/src/app/client
       - /usr/src/app/client/node_modules
       - /usr/src/app/client/dist
-#  user:
-#    build:
-#      context: .
-#      dockerfile: server-user/Dockerfile
-#    ports:
-#     - "3008:3008"
+  user:
+    image: user
+    container_name: user
+    build:
+      context: ./
+      dockerfile: server-user/Dockerfile
+    ports:
+      - "3008"
+    volumes:
+      - ./tradejs.config.js:/usr/src/app/tradejs.config.js
+      - ./tradejs.config.custom.js:/usr/src/app/tradejs.config.custom.js
+      - ./server-user:/usr/src/app/server-user
+      - /usr/src/app/server-user/node_modules
+    links:
+      - nginx
+      - redis
+      - mongodb
+  notify:
+    image: notify
+    container_name: notify
+    build:
+      context: ./
+      dockerfile: server-notify/Dockerfile
+    ports:
+      - "3010"
+    volumes:
+      - ./server-notify:/usr/src/app/server-notify
+      - /usr/src/app/server-notify/node_modules
+    links:
+      - nginx
+      - redis
+      - mongodb
+  comment:
+    image: comment
+    container_name: comment
+    build:
+      context: ./
+      dockerfile: server-comment/Dockerfile
+    ports:
+      - "3009"
+    volumes:
+      - ./server-comment:/usr/src/app/server-comment
+      - /usr/src/app/server-comment/node_modules
+    links:
+      - nginx
+      - redis
+      - mongodb
+  event:
+    image: event
+    container_name: event
+    build:
+      context: ./
+      dockerfile: server-event/Dockerfile
+    ports:
+      - "3011"
+    volumes:
+      - ./server-event:/usr/src/app/server-event
+      - /usr/src/app/server-event/node_modules
+    links:
+      - nginx
+      - redis
+      - mongodb
 #
 #  old:
 #    build:

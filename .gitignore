@@ -7,8 +7,7 @@ Thumbs.db
 # misc
 npm-debug.*
 node_modules
-testem.log
-/dist
+/data
 /**/*.map
 dump.rdb
 
@@ -30,7 +29,7 @@ tradejs.config.custom.json
 !/custom/indicator/example/*
 
 # Server
-/server/config/tradejs.config.json
+/server/config/tradejs.config.js
 /server/**/*.js
 !/server/gulpfile.js
 !/server/copy-sql3-binary.js
@@ -40,14 +39,5 @@ tradejs.config.custom.json
 /shared/dist
 #/shared/**/*.js
 /shared/**/*.map
-
-# Engine
-/shared/engine/cmake
-/shared/engine/cmake-build-debug
-/shared/engine/CMakeFiles
-/shared/engine/cmake_install.cmake
-/shared/engine/Engine
-/shared/engine/Engine.cbp
-/shared/engine/Makefile
 
 
