@@ -1,6 +1,11 @@
 version: '3.3'
 
 services:
+  client:
+    build:
+      args:
+        NODE_ENV: development
   nginx:
     ports:
       - "4000:80"
+  

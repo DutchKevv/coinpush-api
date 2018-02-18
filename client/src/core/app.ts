@@ -161,20 +161,29 @@ export class App extends MicroEvent {
                 // on progress
                 xhr.onprogress = event => this.prettyBootty.step('data', (event.loaded / event.total) * 100);
 
-                // on finish
-                xhr.onload = () => {
-                    this.data = JSON.parse(xhr.response);
+                xhr.onreadystatechange = async () => {
+                    if (xhr.readyState == 4) {
+                        if (xhr.status == 200) {
+                            this.data = JSON.parse(xhr.response);
 
-                    if (this.data.user) {
-                        this.user = this.data.user;
-                        delete this.data.user;
+                            if (this.data.user) {
+                                this.user = this.data.user;
+                                delete this.data.user;
+                            }
+
+                            resolve();
+                        } else {
+
+                            // user rejected
+                            if (xhr.status === 401) {
+                                await this.removeStoredUser();
+                                window.location.reload();
+                                return;
+                            }
+                            reject();
+                        }
                     }
-
-                    resolve();
-                }
-
-                // on error
-                xhr.onerror = reject;
+                };
 
                 xhr.send();
             })

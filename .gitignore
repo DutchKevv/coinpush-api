@@ -5,35 +5,20 @@ Thumbs.db
 .vscode
 
 # misc
+/**/*.map
 npm-debug.*
 node_modules
+/_data
 /data
-/**/*.map
-dump.rdb
-
-#### Log ####
 /_logs
-log.txt
-server.txt
-
-#### App ####
-tradejs.config.custom.json
-/_builds
-!/_builds/ea/example/*
-!/_builds/indicator/example/*
-/_cache
-/_config
-/custom/*
-!/custom/tsconfig.json
-!/custom/ea/example/*
-!/custom/indicator/example/*
+dump.rdb
+/custom/
 
 # Server
 /server/config/tradejs.config.js
 /server/**/*.js
 !/server/gulpfile.js
 !/server/copy-sql3-binary.js
-/server/**/*.map
 
 # Shared
 /shared/dist

@@ -6,23 +6,15 @@ services:
     image: mongo:latest
     container_name: "mongodb"
     environment:
-      - MONGO_DATA_DIR=/data/db
+      - MONGO_DATA_DIR=/_data/db
       - MONGO_LOG_DIR=/dev/null
     volumes:
-      - ./data/db:/data/db
+      - ./_data/db:/_data/db
     ports:
       - 27017:27017
     command: mongod --smallfiles --logpath=/dev/null # --quiet
-    # networks:
-      # - backend
     configs:
-    # to avoid changes to the original mongo image, we import the healthcheck script using configs
       - mongo-healthcheck
-    # it simply checks that the client can connect to mongo. No test is run w.r.t. the cluster.
-    # healthcheck:
-    #   interval: 1m
-    #   timeout: 10s
-    #   retries: 3
     deploy:
       mode: global
       restart_policy:
@@ -47,7 +39,7 @@ services:
       - redis
       - mongodb
   nginx:
-    restart: always
+    restart: unless-stopped
     build: ./server-nginx
     image: nginx
     container_name: nginx
@@ -56,7 +48,7 @@ services:
     volumes:
       - ./images:/usr/src/images
   redis:
-    restart: always
+    restart: unless-stopped
     image: "redis:alpine"
     ports:
         - "6379"
@@ -77,26 +69,19 @@ services:
       - ./images:/usr/src/app/images
       - ./server-gateway:/usr/src/app/server-gateway
       - /usr/src/app/server-gateway/node_modules
-    depends_on:
+    links:
       - nginx
       - redis
       - client
-    links:
-      - user
-      - cache
   client:
-    restart: always
     image: client
     container_name: client
     build:
       context: ./
       dockerfile: /client/Dockerfile
-    ports:
-      - "4200:4200"
     volumes:
       - ./client:/usr/src/app/client
       - /usr/src/app/client/node_modules
-      - /usr/src/app/client/dist
   user:
     image: user
     container_name: user
@@ -159,11 +144,3 @@ services:
       - nginx
       - redis
       - mongodb
-#
-#  old:
-#    build:
-#      context: .
-#      dockerfile: server/Dockerfile
-#    ports:
-#      - "3000:3000"
-#

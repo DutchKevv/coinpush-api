@@ -1,32 +1,22 @@
-### STAGE 1: Build ###
-
-# We label our stage as 'builder'
 FROM node:8-alpine
 
 ENV APP_LOCATION=/usr/src/app
 ENV CLIENT_LOCATION=$APP_LOCATION/client
 ENV SHARED_LOCATION=$APP_LOCATION/shared
 
-# Create a directory where our app will be placed
-RUN mkdir -p $CLIENT_LOCATION
+ARG NODE_ENV
+ENV NODE_ENV=$NODE_ENV
+
 RUN mkdir -p $CLIENT_LOCATION/node_modules
-RUN mkdir -p $CLIENT_LOCATION/dist
-RUN mkdir -p $SHARED_LOCATION/shared
+RUN mkdir -p $CLIENT_LOCATION/www
 
 RUN apk update && \
     apk upgrade && \
-    apk add git
+    apk add git imagemagick-dev && \
+    apk add --update --repository http://dl-3.alpinelinux.org/alpine/edge/testing vips-tools vips-dev fftw-dev && \
+    rm -rf /var/cache/apk/*
 
-RUN apk add imagemagick-dev
-
-# Install Python.
 RUN apk add --no-cache make gcc g++ python
-
-# sharp image processing
-RUN apk add --update \
-    --repository http://dl-3.alpinelinux.org/alpine/edge/testing \
-    vips-tools vips-dev fftw-dev \
-    && rm -rf /var/cache/apk/*
 
 WORKDIR $SHARED_LOCATION/
 COPY /shared/package.json .
@@ -39,9 +29,8 @@ WORKDIR $CLIENT_LOCATION/
 COPY /client/package.json .
 RUN npm i
 COPY /client .
+# RUN npm run build
+# RUN if [ "x$NODE_ENV" = "x" ] ; then echo NODE_ENV not provided ; else npm run build ; fi
 
-# Expose the port the app runs in
-EXPOSE 4200
-
-# Serve the app
+# CMD npm run build
 CMD npm start
