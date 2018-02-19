@@ -57,6 +57,7 @@ export const cacheController = {
 	 * @param tick 
 	 */
 	onTick(tick: any): void {
+		console.log(1, tick);
 		let symbolObj = app.broker.symbols.find(symbol => symbol.name === tick.instrument);
 
 		if (!symbolObj)
@@ -124,14 +125,13 @@ export const cacheController = {
 		log.info('cache', `syncing ${statuses.length} collections for broker ${brokerName}`);
 
 		// loop over each symbol (in bulk)
-		// for (let i = 0, len = statuses.length; i < len; i++) {
-		statuses.forEach(async (status, i) => {
+		for (let i = 0, len = statuses.length; i < len; i++) {
 			const now = Date.now();
-			// const status = statuses[i];
+			const status = statuses[i];
 
 			let lastSyncTimestamp;
 
-			// log.info('cache', 'syncing: ' + brokerName + ' |  ' + i);
+			log.info('cache', `syncing ${status.symbol}: ` + brokerName + ' |  ' + i);
 
 			// only continue if a new bar is there
 			if (status.lastSync) {
@@ -139,8 +139,7 @@ export const cacheController = {
 
 				if (lastSyncTimestamp + timeFrameSteps[status.timeFrame] > now) {
 					progressBar && progressBar.tick();
-					// continue;
-					return;
+					continue;
 				}
 			}
 
@@ -163,8 +162,8 @@ export const cacheController = {
 			} finally {
 				progressBar && progressBar.tick();
 			}
-		// }
-		});
+		}
+		// });
 
 		return {
 			time: Date.now()

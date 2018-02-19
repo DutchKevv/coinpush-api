@@ -1,7 +1,2 @@
 .git
 .gitignore
-
-npm-debug.log
-node_modules
-*.js
-*.map

@@ -57,7 +57,7 @@ export const app = {
 	_setupApi(): void {
 		// http 
 		this.api = express();
-		const server = this.api.listen(config.server.cache.port, () => console.log(`\n Cache service started on      : 127.0.0.1:${config.server.cache.port}`));
+		const server = this.api.listen(config.server.cache.port, '0.0.0.0', () => console.log(`\n Cache service started on      : 0.0.0.0:${config.server.cache.port}`));
 
 		this.api.use(morgan('dev'));
 		this.api.use(helmet());

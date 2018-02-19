@@ -26,12 +26,7 @@ RUN npm run build
 # server
 WORKDIR $CACHE_LOCATION/
 COPY /server-cache/package.json .
-RUN npm i
 COPY /server-cache .
-RUN npm run build
 
 # port
 EXPOSE 3001
-
-# Serve the app
-CMD ["npm", "start"]

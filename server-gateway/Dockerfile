@@ -5,10 +5,11 @@ ENV SERVER_LOCATION=$APP_LOCATION/server-gateway
 ENV SHARED_LOCATION=$APP_LOCATION/shared
 
 RUN npm config set registry http://registry.npmjs.org/
+RUN npm set progress=false && npm config set depth 0 && npm cache clean --force
 
 # Create a directory where our app will be placed
 RUN mkdir -p $SERVER_LOCATION/
-RUN mkdir -p $SERVER_LOCATION/node_modules/
+# RUN mkdir -p $SERVER_LOCATION/node_modules/
 RUN mkdir -p $SHARED_LOCATION/
 
 # config
@@ -23,19 +24,14 @@ RUN apk add --update \
 
 WORKDIR $SHARED_LOCATION/
 COPY /shared/package.json .
-RUN npm i
+RUN npm i --silent
 COPY /shared .
 RUN npm run build
 
 # server
 WORKDIR $SERVER_LOCATION/
 COPY /server-gateway/package.json .
-RUN npm i
 COPY /server-gateway .
-RUN npm run build
 
 # port
 EXPOSE 3100
-
-# Serve the app
-CMD npm start
