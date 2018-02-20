@@ -18,7 +18,9 @@ export class LoginComponent implements OnInit {
 	@Output() public loading$: EventEmitter<boolean> = new EventEmitter;
 
 	loginModel: any = {};
-	registerModel: any = {};
+	registerModel: any = {
+		country: 'US'
+	};
 	loading = false;
 	returnUrl: string;
 
@@ -52,8 +54,14 @@ export class LoginComponent implements OnInit {
 	async register() {
 		this.loading$.emit(true);
 
+		if (this.registerModel.password !== this.registerModel.passwordConf) {
+			this.loading$.emit(false);
+			this._alertService.error(`Passwords do not match`);
+			return;
+		}
+
 		try {
-			await this._userService.create(this.registerModel).toPromise();
+			await this._userService.create(this.registerModel);
 			this._alertService.success('Registration successful, check your mail', true);
 
 			// pre-set login values
@@ -65,7 +73,7 @@ export class LoginComponent implements OnInit {
 			this._changeDetectorRef.detectChanges();
 		} catch (error) {
 			this.loading$.emit(false);
-
+			console.error(error);
 			if (error.code) {
 				switch (error.code) {
 					case G_ERROR_DUPLICATE:

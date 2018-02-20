@@ -2,69 +2,90 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 *ngIf="formType === 'login'" class="modal-title">Login</h5>
-                <h5 *ngIf="formType === 'register'" class="modal-title">Register</h5>
+                <h4 *ngIf="formType === 'login'" class="modal-title">Login</h4>
+                <h4 *ngIf="formType === 'register'" class="modal-title">Register</h4>
                 <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form (ngSubmit)="loginForm.form.valid && login($event)" #loginForm="ngForm" *ngIf="formType === 'login'">
-                    <div class="form-group">
+                <!-- login form -->
+                <form name="form" (ngSubmit)="loginForm.form.valid && login($event)" #loginForm="ngForm" *ngIf="formType === 'login'" novalidate>
+                    <div class="form-group" [ngClass]="{ 'has-error': loginForm.submitted && !email.valid }">
                         <label class="form-control-label" for="email">Email</label>
-                        <input [(ngModel)]="loginModel.email" type="email" name="email" class="form-control form-control-success" id="email" placeholder="Enter email">
+                        <span *ngIf="loginForm.submitted && !email.valid" class="help-block">required</span>
+                        <input [(ngModel)]="loginModel.email" type="email" name="email" [(ngModel)]="loginModel.email" #email="ngModel" class="form-control"
+                            id="email" placeholder="Enter email" required>
+                    </div>
+
+                    <div class="form-group" [ngClass]="{ 'has-error': loginForm.submitted && !password.valid }">
+                        <label class="form-control-label" for="password">Password
+                            <span *ngIf="loginForm.submitted && !password.valid" class="help-block">required</span>
+                        </label>
+                        <input [(ngModel)]="loginModel.password" type="password" name="password" [(ngModel)]="loginModel.password" #password="ngModel"
+                            class="form-control" id="password" placeholder="Enter password" required>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-control-label" for="password">Password</label>
-                        <input [(ngModel)]="loginModel.password" type="password" name="password" class="form-control form-control-error" id="password"
-                            placeholder="Enter password">
+                        <button [disabled]="loading$ | async" class="btn btn-success pull-right">Login
+                            <img *ngIf="loading$ | async" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
+                            />
+                        </button>
                     </div>
 
-                    <div class="form-group">
-                        <button [disabled]="loading$ | async" class="btn btn-success pull-right">Submit <img *ngIf="loading$ | async" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
-                            /></button>
-                    </div>
-
-                    <div class="form-group">
+                    <!-- footer buttons -->
+                    <div class="form-group login-footer-buttons">
                         <a (click)="formType = 'register'" class="btn btn-link">Register</a>
                         <!-- <a (click)="authenticationService.showRegisterPopup()" class="btn btn-link">Register</a> -->
                         <a (click)="authenticationService.showForgotPasswordPopup()" class="btn btn-link">Forgot password</a>
                     </div>
                 </form>
 
-                <form name="form" (ngSubmit)="registerForm.form.valid && register()" #registerForm="ngForm" novalidate *ngIf="formType === 'register'">
+                <!-- register form -->
+                <form name="form" (ngSubmit)="registerForm.form.valid && register()" #registerForm="ngForm" *ngIf="formType === 'register'"
+                    novalidate>
                     <div class="form-group" [ngClass]="{ 'has-error': registerForm.submitted && !name.valid }">
-                        <label>Name</label>
+                        <label>Name
+                            <span *ngIf="registerForm.submitted && !name.valid" class="help-block">Name is required</span>
+                        </label>
                         <input id="name" class="form-control" name="name" required [(ngModel)]="registerModel.name" #name="ngModel" />
-                        <div *ngIf="registerForm.submitted && !name.valid" class="help-block">Name is required</div>
                     </div>
                     <div class="form-group" [ngClass]="{ 'has-error': registerForm.submitted && !email.valid }">
-                        <label for="email">Email</label>
+                        <label for="email">Email
+                            <span *ngIf="registerForm.submitted && !email.valid" class="help-block">Email is required</span>
+                        </label>
                         <input id="email" class="form-control" name="email" [(ngModel)]="registerModel.email" #email="ngModel" required/>
-                        <div *ngIf="registerForm.submitted && !email.valid" class="help-block">Email is required</div>
-                    </div>
-                    <div class="form-group">
-                        <label for="country">Country</label>
-                        <select class="form-control" id="country" [(ngModel)]="registerModel.country" name="country">
-                            <option *ngFor="let country of countries" [attr.value]="country.code" [innerHTML]="country.name"></option>
-                        </select>
                     </div>
                     <div class="form-group" [ngClass]="{ 'has-error': registerForm.submitted && !password.valid }">
-                        <label for="password">Password</label>
+                        <label for="country">Country</label>
+                        <select class="form-control" id="country" [(ngModel)]="registerModel.country" name="country" required>
+                            <option *ngFor="let country of countries" [attr.value]="country.code" [innerHTML]="country.name"></option>
+                        </select>
+                        <div *ngIf="registerFormsubmitted && !country.valid" class="help-block">Country is required</div>
+                    </div>
+                    <div class="form-group" [ngClass]="{ 'has-error': registerForm.submitted && !password.valid }">
+                        <label for="password">Password
+                            <span *ngIf="registerForm.submitted && !password.valid" class="help-block">Password is required</span>
+                        </label>
                         <input id="password" type="password" class="form-control" name="password" [(ngModel)]="registerModel.password" #password="ngModel"
                             required/>
-                        <div *ngIf="registerForm.submitted && !password.valid" class="help-block">Password is required</div>
+                        <small class="form-text form-text-muted">
+                            Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces, special characters,
+                            or emoji.
+                        </small>
                     </div>
                     <div class="form-group" [ngClass]="{ 'has-error': registerForm.submitted && !passwordConf.valid }">
-                        <label for="passwordConf">Password confirmation</label>
-                        <input id="passwordConf" type="password" class="form-control" name="password" [(ngModel)]="registerModel.passwordConf" #passwordConf="ngModel"
-                            required/>
-                        <div *ngIf="registerFormsubmitted && !passwordConf.valid" class="help-block">Password confirmation is required</div>
+                        <label for="passwordConf">Password confirmation
+                            <span *ngIf="registerForm.submitted && !passwordConf.valid" class="help-block">Password confirmation is required</span>
+                        </label>
+                        <input id="passwordConf" type="password" class="form-control" name="passwordConf" [(ngModel)]="registerModel.passwordConf"
+                            #passwordConf="ngModel" required/>
                     </div>
                     <div class="form-group">
-                        <button [disabled]="loading$ | async" class="btn btn-success">Register <img *ngIf="loading$ | async" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
-                            /></button>
+                        <button [disabled]="loading$ | async" class="btn btn-success">Register
+                            <img *ngIf="loading$ | async" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
+                            />
+                        </button>
                         <a (click)="formType = 'login'" class="btn btn-link">Cancel</a>
                     </div>
                 </form>

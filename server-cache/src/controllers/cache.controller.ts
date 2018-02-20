@@ -57,7 +57,6 @@ export const cacheController = {
 	 * @param tick 
 	 */
 	onTick(tick: any): void {
-		console.log(1, tick);
 		let symbolObj = app.broker.symbols.find(symbol => symbol.name === tick.instrument);
 
 		if (!symbolObj)

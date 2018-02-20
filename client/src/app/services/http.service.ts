@@ -31,7 +31,7 @@ export class CustomHttp extends Http {
 	}
 
 	post(url: string, body: string, options?: RequestOptionsArgs): Observable<Response> {
-		return super.post(this._normalizeUrl(url), body, this._addHeaders(options)).catch(error => this.handleError(error));
+		return super.post(this._normalizeUrl(url), body, this._addHeaders(options)).catch((error, body) => this.handleError(error, body));
 	}
 
 	put(url: string, body: string, options?: RequestOptionsArgs): Observable<Response> {
@@ -74,11 +74,14 @@ export class CustomHttp extends Http {
 		return options;
 	}
 
-	private handleError(error: any) {
+	private handleError(error: any, body?) {
+		console.log(body, error, error.body);
 		switch (error.status) {
 			case 401:
 				this._authenticationService.showLoginRegisterPopup();
 				break;
+			case 409:
+				return Observable.throw(JSON.parse(error._body));
 			case 424:
 				if (confirm('New version available. Download now?')) {
 

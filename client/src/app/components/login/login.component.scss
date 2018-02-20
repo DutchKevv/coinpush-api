@@ -12,21 +12,42 @@
 @import '../../style/helpers/normalize';
 @import '../../style/components/modal';
 
-label {
-    font-size: 12px;
-    color: $font-color-dark;
-    margin-right: 10px;
-    margin-left: 10px;
-}
-
-.close {
-    padding: 10px 20px;
-
-    span {
-        color: black;
+.modal-header {
+    .close {
+        padding: 10px;
+        padding-right: 20px;
+        font-size: 30px;
+        opacity: 1;
     }
 }
 
-.btn-link {
-    color: #fff;
+.modal-body {
+    label {
+        font-size: 14px;
+        margin-left: 6px;
+    }
+
+    label.error {
+        color: $label-error;
+        font-style: italic;
+        font-weight: bold;
+        margin-left: 30px;
+    }
+
+    .btn-link {
+        color: #fff;
+        font-size: 18px;
+    
+        &:hover {
+            color: #b8c8da;
+        }
+    }
+    
+    .form-group:last-child {
+        margin-bottom: 0;
+    }
+
+    .form-text-muted {
+        color: $label-muted;
+    }
 }

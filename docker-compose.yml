@@ -12,15 +12,13 @@ services:
     ports:
       - 27017:27017
     command: mongod --smallfiles --logpath=/dev/null # --quiet
-    configs:
-      - mongo-healthcheck
-    deploy:
-      mode: global
-      restart_policy:
-        condition: on-failure
-      update_config:
-        parallelism: 1
-        delay: 1m30s
+    # deploy:
+    #   mode: global
+    #   restart_policy:
+    #     condition: on-failure
+    #   update_config:
+    #     parallelism: 1
+    #     delay: 1m30s
   cache:
     restart: unless-stopped
     image: cache
@@ -32,7 +30,7 @@ services:
       - "3001"
     volumes:
       - ./server-cache:/usr/src/app/server-cache
-      - /usr/src/app/server-cache/node_modules
+      # - /usr/src/app/server-cache/node_modules
     links:
       - nginx
       - redis
@@ -48,8 +46,8 @@ services:
     build: ./server-nginx
     image: nginx
     container_name: nginx
-    # ports:
-    #   - "80:80"
+    ports:
+      - "80:80"
     volumes:
       - ./images:/usr/src/images
   redis:
@@ -68,12 +66,10 @@ services:
     ports:
       - "3100"
     volumes:
-      - ./tradejs.config.js:/usr/src/app/tradejs.config.js
-      - ./tradejs.config.custom.js:/usr/src/app/tradejs.config.custom.js
       - ./client:/usr/src/app/client
       - ./images:/usr/src/app/images
       - ./server-gateway:/usr/src/app/server-gateway
-      - ./server-gateway/node_modules:/usr/src/app/server-gateway/node_modules
+      # - ./server-gateway/node_modules:/usr/src/app/server-gateway/node_modules
     links:
       - nginx
       - redis
@@ -107,8 +103,6 @@ services:
     ports:
       - "3008"
     volumes:
-      - ./tradejs.config.js:/usr/src/app/tradejs.config.js
-      - ./tradejs.config.custom.js:/usr/src/app/tradejs.config.custom.js
       - ./server-user:/usr/src/app/server-user
       - /usr/src/app/server-user/node_modules
     links:
@@ -155,8 +149,14 @@ services:
       - "3011"
     volumes:
       - ./server-event:/usr/src/app/server-event
-      - /usr/src/app/server-event/node_modules
+      - ./shared/modules/coinpush:/usr/src/app/shared/modules/coinpush
     links:
       - nginx
       - redis
       - mongodb
+    command:
+      - /bin/sh
+      - -c
+      - |
+          npm i
+          npm start

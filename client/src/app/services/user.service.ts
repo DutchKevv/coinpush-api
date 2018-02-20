@@ -27,7 +27,7 @@ export class UserService {
 	}
 
 	create(user) {
-		return this._http.post('/user', user).map((res: Response) => res.json());
+		return this._http.post('/user', user).map((res: Response) => res.json()).toPromise();
 	}
 
 	async update(changes, toServer = true, showAlert: boolean = true) {

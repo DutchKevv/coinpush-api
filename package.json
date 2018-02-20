@@ -27,6 +27,7 @@
     "start": "npm run d-up",
     "prod": "pm2 start ecosystem.config.js --env production && pm2 monit",
     "stop": "npm run d-stop",
+    "m-shell": "docker exec -it mongodb mongo",
     "d-rm": "docker rm $(docker ps -a -q)",
     "d-rmi": "docker rm $(docker images -a -q)",
     "d-stop": "docker stop $(docker ps -a -q)",

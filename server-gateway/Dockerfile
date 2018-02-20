@@ -1,16 +1,15 @@
-FROM node:8-alpine
+FROM mhart/alpine-node:8.9.4
 
-ENV APP_LOCATION=/usr/src/app
-ENV SERVER_LOCATION=$APP_LOCATION/server-gateway
-ENV SHARED_LOCATION=$APP_LOCATION/shared
+ENV APP_LOCATION=/usr/src/app \ 
+    SERVER_LOCATION=/usr/src/app/server-gateway \
+    SHARED_LOCATION=/usr/src/app/shared
 
-RUN npm config set registry http://registry.npmjs.org/
-RUN npm set progress=false && npm config set depth 0 && npm cache clean --force
-
-# Create a directory where our app will be placed
-RUN mkdir -p $SERVER_LOCATION/
-# RUN mkdir -p $SERVER_LOCATION/node_modules/
-RUN mkdir -p $SHARED_LOCATION/
+RUN mkdir -p $SERVER_LOCATION/ &&  \
+    mkdir -p $SHARED_LOCATION/ && \
+    npm config set registry http://registry.npmjs.org/ && \
+    npm set progress=false && \ 
+    npm config set depth 0 && \
+    npm cache clean --force
 
 # config
 COPY /tradejs.config.js /tradejs.config.custom.js $APP_LOCATION/
@@ -32,6 +31,3 @@ RUN npm run build
 WORKDIR $SERVER_LOCATION/
 COPY /server-gateway/package.json .
 COPY /server-gateway .
-
-# port
-EXPOSE 3100

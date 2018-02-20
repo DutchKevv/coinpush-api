@@ -38,6 +38,9 @@ $input-color-text                   : #dddddd;
 $chart-header-background-blur       : -webkit-gradient(linear, left top, left bottom, color-stop(50%,#F0F0F0), color-stop(50%,#D4D4D4));
 $chart-header-background-focus      : -webkit-gradient(linear, left top, left bottom, color-stop(50%, #465254), color-stop(50%, #373939));
 
-
 // Panel
 $panel-heading                      : #12132d;
+
+// form
+$label-error                        : #ff2a2a;
+$label-muted                        : #bbc0c3;

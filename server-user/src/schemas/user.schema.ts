@@ -8,107 +8,112 @@ import * as beautifyUnique from 'mongoose-beautiful-unique-validation';
 
 const config = require('../../../tradejs.config');
 
-export const UserSchema = new Schema({
-	email: {
-		type: String,
-		unique: true,
-		required: true,
-		validate: [isEmail, 'invalid email'],
-		lowercase: true,
-		trim: true
+export const UserSchema = new Schema(
+	{
+		name: {
+			type: String,
+			unique: true,
+			required: true,
+			trim: true
+		},
+		email: {
+			type: String,
+			unique: true,
+			required: true,
+			validate: [isEmail, 'invalid email'],
+			lowercase: true,
+			trim: true
+		},
+		img: {
+			type: String
+		},
+		gender: {
+			type: Number,
+			default: 0
+		},
+		description: {
+			type: String,
+			default: ''
+		},
+		password: {
+			type: String,
+			required: true,
+			minlength: 4
+		},
+		country: {
+			type: String,
+			required: false,
+			trim: true,
+			default: 'NL'
+		},
+		jobTitle: {
+			type: String,
+			required: false,
+			trim: true
+		},
+		favorites: {
+			type: [String],
+			required: false,
+			default: []
+		},
+		followers: [{
+			type: Schema.Types.ObjectId,
+			default: [],
+			ref: 'User'
+		}],
+		followersCount: {
+			type: Number,
+			default: 0
+		},
+		visitors: [{
+			type: Schema.Types.ObjectId,
+			default: [],
+			ref: 'User'
+		}],
+		transactions: {
+			type: Number,
+			required: false,
+			default: 0
+		},
+		lastOnline: {
+			type: Date,
+			required: false,
+			default: Date.now
+		},
+		membershipStartDate: {
+			type: Date,
+			required: false,
+			default: Date.now
+		},
+		membershipEndDate: {
+			type: Date,
+			required: false,
+		},
+		membershipType: {
+			type: String,
+			required: false,
+			default: 'free'
+		},
+		active: {
+			type: Boolean,
+			required: false,
+			default: true
+		},
+		resetPasswordToken: {
+			type: String,
+		},
+		resetPasswordExpires: {
+			type: Date,
+		},
+		emailConfirmed: {
+			type: Boolean,
+			default: false
+		}
 	},
-	name: {
-		type: String,
-		unique: true,
-		required: true,
-		trim: true
-	},
-	img: {
-		type: String
-	},
-	gender: {
-		type: Number,
-		default: 0
-	},
-	description: {
-		type: String,
-		default: ''
-	},
-	password: {
-		type: String,
-		required: true,
-		minlength: 4
-	},
-	country: {
-		type: String,
-		required: false,
-		trim: true,
-		default: 'NL'
-	},
-	jobTitle: {
-		type: String,
-		required: false,
-		trim: true
-	},
-	favorites: {
-		type: [String],
-		required: false,
-		default: []
-	},
-	followers: [{
-		type: Schema.Types.ObjectId,
-		default: [],
-		ref: 'User'
-	}],
-	followersCount: {
-		type: Number,
-		default: 0
-	},
-	visitors: [{
-		type: Schema.Types.ObjectId,
-		default: [],
-		ref: 'User'
-	}],
-	transactions: {
-		type: Number,
-		required: false,
-		default: 0
-	},
-	lastOnline: {
-		type: Date,
-		required: false,
-		default: Date.now
-	},
-	membershipStartDate: {
-		type: Date,
-		required: false,
-		default: Date.now
-	},
-	membershipEndDate: {
-		type: Date,
-		required: false,
-	},
-	membershipType: {
-		type: String,
-		required: false,
-		default: 'free'
-	},
-	active: {
-		type: Boolean,
-		required: false,
-		default: true
-	},
-	resetPasswordToken: {
-		type: String,
-	},
-	resetPasswordExpires: {
-		type: Date,
-	},
-	emailConfirmed: {
-		type: Boolean,
-		default: false
+	{
+		timestamps: true
 	}
-});
+);
 
 UserSchema.plugin(beautifyUnique);
 
@@ -149,7 +154,7 @@ UserSchema.statics.normalize = function (user, doc) {
 UserSchema.statics.setIFollow = function (user, doc) {
 	if (!doc)
 		return;
-	
+
 	if (doc.followers)
 		doc.iFollow = doc.followers.map(c => c.toString()).indexOf(user.id) > -1;
 
@@ -187,11 +192,11 @@ UserSchema.statics.normalizeProfileImg = function (doc) {
 
 UserSchema.statics.setFavorite = async function (userId: string, symbol: string): Promise<void> {
 	console.log(userId, symbol);
-	await (<any>User).updateOne({_id: userId}, { $addToSet: { favorites: symbol }});
+	await (<any>User).updateOne({ _id: userId }, { $addToSet: { favorites: symbol } });
 };
 
 UserSchema.statics.unsetFavorite = async function (userId: string, symbol: string): Promise<void> {
-	await (<any>User).updateOne({_id: userId}, {$pull: { favorites: symbol } });
+	await (<any>User).updateOne({ _id: userId }, { $pull: { favorites: symbol } });
 };
 
 export const User = model('User', UserSchema);

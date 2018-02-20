@@ -3,7 +3,7 @@ import * as express from 'express';
 import * as helmet from 'helmet';
 import * as morgan from 'morgan';
 import * as mongoose from 'mongoose';
-import { pubClient, subClient } from './modules/redis';
+import { pubClient, subClient } from 'coinpush/redis';
 import { eventController } from './controllers/event.controller';
 // error catching
 process.on('unhandledRejection', (reason, p) => {

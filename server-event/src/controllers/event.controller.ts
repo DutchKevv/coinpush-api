@@ -1,10 +1,10 @@
 import { Event } from '../schemas/event.schema';
 import * as mongoose from 'mongoose';
-import { CUSTOM_EVENT_TYPE_ALARM, ALARM_TRIGGER_TYPE_PRICE, ALARM_TRIGGER_TYPE_PERCENTAGE, ALARM_TRIGGER_DIRECTION_DOWN, ALARM_TRIGGER_DIRECTION_UP } from '../../../shared/constants/constants';
+import { CUSTOM_EVENT_TYPE_ALARM, ALARM_TRIGGER_TYPE_PRICE, ALARM_TRIGGER_TYPE_PERCENTAGE, ALARM_TRIGGER_DIRECTION_DOWN, ALARM_TRIGGER_DIRECTION_UP } from 'coinpush/constant';
 import { flatten } from 'lodash';
-import { pubClient } from '../modules/redis';
+import { pubClient } from 'coinpush/redis';
 
-const config = require('../../../tradejs.config');
+const config = require('./../../../tradejs.config');
 
 export const eventController = {
 

@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "lib": ["es7"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "rootDir": "./",
+    "target": "esnext",
+    "types": [
+      "node"
+    ],
+    "pretty": true
+  }
+}

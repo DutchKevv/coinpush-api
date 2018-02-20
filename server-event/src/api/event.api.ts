@@ -7,7 +7,7 @@ const router = Router();
 /**
  * single
  */
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', async (req: any, res, next) => {
 	try {
 		// res.send(await eventController.findMany(req.user, req.req.query));
 	} catch (error) {
@@ -18,7 +18,7 @@ router.get('/:id', async (req, res, next) => {
 /**
  * list
  */
-router.get('/', async (req, res, next) => {
+router.get('/', async (req: any, res, next) => {
 	try {
 		res.send(await eventController.findMany(req.user, req.query));
 	} catch (error) {
@@ -29,7 +29,7 @@ router.get('/', async (req, res, next) => {
 /**
  * create
  */
-router.post('/', async (req, res, next) => {
+router.post('/', async (req: any, res, next) => {
 	try {
 		res.send(await eventController.create(req.user, req.body));
 	} catch (error) {
@@ -40,7 +40,7 @@ router.post('/', async (req, res, next) => {
 /**
  * update
  */
-router.put('/', (req, res, next) => {
+router.put('/', (req: any, res, next) => {
 	try {
 		
 	} catch (error) {
@@ -51,7 +51,7 @@ router.put('/', (req, res, next) => {
 /**
  * delete
  */
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', async (req: any, res, next) => {
 	try {
 		res.send(await eventController.remove(req.user, req.params.id));
 	} catch (error) {
