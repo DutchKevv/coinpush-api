@@ -26,3 +26,19 @@
 2018-02-20T02:24:14.831Z - info: redis                :  client connected
 2018-02-20T02:25:14.446Z - info: redis                :  client connected
 2018-02-20T02:25:14.452Z - info: redis                :  client connected
+2018-02-20T13:28:33.652Z - info: redis                :  client connected
+2018-02-20T13:28:33.670Z - info: redis                :  client connected
+2018-02-20T14:15:09.739Z - info: redis                :  client connected
+2018-02-20T14:15:09.753Z - info: redis                :  client connected
+2018-02-20T15:39:53.124Z - info: redis                :  connection error, retry attempt: 1
+2018-02-20T15:39:53.125Z - info: redis                :  connection error, retry attempt: 1
+2018-02-20T15:39:53.235Z - info: redis                :  connection error, retry attempt: 2
+2018-02-20T15:39:53.237Z - info: redis                :  connection error, retry attempt: 2
+2018-02-20T15:42:56.711Z - info: redis                :  client connected
+2018-02-20T15:42:56.717Z - info: redis                :  client connected
+2018-02-20T15:44:38.573Z - info: redis                :  client connected
+2018-02-20T15:44:38.584Z - info: redis                :  client connected
+2018-02-20T16:16:31.395Z - info: redis                :  client connected
+2018-02-20T16:16:31.404Z - info: redis                :  client connected
+2018-02-20T21:16:15.633Z - info: redis                :  client connected
+2018-02-20T21:16:15.643Z - info: redis                :  client connected

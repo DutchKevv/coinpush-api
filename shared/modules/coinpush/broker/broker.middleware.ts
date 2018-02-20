@@ -1,10 +1,10 @@
 import { EventEmitter } from 'events';
 import { log } from '../util/util.log';
-import OandaApi from './oanda/index';
+import { OandaApi} from './oanda/index';
 import CyrptoCompareApi from './cc/cryptocompare.broker';
 import { BROKER_GENERAL_TYPE_CC, BROKER_GENERAL_TYPE_OANDA } from '../constant';
 
-const config = require('../../tradejs.config');
+const config = require('../../../../tradejs.config');
 
 export class BrokerMiddleware extends EventEmitter {
 

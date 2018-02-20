@@ -1,5 +1,5 @@
 import * as Stream from 'stream';
-import { Adapter } from './lib/OANDAAdapter';
+import { OandaAdapter } from './lib/OANDAAdapter';
 import { splitToChunks } from '../../util/util.date';
 import { log } from '../../util/util.log';
 import { EventEmitter } from 'events';
@@ -7,7 +7,7 @@ import { ORDER_TYPE_IF_TOUCHED, ORDER_TYPE_LIMIT, ORDER_TYPE_MARKET, ORDER_TYPE_
 
 const metaData = require('./symbols-meta').meta;
 
-export default class OandaApi extends EventEmitter {
+export class OandaApi extends EventEmitter {
 
 	public static readonly FAVORITE_SYMBOLS = [
 		'EUR_USD',
@@ -26,7 +26,7 @@ export default class OandaApi extends EventEmitter {
 
 	public init() {
 
-		this._client = new Adapter({
+		this._client = new OandaAdapter({
 			// 'live', 'practice' or 'sandbox'
 			environment: this.options.environment,
 			// Generate your API access in the 'Manage API Access' section of 'My Account' on OANDA's website

@@ -32,7 +32,7 @@ let maxSockets = 3, maxRequestsPerSecond = 15, maxRequestsWarningThreshold = 100
  * config.accessToken
  * config.username (Sandbox only)
  */
-const OandaAdapter = <any>class extends EventEmitter{
+export class OandaAdapter extends EventEmitter {
 
 	accessToken;
 	streamHost;
@@ -42,10 +42,37 @@ const OandaAdapter = <any>class extends EventEmitter{
 	subscriptions;
 	_eventsBuffer;
 	_pricesBuffer;
+	_onEventsData;
+
+
+	subscribeEvents;
+	unsubscribeEvents;
+	_onEventsResponse;
+	_eventsHeartbeatTimeout;
+	getAccounts;
+	getAccount;
+	getInstruments;
+	getPrices;
+	_onPricesResponse;
+	_streamEvents;
+	subscribePrices;
+	_pricesHeartbeatTimeout;
+	_candlesJsonStringToArray;
+	_onPricesData;
+	getCandles;
+	getOpenPositions;
+	getOpenTrades;
+	createOrder;
+	closeOrder;
+	_sendRESTRequestStream;
+	_sendRESTRequest;
+	unsubscribePrices;
+	getTransactionHistory;
+	_streamPrices;
+	kill;
 
 	constructor(config) {
 		super();
-
 		config.environment = config.environment || 'practice';
 		// this.accountId = accountId;
 		this.accessToken = config.accessToken;
@@ -69,14 +96,14 @@ Events.mixin(OandaAdapter.prototype);
  */
 OandaAdapter.prototype.subscribeEvents = function (listener, context) {
 	let existingSubscriptions = this.getHandlers('event');
-	this.off('event', listener, context);
+	this.removeListener('event', listener, context);
 	this.on('event', listener, context);
 	if (existingSubscriptions.length === 0) {
 		this._streamEvents();
 	}
 };
 OandaAdapter.prototype.unsubscribeEvents = function (listener, context) {
-	this.off('event', listener, context);
+	this.removeListener('event', listener, context);
 	this._streamEvents();
 };
 OandaAdapter.prototype._streamEvents = function () {
@@ -103,18 +130,18 @@ OandaAdapter.prototype._streamEvents = function () {
 OandaAdapter.prototype._onEventsResponse = function (body, statusCode) {
 	if (statusCode !== 200) {
 		if (body && body.disconnect) {
-			this.trigger('message', null, 'Events streaming API disconnected.\nOanda code ' + body.disconnect.code + ': ' + body.disconnect.message);
+			this.emit('message', null, 'Events streaming API disconnected.\nOanda code ' + body.disconnect.code + ': ' + body.disconnect.message);
 			// ***** CUSTOM *****
-			this.trigger('error', {
+			this.emit('error', {
 				code: constants.BROKER_ERROR_DISCONNECT,
 				brokerCode: body.disconnect.code,
 				message: body.disconnect.message
 			});
 		}
 		else {
-			this.trigger('message', null, 'Events streaming API disconnected with status ' + statusCode);
+			this.emit('message', null, 'Events streaming API disconnected with status ' + statusCode);
 			// ***** CUSTOM *****
-			this.trigger('error', {
+			this.emit('error', {
 				code: constants.BROKER_ERROR_DISCONNECT,
 				httpCode: statusCode
 			});
@@ -138,7 +165,7 @@ OandaAdapter.prototype._onEventsData = function (data) {
 					// Wait for next line.
 					return;
 				}
-				this.trigger('error', {
+				this.emit('error', {
 					code: constants.BROKER_ERROR_PARSE,
 					message: `Unable to parse Oanda events subscription update. \n \n Error: \n ${error}`
 				});
@@ -151,7 +178,7 @@ OandaAdapter.prototype._onEventsData = function (data) {
 				this.eventsTimeout = setTimeout(this._eventsHeartbeatTimeout.bind(this), 20000);
 				return;
 			}
-			this.trigger('event', update);
+			this.emit('event', update);
 		}
 	}, this);
 };
@@ -220,7 +247,7 @@ OandaAdapter.prototype.subscribePrices = function (accountId, symbols, listener)
 		if (!this.streamPrices) {
 			this.streamPrices = throttle(this._streamPrices.bind(this, accountId));
 		}
-		this.off('price/' + symbol, listener);
+		this.removeListener('price/' + symbol, listener);
 		this.on('price/' + symbol, listener);
 
 		if (!existingSubscriptions.length)
@@ -229,7 +256,7 @@ OandaAdapter.prototype.subscribePrices = function (accountId, symbols, listener)
 
 };
 OandaAdapter.prototype.unsubscribePrices = function (symbol, listener, context) {
-	this.off('price/' + symbol, listener, context);
+	this.removeListener('price/' + symbol, listener, context);
 	this.streamPrices();
 };
 // Kills rates streaming keep alive request for account and creates a new one whenever subsciption list changes. Should always be throttled.
@@ -288,7 +315,7 @@ OandaAdapter.prototype._onPricesData = function (data) {
 				}
 				// Drop if cannot produce object after 5 updates
 				this._pricesBuffer = [];
-				this.trigger('error', {
+				this.emit('error', {
 					message: 'Unable to parse Oanda price subscription update',
 					code: constants.BROKER_ERROR_PARSE
 				});
@@ -302,7 +329,7 @@ OandaAdapter.prototype._onPricesData = function (data) {
 			}
 			if (update.tick) {
 				update.tick.time = new Date(update.tick.time);
-				this.trigger('price/' + update.tick.instrument, update.tick);
+				this.emit('price/' + update.tick.instrument, update.tick);
 			}
 		}
 	}, this);
@@ -311,7 +338,7 @@ OandaAdapter.prototype._onPricesData = function (data) {
 OandaAdapter.prototype._pricesHeartbeatTimeout = function () {
 	console.warn('[WARN] OandaAdapter: No heartbeat received from prices stream for 10 seconds. Reconnecting.');
 	delete this.lastPriceSubscriptions;
-	this.trigger('stream-timeout');
+	this.emit('stream-timeout');
 	this._streamPrices();
 };
 
@@ -471,7 +498,7 @@ OandaAdapter.prototype._sendRESTRequestStream = function (request, callback, onD
 				}
 			}
 		}
-		this.trigger('error', errorObject);
+		this.emit('error', errorObject);
 		callback(errorObject);
 	}, onData);
 };
@@ -513,7 +540,7 @@ OandaAdapter.prototype._sendRESTRequest = function (params, callback) {
 					}
 				}
 			}
-			this.trigger('error', errorObject);
+			this.emit('error', errorObject);
 			callback(errorObject);
 		});
 }
@@ -524,7 +551,7 @@ OandaAdapter.prototype.kill = function () {
 	if (this.eventsRequest) {
 		this.eventsRequest.abort();
 	}
-	this.off();
+	this.removeListener();
 };
 
 export const Adapter = OandaAdapter;

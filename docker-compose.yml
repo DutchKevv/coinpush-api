@@ -31,6 +31,7 @@ services:
     volumes:
       - ./server-cache:/usr/src/app/server-cache
       # - /usr/src/app/server-cache/node_modules
+      - ./shared/modules/coinpush:/usr/src/app/shared/modules/coinpush
     links:
       - nginx
       - redis
@@ -40,7 +41,7 @@ services:
       - -c
       - |
           npm i
-          npm start
+          npm run build
   nginx:
     restart: unless-stopped
     build: ./server-nginx
@@ -49,7 +50,16 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./images:/usr/src/images
+      - ./images:/usr/src/app/images
+      - ./client/www:/usr/src/app/client/www
+    command:
+      - /bin/sh
+      - -c
+      - |
+          # cd /usr/src/app/client/www && ls
+          # cp nginx:/etc/nginx/nginx.conf ./nginx.conf
+          nginx -t
+          nginx -g 'daemon off;'
   redis:
     restart: unless-stopped
     image: "redis:alpine"
@@ -66,14 +76,11 @@ services:
     ports:
       - "3100"
     volumes:
-      - ./client:/usr/src/app/client
-      - ./images:/usr/src/app/images
       - ./server-gateway:/usr/src/app/server-gateway
       # - ./server-gateway/node_modules:/usr/src/app/server-gateway/node_modules
     links:
       - nginx
       - redis
-      - client
     command:
       - /bin/sh
       - -c

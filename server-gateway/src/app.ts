@@ -153,11 +153,11 @@ export const app = {
 		// });
 
 		// public assets
-		this.api.use(express.static(PATH_WWW_ROOT));
+		// this.api.use(express.static(PATH_WWW_ROOT));
 
 		// images 
 		// TODO: should be on CDN
-		this.api.use(express.static(PATH_IMAGES));
+		// this.api.use(express.static(PATH_IMAGES));
 
 		// this.api.use('/images/', (req, res) => {
 		// 	console.log('IMAGSFDSDF');

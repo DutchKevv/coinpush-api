@@ -170,7 +170,7 @@ UserSchema.statics.normalizeProfileImg = function (doc) {
 	if (!doc)
 		return;
 
-	const domainPrefix = config.server.gateway.protocol + '://' + (process.env.NODE_ENV === 'production' ? config.ip.prod : config.ip.local + ':' + config.port);
+	// const domainPrefix = config.server.gateway.protocol + '://' + (process.env.NODE_ENV === 'production' ? config.ip.prod : config.ip.local + ':' + config.port);
 
 	// followers
 	if (doc.followers && doc.followers.length)
@@ -178,7 +178,8 @@ UserSchema.statics.normalizeProfileImg = function (doc) {
 
 	// default img
 	if (!doc.img) {
-		doc.img = domainPrefix + config.image.profileDefaultUrl;
+		// doc.img = domainPrefix + config.image.profileDefaultUrl;
+		doc.img = config.image.profileDefaultUrl;
 		return;
 	}
 
@@ -187,7 +188,8 @@ UserSchema.statics.normalizeProfileImg = function (doc) {
 		return;
 
 	// user image
-	doc.img = domainPrefix + join(config.image.profileBaseUrl, doc.img);
+	doc.img = join(config.image.profileBaseUrl, doc.img);
+	// doc.img = domainPrefix + join(config.image.profileBaseUrl, doc.img);
 };
 
 UserSchema.statics.setFavorite = async function (userId: string, symbol: string): Promise<void> {

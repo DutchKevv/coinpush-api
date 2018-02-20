@@ -9,7 +9,7 @@ function waitFor(event, listener, context, wait) {
 		listener.apply(context, arguments);
 	};
 	timeout = setTimeout(function () {
-		this.off(event, handler, context);
+		this.removeListener(event, handler, context);
 		listener.call(context, "timeout");
 	}.bind(this), wait);
 	this.once(event, handler, context);
@@ -17,7 +17,7 @@ function waitFor(event, listener, context, wait) {
 // Listens for duration ms for events to fire, then removes listener
 function listenFor(event, listener, context, duration) {
 	setTimeout(function () {
-		this.off(event, listener, context);
+		this.removeListener(event, listener, context);
 	}.bind(this), duration);
 	this.on(event, listener, context);
 }

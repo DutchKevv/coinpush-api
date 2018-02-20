@@ -5,6 +5,12 @@ services:
     build:
       args:
         NODE_ENV: development
+    command:
+      - /bin/sh
+      - -c
+      - |
+          npm i
+          npm start
   nginx:
     ports:
       - "4000:80"

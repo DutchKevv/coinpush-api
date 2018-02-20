@@ -6,9 +6,9 @@ import * as mongoose from 'mongoose';
 import * as morgan from 'morgan';
 import { cacheController } from './controllers/cache.controller';
 import { symbolController } from './controllers/symbol.controller';
-import { BrokerMiddleware } from '../../shared/brokers/broker.middleware';
-import { pubClient } from './modules/redis';
-import { log } from '../../shared/logger';
+import { BrokerMiddleware } from 'coinpush/broker';
+import { pubClient } from 'coinpush/redis';
+import { log } from 'coinpush/util/util.log';
 
 // error catching
 process.on('unhandledRejection', (reason, p) => {

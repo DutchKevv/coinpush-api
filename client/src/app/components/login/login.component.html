@@ -48,7 +48,10 @@
                         <label>Name
                             <span *ngIf="registerForm.submitted && !name.valid" class="help-block">Name is required</span>
                         </label>
-                        <input id="name" class="form-control" name="name" required [(ngModel)]="registerModel.name" #name="ngModel" />
+                        <input id="name" class="form-control" name="name" required [(ngModel)]="registerModel.name" #name="ngModel" minlength="2" />
+                        <small class="form-text form-text-muted">
+                            Minimum 2 characters
+                        </small>
                     </div>
                     <div class="form-group" [ngClass]="{ 'has-error': registerForm.submitted && !email.valid }">
                         <label for="email">Email
@@ -65,28 +68,29 @@
                     </div>
                     <div class="form-group" [ngClass]="{ 'has-error': registerForm.submitted && !password.valid }">
                         <label for="password">Password
+                            
                             <span *ngIf="registerForm.submitted && !password.valid" class="help-block">Password is required</span>
                         </label>
                         <input id="password" type="password" class="form-control" name="password" [(ngModel)]="registerModel.password" #password="ngModel"
-                            required/>
-                        <small class="form-text form-text-muted">
-                            Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces, special characters,
-                            or emoji.
-                        </small>
+                            required minlength="4"/>
                     </div>
                     <div class="form-group" [ngClass]="{ 'has-error': registerForm.submitted && !passwordConf.valid }">
                         <label for="passwordConf">Password confirmation
                             <span *ngIf="registerForm.submitted && !passwordConf.valid" class="help-block">Password confirmation is required</span>
                         </label>
                         <input id="passwordConf" type="password" class="form-control" name="passwordConf" [(ngModel)]="registerModel.passwordConf"
-                            #passwordConf="ngModel" required/>
+                            #passwordConf="ngModel" required minlength="4"/>
+                        <small class="form-text form-text-muted">
+                            Your password must be 4-20 characters long, contain letters and numbers, and must not contain spaces, special characters,
+                            or emoji.
+                        </small>
                     </div>
                     <div class="form-group">
+                        <a (click)="formType = 'login'" class="btn btn-link">Cancel</a>
                         <button [disabled]="loading$ | async" class="btn btn-success">Register
                             <img *ngIf="loading$ | async" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
                             />
                         </button>
-                        <a (click)="formType = 'login'" class="btn btn-link">Cancel</a>
                     </div>
                 </form>
             </div>

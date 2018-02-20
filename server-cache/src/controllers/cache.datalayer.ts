@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as mongoose from 'mongoose';
-import { log } from '../../../shared/logger';
-import { timeFrameSteps } from '../../../shared/util/util.date';
+import { log } from 'coinpush/util/util.log';
+import { timeFrameSteps } from 'coinpush/util/util.date'
 import { CandleSchema } from '../schemas/candle';
 import { Status } from '../schemas/status.schema';
 import { BulkWriteResult } from 'mongodb';

@@ -1,14 +1,12 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import OandaApi from "../../../shared/brokers/oanda/index";
 import { cacheController } from './cache.controller';
 import { Status } from '../schemas/status.schema';
-import { log } from "../../../shared/logger";
 import { dataLayer } from "./cache.datalayer";
-import { SYMBOL_CAT_TYPE_OTHER } from "../../../shared/constants/constants";
+import { SYMBOL_CAT_TYPE_OTHER } from "coinpush/constant";
 import { app } from '../app';
 
-const metaData = require('../../../shared/brokers/oanda/symbols-meta').meta;
+const metaData = require('coinpush/broker/oanda/symbols-meta').meta;
 
 /**
  * handle all symbol specific actions that do not concern fetching or writing data
