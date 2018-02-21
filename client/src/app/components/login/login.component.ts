@@ -51,6 +51,14 @@ export class LoginComponent implements OnInit {
 			this.loading$.emit(false);
 	}
 
+	async fbLogin() {
+		this.loading$.emit(true);
+		const result = await this.authenticationService.authenticateFacebook();
+
+		if (!result)
+			this.loading$.emit(false);
+	}
+
 	async register() {
 		this.loading$.emit(true);
 

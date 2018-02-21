@@ -13,10 +13,6 @@ const config = {
         'custom': path.join(__dirname, 'custom'),
         'config': path.join(__dirname, '_config')
     },
-    token: {
-        secret: 'BUTTERFLY1942',
-        passwordResetSecret: 'BEAVER_COMMUNITY_12_1'
-    },
     server: {
         gateway: {
             port: 3100,
@@ -108,13 +104,19 @@ const config = {
             live: '**',
         }
     },
-    facebookAuth : {
-        'clientID'      : 'your-secret-clientID-here', // your App ID
-        'clientSecret'  : 'your-client-secret-here', // your App Secret
-        'callbackURL'   : 'http://localhost:8080/auth/facebook/callback',
-        'profileURL'    : 'https://graph.facebook.com/v2.5/me?fields=first_name,last_name,email',
-        'profileFields' : ['id', 'email', 'name'] // For requesting permissions from Facebook API
-    },
+    auth: {
+        jwt: {
+            secret: 'BUTTERFLY1942',
+            passwordResetSecret: 'BEAVER_COMMUNITY_12_1'
+        },
+        facebook: {
+            clientID      : '178901869390909', // your App ID
+            clientSecret  : 'be8d6625e76a24899b2585d65d3522c1', // your App Secret
+            'callbackURL'   : 'http://localhost:8080/auth/facebook/callback',
+            'profileURL'    : 'https://graph.facebook.com/v2.12/me?fields=first_name,last_name,email',
+            'profileFields' : ['id', 'email', 'name'] // For requesting permissions from Facebook API
+        }
+    }
 };
 
 // deepmerge config with custom config

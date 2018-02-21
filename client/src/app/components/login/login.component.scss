@@ -12,6 +12,18 @@
 @import '../../style/helpers/normalize';
 @import '../../style/components/modal';
 
+.btn-facebook {
+    background-color: #4267b2;
+    color: white;
+
+    i {
+        border-right: 1px solid white;
+        margin-right: 10px;
+        padding-right: 10px;
+        font-size: 20px;
+    }
+}
+
 .modal-header {
     .close {
         padding: 10px;
@@ -25,13 +37,13 @@
     label {
         font-size: 14px;
         margin-left: 6px;
-    }
 
-    span {
-        color: $label-error;
-        font-style: italic;
-        font-weight: bold;
-        margin-left: 30px;
+        span {
+            color: $label-error;
+            font-style: italic;
+            font-weight: bold;
+            margin-left: 30px;
+        }    
     }
 
     .btn-link {
@@ -49,5 +61,11 @@
 
     .form-text-muted {
         color: $label-muted;
+    }
+}
+
+.login-footer-buttons {
+    .btn-link:first-child {
+        padding-left: 0;
     }
 }

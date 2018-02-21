@@ -125,7 +125,6 @@ export class AppComponent implements OnInit, AfterViewInit {
 	}
 
 	ngAfterViewInit() {
-
 		// small break before loading ads and receiving for push messages
 		setTimeout(() => {
 			app.prettyBootty.step('done');
@@ -136,7 +135,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 				app.initNotifications().catch(console.error);
 				
 			app.loadAds();
-		}, 0);
+		}, 100);
 	}
 
 	public onSearchKeyUp(event): void {

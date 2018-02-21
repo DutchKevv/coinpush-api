@@ -16,6 +16,17 @@ router.get('/', async (req, res, next) => {
 });
 
 /**
+ * authenticate facebook
+ */
+router.post('/facebook', async (req, res, next) => {
+	try {
+		res.send(await authenticateController.authenticateFacebook(req.user, req.body));
+	} catch (error) {
+		next(error);
+	}
+});
+
+/**
  * password reset request
  */
 router.post('/request-password-reset', async (req, res, next) => {

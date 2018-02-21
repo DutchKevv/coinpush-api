@@ -1,5 +1,6 @@
 import * as jwt from 'jsonwebtoken';
 import * as request from 'request-promise';
+import { FB, FacebookApiException } from 'fb';
 import { userController } from "./user.controller";
 import { G_ERROR_UNKNOWN } from "../../../shared/constants/constants";
 import { log } from '../../../shared/logger';
@@ -14,7 +15,8 @@ const config = require('../../../tradejs.config');
 
 export const authenticateController = {
 
-	async authenticate(reqUser: IReqUser, params: { email?: string, password?: string, token?: string, device?: any}, options: {profile?: boolean} = {}): Promise<any> {
+	async authenticate(reqUser: IReqUser, params: { email?: string, password?: string, token?: string, device?: any }, options: { profile?: boolean } = {}): Promise<any> {
+
 		if (params.token) {
 			if (reqUser.id && reqUser.id !== params.token)
 				throw new Error('header token and param token do not match');
@@ -24,11 +26,11 @@ export const authenticateController = {
 
 		let user: IUser;
 		let userData: any = [];
-
+		console.log(1);
 		const results = await Promise.all([
 			symbolController.getPublicList(),
 			(async () => {
-				
+
 				if (params.email || params.password || params.token) {
 					params['fields'] = ['favorites', 'name', 'img'];
 
@@ -51,8 +53,8 @@ export const authenticateController = {
 					}
 				}
 			})()
-		])
-
+		]);
+		console.log(2);
 		return {
 			symbols: results[0],
 			notifications: {
@@ -61,6 +63,24 @@ export const authenticateController = {
 			events: userData[1],
 			user
 		};
+	},
+
+	async authenticateFacebook(reqUser: IReqUser, params: { token: string }) {
+		FB.options({accessToken: params.token});
+		const result = await FB.api('/me');
+
+
+		if (result && result.error) {
+			if(result.error.code === 'ETIMEDOUT') {
+				console.log('request timeout');
+			}
+			else {
+				console.log('error', result.error);
+			}
+		}
+		else {
+			console.log(result);
+		}
 	},
 
 	async requestPasswordReset(reqUser, email: string): Promise<void> {

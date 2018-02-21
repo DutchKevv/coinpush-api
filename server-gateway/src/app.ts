@@ -1,3 +1,4 @@
+import * as path from 'path';
 import { parse } from 'url';
 import * as semver from 'semver';
 import * as _http from 'http';
@@ -6,18 +7,20 @@ import * as express from 'express';
 import * as helmet from 'helmet';
 import * as morgan from 'morgan';
 import * as io from 'socket.io';
+import * as jwt from 'jsonwebtoken';
+import * as passport from 'passport';
+import * as passportJWT from 'passport-jwt';
+import { Strategy as FacebookStrategy } from 'passport-facebook';
 import { symbolController } from './controllers/symbol.controller';
 import { BrokerMiddleware } from '../../shared/brokers/broker.middleware';
 import { log } from '../../shared/logger';
 import { subClient } from './modules/redis';
+import { userController } from './controllers/user.controller';
 
-const path = require('path');
-const httpProxy = require('http-proxy');
-const jwt = require('jsonwebtoken');
 const expressJwt = require('express-jwt');
-const morgan = require('morgan');
-const helmet = require('helmet');
-const { json } = require('body-parser');
+
+const ExtractJwt = passportJWT.ExtractJwt;
+const JwtStrategy = passportJWT.Strategy;
 
 const PATH_WWW_ROOT = path.join(__dirname, '../../client/www');
 const PATH_WWW_BROWSER_NOT_SUPPORTED_FILE = path.join(__dirname, '../public/index.legacy.browser.html');
@@ -46,8 +49,8 @@ export const app = {
 	_socketTickIntervalTime: 500,
 
 	async init(): Promise<void> {
-		
-		
+
+
 		await this._setRedisListeners();
 
 		// load symbols
@@ -127,8 +130,48 @@ export const app = {
 			};
 		};
 
-		this.api.use(bodyParserJsonMiddleware());
+		const jwtOptions = {
+			jwtFromRequest: passportJWT.ExtractJwt.fromAuthHeaderWithScheme("jwt"),
+			secretOrKey: config.auth.jwt.secret
+		}
 
+		const jwtStrategy = new JwtStrategy(jwtOptions, function (jwt_payload, next) {
+			console.log('payload received', jwt_payload);
+			// usually this would be a database call:
+			// var user = users[_.findIndex(users, { id: jwt_payload.id })];
+			// if (user) {
+			// 	next(null, user);
+			// } else {
+			// 	next(null, false);
+			// }
+		});
+
+		const facebookStrategy = new FacebookStrategy({
+			clientID: config.auth.facebook.clientID,
+			clientSecret: config.auth.facebook.clientSecret
+		}, async (accessToken, refreshToken, profile, done) => {
+			// User.upsertFbUser(accessToken, refreshToken, profile, function (err, user) {
+			// 	return done(err, user);
+			// });
+
+			const newUser = await userController.create({}, {
+				email: profile.emails[0].value,
+				name: profile.name.givenName + ' ' + profile.name.familyName,
+				oauthFacebook: {
+					id: profile.id,
+					token: accessToken
+				}
+			});
+
+			done(newUser);
+		});
+
+		passport.use(jwtStrategy);
+		passport.use(facebookStrategy);
+
+		this.api.use(bodyParserJsonMiddleware());
+		this.api.use(passport.initialize());
+		this.api.use(passport.session());
 		this.api.use(morgan('dev'));
 		this.api.use(helmet());
 
@@ -163,34 +206,19 @@ export const app = {
 		// 	console.log('IMAGSFDSDF');
 		// })
 
-		// use JWT auth to secure the api, the token can be passed in the authorization header or query string
-		const getToken = function (req) {
-			if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer')
-				return req.headers.authorization.split(' ')[1];
-		};
+		// // use JWT auth to secure the api, the token can be passed in the authorization header or query string
+		// const getToken = function (req) {
+		// 	if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer')
+		// 		return req.headers.authorization.split(' ')[1];
+		// };
 
-		this.api.use(expressJwt({ secret: config.token.secret, getToken }).unless((req) => {
-			return (
-				req.method === 'GET' ||
-				req.originalUrl.startsWith('/api/v1/authenticate') ||
-				(req.originalUrl === '/api/v1/user' && req.method === 'POST')
-			);
-		}));
-
-
-		// /**
-		//  * websocket
-		//  */
-		// server.on('upgrade', (req, socket, head) => {
-		// 	switch (parse(req.url).pathname) {
-		// 		case '/ws/general/':
-		// 			proxy.ws(req, socket, head, { target: config.server.oldApi.apiUrl });
-		// 			break;
-		// 		case '/ws/candles/':
-		// 			proxy.ws(req, socket, head, { target: config.server.cache.apiUrl });
-		// 			break;
-		// 	}
-		// });
+		// this.api.use(expressJwt({ secret: config.token.secret, getToken }).unless((req) => {
+		// 	return (
+		// 		req.method === 'GET' ||
+		// 		req.originalUrl.startsWith('/api/v1/authenticate') ||
+		// 		(req.originalUrl === '/api/v1/user' && req.method === 'POST')
+		// 	);
+		// }));
 
 		/**
 		 * error - unauthorized
@@ -213,21 +241,8 @@ export const app = {
 				req.headers._id = req.user.id;
 				next();
 			} else {
-				const token = getToken(req);
-
-				if (token) {
-					jwt.verify(token, config.token.secret, {}, (err, decoded) => {
-						if (err) {
-							res.status(401);
-						} else {
-							req.user = decoded;
-							next();
-						}
-					});
-				} else {
-					req.user = {};
-					next();
-				}
+				req.user = {};
+				next();
 			}
 		});
 
@@ -311,8 +326,8 @@ export const app = {
 
 				return;
 			}
-
-			res.status(500).send({ error });
+			console.error(error);
+			res.status(500).send('Error');
 		});
 	},
 

@@ -6,6 +6,7 @@ import { LoginComponent } from '../components/login/login.component';
 import { app } from '../../core/app';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
+declare const window: any;
 
 @Injectable()
 export class AuthenticationService {
@@ -93,6 +94,32 @@ export class AuthenticationService {
 
 			return false;
 		}
+	}
+
+	public async authenticateFacebook() {
+		await new Promise((resolve, reject) => {
+			window.FB.login(function (result) {
+				console.log(result);
+
+				if (result.authResponse) {
+					return this._http.post(`/authenticate/facebook`, { token: result.authResponse.accessToken })
+						.toPromise()
+						.then(response => {
+							var token = response.headers.get('x-auth-token');
+							if (token) {
+								localStorage.setItem('id_token', token);
+							}
+							console.log(response.json());
+							resolve(response.json());
+						})
+						.catch(() => reject());
+				} else {
+					reject(result);
+				}
+			}, {
+					scope: 'email,public_profile'
+				});
+		});
 	}
 
 	public async saveDevice() {

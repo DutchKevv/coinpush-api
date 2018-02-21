@@ -9,6 +9,7 @@ export interface IUser {
 	language?: string;
 	img?: string;
 	description?: string;
-	favorites?: Array<string>
+	favorites?: Array<string>;
 	device?: any;
+	oauthFacebook?: any;
 }

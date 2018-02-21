@@ -22,7 +22,8 @@ export const UserSchema = new Schema(
 			required: true,
 			validate: [isEmail, 'invalid email'],
 			lowercase: true,
-			trim: true
+			trim: true,
+			select: false
 		},
 		img: {
 			type: String
@@ -38,7 +39,8 @@ export const UserSchema = new Schema(
 		password: {
 			type: String,
 			required: true,
-			minlength: 4
+			minlength: 4,
+			select: false
 		},
 		country: {
 			type: String,
@@ -49,7 +51,7 @@ export const UserSchema = new Schema(
 		jobTitle: {
 			type: String,
 			required: false,
-			trim: true
+			trim: true,
 		},
 		favorites: {
 			type: [String],
@@ -73,7 +75,8 @@ export const UserSchema = new Schema(
 		transactions: {
 			type: Number,
 			required: false,
-			default: 0
+			default: 0,
+			select: false
 		},
 		lastOnline: {
 			type: Date,
@@ -83,11 +86,13 @@ export const UserSchema = new Schema(
 		membershipStartDate: {
 			type: Date,
 			required: false,
-			default: Date.now
+			default: Date.now,
+			select: false
 		},
 		membershipEndDate: {
 			type: Date,
 			required: false,
+			select: false
 		},
 		membershipType: {
 			type: String,
@@ -97,17 +102,28 @@ export const UserSchema = new Schema(
 		active: {
 			type: Boolean,
 			required: false,
-			default: true
+			default: true,
+			select: false
 		},
 		resetPasswordToken: {
 			type: String,
+			select: false
 		},
 		resetPasswordExpires: {
 			type: Date,
+			select: false
 		},
 		emailConfirmed: {
 			type: Boolean,
-			default: false
+			default: false,
+			select: false
+		},
+		oauthFacebook: {
+			type: {
+				id: String,
+				token: String
+			},
+			select: false
 		}
 	},
 	{
