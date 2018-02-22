@@ -20,7 +20,7 @@ export class AuthenticationService {
 		private _alertService: AlertService,
 		private _modalService: NgbModal,
 		private _http: Http) {
-			app.on('firebase-token-refresh', () => this.saveDevice());
+		app.on('firebase-token-refresh', () => this.saveDevice());
 	}
 
 	public async requestPasswordReset(email: string) {
@@ -61,7 +61,7 @@ export class AuthenticationService {
 		};
 
 		try {
-			const result = await this._http.post('/authenticate', postData, {params: {profile: 0}}).map((r: Response) => r.json()).toPromise();
+			const result = await this._http.post('/authenticate', postData, { params: { profile: 0 } }).map((r: Response) => r.json()).toPromise();
 
 			if (!result.user || !result.user.token) {
 				return false;
@@ -96,23 +96,32 @@ export class AuthenticationService {
 		}
 	}
 
-	public async authenticateFacebook() {
+	public async authenticateFacebook(reload: boolean = true) {
 		await new Promise((resolve, reject) => {
-			window.FB.login(function (result) {
+			window.FB.login(async (result) => {
 				console.log(result);
 
 				if (result.authResponse) {
-					return this._http.post(`/authenticate/facebook`, { token: result.authResponse.accessToken })
-						.toPromise()
-						.then(response => {
-							var token = response.headers.get('x-auth-token');
-							if (token) {
-								localStorage.setItem('id_token', token);
-							}
-							console.log(response.json());
-							resolve(response.json());
-						})
-						.catch(() => reject());
+					const authResult = await this._http
+						.post(`/authenticate/facebook`, { token: result.authResponse.accessToken })
+						.map(res => res.json())
+						.toPromise();
+
+					if (!authResult || !authResult.user || !authResult.user.token) {
+						return false;
+					}
+
+					// does not save to server but updates persistant storage
+					await this._userService.update(authResult.user, false, false);
+
+					if (reload)
+						window.location.reload();
+
+					return true;
+
+					// console.log('asdfsfsdf', authResult);
+					// resolve(response.json());
+
 				} else {
 					reject(result);
 				}

@@ -9,6 +9,7 @@ const router = Router();
  */
 router.get('/', async (req, res, next) => {
 	try {
+		console.log('token', (req.headers.authorization || '').split('Bearer ')[1]);
 		res.send(await authenticateController.authenticate(req.user, {}, req.query));
 	} catch (error) {
 		next(error);

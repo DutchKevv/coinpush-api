@@ -26,7 +26,7 @@ export const authenticateController = {
 
 		let user: IUser;
 		let userData: any = [];
-		console.log(1);
+
 		const results = await Promise.all([
 			symbolController.getPublicList(),
 			(async () => {
@@ -44,6 +44,8 @@ export const authenticateController = {
 						json: true
 					});
 
+					console.log(user);
+
 					if (options.profile && user && user._id) {
 						// get unread notification counter and active events (alarms) 
 						userData = await Promise.all([
@@ -54,7 +56,7 @@ export const authenticateController = {
 				}
 			})()
 		]);
-		console.log(2);
+
 		return {
 			symbols: results[0],
 			notifications: {
@@ -66,12 +68,34 @@ export const authenticateController = {
 	},
 
 	async authenticateFacebook(reqUser: IReqUser, params: { token: string }) {
-		FB.options({accessToken: params.token});
-		const result = await FB.api('/me');
+		// FB.options({accessToken: params.token});
+		const result = await FB.api('me', { fields: ['id', 'name', 'email', 'picture'], access_token: params.token });
 
+		if (result && result.id) {
+			let user = (await userController.findByFacebookId(reqUser, result.id))[0];
+			console.log('old user', user);
+			if (!user) {
+				// create new user
+				user = await userController.create({}, {
+					email: result.email,
+					name: result.name,
+					img: result.picture.data.url,
+					oauthFacebook: {
+						id: result.id
+					}
+				});
+			}
 
+			return {
+				user: {
+					token: jwt.sign({id: user._id}, config.auth.jwt.secret)
+				}
+			};
+		}
+
+		// handle error
 		if (result && result.error) {
-			if(result.error.code === 'ETIMEDOUT') {
+			if (result.error.code === 'ETIMEDOUT') {
 				console.log('request timeout');
 			}
 			else {
@@ -79,7 +103,7 @@ export const authenticateController = {
 			}
 		}
 		else {
-			console.log(result);
+			console.log('asdf', result);
 		}
 	},
 

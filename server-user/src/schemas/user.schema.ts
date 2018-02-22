@@ -38,7 +38,6 @@ export const UserSchema = new Schema(
 		},
 		password: {
 			type: String,
-			required: true,
 			minlength: 4,
 			select: false
 		},
@@ -130,6 +129,14 @@ export const UserSchema = new Schema(
 		timestamps: true
 	}
 );
+
+UserSchema.pre('validate', function(next) {
+    if (!this.password && (!this.oauthFacebook || !this.oauthFacebook.id)) {
+        next(new Error('Password must be given'));
+    } else {
+        next();
+    }
+});
 
 UserSchema.plugin(beautifyUnique);
 

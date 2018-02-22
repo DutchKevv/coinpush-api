@@ -62,6 +62,7 @@ export class CustomHttp extends Http {
 	private _addHeaderJwt(options: RequestOptionsArgs): RequestOptionsArgs {
 		// add authorization header with jwt token
 		if (app.user && app.user.token)
+			// options.headers.append('Authorization', 'JWT ' + app.user.token);
 			options.headers.append('Authorization', 'Bearer ' + app.user.token);
 
 		return options;

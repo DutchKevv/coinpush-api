@@ -63,6 +63,9 @@ export const userController = {
 		if (params.text)
 			where.name = { "$regex": params.text, "$options": "i" }
 
+		if (params.facebookId)
+			where['oauthFacebook.id'] = {"$eq": params.facebookId}
+
 		console.log('where', where, params);
 
 		fields.followers = 1;
@@ -115,7 +118,10 @@ export const userController = {
 			email: params.email,
 			name: params.name,
 			password: params.password,
-			country: params.country
+			country: params.country,
+			oauthFacebook: {
+				id: params.oauthFacebook.id
+			}
 		};
 
 		const user = await User.create(userData);

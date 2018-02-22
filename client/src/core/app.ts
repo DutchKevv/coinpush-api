@@ -157,6 +157,7 @@ export class App extends MicroEvent {
 
                 // user authentication token
                 xhr.setRequestHeader('Authorization', this.user ? 'Bearer ' + this.user.token : '');
+                // xhr.setRequestHeader('Authorization', this.user ? 'JWT ' + this.user.token : '');
 
                 // on progress
                 xhr.onprogress = event => this.prettyBootty.step('data', (event.loaded / event.total) * 100);

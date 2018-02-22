@@ -30,8 +30,5 @@ RUN npm i
 COPY /server-notify .
 RUN npm run build
 
-# port
-EXPOSE 3010
-
 # Serve the app
 CMD ["npm", "start"]

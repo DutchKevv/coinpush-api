@@ -9,7 +9,7 @@ import { subClient } from './modules/redis';
 
 const config = require('../../tradejs.config');
 const app = express();
-app.listen(config.server.notify.port, () => console.log(`\n Notify service started on      : 127.0.0.1:${config.server.notify.port}`));
+app.listen(config.server.notify.port, '0.0.0.0', () => console.log(`\n Notify service started on      : 0.0.0.0:${config.server.notify.port}`));
 
 /**
  * mongo

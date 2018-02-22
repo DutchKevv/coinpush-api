@@ -25,6 +25,8 @@
   "scripts": {
     "build": "npm run build-server && npm run build-client",
     "start": "npm run d-up",
+    "start-server": "docker-compose up nginx redis gateway notify cache event comment user",
+    "start-client": "docker-compose up client",
     "prod": "pm2 start ecosystem.config.js --env production && pm2 monit",
     "stop": "npm run d-stop",
     "m-shell": "docker exec -it mongodb mongo",

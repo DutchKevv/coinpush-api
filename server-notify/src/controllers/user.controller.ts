@@ -44,7 +44,9 @@ export const userController = {
 
 	async create(reqUser, params, options) {
 		console.log('emaila sdf', params);
-		return User.findOneAndUpdate({_id: params._id}, params, {upsert: true, new: true, setDefaultsOnInsert: true});
+		const user = await User.findOneAndUpdate({_id: params._id}, params, {upsert: true, new: true, setDefaultsOnInsert: true});
+		console.log('sdfdf', user);
+		return user;
 	},
 
 	// TODO - Filter fields

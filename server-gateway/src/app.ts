@@ -131,12 +131,13 @@ export const app = {
 		};
 
 		const jwtOptions = {
-			jwtFromRequest: passportJWT.ExtractJwt.fromAuthHeaderWithScheme("jwt"),
+			jwtFromRequest: passportJWT.ExtractJwt.fromAuthHeaderWithScheme("JWT"),
 			secretOrKey: config.auth.jwt.secret
 		}
-
+		console.log('config.auth.jwt.secret', config.auth.jwt.secret);
 		const jwtStrategy = new JwtStrategy(jwtOptions, function (jwt_payload, next) {
-			console.log('payload received', jwt_payload);
+			console.log('!!!!!!!!payload received', jwt_payload);
+			next();
 			// usually this would be a database call:
 			// var user = users[_.findIndex(users, { id: jwt_payload.id })];
 			// if (user) {
@@ -150,28 +151,23 @@ export const app = {
 			clientID: config.auth.facebook.clientID,
 			clientSecret: config.auth.facebook.clientSecret
 		}, async (accessToken, refreshToken, profile, done) => {
+			console.log('sadfsf');
 			// User.upsertFbUser(accessToken, refreshToken, profile, function (err, user) {
 			// 	return done(err, user);
 			// });
 
-			const newUser = await userController.create({}, {
-				email: profile.emails[0].value,
-				name: profile.name.givenName + ' ' + profile.name.familyName,
-				oauthFacebook: {
-					id: profile.id,
-					token: accessToken
-				}
-			});
-
-			done(newUser);
+			done();
 		});
 
-		passport.use(jwtStrategy);
-		passport.use(facebookStrategy);
+		// passport.use(jwtStrategy);
+		// passport.use(facebookStrategy);
+		
+		// this.api.use(passport.session());
 
+		
 		this.api.use(bodyParserJsonMiddleware());
-		this.api.use(passport.initialize());
-		this.api.use(passport.session());
+		
+		
 		this.api.use(morgan('dev'));
 		this.api.use(helmet());
 
@@ -181,8 +177,9 @@ export const app = {
 			next();
 		});
 
+		// this.api.use(passport.initialize());
 		// TEMP TEMP TEMP, NOT REQUIRED WHEN USING ANDROID PLAYSTORE
-		// this.api.use((req, res, next) => {
+		// this.api.use((req, res, next) => { O
 		// 	const appVersion = req.headers['app-version'];
 		// 	console.log(appVersion);
 
@@ -206,26 +203,26 @@ export const app = {
 		// 	console.log('IMAGSFDSDF');
 		// })
 
-		// // use JWT auth to secure the api, the token can be passed in the authorization header or query string
-		// const getToken = function (req) {
-		// 	if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer')
-		// 		return req.headers.authorization.split(' ')[1];
-		// };
+		// use JWT auth to secure the api, the token can be passed in the authorization header or query string
+		const getToken = function (req) {
+			if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer')
+				return req.headers.authorization.split(' ')[1];
+		};
 
-		// this.api.use(expressJwt({ secret: config.token.secret, getToken }).unless((req) => {
-		// 	return (
-		// 		req.method === 'GET' ||
-		// 		req.originalUrl.startsWith('/api/v1/authenticate') ||
-		// 		(req.originalUrl === '/api/v1/user' && req.method === 'POST')
-		// 	);
-		// }));
+		this.api.use(expressJwt({ secret: config.auth.jwt.secret, getToken }).unless((req) => {
+			return (
+				(req.method === 'GET' && !req.originalUrl.startsWith('/api/v1/authenticate')) ||
+				(req.originalUrl.startsWith('/api/v1/authenticate') && !getToken(req)) ||
+				(req.originalUrl === '/api/v1/user' && req.method === 'POST')
+			);
+		}));
 
 		/**
 		 * error - unauthorized
 		 */
 		this.api.use((err, req, res, next) => {
 			console.log('ERRORO NAME: ', err.name);
-
+			console.log(err);
 			if (err.name === 'UnauthorizedError')
 				return res.status(401).send('invalid token...');
 

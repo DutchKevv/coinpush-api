@@ -21,7 +21,18 @@ export const userController = {
 		return Object.assign(results[0] || {}, results[1] || {});
 	},
 
-	async findMany(reqUser: IReqUser, params): Promise<Array<any>> {
+	findByFacebookId(reqUser: IReqUser, facebookId) {
+		return request({ 
+			uri: config.server.user.apiUrl + '/user/', 
+			headers: { '_id': reqUser.id },
+			qs: {
+				facebookId
+			},
+			json: true 
+		})
+	},
+
+	findMany(reqUser: IReqUser, params): Promise<Array<any>> {
 		return request({ 
 			uri: config.server.user.apiUrl + '/user/', 
 			headers: { '_id': reqUser.id },
@@ -46,15 +57,7 @@ export const userController = {
 				uri: config.server.user.apiUrl + '/user',
 				headers: { '_id': reqUser.id },
 				method: 'POST',
-				body: {
-					img: params.img,
-					name: params.name,
-					gender: params.gender,
-					email: params.email,
-					password: params.password,
-					country: params.country,
-					language: params.language
-				},
+				body: params,
 				json: true
 			});
 
