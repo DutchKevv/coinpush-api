@@ -11,6 +11,13 @@
             <div class="modal-body">
                 <!-- login form -->
                 <form name="form" (ngSubmit)="loginForm.form.valid && login($event)" #loginForm="ngForm" *ngIf="formType === 'login'" novalidate>
+                    <div class="form-group login-footer-buttons">
+                        <div (click)="fbLogin()" class="btn btn-small btn-facebook">
+                            <i class="fa fa-facebook-square align-middle" aria-hidden="true"></i>
+                            <span class="align-middle">Facebook</span>
+                        </div>
+                    </div>
+                    
                     <div class="form-group" [ngClass]="{ 'has-error': loginForm.submitted && !email.valid }">
                         <label class="form-control-label" for="email">Email</label>
                         <span *ngIf="loginForm.submitted && !email.valid" class="help-block">required</span>
@@ -34,12 +41,6 @@
                     </div>
 
                     <!-- footer buttons -->
-                    <div class="form-group login-footer-buttons">
-                        <div (click)="fbLogin()" class="btn btn-small btn-facebook">
-                            <i class="fa fa-facebook-square align-middle" aria-hidden="true"></i>
-                            <span class="align-middle">Facebook</span>
-                        </div>
-                    </div>
 
                     <div class="form-group login-footer-buttons">
                         <a (click)="formType = 'register'" class="btn btn-link">Register</a>

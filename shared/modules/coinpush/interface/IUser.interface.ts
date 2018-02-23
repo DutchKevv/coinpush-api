@@ -8,6 +8,7 @@ export interface IUser {
 	country?: string;
 	language?: string;
 	img?: string;
+	imgUrl?: string;
 	description?: string;
 	favorites?: Array<string>
 	device?: any;

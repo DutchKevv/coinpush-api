@@ -4,13 +4,14 @@ import * as sharp from 'sharp';
 import * as fs from 'fs';
 import { join, extname } from 'path';
 import { userController } from '../controllers/user.controller';
-import { G_ERROR_MAX_SIZE } from '../../../shared/constants/constants';
+import { G_ERROR_MAX_SIZE } from 'coinpush/constant';
+import { IReqUser } from 'coinpush/interface/IReqUser.interface';
 
 const config = require('../../../tradejs.config');
 const domainPrefix = 'http://' + (process.env.NODE_ENV === 'production' ? config.ip.prod : config.ip.local) + ':' + config.port;
 
 const upload = multer({ storage: multer.memoryStorage({}) });
-const router = Router();
+export const router = Router();
 
 function normalizeProfileImg(filename) {
 	if (filename) {
@@ -34,7 +35,7 @@ router.post('/profile', upload.single('image'), async (req: any, res, next) => {
 
 		const fileName = req.user.id + '_' + Date.now() + extname(req.file.originalname);
 		const fullPath = join(config.image.profilePath, fileName);
-		
+
 		// resize and save
 		await sharp(req.file.buffer).resize(1000).max().toFile(fullPath);
 
@@ -49,4 +50,18 @@ router.post('/profile', upload.single('image'), async (req: any, res, next) => {
 	}
 });
 
-export = router;
+export async function downloadProfileImgFromUrl(reqUser: IReqUser, url: string): Promise<string> {
+	const fileName = reqUser.id + '_' + Date.now() + '.png';
+	const fullPath = join(config.image.profilePath, fileName);
+
+	// resize and save
+	await sharp(url).resize(1000).max().toFile(fullPath);
+
+	return fileName;
+	// request(imageLink).pipe(fs.createWriteStream("resultIMG.png"))
+	// 	.on('close', function () {
+	// 		console.log("saving process is done!");
+	// 	});
+}
+
+// export = router;

@@ -1,5 +1,5 @@
 import * as request from 'request-promise';
-import { IReqUser } from '../../../shared/interfaces/IReqUser.interface';
+import { IReqUser } from 'coinpush/interface/IReqUser.interface';
 
 const config = require('../../../tradejs.config');
 

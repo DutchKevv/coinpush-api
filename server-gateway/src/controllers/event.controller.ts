@@ -1,7 +1,7 @@
 import * as request from 'request-promise';
-import {BROKER_ERROR_NOT_ENOUGH_FUNDS} from '../../../shared/constants/constants';
+// import {BROKER_ERROR_NOT_ENOUGH_FUNDS} from 'coinpush/util/util.log';
 import {userController} from './user.controller';
-import { IReqUser } from '../../../shared/interfaces/IReqUser.interface';
+import { IReqUser } from 'coinpush/interface/IReqUser.interface';
 
 const config = require('../../../tradejs.config');
 

@@ -2,7 +2,7 @@ import * as faker from 'faker';
 import * as minimist from 'minimist';
 import { userController } from '../controllers/user.controller';
 import { emailController } from '../controllers/email.controller';
-import { USER_FETCH_TYPE_PROFILE_SETTINGS } from '../../../shared/constants/constants';
+import { USER_FETCH_TYPE_PROFILE_SETTINGS } from 'coinpush/constant';
 
 const argv = minimist(process.argv.slice(2));
 

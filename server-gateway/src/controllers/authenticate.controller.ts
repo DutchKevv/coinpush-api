@@ -2,12 +2,12 @@ import * as jwt from 'jsonwebtoken';
 import * as request from 'request-promise';
 import { FB, FacebookApiException } from 'fb';
 import { userController } from "./user.controller";
-import { G_ERROR_UNKNOWN } from "../../../shared/constants/constants";
-import { log } from '../../../shared/logger';
-import { IUser } from '../../../shared/interfaces/IUser.interface';
+import { G_ERROR_UNKNOWN } from "coinpush/constant";
+import { log } from 'coinpush/util/util.log';
+import { IUser } from 'coinpush/interface/IUser.interface';
 import { deviceController } from './device.controller';
 import { symbolController } from './symbol.controller';
-import { IReqUser } from '../../../shared/interfaces/IReqUser.interface';
+import { IReqUser } from 'coinpush/interface/IReqUser.interface';
 import { notifyController } from './notify.controller';
 import { eventController } from './event.controller';
 
@@ -69,19 +69,21 @@ export const authenticateController = {
 
 	async authenticateFacebook(reqUser: IReqUser, params: { token: string }) {
 		// FB.options({accessToken: params.token});
-		const result = await FB.api('me', { fields: ['id', 'name', 'email', 'picture'], access_token: params.token });
+		const facebookProfile = await FB.api('me', { fields: ['id', 'name', 'email'], access_token: params.token });
 
-		if (result && result.id) {
-			let user = (await userController.findByFacebookId(reqUser, result.id))[0];
-			console.log('old user', user);
+		if (facebookProfile && facebookProfile.id) {
+
+			// search in DB for user with facebookId
+			let user = (await userController.findByFacebookId(reqUser, facebookProfile.id))[0];
+			
+			// create new user if not founds
 			if (!user) {
-				// create new user
 				user = await userController.create({}, {
-					email: result.email,
-					name: result.name,
-					img: result.picture.data.url,
+					email: facebookProfile.email,
+					name: facebookProfile.name,
+					imgUrl: 'https://graph.facebook.com/'+ facebookProfile.id + '/picture?width=1000',
 					oauthFacebook: {
-						id: result.id
+						id: facebookProfile.id
 					}
 				});
 			}
@@ -94,16 +96,16 @@ export const authenticateController = {
 		}
 
 		// handle error
-		if (result && result.error) {
-			if (result.error.code === 'ETIMEDOUT') {
+		if (facebookProfile && facebookProfile.error) {
+			if (facebookProfile.error.code === 'ETIMEDOUT') {
 				console.log('request timeout');
 			}
 			else {
-				console.log('error', result.error);
+				console.log('error', facebookProfile.error);
 			}
 		}
 		else {
-			console.log('asdf', result);
+			console.log('asdf', facebookProfile);
 		}
 	},
 

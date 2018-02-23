@@ -1,9 +1,10 @@
 import * as request from 'request-promise';
 import * as redis from '../modules/redis';
-import { USER_FETCH_TYPE_ACCOUNT_DETAILS, USER_FETCH_TYPE_FULL, USER_FETCH_TYPE_PROFILE_SETTINGS } from '../../../shared/constants/constants';
+import { USER_FETCH_TYPE_ACCOUNT_DETAILS, USER_FETCH_TYPE_FULL, USER_FETCH_TYPE_PROFILE_SETTINGS } from 'coinpush/constant';
 import { emailController } from './email.controller';
-import { IReqUser } from '../../../shared/interfaces/IReqUser.interface';
-import { IUser } from '../../../shared/interfaces/IUser.interface';
+import { IReqUser } from 'coinpush/interface/IReqUser.interface';
+import { IUser } from 'coinpush/interface/IUser.interface';
+import { downloadProfileImgFromUrl } from '../api/upload.api';
 
 const config = require('../../../tradejs.config');
 
@@ -62,6 +63,11 @@ export const userController = {
 			});
 
 			console.log(2);
+			
+			if (params.imgUrl) {
+				params.img = await downloadProfileImgFromUrl({id: user.id}, params.img);
+				delete params.imgUrl;
+			}
 
 			// notify
 			notify = await emailController.addUser({ id: user._id }, {

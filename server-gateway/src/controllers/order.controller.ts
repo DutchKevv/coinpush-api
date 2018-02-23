@@ -1,5 +1,5 @@
 import * as request from 'request-promise';
-import {BROKER_ERROR_NOT_ENOUGH_FUNDS} from '../../../shared/constants/constants';
+import {BROKER_ERROR_NOT_ENOUGH_FUNDS} from 'coinpush/constant';
 import {userController} from './user.controller';
 
 const config = require('../../../tradejs.config');

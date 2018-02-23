@@ -12,8 +12,8 @@ import * as passport from 'passport';
 import * as passportJWT from 'passport-jwt';
 import { Strategy as FacebookStrategy } from 'passport-facebook';
 import { symbolController } from './controllers/symbol.controller';
-import { BrokerMiddleware } from '../../shared/brokers/broker.middleware';
-import { log } from '../../shared/logger';
+import { BrokerMiddleware } from 'coinpush/broker';
+import { log } from 'coinpush/util/util.log';
 import { subClient } from './modules/redis';
 import { userController } from './controllers/user.controller';
 
@@ -129,45 +129,8 @@ export const app = {
 				return json()(req, res, next);
 			};
 		};
-
-		const jwtOptions = {
-			jwtFromRequest: passportJWT.ExtractJwt.fromAuthHeaderWithScheme("JWT"),
-			secretOrKey: config.auth.jwt.secret
-		}
-		console.log('config.auth.jwt.secret', config.auth.jwt.secret);
-		const jwtStrategy = new JwtStrategy(jwtOptions, function (jwt_payload, next) {
-			console.log('!!!!!!!!payload received', jwt_payload);
-			next();
-			// usually this would be a database call:
-			// var user = users[_.findIndex(users, { id: jwt_payload.id })];
-			// if (user) {
-			// 	next(null, user);
-			// } else {
-			// 	next(null, false);
-			// }
-		});
-
-		const facebookStrategy = new FacebookStrategy({
-			clientID: config.auth.facebook.clientID,
-			clientSecret: config.auth.facebook.clientSecret
-		}, async (accessToken, refreshToken, profile, done) => {
-			console.log('sadfsf');
-			// User.upsertFbUser(accessToken, refreshToken, profile, function (err, user) {
-			// 	return done(err, user);
-			// });
-
-			done();
-		});
-
-		// passport.use(jwtStrategy);
-		// passport.use(facebookStrategy);
-		
-		// this.api.use(passport.session());
-
 		
 		this.api.use(bodyParserJsonMiddleware());
-		
-		
 		this.api.use(morgan('dev'));
 		this.api.use(helmet());
 
@@ -191,17 +154,6 @@ export const app = {
 
 		// 	next();
 		// });
-
-		// public assets
-		// this.api.use(express.static(PATH_WWW_ROOT));
-
-		// images 
-		// TODO: should be on CDN
-		// this.api.use(express.static(PATH_IMAGES));
-
-		// this.api.use('/images/', (req, res) => {
-		// 	console.log('IMAGSFDSDF');
-		// })
 
 		// use JWT auth to secure the api, the token can be passed in the authorization header or query string
 		const getToken = function (req) {
@@ -275,7 +227,7 @@ export const app = {
 		/**
 		 * upload
 		 */
-		this.api.use('/api/v1/upload', require('./api/upload.api'));
+		this.api.use('/api/v1/upload', require('./api/upload.api').router);
 
 		/**
 		 * user

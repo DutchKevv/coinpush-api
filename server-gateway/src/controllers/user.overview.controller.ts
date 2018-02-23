@@ -1,7 +1,7 @@
 import * as url from 'url';
 import * as request from 'request-promise';
 import * as redis from '../modules/redis';
-import {REDIS_USER_PREFIX} from '../../../shared/constants/constants';
+import {REDIS_USER_PREFIX} from 'coinpush/constant';
 import { userController } from './user.controller';
 
 const config = require('../../../tradejs.config');
