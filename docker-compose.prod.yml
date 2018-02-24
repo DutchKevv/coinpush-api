@@ -5,7 +5,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - /letsencrypt:/usr/src/letsencrypt
+      - /etc/letsencrypt:/usr/src/letsencrypt
   client:
     build:
       args:
