@@ -16,7 +16,7 @@ services:
       - /bin/sh
       - -c
       - |
-          cd ../shared/modules/coinpush && npm i --unsafe-perm
+          cd ../shared/modules/coinpush && npm i
           cd ../../../client
           npm i
           npm run build

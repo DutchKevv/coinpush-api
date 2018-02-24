@@ -7,6 +7,7 @@ ARG NODE_ENV
 ENV NODE_ENV=$NODE_ENV
 
 RUN mkdir -p $CLIENT_LOCATION/www
+RUN mkdir -p /usr/src/app/shared/modules/coinpush
 
 RUN apk add --no-cache make gcc g++ python
 RUN apk update && \
