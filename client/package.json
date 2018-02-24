@@ -5,7 +5,7 @@
   "description": "A sample Apache Cordova application that responds to the deviceready event.",
   "main": "index.js",
   "scripts": {
-    "preinstall": "cd ../shared/modules/coinpush && npm i",
+    "preinstall": "cd ../shared/modules/coinpush && npm i --unsafe-perm",
     "start": "npm run build-spritesheet && ng build --watch --aot --no-sourcemaps --output-hashing none",
     "build": "npm run build-spritesheet && ng build --prod --aot --env=prod --output-hashing none",
     "build-stats": "ng build --prod --aot --env=prod --stats-json --output-hashing none",

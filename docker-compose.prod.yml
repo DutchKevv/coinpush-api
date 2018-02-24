@@ -16,7 +16,9 @@ services:
       - /bin/sh
       - -c
       - |
-          npm i
+          # cd ../shared/modules/coinpush && npm i --unsafe-perm
+          # cd ../../../client
+          npm i --unsafe-perm
           npm run build
   nginx:
     ports:
