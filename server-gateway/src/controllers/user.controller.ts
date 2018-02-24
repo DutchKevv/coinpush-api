@@ -1,5 +1,4 @@
 import * as request from 'request-promise';
-import * as redis from '../modules/redis';
 import { USER_FETCH_TYPE_ACCOUNT_DETAILS, USER_FETCH_TYPE_FULL, USER_FETCH_TYPE_PROFILE_SETTINGS } from 'coinpush/constant';
 import { emailController } from './email.controller';
 import { IReqUser } from 'coinpush/interface/IReqUser.interface';

@@ -70,3 +70,9 @@
 2018-02-24T16:13:18.520Z - info: redis                :  client connected
 2018-02-24T16:46:16.077Z - info: redis                :  client connected
 2018-02-24T16:46:16.094Z - info: redis                :  client connected
+2018-02-24T16:50:44.894Z - info: redis                :  connection error, retry attempt: 1
+2018-02-24T16:50:44.895Z - info: redis                :  connection error, retry attempt: 1
+2018-02-24T16:50:44.999Z - info: redis                :  connection error, retry attempt: 2
+2018-02-24T16:50:45.000Z - info: redis                :  connection error, retry attempt: 2
+2018-02-24T16:52:53.832Z - info: redis                :  client connected
+2018-02-24T16:52:53.849Z - info: redis                :  client connected

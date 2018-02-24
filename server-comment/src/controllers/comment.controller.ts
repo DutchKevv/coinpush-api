@@ -1,6 +1,6 @@
 import { Comment } from '../schemas/comment.schema';
 import { Types } from 'mongoose';
-import { pubClient } from '../modules/redis';
+import { pubClient } from 'coinpush/redis';
 import { User } from '../schemas/user.schema';
 import { IReqUser } from 'coinpush/interface/IReqUser.interface';
 

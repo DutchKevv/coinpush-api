@@ -1,5 +1,5 @@
 
-import { pubClient, subClient } from './redis';
+import { pubClient, subClient } from 'coinpush/redis';
 import { EventEmitter } from 'events';
 
 export class SymbolSyncer extends EventEmitter {
@@ -28,7 +28,7 @@ export class SymbolSyncer extends EventEmitter {
 
     private _loadSymbols(): Promise<void> {
         return new Promise((resolve, reject) => {
-            pubClient.hgetall('symbols', (err, redisSymbols) => {
+            pubClient.hgetall('symbols', (err, redisSymbols: any) => {
                 if (err)
                     return reject(err);
 

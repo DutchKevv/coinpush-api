@@ -4,8 +4,7 @@ import * as morgan from 'morgan';
 import * as mongoose from 'mongoose';
 import { json, urlencoded } from 'body-parser';
 import { notifyController } from './controllers/notify.controller';
-import * as redis from './modules/redis';
-import { subClient } from './modules/redis';
+import { subClient } from 'coinpush/redis';
 
 const config = require('../../tradejs.config');
 const app = express();

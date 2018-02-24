@@ -5,7 +5,7 @@ import * as gcm from 'node-gcm';
 import { User } from '../schemas/user.schema';
 import { Notification } from '../schemas/notification.schema';
 import { IReqUser } from 'coinpush/interface/IReqUser.interface';
-import { pubClient } from '../modules/redis';
+import { pubClient } from 'coinpush/redis';
 
 const config = require('../../../tradejs.config');
 

@@ -14,7 +14,7 @@ import { Strategy as FacebookStrategy } from 'passport-facebook';
 import { symbolController } from './controllers/symbol.controller';
 import { BrokerMiddleware } from 'coinpush/broker';
 import { log } from 'coinpush/util/util.log';
-import { subClient } from './modules/redis';
+import { subClient } from 'coinpush/redis';
 import { userController } from './controllers/user.controller';
 
 const expressJwt = require('express-jwt');
