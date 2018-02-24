@@ -11,7 +11,6 @@ services:
     volumes:
       - ./images:/usr/src/app/images
       - ./client:/usr/src/app/client
-      - ./letsencrypt:/usr/src/letsencrypt
   mongodb:
     image: mongo:latest
     container_name: "mongodb"
