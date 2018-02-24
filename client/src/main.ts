@@ -1,5 +1,5 @@
 // TODO: quick hack
-import 'coinpush/util/countries.js';
+import 'coinpush/util/countries';
 
 import { platformBrowser } from '@angular/platform-browser';
 import { environment } from './environments/environment';

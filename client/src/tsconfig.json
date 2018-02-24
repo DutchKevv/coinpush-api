@@ -20,6 +20,7 @@
   },
   "include": [
     "../../shared/modules/coinpush/constant/index.ts",
+    "../../shared/modules/coinpush/util/countries.ts",
     "../**/*.ts"
   ],
   "angularCompilerOptions": {
