@@ -4,6 +4,8 @@ services:
   nginx:
     ports:
       - "80:80"
+    volumes:
+      - ./server-nginx/letsencrypt:/usr/src/app/server-nginx/letsencrypt
   client:
     build:
       args:
