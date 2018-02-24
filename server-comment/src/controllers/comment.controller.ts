@@ -2,7 +2,7 @@ import { Comment } from '../schemas/comment.schema';
 import { Types } from 'mongoose';
 import { pubClient } from '../modules/redis';
 import { User } from '../schemas/user.schema';
-import { IReqUser } from '../../../shared/interfaces/IReqUser.interface';
+import { IReqUser } from 'coinpush/interface/IReqUser.interface';
 
 const config = require('../../../tradejs.config');
 

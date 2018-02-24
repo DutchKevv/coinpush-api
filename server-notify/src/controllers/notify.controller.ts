@@ -1,10 +1,10 @@
 import * as nodeMailer from 'nodemailer';
 import { userController } from './user.controller';
-import { IUser } from '../../../shared/interfaces/IUser.interface';
+import { IUser } from 'coinpush/interface/IUser.interface';
 import * as gcm from 'node-gcm';
 import { User } from '../schemas/user.schema';
 import { Notification } from '../schemas/notification.schema';
-import { IReqUser } from '../../../shared/interfaces/IReqUser.interface';
+import { IReqUser } from 'coinpush/interface/IReqUser.interface';
 import { pubClient } from '../modules/redis';
 
 const config = require('../../../tradejs.config');

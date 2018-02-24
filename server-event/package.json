@@ -8,10 +8,10 @@
     "url": "https://github.com/DutchKevv/TradeJS.git"
   },
   "scripts": {
+    "install-shared": "cd ../shared/modules/coinpush && npm i && npm run build",
     "start": "tsc-watch --sourceMap --onSuccess \"node index.js\"",
     "build": "tsc",
-    "link-cp": "cd ../shared/modules/coinpush && npm link && cd ../../../server-event && npm link coinpush",
-    "copy-package": "docker cp ./package.json event:/usr/src/app/server-event/package.json"
+    "prod": "node index.js"
   },
   "author": "",
   "license": "ISC",

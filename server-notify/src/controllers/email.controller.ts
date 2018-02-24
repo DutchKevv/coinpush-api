@@ -1,6 +1,6 @@
 import * as nodeMailer from 'nodemailer';
 import { userController } from './user.controller';
-import { IUser } from '../../../shared/interfaces/IUser.interface';
+import { IUser } from 'coinpush/interface/IUser.interface';
 
 const config = require('../../../tradejs.config');
 

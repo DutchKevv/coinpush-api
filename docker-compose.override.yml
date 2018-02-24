@@ -1,11 +1,18 @@
 version: '3.3'
 
 services:
+  nginx:
+    ports:
+      - "4000:80"
   cache:
+    build:
+      args:
+        NODE_ENV: development
     command:
       - /bin/sh
       - -c
       - |
+          npm run install-shared
           npm i
           npm start
   client:
@@ -19,7 +26,59 @@ services:
           npm run install-shared
           npm i
           npm start
-  nginx:
-    ports:
-      - "4000:80"
+  gateway:
+    build:
+      args:
+        NODE_ENV: development
+    command:
+      - /bin/sh
+      - -c
+      - |
+          npm run install-shared
+          npm i
+          npm run start
+  user:
+    build:
+      args:
+        NODE_ENV: development
+    command:
+      - /bin/sh
+      - -c
+      - |
+          npm run install-shared
+          npm i
+          npm run start
+  comment:
+    build:
+      args:
+        NODE_ENV: development
+    command:
+      - /bin/sh
+      - -c
+      - |
+          npm run install-shared
+          npm i
+          npm run start
+  event:
+    build:
+      args:
+        NODE_ENV: development
+    command:
+      - /bin/sh
+      - -c
+      - |
+          npm run install-shared
+          npm i
+          npm run start
+  notify:
+    build:
+      args:
+        NODE_ENV: development
+    command:
+      - /bin/sh
+      - -c
+      - |
+          npm run install-shared
+          npm i
+          npm run start
   

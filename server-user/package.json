@@ -8,9 +8,10 @@
   },
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "install-shared": "cd ../shared/modules/coinpush && npm i && npm run build",
     "start": "tsc-watch --sourceMap --onSuccess \"node index\"",
-    "build": "tsc"
+    "build": "tsc",
+    "prod": "node index.js"
   },
   "author": "H.K.Brandsma",
   "license": "ISC",
@@ -22,6 +23,7 @@
     "@types/validator": "^6.3.0",
     "bcryptjs": "*",
     "body-parser": "^1.18.2",
+    "coinpush": "file:../shared/modules/coinpush",
     "express": "^4.16.2",
     "faker": "^4.1.0",
     "helmet": "^3.9.0",

@@ -8,10 +8,10 @@
   },
   "main": "index.js",
   "scripts": {
-    "preinstall": "cd ../shared/modules/coinpush && npm i",
+    "install-shared": "cd ../shared/modules/coinpush && npm i && npm run build",
     "start": "./node_modules/.bin/tsc-watch --sourceMap --onSuccess \"node index.js\"",
-    "prod": "node index.js",
-    "build": "tsc"
+    "build": "tsc",
+    "prod": "node index.js"
   },
   "author": "",
   "license": "ISC",

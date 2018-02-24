@@ -12,13 +12,6 @@ services:
     ports:
       - 27017:27017
     command: mongod --smallfiles --logpath=/dev/null # --quiet
-    # deploy:
-    #   mode: global
-    #   restart_policy:
-    #     condition: on-failure
-    #   update_config:
-    #     parallelism: 1
-    #     delay: 1m30s
   cache:
     image: cache
     container_name: "cache"
@@ -29,18 +22,11 @@ services:
       - "3001"
     volumes:
       - ./server-cache:/usr/src/app/server-cache
-      # - /usr/src/app/server-cache/node_modules
       - ./shared/modules/coinpush:/usr/src/app/shared/modules/coinpush
     links:
       - nginx
       - redis
       - mongodb
-    command:
-      - /bin/sh
-      - -c
-      - |
-          npm i
-          npm run build
   nginx:
     restart: unless-stopped
     build: ./server-nginx
@@ -55,8 +41,6 @@ services:
       - /bin/sh
       - -c
       - |
-          # cd /usr/src/app/client/www && ls
-          # cp nginx:/etc/nginx/nginx.conf ./nginx.conf
           nginx -t
           nginx -g 'daemon off;'
   redis:
@@ -80,12 +64,6 @@ services:
     links:
       - nginx
       - redis
-    command:
-      - /bin/sh
-      - -c
-      - |
-          npm i
-          npm start
   client:
     image: client
     container_name: client
@@ -95,12 +73,6 @@ services:
     volumes:
       - ./client:/usr/src/app/client
       - ./shared/modules/coinpush:/usr/src/app/shared/modules/coinpush
-    command:
-      - /bin/sh
-      - -c
-      - |
-          npm i
-          npm start
   user:
     image: user
     container_name: user
@@ -111,7 +83,7 @@ services:
       - "3008"
     volumes:
       - ./server-user:/usr/src/app/server-user
-      - /usr/src/app/server-user/node_modules
+      - ./shared/modules/coinpush:/usr/src/app/shared/modules/coinpush
     links:
       - nginx
       - redis
@@ -126,7 +98,7 @@ services:
       - "3010"
     volumes:
       - ./server-notify:/usr/src/app/server-notify
-      - /usr/src/app/server-notify/node_modules
+      - ./shared/modules/coinpush:/usr/src/app/shared/modules/coinpush
     links:
       - nginx
       - redis
@@ -141,7 +113,7 @@ services:
       - "3009"
     volumes:
       - ./server-comment:/usr/src/app/server-comment
-      - /usr/src/app/server-comment/node_modules
+      - ./shared/modules/coinpush:/usr/src/app/shared/modules/coinpush
     links:
       - nginx
       - redis
@@ -161,9 +133,3 @@ services:
       - nginx
       - redis
       - mongodb
-    command:
-      - /bin/sh
-      - -c
-      - |
-          npm i
-          npm start

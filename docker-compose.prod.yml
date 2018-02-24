@@ -1,13 +1,9 @@
 version: '3.3'
 
 services:
-  cache:
-    command:
-      - /bin/sh
-      - -c
-      - |
-          npm i
-          npm run build
+  nginx:
+    ports:
+      - "80:80"
   client:
     build:
       args:
@@ -19,7 +15,76 @@ services:
           npm run install-shared
           npm i
           npm run build
-  nginx:
-    ports:
-      - "80:80"
+          npm run prod
+  gateway:
+    build:
+      args:
+        NODE_ENV: production
+    command:
+      - /bin/sh
+      - -c
+      - |
+          npm run install-shared
+          npm i
+          npm run build
+          npm run prod
+  cache:
+    build:
+      args:
+        NODE_ENV: production
+    command:
+      - /bin/sh
+      - -c
+      - |
+          npm i
+          npm run build
+          npm run prod
+  event:
+    build:
+      args:
+        NODE_ENV: production
+    command:
+      - /bin/sh
+      - -c
+      - |
+          npm run install-shared
+          npm i
+          npm run build
+          npm run prod
+  notify:
+    build:
+      args:
+        NODE_ENV: production
+    command:
+      - /bin/sh
+      - -c
+      - |
+          npm run install-shared
+          npm i
+          npm run build
+          npm run prod
+  user:
+    build:
+      args:
+        NODE_ENV: production
+    command:
+      - /bin/sh
+      - -c
+      - |
+          npm run install-shared
+          npm i
+          npm run build
+          npm run prod
+  comment:
+    build:
+      args:
+        NODE_ENV: production
+    command:
+      - /bin/sh
+      - -c
+      - |
+          npm run install-shared
+          npm i
+          npm run build
+          npm run prod
   

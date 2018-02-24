@@ -1,8 +1,8 @@
 import * as jwt from 'jsonwebtoken';
 import mongoose = require('mongoose');
 import {User} from '../schemas/user.schema';
-import {IUser} from "../../../shared/interfaces/IUser.interface";
-import { IReqUser } from '../../../shared/interfaces/IReqUser.interface';
+import {IUser} from "coinpush/interface/IUser.interface";
+import { IReqUser } from 'coinpush/interface/IReqUser.interface';
 
 const config = require('../../../tradejs.config');
 

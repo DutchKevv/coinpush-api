@@ -2,8 +2,8 @@ import { Schema, model } from 'mongoose';
 import * as bcrypt from 'bcryptjs';
 import { isEmail } from 'validator';
 import { join } from 'path';
-import { BROKER_GENERAL_TYPE_OANDA, LEVERAGE_TYPE_1 } from '../../../shared/constants/constants';
-import { IUser } from "../../../shared/interfaces/IUser.interface";
+import { BROKER_GENERAL_TYPE_OANDA, LEVERAGE_TYPE_1 } from 'coinpush/constant';
+import { IUser } from "coinpush/interface/IUser.interface";
 import * as beautifyUnique from 'mongoose-beautiful-unique-validation';
 
 const config = require('../../../tradejs.config');
