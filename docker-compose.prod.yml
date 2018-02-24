@@ -11,13 +11,11 @@ services:
   client:
     build:
       args:
-        NODE_ENV: development
+        NODE_ENV: production
     command:
       - /bin/sh
       - -c
       - |
-          cd ../shared/modules/coinpush && npm i
-          cd ../../../client
           npm i
           npm run build
   nginx:

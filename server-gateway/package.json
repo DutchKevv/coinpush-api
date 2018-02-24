@@ -8,7 +8,7 @@
   },
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "preinstall": "cd ../shared/modules/coinpush && npm i",
     "start": "./node_modules/.bin/tsc-watch --sourceMap --onSuccess \"node index.js\"",
     "prod": "node index.js",
     "build": "tsc"
