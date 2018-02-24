@@ -1,7 +1,7 @@
 import { Injectable, Output } from '@angular/core';
 import { UserModel } from '../models/user.model';
 import { Http, Response } from '@angular/http';
-import { USER_FETCH_TYPE_SLIM } from '../../../../shared/constants/constants';
+import { USER_FETCH_TYPE_SLIM } from 'coinpush/constant';
 // import {StartupService} from './startup.service';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 

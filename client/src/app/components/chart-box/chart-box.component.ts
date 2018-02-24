@@ -6,7 +6,7 @@ import {
 import { CacheService } from '../../services/cache.service';
 import { SymbolModel } from "../../models/symbol.model";
 import { EventService } from '../../services/event.service';
-import { CUSTOM_EVENT_TYPE_ALARM, CUSTOM_EVENT_TYPE_PRICE, CUSTOM_EVENT_TYPE_ALARM_NEW } from '../../../../../shared/constants/constants';
+import { CUSTOM_EVENT_TYPE_ALARM, CUSTOM_EVENT_TYPE_PRICE, CUSTOM_EVENT_TYPE_ALARM_NEW } from 'coinpush/constant';
 import { EventModel } from '../../models/event.model';
 
 

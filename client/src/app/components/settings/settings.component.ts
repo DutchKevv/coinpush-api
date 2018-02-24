@@ -5,7 +5,7 @@ import {
 import { UserService } from '../../services/user.service';
 import { Http } from '@angular/http';
 import { FormBuilder } from '@angular/forms';
-import { USER_FETCH_TYPE_PROFILE_SETTINGS, G_ERROR_MAX_SIZE } from '../../../../../shared/constants/constants';
+import { USER_FETCH_TYPE_PROFILE_SETTINGS, G_ERROR_MAX_SIZE } from 'coinpush/constant';
 import { UserModel } from '../../models/user.model';
 import { AuthenticationService } from '../../services/authenticate.service';
 import { AlertService } from '../../services/alert.service';

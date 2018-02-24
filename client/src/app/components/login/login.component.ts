@@ -4,7 +4,7 @@ import { AuthenticationService } from '../../services/authenticate.service';
 import { AlertService } from '../../services/alert.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from '../../services/user.service';
-import { G_ERROR_DUPLICATE } from '../../../../../shared/constants/constants';
+import { G_ERROR_DUPLICATE } from 'coinpush/constant';
 
 @Component({
 	styleUrls: ['./login.component.scss'],

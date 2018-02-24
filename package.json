@@ -27,6 +27,8 @@
     "start": "npm run d-up",
     "start-server": "docker-compose up nginx redis gateway notify cache event comment user",
     "start-client": "docker-compose up client",
+    "prod-client": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up client -d",
+    "prod-server": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up nginx redis gateway notify user event cache comment -d",
     "prod": "pm2 start ecosystem.config.js --env production && pm2 monit",
     "stop": "npm run d-stop",
     "m-shell": "docker exec -it mongodb mongo",

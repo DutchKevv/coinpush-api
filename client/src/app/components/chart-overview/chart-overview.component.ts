@@ -13,7 +13,7 @@ import { Subject } from 'rxjs/Subject';
 import { UserService } from '../../services/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CacheService } from '../../services/cache.service';
-import { SYMBOL_CAT_TYPE_FOREX, SYMBOL_CAT_TYPE_RESOURCE, SYMBOL_CAT_TYPE_CRYPTO, CUSTOM_EVENT_TYPE_ALARM, ALARM_TRIGGER_DIRECTION_DOWN, ALARM_TRIGGER_DIRECTION_UP, BROKER_GENERAL_TYPE_OANDA, BROKER_GENERAL_TYPE_CC, CUSTOM_EVENT_TYPE_ALARM_NEW } from "../../../../../shared/constants/constants";
+import { SYMBOL_CAT_TYPE_FOREX, SYMBOL_CAT_TYPE_RESOURCE, SYMBOL_CAT_TYPE_CRYPTO, CUSTOM_EVENT_TYPE_ALARM, ALARM_TRIGGER_DIRECTION_DOWN, ALARM_TRIGGER_DIRECTION_UP, BROKER_GENERAL_TYPE_OANDA, BROKER_GENERAL_TYPE_CC, CUSTOM_EVENT_TYPE_ALARM_NEW } from "coinpush/constant";
 import { NgForm } from '@angular/forms';
 import { app } from '../../../core/app';
 import { EventService } from '../../services/event.service';

@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "allowJs": false,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": false,
@@ -10,16 +11,22 @@
     "sourceMap": false,
     "target": "es2015",
     "module": "es2015",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "paths": {
+      "@angular/*": [
+        "../node_modules/@angular/*"
+      ]
+    }
   },
-  "exclude": [
-    "node_modules"
+  "include": [
+    "../../shared/modules/coinpush/constant/index.ts",
+    "../**/*.ts"
   ],
   "angularCompilerOptions": {
     "genDir": "./aot",
     "comments": false,
     "entryModule": "./app/app.module#AppModule",
     "preserveWhitespaces": false,
-    "skipMetadataEmit" : true
+    "skipMetadataEmit": true
   }
 }
