@@ -1,0 +1,2 @@
+2018-02-24T16:52:56.223Z - info: redis                :  client connected
+2018-02-24T16:52:56.227Z - info: redis                :  client connected
