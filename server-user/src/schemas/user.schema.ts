@@ -2,8 +2,9 @@ import { Schema, model } from 'mongoose';
 import * as bcrypt from 'bcryptjs';
 import { isEmail } from 'validator';
 import { join } from 'path';
-import { BROKER_GENERAL_TYPE_OANDA, LEVERAGE_TYPE_1 } from 'coinpush/constant';
+import { BROKER_GENERAL_TYPE_OANDA, USER_GENDER_UNKNOWN, USER_GENDER_MALE, USER_GENDER_FEMALE, USER_GENDER_OTHER } from 'coinpush/constant';
 import { IUser } from "coinpush/interface/IUser.interface";
+import { countries } from "coinpush/util/countries";
 import * as beautifyUnique from 'mongoose-beautiful-unique-validation';
 
 const config = require('../../../tradejs.config');
@@ -25,11 +26,13 @@ export const UserSchema = new Schema(
 			select: false
 		},
 		img: {
-			type: String
+			type: String,
+			trim: true
 		},
 		gender: {
 			type: Number,
-			default: 0
+			default: USER_GENDER_UNKNOWN,
+			enum: [USER_GENDER_UNKNOWN, USER_GENDER_MALE, USER_GENDER_FEMALE, USER_GENDER_OTHER]
 		},
 		description: {
 			type: String,
@@ -42,9 +45,9 @@ export const UserSchema = new Schema(
 		},
 		country: {
 			type: String,
-			required: false,
+			required: true,
 			trim: true,
-			default: 'NL'
+			enum: countries.map(country => country.code)
 		},
 		jobTitle: {
 			type: String,

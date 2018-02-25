@@ -1,22 +1,16 @@
-FROM node:8-alpine
-
-ENV APP_LOCATION=/usr/src/app
-ENV CLIENT_LOCATION=$APP_LOCATION/client
+FROM mhart/alpine-node:8.9.4
 
 ARG NODE_ENV
 ENV NODE_ENV=$NODE_ENV
 
-RUN mkdir -p $CLIENT_LOCATION/www
-RUN mkdir -p /usr/src/app/shared/modules/coinpush
+# TODO - only needed if want to rebuild spritesheet
+# RUN apk add --no-cache make gcc g++ python
+# RUN apk update && \
+#     apk upgrade && \
+#     apk add git imagemagick-dev && \
+#     apk add --update --repository http://dl-3.alpinelinux.org/alpine/edge/testing vips-tools vips-dev fftw-dev && \
+#     rm -rf /var/cache/apk/*
 
-RUN apk add --no-cache make gcc g++ python
-RUN apk update && \
-    apk upgrade && \
-    apk add git imagemagick-dev && \
-    apk add --update --repository http://dl-3.alpinelinux.org/alpine/edge/testing vips-tools vips-dev fftw-dev && \
-    rm -rf /var/cache/apk/*
 
-# Change directory so that our commands run inside this new directory
-WORKDIR $CLIENT_LOCATION/
-COPY /client/package.json .
+WORKDIR /usr/src/app/client
 COPY /client .

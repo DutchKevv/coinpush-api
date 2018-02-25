@@ -36,12 +36,12 @@ export class UserOverviewComponent implements OnInit, OnDestroy, AfterViewChecke
 		private _cacheService: CacheService) {
 	}
 
-	ngOnInit() {
-		this.userService.getOverview().subscribe((users: Array<UserModel>) => {
-			this.newest$.next(users.slice());
-			this.editorChoice$.next(users.slice().reverse());
-			this.topInvestors$.next(shuffleArray(users.slice()));
-		});
+	async ngOnInit() {
+		const users = <any>await this.userService.getOverview();
+
+		this.newest$.next(users.slice());
+		this.editorChoice$.next(users.slice().reverse());
+		this.topInvestors$.next(shuffleArray(users.slice()));
 	}
 
 	ngAfterViewChecked() {

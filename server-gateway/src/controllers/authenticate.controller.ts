@@ -5,6 +5,7 @@ import { userController } from "./user.controller";
 import { G_ERROR_UNKNOWN } from "coinpush/constant";
 import { log } from 'coinpush/util/util.log';
 import { IUser } from 'coinpush/interface/IUser.interface';
+import { genderStringToConstant } from 'coinpush/util/util.convert';
 import { deviceController } from './device.controller';
 import { symbolController } from './symbol.controller';
 import { IReqUser } from 'coinpush/interface/IReqUser.interface';
@@ -69,10 +70,11 @@ export const authenticateController = {
 
 	async authenticateFacebook(reqUser: IReqUser, params: { token: string }) {
 		// FB.options({accessToken: params.token});
-		const facebookProfile = await FB.api('me', { fields: ['id', 'name', 'email'], access_token: params.token });
+		const facebookProfile = await FB.api('me', { fields: ['id', 'name', 'email', 'gender', 'about', 'locale'], access_token: params.token });
 
 		if (facebookProfile && facebookProfile.id) {
-
+			console.log('facebook user: ', facebookProfile);
+			
 			// search in DB for user with facebookId
 			let user = (await userController.findByFacebookId(reqUser, facebookProfile.id))[0];
 			
@@ -81,6 +83,9 @@ export const authenticateController = {
 				user = await userController.create({}, {
 					email: facebookProfile.email,
 					name: facebookProfile.name,
+					// description: facebookProfile.about,
+					gender: genderStringToConstant(facebookProfile.gender),
+					country: facebookProfile.locale.split('_')[1],
 					imgUrl: 'https://graph.facebook.com/'+ facebookProfile.id + '/picture?width=1000',
 					oauthFacebook: {
 						id: facebookProfile.id
@@ -89,9 +94,7 @@ export const authenticateController = {
 			}
 
 			return {
-				user: {
-					token: jwt.sign({id: user._id}, config.auth.jwt.secret)
-				}
+				token: jwt.sign({id: user._id}, config.auth.jwt.secret)
 			};
 		}
 
@@ -106,6 +109,7 @@ export const authenticateController = {
 		}
 		else {
 			console.log('asdf', facebookProfile);
+			throw new Error('Invalid facebook response');
 		}
 	},
 

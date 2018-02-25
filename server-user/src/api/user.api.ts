@@ -40,16 +40,14 @@ router.post('/:id/follow', async (req: any, res, next) => {
 /**
  * create
  */
-router.post('/', async (req, res, next) => {
+router.post('/', async (req: any, res, next) => {
 	try {
-		console.log('asdf');
-		res.send(await userController.create(req.body));
-		// res.send(await userController.create(req.body));
-		
+		res.send(await userController.create(req.user, req.body));
 	} catch (error) {
-		
+
 		if (error) {
 			if (error.name === 'ValidationError') {
+				console.log('validation error', error);
 				res.status(409).send({ code: G_ERROR_DUPLICATE, field: Object.keys(error.errors)[0] });
 				return;
 			}

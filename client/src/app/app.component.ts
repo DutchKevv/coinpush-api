@@ -4,9 +4,9 @@ import { CacheService } from "./services/cache.service";
 import { Subject } from "rxjs/Subject";
 import { Router, NavigationEnd, NavigationStart, ActivatedRoute } from '@angular/router';
 import { UserService } from './services/user.service';
-import { Http } from '@angular/http';
 import { app } from '../core/app';
 import { EventService } from './services/event.service';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 declare let Module: any;
 
@@ -101,7 +101,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 	}
 
 	constructor(
-		public http: Http,
+		public http: HttpClient,
 		public router: Router,
 		public activatedRoute: ActivatedRoute,
 		public userService: UserService,
@@ -157,7 +157,11 @@ export class AppComponent implements OnInit, AfterViewInit {
 		this.toggleDropdownVisibility(true);
 		this.searchResults$.next(currentResult);
 
-		this.http.get('/search/', { params: { limit: 5, text: value } }).map(res => res.json()).subscribe((result: any) => {
+		const params = new HttpParams({
+			fromObject: { limit: '5', text: value }
+		});
+
+		this.http.get('/search/', { params }).subscribe((result: any) => {
 			currentResult.users = result.users;
 			this.searchResults$.next(currentResult);
 		});

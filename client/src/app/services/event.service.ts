@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Response, Http } from '@angular/http';
-
 import { Observable } from 'rxjs/Observable';
 import { CommentModel } from '../models/comment.model';
 import { AlertService } from './alert.service';
@@ -9,6 +7,7 @@ import { app } from '../../core/app';
 import { CacheService } from './cache.service';
 import { EventModel } from '../models/event.model';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 @Injectable()
 export class EventService {
@@ -16,11 +15,11 @@ export class EventService {
 	public events$: BehaviorSubject<Array<EventModel>> = new BehaviorSubject([]);
 
 	constructor(
-		private _http: Http,
+		private _http: HttpClient,
 		private _alertService: AlertService,
 		private _userService: UserService,
 		private _cacheService: CacheService
-	) {}
+	) { }
 
 	public init() {
 		this._initializeEvents();
@@ -31,8 +30,7 @@ export class EventService {
 
 	public async create(params: any): Promise<EventModel> {
 		try {
-			const result = await this._http.post('/event', params)
-				.map(res => res.json())
+			const result = <any>await this._http.post('/event', params)
 				.toPromise();
 
 			this._alertService.success(`Alarm set on ${params.symbol} - Price $${params.amount}`);
@@ -60,23 +58,32 @@ export class EventService {
 	}
 
 	public async findById(id: string): Promise<Array<CommentModel>> {
-		const result = await this._http.get('/event/' + id)
-			.map(res => [res.json()].map(r => {
+		const result = <any>await this._http.get('/event/' + id)
+			.map(r => {
 				const model = new CommentModel(r);
 				model.options.children = model.options.children.map(c => new CommentModel(c));
 				return model;
-			}))
+			})
 			.toPromise();
 
 		return result;
 	}
 
 	public findBySymbol(symbol: string, offset: number = 0, limit: number = 5, history?: boolean): any {
-		return this._http.get('/event', { params: { symbol, offset, limit, history } }).map(res => res.json());
+		const params = new HttpParams({
+			fromObject: {
+				symbol,
+				history: history.toString(),
+				offset: offset.toString(),
+				limit: limit.toString()
+			}
+		});
+
+		return this._http.get('/event', { params });
 	}
 
 	public update(model: CommentModel, options): Observable<Response> {
-		return this._http.put('/event/' + model.get('_id'), options);
+		return <any>this._http.put('/event/' + model.get('_id'), options);
 	}
 
 	public remove(eventModel: EventModel): Promise<any> {

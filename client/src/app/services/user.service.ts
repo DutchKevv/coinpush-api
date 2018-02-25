@@ -1,10 +1,10 @@
 import { Injectable, Output } from '@angular/core';
 import { UserModel } from '../models/user.model';
-import { Http, Response } from '@angular/http';
 import { AlertService } from './alert.service';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { SymbolModel } from "../models/symbol.model";
 import { app } from '../../core/app';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class UserService {
@@ -15,7 +15,7 @@ export class UserService {
     });
 
 	constructor(
-		private _http: Http,
+		private _http: HttpClient,
 		private _alertService: AlertService) {}
 
 	findById(id: string, options: any = {}): Promise<UserModel> {
@@ -23,7 +23,7 @@ export class UserService {
 	}
 
 	getOverview(options: any = {}) {
-		return this._http.get('/user', { params: options }).map((res: Response) => res.json().map(user => new UserModel(user)));
+		return this._http.get('/user', { params: options }).map(user => new UserModel(user)).toPromise();
 	}
 
 	create(user) {
@@ -69,7 +69,7 @@ export class UserService {
 
 	async toggleFollow(model: UserModel, state: boolean) {
 		try {
-			const result = await this._http.post('/user/' + model.get('_id') + '/follow', null).map(res => res.json()).toPromise();
+			const result = <any>await this._http.post('/user/' + model.get('_id') + '/follow', null).toPromise();
 
 			let text;
 

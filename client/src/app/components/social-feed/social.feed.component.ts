@@ -7,7 +7,6 @@ import {
 	ChangeDetectorRef
 } from '@angular/core';
 import { UserService } from '../../services/user.service';
-import { Http } from '@angular/http';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from "@angular/router";
 import { CommentService } from "../../services/comment.service";
@@ -61,7 +60,8 @@ export class SocialFeedComponent implements OnInit, AfterViewInit, OnDestroy {
 	private _offset = 0;
 	private _limit = 5;
 
-	constructor(private _route: ActivatedRoute,
+	constructor(
+		private _route: ActivatedRoute,
 		public commentService: CommentService,
 		public changeDetectorRef: ChangeDetectorRef,
 		public _router: Router,
@@ -88,8 +88,6 @@ export class SocialFeedComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 
 	ngAfterViewInit() {
-		if (this.userId)
-			this._bindScroll();
 	}
 
 	onEnterFunction() {
@@ -143,7 +141,7 @@ export class SocialFeedComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 
 	async loadMoreChildren(parentModel: CommentModel) {
-		const children = await this.commentService.findChildren(parentModel.options._id, parentModel.options.children.length);
+		const children = <any>await this.commentService.findChildren(parentModel.options._id, parentModel.options.children.length);
 		parentModel.options.children = children.concat(parentModel.options.children);
 		this.changeDetectorRef.detectChanges();
 	}
@@ -166,16 +164,6 @@ export class SocialFeedComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.isLoading = true;
 		this.comments$.next(await this.commentService.findById(postId));
 		this.isLoading = false;
-	}
-
-	private _onScroll(event) {
-		if (!this.isLoading && $(event.target).scrollTop() + $(event.target).innerHeight() >= $(event.target)[0].scrollHeight) {
-			this._loadByUserId(this.userId);
-		}
-	}
-
-	private _bindScroll() {
-		// $(this.elementRef.nativeElement.parentNode).on('scroll.feed', (event) => this._onScroll(event)).scroll();
 	}
 
 	private _unbindScroll() {

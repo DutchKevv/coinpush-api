@@ -10,12 +10,12 @@ services:
     image: mongo:latest
     container_name: "mongodb"
     environment:
-      - MONGO_DATA_DIR=/data/db
+      - MONGO_DATA_DIR=/_data/db
       - MONGO_LOG_DIR=/dev/null
     volumes:
-      - ./data/db:/data/db
+      - ./_data/db:/_data/db
     ports:
-      - 27017:27017
+      - 27017
     command: mongod --smallfiles --logpath=/dev/null # --quiet
   cache:
     image: cache
@@ -24,7 +24,7 @@ services:
       context: ./
       dockerfile: server-cache/Dockerfile
     ports:
-      - "3001"
+      - 3001
     volumes:
       - ./server-cache:/usr/src/app/server-cache
       - ./shared/modules/coinpush:/usr/src/app/shared/modules/coinpush
@@ -36,7 +36,7 @@ services:
     restart: unless-stopped
     image: "redis:alpine"
     ports:
-        - "6379"
+        - 6379
     container_name: redis
   gateway:
     restart: unless-stopped
@@ -46,7 +46,7 @@ services:
       context: ./
       dockerfile: ./server-gateway/Dockerfile
     ports:
-      - "3100"
+      - 3100
     volumes:
       - ./server-gateway:/usr/src/app/server-gateway
       - ./shared/modules/coinpush:/usr/src/app/shared/modules/coinpush
@@ -69,7 +69,7 @@ services:
       context: ./
       dockerfile: server-user/Dockerfile
     ports:
-      - "3008"
+      - 3008
     volumes:
       - ./server-user:/usr/src/app/server-user
       - ./shared/modules/coinpush:/usr/src/app/shared/modules/coinpush
@@ -84,7 +84,7 @@ services:
       context: ./
       dockerfile: server-notify/Dockerfile
     ports:
-      - "3010"
+      - 3010
     volumes:
       - ./server-notify:/usr/src/app/server-notify
       - ./shared/modules/coinpush:/usr/src/app/shared/modules/coinpush
@@ -99,7 +99,7 @@ services:
       context: ./
       dockerfile: server-comment/Dockerfile
     ports:
-      - "3009"
+      - 3009
     volumes:
       - ./server-comment:/usr/src/app/server-comment
       - ./shared/modules/coinpush:/usr/src/app/shared/modules/coinpush
@@ -114,7 +114,7 @@ services:
       context: ./
       dockerfile: server-event/Dockerfile
     ports:
-      - "3011"
+      - 3011
     volumes:
       - ./server-event:/usr/src/app/server-event
       - ./shared/modules/coinpush:/usr/src/app/shared/modules/coinpush

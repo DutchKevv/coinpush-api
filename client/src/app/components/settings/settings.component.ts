@@ -3,12 +3,12 @@ import {
 	ViewEncapsulation
 } from '@angular/core';
 import { UserService } from '../../services/user.service';
-import { Http } from '@angular/http';
 import { FormBuilder } from '@angular/forms';
 import { USER_FETCH_TYPE_PROFILE_SETTINGS, G_ERROR_MAX_SIZE } from 'coinpush/constant';
 import { UserModel } from '../../models/user.model';
 import { AuthenticationService } from '../../services/authenticate.service';
 import { AlertService } from '../../services/alert.service';
+import { HttpClient } from '@angular/common/http';
 
 declare let $: any;
 
@@ -31,7 +31,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
 	countries = window['countries'];
 
-	constructor(private _http: Http,
+	constructor(
+		private _http: HttpClient,
 		private _formBuilder: FormBuilder,
 		private _authenticationService: AuthenticationService,
 		private _userService: UserService,
@@ -108,7 +109,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 		let data = new FormData();
 		data.append('image', this.uploadBtn.nativeElement.files.item(0));
 
-		this._http.post('/upload/profile', data).map(res => res.json()).subscribe((result) => {
+		this._http.post('/upload/profile', data).subscribe((result: any) => {
 			this._userService.update({ img: result.url }, false);
 		}, (result) => {
 

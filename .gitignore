@@ -1,28 +1,12 @@
-#System Files
-.idea
 .DS_Store
-Thumbs.db
-.vscode
+.idea/
+.vscode/
 
-# misc
-/**/*.map
-npm-debug.*
 node_modules
 /_data
 /data
 /_logs
-dump.rdb
-/custom/
 
-# Server
-/server/config/tradejs.config.js
-/server/**/*.js
-!/server/gulpfile.js
-!/server/copy-sql3-binary.js
-
-# Shared
-/shared/dist
-#/shared/**/*.js
-/shared/**/*.map
-
-
+npm-debug.log
+*.map
+log.txt

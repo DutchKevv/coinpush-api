@@ -53,10 +53,14 @@ export class LoginComponent implements OnInit {
 
 	async fbLogin() {
 		this.loading$.emit(true);
-		const result = await this.authenticationService.authenticateFacebook();
-
-		if (!result)
+		
+		try {
+			await this.authenticationService.authenticateFacebook();
+		} catch (error) {
+			this._alertService.error('Facebook login failed...');
+		} finally {
 			this.loading$.emit(false);
+		}		
 	}
 
 	async register() {

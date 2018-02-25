@@ -1,12 +1,17 @@
 import { EventEmitter, Injectable, Output } from '@angular/core';
-import { Http, Response } from '@angular/http';
 import { UserService } from './user.service';
 import { AlertService } from "./alert.service";
 import { LoginComponent } from '../components/login/login.component';
 import { app } from '../../core/app';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { environment } from '../../environments/environment';
+import { CustomHttp } from './http.service';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 declare const window: any;
+
+const FB_APP_ID_PROD = '178901869390909';
+const FB_APP_ID_DEV = '162805194523993';
 
 @Injectable()
 export class AuthenticationService {
@@ -19,12 +24,16 @@ export class AuthenticationService {
 		private _userService: UserService,
 		private _alertService: AlertService,
 		private _modalService: NgbModal,
-		private _http: Http) {
+		private _http: HttpClient) {
+		this.init();
+	}
+
+	init() {
 		app.on('firebase-token-refresh', () => this.saveDevice());
 	}
 
 	public async requestPasswordReset(email: string) {
-		const result = await this._http.post('/authenticate/request-password-reset', { email }).toPromise();
+		const result = <any>await this._http.post('/authenticate/request-password-reset', { email }).toPromise();
 
 		if (result.status === 200)
 			this._alertService.success(`Email send to: ${email}`);
@@ -35,7 +44,7 @@ export class AuthenticationService {
 	}
 
 	public async updatePassword(token: string, password: string) {
-		const result = await this._http.put('/authenticate', { token, password }).toPromise();
+		const result = <any>await this._http.put('/authenticate', { token, password }).toPromise();
 
 		if (result.status === 200)
 			this._alertService.success('Your password has been reset');
@@ -61,7 +70,11 @@ export class AuthenticationService {
 		};
 
 		try {
-			const result = await this._http.post('/authenticate', postData, { params: { profile: 0 } }).map((r: Response) => r.json()).toPromise();
+			const params = new HttpParams({
+				fromObject: { profile: '0' }
+			});
+
+			const result = <any>await this._http.post('/authenticate', postData, { params }).toPromise();
 
 			if (!result.user || !result.user.token) {
 				return false;
@@ -96,38 +109,30 @@ export class AuthenticationService {
 		}
 	}
 
-	public async authenticateFacebook(reload: boolean = true) {
-		await new Promise((resolve, reject) => {
-			window.FB.login(async (result) => {
-				console.log(result);
+	public authenticateFacebook(): Promise<any> {
+		return new Promise((resolve, reject) => {
+			const clientId = environment.production ? FB_APP_ID_PROD : FB_APP_ID_DEV;
+			const scope = 'email,public_profile,user_location,user_birthday,user_about_me';
+			const redirectUrl = (environment.production ? 'https://frontend-freelance.com' : 'http://localhost:4000') + '/index.redirect.facebook.html';
+			const loginUrl = `//graph.facebook.com/oauth/authorize?client_id=${clientId}&response_type=token&redirect_uri=${redirectUrl}&scope=${scope}`;
 
-				if (result.authResponse) {
-					const authResult = await this._http
-						.post(`/authenticate/facebook`, { token: result.authResponse.accessToken })
-						.map(res => res.json())
-						.toPromise();
+			const self = this;
+			window.addEventListener('message', async function cb(message) {
+				window.removeEventListener('message', cb, false);
 
-					if (!authResult || !authResult.user || !authResult.user.token) {
-						return false;
-					}
+				if (message.data.error)
+					return reject(message.error);
 
-					// does not save to server but updates persistant storage
-					await this._userService.update(authResult.user, false, false);
+				const authResult = <any>await self._http.post(`/authenticate/facebook`, { token: message.data.token }).toPromise();
 
-					if (reload)
-						window.location.reload();
-
-					return true;
-
-					// console.log('asdfsfsdf', authResult);
-					// resolve(response.json());
-
-				} else {
-					reject(result);
+				if (authResult && authResult.token) {
+					await self._userService.update({ token: authResult.token }, false, false);
+					window.location.reload();
 				}
-			}, {
-					scope: 'email,public_profile'
-				});
+			}, false);
+
+			const fbWindow = window.open(loginUrl, "fbLogin");
+			fbWindow.focus();
 		});
 	}
 
@@ -151,10 +156,8 @@ export class AuthenticationService {
 	}
 
 	public async logout(): Promise<void> {
-		if (this._userService.model.options._id) {
-			await app.removeStoredUser();
-			window.location.reload();
-		}
+		await app.removeStoredUser();
+		window.location = window.location.origin;
 	}
 
 	private _getDeviceToken() {

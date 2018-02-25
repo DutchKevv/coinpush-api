@@ -14,27 +14,5 @@ export class BootstrapService {
 		// boot progressbar removal
 		if (!app.isReady)
 			await new Promise((resolve, reject) => app.once('ready', resolve));
-
-		this._loadFacebookLogin();
-	}
-
-	private _loadFacebookLogin() {
-		(function (d, s, id) {
-			var js, fjs = d.getElementsByTagName(s)[0];
-			if (d.getElementById(id)) { return; }
-			js = d.createElement(s); js.id = id;
-			js.src = "https://connect.facebook.net/en_US/sdk.js";
-			fjs.parentNode.insertBefore(js, fjs);
-		}(document, 'script', 'facebook-jssdk'));
-
-		window.fbAsyncInit = function () {
-			window.FB.init({
-				appId: environment.production ? FB_APP_ID_PROD : FB_APP_ID_DEV,
-				cookie: true,
-				xfbml: false,
-				version: 'v2.12',
-				display: 'popup'
-			});
-		};
 	}
 }

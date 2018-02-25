@@ -64,7 +64,7 @@ export const userController = {
 			where.name = { "$regex": params.text, "$options": "i" }
 
 		if (params.facebookId)
-			where['oauthFacebook.id'] = {"$eq": params.facebookId}
+			where['oauthFacebook.id'] = { "$eq": params.facebookId }
 
 		console.log('where', where, params);
 
@@ -98,11 +98,11 @@ export const userController = {
 		return users;
 	},
 
-	async create(params) {
+	async create(reqUser: IReqUser, params: IUser) {
 
 		// hash password
 		// TODO - unique hash per user
-		if (params.password)
+		if (params.password) {
 			await new Promise((resolve, reject) => {
 				bcrypt.hash(params.password, 10, (error, password) => {
 					if (error)
@@ -112,11 +112,13 @@ export const userController = {
 					resolve();
 				});
 			});
+		}
 
 		let userData: IUser = {
-			img: params.img,
 			email: params.email,
 			name: params.name,
+			img: params.img,
+			gender: params.gender,
 			password: params.password,
 			country: params.country
 		};

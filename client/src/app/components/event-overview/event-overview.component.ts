@@ -3,7 +3,6 @@ import {
 	ViewEncapsulation
 } from '@angular/core';
 import { UserService } from '../../services/user.service';
-import { Http } from '@angular/http';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { NewsService } from '../../services/news.service';
 

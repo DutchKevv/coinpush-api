@@ -1,6 +1,4 @@
 import { Injectable, Injector } from '@angular/core';
-import { ConnectionBackend, XHRBackend, RequestOptions, Request, RequestOptionsArgs, Response, Http, Headers } from '@angular/http';
-
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
@@ -8,71 +6,89 @@ import 'rxjs/add/observable/throw';
 import { Router } from '@angular/router';
 import { AuthenticationService } from './authenticate.service';
 import { app } from '../../core/app';
+import { HttpHeaders, HttpParams, HttpClient, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse, HttpInterceptor } from '@angular/common/http';
 
+export interface IRequestOptions {
+	headers?: HttpHeaders;
+	observe?: 'body';
+	params?: HttpParams;
+	reportProgress?: boolean;
+	responseType?: 'json';
+	withCredentials?: boolean;
+	body?: any;
+}
+
+// export function applicationHttpClientCreator(auth: AuthenticationService, http: HttpClient) {
+// 	return new CustomHttp(http, auth);
+// }
 
 @Injectable()
-export class CustomHttp extends Http {
-	private _authenticationService: AuthenticationService;
+export class CustomHttp implements HttpInterceptor {
+	// private _authenticationService: AuthenticationService;
 
 	constructor(
-		backend: ConnectionBackend,
-		defaultOptions: RequestOptions,
-		router: Router,
-		injector: Injector
-	) {
-		super(backend, defaultOptions);
-		setTimeout(() => {
-			this._authenticationService = injector.get(AuthenticationService);
-		}, 0);
+		public http: HttpClient,
+		private _authenticationService: AuthenticationService
+	) {}
+
+	intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+		return next.handle(this._normalizeRequest(req))
+			.catch((event) => {
+				console.log('event', event);
+				if (event instanceof HttpErrorResponse) {
+					return this.catch401(event);
+				}
+			});
 	}
 
-	get(url: string, options?: RequestOptionsArgs): Observable<Response> {
-		return super.get(this._normalizeUrl(url), this._addHeaders(options)).catch(error => this.handleError(error));
+	// get(url: string, options?: IRequestOptions): Observable<Response> {
+	// 	return this.get(this._normalizeUrl(url), this._addHeaders(options)).catch(error => this.handleError(error));
+	// }
+
+	// post(url: string, body: any, options?: IRequestOptions): Observable<Response> {
+	// 	return this.post(this._normalizeUrl(url), body, this._addHeaders(options)).catch((error, body) => this.handleError(error, body));
+	// }
+
+	// put(url: string, body: any, options?: IRequestOptions): Observable<Response> {
+	// 	return this.put(this._normalizeUrl(url), body, this._addHeaders(options)).catch(error => this.handleError(error));
+	// }
+
+	// delete(url: string, options?: IRequestOptions): Observable<Response> {
+	// 	return this.delete(this._normalizeUrl(url), this._addHeaders(options)).catch(error => this.handleError(error));
+	// }
+
+	private _normalizeRequest(req: HttpRequest<any>): HttpRequest<any> {
+		if (!req.url.startsWith('http://') && !req.url.startsWith('https://'))
+			req =  req.clone({url: (app.address.apiUrl + req.url).replace(/([^:]\/)\/+/g, "$1")});
+
+		req = this._addHeaderJwt(req);
+
+		return req;
 	}
 
-	post(url: string, body: string, options?: RequestOptionsArgs): Observable<Response> {
-		return super.post(this._normalizeUrl(url), body, this._addHeaders(options)).catch((error, body) => this.handleError(error, body));
-	}
-
-	put(url: string, body: string, options?: RequestOptionsArgs): Observable<Response> {
-		return super.put(this._normalizeUrl(url), body, this._addHeaders(options)).catch(error => this.handleError(error));
-	}
-
-	delete(url: string, options?: RequestOptionsArgs): Observable<Response> {
-		return super.delete(this._normalizeUrl(url), this._addHeaders(options)).catch(error => this.handleError(error));
-	}
-
-	private _normalizeUrl(url: string) {
-		url = app.address.apiUrl + url;
-		url = url.replace(/([^:]\/)\/+/g, "$1");
-		return url;
-	}
-
-	private _addHeaders(options?: RequestOptionsArgs): RequestOptionsArgs {
-		// ensure request options and headers are not null
-		options = options || new RequestOptions();
-		options.headers = options.headers || new Headers();
-
-		this._addHeaderJwt(options);
-		this._addHeaderAppVersion(options);
-
-		return options;
-	}
-
-	private _addHeaderJwt(options: RequestOptionsArgs): RequestOptionsArgs {
+	private _addHeaderJwt(req: HttpRequest<any>): HttpRequest<any> {
 		// add authorization header with jwt token
 		if (app.user && app.user.token)
-			// options.headers.append('Authorization', 'JWT ' + app.user.token);
-			options.headers.append('Authorization', 'Bearer ' + app.user.token);
+			return req.clone({ setHeaders: { Authorization: 'Bearer ' + app.user.token } });
 
-		return options;
+		return req;
 	}
 
-	private _addHeaderAppVersion(options: RequestOptionsArgs): RequestOptionsArgs {
-		if (window['app'].version)
-			options.headers.append('app-version', window['app'].version);
+	// private _addHeaderAppVersion(req: HttpRequest<any>): IRequestOptions {
+	// 	if (window['app'].version)
+	// 		options.headers.append('app-version', window['app'].version);
 
-		return options;
+	// 	return options;
+	// }
+
+	// Response Interceptor
+	private catch401(error: HttpErrorResponse): Observable<any> {
+		// Check if we had 401 response
+		if (error.status === 401) {
+			// redirect to Login page for example
+			return Observable.empty();
+		}
+		return Observable.throw(error);
 	}
 
 	private handleError(error: any, body?) {

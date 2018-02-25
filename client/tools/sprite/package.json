@@ -1,0 +1,15 @@
+{
+  "name": "sprite",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "sharp": "^0.19.1",
+    "spritesheet-js": "^1.2.6"
+  },
+  "author": "",
+  "license": "ISC"
+}

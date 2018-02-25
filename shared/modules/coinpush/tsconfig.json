@@ -1,13 +1,12 @@
 {
   "compilerOptions": {
-    "lib": ["es7"],
+    "declaration": false,
+    "experimentalDecorators": true,
+    "lib": ["es6", "es2017"],
     "module": "commonjs",
     "moduleResolution": "node",
     "rootDir": "./",
-    "target": "esnext",
-    "types": [
-      "node"
-    ],
-    "pretty": true
+    "target": "es2017",
+    "skipLibCheck": true,
   }
 }

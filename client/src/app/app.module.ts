@@ -14,7 +14,7 @@ import { AuthenticationService } from './services/authenticate.service';
 import { CustomHttp } from './services/http.service';
 import { AlertService } from './services/alert.service';
 import { AlertComponent } from './components/alert/alert.component';
-import { HttpModule, XHRBackend, RequestOptions, Http } from '@angular/http';
+import { HttpClientModule, HttpErrorResponse, HttpHeaders, HttpParams, HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { UserOverviewComponent } from './components/user-overview/user.overview.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { SettingsComponent } from './components/settings/settings.component';
@@ -58,7 +58,7 @@ import { NotificationMenuComponent } from './components/notification-menu/notifi
 		AppRouter,
 		FormsModule,
 		ReactiveFormsModule,
-		HttpModule,
+		HttpClientModule,
 		NgbModule.forRoot()
 	],
 	providers: [
@@ -70,16 +70,18 @@ import { NotificationMenuComponent } from './components/notification-menu/notifi
 		NewsService,
 		EventService,
 		NotificationService,
+		AuthenticationService,
+		CacheService,
 		{ provide: APP_INITIALIZER, useFactory: (config: BootstrapService) => () => config.load(), deps: [BootstrapService], multi: true },
-		{ provide: AuthenticationService, useClass: AuthenticationService },
-		{
-			provide: Http,
-			useFactory: (backend: XHRBackend, options: RequestOptions, route: Router, inj: Injector) => {
-				return new CustomHttp(backend, options, route, inj);
-			},
-			deps: [XHRBackend, RequestOptions, Router, Injector]
-		},
-		{ provide: CacheService, useClass: CacheService }
+		{ provide: HTTP_INTERCEPTORS, useClass: CustomHttp, multi: true },
+		// {
+		// 	provide: Http,
+		// 	useFactory: (backend: XHRBackend, options: RequestOptions, route: Router, inj: Injector) => {
+		// 		return new CustomHttp(backend, options, route, inj);
+		// 	},
+		// 	deps: [XHRBackend, RequestOptions, Router, Injector]
+		// },
+		// { provide: CacheService, useClass: CacheService }
 	],
 	bootstrap: [
 		AppComponent
