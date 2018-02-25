@@ -4,6 +4,7 @@ import { emailController } from './email.controller';
 import { IReqUser } from 'coinpush/interface/IReqUser.interface';
 import { IUser } from 'coinpush/interface/IUser.interface';
 import { downloadProfileImgFromUrl } from '../api/upload.api';
+import { commentController } from './comment.controller';
 
 const config = require('../../../tradejs.config');
 
@@ -22,21 +23,21 @@ export const userController = {
 	},
 
 	findByFacebookId(reqUser: IReqUser, facebookId) {
-		return request({ 
-			uri: config.server.user.apiUrl + '/user/', 
+		return request({
+			uri: config.server.user.apiUrl + '/user/',
 			headers: { '_id': reqUser.id },
 			qs: {
 				facebookId
 			},
-			json: true 
+			json: true
 		})
 	},
 
 	findMany(reqUser: IReqUser, params): Promise<Array<any>> {
-		return request({ 
-			uri: config.server.user.apiUrl + '/user/', 
+		return request({
+			uri: config.server.user.apiUrl + '/user/',
 			headers: { '_id': reqUser.id },
-			json: true 
+			json: true
 		})
 	},
 
@@ -52,7 +53,8 @@ export const userController = {
 		let user, notify;
 
 		try {
-			// create user
+
+			// create initial user
 			user = await request({
 				uri: config.server.user.apiUrl + '/user',
 				headers: { '_id': reqUser.id },
@@ -61,36 +63,33 @@ export const userController = {
 				json: true
 			});
 
-			console.log(2);
-			
-			if (params.imgUrl) {
-				params.img = await downloadProfileImgFromUrl({id: user.id}, params.img);
-				delete params.imgUrl;
-			}
-
-			// notify
-			notify = await emailController.addUser({ id: user._id }, {
-				_id: user._id,
-				img: user.img,
-				name: user.name,
-				email: user.email,
-				language: user.language
-			});
-
-			console.log(3);
-
-			// comment
-			await request({
-				uri: config.server.comment.apiUrl + '/user',
-				headers: { '_id': user._id },
-				method: 'POST',
-				body: {
+			// create user on other services
+			await Promise.all([
+				// notify
+				emailController.addUser({ id: user._id }, {
 					_id: user._id,
-					name: user.name,
 					img: user.img,
-				},
-				json: true
-			});
+					name: user.name,
+					email: user.email,
+					language: user.language
+				}),
+				// comment
+				commentController.addUser({ id: user._id }, {
+					_id: user._id,
+					img: user.img,
+					name: user.name,
+				})
+			]);
+
+			// download (async) profile image (facebook etc)
+			if (params.imgUrl) {
+				downloadProfileImgFromUrl({ id: user._id }, params.imgUrl)
+					.then((fileName: string) => {
+						if (typeof fileName === 'string' && fileName.length)
+							return this.update({ id: user._id }, user._id, { img: fileName })
+					})
+					.catch(console.error)
+			}
 
 			// send newMember email
 			if (sendEmail) {
@@ -104,7 +103,7 @@ export const userController = {
 					json: true
 				});
 			}
-			
+
 			return user;
 
 		} catch (error) {
@@ -131,7 +130,7 @@ export const userController = {
 		const keys = Object.keys(params);
 
 		if (keys.includes('name') || keys.includes('img')) {
-			
+
 		}
 
 		const results = await Promise.all([
@@ -242,11 +241,11 @@ export const userController = {
 	},
 
 	_getUser(reqUser: IReqUser, userId, type) {
-		return request({ 
-			uri: config.server.user.apiUrl + '/user/' + userId, 
-			qs: { type }, 
-			headers: { _id: reqUser.id }, 
-			json: true 
+		return request({
+			uri: config.server.user.apiUrl + '/user/' + userId,
+			qs: { type },
+			headers: { _id: reqUser.id },
+			json: true
 		});
 	}
 };

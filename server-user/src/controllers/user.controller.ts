@@ -1,6 +1,6 @@
 import * as bcrypt from 'bcryptjs';
 import { Types } from 'mongoose';
-import { pubClient } from '../modules/redis';
+import { pubClient } from 'coinpush/redis';
 import { User, UserSchema } from '../schemas/user.schema';
 import {
 	G_ERROR_EXPIRED,
@@ -100,32 +100,36 @@ export const userController = {
 
 	async create(params) {
 
+		// hash password
+		// TODO - unique hash per user
 		if (params.password)
 			await new Promise((resolve, reject) => {
-				// resolve();
 				bcrypt.hash(params.password, 10, (error, password) => {
-					if (error) {
-						console.error(error);
+					if (error)
 						return reject(error);
-					}
+
 					params.password = password;
 					resolve();
 				});
 			});
 
-		let userData = {
+		let userData: IUser = {
 			img: params.img,
 			email: params.email,
 			name: params.name,
 			password: params.password,
-			country: params.country,
-			oauthFacebook: {
-				id: params.oauthFacebook.id
-			}
+			country: params.country
 		};
 
+		if (params.oauthFacebook && params.oauthFacebook.id) {
+			userData.confirmed = true;
+			userData.oauthFacebook = {
+				id: params.oauthFacebook.id
+			};
+		}
+
 		const user = await User.create(userData);
-		console.log(user);
+
 		return user;
 	},
 

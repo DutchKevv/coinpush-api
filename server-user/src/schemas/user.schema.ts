@@ -12,7 +12,6 @@ export const UserSchema = new Schema(
 	{
 		name: {
 			type: String,
-			unique: true,
 			required: true,
 			trim: true
 		},
@@ -98,10 +97,9 @@ export const UserSchema = new Schema(
 			required: false,
 			default: 'free'
 		},
-		active: {
+		confirmed: {
 			type: Boolean,
-			required: false,
-			default: true,
+			default: false,
 			select: false
 		},
 		resetPasswordToken: {

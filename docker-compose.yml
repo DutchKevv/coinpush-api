@@ -5,10 +5,7 @@ services:
     restart: unless-stopped
     build: ./server-nginx
     image: nginx
-    container_name: nginx
-    volumes:
-      - ./images:/usr/src/app/images
-      - ./client:/usr/src/app/client
+    container_name: nginx     
   mongodb:
     image: mongo:latest
     container_name: "mongodb"

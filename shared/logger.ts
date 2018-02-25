@@ -4,7 +4,7 @@ import * as fs		from 'fs';
 import * as mkdirp	from 'mkdirp';
 
 const
-	PATH_SERVER_LOG = path.join('_logs', '/server.txt'),
+	PATH_SERVER_LOG = path.join('_log', '/server.txt'),
 	OWNER_MIN_LENGTH = 20;
 
 if (!fs.existsSync(PATH_SERVER_LOG)) {

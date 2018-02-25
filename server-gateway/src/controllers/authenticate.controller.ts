@@ -32,7 +32,9 @@ export const authenticateController = {
 			(async () => {
 
 				if (params.email || params.password || params.token) {
-					params['fields'] = ['favorites', 'name', 'img'];
+					if (options.profile) {
+						params['fields'] = ['favorites', 'name', 'img'];
+					}
 
 					user = await request({
 						uri: config.server.user.apiUrl + '/authenticate',
@@ -43,8 +45,6 @@ export const authenticateController = {
 						body: params,
 						json: true
 					});
-
-					console.log(user);
 
 					if (options.profile && user && user._id) {
 						// get unread notification counter and active events (alarms) 

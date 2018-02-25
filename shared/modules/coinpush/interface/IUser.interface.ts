@@ -13,4 +13,5 @@ export interface IUser {
 	favorites?: Array<string>
 	device?: any;
 	oauthFacebook?: any;
+	confirmed?: boolean;
 }

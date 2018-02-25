@@ -63,13 +63,13 @@ export const app = {
 	},
 
 	async _setRedisListeners() {
-		if (!subClient.isConnected) {
-			await new Promise((resolve, reject) => {
-				subClient.on("connect", function () {
-					resolve();
-				});
-			});
-		}
+		// if (!subClient.isConnected) {
+		// 	await new Promise((resolve, reject) => {
+		// 		subClient.on("connect", function () {
+		// 			resolve();
+		// 		});
+		// 	});
+		// }
 
 		subClient.subscribe('ticks');
 		subClient.subscribe('socket-notification');

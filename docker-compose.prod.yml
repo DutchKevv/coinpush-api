@@ -3,10 +3,11 @@ version: '3.3'
 services:
   nginx:
     ports:
-      - "80:80"
-      - "443:443"
+      - "80"
+      - "443"
     volumes:
-      - ./server-nginx/letsencrypt:/usr/src/app/server-nginx/letsencrypt
+      - ./images:/usr/src/app/images
+      - ./client:/usr/src/app/client
     build:
       args:
         COPY_FILE: ./config/nginx.prod.conf
@@ -34,6 +35,8 @@ services:
           npm i
           npm run build
           npm run prod
+    volumes:
+      - ./images:/usr/src/app/images
   cache:
     build:
       args:

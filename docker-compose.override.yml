@@ -7,6 +7,9 @@ services:
     build:
       args:
         COPY_FILE: ./config/nginx.conf
+    volumes:
+      - ./images:/usr/src/app/images
+      - ./client:/usr/src/app/client
   cache:
     build:
       args:
@@ -40,6 +43,8 @@ services:
           npm run install-shared
           npm i
           npm run start
+    volumes:
+      - ./images:/usr/src/app/images
   user:
     build:
       args:

@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import * as multer from 'multer';
 import * as sharp from 'sharp';
+import * as request from 'requestretry';
 import * as fs from 'fs';
 import { join, extname } from 'path';
 import { userController } from '../controllers/user.controller';
@@ -50,18 +51,21 @@ router.post('/profile', upload.single('image'), async (req: any, res, next) => {
 	}
 });
 
-export async function downloadProfileImgFromUrl(reqUser: IReqUser, url: string): Promise<string> {
+export function downloadProfileImgFromUrl(reqUser: IReqUser, url: string): Promise<string> {
 	const fileName = reqUser.id + '_' + Date.now() + '.png';
 	const fullPath = join(config.image.profilePath, fileName);
-
-	// resize and save
-	await sharp(url).resize(1000).max().toFile(fullPath);
-
-	return fileName;
-	// request(imageLink).pipe(fs.createWriteStream("resultIMG.png"))
-	// 	.on('close', function () {
-	// 		console.log("saving process is done!");
-	// 	});
+	const resizeTransform = sharp().resize(1000).max();
+	console.log("URL URL", url, reqUser);
+	return new Promise((resolve, reject) => {
+		request(url).pipe(resizeTransform).pipe(fs.createWriteStream(fullPath))
+			.on('close', () => {
+				console.log('DONE DONE!!');
+				resolve(fileName);
+			})
+			.on('error', (error) => {
+				reject(error);
+			});
+	});
 }
 
 // export = router;

@@ -1,10 +1,28 @@
-import * as request from 'request-promise';
+import * as request from 'requestretry';
 import {userController} from "./user.controller";
 import { IReqUser } from 'coinpush/interface/IReqUser.interface';
+import { IUser } from 'coinpush/interface/IUser.interface';
 
 const config = require('../../../tradejs.config');
 
 export const commentController = {
+
+	async addUser(reqUser: IReqUser, params: IUser, updateWhenPresent = undefined): Promise<IUser> {
+       
+        const user = await request({
+			uri: config.server.comment.apiUrl + '/user',
+			headers: { '_id': params._id },
+			method: 'POST',
+			body: {
+				_id: params._id,
+				name: params.name,
+				img: params.img,
+			},
+			json: true
+		});
+
+        return user;
+    },
 
 	async findById(reqUser: IReqUser, id: string, params: any = {}): Promise<any> {
 		const result = await request({
