@@ -1,5 +1,6 @@
 FROM nginx
 
-# Copy custom configuration file from the current directory
-COPY ./nginx.conf /etc/nginx/nginx.conf
-COPY mime.types /etc/nginx/mime.types
+ARG COPY_FILE
+
+COPY ${COPY_FILE} /etc/nginx/nginx.conf
+COPY ./config/mime.types /etc/nginx/mime.types

@@ -7,6 +7,9 @@ services:
       - "443:443"
     volumes:
       - ./server-nginx/letsencrypt:/usr/src/app/server-nginx/letsencrypt
+    build:
+      args:
+        COPY_FILE: ./config/nginx.prod.conf
   client:
     build:
       args:

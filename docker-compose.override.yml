@@ -4,6 +4,9 @@ services:
   nginx:
     ports:
       - "4000:80"
+    build:
+      args:
+        COPY_FILE: ./config/nginx.conf
   cache:
     build:
       args:
