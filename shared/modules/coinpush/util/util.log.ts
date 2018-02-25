@@ -4,7 +4,7 @@ import * as fs		from 'fs';
 import * as mkdirp	from 'mkdirp';
 
 const
-	PATH_SERVER_LOG = path.join('_logs', '/server.txt'),
+	PATH_SERVER_LOG = path.join(__dirname, '..', '..', '..', '_log', 'server.txt'),
 	OWNER_MIN_LENGTH = 20;
 
 if (!fs.existsSync(PATH_SERVER_LOG)) {
@@ -22,18 +22,17 @@ const logger = new win.Logger({
 	transports: [
 		new win.transports.File({
 			level: 'info',
-			filename: 'log.txt',
+			filename: PATH_SERVER_LOG,
 			json: false,
-			maxsize: 5242880, // 5MB
-			maxFiles: 1,
-			colorize: false
+			maxsize: 10242880, // 10MB
+			maxFiles: 1
 		}).on('error', function(err) {
 			console.error(err.stack);
 		}),
 		new win.transports.Console({
 			level: 'debug',
 			json: false,
-			colorize: true
+			colorize: 'all'
 		})
 	],
 	exitOnError: false

@@ -6,8 +6,6 @@ services:
     build: ./server-nginx
     image: nginx
     container_name: nginx
-    ports:
-      - "80:80"
     volumes:
       - ./images:/usr/src/app/images
       - ./client:/usr/src/app/client

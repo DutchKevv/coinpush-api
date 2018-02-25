@@ -3,3 +3,4 @@ node_modules
 *.js
 *.map
 server.txt
+log.txt
