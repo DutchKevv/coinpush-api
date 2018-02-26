@@ -27,8 +27,8 @@ services:
       - 3001
     volumes:
       - ./server-cache:/usr/src/app/server-cache
-      - /usr/src/app/server-cache/node_modules
-      - /usr/src/app/shared/modules/coinpush/node_modules
+      # - /usr/src/app/server-cache/node_modules
+      # - /usr/src/app/shared/modules/coinpush/node_modules
       # - ./shared/modules/coinpush:/usr/src/app/shared/modules/coinpush
     links:
       - nginx
