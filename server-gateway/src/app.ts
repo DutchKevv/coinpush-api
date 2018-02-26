@@ -1,30 +1,18 @@
 import * as path from 'path';
 import { parse } from 'url';
-import * as semver from 'semver';
-import * as _http from 'http';
-import { json, urlencoded } from 'body-parser';
+import { json } from 'body-parser';
 import * as express from 'express';
 import * as helmet from 'helmet';
 import * as morgan from 'morgan';
 import * as io from 'socket.io';
-import * as jwt from 'jsonwebtoken';
-import * as passport from 'passport';
-import * as passportJWT from 'passport-jwt';
-import { Strategy as FacebookStrategy } from 'passport-facebook';
 import { symbolController } from './controllers/symbol.controller';
 import { BrokerMiddleware } from 'coinpush/broker';
 import { log } from 'coinpush/util/util.log';
 import { subClient } from 'coinpush/redis';
-import { userController } from './controllers/user.controller';
 
 const expressJwt = require('express-jwt');
 
-const ExtractJwt = passportJWT.ExtractJwt;
-const JwtStrategy = passportJWT.Strategy;
-
-const PATH_WWW_ROOT = path.join(__dirname, '../../client/www');
 const PATH_WWW_BROWSER_NOT_SUPPORTED_FILE = path.join(__dirname, '../public/index.legacy.browser.html');
-const PATH_IMAGES = path.join('/usr/src/app');
 
 // error catching
 process.on('unhandledRejection', (reason, p) => {
@@ -130,8 +118,8 @@ export const app = {
 			};
 		};
 		
-		this.api.use(bodyParserJsonMiddleware());
-		this.api.use(morgan('dev'));
+		// this.api.use(bodyParserJsonMiddleware());
+		this.api.use(morgan(process.env.NODE_ENV || 'dev'));
 		this.api.use(helmet());
 
 		this.api.use((req, res, next) => {
@@ -139,21 +127,6 @@ export const app = {
 			res.header('Access-Control-Allow-Headers', 'App verion', 'Authorization, Origin, X-Requested-With, Content-Type, Accept');
 			next();
 		});
-
-		// this.api.use(passport.initialize());
-		// TEMP TEMP TEMP, NOT REQUIRED WHEN USING ANDROID PLAYSTORE
-		// this.api.use((req, res, next) => { O
-		// 	const appVersion = req.headers['app-version'];
-		// 	console.log(appVersion);
-
-		// 	if (!appVersion || !config.app.version)
-		// 		return next();
-
-		// 	if (semver.lt(appVersion, config.app.version))
-		// 		return res.status(424)
-
-		// 	next();
-		// });
 
 		// use JWT auth to secure the api, the token can be passed in the authorization header or query string
 		const getToken = function (req) {
@@ -233,11 +206,6 @@ export const app = {
 		 * user
 		 */
 		this.api.use('/api/v1/user', require('./api/user.api'));
-
-		/**
-		 * order
-		 */
-		this.api.use('/api/v1/order', require('./api/order.api'));
 
 		/**
 		 * comment

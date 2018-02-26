@@ -1,4 +1,3 @@
-import * as path from 'path';
 import { log } from 'coinpush/util/util.log';
 import { dataLayer } from './cache.datalayer';
 import { symbolController } from './symbol.controller';
@@ -7,7 +6,6 @@ import { Status } from '../schemas/status.schema';
 import { BROKER_GENERAL_TYPE_CC, BROKER_GENERAL_TYPE_OANDA } from 'coinpush/constant';
 import { timeFrameSteps } from 'coinpush/util/util.date';
 import * as ProgressBar from 'progress';
-import * as moment from 'moment-timezone';
 import { pubClient } from 'coinpush/redis';
 
 const config = require('../../../tradejs.config');

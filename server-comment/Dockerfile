@@ -1,15 +1,12 @@
-FROM node:8-alpine
-
-ENV APP_LOCATION=/usr/src/app
-ENV COMMENT_LOCATION=$APP_LOCATION/server-comment
-ENV SHARED_LOCATION=$APP_LOCATION/shared
-
-RUN npm config set registry http://registry.npmjs.org/
+FROM mhart/alpine-node:8.9.4
 
 # config
-COPY /tradejs.config.js /tradejs.config.custom.js $APP_LOCATION/
+COPY /tradejs.config.js /tradejs.config.custom.js /usr/src/app/
+
+WORKDIR /usr/src/app/shared
+COPY /shared .
 
 # server
-WORKDIR $COMMENT_LOCATION/
+WORKDIR /usr/src/app/server-comment
 COPY /server-comment/package.json .
 COPY /server-comment .

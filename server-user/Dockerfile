@@ -1,13 +1,13 @@
-FROM node:8-alpine
+FROM mhart/alpine-node:8.9.4
 
 ENV APP_LOCATION=/usr/src/app
 ENV USER_LOCATION=$APP_LOCATION/server-user
-ENV SHARED_LOCATION=$APP_LOCATION/shared
-
-RUN npm config set registry http://registry.npmjs.org/
 
 # config
 COPY /tradejs.config.js /tradejs.config.custom.js $APP_LOCATION/
+
+WORKDIR /usr/src/app/shared
+COPY /shared .
 
 # server
 WORKDIR $USER_LOCATION/

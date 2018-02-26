@@ -1,4 +1,3 @@
-import * as httpProxy from 'http-proxy';
 import {Router} from 'express';
 import { eventController } from '../controllers/event.controller';
 

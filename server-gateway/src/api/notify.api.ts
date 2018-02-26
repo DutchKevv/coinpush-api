@@ -1,5 +1,4 @@
 import {Router} from 'express';
-import * as httpProxy from 'http-proxy';
 import { notifyController } from '../controllers/notify.controller';
 
 const router = Router();

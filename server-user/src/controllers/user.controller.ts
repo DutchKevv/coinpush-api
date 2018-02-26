@@ -1,5 +1,6 @@
 import * as bcrypt from 'bcryptjs';
 import { Types } from 'mongoose';
+import * as jwt from 'jsonwebtoken';
 import { pubClient } from 'coinpush/redis';
 import { User, UserSchema } from '../schemas/user.schema';
 import {
@@ -9,6 +10,8 @@ import {
 } from 'coinpush/constant';
 import { IReqUser } from "coinpush/interface/IReqUser.interface";
 import { IUser } from "coinpush/interface/IUser.interface";
+
+const config = require('../../../tradejs.config');
 
 const RESET_PASSWORD_TOKEN_EXPIRE = 1000 * 60 * 60 * 24; // 24 hour
 
@@ -75,6 +78,10 @@ export const userController = {
 			delete user['followers'];
 		});
 
+		// TODO - does not belong here
+		if (params.facebookId && users.length)
+			users[0].token = jwt.sign({id: users[0]._id}, config.auth.jwt.secret);
+
 		return users;
 	},
 
@@ -130,8 +137,8 @@ export const userController = {
 			};
 		}
 
-		const user = await User.create(userData);
-
+		const user = <IUser>await User.create(userData);
+		user.token = jwt.sign({id: user._id}, config.auth.jwt.secret)
 		return user;
 	},
 

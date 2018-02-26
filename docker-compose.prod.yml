@@ -21,7 +21,7 @@ services:
       - /bin/sh
       - -c
       - |
-          npm run install-shared
+          # npm run install-shared
           npm i
           npm run build
           npm run prod
@@ -33,7 +33,7 @@ services:
       - /bin/sh
       - -c
       - |
-          npm run install-shared
+          # npm run install-shared
           npm i
           npm run build
           npm run prod
@@ -47,6 +47,7 @@ services:
       - /bin/sh
       - -c
       - |
+          # npm run install-shared
           npm i
           npm run build
           npm run prod
@@ -58,7 +59,7 @@ services:
       - /bin/sh
       - -c
       - |
-          npm run install-shared
+          # npm run install-shared
           npm i
           npm run build
           npm run prod
@@ -70,7 +71,7 @@ services:
       - /bin/sh
       - -c
       - |
-          npm run install-shared
+          # npm run install-shared
           npm i
           npm run build
           npm run prod
@@ -82,7 +83,7 @@ services:
       - /bin/sh
       - -c
       - |
-          npm run install-shared
+          # npm run install-shared
           npm i
           npm run build
           npm run prod
@@ -94,7 +95,7 @@ services:
       - /bin/sh
       - -c
       - |
-          npm run install-shared
+          # npm run install-shared
           npm i
           npm run build
           npm run prod

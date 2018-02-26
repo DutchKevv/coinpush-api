@@ -4,10 +4,6 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "rootDir": "./",
-    "target": "esnext",
-    "types": [
-      "node"
-    ],
-    "pretty": true
+    "target": "esnext"
   }
 }

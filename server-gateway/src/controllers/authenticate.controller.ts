@@ -1,4 +1,3 @@
-import * as jwt from 'jsonwebtoken';
 import * as request from 'request-promise';
 import { FB, FacebookApiException } from 'fb';
 import { userController } from "./user.controller";
@@ -94,7 +93,7 @@ export const authenticateController = {
 			}
 
 			return {
-				token: jwt.sign({id: user._id}, config.auth.jwt.secret)
+				token: user.token
 			};
 		}
 

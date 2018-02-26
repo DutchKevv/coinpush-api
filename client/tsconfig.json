@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": "./src",
     "allowJs": false,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": false,
@@ -19,9 +19,9 @@
     }
   },
   "include": [
-    "../../shared/modules/coinpush/constant/index.ts",
-    "../../shared/modules/coinpush/util/countries.ts",
-    "../**/*.ts"
+    "../shared/modules/coinpush/constant/index.ts",
+    "../shared/modules/coinpush/util/countries.ts",
+    "./**/*.ts"
   ],
   "angularCompilerOptions": {
     "genDir": "./aot",

@@ -8,7 +8,7 @@
     "url": "https://github.com/DutchKevv/TradeJS.git"
   },
   "scripts": {
-    "install-shared": "cd ../shared/modules/coinpush && npm i && npm run build",
+    "install-shared": "cd ../shared/modules/coinpush && npm i",
     "start": "tsc-watch --sourceMap --onSuccess \"node index.js\"",
     "build": "tsc",
     "prod": "node index.js"

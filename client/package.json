@@ -2,12 +2,16 @@
   "name": "coinpush",
   "displayName": "App",
   "version": "1.0.0",
-  "description": "A sample Apache Cordova application that responds to the deviceready event.",
+  "description": "CoinPush client",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DutchKevv/TradeJS.git"
+  },
   "main": "index.js",
   "scripts": {
-    "install-shared": "cd ../shared/modules/coinpush && npm i && npm run build",
-    "start": "ng build --watch --aot --no-sourcemaps --output-hashing none",
-    "build": "ng build --prod --aot --env=prod --output-hashing none",
+    "install-shared": "cd ../shared/modules/coinpush && npm i",
+    "start": "ng build --watch --aot --output-hashing none",
+    "build": "ng build --prod --aot --env=production --output-hashing none",
     "build-stats": "ng build --prod --aot --env=prod --stats-json --output-hashing none",
     "build-verbose": "ng build --prod --env=prod --stats-json --output-hashing none --verbose > build.txt",
     "build-mobile": "npm run clean && cordova build --no-inc",

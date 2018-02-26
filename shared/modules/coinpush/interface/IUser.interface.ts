@@ -14,4 +14,5 @@ export interface IUser {
 	device?: any;
 	oauthFacebook?: any;
 	confirmed?: boolean;
+	token?: string;
 }
