@@ -11,9 +11,8 @@ services:
       - ./images:/usr/src/app/images
       - ./client:/usr/src/app/client
   cache:
-    build:
-      args:
-        NODE_ENV: development
+    environment:
+      - NODE_ENV=development
     command:
       - /bin/sh
       - -c
@@ -22,9 +21,8 @@ services:
           npm i
           npm start
   client:
-    build:
-      args:
-        NODE_ENV: development
+    environment:
+      - NODE_ENV=development
     command:
       - /bin/sh
       - -c
@@ -33,9 +31,8 @@ services:
           npm i
           npm start
   gateway:
-    build:
-      args:
-        NODE_ENV: development
+    environment:
+      - NODE_ENV=development
     command:
       - /bin/sh
       - -c
@@ -46,9 +43,8 @@ services:
     volumes:
       - ./images:/usr/src/app/images
   user:
-    build:
-      args:
-        NODE_ENV: development
+    environment:
+      - NODE_ENV=development
     command:
       - /bin/sh
       - -c
@@ -57,9 +53,8 @@ services:
           npm i
           npm run start
   comment:
-    build:
-      args:
-        NODE_ENV: development
+    environment:
+      - NODE_ENV=development
     command:
       - /bin/sh
       - -c
@@ -68,9 +63,8 @@ services:
           npm i
           npm run start
   event:
-    build:
-      args:
-        NODE_ENV: development
+    environment:
+      - NODE_ENV=development
     command:
       - /bin/sh
       - -c
@@ -79,9 +73,8 @@ services:
           npm i
           npm run start
   notify:
-    build:
-      args:
-        NODE_ENV: development
+    environment:
+      - NODE_ENV=development
     command:
       - /bin/sh
       - -c

@@ -12,9 +12,8 @@ services:
       args:
         COPY_FILE: ./config/nginx.prod.conf
   client:
-    build:
-      args:
-        NODE_ENV: production
+    environment:
+      - NODE_ENV=production
     command:
       - /bin/sh
       - -c
@@ -24,9 +23,8 @@ services:
           npm run build
           npm run prod
   gateway:
-    build:
-      args:
-        NODE_ENV: production
+    environment:
+      - NODE_ENV=production
     command:
       - /bin/sh
       - -c
@@ -38,9 +36,8 @@ services:
     volumes:
       - ./images:/usr/src/app/images
   cache:
-    build:
-      args:
-        NODE_ENV: production
+    environment:
+      - NODE_ENV=production
     command:
       - /bin/sh
       - -c
@@ -50,9 +47,8 @@ services:
           npm run build
           npm run prod
   event:
-    build:
-      args:
-        NODE_ENV: production
+    environment:
+      - NODE_ENV=production
     command:
       - /bin/sh
       - -c
@@ -62,9 +58,8 @@ services:
           npm run build
           npm run prod
   notify:
-    build:
-      args:
-        NODE_ENV: production
+    environment:
+      - NODE_ENV=production
     command:
       - /bin/sh
       - -c
@@ -74,9 +69,8 @@ services:
           npm run build
           npm run prod
   user:
-    build:
-      args:
-        NODE_ENV: production
+    environment:
+      - NODE_ENV=production
     command:
       - /bin/sh
       - -c
@@ -86,9 +80,8 @@ services:
           npm run build
           npm run prod
   comment:
-    build:
-      args:
-        NODE_ENV: production
+    environment:
+      - NODE_ENV=production
     command:
       - /bin/sh
       - -c
