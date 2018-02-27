@@ -19,7 +19,7 @@ export class UserService {
 		private _alertService: AlertService) {}
 
 	findById(id: string, options: any = {}): Promise<UserModel> {
-		return this._http.get('/user/' + id, { params: options }).map((res: Response) => new UserModel(res.json())).toPromise();
+		return this._http.get('/user/' + id, { params: options }).map((res: Response) => new UserModel(res)).toPromise();
 	}
 
 	getOverview(options: any = {}) {
@@ -27,7 +27,7 @@ export class UserService {
 	}
 
 	create(user) {
-		return this._http.post('/user', user).map((res: Response) => res.json()).toPromise();
+		return this._http.post('/user', user).toPromise();
 	}
 
 	async update(changes, toServer = true, showAlert: boolean = true) {

@@ -118,7 +118,7 @@ export const app = {
 			};
 		};
 		
-		// this.api.use(bodyParserJsonMiddleware());
+		this.api.use(bodyParserJsonMiddleware());
 		this.api.use(morgan(process.env.NODE_ENV || 'dev'));
 		this.api.use(helmet());
 

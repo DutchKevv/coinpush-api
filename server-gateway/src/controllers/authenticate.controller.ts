@@ -67,16 +67,15 @@ export const authenticateController = {
 		};
 	},
 
-	async authenticateFacebook(reqUser: IReqUser, params: { token: string }) {
-		// FB.options({accessToken: params.token});
+	async authenticateFacebook(reqUser: IReqUser, params: { token: string } = { token: undefined }) {
 		const facebookProfile = await FB.api('me', { fields: ['id', 'name', 'email', 'gender', 'about', 'locale'], access_token: params.token });
 
 		if (facebookProfile && facebookProfile.id) {
 			console.log('facebook user: ', facebookProfile);
-			
+
 			// search in DB for user with facebookId
 			let user = (await userController.findByFacebookId(reqUser, facebookProfile.id))[0];
-			
+
 			// create new user if not founds
 			if (!user) {
 				user = await userController.create({}, {
@@ -85,13 +84,13 @@ export const authenticateController = {
 					// description: facebookProfile.about,
 					gender: genderStringToConstant(facebookProfile.gender),
 					country: facebookProfile.locale.split('_')[1],
-					imgUrl: 'https://graph.facebook.com/'+ facebookProfile.id + '/picture?width=1000',
+					imgUrl: 'https://graph.facebook.com/' + facebookProfile.id + '/picture?width=1000',
 					oauthFacebook: {
 						id: facebookProfile.id
 					}
 				});
 			}
-
+			console.log('koffie!!', user);
 			return {
 				token: user.token
 			};

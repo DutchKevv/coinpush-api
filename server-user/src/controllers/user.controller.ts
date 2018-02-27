@@ -137,7 +137,7 @@ export const userController = {
 			};
 		}
 
-		const user = <IUser>await User.create(userData);
+		const user = <IUser>(await User.create(userData)).toObject();
 		user.token = jwt.sign({id: user._id}, config.auth.jwt.secret)
 		return user;
 	},
