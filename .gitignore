@@ -8,5 +8,6 @@ node_modules
 /_logs
 
 npm-debug.log
+package-lock.json
 *.map
 log.txt
