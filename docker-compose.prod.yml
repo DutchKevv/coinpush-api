@@ -3,11 +3,12 @@ version: '3.3'
 services:
   nginx:
     ports:
-      - "80"
-      - "443"
+      - "80:80"
+      - "443:443"
     volumes:
       - ./images:/usr/src/app/images
       - ./client:/usr/src/app/client
+      - ./server-nginx/letsencrypt:/usr/src/app/server-nginx/letsencrypt
     build:
       args:
         COPY_FILE: ./config/nginx.prod.conf
@@ -21,7 +22,6 @@ services:
           npm run install-shared
           npm i
           npm run build
-          npm run prod
   gateway:
     environment:
       - NODE_ENV=production

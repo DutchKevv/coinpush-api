@@ -3,7 +3,7 @@ import * as io from 'socket.io-client';
 import { SymbolModel } from "../models/symbol.model";
 import { UserService } from './user.service';
 import { app } from '../../core/app';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 @Injectable()
 export class CacheService {
@@ -51,15 +51,16 @@ export class CacheService {
 		});
 	}
 
-	public async read(params) {
-		const headers = new Headers;
-		headers.append('Content-Type', 'application/octet-stream');
+	public async read(params: any) {
+		params = new HttpParams({
+			fromObject: params
+		});
 
-		return (<any>this._http).get('/cache', {
-			headers,
+		return this._http.get('/cache', {
+			responseType: "arraybuffer",
 			params
 		})
-			.map(res => new Float64Array(res._body))
+			.map(res => new Float64Array(res))
 			.toPromise();
 	}
 

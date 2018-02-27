@@ -5,7 +5,9 @@ services:
     restart: unless-stopped
     build: ./server-nginx
     image: nginx
-    container_name: nginx     
+    container_name: nginx 
+    links:
+      - gateway    
   mongodb:
     image: mongo:latest
     container_name: "mongodb"
@@ -53,7 +55,6 @@ services:
       - ./server-gateway:/usr/src/app/server-gateway
       # - /usr/src/app/shared/modules/coinpush
     links:
-      - nginx
       - redis
   client:
     image: client

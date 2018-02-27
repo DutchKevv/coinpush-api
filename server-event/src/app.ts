@@ -86,7 +86,7 @@ export const app = {
 				reject();
 			});
 			this.db.once('open', () => {
-				console.log('Cache DB connected');
+				console.log('Event DB connected');
 				resolve();
 			});
 
