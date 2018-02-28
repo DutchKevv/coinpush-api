@@ -65,7 +65,7 @@ export class UserService {
 			const result = await this._http.post('/favorite', {
 				symbol: symbol.options.name,
 				state: !symbol.options.iFavorite 
-			}).toPromise();
+			}, {responseType: "text"}).toPromise();
 
 			symbol.options.iFavorite = !symbol.options.iFavorite;
 			
