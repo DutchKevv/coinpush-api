@@ -19,7 +19,7 @@
                             />
                         </div>
                     </div>
-                    
+
                     <div class="form-group" [ngClass]="{ 'has-error': loginForm.submitted && !email.valid }">
                         <label class="form-control-label" for="email">Email</label>
                         <span *ngIf="loginForm.submitted && !email.valid" class="help-block">required</span>
@@ -32,22 +32,21 @@
                             <span *ngIf="loginForm.submitted && !password.valid" class="help-block">required</span>
                         </label>
                         <input [(ngModel)]="loginModel.password" type="password" name="password" [(ngModel)]="loginModel.password" #password="ngModel"
-                            class="form-control" id="password" placeholder="Enter password" required>
+                            class="form-control" id="password" placeholder="Enter password" autocomplete="off" required>
                     </div>
 
                     <div class="form-group">
+                        
+                    </div>
+
+                    <!-- footer buttons -->
+                    <div class="form-group login-footer-buttons">
+                        <a (click)="formType = 'register'" class="btn btn-link" style="float:left" >Register</a>
+                        <a (click)="authenticationService.showForgotPasswordPopup()" class="btn btn-link" style="float:left" >Forgot password</a>
                         <button [disabled]="loading$ | async" class="btn btn-success pull-right">Login
                             <img *ngIf="loading$ | async" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
                             />
                         </button>
-                    </div>
-
-                    <!-- footer buttons -->
-
-                    <div class="form-group login-footer-buttons">
-                        <a (click)="formType = 'register'" class="btn btn-link">Register</a>
-                        <!-- <a (click)="authenticationService.showRegisterPopup()" class="btn btn-link">Register</a> -->
-                        <a (click)="authenticationService.showForgotPasswordPopup()" class="btn btn-link">Forgot password</a>
                     </div>
                 </form>
 
@@ -58,21 +57,22 @@
                         <label>Name
                             <span *ngIf="registerForm.submitted && !name.valid" class="help-block">Name is required</span>
                         </label>
-                        <input id="name" class="form-control" name="name" required [(ngModel)]="registerModel.name" #name="ngModel" minlength="2"
-                        />
+                        <input id="name" class="form-control" name="name" [(ngModel)]="registerModel.name" #name="ngModel" minlength="2" maxlength="30" autocomplete="off"
+                            required />
                         <small class="form-text form-text-muted">
-                            Minimum 2 characters
+                            min 2, max 30
                         </small>
                     </div>
                     <div class="form-group" [ngClass]="{ 'has-error': registerForm.submitted && !email.valid }">
                         <label for="email">Email
                             <span *ngIf="registerForm.submitted && !email.valid" class="help-block">Email is required</span>
                         </label>
-                        <input id="email" class="form-control" name="email" [(ngModel)]="registerModel.email" #email="ngModel" required/>
+                        <input id="email" class="form-control" name="email" [(ngModel)]="registerModel.email" #email="ngModel" autocomplete="off"
+                            required/>
                     </div>
                     <div class="form-group" [ngClass]="{ 'has-error': registerForm.submitted && !password.valid }">
                         <label for="country">Country</label>
-                        <select class="form-control" id="country" [(ngModel)]="registerModel.country" name="country" required>
+                        <select class="form-control" id="country" [(ngModel)]="registerModel.country" name="country" autocomplete="off" required>
                             <option *ngFor="let country of countries" [attr.value]="country.code" [innerHTML]="country.name"></option>
                         </select>
                         <div *ngIf="registerFormsubmitted && !country.valid" class="help-block">Country is required</div>
@@ -83,21 +83,20 @@
                             <span *ngIf="registerForm.submitted && !password.valid" class="help-block">Password is required</span>
                         </label>
                         <input id="password" type="password" class="form-control" name="password" [(ngModel)]="registerModel.password" #password="ngModel"
-                            required minlength="4" />
+                            autocomplete="off" required minlength="4" />
                     </div>
                     <div class="form-group" [ngClass]="{ 'has-error': registerForm.submitted && !passwordConf.valid }">
                         <label for="passwordConf">Password confirmation
                             <span *ngIf="registerForm.submitted && !passwordConf.valid" class="help-block">Password confirmation is required</span>
                         </label>
                         <input id="passwordConf" type="password" class="form-control" name="passwordConf" [(ngModel)]="registerModel.passwordConf"
-                            #passwordConf="ngModel" required minlength="4" />
+                            #passwordConf="ngModel" autocomplete="off" required minlength="4" />
                         <small class="form-text form-text-muted">
-                            Your password must be 4-20 characters long, contain letters and numbers, and must not contain spaces, special characters,
-                            or emoji.
+                            Your password must be 4-20 characters long, contain letters and numbers, and may not contain spaces
                         </small>
                     </div>
                     <div class="form-group">
-                        <a (click)="formType = 'login'" class="btn btn-link">Cancel</a>
+                        <a (click)="formType = 'login'" class="btn btn-link" style="float: left">Cancel</a>
                         <button [disabled]="loading$ | async" class="btn btn-success">Register
                             <img *ngIf="loading$ | async" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
                             />

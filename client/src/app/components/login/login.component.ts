@@ -83,16 +83,16 @@ export class LoginComponent implements OnInit {
 			// switch to login tab
 			this.formType = 'login';
 			this._changeDetectorRef.detectChanges();
-		} catch (error) {
+		} catch (errorObj) {
 			this.loading$.emit(false);
-			console.error(error);
-			if (error.code) {
+
+			const error = errorObj.error;
+
+			if (error && error.code) {
 				switch (error.code) {
 					case G_ERROR_DUPLICATE:
 						if (error.field === 'email')
 							this._alertService.error(`Email already used`);
-						if (error.field === 'name')
-							this._alertService.error(`Username already used`);
 						break;
 					default:
 						this._alertService.error(`Unknown error occured`);

@@ -15,7 +15,9 @@ export const UserSchema = new Schema(
 		name: {
 			type: String,
 			required: true,
-			trim: true
+			trim: true,
+			min: [2, 'name: min length 2'],
+        	max: [30, 'name: max length 30']
 		},
 		email: {
 			type: String,
@@ -179,7 +181,7 @@ UserSchema.statics.normalize = function (user, doc) {
 UserSchema.statics.setIFollow = function (reqUser: IReqUser, doc) {
 	if (!doc)
 		return;
-	console.log('followers', doc.followers[0], reqUser);
+
 	if (doc.followers && doc.followers.length)
 		doc.iFollow = doc.followers.map(f => f.toString()).indexOf(reqUser.id) > -1;
 

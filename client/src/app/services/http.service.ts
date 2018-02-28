@@ -26,13 +26,7 @@ export class CustomHttp implements HttpInterceptor {
 	) {}
 
 	intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-		return next.handle(this._normalizeRequest(req))
-			.catch((event) => {
-				console.log('event', event);
-				if (event instanceof HttpErrorResponse) {
-					return this.catch401(event);
-				}
-			});
+		return next.handle(this._normalizeRequest(req)).catch((event) => this.catch401(event));
 	}
 
 	private _normalizeRequest(req: HttpRequest<any>): HttpRequest<any> {
