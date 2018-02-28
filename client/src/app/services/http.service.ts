@@ -3,6 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw';
+import 'rxjs/add/observable/empty';
 import { Router } from '@angular/router';
 import { AuthenticationService } from './authenticate.service';
 import { app } from '../../core/app';
@@ -18,14 +19,8 @@ export interface IRequestOptions {
 	body?: any;
 }
 
-// export function applicationHttpClientCreator(auth: AuthenticationService, http: HttpClient) {
-// 	return new CustomHttp(http, auth);
-// }
-
 @Injectable()
 export class CustomHttp implements HttpInterceptor {
-	// private _authenticationService: AuthenticationService;
-
 	constructor(
 		public http: HttpClient,
 		private _authenticationService: AuthenticationService
@@ -40,22 +35,6 @@ export class CustomHttp implements HttpInterceptor {
 				}
 			});
 	}
-
-	// get(url: string, options?: IRequestOptions): Observable<Response> {
-	// 	return this.get(this._normalizeUrl(url), this._addHeaders(options)).catch(error => this.handleError(error));
-	// }
-
-	// post(url: string, body: any, options?: IRequestOptions): Observable<Response> {
-	// 	return this.post(this._normalizeUrl(url), body, this._addHeaders(options)).catch((error, body) => this.handleError(error, body));
-	// }
-
-	// put(url: string, body: any, options?: IRequestOptions): Observable<Response> {
-	// 	return this.put(this._normalizeUrl(url), body, this._addHeaders(options)).catch(error => this.handleError(error));
-	// }
-
-	// delete(url: string, options?: IRequestOptions): Observable<Response> {
-	// 	return this.delete(this._normalizeUrl(url), this._addHeaders(options)).catch(error => this.handleError(error));
-	// }
 
 	private _normalizeRequest(req: HttpRequest<any>): HttpRequest<any> {
 		if (!req.url.startsWith('http://') && !req.url.startsWith('https://'))
@@ -74,31 +53,15 @@ export class CustomHttp implements HttpInterceptor {
 		return req;
 	}
 
-	// private _addHeaderAppVersion(req: HttpRequest<any>): IRequestOptions {
-	// 	if (window['app'].version)
-	// 		options.headers.append('app-version', window['app'].version);
-
-	// 	return options;
-	// }
-
 	// Response Interceptor
 	private catch401(error: HttpErrorResponse): Observable<any> {
 		// Check if we had 401 response
-		if (error.status === 401) {
-			// redirect to Login page for example
-			return Observable.empty();
-		}
-		return Observable.throw(error);
-	}
-
-	private handleError(error: any, body?) {
-		console.log(body, error, error.body);
 		switch (error.status) {
 			case 401:
 				this._authenticationService.showLoginRegisterPopup();
 				break;
 			case 409:
-				return Observable.throw(JSON.parse(error._body));
+				return Observable.throw(error);
 			case 424:
 				if (confirm('New version available. Download now?')) {
 
@@ -106,9 +69,10 @@ export class CustomHttp implements HttpInterceptor {
 
 				}
 				break;
-
+			default:
+				return Observable.throw(error);
 		}
 
-		return Observable.throw(error);
+		return Observable.empty();
 	}
 }
