@@ -69,8 +69,6 @@ export const userController = {
 		if (params.facebookId)
 			where['oauthFacebook.id'] = { "$eq": params.facebookId }
 
-		console.log('where', where, params);
-
 		fields.followers = 1;
 		const users = <Array<IUser>>await User.find(where, fields).sort({ _id: sort }).limit(limit).lean();
 		users.forEach((user) => {
@@ -106,7 +104,6 @@ export const userController = {
 	},
 
 	async create(reqUser: IReqUser, params: IUser) {
-
 		// hash password
 		// TODO - unique hash per user
 		if (params.password) {
@@ -130,6 +127,7 @@ export const userController = {
 			country: params.country
 		};
 
+		// facebook user
 		if (params.oauthFacebook && params.oauthFacebook.id) {
 			userData.confirmed = true;
 			userData.oauthFacebook = {
@@ -229,13 +227,10 @@ export const userController = {
 	},
 
 	async remove(reqUser, id): Promise<any> {
-		console.log('DELETE!!');
 		if (reqUser.id !== id)
 			throw ({ code: '???', message: 'Remove user - req.user.id and userId to not match' });
 
 		const user = await User.findByIdAndRemove(id).lean();
-
-		console.log('REMOVE USER', user);
 
 		return user;
 	}

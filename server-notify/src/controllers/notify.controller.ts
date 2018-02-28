@@ -8,8 +8,17 @@ import { IReqUser } from 'coinpush/interface/IReqUser.interface';
 import { pubClient } from 'coinpush/redis';
 
 const config = require('../../../tradejs.config');
-
 const sender = new gcm.Sender(config.firebase.key);
+
+export interface INotification {
+    toUserId: string;
+    type: string;
+    data?: any;
+    fromUserId?: string;
+    createDate?: Date;
+    readDate?: Date;
+    isRead?: boolean;
+}
 
 export const notifyController = {
 
@@ -24,6 +33,11 @@ export const notifyController = {
         return Notification.find({ toUserId: reqUser.id }).sort({ _id: sort }).limit(limit).lean();
     },
 
+    async create(notification): Promise<any> {
+        const doc = await Notification.create(notification);
+        return doc;
+    },
+
     /**
      * TODO: check if user has GCM enabled, otherwhise send through websocket
      * @param userId 
@@ -36,6 +50,7 @@ export const notifyController = {
         data.__userId = userId;
 
         user = user || await User.findById(userId);
+
         if (!user)
             throw ({ code: 404 });
 
@@ -52,6 +67,8 @@ export const notifyController = {
 
         const message = new gcm.Message(messageObj);
 
+        // notify clients through websockets
+        // TODO - keep a list of websocket / GCM so it is not send without need
         pubClient.publish('socket-notification', JSON.stringify(messageObj.data));
 
         // actually send the message
@@ -82,7 +99,7 @@ export const notifyController = {
         return sendResult;
     },
 
-    async sendTypePostComment(notification, user) {
+    async sendTypePostComment(notification: INotification, user) {
         const fromUser: any = await User.findById(notification.fromUserId, { name: 1 });
 
         const title = `${fromUser.name} responded on your post`;
@@ -96,7 +113,7 @@ export const notifyController = {
         return this.sendToUser(notification.toUserId, title, body, data, user);
     },
 
-    async sendTypePostLike(notification, user) {
+    async sendTypePostLike(notification: INotification, user) {
         const fromUser: any = await User.findById(notification.fromUserId, { name: 1 });
 
         if (!fromUser)
@@ -111,7 +128,7 @@ export const notifyController = {
         return this.sendToUser(notification.toUserId, title, '', data, user);
     },
 
-    async sendTypeCommentLike(notification, user) {
+    async sendTypeCommentLike(notification: INotification, user) {
         const fromUser: any = await User.findById(notification.fromUserId, { name: 1 });
 
         const title = `${fromUser.name} liked your comment`;
@@ -124,7 +141,7 @@ export const notifyController = {
         return this.sendToUser(notification.toUserId, title, '', data, user);
     },
 
-    async sendTypeSymbolAlarm(notification, user) {
+    async sendTypeSymbolAlarm(notification: INotification, user) {
         const title = `Price alarm triggered on ${notification.data.symbol} - ${notification.data.target}`;
         const data = {
             type: 'symbol-alarm',
@@ -136,20 +153,20 @@ export const notifyController = {
         return this.sendToUser(notification.toUserId, title, '', data, user);
     },
 
-    async sendUserFollow(notification, user) {
-        const fromUser: any = await User.findById(notification.fromUserId, { name: 1 });
+    async sendUserFollow(notification: INotification, user) {
+        const fromUser: any = await User.findById(notification.fromUserId, { name: 1 }).lean();
 
         const title = `${fromUser.name} started following you!`;
 
         const data = {
-            type: 'symbol-alarm'
+            type: 'symbol-alarm',
+            fromUser
         };
 
         return this.sendToUser(notification.toUserId, title, '', data, user);
     },
 
-    async parse(notification) {
-        const document = await this.create(notification);
+    async parse(notification: INotification) {
         const user = await User.findOneAndUpdate({_id: notification.toUserId}, { $inc: { unreadCount: 1 } });
 
         switch (notification.type) {
@@ -169,6 +186,8 @@ export const notifyController = {
                 await this.sendUserFollow(notification, user);
                 break;
         }
+
+        const document = await this.create(notification);
     },
 
     async markUnread(reqUser: IReqUser, notificationId: string) {
@@ -201,11 +220,5 @@ export const notifyController = {
 
     async resetUnreadCount(reqUser: IReqUser) {
         const result = await User.update({ _id: reqUser.id }, { unreadCount: 0 });
-    },
-
-    async create(notification): Promise<any> {
-        const document = new Notification(notification);
-        await document.save();
-        return document;
     }
 };

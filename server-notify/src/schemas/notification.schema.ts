@@ -20,9 +20,9 @@ export const NotificationSchema = new Schema({
         type: String,
         required: true
     },
-    data: [
-        Schema.Types.Mixed
-    ],
+    data: {
+        type: Schema.Types.Mixed
+    },
     sendDate: {
         type: Date
     },

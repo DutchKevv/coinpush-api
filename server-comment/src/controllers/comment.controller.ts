@@ -73,9 +73,9 @@ export const commentController = {
 
 		if (options.parentId) {
 			const parent = await Comment.findOneAndUpdate({ _id: comment.parentId }, { $inc: { childCount: 1 } });
-
+			console.log(parent);
 			// notify if not responding on self
-			if (parent.userId.toString() !== reqUser.id) {
+			if (parent.createUser.toString() !== reqUser.id) {
 				let pubOptions = {
 					type: 'post-comment',
 					toUserId: parent.createUser,

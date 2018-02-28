@@ -10,6 +10,9 @@ services:
     volumes:
       - ./images:/usr/src/app/images
       - ./client:/usr/src/app/client
+  mongodb:
+    ports:
+      - "27017:27017"
   cache:
     environment:
       - NODE_ENV=development

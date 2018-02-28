@@ -36,7 +36,7 @@ export class CacheService {
 		app.on('symbols-update', () => this._updateSymbols());
 
 		this._socket.on('notification', notification => {
-			alert('notificaoitn!!!');
+			console.log('notificaoitn!!!', notification);
 		})
 
 		this._socket.on('ticks', ticks => {

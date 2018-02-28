@@ -35,11 +35,12 @@ export class CommentService {
 		return model;
 	}
 
-	async findById(id: string): Promise<Array<CommentModel>> {
-		const result = <any>await this._http.get('/comment/' + id)
-			.map(r => {
-				const model = new CommentModel(r);
+	async findById(id: string): Promise<CommentModel> {
+		const result = await this._http.get('/comment/' + id)
+			.map((res: any) => {
+				const model = new CommentModel(res.body);
 				model.options.children = model.options.children.map(c => new CommentModel(c));
+				console.log(model);
 				return model;
 			})
 			.toPromise();
@@ -78,7 +79,7 @@ export class CommentService {
 		});
 
 		const result = await this._http.get('/comment/' + parentId, { params })
-			.map(r => new CommentModel(r))
+			.map((res: any) => res.body.map(c => new CommentModel(c)))
 			.toPromise();
 
 		return result;

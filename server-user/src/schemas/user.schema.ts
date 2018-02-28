@@ -6,6 +6,7 @@ import { BROKER_GENERAL_TYPE_OANDA, USER_GENDER_UNKNOWN, USER_GENDER_MALE, USER_
 import { IUser } from "coinpush/interface/IUser.interface";
 import { countries } from "coinpush/util/countries";
 import * as beautifyUnique from 'mongoose-beautiful-unique-validation';
+import { IReqUser } from 'coinpush/interface/IReqUser.interface';
 
 const config = require('../../../tradejs.config');
 
@@ -175,12 +176,12 @@ UserSchema.statics.normalize = function (user, doc) {
 	return doc
 };
 
-UserSchema.statics.setIFollow = function (user, doc) {
+UserSchema.statics.setIFollow = function (reqUser: IReqUser, doc) {
 	if (!doc)
 		return;
-
-	if (doc.followers)
-		doc.iFollow = doc.followers.map(c => c.toString()).indexOf(user.id) > -1;
+	console.log('followers', doc.followers[0], reqUser);
+	if (doc.followers && doc.followers.length)
+		doc.iFollow = doc.followers.map(f => f.toString()).indexOf(reqUser.id) > -1;
 
 	return this;
 };
@@ -217,7 +218,6 @@ UserSchema.statics.normalizeProfileImg = function (doc) {
 };
 
 UserSchema.statics.setFavorite = async function (userId: string, symbol: string): Promise<void> {
-	console.log(userId, symbol);
 	await (<any>User).updateOne({ _id: userId }, { $addToSet: { favorites: symbol } });
 };
 

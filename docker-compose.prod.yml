@@ -12,6 +12,9 @@ services:
     build:
       args:
         COPY_FILE: ./config/nginx.prod.conf
+  mongodb:
+    ports:
+      - 27017
   client:
     environment:
       - NODE_ENV=production

@@ -243,8 +243,8 @@ export const userController = {
 	_getUser(reqUser: IReqUser, userId, type) {
 		return request({
 			uri: config.server.user.apiUrl + '/user/' + userId,
-			qs: { type },
 			headers: { _id: reqUser.id },
+			qs: { type },
 			json: true
 		});
 	}

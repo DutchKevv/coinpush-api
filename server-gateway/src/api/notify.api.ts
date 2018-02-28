@@ -77,7 +77,6 @@ router.put('/:id', async (req, res, next) => {
  */
 router.delete('/:id', async (req, res, next) => {
 	try {
-		console.log('user user', req.user, req.params.id);
 		res.send(await notifyController.remove(req.user, req.params.id));
 	} catch (error) {
 		next(error);

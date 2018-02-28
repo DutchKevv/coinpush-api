@@ -9,8 +9,8 @@ import { symbolController } from './controllers/symbol.controller';
 import { BrokerMiddleware } from 'coinpush/broker';
 import { log } from 'coinpush/util/util.log';
 import { subClient } from 'coinpush/redis';
-
-const expressJwt = require('express-jwt');
+import * as expressJwt from 'express-jwt';
+import * as jwt from 'jsonwebtoken';
 
 const PATH_WWW_BROWSER_NOT_SUPPORTED_FILE = path.join(__dirname, '../public/index.legacy.browser.html');
 
@@ -134,7 +134,11 @@ export const app = {
 				return req.headers.authorization.split(' ')[1];
 		};
 
-		this.api.use(expressJwt({ secret: config.auth.jwt.secret, getToken }).unless((req) => {
+		this.api.use(expressJwt({ 
+			secret: config.auth.jwt.secret, 
+			getToken,
+			credentialsRequired: true 
+		}).unless(req => {
 			return (
 				(req.method === 'GET' && !req.originalUrl.startsWith('/api/v1/authenticate')) ||
 				(req.originalUrl.startsWith('/api/v1/authenticate') && !getToken(req)) ||
@@ -146,8 +150,6 @@ export const app = {
 		 * error - unauthorized
 		 */
 		this.api.use((err, req, res, next) => {
-			console.log('ERRORO NAME: ', err.name);
-			console.log(err);
 			if (err.name === 'UnauthorizedError')
 				return res.status(401).send('invalid token...');
 
@@ -159,12 +161,26 @@ export const app = {
 		 * set client user id for upcoming (proxy) requests
 		 */
 		this.api.use((req, res, next) => {
+			console.log('APP.TS : req.user', req.user);
 			if (req.user) {
 				req.headers._id = req.user.id;
 				next();
 			} else {
-				req.user = {};
-				next();
+				const token = getToken(req);
+		
+				if (token) {
+					jwt.verify(token, config.auth.jwt.secret, {}, (error, decoded) => {
+						if (error) {
+							res.status(401);
+						} else {
+							req.user = decoded;
+							next();
+						}
+					});
+				} else {
+					req.user = {};
+					next();
+				}
 			}
 		});
 

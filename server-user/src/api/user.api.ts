@@ -84,7 +84,6 @@ router.put('/:id', async (req: any, res, next) => {
  * delete
  */
 router.delete('/:id', async (req: any, res, next) => {
-	console.log('DELETE!!');
 	try {
 		res.send(await userController.remove(req.user, req.params.id));
 	} catch (error) {

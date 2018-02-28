@@ -55,16 +55,13 @@ export function downloadProfileImgFromUrl(reqUser: IReqUser, url: string): Promi
 	const fileName = reqUser.id + '_' + Date.now() + '.png';
 	const fullPath = join(config.image.profilePath, fileName);
 	const resizeTransform = sharp().resize(1000).max();
-	console.log("URL URL", url, reqUser);
+
 	return new Promise((resolve, reject) => {
-		request(url).pipe(resizeTransform).pipe(fs.createWriteStream(fullPath))
-			.on('close', () => {
-				console.log('DONE DONE!!');
-				resolve(fileName);
-			})
-			.on('error', (error) => {
-				reject(error);
-			});
+		request(url)
+			.pipe(resizeTransform)
+			.pipe(fs.createWriteStream(fullPath))
+			.on('close', () => resolve(fileName))
+			.on('error', reject);
 	});
 }
 

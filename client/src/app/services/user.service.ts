@@ -77,7 +77,6 @@ export class UserService {
 	async toggleFollow(model: UserModel, state: boolean) {
 		try {
 			const result = <any>await this._http.post('/user/' + model.get('_id') + '/follow', null).toPromise();
-
 			let text;
 
 			if (result.state) {

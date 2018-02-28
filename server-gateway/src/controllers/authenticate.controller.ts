@@ -71,8 +71,6 @@ export const authenticateController = {
 		const facebookProfile = await FB.api('me', { fields: ['id', 'name', 'email', 'gender', 'about', 'locale'], access_token: params.token });
 
 		if (facebookProfile && facebookProfile.id) {
-			console.log('facebook user: ', facebookProfile);
-
 			// search in DB for user with facebookId
 			let user = (await userController.findByFacebookId(reqUser, facebookProfile.id))[0];
 
@@ -90,7 +88,7 @@ export const authenticateController = {
 					}
 				});
 			}
-			console.log('koffie!!', user);
+
 			return {
 				token: user.token
 			};

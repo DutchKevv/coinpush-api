@@ -162,7 +162,7 @@ export class SocialFeedComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	private async _loadByPostId(postId: string) {
 		this.isLoading = true;
-		this.comments$.next(await this.commentService.findById(postId));
+		this.comments$.next([await this.commentService.findById(postId)]);
 		this.isLoading = false;
 	}
 
