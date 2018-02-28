@@ -13,14 +13,13 @@ export class CommentService {
 	}
 
 	async create(toUserId = null, parentId: string = null, content: string): Promise<CommentModel> {
-		const comment = await this._http.post('/comment', { toUserId, parentId, content })
-			.toPromise();
+		const comment = <any>await this._http.post('/comment', { toUserId, parentId, content }).toPromise();
 
-		if (!comment)
+		if (!comment || !comment.body)
 			return;
 
 		const model = new CommentModel({
-			...comment,
+			...comment.body,
 			content,
 			isNew: true,
 			created: new Date(),
@@ -57,14 +56,15 @@ export class CommentService {
 			}
 		});
 
-		const result = <any>await this._http.get('/comment', { params })
-			.map(r => {
-				const model = new CommentModel(r);
-				model.options.children = model.options.children.map(c => new CommentModel(c));
-				return model;
+		const result = await this._http.get('/comment', { params })
+			.map((r: any) => {
+				return r.body.map(comment => {
+					const model = new CommentModel(comment);
+					model.options.children = model.options.children.map(c => new CommentModel(c));
+					return model;
+				});
 			})
 			.toPromise();
-
 		return result;
 	}
 
