@@ -4,7 +4,7 @@ import { AlertService } from './alert.service';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { SymbolModel } from "../models/symbol.model";
 import { app } from '../../core/app';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 @Injectable()
 export class UserService {
@@ -19,11 +19,18 @@ export class UserService {
 		private _alertService: AlertService) {}
 
 	findById(id: string, options: any = {}): Promise<UserModel> {
-		return this._http.get('/user/' + id, { params: options }).map((res: Response) => new UserModel(res)).toPromise();
+		const params = new HttpParams({
+			fromObject: options
+		});
+		return this._http.get('/user/' + id, { params }).map((res: Response) => new UserModel(res)).toPromise();
 	}
 
 	getOverview(options: any = {}) {
-		return this._http.get('/user', { params: options }).map(user => new UserModel(user)).toPromise();
+		const params = new HttpParams({
+			fromObject: options
+		});
+
+		return this._http.get('/user', { params: options }).map((users: any) => users.map(user => new UserModel(user))).toPromise();
 	}
 
 	create(user) {
