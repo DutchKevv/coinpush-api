@@ -108,14 +108,14 @@ export class AppComponent implements OnInit, AfterViewInit {
 		public authenticationService: AuthenticationService,
 		private _changeDetectorRef: ChangeDetectorRef,
 		private _eventService: EventService,
-		private _cacheService: CacheService) { 
-			// this._changeDetectorRef.detach();
-		}
+		private _cacheService: CacheService) {
+		// this._changeDetectorRef.detach();
+	}
 
 	ngOnInit() {
 		this._cacheService.init(); // cacheService must init before eventService
 		this._eventService.init();
-		
+
 		this._routerEventsSub = this.router.events.subscribe((val) => {
 			if (val instanceof NavigationEnd) {
 				this.searchOpen = false;
@@ -129,12 +129,15 @@ export class AppComponent implements OnInit, AfterViewInit {
 		setTimeout(() => {
 			app.prettyBootty.step('done');
 
-			this._cacheService.connect();
-			
 			if (this.userService.model.options._id)
 				app.initNotifications().catch(console.error);
-				
-			app.loadAds();
+
+			try {
+				(window['adsbygoogle'] = window['adsbygoogle'] || []).push({});
+				window['adsbygoogle'].push({});
+			} catch (e) {
+				console.error("error");
+			}
 		}, 100);
 	}
 

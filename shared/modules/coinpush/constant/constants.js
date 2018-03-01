@@ -48,3 +48,4 @@ exports.CUSTOM_EVENT_TYPE_UNKNOWN = 0, exports.CUSTOM_EVENT_TYPE_ALARM = 1, expo
  * ALARMS
  */
 exports.ALARM_TRIGGER_TYPE_PRICE = 1, exports.ALARM_TRIGGER_TYPE_PERCENTAGE = 2, exports.ALARM_TRIGGER_DIRECTION_UP = 1, exports.ALARM_TRIGGER_DIRECTION_DOWN = 2;
+//# sourceMappingURL=constants.js.map

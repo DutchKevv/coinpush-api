@@ -17,6 +17,14 @@ services:
     volumes:
       - ./_data/db:/_data/db
     command: mongod --smallfiles --logpath=/dev/null # --quiet
+  client:
+    image: client
+    container_name: client
+    build:
+      context: ./
+      dockerfile: /client/Dockerfile
+    volumes:
+      - ./client:/usr/src/app/client
   cache:
     image: cache
     container_name: "cache"
@@ -54,15 +62,6 @@ services:
       # - /usr/src/app/shared/modules/coinpush
     links:
       - redis
-  client:
-    image: client
-    container_name: client
-    build:
-      context: ./
-      dockerfile: /client/Dockerfile
-    volumes:
-      - ./client:/usr/src/app/client
-      # - ./shared/modules/coinpush:/usr/src/app/shared/modules/coinpush
   user:
     image: user
     container_name: user

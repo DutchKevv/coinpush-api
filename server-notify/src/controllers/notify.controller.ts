@@ -4,21 +4,12 @@ import { IUser } from 'coinpush/interface/IUser.interface';
 import * as gcm from 'node-gcm';
 import { User } from '../schemas/user.schema';
 import { Notification } from '../schemas/notification.schema';
+import { INotification } from 'coinpush/interface/Notification.interface';
 import { IReqUser } from 'coinpush/interface/IReqUser.interface';
 import { pubClient } from 'coinpush/redis';
 
 const config = require('../../../tradejs.config');
 const sender = new gcm.Sender(config.firebase.key);
-
-export interface INotification {
-    toUserId: string;
-    type: string;
-    data?: any;
-    fromUserId?: string;
-    createDate?: Date;
-    readDate?: Date;
-    isRead?: boolean;
-}
 
 export const notifyController = {
 

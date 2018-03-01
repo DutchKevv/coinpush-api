@@ -1,9 +1,9 @@
 import { EventEmitter, Injectable, NgZone, Output } from '@angular/core';
-import * as io from 'socket.io-client';
 import { SymbolModel } from "../models/symbol.model";
 import { UserService } from './user.service';
 import { app } from '../../core/app';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { SocketService } from './socket.service';
 
 @Injectable()
 export class CacheService {
@@ -11,35 +11,19 @@ export class CacheService {
 	@Output() public changed$: EventEmitter<any[]> = new EventEmitter();
 	@Output() public symbols: Array<SymbolModel> = [];
 
-	private _socket: any;
-
 	constructor(
 		private _zone: NgZone,
 		private _userService: UserService,
+		private _socketService: SocketService,
 		private _http: HttpClient
-	) {
-
-	}
+	) {}
 
 	public init() {
-		this._socket = io(app.address.host + '://' + app.address.ip + (app.address.port ? ':' + app.address.port : ''), {
-			reconnectionAttempts: 10000, // avoid having user reconnect manually in order to prevent dead clients after a server restart
-			timeout: 10000, // before connect_error and connect_timeout are emitted.
-			transports: ['websocket'],
-			query: 'userId=' + this._userService.model.options._id,
-			secure: true,
-			autoConnect: false
-		});
-
 		this._updateSymbols();
 
 		app.on('symbols-update', () => this._updateSymbols());
 
-		this._socket.on('notification', notification => {
-			console.log('notificaoitn!!!', notification);
-		})
-
-		this._socket.on('ticks', ticks => {
+		this._socketService.socket.on('ticks', ticks => {
 			for (let _symbol in ticks) {
 				let symbol = this.getSymbolByName(_symbol);
 
@@ -74,14 +58,6 @@ export class CacheService {
 			number = parseFloat(number);
 
 		return number.toPrecision(8);
-	}
-
-	public connect() {
-		this._socket.open();
-	}
-
-	public disconnect() {
-		this._socket.close();
 	}
 
 	private _updateSymbols() {

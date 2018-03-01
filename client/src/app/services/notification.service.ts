@@ -3,6 +3,8 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { app } from '../../core/app';
 import { Observable } from 'rxjs/Observable';
 import { HttpClient, HttpParams } from '@angular/common/http';
+// import { INotification } from '../../../../shared/modules/coinpush/interface/notification.interface';
+import { SocketService } from './socket.service';
 
 @Injectable()
 export class NotificationService {
@@ -15,8 +17,16 @@ export class NotificationService {
 
 	private _unreadCount = parseInt(app.data.notifications.unreadCount, 10) || 0;
 
-	constructor(private _http: HttpClient) {
+	constructor(
+		private _http: HttpClient,
+		private _socketService: SocketService
+	) {
+		this.init();
+	}
 
+	init() {
+		app.on('notification', (notification) => this._onNotification(notification));
+		this._socketService.socket.on('notification', notification => this._onNotification(notification));
 	}
 
 	findById(id: string, options: any = {}): Promise<any> {
@@ -56,5 +66,27 @@ export class NotificationService {
 
 	async update(changes, toServer = true, showAlert: boolean = true) {
 
+	}
+
+	private async _onNotification(notification) {
+		alert('sdf');
+		console.log('NOTIFICATION!', notification);
+		switch (notification.type) {
+			case 'post-comment':
+				window.location.hash = '#/comment/' + notification.data.parentId + '?focus=' + notification.data.commentId;
+				break;
+			case 'post-like':
+				window.location.hash = '#/comment/' + notification.data.commentId;
+				break;
+			case 'comment-like':
+				window.location.hash = '#/comment/' + notification.data.parentId + '?focus=' + notification.data.commentId;
+				break
+			case 'symbol-alarm':
+				window.location.hash = '#/symbols/?symbol=' + notification.data.symbol;
+				app.emit('event-triggered', Object.assign(notification, { title: notification.data.title }));
+				break
+			default:
+				console.error('Uknown notification type: ' + notification.type);
+		}
 	}
 }

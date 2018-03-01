@@ -10,6 +10,7 @@ services:
     volumes:
       - ./images:/usr/src/app/images
       - ./client:/usr/src/app/client
+      - ./server-nginx/pages:/usr/src/app/server-nginx/pages
   mongodb:
     ports:
       - "27017:27017"
@@ -30,7 +31,6 @@ services:
       - /bin/sh
       - -c
       - |
-          npm run install-shared
           npm i
           npm start
   gateway:

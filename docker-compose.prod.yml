@@ -8,6 +8,7 @@ services:
     volumes:
       - ./images:/usr/src/app/images
       - ./client:/usr/src/app/client
+      - ./server-nginx/pages:/usr/src/app/server-nginx/pages
       - ./server-nginx/letsencrypt:/usr/src/app/server-nginx/letsencrypt
     build:
       args:
@@ -22,7 +23,6 @@ services:
       - /bin/sh
       - -c
       - |
-          npm run install-shared
           npm i
           npm run build
   gateway:

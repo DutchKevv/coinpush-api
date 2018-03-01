@@ -305,3 +305,4 @@ function dataUnpack(data) {
     // displayData(currentPrice[pair], from, tsym, fsym);
 }
 ;
+//# sourceMappingURL=cryptocompare.broker.js.map

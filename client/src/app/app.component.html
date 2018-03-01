@@ -2,11 +2,11 @@
 
 <!-- left main navigation -->
 <nav class="nav-main" id="sidebar" #navbar>
-    <h6 style="text-align: right; line-height: 40px; padding-right: 20px;">
-        <i>v0.0.1-alpha</i>
-    </h6>
     <a (click)="toggleNav( false)" [routerLink]="['/user/', userService.model.options._id]" [routerLinkActive]="['active']" class="profile"
         style="padding-top: 0">
+        <h6 style="text-align: right; line-height: 40px; padding-right: 20px;">
+            <i>v0.0.2-alpha</i>
+        </h6>
         <img class="logo" width="70" height="70" [attr.src]="userService.model.options.img ? userService.model.options.img : undefined">
         <h4>{{userService.model.options.name}}</h4>
     </a>
@@ -34,6 +34,11 @@
         <i class="fa fa-sign-out"></i>
         <span>Login</span>
     </a>
+
+    <!-- navigation -->
+    <div style="width:220px; height: 300px; margin: 0 auto; border: 1px solid #5d5c5c;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1181429338292864" data-ad-slot="1307246775" data-ad-format="auto"></ins>
+    </div>
 </nav>
 
 <div (click)="toggleNav(false)" class="nav-overlay"></div>
@@ -45,12 +50,12 @@
 
         <!-- mobile nav button -->
         <i (click)="toggleNav(true)" class="fa fa-navicon d-lg-none"></i>
-        
+
         <!-- notifications -->
         <app-notification-menu></app-notification-menu>
-       
+
         <!-- filter -->
-        
+
         <i *ngIf="router.url.startsWith('/symbols')" (click)="onClickFilter($event)" class="fa fa-filter d-lg-none"></i>
 
         <!-- title -->
@@ -77,6 +82,11 @@
         <!-- mobile search button -->
         <i (click)="toggleSearch()" class="fa fa-search d-lg-none"></i>
     </header>
+
+
+    <div style="margin: 0 auto; border: 1px solid #5d5c5c;">
+        <ins class="adsbygoogle" style="display:inline-block;width:468px;height:60px" data-ad-client="ca-pub-1181429338292864" data-ad-slot="5593141995"></ins>
+    </div>
 
     <!-- page -->
     <router-outlet></router-outlet>

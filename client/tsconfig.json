@@ -21,6 +21,7 @@
   "include": [
     "../shared/modules/coinpush/constant/index.ts",
     "../shared/modules/coinpush/util/countries.ts",
+    "../shared/modules/coinpush/interface/notification.interface.ts",
     "./**/*.ts"
   ],
   "angularCompilerOptions": {

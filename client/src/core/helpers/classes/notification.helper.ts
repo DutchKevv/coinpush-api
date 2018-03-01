@@ -74,23 +74,8 @@ export class NotificationHelper {
             if (!app.user || !app.user._id || app.user._id !== body.__userId)
                 return console.warn('notification __userId mismatch')
 
-            switch (body.type) {
-                case 'post-comment':
-                    window.location.hash = '#/comment/' + body.parentId + '?focus=' + body.commentId;
-                    break;
-                case 'post-like':
-                    window.location.hash = '#/comment/' + body.commentId;
-                    break;
-                case 'comment-like':
-                    window.location.hash = '#/comment/' + body.parentId + '?focus=' + body.commentId;
-                    break
-                case 'symbol-alarm':
-                    window.location.hash = '#/symbols/?symbol=' + body.symbol;
-                    app.emit('event-triggered', Object.assign(body, { title: message.title }));
-                    break
-                default:
-                    console.error('Uknown notification type: ' + body.type);
-            }
+            app.emit('notification', { title: message.title, data: body });
+
         } catch (error) {
             console.info('message', message);
             console.error(error);

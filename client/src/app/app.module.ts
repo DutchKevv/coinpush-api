@@ -32,6 +32,7 @@ import { AlarmMenuComponent, AlarmMenuActiveSymbolEventPipe } from './components
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from './services/notification.service';
 import { NotificationMenuComponent } from './components/notification-menu/notification-menu.component';
+import { SocketService } from './services/socket.service';
 
 @NgModule({
 	declarations: [
@@ -72,6 +73,7 @@ import { NotificationMenuComponent } from './components/notification-menu/notifi
 		NotificationService,
 		AuthenticationService,
 		CacheService,
+		SocketService,
 		{ provide: APP_INITIALIZER, useFactory: (config: BootstrapService) => () => config.load(), deps: [BootstrapService], multi: true },
 		{ provide: HTTP_INTERCEPTORS, useClass: CustomHttp, multi: true },
 		// {
