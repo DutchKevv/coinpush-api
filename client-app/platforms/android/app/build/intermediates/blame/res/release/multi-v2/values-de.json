@@ -1,0 +1,77 @@
+{
+    "logs": [
+        {
+            "outputFile": "/Users/kewinbrandsma/Projects/TradeJS/client-app/platforms/android/app/build/intermediates/incremental/mergeReleaseResources/merged.dir/values-de/values-de.xml",
+            "map": [
+                {
+                    "source": "/Users/kewinbrandsma/.gradle/caches/transforms-1/files-1.1/firebase-messaging-11.8.0.aar/7a76b86cc9a6de546c818c949c919b32/res/values-de/values.xml",
+                    "from": {
+                        "startLines": "4",
+                        "startColumns": "0",
+                        "startOffsets": "241",
+                        "endColumns": "103",
+                        "endOffsets": "344"
+                    },
+                    "to": {
+                        "startLines": "20",
+                        "startColumns": "4",
+                        "startOffsets": "2945",
+                        "endColumns": "107",
+                        "endOffsets": "3048"
+                    }
+                },
+                {
+                    "source": "/Users/kewinbrandsma/.gradle/caches/transforms-1/files-1.1/play-services-basement-11.8.0.aar/5c04da4bdd1b1cee5a644ded4e23ed3b/res/values-de/values.xml",
+                    "from": {
+                        "startLines": "4",
+                        "startColumns": "0",
+                        "startOffsets": "283",
+                        "endColumns": "203",
+                        "endOffsets": "486"
+                    },
+                    "to": {
+                        "startLines": "10",
+                        "startColumns": "4",
+                        "startOffsets": "1325",
+                        "endColumns": "203",
+                        "endOffsets": "1524"
+                    }
+                },
+                {
+                    "source": "/Users/kewinbrandsma/.gradle/caches/transforms-1/files-1.1/play-services-base-11.8.0.aar/52117a7c73d86c48da06cd4324f57c64/res/values-de/values.xml",
+                    "from": {
+                        "startLines": "4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20",
+                        "startColumns": "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0",
+                        "startOffsets": "281,388,584,710,820,1057,1186,1333,1477,1716,1826,2026,2155,2376,2578,2675,2764",
+                        "endColumns": "106,195,125,109,236,128,146,143,238,109,199,128,220,201,96,88,104",
+                        "endOffsets": "387,583,709,819,1056,1185,1332,1476,1715,1825,2025,2154,2375,2577,2674,2763,2868"
+                    },
+                    "to": {
+                        "startLines": "2,3,4,5,6,7,8,9,11,12,13,14,15,16,17,18,19",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "105,216,412,542,656,893,1026,1177,1529,1768,1882,2082,2215,2436,2642,2743,2836",
+                        "endColumns": "110,195,129,113,236,132,150,147,238,113,199,132,220,205,100,92,108",
+                        "endOffsets": "211,407,537,651,888,1021,1172,1320,1763,1877,2077,2210,2431,2637,2738,2831,2940"
+                    }
+                },
+                {
+                    "source": "/Users/kewinbrandsma/.gradle/caches/transforms-1/files-1.1/play-services-ads-11.8.0.aar/f41825b1a65aa7f33cb377febe6829d2/res/values-de/values.xml",
+                    "from": {
+                        "startLines": "4,5,6,7,8,9,10",
+                        "startColumns": "0,0,0,0,0,0,0",
+                        "startOffsets": "235,306,434,501,567,649,768",
+                        "endColumns": "70,127,66,65,81,118,68",
+                        "endOffsets": "305,433,500,566,648,767,836"
+                    },
+                    "to": {
+                        "startLines": "21,22,23,24,25,26,27",
+                        "startColumns": "4,4,4,4,4,4,4",
+                        "startOffsets": "3053,3128,3260,3331,3401,3487,3610",
+                        "endColumns": "74,131,70,69,85,122,72",
+                        "endOffsets": "3123,3255,3326,3396,3482,3605,3678"
+                    }
+                }
+            ]
+        }
+    ]
+}

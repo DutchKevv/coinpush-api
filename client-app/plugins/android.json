@@ -1,0 +1,31 @@
+{
+  "prepare_queue": {
+    "installed": [],
+    "uninstalled": []
+  },
+  "config_munge": {
+    "files": {}
+  },
+  "installed_plugins": {
+    "cordova-plugin-whitelist": {
+      "PACKAGE_NAME": "com.ff.coinpush"
+    },
+    "cordova-plugin-admobpro": {
+      "PACKAGE_NAME": "com.ff.coinpush"
+    },
+    "cordova-plugin-firebase": {
+      "PACKAGE_NAME": "com.ff.coinpush"
+    },
+    "cordova-plugin-fileopener": {
+      "PACKAGE_NAME": "com.ff.coinpush"
+    },
+    "cordova-plugin-badge": {
+      "PACKAGE_NAME": "com.ff.coinpush"
+    }
+  },
+  "dependent_plugins": {
+    "cordova-plugin-extension": {
+      "PACKAGE_NAME": "com.ff.coinpush"
+    }
+  }
+}

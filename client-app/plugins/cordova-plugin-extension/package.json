@@ -1,0 +1,58 @@
+{
+  "_from": "cordova-plugin-extension@^1.5.4",
+  "_id": "cordova-plugin-extension@1.5.4",
+  "_inBundle": false,
+  "_integrity": "sha1-k4/KDLAAa6tW/87lBiAb/hsA44Q=",
+  "_location": "/cordova-plugin-extension",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "range",
+    "registry": true,
+    "raw": "cordova-plugin-extension@^1.5.4",
+    "name": "cordova-plugin-extension",
+    "escapedName": "cordova-plugin-extension",
+    "rawSpec": "^1.5.4",
+    "saveSpec": null,
+    "fetchSpec": "^1.5.4"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/cordova-plugin-extension/-/cordova-plugin-extension-1.5.4.tgz",
+  "_shasum": "938fca0cb0006bab56ffcee506201bfe1b00e384",
+  "_spec": "cordova-plugin-extension@^1.5.4",
+  "_where": "/Users/kewinbrandsma/Projects/TradeJS/client-app",
+  "author": {
+    "name": "Liming Xie",
+    "email": "rjfun.mobile@gmail.com"
+  },
+  "bugs": {
+    "url": "https://github.com/floatinghotpot/cordova-extension/issues"
+  },
+  "bundleDependencies": false,
+  "cordova": {
+    "id": "cordova-plugin-extension",
+    "platforms": [
+      "android",
+      "ios",
+      "amazon-fireos"
+    ]
+  },
+  "deprecated": false,
+  "description": "Cordova Plugin common extension with adapter interface",
+  "homepage": "https://github.com/floatinghotpot/cordova-extension#readme",
+  "keywords": [
+    "cordova",
+    "ecosystem:cordova",
+    "extension",
+    "rjfun"
+  ],
+  "license": "MIT",
+  "name": "cordova-plugin-extension",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/floatinghotpot/cordova-extension.git"
+  },
+  "version": "1.5.4"
+}

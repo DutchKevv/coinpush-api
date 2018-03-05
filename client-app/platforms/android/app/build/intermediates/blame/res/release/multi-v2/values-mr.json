@@ -1,0 +1,77 @@
+{
+    "logs": [
+        {
+            "outputFile": "/Users/kewinbrandsma/Projects/TradeJS/client-app/platforms/android/app/build/intermediates/incremental/mergeReleaseResources/merged.dir/values-mr/values-mr.xml",
+            "map": [
+                {
+                    "source": "/Users/kewinbrandsma/.gradle/caches/transforms-1/files-1.1/firebase-messaging-11.8.0.aar/7a76b86cc9a6de546c818c949c919b32/res/values-mr/values.xml",
+                    "from": {
+                        "startLines": "4",
+                        "startColumns": "0",
+                        "startOffsets": "241",
+                        "endColumns": "99",
+                        "endOffsets": "340"
+                    },
+                    "to": {
+                        "startLines": "20",
+                        "startColumns": "4",
+                        "startOffsets": "2748",
+                        "endColumns": "103",
+                        "endOffsets": "2847"
+                    }
+                },
+                {
+                    "source": "/Users/kewinbrandsma/.gradle/caches/transforms-1/files-1.1/play-services-basement-11.8.0.aar/5c04da4bdd1b1cee5a644ded4e23ed3b/res/values-mr/values.xml",
+                    "from": {
+                        "startLines": "4",
+                        "startColumns": "0",
+                        "startOffsets": "283",
+                        "endColumns": "201",
+                        "endOffsets": "484"
+                    },
+                    "to": {
+                        "startLines": "10",
+                        "startColumns": "4",
+                        "startOffsets": "1242",
+                        "endColumns": "201",
+                        "endOffsets": "1439"
+                    }
+                },
+                {
+                    "source": "/Users/kewinbrandsma/.gradle/caches/transforms-1/files-1.1/play-services-ads-11.8.0.aar/f41825b1a65aa7f33cb377febe6829d2/res/values-mr/values.xml",
+                    "from": {
+                        "startLines": "4,5,6,7,8,9,10",
+                        "startColumns": "0,0,0,0,0,0,0",
+                        "startOffsets": "235,306,425,491,558,640,754",
+                        "endColumns": "70,118,65,66,81,113,70",
+                        "endOffsets": "305,424,490,557,639,753,824"
+                    },
+                    "to": {
+                        "startLines": "21,22,23,24,25,26,27",
+                        "startColumns": "4,4,4,4,4,4,4",
+                        "startOffsets": "2852,2927,3050,3120,3191,3277,3395",
+                        "endColumns": "74,122,69,70,85,117,74",
+                        "endOffsets": "2922,3045,3115,3186,3272,3390,3465"
+                    }
+                },
+                {
+                    "source": "/Users/kewinbrandsma/.gradle/caches/transforms-1/files-1.1/play-services-base-11.8.0.aar/52117a7c73d86c48da06cd4324f57c64/res/values-mr/values.xml",
+                    "from": {
+                        "startLines": "4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20",
+                        "startColumns": "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0",
+                        "startOffsets": "281,387,583,705,815,1019,1138,1272,1394,1603,1709,1891,2013,2211,2390,2476,2568",
+                        "endColumns": "105,195,121,109,203,118,133,121,208,105,181,121,197,178,85,91,105",
+                        "endOffsets": "386,582,704,814,1018,1137,1271,1393,1602,1708,1890,2012,2210,2389,2475,2567,2673"
+                    },
+                    "to": {
+                        "startLines": "2,3,4,5,6,7,8,9,11,12,13,14,15,16,17,18,19",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "105,215,411,537,651,855,978,1116,1444,1653,1763,1945,2071,2269,2452,2542,2638",
+                        "endColumns": "109,195,125,113,203,122,137,125,208,109,181,125,197,182,89,95,109",
+                        "endOffsets": "210,406,532,646,850,973,1111,1237,1648,1758,1940,2066,2264,2447,2537,2633,2743"
+                    }
+                }
+            ]
+        }
+    ]
+}

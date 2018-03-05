@@ -1,0 +1,77 @@
+{
+    "logs": [
+        {
+            "outputFile": "/Users/kewinbrandsma/Projects/TradeJS/client-app/platforms/android/app/build/intermediates/incremental/mergeReleaseResources/merged.dir/values-uk/values-uk.xml",
+            "map": [
+                {
+                    "source": "/Users/kewinbrandsma/.gradle/caches/transforms-1/files-1.1/play-services-base-11.8.0.aar/52117a7c73d86c48da06cd4324f57c64/res/values-uk/values.xml",
+                    "from": {
+                        "startLines": "4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20",
+                        "startColumns": "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0",
+                        "startOffsets": "281,387,582,707,815,1028,1155,1296,1426,1653,1757,1950,2073,2279,2447,2543,2630",
+                        "endColumns": "105,194,124,107,212,126,140,129,226,103,192,122,205,167,95,86,112",
+                        "endOffsets": "386,581,706,814,1027,1154,1295,1425,1652,1756,1949,2072,2278,2446,2542,2629,2742"
+                    },
+                    "to": {
+                        "startLines": "2,3,4,5,6,7,8,9,11,12,13,14,15,16,17,18,19",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "105,215,410,539,651,864,995,1140,1479,1706,1814,2007,2134,2340,2512,2612,2703",
+                        "endColumns": "109,194,128,111,212,130,144,133,226,107,192,126,205,171,99,90,116",
+                        "endOffsets": "210,405,534,646,859,990,1135,1269,1701,1809,2002,2129,2335,2507,2607,2698,2815"
+                    }
+                },
+                {
+                    "source": "/Users/kewinbrandsma/.gradle/caches/transforms-1/files-1.1/firebase-messaging-11.8.0.aar/7a76b86cc9a6de546c818c949c919b32/res/values-uk/values.xml",
+                    "from": {
+                        "startLines": "4",
+                        "startColumns": "0",
+                        "startOffsets": "241",
+                        "endColumns": "98",
+                        "endOffsets": "339"
+                    },
+                    "to": {
+                        "startLines": "20",
+                        "startColumns": "4",
+                        "startOffsets": "2820",
+                        "endColumns": "102",
+                        "endOffsets": "2918"
+                    }
+                },
+                {
+                    "source": "/Users/kewinbrandsma/.gradle/caches/transforms-1/files-1.1/play-services-basement-11.8.0.aar/5c04da4bdd1b1cee5a644ded4e23ed3b/res/values-uk/values.xml",
+                    "from": {
+                        "startLines": "4",
+                        "startColumns": "0",
+                        "startOffsets": "283",
+                        "endColumns": "204",
+                        "endOffsets": "487"
+                    },
+                    "to": {
+                        "startLines": "10",
+                        "startColumns": "4",
+                        "startOffsets": "1274",
+                        "endColumns": "204",
+                        "endOffsets": "1474"
+                    }
+                },
+                {
+                    "source": "/Users/kewinbrandsma/.gradle/caches/transforms-1/files-1.1/play-services-ads-11.8.0.aar/f41825b1a65aa7f33cb377febe6829d2/res/values-uk/values.xml",
+                    "from": {
+                        "startLines": "4,5,6,7,8,9,10",
+                        "startColumns": "0,0,0,0,0,0,0",
+                        "startOffsets": "235,311,420,486,553,635,739",
+                        "endColumns": "75,108,65,66,81,103,75",
+                        "endOffsets": "310,419,485,552,634,738,814"
+                    },
+                    "to": {
+                        "startLines": "21,22,23,24,25,26,27",
+                        "startColumns": "4,4,4,4,4,4,4",
+                        "startOffsets": "2923,3003,3116,3186,3257,3343,3451",
+                        "endColumns": "79,112,69,70,85,107,79",
+                        "endOffsets": "2998,3111,3181,3252,3338,3446,3526"
+                    }
+                }
+            ]
+        }
+    ]
+}

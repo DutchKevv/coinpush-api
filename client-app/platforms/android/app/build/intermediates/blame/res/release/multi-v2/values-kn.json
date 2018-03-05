@@ -1,0 +1,77 @@
+{
+    "logs": [
+        {
+            "outputFile": "/Users/kewinbrandsma/Projects/TradeJS/client-app/platforms/android/app/build/intermediates/incremental/mergeReleaseResources/merged.dir/values-kn/values-kn.xml",
+            "map": [
+                {
+                    "source": "/Users/kewinbrandsma/.gradle/caches/transforms-1/files-1.1/firebase-messaging-11.8.0.aar/7a76b86cc9a6de546c818c949c919b32/res/values-kn/values.xml",
+                    "from": {
+                        "startLines": "4",
+                        "startColumns": "0",
+                        "startOffsets": "241",
+                        "endColumns": "98",
+                        "endOffsets": "339"
+                    },
+                    "to": {
+                        "startLines": "20",
+                        "startColumns": "4",
+                        "startOffsets": "2825",
+                        "endColumns": "102",
+                        "endOffsets": "2923"
+                    }
+                },
+                {
+                    "source": "/Users/kewinbrandsma/.gradle/caches/transforms-1/files-1.1/play-services-base-11.8.0.aar/52117a7c73d86c48da06cd4324f57c64/res/values-kn/values.xml",
+                    "from": {
+                        "startLines": "4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20",
+                        "startColumns": "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0",
+                        "startOffsets": "281,390,592,723,836,1038,1165,1299,1423,1632,1743,1934,2067,2271,2454,2549,2638",
+                        "endColumns": "108,201,130,112,201,126,133,123,208,110,190,132,203,182,94,88,109",
+                        "endOffsets": "389,591,722,835,1037,1164,1298,1422,1631,1742,1933,2066,2270,2453,2548,2637,2747"
+                    },
+                    "to": {
+                        "startLines": "2,3,4,5,6,7,8,9,11,12,13,14,15,16,17,18,19",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "105,218,420,555,672,874,1005,1143,1476,1685,1800,1991,2128,2332,2519,2618,2711",
+                        "endColumns": "112,201,134,116,201,130,137,127,208,114,190,136,203,186,98,92,113",
+                        "endOffsets": "213,415,550,667,869,1000,1138,1266,1680,1795,1986,2123,2327,2514,2613,2706,2820"
+                    }
+                },
+                {
+                    "source": "/Users/kewinbrandsma/.gradle/caches/transforms-1/files-1.1/play-services-basement-11.8.0.aar/5c04da4bdd1b1cee5a644ded4e23ed3b/res/values-kn/values.xml",
+                    "from": {
+                        "startLines": "4",
+                        "startColumns": "0",
+                        "startOffsets": "283",
+                        "endColumns": "204",
+                        "endOffsets": "487"
+                    },
+                    "to": {
+                        "startLines": "10",
+                        "startColumns": "4",
+                        "startOffsets": "1271",
+                        "endColumns": "204",
+                        "endOffsets": "1471"
+                    }
+                },
+                {
+                    "source": "/Users/kewinbrandsma/.gradle/caches/transforms-1/files-1.1/play-services-ads-11.8.0.aar/f41825b1a65aa7f33cb377febe6829d2/res/values-kn/values.xml",
+                    "from": {
+                        "startLines": "4,5,6,7,8,9,10",
+                        "startColumns": "0,0,0,0,0,0,0",
+                        "startOffsets": "235,303,424,490,557,638,745",
+                        "endColumns": "67,120,65,66,80,106,73",
+                        "endOffsets": "302,423,489,556,637,744,818"
+                    },
+                    "to": {
+                        "startLines": "21,22,23,24,25,26,27",
+                        "startColumns": "4,4,4,4,4,4,4",
+                        "startOffsets": "2928,3000,3125,3195,3266,3351,3462",
+                        "endColumns": "71,124,69,70,84,110,77",
+                        "endOffsets": "2995,3120,3190,3261,3346,3457,3535"
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,213 @@
+<!DOCTYPE html><html><head>
+    <title>CoinPush</title>
+    <base href="./">
+    <meta charset="utf-8">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, height=device-height, user-scalable=no, initial-scale=1, minimum-scale=1, maximum-scale=1">
+
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="assets/font-awesome/css/font-awesome.min.css">
+
+    <style>
+        html {
+            height: 100%;
+        }
+
+        body {
+            height: 100%;
+            background: #222122;
+            margin: 0;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        /* browser not supported */
+
+        #bns-container {
+            background: white;
+            max-width: 800px;
+            padding: 100px 20px;
+            margin: 50px auto;
+            box-shadow: 0px 0px 40px rgba(255, 255, 255, 0.5);
+            text-align: center;
+            border-radius: 50%;
+        }
+
+        /* initial preload box */
+
+        #preload-box {
+            background: #222122;
+            color: white;
+            text-align: center;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            display: flex;
+            flex-flow: column;
+            justify-content: center;
+            /* top: calc(50% - 120px); */
+            left: 0;
+            right: 0;
+            z-index: 100000000;
+            transition: opacity .4s ease;
+            opacity: 1;
+        }
+
+        #preload-box.fade-in {
+            opacity: 1;
+        }
+
+        #preload-box.fade-out {
+            opacity: 0;
+        }
+
+        #initialProgressBar {
+            border-bottom: 1px solid white;
+            border-top: 1px solid white;
+            width: 100%;
+            background: black;
+            margin-top: 40px;
+            position: relative;
+        }
+
+        #initialProgressBar span {
+            color: white;
+            text-align: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        #initialProgressBar div {
+            background: #0e474e;
+            width: 0;
+            transition: width .2s ease;
+            box-shadow: 0px 0px 30px rgba(255, 255, 255, 0.8);
+        }
+
+        .font-awesome-preload-trigger {
+            width: 0px;
+            height: 0px;
+            overflow: hidden;
+        }
+
+        .modal-backdrop {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;
+            opacity: 0.75;
+            z-index: 1000;
+        }
+    </style>
+
+    <script async="" src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-1181429338292864",
+            enable_page_level_ads: true
+        });
+    </script>
+<link rel="stylesheet" href="styles.css"></head>
+
+<body>
+    <!-- header_banner -->
+    <!-- <ins class="adsbygoogle" style="display:inline-block;width:468px;height:60px" data-ad-client="ca-pub-1181429338292864" data-ad-slot="5593141995"></ins> -->
+    <!-- <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script> -->
+
+    <div id="preload-box" class="fade-out">
+        <h4>Crypto, Forex, Resources, Wobly titties, you name it...</h4>
+        <div id="initialProgressBar">
+            <span>2% init</span>
+            <div>&nbsp;</div>
+        </div>
+    </div>
+    <app>
+        <i class="font-awesome-preload-trigger fa fa-square-o"></i>
+    </app>
+
+    <script>
+
+
+        // is browser supported
+        (function () {
+            window.BROWSERSUPPORTED = function () {
+                try {
+                    return !!class test { };
+                } catch (err) {
+                    return false;
+                }
+            }();
+
+            if (!window.BROWSERSUPPORTED)
+                document.body.innerHTML = '<div id="bns-container"><h2>Whoops! Your browser is not supported.</h2><p>Please update to a more recent version of Chrome, Firefox or Edge</p></div>';
+        })();
+
+        (function () {
+            if (!window.BROWSERSUPPORTED)
+                return;
+
+            // platform data
+            window.platform = {
+                adsEnabled: false,
+                startTime: new Date(),
+                prettyBootTimeout: null,
+                isReady: false,
+                isReady$: Promise.resolve(),
+                version: '',
+                isApp: !!window['_cordovaNative'],
+                isEmulator: navigator.platform === 'Linux i686',
+                isLocal: document.URL.indexOf('file://') > -1
+            };
+
+            window.platform.prettyBootTimeout = setTimeout(() => {
+                const el = document.getElementById('preload-box').classList.remove('fade-out');
+
+                if (!el)
+                    return;
+            }, 200);
+
+            /**
+             * 
+             * browser browser browser browser browser browser 
+             * 
+             */
+            if (!window.platform.isApp) {
+                window.platform.isReady = true;
+                return;
+            }
+
+            /**
+             * 
+             * app app app app app app app app app app app
+             * 
+             */
+
+            // device ready listener
+            window.platform.isReady$ = new Promise((resolve, reject) => {
+                document.addEventListener("deviceready", function callback() {
+                    document.removeEventListener('deviceready', callback, false);
+                    window.platform.isReady = true;
+                    resolve();
+                }, false);
+            });
+
+            // cordova script
+            let script = document.createElement('script');
+            script.src = 'cordova.js';
+            document.head.appendChild(script);
+
+            // special root class
+            document.body.querySelector('app').classList.add('app');
+        })();
+    </script>
+
+
+<script type="text/javascript" src="runtime.js"></script><script type="text/javascript" src="main~polyfills.js"></script><script type="text/javascript" src="polyfills.js"></script><script type="text/javascript" src="main.js"></script></body></html>

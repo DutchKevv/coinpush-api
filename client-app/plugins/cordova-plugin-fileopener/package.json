@@ -1,0 +1,61 @@
+{
+  "_from": "cordova-plugin-fileopener@^1.0.5",
+  "_id": "cordova-plugin-fileopener@1.0.5",
+  "_inBundle": false,
+  "_integrity": "sha1-NphCi5PqAM8SXciYshpyvrkfcM4=",
+  "_location": "/cordova-plugin-fileopener",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "range",
+    "registry": true,
+    "raw": "cordova-plugin-fileopener@^1.0.5",
+    "name": "cordova-plugin-fileopener",
+    "escapedName": "cordova-plugin-fileopener",
+    "rawSpec": "^1.0.5",
+    "saveSpec": null,
+    "fetchSpec": "^1.0.5"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/cordova-plugin-fileopener/-/cordova-plugin-fileopener-1.0.5.tgz",
+  "_shasum": "3698428b93ea00cf125dc898b21a72beb91f70ce",
+  "_spec": "cordova-plugin-fileopener@^1.0.5",
+  "_where": "/Users/kewinbrandsma/Projects/TradeJS/client-app",
+  "author": {
+    "name": "smile"
+  },
+  "bugs": {
+    "url": "https://github.com/Smile-SA/cordova-plugin-fileopener/issues"
+  },
+  "bundleDependencies": false,
+  "cordova": {
+    "id": "cordova-plugin-fileopener",
+    "platforms": [
+      "android"
+    ]
+  },
+  "deprecated": false,
+  "description": "Plugin to download and open files with default application for Android devices",
+  "homepage": "https://github.com/Smile-SA/cordova-plugin-fileopener#readme",
+  "keywords": [
+    "file",
+    "downloader",
+    "opener",
+    "android",
+    "extension",
+    "MIME types",
+    "cordova",
+    "plugin",
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "license": "MIT",
+  "name": "cordova-plugin-fileopener",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Smile-SA/cordova-plugin-fileopener.git"
+  },
+  "version": "1.0.5"
+}

@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.ff.coinpush" version="0.0.127" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <feature name="Whitelist">
+        <param name="android-package" value="org.apache.cordova.whitelist.WhitelistPlugin" />
+        <param name="onload" value="true" />
+    </feature>
+    <feature name="AdMob">
+        <param name="android-package" value="com.rjfun.cordova.admob.AdMobPlugin" />
+        <param name="onload" value="true" />
+    </feature>
+    <feature name="FirebasePlugin">
+        <param name="android-package" value="org.apache.cordova.firebase.FirebasePlugin" />
+        <param name="onload" value="true" />
+    </feature>
+    <feature name="FileOpener">
+        <param name="android-package" value="fr.smile.cordova.fileopener.FileOpener" />
+    </feature>
+    <feature name="Badge">
+        <param name="android-package" value="de.appplant.cordova.plugin.badge.Badge" />
+    </feature>
+    <name>CoinPush</name>
+    <description>
+        Stock trading application with custom alarams
+    </description>
+    <author email="kewin@frontend-freelance.com" href="">
+        H.K.Brandsma
+    </author>
+    <icon src="assets/icon.png" />
+    <content src="index.html" />
+    <access origin="http://10.0.2.2" />
+    <access origin="https://frontend-freelance.com" subdomains="true" />
+    <allow-navigation href="https://frontend-freelance.com" />
+    <allow-navigation href="http://10.0.2.2" />
+    <allow-intent href="market:*" />
+    <preference name="loglevel" value="DEBUG" />
+    <preference name="BackgroundColor" value="0xff222122" />
+    <preference name="fullscreen" value="true" />
+</widget>
