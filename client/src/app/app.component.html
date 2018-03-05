@@ -36,7 +36,7 @@
     </a>
 
     <!-- navigation -->
-    <div style="width:220px; height: 300px; margin: 0 auto; border: 1px solid #5d5c5c;">
+    <div *ngIf="platform.adsEnabled" style="width:220px; height: 300px; margin: 0 auto; border: 1px solid #5d5c5c;">
         <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1181429338292864" data-ad-slot="1307246775" data-ad-format="auto"></ins>
     </div>
 </nav>
@@ -83,8 +83,7 @@
         <i (click)="toggleSearch()" class="fa fa-search d-lg-none"></i>
     </header>
 
-
-    <div style="margin: 0 auto; border: 1px solid #5d5c5c;">
+    <div *ngIf="platform.adsEnabled" style="margin: 0 auto; border: 1px solid #5d5c5c;">
         <ins class="adsbygoogle" style="display:inline-block;width:468px;height:60px" data-ad-client="ca-pub-1181429338292864" data-ad-slot="5593141995"></ins>
     </div>
 

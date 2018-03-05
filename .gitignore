@@ -1,10 +1,10 @@
 .DS_Store
 .idea/
 .vscode/
+.gradle
 
 node_modules
 /_data
-/data
 /_logs
 
 npm-debug.log

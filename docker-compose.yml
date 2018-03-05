@@ -16,32 +16,7 @@ services:
       - MONGO_LOG_DIR=/dev/null
     volumes:
       - ./_data/db:/_data/db
-    command: mongod --smallfiles --logpath=/dev/null # --quiet
-  client:
-    image: client
-    container_name: client
-    build:
-      context: ./
-      dockerfile: /client/Dockerfile
-    volumes:
-      - ./client:/usr/src/app/client
-  cache:
-    image: cache
-    container_name: "cache"
-    build:
-      context: ./
-      dockerfile: server-cache/Dockerfile
-    ports:
-      - 3001
-    volumes:
-      - ./server-cache:/usr/src/app/server-cache
-      # - /usr/src/app/server-cache/node_modules
-      # - /usr/src/app/shared/modules/coinpush/node_modules
-      # - ./shared/modules/coinpush:/usr/src/app/shared/modules/coinpush
-    links:
-      - nginx
-      - redis
-      - mongodb
+    command: mongod --smallfiles --logpath=/dev/null
   redis:
     restart: unless-stopped
     image: "redis:alpine"
@@ -59,10 +34,45 @@ services:
       - 3100
     volumes:
       - ./server-gateway:/usr/src/app/server-gateway
-      # - /usr/src/app/shared/modules/coinpush
+      - ./tradejs.config.js:/usr/src/app/tradejs.config.js
+      - ./tradejs.config.custom.js:/usr/src/app/tradejs.config.custom.js
     links:
       - redis
+  client:
+    image: client
+    container_name: client
+    build:
+      context: ./
+      dockerfile: /client/Dockerfile
+    volumes:
+      - ./client:/usr/src/app/client
+  client-app:
+    image: client-app
+    container_name: client-app
+    build:
+      context: ./
+      dockerfile: /client-app/Dockerfile
+    volumes:
+      - ./client-app:/usr/src/app/client-app
+      - ./client/www:/usr/src/app/client-app/www
+  cache:
+    restart: unless-stopped
+    image: cache
+    container_name: "cache"
+    build:
+      context: ./
+      dockerfile: server-cache/Dockerfile
+    ports:
+      - 3001
+    volumes:
+      - ./server-cache:/usr/src/app/server-cache
+      - ./tradejs.config.js:/usr/src/app/tradejs.config.js
+      - ./tradejs.config.custom.js:/usr/src/app/tradejs.config.custom.js
+    links:
+      - redis
+      - mongodb
   user:
+    restart: unless-stopped
     image: user
     container_name: user
     build:
@@ -72,12 +82,13 @@ services:
       - 3008
     volumes:
       - ./server-user:/usr/src/app/server-user
-      # - ./shared/modules/coinpush:/usr/src/app/shared/modules/coinpush
+      - ./tradejs.config.js:/usr/src/app/tradejs.config.js
+      - ./tradejs.config.custom.js:/usr/src/app/tradejs.config.custom.js
     links:
-      - nginx
       - redis
       - mongodb
   notify:
+    restart: unless-stopped
     image: notify
     container_name: notify
     build:
@@ -87,9 +98,9 @@ services:
       - 3010
     volumes:
       - ./server-notify:/usr/src/app/server-notify
-      # - ./shared/modules/coinpush:/usr/src/app/shared/modules/coinpush
+      - ./tradejs.config.js:/usr/src/app/tradejs.config.js
+      - ./tradejs.config.custom.js:/usr/src/app/tradejs.config.custom.js
     links:
-      - nginx
       - redis
       - mongodb
   comment:
@@ -102,9 +113,9 @@ services:
       - 3009
     volumes:
       - ./server-comment:/usr/src/app/server-comment
-      # - ./shared/modules/coinpush:/usr/src/app/shared/modules/coinpush
+      - ./tradejs.config.js:/usr/src/app/tradejs.config.js
+      - ./tradejs.config.custom.js:/usr/src/app/tradejs.config.custom.js
     links:
-      - nginx
       - redis
       - mongodb
   event:
@@ -117,8 +128,8 @@ services:
       - 3011
     volumes:
       - ./server-event:/usr/src/app/server-event
-      # - ./shared/modules/coinpush:/usr/src/app/shared/modules/coinpush
+      - ./tradejs.config.js:/usr/src/app/tradejs.config.js
+      - ./tradejs.config.custom.js:/usr/src/app/tradejs.config.custom.js
     links:
-      - nginx
       - redis
       - mongodb

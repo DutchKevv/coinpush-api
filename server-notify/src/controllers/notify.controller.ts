@@ -4,7 +4,7 @@ import { IUser } from 'coinpush/interface/IUser.interface';
 import * as gcm from 'node-gcm';
 import { User } from '../schemas/user.schema';
 import { Notification } from '../schemas/notification.schema';
-import { INotification } from 'coinpush/interface/Notification.interface';
+import { INotification } from 'coinpush/interface/notification.interface';
 import { IReqUser } from 'coinpush/interface/IReqUser.interface';
 import { pubClient } from 'coinpush/redis';
 

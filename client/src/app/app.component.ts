@@ -31,6 +31,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 	@ViewChild('globeContainer') globeContainerRef: ElementRef;
 
 	public searchOpen = false;
+	public platform = app.platform;
 
 	private _sub: any;
 	private _routerEventsSub: any;
@@ -132,11 +133,13 @@ export class AppComponent implements OnInit, AfterViewInit {
 			if (this.userService.model.options._id)
 				app.initNotifications().catch(console.error);
 
-			try {
-				(window['adsbygoogle'] = window['adsbygoogle'] || []).push({});
-				window['adsbygoogle'].push({});
-			} catch (e) {
-				console.error("error");
+			if (app.platform.adsEnabled) {
+				try {
+					(window['adsbygoogle'] = window['adsbygoogle'] || []).push({});
+					window['adsbygoogle'].push({});
+				} catch (e) {
+					console.error("error");
+				}
 			}
 		}, 100);
 	}

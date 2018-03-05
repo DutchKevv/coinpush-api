@@ -20,7 +20,6 @@
     "@types/express": "latest",
     "@types/validator": "latest",
     "@types/mongoose": "^4.7.29",
-    "tsc-watch": "^1.0.8",
     "typescript": "^2.6.2",
     "body-parser": "^1.18.2",
     "coinpush": "file:../shared/modules/coinpush",
@@ -30,5 +29,8 @@
     "mongoose-beautiful-unique-validation": "^7.0.0",
     "morgan": "^1.9.0",
     "validator": "latest"
+  },
+  "devDependencies": {
+    "tsc-watch": "^1.0.16"
   }
 }

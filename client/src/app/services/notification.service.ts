@@ -26,7 +26,7 @@ export class NotificationService {
 
 	init() {
 		app.on('notification', (notification) => this._onNotification(notification));
-		this._socketService.socket.on('notification', notification => this._onNotification(notification));
+		// this._socketService.socket.on('notification', notification => this._onNotification(notification));
 	}
 
 	findById(id: string, options: any = {}): Promise<any> {

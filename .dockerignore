@@ -1,18 +1,39 @@
-
-/_data
-
+### global
 **/_logs/
 **/.git
 **/.gitignore
 **/.idea
 **/.vscode
+**/.DS_Store
 **/node_modules/
 **/*.map
+**/*.md
+# **/*.js
+**/*.yml
+**/*.txt
+**/*.tmp
+**/npm-debug.log
+**/package-lock.json
 
-client/hooks/
+### root
+/_data
+!tradejs.config.js
+!tradejs.config.custom.js
+
+### shared
+!shared/modules/coinpush/**/*.js
+
+### client
 client/images/
-client/platforms/
-client/plugins/
-client/res/
-client/scripts/
 client/www/
+
+# mobile app
+client-app/.gradle
+client-app/hooks/
+client-app/platforms/
+client-app/plugins/
+client-app/res/
+client-app/scripts/
+
+### cache
+cache/dump.rdb

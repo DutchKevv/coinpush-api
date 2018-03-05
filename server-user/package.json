@@ -18,27 +18,26 @@
   "dependencies": {
     "@types/bcrypt": "^1.0.0",
     "@types/body-parser": "^1.16.8",
+    "@types/node": "latest",
+    "@types/express": "latest",
+    "@types/validator": "latest",
     "@types/mongoose": "^4.7.29",
-    "@types/node": "^8.5.1",
-    "@types/validator": "^6.3.0",
     "bcryptjs": "*",
     "body-parser": "^1.18.2",
     "coinpush": "file:../shared/modules/coinpush",
     "express": "^4.16.2",
-    "faker": "^4.1.0",
     "helmet": "^3.9.0",
-    "install": "^0.10.2",
     "jsonwebtoken": "^8.1.0",
     "minimist": "^1.2.0",
     "mongoose": "^4.13.7",
     "mongoose-beautiful-unique-validation": "^7.0.0",
     "morgan": "^1.9.0",
-    "npm": "^5.6.0",
-    "redis": "^2.8.0",
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
-    "tsc-watch": "^1.0.8",
     "typescript": "^2.6.2",
     "validator": "^9.2.0"
+  },
+  "devDependencies": {
+    "tsc-watch": "^1.0.16"
   }
 }

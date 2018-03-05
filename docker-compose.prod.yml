@@ -25,6 +25,8 @@ services:
       - |
           npm i
           npm run build
+    volumes:
+      - /usr/src/app/client/node_modules
   gateway:
     environment:
       - NODE_ENV=production
@@ -38,6 +40,7 @@ services:
           npm run prod
     volumes:
       - ./images:/usr/src/app/images
+      - /usr/src/app/server-gateway/node_modules
   cache:
     environment:
       - NODE_ENV=production
@@ -49,6 +52,8 @@ services:
           npm i
           npm run build
           npm run prod
+    volumes:
+      - /usr/src/app/server-cache/node_modules
   event:
     environment:
       - NODE_ENV=production
@@ -60,6 +65,8 @@ services:
           npm i
           npm run build
           npm run prod
+    volumes:
+      - /usr/src/app/server-event/node_modules
   notify:
     environment:
       - NODE_ENV=production
@@ -71,6 +78,8 @@ services:
           npm i
           npm run build
           npm run prod
+    volumes:
+      - /usr/src/app/server-notify/node_modules
   user:
     environment:
       - NODE_ENV=production
@@ -82,6 +91,8 @@ services:
           npm i
           npm run build
           npm run prod
+    volumes:
+      - /usr/src/app/server-user/node_modules
   comment:
     environment:
       - NODE_ENV=production
@@ -93,4 +104,6 @@ services:
           npm i
           npm run build
           npm run prod
+    volumes:
+      - /usr/src/app/server-comment/node_modules
   

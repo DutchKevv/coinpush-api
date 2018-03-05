@@ -9,72 +9,34 @@
   },
   "main": "index.js",
   "scripts": {
-    "install-shared": "cd ../shared/modules/coinpush && npm i",
     "start": "ng build --watch --aot ---env=development -output-hashing none",
     "build": "ng build --prod --aot --env=production --output-hashing none",
     "build-stats": "ng build --prod --aot --env=production --stats-json --output-hashing none",
     "build-verbose": "ng build --prod --env=production --stats-json --output-hashing none --verbose > build.txt",
-    "build-mobile": "npm run clean && cordova build --no-inc",
-    "build-android": "npm run clean && cordova build android --no-inc",
-    "build-ios": "npm run clean && cordova build ios --no-inc",
-    "build-mobile-release": "npm run clean && cordova build --release --inc-version",
-    "build-android-release": "npm run clean && cordova build android --release --inc-version",
-    "build-ios-release": "npm run clean && cordova build ios --release --inc-version",
-    "emulate-android": "cordova emulate android",
-    "emulate-ios": "cordova emulate ios",
-    "run-android": "cordova run android",
-    "run-ios": "cordova run android",
     "load-symbol-images": "node ./tools/load-symbol-images.js",
     "build-spritesheet": "node ./tools/build-spritesheet.js",
-    "clean": "cordova clean",
     "bundle-report": "webpack-bundle-analyzer www/stats.json"
   },
   "author": "Apache Cordova Team",
   "license": "Apache-2.0",
   "dependencies": {
-    "@angular/cli": "^1.7.1",
-    "@angular/common": "^5.2.6",
-    "@angular/compiler": "^5.2.6",
-    "@angular/compiler-cli": "^5.2.6",
-    "@angular/core": "^5.2.6",
-    "@angular/forms": "^5.2.6",
-    "@angular/platform-browser": "^5.2.6",
-    "@angular/router": "^5.2.6",
+    "@angular/cli": "^6.0.0-beta.4",
+    "@angular/common": "^6.0.0-beta.6",
+    "@angular/compiler": "^6.0.0-beta.6",
+    "@angular/compiler-cli": "^6.0.0-beta.6",
+    "@angular/core": "^6.0.0-beta.6",
+    "@angular/forms": "^6.0.0-beta.6",
+    "@angular/platform-browser": "^6.0.0-beta.6",
+    "@angular/router": "^6.0.0-beta.6",
     "@ng-bootstrap/ng-bootstrap": "^1.0.0",
     "@ngrx/core": "1.2.0",
     "@types/node": "^9.4.6",
-    "android-versions": "^1.3.0",
     "bootstrap": "^4.0.0",
-    "coinpush": "file:../shared/modules/coinpush",
-    "cordova-android": "^7.1.0",
-    "cordova-browser": "^5.0.3",
-    "cordova-build-increment": "^0.1.0",
-    "cordova-plugin-admobpro": "^2.31.1",
-    "cordova-plugin-badge": "^0.8.7",
-    "cordova-plugin-extension": "^1.5.4",
-    "cordova-plugin-fileopener": "^1.0.5",
-    "cordova-plugin-firebase": "^0.1.25",
-    "cordova-plugin-whitelist": "^1.3.3",
     "highcharts": "^6.0.7",
     "localforage": "^1.5.7",
     "socket.io-client": "2.0.4",
-    "typescript": "^2.7.2",
-    "zone.js": "^0.8.20"
-  },
-  "cordova": {
-    "plugins": {
-      "cordova-plugin-whitelist": {},
-      "cordova-plugin-admobpro": {},
-      "cordova-plugin-firebase": {},
-      "cordova-plugin-fileopener": {},
-      "cordova-plugin-badge": {}
-    },
-    "platforms": [
-      "browser",
-      "android"
-    ]
-  },
-  "devDependencies": {
-    "webpack-bundle-analyzer": "^2.10.1"
+    "typescript": "~2.6.2",
+    "zone.js": "^0.8.20",
+    "webpack-bundle-analyzer": "2.10.1"
   }
 }

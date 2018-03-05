@@ -33,6 +33,17 @@ services:
       - |
           npm i
           npm start
+  client-app:
+    environment:
+      - NODE_ENV=development
+    command:
+      - /bin/sh
+      - -c
+      - |
+          npm i
+          chmod 777 -R /usr/local/android-sdk
+          ./node_modules/.bin/cordova platform add android
+          npm run build-android
   gateway:
     environment:
       - NODE_ENV=development

@@ -1,15 +1,9 @@
 FROM mhart/alpine-node:8.9.4
 
-ENV APP_LOCATION=/usr/src/app
-ENV NOTIFY_LOCATION=$APP_LOCATION/server-notify
-
-# config
-COPY /tradejs.config.js /tradejs.config.custom.js $APP_LOCATION/
-
-WORKDIR /usr/src/app/shared
-COPY /shared .
+# shared
+WORKDIR /usr/src/app/shared/modules/coinpush
+COPY /shared/modules/coinpush .
 
 # server
-WORKDIR $NOTIFY_LOCATION/
-COPY /server-notify/package.json .
+WORKDIR /usr/src/app/server-notify
 COPY /server-notify .

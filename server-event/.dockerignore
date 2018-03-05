@@ -1,9 +1,0 @@
-.git
-_logs/
-
-npm-debug.log
-node_modules
-server.txt
-log.txt
-src/**/*.js
-src/**/*.map

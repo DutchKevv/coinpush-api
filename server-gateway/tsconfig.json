@@ -1,12 +1,9 @@
 {
   "compilerOptions": {
-    "declaration": false,
-    "experimentalDecorators": true,
-    "lib": ["es6", "es2017"],
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "rootDir": "./",
+    "rootDir": "./src",
     "target": "es2017",
-    "skipLibCheck": true,
+    "lib": ["esnext"],
+    "module": "commonjs",
+    "pretty": true
   }
 }

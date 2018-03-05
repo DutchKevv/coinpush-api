@@ -16,7 +16,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/node": "^9.4.6",
+    "@types/node": "latest",
+    "@types/express": "latest",
+    "@types/validator": "latest",
+    "@types/mongoose": "^4.7.29",
     "@types/sharp": "^0.17.6",
     "coinpush": "file:../shared/modules/coinpush",
     "express": "^4.16.2",
@@ -33,7 +36,9 @@
     "requestretry": "^1.13.0",
     "sharp": "^0.19.1",
     "socket.io": "^2.0.4",
-    "tsc-watch": "^1.0.16",
     "typescript": "^2.7.2"
+  },
+  "devDependencies": {
+    "tsc-watch": "^1.0.16"
   }
 }

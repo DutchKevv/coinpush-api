@@ -1,27 +1,9 @@
 {
   "compilerOptions": {
-    "allowJs": true,
-    "declaration": false,
-    "experimentalDecorators": true,
-    "lib": ["es6", "es2017"],
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "rootDir": "./",
+    "rootDir": "./src",
     "target": "es2017",
-    "skipLibCheck": true,
-    "types": [
-      "node"
-    ],
-    "typeRoots": [
-      "node_modules/@types"
-    ],
+    "lib": ["esnext"],
+    "module": "commonjs",
     "pretty": true
-  },
-  "include": [
-    "./**/*.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "shared"
-  ]
+  }
 }

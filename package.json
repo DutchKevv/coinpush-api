@@ -23,7 +23,6 @@
     "NodeJS"
   ],
   "scripts": {
-    "build": "npm run build-server && npm run build-client",
     "copy-ssl": "cp -r /etc/letsencrypt/ ./server-nginx/letsencrypt && chmod -R 777 ./server-nginx/letsencrypt/",
     "start": "npm run d-up",
     "start-server": "docker-compose up nginx redis gateway notify cache event comment user",
@@ -38,10 +37,9 @@
     "d-stop": "docker stop $(docker ps -a -q)",
     "d-build": "docker-compose build",
     "d-up": "docker-compose up",
+    "d-prune": "docker system prune",
     "clean-server": "",
-    "clean-db": "",
-    "run-client": "cd ./client && npm start",
-    "klabam": "npm i && npm run build && npm run prod"
+    "clean-db": ""
   },
   "dependencies": {}
 }

@@ -1,12 +1,8 @@
 {
   "compilerOptions": {
-    "declaration": false,
-    "experimentalDecorators": true,
-    "lib": ["es6", "es2017"],
-    "module": "commonjs",
-    "moduleResolution": "node",
     "rootDir": "./",
-    "target": "es2017",
-    "skipLibCheck": true,
+    "lib": ["es2017"],
+    "target": "es5",
+    "pretty": true
   }
 }
