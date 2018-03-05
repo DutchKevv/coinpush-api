@@ -1,7 +1,7 @@
 FROM mhart/alpine-node:8.9.4
 
 # TODO - only needed if want to rebuild spritesheet
-RUN apk update && add git
+RUN apk update && apk add git
 # RUN apk add --no-cache make gcc g++ python
 # RUN apk update && \
 #     apk upgrade && \
