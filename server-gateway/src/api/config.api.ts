@@ -8,7 +8,7 @@ const router = Router();
 /**
  * get app config
  */
-router.get('/', function (req, res, next) {
+router.get('/', function (req: any, res, next) {
     res.send(config.app);
 });
 

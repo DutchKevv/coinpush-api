@@ -6,7 +6,7 @@ const router = Router();
 /**
  * Single
  */
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', async (req: any, res, next) => {
 	try {
 		if (req.query.type)
 			req.query.type = parseInt(req.query.type, 10);
@@ -20,7 +20,7 @@ router.get('/:id', async (req, res, next) => {
 /**
  * List
  */
-router.get('/', async (req, res, next) => {
+router.get('/', async (req: any, res, next) => {
 	try {
 		res.send(await userController.findMany(req.user, req.query));
 	} catch (error) {
@@ -31,7 +31,7 @@ router.get('/', async (req, res, next) => {
 /**
  * Follow
  */
-router.post('/:id/follow', async (req, res, next) => {
+router.post('/:id/follow', async (req: any, res, next) => {
 	try {
 		res.send(await userController.toggleFollow(req.user, req.params.id));
 	} catch (error) {
@@ -42,7 +42,7 @@ router.post('/:id/follow', async (req, res, next) => {
 /**
  * Create
  */
-router.post('/', async (req, res, next) => {
+router.post('/', async (req: any, res, next) => {
 	try {
 		res.send(await userController.create(req.user, req.body));
 	} catch (error) {
@@ -53,7 +53,7 @@ router.post('/', async (req, res, next) => {
 /**
  * Update
  */
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', async (req: any, res, next) => {
 	try {
 		res.send(await userController.update(req.user, req.params.id, req.body));
 	} catch (error) {
@@ -64,7 +64,7 @@ router.put('/:id', async (req, res, next) => {
 /**
  * delete
  */
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', async (req: any, res, next) => {
 	try {
 		console.log('user user', req.user, req.params.id);
 		res.send(await userController.remove(req.user, req.params.id));

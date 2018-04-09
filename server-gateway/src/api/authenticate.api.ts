@@ -7,7 +7,7 @@ const router = Router();
 /**
  * authenticate 
  */
-router.get('/', async (req, res, next) => {
+router.get('/', async (req: any, res, next) => {
 	try {
 		res.send(await authenticateController.authenticate(req.user, {}, req.query));
 	} catch (error) {
@@ -18,7 +18,7 @@ router.get('/', async (req, res, next) => {
 /**
  * authenticate facebook
  */
-router.post('/facebook', async (req, res, next) => {
+router.post('/facebook', async (req: any, res, next) => {
 	try {
 		res.send(await authenticateController.authenticateFacebook(req.user, req.body));
 	} catch (error) {
@@ -29,7 +29,7 @@ router.post('/facebook', async (req, res, next) => {
 /**
  * password reset request
  */
-router.post('/request-password-reset', async (req, res, next) => {
+router.post('/request-password-reset', async (req: any, res, next) => {
 	try {
 		res.send(await authenticateController.requestPasswordReset(req.user, req.body.email));
 	} catch (error) {
@@ -41,7 +41,7 @@ router.post('/request-password-reset', async (req, res, next) => {
 /**
  * login
  */
-router.post('/', async (req, res, next) => {
+router.post('/', async (req: any, res, next) => {
 	try {
 		res.send(await authenticateController.authenticate(req.user, req.body, req.query));
 	} catch (error) {
@@ -52,7 +52,7 @@ router.post('/', async (req, res, next) => {
 /**
  * password update
  */
-router.put('/', async (req, res, next) => {
+router.put('/', async (req: any, res, next) => {
 	try {
 		res.send(await userController.updatePassword(req.user, req.body.token, req.body.password));
 	} catch (error) {

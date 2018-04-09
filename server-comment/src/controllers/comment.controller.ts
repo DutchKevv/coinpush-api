@@ -9,7 +9,7 @@ const config = require('../../../tradejs.config');
 export const commentController = {
 
 	async findById(reqUser, id: string, params: any = {}): Promise<any> {
-		const comment = await Comment.findById(id).populate('createUser').lean();
+		const comment = <any>await Comment.findById(id).populate('createUser').lean();
 
 		if (!comment)
 			return;
@@ -17,15 +17,15 @@ export const commentController = {
 		if (comment.childCount)
 			comment.children = await this.findChildren(reqUser, comment._id);
 
-		Comment.addILike(reqUser.id, [comment]);
-		User.normalizeProfileImg(comment);
+		(<any>Comment).addILike(reqUser.id, [comment]);
+		(<any>User).normalizeProfileImg(comment);
 
 		return comment;
 	},
 
 	async findByToUserId(reqUser, params: { toUserId: string, offset: any, limit: any }) {
 
-		let comments = await Comment
+		let comments = <Array<any>>await Comment
 			.find({ toUser: params.toUserId, parentId: { $eq: undefined } })
 			.skip(parseInt(params.offset, 10) || 0)
 			.limit(parseInt(params.limit, 10) || 10)
@@ -38,8 +38,8 @@ export const commentController = {
 			return comment;
 		}));
 
-		Comment.addILike(reqUser.id, comments);
-		comments.forEach(User.normalizeProfileImg);
+		(<any>Comment).addILike(reqUser.id, comments);
+		(<any>Comment).forEach((<any>User).normalizeProfileImg);
 
 		return comments;
 	},
@@ -50,7 +50,7 @@ export const commentController = {
 
 	async findChildren(reqUser: IReqUser, parentId: string, params: any = {}) {
 
-		const children = await Comment
+		const children = <Array<any>>await Comment
 			.find({ parentId: { $eq: Types.ObjectId(parentId) } })
 			.sort({ _id: -1 })
 			.skip(parseInt(params.offset, 10) || 0)
@@ -58,13 +58,13 @@ export const commentController = {
 			.populate('createUser')
 			.lean();
 
-		children.forEach(User.normalizeProfileImg);
+		children.forEach((<any>User).normalizeProfileImg);
 
 		return children.reverse();
 	},
 
 	async create(reqUser, options): Promise<any> {
-		const comment = await Comment.create({
+		const comment = <any>await Comment.create({
 			createUser: reqUser.id,
 			toUser: options.toUserId,
 			parentId: options.parentId,
@@ -72,7 +72,7 @@ export const commentController = {
 		});
 
 		if (options.parentId) {
-			const parent = await Comment.findOneAndUpdate({ _id: comment.parentId }, { $inc: { childCount: 1 } });
+			const parent = <any>await Comment.findOneAndUpdate({ _id: comment.parentId }, { $inc: { childCount: 1 } });
 			console.log(parent);
 			// notify if not responding on self
 			if (parent.createUser.toString() !== reqUser.id) {
@@ -95,7 +95,7 @@ export const commentController = {
 	},
 
 	async toggleLike(reqUser, commentId) {
-		const { iLike, comment } = await Comment.toggleLike(reqUser.id, commentId);
+		const { iLike, comment } = await (<any>Comment).toggleLike(reqUser.id, commentId);
 
 		if (comment && iLike) {
 			console.log(comment);

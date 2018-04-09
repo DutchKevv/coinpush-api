@@ -8,7 +8,8 @@ export const symbolController = {
 
     async init() {
         this.symbolSyncer = new SymbolSyncer();
-        await this.symbolSyncer.load();
+        await this.symbolSyncer.sync();
+        this.symbolSyncer.startSyncInterval();
     },
 
 	getPublicList(): Array<any> {

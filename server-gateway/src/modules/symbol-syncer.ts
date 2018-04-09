@@ -2,40 +2,50 @@
 import { pubClient, subClient } from 'coinpush/redis';
 import { EventEmitter } from 'events';
 
+const SYMBOL_INTERVAL = 10000;
+
 export class SymbolSyncer extends EventEmitter {
 
     private _symbols = [];
+    private _syncInterval = null;
 
     get symbols() {
         return this._symbols;
     }
 
-    constructor() {
-        super();
-    }
-
-    async tick() {
+    async onTick() {
 
     }
 
-    async load() {
-        await this._loadSymbols();
-    }
-
-    stop() {
-        // subClient.off('message', this._onMessage);
-    }
-
-    private _loadSymbols(): Promise<void> {
+    public sync(): Promise<void> {
         return new Promise((resolve, reject) => {
-            pubClient.hgetall('symbols', (err, redisSymbols: any) => {
-                if (err)
+            pubClient.hgetall('symbols', (err, symbols: any) => {
+                if (err) {
+                    this.emit('error', err);
                     return reject(err);
+                }
 
-                this._symbols = redisSymbols;
+                // can be empty when having cache problems
+                if (symbols && Object.keys(symbols).length) {
+                    this._symbols = symbols;
+                } else {
+                    console.warn('EMPTY SYMBOL SET RECEIVED FROM REDIS!');
+                    console.log(symbols);
+                }
+
+                this.emit('synced');
 
                 resolve();
             });
         });
+    }
+
+    public startSyncInterval() {
+        this._syncInterval = setInterval(() => this.sync().catch(console.error), SYMBOL_INTERVAL);
+    }
+
+    public stopSyncInterval() {
+        clearInterval(this._syncInterval);
+        this._syncInterval = null;
     }
 }

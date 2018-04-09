@@ -6,7 +6,7 @@ const router = Router();
 /**
  * Search
  */
-router.get('/', async (req, res, next) => {
+router.get('/', async (req: any, res, next) => {
 	try {
 		res.send(await cacheController.find(req.user, req.query));
 	} catch (error) {

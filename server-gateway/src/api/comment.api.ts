@@ -6,7 +6,7 @@ const router = Router();
 /**
  * Single
  */
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', async (req: any, res, next) => {
 	try {
 		res.send(await commentController.findById(req.user, req.params.id, req.query));
 	} catch (error) {
@@ -17,7 +17,7 @@ router.get('/:id', async (req, res, next) => {
 /**
  * List
  */
-router.get('/', async (req, res, next) => {
+router.get('/', async (req: any, res, next) => {
 	try {
 		if (req.query.toUserId)
 			res.send(await commentController.findByUserId(req.user, req.query));
@@ -31,7 +31,7 @@ router.get('/', async (req, res, next) => {
 /**
  * Like
  */
-router.post('/like/:id', async (req, res, next) => {
+router.post('/like/:id', async (req: any, res, next) => {
 	try {
 		res.send(await commentController.toggleLike(req.user, req.params.id));
 	} catch (error) {
@@ -43,7 +43,7 @@ router.post('/like/:id', async (req, res, next) => {
 /**
  * Create
  */
-router.post('/', async (req, res, next) => {
+router.post('/', async (req: any, res, next) => {
 	try {
 		res.send(await commentController.create(req.user, req.body));
 	} catch (error) {
@@ -55,7 +55,7 @@ router.post('/', async (req, res, next) => {
 /**
  * Update
  */
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', async (req: any, res, next) => {
 	try {
 		res.send(await commentController.update(req.user, req.params.id, req.body));
 	} catch (error) {
@@ -67,7 +67,7 @@ router.put('/:id', async (req, res, next) => {
 /**
  * Delete
  */
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', async (req: any, res, next) => {
 	try {
 		res.send(await commentController.remove(req.user, req.params.id));
 	} catch (error) {

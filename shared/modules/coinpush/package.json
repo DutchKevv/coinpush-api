@@ -16,6 +16,7 @@
   "dependencies": {
     "mkdirp": "^0.5.1",
     "redis": "^2.8.0",
+    "redis-commands": "^1.3.5",
     "requestretry": "^1.13.0",
     "socket.io-client": "^2.0.4",
     "socket.io-parser": "^3.1.3",

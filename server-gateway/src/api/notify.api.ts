@@ -6,7 +6,7 @@ const router = Router();
 /**
  * Single
  */
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', async (req: any, res, next) => {
 	try {
 		if (req.query.type)
 			req.query.type = parseInt(req.query.type, 10);
@@ -20,7 +20,7 @@ router.get('/:id', async (req, res, next) => {
 /**
  * List
  */
-router.get('/', async (req, res, next) => {
+router.get('/', async (req: any, res, next) => {
 	try {
 		res.send(await notifyController.findMany(req.user, req.query));
 	} catch (error) {
@@ -31,7 +31,7 @@ router.get('/', async (req, res, next) => {
 /**
  * update unread
  */
-router.put('/unread/:id', async (req, res, next) => {
+router.put('/unread/:id', async (req: any, res, next) => {
 	try {
 		res.send(await notifyController.markUnread(req.user, req.params.id));
 	} catch (error) {
@@ -42,7 +42,7 @@ router.put('/unread/:id', async (req, res, next) => {
 /**
  * update unread
  */
-router.put('/unread', async (req, res, next) => {
+router.put('/unread', async (req: any, res, next) => {
 	try {
 		res.send(await notifyController.markAllUnread(req.user));
 	} catch (error) {
@@ -53,7 +53,7 @@ router.put('/unread', async (req, res, next) => {
 /**
  * update unread
  */
-router.put('/reset-unread-counter', async (req, res, next) => {
+router.put('/reset-unread-counter', async (req: any, res, next) => {
 	try {
 		res.send(await notifyController.resetUnreadCount(req.user));
 	} catch (error) {
@@ -64,7 +64,7 @@ router.put('/reset-unread-counter', async (req, res, next) => {
 /**
  * Update
  */
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', async (req: any, res, next) => {
 	try {
 		res.send(await notifyController.update(req.user, req.params.id, req.body));
 	} catch (error) {
@@ -75,7 +75,7 @@ router.put('/:id', async (req, res, next) => {
 /**
  * delete
  */
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', async (req: any, res, next) => {
 	try {
 		res.send(await notifyController.remove(req.user, req.params.id));
 	} catch (error) {

@@ -6,7 +6,7 @@ const router = Router();
 /**
  * Get overview
  */
-router.get('/', async (req, res, next) => {
+router.get('/', async (req: any, res, next) => {
 	try {
 		res.send(await userOverviewController.getOverview(req.user, req.query));
 	} catch (error) {
