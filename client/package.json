@@ -36,7 +36,7 @@
     "localforage": "1.7.1",
     "npm-check-updates": "^2.14.1",
     "socket.io-client": "2.1.0",
-    "typescript": "2.7.2",
+    "typescript": "2.7",
     "webpack-bundle-analyzer": "2.11.1",
     "zone.js": "0.8.22"
   }

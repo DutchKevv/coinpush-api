@@ -43,7 +43,7 @@ services:
     container_name: client
     build:
       context: ./
-      dockerfile: /client/Dockerfile
+      dockerfile: ./client/Dockerfile
     volumes:
       - ./client:/usr/src/app/client
   client-app:

@@ -273,7 +273,7 @@ export const app = {
 
 			// const JSONString = JSON.stringify(cacheController.tickBuffer);
 
-			this.io.sockets.emit('ticks', JSONString);
+			// this.io.sockets.emit('ticks', JSONString);
 			// client.publish('ticks', JSONString);
 
 			// cacheController.tickBuffer = {};
