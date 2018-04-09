@@ -4,10 +4,9 @@ const config = require('../../../tradejs.config');
 
 export const symbolController = {
 
-    symbolSyncer: null,
+    symbolSyncer: new SymbolSyncer(),
 
     async init() {
-        this.symbolSyncer = new SymbolSyncer();
         await this.symbolSyncer.sync();
         this.symbolSyncer.startSyncInterval();
     },

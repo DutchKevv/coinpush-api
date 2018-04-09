@@ -71,7 +71,11 @@ export class App extends MicroEvent {
     public helpers = generalHelpers;
 
     public user;
-    public data: any = {};
+    public data: any = {
+        notifications: {
+            unreadCount: 0
+        }
+    };
     public isReady = false;
     public angularReady = false;
     public angularReady$ = Promise.resolve();
@@ -121,12 +125,16 @@ export class App extends MicroEvent {
 
         this.prettyBootty.step('data', 0);
 
-        await this._preload()
+        try {
+            await this._preload()
 
-        // set initial unread notification badge count
-        if (this.data.notifications)
+             // set initial unread notification badge count
+            if (this.data.notifications)
             this.notification.updateBadgeCounter(parseInt(this.data.notifications.unreadCount, 10));
-
+        } catch (error) {
+            console.error(error);
+        }
+       
         await this._waitUntilAllScriptsLoaded();
 
         this.isReady = true;
@@ -157,7 +165,6 @@ export class App extends MicroEvent {
 
                 // user authentication token
                 xhr.setRequestHeader('Authorization', this.user ? 'Bearer ' + this.user.token : '');
-                // xhr.setRequestHeader('Authorization', this.user ? 'JWT ' + this.user.token : '');
 
                 // on progress
                 xhr.onprogress = event => this.prettyBootty.step('data', (event.loaded / event.total) * 100);
@@ -174,14 +181,16 @@ export class App extends MicroEvent {
 
                             resolve();
                         } else {
-
-                            // user rejected
-                            if (xhr.status === 401) {
-                                await this.removeStoredUser();
-                                window.location.reload();
-                                return;
+                            switch (xhr.status) {
+                                case 401: 
+                                    await this.removeStoredUser();
+                                    window.location.reload();
+                                    return;
+                                case 404:
+                                case 502: 
+                                    console.error('servers cannot be reached');
+                                    reject();
                             }
-                            reject();
                         }
                     }
                 };

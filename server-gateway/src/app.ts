@@ -37,8 +37,6 @@ export const app = {
 	_socketTickIntervalTime: 500,
 
 	async init(): Promise<void> {
-
-
 		await this._setRedisListeners();
 
 		// load symbols
@@ -74,7 +72,7 @@ export const app = {
 					}
 					break;
 				case 'ticks':
-					symbolController.symbolSyncer.tick(object);
+					symbolController.symbolSyncer.onTick(object);
 					this.io.sockets.emit('ticks', object);
 					break;
 			}
@@ -88,17 +86,18 @@ export const app = {
 
 		// websocket
 		this.io = io(server).listen(server);
-		this.io.use((socket, next) => {
-			socket.userId = socket.handshake.query.userId;
+		// this.io.use((socket, next) => {
+		// 	console.log('connet!');
+		// 	socket.userId = socket.handshake.query.userId;
 
-			// return the result of next() to accept the connection.
-			// if (socket.handshake.query.foo == "bar") {
-			return next();
-			// }
-			// call next() with an Error if you need to reject the connection.
-			// next(new Error('Authentication error'));
-		});
-		// this.io.on('connection', socket => require('./api/cache.socket')(socket));
+		// 	// return the result of next() to accept the connection.
+		// 	// if (socket.handshake.query.foo == "bar") {
+		// 	return next();
+		// 	// }
+		// 	// call next() with an Error if you need to reject the connection.
+		// 	// next(new Error('Authentication error'));
+		// });
+		this.io.on('connection', socket => require('./api/socket.api')(socket));
 
 		/**
 		 *
@@ -161,7 +160,7 @@ export const app = {
 		 * set client user id for upcoming (proxy) requests
 		 */
 		this.api.use((req, res, next) => {
-			console.log('APP.TS : req.user', req.user);
+
 			if (req.user) {
 				req.headers._id = req.user.id;
 				next();
@@ -274,7 +273,7 @@ export const app = {
 
 			// const JSONString = JSON.stringify(cacheController.tickBuffer);
 
-			// this.io.sockets.emit('ticks', JSONString);
+			this.io.sockets.emit('ticks', JSONString);
 			// client.publish('ticks', JSONString);
 
 			// cacheController.tickBuffer = {};

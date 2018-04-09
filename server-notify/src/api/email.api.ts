@@ -6,7 +6,7 @@ const router = Router();
 /**
  * Password reset
  */
-router.post('/request-password-reset', async (req, res, next) => {
+router.post('/request-password-reset', async (req: any, res, next) => {
 	console.log(req.body);
 
 	try {
@@ -19,7 +19,7 @@ router.post('/request-password-reset', async (req, res, next) => {
 /**
  * Password reset
  */
-router.post('/new-member', async (req, res, next) => {
+router.post('/new-member', async (req: any, res, next) => {
 	console.log(req.body);
 
 	try {

@@ -68,7 +68,7 @@ export const authenticateController = {
 	},
 
 	async authenticateFacebook(reqUser: IReqUser, params: { token: string } = { token: undefined }) {
-		const facebookProfile = await FB.api('me', { fields: ['id', 'name', 'email', 'gender', 'about', 'locale'], access_token: params.token });
+		const facebookProfile = await FB.api('me', { fields: ['id', 'name', 'email', 'gender', 'locale'], access_token: params.token });
 
 		if (facebookProfile && facebookProfile.id) {
 			// search in DB for user with facebookId

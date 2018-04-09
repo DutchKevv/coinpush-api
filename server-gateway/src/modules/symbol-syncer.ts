@@ -13,7 +13,7 @@ export class SymbolSyncer extends EventEmitter {
         return this._symbols;
     }
 
-    async onTick() {
+    async onTick(tick: any) {
 
     }
 

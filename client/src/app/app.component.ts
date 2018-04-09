@@ -7,6 +7,7 @@ import { UserService } from './services/user.service';
 import { app } from '../core/app';
 import { EventService } from './services/event.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { SocketService } from './services/socket.service';
 
 declare let Module: any;
 
@@ -109,13 +110,15 @@ export class AppComponent implements OnInit, AfterViewInit {
 		public authenticationService: AuthenticationService,
 		private _changeDetectorRef: ChangeDetectorRef,
 		private _eventService: EventService,
-		private _cacheService: CacheService) {
+		private _cacheService: CacheService,
+		private _socketService: SocketService) {
 		// this._changeDetectorRef.detach();
 	}
 
 	ngOnInit() {
 		this._cacheService.init(); // cacheService must init before eventService
 		this._eventService.init();
+		this._socketService.connect();
 
 		this._routerEventsSub = this.router.events.subscribe((val) => {
 			if (val instanceof NavigationEnd) {

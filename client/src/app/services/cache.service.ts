@@ -23,16 +23,16 @@ export class CacheService {
 
 		app.on('symbols-update', () => this._updateSymbols());
 
-		// this._socketService.socket.on('ticks', ticks => {
-		// 	for (let _symbol in ticks) {
-		// 		let symbol = this.getSymbolByName(_symbol);
+		this._socketService.socket.on('ticks', ticks => {
+			for (let _symbol in ticks) {
+				let symbol = this.getSymbolByName(_symbol);
 
-		// 		if (symbol)
-		// 			symbol.tick([ticks[_symbol]]);
-		// 	}
+				if (symbol)
+					symbol.tick([ticks[_symbol]]);
+			}
 
-		// 	this.changed$.next(Object.keys(ticks));
-		// });
+			this.changed$.next(Object.keys(ticks));
+		});
 	}
 
 	public async read(params: any) {

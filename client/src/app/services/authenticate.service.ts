@@ -112,7 +112,7 @@ export class AuthenticationService {
 	public authenticateFacebook(): Promise<any> {
 		return new Promise((resolve, reject) => {
 			const clientId = environment.production ? FB_APP_ID_PROD : FB_APP_ID_DEV;
-			const scope = 'email,public_profile,user_location,user_birthday,user_about_me';
+			const scope = 'email,public_profile,user_location,user_birthday';
 			const redirectUrl = (environment.production ? 'https://frontend-freelance.com' : 'http://localhost:4000') + '/index.redirect.facebook.html';
 			const loginUrl = `//graph.facebook.com/oauth/authorize?client_id=${clientId}&response_type=token&redirect_uri=${redirectUrl}&scope=${scope}`;
 
