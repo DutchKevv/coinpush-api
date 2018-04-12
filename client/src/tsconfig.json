@@ -4,7 +4,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": false,
     "lib": ["dom", "es2017"],
-    "target": "es6",
+    "target": "es5",
     "paths": {
       "coinpush/*": [
         "../../shared/modules/coinpush/*"

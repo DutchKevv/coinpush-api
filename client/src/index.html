@@ -165,6 +165,7 @@
                 isReady: false,
                 isReady$: Promise.resolve(),
                 version: '',
+                isSecure: location.protocol === 'https:',
                 isApp: !!window['_cordovaNative'],
                 isEmulator: navigator.platform === 'Linux i686',
                 isLocal: document.URL.indexOf('file://') > -1

@@ -30,7 +30,7 @@
     "@angular/platform-browser": "5.2.9",
     "@angular/router": "5.2.9",
     "@ng-bootstrap/ng-bootstrap": "1.1.0",
-    "@types/node": "9.6.1",
+    "@types/node": "9.6.4",
     "bootstrap": "4.0.0",
     "highcharts": "6.0.7",
     "localforage": "1.7.1",

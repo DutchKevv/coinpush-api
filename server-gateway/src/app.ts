@@ -82,10 +82,10 @@ export const app = {
 	_setupApi(): void {
 		// http 
 		this.api = express();
-		const server = this.api.listen(config.server.gateway.port, '0.0.0.0', () => console.log(`\n Gateway service started on      : 0.0.0.0:${config.server.gateway.port}`));
+		const http = require('http').Server(this.api);
 
 		// websocket
-		this.io = io(server).listen(server);
+		this.io = io(http);
 		// this.io.use((socket, next) => {
 		// 	console.log('connet!');
 		// 	socket.userId = socket.handshake.query.userId;
@@ -183,9 +183,9 @@ export const app = {
 			}
 		});
 
-		this.api.get('/', function (req, res, next) {
-			res.send('This page has been viewed ' + 3 + ' times!');
-		});
+		// this.api.get('/', function (req, res, next) {
+		// 	res.send('This page has been viewed ' + 3 + ' times!');
+		// });
 
 		/**
 		 * symbol
@@ -261,6 +261,8 @@ export const app = {
 			console.error(error);
 			res.status(500).send('Error');
 		});
+
+		const server = http.listen(config.server.gateway.port, '0.0.0.0', () => console.log(`\n Gateway service started on      : 0.0.0.0:${config.server.gateway.port}`));
 	},
 
 	_toggleWebSocketTickInterval(state: boolean) {

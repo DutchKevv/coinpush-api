@@ -11,7 +11,7 @@ RUN apk update && apk add git
 #     apk add --update --repository http://dl-3.alpinelinux.org/alpine/edge/testing vips-tools vips-dev fftw-dev && \
 #     rm -rf /var/cache/apk/*
 
-RUN npm set progress=false && npm config set depth 0 && npm cache clean --force
+# RUN npm set progress=false && npm config set depth 0 && npm cache clean --force
 
 # shared
 WORKDIR /usr/src/app/shared

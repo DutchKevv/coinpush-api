@@ -1,4 +1,4 @@
-FROM mhart/alpine-node:8.11.0
+FROM mhart/alpine-node:8.11.1
 
 # shared
 WORKDIR /usr/src/app/shared
