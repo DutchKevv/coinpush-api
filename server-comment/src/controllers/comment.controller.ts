@@ -39,7 +39,7 @@ export const commentController = {
 		}));
 
 		(<any>Comment).addILike(reqUser.id, comments);
-		(<any>Comment).forEach((<any>User).normalizeProfileImg);
+		comments.forEach((<any>User).normalizeProfileImg);
 
 		return comments;
 	},
