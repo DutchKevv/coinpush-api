@@ -6,8 +6,8 @@ services:
     build: ./server-nginx
     image: nginx
     container_name: nginx 
-    links:
-      - gateway    
+    # links:
+    #   - gateway    
   mongodb:
     image: mongo:latest
     container_name: "mongodb"
