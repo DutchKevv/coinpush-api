@@ -109,6 +109,12 @@ export class SocialFeedComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.comments$.next(current);
 	}
 
+	public async toggleLike(model: CommentModel) {
+		console.log('sdf');
+		await this.commentService.toggleLike(model);
+		this.changeDetectorRef.detectChanges();
+	}
+
 	async respond(event, parentModel: CommentModel) {
 		const input = event.currentTarget;
 		input.setAttribute('disabled', true);

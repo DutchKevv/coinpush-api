@@ -69,7 +69,6 @@ export class NotificationService {
 	}
 
 	private async _onNotification(notification) {
-		alert('sdf');
 		console.log('NOTIFICATION!', notification);
 		switch (notification.type) {
 			case 'post-comment':

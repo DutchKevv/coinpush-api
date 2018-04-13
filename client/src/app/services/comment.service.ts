@@ -96,8 +96,8 @@ export class CommentService {
 	async toggleLike(model: CommentModel) {
 		const result = <any>await this._http.post('/comment/like/' + model.get('_id'), {})
 			.toPromise();
-
-		const newCount = model.get('likeCount') + (result.state ? 1 : -1);
-		model.set({ iLike: !!result.state, likeCount: newCount });
+		console.log(model, result);
+		const newCount = model.get('likeCount') + (result.body.state ? 1 : -1);
+		model.set({ iLike: !!result.body.state, likeCount: newCount });
 	}
 }

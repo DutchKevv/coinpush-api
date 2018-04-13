@@ -20,6 +20,7 @@ export class BaseModel {
 
 	public set(obj: any, triggerChange = true, triggerOptions = true) {
 		Object.assign(this.options, obj);
+		// this.options$.next(this.options);
 	}
 
 	private __setInitialOptions(target, options) {
