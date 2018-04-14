@@ -154,11 +154,11 @@
           "/resources": [
             {
               "xml": "<string name=\"fb_app_id\">162805194523993</string>",
-              "count": 15
+              "count": 19
             },
             {
               "xml": "<string name=\"fb_app_name\">CoinPush</string>",
-              "count": 9
+              "count": 13
             }
           ]
         }

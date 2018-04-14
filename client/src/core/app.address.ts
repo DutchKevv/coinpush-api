@@ -1,3 +1,5 @@
+import { environment } from '../environments/environment';
+
 declare let window: any;
 
 const localIp = '127.0.0.1';
@@ -11,7 +13,7 @@ let ip: string;
 let port: number;
 
 if (window.platform.isApp) {
-	if (window.platform.isEmulator) {
+	if (window.platform.isEmulator && !environment.production) {
 		ip = emulatorIp;
 		host = 'http';
 		ws = 'ws';

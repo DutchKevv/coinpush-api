@@ -56,8 +56,21 @@ export class LoginComponent implements OnInit {
 		
 		try {
 			await this.authenticationService.authenticateFacebook();
-		} catch (error) {
-			this._alertService.error('Facebook login failed...');
+		} catch (errorObj) {
+			const error = errorObj.error;
+
+			if (error && error.code) {
+				switch (error.code) {
+					case G_ERROR_DUPLICATE:
+						if (error.field === 'email')
+							this._alertService.error(`Email already used`);
+						break;
+					default:
+						this._alertService.error(`Facebook login failed...`);
+				}
+			} else {
+				this._alertService.error(`Facebook login failed...`);
+			}
 		} finally {
 			this.loading$.emit(false);
 		}		

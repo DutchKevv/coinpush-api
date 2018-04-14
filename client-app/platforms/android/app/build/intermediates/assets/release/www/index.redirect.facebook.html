@@ -1,0 +1,38 @@
+<html>
+
+<head></head>
+
+<body>
+    <p style="text-align: center; margin-top: 100px">one moment please...</p>
+    <script>
+        setTimeout(() => {
+            function getHashValue(key) {
+                var matches = location.hash.match(new RegExp(key + '=([^&]*)'));
+                return matches ? matches[1] : null;
+            }
+
+            function getUrlParam(key) {
+                const url = new URL(window.location.href);
+                return  url.searchParams.get(key);
+            }
+
+            // check facebook redirect
+            const fbRedirectToken = getHashValue('access_token');
+            if (fbRedirectToken) {
+                window.opener.postMessage({token: fbRedirectToken}, window.location.origin);
+                window.close();
+            } else {
+                const error = getUrlParam('error');
+                const errorCode = getUrlParam('error_code');
+
+                if (error) {
+                    window.opener.postMessage({error: {code: errorCode}}, window.location.origin);
+                }
+
+                // window.close();
+            }
+        })
+    </script>
+</body>
+
+</html>
