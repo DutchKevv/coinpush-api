@@ -11,7 +11,7 @@ export class UserService {
 
 	public model: UserModel = new UserModel(app.user || {
         name: 'Anonymous',
-        img: './assets/image/default-profile.jpg'
+        img: '/assets/image/default-profile.jpg'
     });
 
 	constructor(

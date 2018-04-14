@@ -11,7 +11,6 @@ export const CommentSchema = new Schema({
 	},
 	toUser: {
 		type: Schema.Types.ObjectId,
-		required: true,
 		ref: 'User'
 	},
 	parentId: {
@@ -32,6 +31,9 @@ export const CommentSchema = new Schema({
 	likeCount: {
 		type: Number,
 		default: 0
+	},
+	public: {
+		type: Boolean
 	},
 	created: {
 		type: Date,

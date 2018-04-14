@@ -1,0 +1,9 @@
+@import '~bootstrap/scss/_functions';
+@import '~bootstrap/scss/_variables';
+@import '~bootstrap/scss/_mixins';
+
+:host {
+    display: block;
+    height: 100%;
+    // overflow: auto;
+}

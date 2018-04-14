@@ -9,12 +9,14 @@ import { SocialFeedComponent } from './components/social-feed/social.feed.compon
 import { PasswordResetComponent } from "./components/password-reset/password-reset.component";
 import { RequestPasswordResetComponent } from "./components/request-password-reset/request-password-reset.component";
 import { EventOverviewComponent } from './components/event-overview/event-overview.component';
+import { TimelineComponent } from './components/timeline/timeline.component';
 
 const routes: Routes = [
 	{ path: '', redirectTo: 'symbols', pathMatch: 'full', canActivate: [AuthGuard] },
 	{ path: 'password-reset', component: PasswordResetComponent },
 	{ path: 'request-password-reset', component: RequestPasswordResetComponent },
 
+	{ path: 'timeline', component: TimelineComponent, canActivate: [AuthGuard] },
 	{ path: 'comment/:id', component: SocialFeedComponent, canActivate: [AuthGuard] },
 	{ path: 'user', component: UserOverviewComponent, canActivate: [AuthGuard] },
 	{ path: 'calendar', component: EventOverviewComponent, canActivate: [AuthGuard] },

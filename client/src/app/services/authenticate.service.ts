@@ -111,28 +111,57 @@ export class AuthenticationService {
 
 	public authenticateFacebook(): Promise<any> {
 		return new Promise((resolve, reject) => {
-			const clientId = environment.production ? FB_APP_ID_PROD : FB_APP_ID_DEV;
 			const scope = 'email,public_profile,user_location,user_birthday';
-			const redirectUrl = (environment.production ? 'https://frontend-freelance.com' : 'http://localhost:4000') + '/index.redirect.facebook.html';
-			const loginUrl = `//graph.facebook.com/oauth/authorize?client_id=${clientId}&response_type=token&redirect_uri=${redirectUrl}&scope=${scope}`;
 
-			const self = this;
-			window.addEventListener('message', async function cb(message) {
-				window.removeEventListener('message', cb, false);
+			// app
+			if (app.platform.isApp) {
+				window.facebookConnectPlugin.login(scope.split(','), async (response) => {
+					console.log(response)
+					const token = response.authResponse.accessToken;
+					
+					if (token) {
+						const authResult = <any>await this._http.post(`/authenticate/facebook`, { token }).toPromise();
+						if (authResult && authResult.token) {
+							await this._userService.update({ token: authResult.token }, false, false);
+							window.location = 'file:///android_asset/www/index.html';
+						}
+					} else {
+						console.error(response);
+					}
+				}, (error) => {
+					reject(error);
+				});
 
-				if (message.data.error)
-					return reject(message.error);
+			// browser
+			} else {
+				const clientId = environment.production ? FB_APP_ID_PROD : FB_APP_ID_DEV;
 
-				const authResult = <any>await self._http.post(`/authenticate/facebook`, { token: message.data.token }).toPromise();
+				// const redirectUrl = 'https://www.facebook.com/connect/login_success.html';
+				// const redirectUrl = window.location.origin + 'index.redirect.facebook.html';
+				const redirectUrl = (environment.production ? 'https://frontend-freelance.com' : 'http://localhost:4000') + '/index.redirect.facebook.html';
+				const loginUrl = `https://graph.facebook.com/oauth/authorize?client_id=${clientId}&response_type=token&redirect_uri=${redirectUrl}&scope=${scope}`;
 
-				if (authResult && authResult.token) {
-					await self._userService.update({ token: authResult.token }, false, false);
-					window.location.reload();
-				}
-			}, false);
+				const self = this;
+				window.addEventListener('message', async function cb(message) {
+					console.log(message);
+					window.removeEventListener('message', cb, false);
 
-			const fbWindow = window.open(loginUrl, "fbLogin");
-			fbWindow.focus();
+					if (message.data.error)
+						return reject(message.error);
+
+					const authResult = <any>await self._http.post(`/authenticate/facebook`, { token: message.data.token }).toPromise();
+
+					if (authResult && authResult.token) {
+						await self._userService.update({ token: authResult.token }, false, false);
+						window.location.reload();
+					}
+				}, false);
+
+				const fbWindow = window.open(loginUrl, '_system');
+				console.log('asd', fbWindow);
+
+				fbWindow.focus();
+			}
 		});
 	}
 
@@ -157,7 +186,8 @@ export class AuthenticationService {
 
 	public async logout(): Promise<void> {
 		await app.removeStoredUser();
-		window.location = window.location.origin;
+
+		window.location = app.platform.isApp ? 'file:///android_asset/www/index.html' : window.location.origin;
 	}
 
 	private _getDeviceToken() {

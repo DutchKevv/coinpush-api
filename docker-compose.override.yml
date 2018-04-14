@@ -38,14 +38,16 @@ services:
   client-app:
     environment:
       - NODE_ENV=development
+    ports:
+      - "2222:22"
+      - "5554:5554"
     command:
       - /bin/sh
       - -c
       - |
-          npm i
-          chmod 777 -R /usr/local/android-sdk
-          ./node_modules/.bin/cordova platform add android
-          npm run build-android
+          # npm i
+          # cordova platform add android
+          npm run emulate-android
   gateway:
     environment:
       - NODE_ENV=development

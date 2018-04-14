@@ -39,3 +39,4 @@ app.use((req: any, res, next) => {
 
 app.use('/user', require('./api/user.api'));
 app.use('/comment', require('./api/comment.api'));
+app.use('/timeline', require('./api/timeline.api'));

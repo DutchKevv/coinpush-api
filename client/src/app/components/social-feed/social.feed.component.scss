@@ -77,9 +77,15 @@
 	}
 }
 
-.feed {
-	max-width: 500px;
+.feed-container {
+	overflow: auto;
 	width: 100%;
+	margin-bottom: 20px;
+}
+
+.feed {
+	margin: 0 auto;
+	max-width: 500px;
 }
 
 emoji-input{
@@ -262,4 +268,8 @@ app-comment-box {
 		border-radius: 5px;
 		max-width: 500px;
 	}
+}
+
+.showMoreTextButton {
+	color: blue !important;
 }

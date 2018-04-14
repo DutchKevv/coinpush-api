@@ -1,6 +1,6 @@
 <header>
     <div class="profile-details" style="background: url(./assets/image/cover.svg) center/cover;">
-        <img class="profileImg" [attr.src]="user.options.img ? user.options.img : undefined">
+        <img class="profileImg" [attr.src]="user.options.img ? (user.options.img | NormalizeImgUrl) : undefined">
         <div class="meta-data">
             <h2>{{user.options.name || '&nbsp;'}}</h2>
             <div class="profile-details-meta-container">

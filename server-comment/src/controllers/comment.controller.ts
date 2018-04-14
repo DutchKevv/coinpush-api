@@ -66,7 +66,8 @@ export const commentController = {
 	async create(reqUser, options): Promise<any> {
 		const comment = <any>await Comment.create({
 			createUser: reqUser.id,
-			toUser: options.toUserId,
+			toUser: options.toUserId && options.toUserId !== reqUser.id ? options.toUserId : undefined,
+			// public: options.toUserId && options.toUserId !== reqUser.id ? undefined : true,
 			parentId: options.parentId,
 			content: options.content
 		});

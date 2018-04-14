@@ -35,17 +35,33 @@ export class CommentService {
 		return model;
 	}
 
-	async findById(id: string): Promise<CommentModel> {
-		const result = await this._http.get('/comment/' + id)
+	public async findTimeline(offset: number = 0, limit: number = 10): Promise<Array<CommentModel>> {
+		const params = new HttpParams({
+			fromObject: {
+				offset: offset.toString(),
+				limit: limit.toString()
+			}
+		});
+
+		const result = <any>await this._http.get('/timeline', {params}).map((res: any) => {
+			return res.map((object => {
+				const model = new CommentModel(object);
+				model.options.children = model.options.children.map(c => new CommentModel(c));
+				return model;
+			}))
+		}).toPromise();
+
+		return result
+	}
+
+	public findById(id: string): Promise<CommentModel> {
+		return this._http.get('/comment/' + id)
 			.map((res: any) => {
 				const model = new CommentModel(res.body);
 				model.options.children = model.options.children.map(c => new CommentModel(c));
-				console.log(model);
 				return model;
 			})
 			.toPromise();
-
-		return result;
 	}
 
 	async findByUserId(toUserId: string, offset: number = 0, limit: number = 5): Promise<Array<CommentModel>> {

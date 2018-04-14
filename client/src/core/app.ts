@@ -80,7 +80,6 @@ export class App extends MicroEvent {
     public angularReady = false;
     public angularReady$ = Promise.resolve();
 
-
     private _boottySteps = [
         {
             id: 'init',
@@ -168,6 +167,7 @@ export class App extends MicroEvent {
 
                 // on progress
                 xhr.onprogress = event => this.prettyBootty.step('data', (event.loaded / event.total) * 100);
+                xhr.timeout = 10000;
 
                 xhr.onreadystatechange = async () => {
                     if (xhr.readyState == 4) {
@@ -181,15 +181,19 @@ export class App extends MicroEvent {
 
                             resolve();
                         } else {
+                            console.log(xhr.status);
                             switch (xhr.status) {
                                 case 401: 
                                     await this.removeStoredUser();
                                     window.location.reload();
                                     return;
+                                case 0:
                                 case 404:
-                                case 502: 
+                                case 502:
+                                case 503:
+                                case 504:
                                     console.error('servers cannot be reached');
-                                    reject();
+                                    return reject();
                             }
                         }
                     }

@@ -30,8 +30,8 @@ client/www/
 # mobile app
 client-app/.gradle
 client-app/hooks/
-client-app/platforms/
-client-app/plugins/
+# client-app/platforms/
+# client-app/plugins/
 client-app/res/
 client-app/scripts/
 

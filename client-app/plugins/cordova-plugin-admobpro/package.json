@@ -1,35 +1,57 @@
 {
-  "_from": "cordova-plugin-admobpro@^2.31.1",
-  "_id": "cordova-plugin-admobpro@2.31.1",
-  "_inBundle": false,
-  "_integrity": "sha1-22cThIH2dwEz+R/0S/yK9Rpszsw=",
+  "_args": [
+    [
+      {
+        "raw": "cordova-plugin-admobpro@^2.31.4",
+        "scope": null,
+        "escapedName": "cordova-plugin-admobpro",
+        "name": "cordova-plugin-admobpro",
+        "rawSpec": "^2.31.4",
+        "spec": ">=2.31.4 <3.0.0",
+        "type": "range"
+      },
+      "/usr/src/app/client-app"
+    ]
+  ],
+  "_from": "cordova-plugin-admobpro@>=2.31.4 <3.0.0",
+  "_id": "cordova-plugin-admobpro@2.31.4",
+  "_inCache": true,
   "_location": "/cordova-plugin-admobpro",
+  "_nodeVersion": "6.11.1",
+  "_npmOperationalInternal": {
+    "host": "s3://npm-registry-packages",
+    "tmp": "tmp/cordova-plugin-admobpro_2.31.4_1521983722579_0.8927279003773445"
+  },
+  "_npmUser": {
+    "name": "floatinghotpot",
+    "email": "rjfun.mobile@gmail.com"
+  },
+  "_npmVersion": "3.10.10",
   "_phantomChildren": {},
   "_requested": {
-    "type": "range",
-    "registry": true,
-    "raw": "cordova-plugin-admobpro@^2.31.1",
-    "name": "cordova-plugin-admobpro",
+    "raw": "cordova-plugin-admobpro@^2.31.4",
+    "scope": null,
     "escapedName": "cordova-plugin-admobpro",
-    "rawSpec": "^2.31.1",
-    "saveSpec": null,
-    "fetchSpec": "^2.31.1"
+    "name": "cordova-plugin-admobpro",
+    "rawSpec": "^2.31.4",
+    "spec": ">=2.31.4 <3.0.0",
+    "type": "range"
   },
   "_requiredBy": [
     "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/cordova-plugin-admobpro/-/cordova-plugin-admobpro-2.31.1.tgz",
-  "_shasum": "db67138481f6770133f91ff44bfc8af51a6ccecc",
-  "_spec": "cordova-plugin-admobpro@^2.31.1",
-  "_where": "/Users/kewinbrandsma/Projects/TradeJS/client-app",
+  "_resolved": "https://registry.npmjs.org/cordova-plugin-admobpro/-/cordova-plugin-admobpro-2.31.4.tgz",
+  "_shasum": "3f27611ec66ab1ee3ccfa57642b7edd28f1cbd0b",
+  "_shrinkwrap": null,
+  "_spec": "cordova-plugin-admobpro@^2.31.4",
+  "_where": "/usr/src/app/client-app",
   "author": {
     "name": "Liming Xie"
   },
   "bugs": {
     "url": "https://github.com/floatinghotpot/cordova-admob-pro/issues"
   },
-  "bundleDependencies": false,
   "cordova": {
     "id": "cordova-plugin-admobpro",
     "platforms": [
@@ -39,8 +61,17 @@
       "wp8"
     ]
   },
-  "deprecated": false,
+  "dependencies": {},
   "description": "Ultimate Cordova Plugin for Google AdMob and DFP to monetize hybrid apps. Show mobile Ad with single line of JavaScript. Compatible with Cordova CLI, PhoneGap Build, Intel XDK/Crosswalk, Google ChromeApp, Ionic, Meteor, etc.",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "shasum": "3f27611ec66ab1ee3ccfa57642b7edd28f1cbd0b",
+    "tarball": "https://registry.npmjs.org/cordova-plugin-admobpro/-/cordova-plugin-admobpro-2.31.4.tgz",
+    "fileCount": 116,
+    "unpackedSize": 34662277
+  },
+  "gitHead": "2b15e21109179697f5a2391114dc3eaf82be7bb9",
   "homepage": "https://github.com/floatinghotpot/cordova-admob-pro#readme",
   "keywords": [
     "cordova",
@@ -89,10 +120,19 @@
     "rjfun"
   ],
   "license": "MIT",
+  "maintainers": [
+    {
+      "name": "floatinghotpot",
+      "email": "rjfun.mobile@gmail.com"
+    }
+  ],
   "name": "cordova-plugin-admobpro",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/floatinghotpot/cordova-admob-pro.git"
   },
-  "version": "2.31.1"
+  "scripts": {},
+  "version": "2.31.4"
 }

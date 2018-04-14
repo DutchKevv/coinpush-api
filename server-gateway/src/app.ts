@@ -223,6 +223,11 @@ export const app = {
 		this.api.use('/api/v1/user', require('./api/user.api'));
 
 		/**
+		 * timeline
+		 */
+		this.api.use('/api/v1/timeline', require('./api/timeline.api'));
+
+		/**
 		 * comment
 		 */
 		this.api.use('/api/v1/comment', require('./api/comment.api'));

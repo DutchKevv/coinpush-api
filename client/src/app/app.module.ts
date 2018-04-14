@@ -33,6 +33,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from './services/notification.service';
 import { NotificationMenuComponent } from './components/notification-menu/notification-menu.component';
 import { SocketService } from './services/socket.service';
+import { TimelineComponent } from './components/timeline/timeline.component';
+import { NormalizeImgUrlPipe } from './pipes/normalize-image.pipe';
 
 @NgModule({
 	declarations: [
@@ -52,7 +54,9 @@ import { SocketService } from './services/socket.service';
 		ProfileComponent,
 		SettingsComponent,
 		CommentBoxComponent,
-		AlarmMenuActiveSymbolEventPipe
+		TimelineComponent,
+		AlarmMenuActiveSymbolEventPipe,
+		NormalizeImgUrlPipe
 	],
 	imports: [
 		BrowserModule,

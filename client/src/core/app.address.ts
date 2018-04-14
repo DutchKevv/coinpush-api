@@ -9,7 +9,6 @@ let host: string = 'https';
 let ws: string;
 let ip: string;
 let port: number;
-let apiUrl = '';
 
 if (window.platform.isApp) {
 	if (window.platform.isEmulator) {
@@ -23,15 +22,15 @@ if (window.platform.isApp) {
 		ws = 'wss';
 		port = undefined;
 	}
-
-	apiUrl = host + '://' + (ip + (port ? ':' + port : '')) + '/api/v1/';
 } else {
 	ip = location.hostname;
 	port = parseInt(location.port, 10) || undefined;
 	host = location.protocol.replace(/:/g, '');
-	apiUrl = '/api/v1/';
 }
 
+const hostUrl = host + '://' + (ip + (port ? ':' + port : ''));
+const apiUrl = hostUrl + '/api/v1/';
+
 export const getAddress = function () {
-	return { host, ip, port, apiUrl, ws, secure};
+	return { host, ip, port, hostUrl, apiUrl, ws, secure};
 }

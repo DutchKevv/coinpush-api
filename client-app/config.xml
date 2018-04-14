@@ -13,10 +13,23 @@
     <content src="index.html" />
     <access origin="http://10.0.2.2" />
     <access origin="https://frontend-freelance.com" subdomains="true" />
+    <access origin="https://facebook.com" subdomains="true" />
+    <access origin="https://graph.facebook.com" subdomains="true" />
+    <access origin="https://connect.facebook.net" subdomains="true" />
+    <access origin="https://staticxx.facebook.com" subdomains="true" />
+    <allow-navigation href="https://facebook.com/*" />
+    <allow-navigation href="https://graph.facebook.com/*" />
+    <allow-navigation href="https://connect.facebook.net/*" />
+    <allow-navigation href="https://staticxx.facebook.com/*" />
     <allow-navigation href="https://frontend-freelance.com" />
     <allow-navigation href="http://10.0.2.2" />
     <platform name="android">
+        <preference name="android-minSdkVersion" value="19" />
         <allow-intent href="market:*" />
+        <config-file parent="/resources" target="./res/values/strings.xml">
+            <string name="fb_app_id">162805194523993</string>
+            <string name="fb_app_name">CoinPush</string>
+        </config-file>
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />
@@ -27,6 +40,11 @@
     <plugin name="cordova-plugin-firebase" spec="^0.1.25" />
     <plugin name="cordova-plugin-fileopener" spec="^1.0.5" />
     <plugin name="cordova-plugin-badge" spec="^0.8.7" />
+    <plugin name="cordova-plugin-inappbrowser" spec="^2.0.2" />
+    <plugin name="cordova-plugin-facebook4" spec="^1.10.0">
+        <variable name="APP_ID" value="162805194523993" />
+        <variable name="APP_NAME" value="CoinPush" />
+    </plugin>
     <engine name="browser" spec="5.0.3" />
     <engine name="android" spec="^7.1.0" />
 </widget>

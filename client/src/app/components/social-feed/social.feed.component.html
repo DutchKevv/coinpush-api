@@ -27,69 +27,72 @@
 	</div> -->
 </div>
 
-<div class="feed">
-	<app-comment-box *ngIf="userId" [userId]="userId" (newMessage)="addMessage($event)"></app-comment-box>
+<div class="feed-container" (scroll)="onScroll($event)">
+	<div class="feed">
+		<app-comment-box *ngIf="!commentId" [userId]="userId" (newMessage)="addMessage($event)"></app-comment-box>
 
-	<div *ngFor="let comment of comments$ | async; trackBy: trackByFn" class="comment-container" [ngClass]="{'fade-in': comment.options.isNew}">
-		<header>
-			<a [routerLink]="['/user/', comment.options.createUser._id]">
-				<img [attr.src]="comment.options.createUser.img" />
-			</a>
-			<div>
-				<a [routerLink]="['/user/', comment.options.createUser._id]" class="g-username">
-					{{comment.options.createUser.name}}
+		<div *ngFor="let comment of comments$ | async; trackBy: trackByFn" class="comment-container" [ngClass]="{'fade-in': comment.options.isNew}">
+			<header>
+				<a [routerLink]="['/user/', comment.options.createUser._id]">
+					<img [attr.src]="comment.options.createUser.img | NormalizeImgUrl" />
 				</a>
-				<a [routerLink]="['/comment/', comment.options._id]">{{comment.options.created | date:'shortTime'}}</a>
-			</div>
-			<i class="fa fa-ellipsis-v more-post-actions-button" (click)="showMorePostActions(comment)"></i>
-		</header>
-		<main>
-			<p [innerHtml]="comment.options.content | parseCommentContent"></p>
-		</main>
-		<footer>
-			<div class="parent-buttons">
-				<a (click)="toggleLike(comment)" [ngClass]="{active: (comment.options$ | async).iLike}">
-					<span *ngIf="(comment.options$ | async).iLike">I Like</span>
-					<span *ngIf="!(comment.options$ | async).iLike">like</span>
-					<span *ngIf="(comment.options$ | async).likeCount > 0">
-						<i class="fa fa-thumbs-o-up"></i> {{(comment.options$ | async).likeCount}} -
-					</span>
+				<div>
+					<a [routerLink]="['/user/', comment.options.createUser._id]" class="g-username">
+						{{comment.options.createUser.name}}
+					</a>
+					<a [routerLink]="['/comment/', comment.options._id]">{{comment.options.created | date:'shortTime'}}</a>
+				</div>
+				<i class="fa fa-ellipsis-v more-post-actions-button" (click)="showMorePostActions(comment)"></i>
+			</header>
+			<main>
+				<p [innerHtml]="comment.options.content | parseCommentContent"></p>
+				<a *ngIf="comment.options.content.length > 100" (click)="onClickShowMoreText(comment, $event)" class="showMoreTextButton">show more</a>
+			</main>
+			<footer>
+				<div class="parent-buttons">
+					<a (click)="toggleLike(comment)" [ngClass]="{active: (comment.options$ | async).iLike}">
+						<span *ngIf="(comment.options$ | async).iLike">I Like</span>
+						<span *ngIf="!(comment.options$ | async).iLike">like</span>
+						<span *ngIf="(comment.options$ | async).likeCount > 0">
+							<i class="fa fa-thumbs-o-up"></i> {{(comment.options$ | async).likeCount}} -
+						</span>
+					</a>
+					<a (click)="focusInput($event)">
+						{{(comment.options$ | async).childCount || 0}} comment(s)
+						<i class="fa fa-comment"></i>
+					</a>
+				</div>
+				<a *ngIf="comment.options.childCount > comment.options.children.length" class="load-more-row" (click)="loadMoreChildren(comment)">
+					Load older comments
 				</a>
-				<a (click)="focusInput($event)">
-					{{(comment.options$ | async).childCount || 0}} comment(s)
-					<i class="fa fa-comment"></i>
-				</a>
-			</div>
-			<a *ngIf="comment.options.childCount > comment.options.children.length" class="load-more-row" (click)="loadMoreChildren(comment)">
-				Load older comments
-			</a>
-			<div class="child-row" *ngFor="let child of comment.options.children; trackByFn">
-				<a [routerLink]="['/user/', child.options.createUser._id]">
-					<img [attr.src]="child.options.createUser.img" />
-				</a>
+				<div class="child-row" *ngFor="let child of comment.options.children; trackByFn">
+					<a [routerLink]="['/user/', child.options.createUser._id]">
+						<img [attr.src]="child.options.createUser.img | NormalizeImgUrl" />
+					</a>
 
-				<div style="width: 100%;">
-					<a class="g-username" [routerLink]="['/user/', child.options.createUser._id]">{{child.options.createUser.name}}</a>
-					<span [innerHtml]="child.options.content | parseCommentContent"></span>
-					<div class="child-buttons" style="display: flex">
-						<a (click)="toggleLike(child)" [ngClass]="{active: (child.options$ | async).iLike}">
-							<span *ngIf="(child.options$ | async).iLike">I Like -</span>
-							<span *ngIf="!(child.options$ | async).iLike">like -</span>
-							<span *ngIf="(child.options$ | async).likeCount > 0">
-								<i class="fa fa-thumbs-o-up"></i>{{(child.options$ | async).likeCount}} -
-							</span>
-						</a>
-						<span>&nbsp;{{child.options.created | date:'shortTime'}}</span>
-						<i class="fa fa-ellipsis-v more-comment-actions-button" (click)="showMoreCommentActions(child)"></i>
+					<div style="width: 100%;">
+						<a class="g-username" [routerLink]="['/user/', child.options.createUser._id]">{{child.options.createUser.name}}</a>
+						<span [innerHtml]="child.options.content | parseCommentContent"></span>
+						<div class="child-buttons" style="display: flex">
+							<a (click)="toggleLike(child)" [ngClass]="{active: (child.options$ | async).iLike}">
+								<span *ngIf="(child.options$ | async).iLike">I Like -</span>
+								<span *ngIf="!(child.options$ | async).iLike">like -</span>
+								<span *ngIf="(child.options$ | async).likeCount > 0">
+									<i class="fa fa-thumbs-o-up"></i>{{(child.options$ | async).likeCount}} -
+								</span>
+							</a>
+							<span>&nbsp;{{child.options.created | date:'shortTime'}}</span>
+							<i class="fa fa-ellipsis-v more-comment-actions-button" (click)="showMoreCommentActions(child)"></i>
+						</div>
 					</div>
 				</div>
-			</div>
 
-			<div class="child-row comment-input">
-				<img [attr.src]="userService.model.options.img">
-				<input (keyup.enter)="respond($event, comment)" type="text" placeholder="Write a comment..." />
-			</div>
-		</footer>
+				<div class="child-row comment-input">
+					<img [attr.src]="userService.model.options.img | NormalizeImgUrl">
+					<input (keyup.enter)="respond($event, comment)" type="text" placeholder="Write a comment..." />
+				</div>
+			</footer>
+		</div>
 	</div>
 	<!-- <div *ngIf="isLoading" class="spinner" style="margin: 20px auto;">
 		<div class="dot1"></div>

@@ -15,7 +15,7 @@
 <section class="item-row">
     <div *ngFor="let model of newest$ | async" class="card">
         <ng-container *ngIf="model.options$ | async as options">
-            <header [style.background]="'url(' + options.img + ')'">
+            <header [style.background]="'url(' + (options.img | NormalizeImgUrl) + ')'">
                 <a [routerLink]="['/user/', options._id]" [routerLinkActive]="['active']"></a>
             </header>
             <main>
@@ -44,7 +44,7 @@
 <section class="item-row">
     <div *ngFor="let model of editorChoice$ | async" class="card">
         <ng-container *ngIf="model.options$ | async as options">
-            <header [style.background]="'url(' + options.img + ')'">
+            <header [style.background]="'url(' + (options.img | NormalizeImgUrl) + ')'">
                 <a [routerLink]="['/user/', options._id]" [routerLinkActive]="['active']"></a>
             </header>
             <main>
@@ -73,7 +73,7 @@
 <section class="item-row">
     <div *ngFor="let model of topInvestors$ | async" class="card">
         <ng-container *ngIf="model.options$ | async as options">
-            <header [style.background]="'url(' + model.options.img + ')'">
+            <header [style.background]="'url(' + (options.img | NormalizeImgUrl) + ')'">
                 <a [routerLink]="['/user/', model.options._id]" [routerLinkActive]="['active']"></a>
             </header>
             <main>

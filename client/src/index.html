@@ -11,7 +11,6 @@
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="assets/font-awesome/css/font-awesome.min.css">
-
     <style>
         html {
             height: 100%;
@@ -109,12 +108,12 @@
         }
     </style>
 
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script> -->
     <script>
-        (adsbygoogle = window.adsbygoogle || []).push({
-            google_ad_client: "ca-pub-1181429338292864",
-            enable_page_level_ads: true
-        });
+        // (adsbygoogle = window.adsbygoogle || []).push({
+        //     google_ad_client: "ca-pub-1181429338292864",
+        //     enable_page_level_ads: true
+        // });
     </script>
 </head>
 
@@ -139,19 +138,19 @@
     <script>
 
 
-        // is browser supported
-        (function () {
-            window.BROWSERSUPPORTED = function () {
-                try {
-                    return !!class test { };
-                } catch (err) {
-                    return false;
-                }
-            }();
+            // is browser supported
+            (function () {
+                window.BROWSERSUPPORTED = function () {
+                    try {
+                        return !!class test { };
+                    } catch (err) {
+                        return false;
+                    }
+                }();
 
-            if (!window.BROWSERSUPPORTED)
-                document.body.innerHTML = '<div id="bns-container"><h2>Whoops! Your browser is not supported.</h2><p>Please update to a more recent version of Chrome, Firefox or Edge</p></div>';
-        })();
+                if (!window.BROWSERSUPPORTED)
+                    document.body.innerHTML = '<div id="bns-container"><h2>Whoops! Your browser is not supported.</h2><p>Please update to a more recent version of Chrome, Firefox or Edge</p></div>';
+            })();
 
         (function () {
             if (!window.BROWSERSUPPORTED)
@@ -198,6 +197,8 @@
             window.platform.isReady$ = new Promise((resolve, reject) => {
                 document.addEventListener("deviceready", function callback() {
                     document.removeEventListener('deviceready', callback, false);
+                    window.runningInCordova = true;
+                    window.open = cordova.InAppBrowser.open;
                     window.platform.isReady = true;
                     resolve();
                 }, false);

@@ -31,6 +31,23 @@ module.exports = [
     "clobbers": [
       "cordova.plugins.notification.badge"
     ]
+  },
+  {
+    "id": "cordova-plugin-inappbrowser.inappbrowser",
+    "file": "plugins/cordova-plugin-inappbrowser/www/inappbrowser.js",
+    "pluginId": "cordova-plugin-inappbrowser",
+    "clobbers": [
+      "cordova.InAppBrowser.open",
+      "window.open"
+    ]
+  },
+  {
+    "id": "cordova-plugin-facebook4.FacebookConnectPlugin",
+    "file": "plugins/cordova-plugin-facebook4/www/facebook-native.js",
+    "pluginId": "cordova-plugin-facebook4",
+    "clobbers": [
+      "facebookConnectPlugin"
+    ]
   }
 ];
 module.exports.metadata = 
@@ -38,10 +55,12 @@ module.exports.metadata =
 {
   "cordova-plugin-whitelist": "1.3.3",
   "cordova-plugin-extension": "1.5.4",
-  "cordova-plugin-admobpro": "2.31.1",
+  "cordova-plugin-admobpro": "2.31.4",
   "cordova-plugin-firebase": "0.1.25",
   "cordova-plugin-fileopener": "1.0.5",
-  "cordova-plugin-badge": "0.8.7"
+  "cordova-plugin-badge": "0.8.7",
+  "cordova-plugin-inappbrowser": "2.0.2",
+  "cordova-plugin-facebook4": "1.9.1"
 };
 // BOTTOM OF METADATA
 });

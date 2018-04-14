@@ -16,6 +16,8 @@ import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { ProfileComponent } from "../profile/profile.component";
 import { UserModel } from '../../models/user.model';
 
+const MAX_COMMENT_LENGTH = 200;
+
 function linkify(inputText) {
 	var replacedText, replacePattern1, replacePattern2, replacePattern3;
 
@@ -34,10 +36,24 @@ function linkify(inputText) {
 	return replacedText;
 }
 
+function shortify(inputText: string) {
+	if (inputText.length > 100) {
+		const preText = inputText.substring(0, 100);
+		inputText = preText + '<a>sdf</a><span style="display: none">' + inputText.substring(100) + '</span>';
+	}
+
+	return inputText;
+}
+
 @Pipe({ name: 'parseCommentContent' })
 export class ParseCommentContentPipe implements PipeTransform {
 	transform(value: string, field: string): string {
-		return linkify(value);
+		value = linkify(value);
+
+		if (value.length > MAX_COMMENT_LENGTH)
+			return value.substring(0, MAX_COMMENT_LENGTH) + ' ...';
+
+		return value;
 	}
 }
 
@@ -53,12 +69,14 @@ export class SocialFeedComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	public comments$: BehaviorSubject<Array<CommentModel>> = new BehaviorSubject([]);
 	public isLoading: boolean = true;
+	@Input() feedType: string;
 
 	userId: string;
 	commentId: string;
 	private _routeParamsSub;
 	private _offset = 0;
 	private _limit = 5;
+	private _scrollActive = true;
 
 	constructor(
 		private _route: ActivatedRoute,
@@ -75,16 +93,19 @@ export class SocialFeedComponent implements OnInit, AfterViewInit, OnDestroy {
 
 		if (this.commentId)
 			this._loadByPostId(this.commentId);
+		else if (this.feedType === 'timeline') {
+			this._loadTimeline();
+		}
 		else {
 			this._loadByUserId(this.userId);
-		}
 
-		this._routeParamsSub = this._route.parent.params.subscribe(params => {
-			// only load if userId is different then current userId
-			if (this.userId !== params['id']) {
-				this._loadByUserId(params['id']);
-			}
-		});
+			this._routeParamsSub = this._route.parent.params.subscribe(params => {
+				// only load if userId is different then current userId
+				if (this.userId !== params['id']) {
+					this._loadByUserId(params['id']);
+				}
+			});
+		}
 	}
 
 	ngAfterViewInit() {
@@ -152,6 +173,50 @@ export class SocialFeedComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.changeDetectorRef.detectChanges();
 	}
 
+	public onClickShowMoreText(model: CommentModel, event) {
+		event.target.previousElementSibling.innerHTML = linkify(model.options.content);
+		event.target.parentNode.removeChild(event.target);
+	}
+
+	public onScroll(event) {
+		if (!this._scrollActive)
+			return;
+
+		if (event.target.scrollHeight - event.target.scrollTop !== event.target.clientHeight)
+			return;
+
+		if (this.commentId)
+			this._loadByPostId(this.commentId);
+		else if (this.feedType === 'timeline') {
+			this._loadTimeline();
+		}
+		else {
+			this._loadByUserId(this.userId);
+
+			this._routeParamsSub = this._route.parent.params.subscribe(params => {
+				// only load if userId is different then current userId
+				if (this.userId !== params['id']) {
+					this._loadByUserId(params['id']);
+				}
+			});
+		}
+	}
+
+	private async _loadTimeline() {
+		this.isLoading = true;
+		const items = await this.commentService.findTimeline(this._offset);
+		console.log(items);
+		this.isLoading = false;
+
+		if (items.length) {
+			this._offset += items.length;
+		} else {
+			this._unbindScroll();
+		}
+
+		this.comments$.next(this.comments$.getValue().concat(items));
+	}
+
 	private async _loadByUserId(userId: string) {
 		this.isLoading = true;
 		const items = await this.commentService.findByUserId(userId, this._offset);
@@ -173,6 +238,7 @@ export class SocialFeedComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 
 	private _unbindScroll() {
+		this._scrollActive = false;
 		// $(this.elementRef.nativeElement.parentNode).off('scroll.feed');
 	}
 

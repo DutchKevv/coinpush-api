@@ -21,6 +21,14 @@
     },
     "cordova-plugin-badge": {
       "PACKAGE_NAME": "com.ff.coinpush"
+    },
+    "cordova-plugin-inappbrowser": {
+      "PACKAGE_NAME": "com.ff.coinpush"
+    },
+    "cordova-plugin-facebook4": {
+      "APP_ID": "162805194523993",
+      "APP_NAME": "CoinPush",
+      "PACKAGE_NAME": "com.ff.coinpush"
     }
   },
   "dependent_plugins": {

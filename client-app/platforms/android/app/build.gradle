@@ -269,6 +269,7 @@ dependencies {
     compile "com.google.firebase:firebase-messaging:+"
     compile "com.google.firebase:firebase-crash:+"
     compile "com.google.firebase:firebase-config:+"
+    compile "com.facebook.android:facebook-android-sdk:4.+"
     // SUB-PROJECT DEPENDENCIES END
 }
 
