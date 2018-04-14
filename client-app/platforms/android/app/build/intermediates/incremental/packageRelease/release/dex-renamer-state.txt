@@ -1,4 +1,0 @@
-#Sun Apr 15 01:05:10 CEST 2018
-base.0=/Users/kewinbrandsma/Projects/TradeJS/client-app/platforms/android/app/build/intermediates/transforms/dex/release/0
-path.0=classes.dex
-renamed.0=classes.dex
