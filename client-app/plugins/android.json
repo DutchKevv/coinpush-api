@@ -7,27 +7,27 @@
     "files": {}
   },
   "installed_plugins": {
-    "cordova-plugin-whitelist": {
-      "PACKAGE_NAME": "com.ff.coinpush"
-    },
     "cordova-plugin-admobpro": {
-      "PACKAGE_NAME": "com.ff.coinpush"
-    },
-    "cordova-plugin-firebase": {
-      "PACKAGE_NAME": "com.ff.coinpush"
-    },
-    "cordova-plugin-fileopener": {
       "PACKAGE_NAME": "com.ff.coinpush"
     },
     "cordova-plugin-badge": {
       "PACKAGE_NAME": "com.ff.coinpush"
     },
-    "cordova-plugin-inappbrowser": {
-      "PACKAGE_NAME": "com.ff.coinpush"
-    },
     "cordova-plugin-facebook4": {
       "APP_ID": "162805194523993",
       "APP_NAME": "CoinPush",
+      "PACKAGE_NAME": "com.ff.coinpush"
+    },
+    "cordova-plugin-fileopener": {
+      "PACKAGE_NAME": "com.ff.coinpush"
+    },
+    "cordova-plugin-firebase": {
+      "PACKAGE_NAME": "com.ff.coinpush"
+    },
+    "cordova-plugin-inappbrowser": {
+      "PACKAGE_NAME": "com.ff.coinpush"
+    },
+    "cordova-plugin-whitelist": {
       "PACKAGE_NAME": "com.ff.coinpush"
     }
   },
