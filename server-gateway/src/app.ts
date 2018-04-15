@@ -87,7 +87,6 @@ export const app = {
 		// websocket
 		this.io = io(http);
 		// this.io.use((socket, next) => {
-		// 	console.log('connet!');
 		// 	socket.userId = socket.handshake.query.userId;
 
 		// 	// return the result of next() to accept the connection.

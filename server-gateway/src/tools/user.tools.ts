@@ -57,7 +57,6 @@ module.exports = {
 		try {
 			await emailController.addUser({id}, user, true);
 		} catch (error) {
-			console.log('EMAIL');
 			console.error(error.message);
 		}
 	},

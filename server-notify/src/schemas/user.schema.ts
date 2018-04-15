@@ -21,8 +21,7 @@ export const UserSchema = new Schema({
     },
     devices: [{
         token: {
-            type: String,
-            required: true
+            type: String
         },
         name: {
             type: String,

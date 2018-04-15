@@ -5,6 +5,4 @@
     <string name="activity_name">@string/launcher_name</string>
     <string name="fb_app_id">178901869390909</string>
     <string name="fb_app_name">CoinPush</string>
-    <string name="google_app_id">@string/google_app_id</string>
-    <string name="google_api_key">@string/google_api_key</string>
 </resources>

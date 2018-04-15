@@ -128,24 +128,17 @@ export class AppComponent implements OnInit, AfterViewInit {
 				this.filterClick$.emit(false);
 			}
 		});
+
+		if (this.userService.model.options._id) {
+			app.initNotifications().catch(console.error);				
+		}
 	}
 
 	ngAfterViewInit() {
 		// small break before loading ads and receiving for push messages
 		setTimeout(() => {
 			app.prettyBootty.step('done');
-
-			if (this.userService.model.options._id)
-				app.initNotifications().catch(console.error);
-
-			if (app.platform.adsEnabled) {
-				try {
-					(window['adsbygoogle'] = window['adsbygoogle'] || []).push({});
-					window['adsbygoogle'].push({});
-				} catch (e) {
-					console.error("error");
-				}
-			}
+			app.loadAds();
 		}, 100);
 	}
 

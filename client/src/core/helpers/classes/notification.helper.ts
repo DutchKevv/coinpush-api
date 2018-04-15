@@ -1,7 +1,8 @@
 import { app } from '../../app';
 
 declare let firebase: any;
-declare let FirebasePlugin: any;
+declare let PushNotification: any;
+declare let FCMPlugin: any;
 declare let cordova: any;
 
 export class NotificationHelper {
@@ -29,14 +30,16 @@ export class NotificationHelper {
         try {
             if (newValue) {
                 if (app.platform.isApp) {
-                    cordova.plugins.notification.badge.set(newValue);
+                    // if (cordova.plugins.notification)
+                    //     cordova.plugins.notification.badge.set(newValue);
                 } else {
                     document.title = this._originalTitle + ` (${newValue})`;
                 }
             }
             else {
                 if (app.platform.isApp) {
-                    cordova.plugins.notification.badge.clear();
+                    // if (cordova.plugins.notification)
+                    //     cordova.plugins.notification.badge.clear();
                 } else {
                     document.title = this._originalTitle;
                 }
@@ -65,6 +68,7 @@ export class NotificationHelper {
      * @param message 
      */
     private _onNotification(message: any): void {
+        console.log(message);
         try {
             if (!message.data)
                 console.info('no-data', message);
@@ -102,7 +106,7 @@ export class NotificationHelper {
                 firebase.initializeApp(config);
                 const messaging = firebase.messaging();
 
-                messaging.onMessage((message) => this._onNotification(message.data));
+                messaging.onMessage((message) => this._onNotification(message));
 
                 messaging.onTokenRefresh(async () => {
                     this._token = await messaging.getToken();
@@ -118,38 +122,143 @@ export class NotificationHelper {
         });
     }
 
-    /**
-     * app (cordova + firebase)
-     */
-    private _loadApp() {
-        // set badge style 
-        cordova.plugins.notification.badge.configure({ indicator: 'circular', autoClear: false });
-
-        FirebasePlugin.hasPermission((data) => {
-            if (!data.isEnabled)
-                FirebasePlugin.grantPermission((result) => {
-                    FirebasePlugin.getToken(token => {
-                        this._token = token;
-
-                    });
-                });
-            else {
-                FirebasePlugin.getToken(token => {
-                    this._token = token;
-
-                });
-            }
+    private async _loadApp() {
+        const push = PushNotification.init({
+            android: {
+                icon: "icon",
+                sound: true,
+                vibrate: true,
+                iconColor: "#ffd700"
+            },
+            browser: {
+                pushServiceURL: 'http://push.api.phonegap.com/v1/push'
+            },
+            ios: {
+                alert: "true",
+                badge: "true",
+                sound: "true"
+            },
+            windows: {}
         });
 
-        FirebasePlugin.onNotificationOpen(notification => this._onNotification(notification), function (error) {
-            throw error;
-        });
-
-        FirebasePlugin.onTokenRefresh((token) => {
-            this._token = token;
+        push.on('registration', (data) => {
+            this._token = data.registrationId;
             app.emit('firebase-token-refresh', this._token);
-        }, function (error) {
-            console.error(error);
         });
+
+        push.on('notification', (data) => {
+            console.log('message!', data);
+            data.data = Object.assign({}, data.additionalData);
+            delete data.additionalData;
+            this._onNotification(data);
+            // data.message,
+            // data.title,
+            // data.count,
+            // data.sound,
+            // data.image,
+            // data.additionalData
+        });
+
+        push.on('error', error => {
+            console.log(error);
+        });
+
+        push.on('accept', (data) => {
+            console.log('asdfasdf', data);
+            // do something with the notification data
+        
+            push.finish(() => {
+                console.log('accept callback finished');
+            }, () => {
+                console.log('accept callback failed');
+            }, data.additionalData.notId);
+        });
+        
+        push.on('reject', (data) => {
+            console.log('asdfasdf', data);
+            // do something with the notification data
+        
+            push.finish(() => {
+                console.log('accept callback finished');
+            }, () => {
+                console.log('accept callback failed');
+            }, data.additionalData.notId);
+        });
+        
+        push.on('maybe', (data) => {
+            console.log('asdfasdf', data);
+            // do something with the notification data
+        
+            push.finish(() => {
+                console.log('accept callback finished');
+            }, () => {
+                console.log('accept callback failed');
+            }, data.additionalData.notId);
+        });
+
+        PushNotification.createChannel(
+            () => {
+                console.log('success');
+            },
+            () => {
+                console.log('error');
+            },
+            {
+                id: 'channel1',
+                description: 'My first test channel',
+                importance: 3
+            }
+        );
+
+        PushNotification.hasPermission(data => {
+            if (!data.isEnabled) {
+                console.log('NO PUSH PERMISSION!');
+            }
+          });
+
+        // try {
+        //     // set badge style 
+        //     cordova.plugins.notification.badge.configure({ indicator: 'circular', autoClear: false });
+
+        //     const permis = await cordova.plugins.firebase.messaging.requestPermission();
+
+        //     cordova.plugins.firebase.messaging.onMessage(payload => {
+        //         payload.data = JSON.parse(payload.data);
+        //         this._onNotification(payload);
+        //     });
+
+        //     cordova.plugins.firebase.messaging.onBackgroundMessage((payload) => {
+        //         payload.data = JSON.parse(payload.data);
+        //         this._onNotification(payload);
+        //     });
+
+        //     this._token = await cordova.plugins.firebase.messaging.getToken();
+        //     app.emit('firebase-token-refresh', this._token);
+
+        // } catch (error) {
+        //     console.error(error);
+        // }
+
+        //     app.emit('firebase-token-refresh', this._token);
+
+
+
+        // cordova.plugins.firebase.messaging.requestPermission((data) => {
+        //     cordova.plugins.firebase.messaging.getToken(token => {
+        //         this._token = token;
+        //         app.emit('firebase-token-refresh', this._token);
+        //     }, console.error);
+        // });
+
+        // cordova.plugins.firebase.messaging.onMessage(notification => this._onNotification(notification), function (error) {
+        //     throw error;
+        // });
+
+        // cordova.plugins.firebase.messaging.onTokenRefresh((token) => {
+        //     this._token = token;
+        //     app.emit('firebase-token-refresh', this._token);
+        // }, function (error) {
+        //     console.error(error);
+        // });
     }
 }

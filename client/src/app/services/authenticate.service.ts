@@ -83,8 +83,13 @@ export class AuthenticationService {
 			// does not save to server but updates persistant storage
 			await this._userService.update(result.user, false, false);
 
-			if (reload)
-				window.location.reload();
+			if (reload) {
+				if (app.platform.isApp) {
+					window.location = 'file:///android_asset/www/index.html';
+				} else {
+					window.location.reload();
+				}
+			}
 
 			return true;
 

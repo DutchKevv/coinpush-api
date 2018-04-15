@@ -1,19 +1,19 @@
 {
-  "_from": "cordova-plugin-inappbrowser@2.0.2",
+  "_from": "cordova-plugin-inappbrowser@^2.0.2",
   "_id": "cordova-plugin-inappbrowser@2.0.2",
   "_inBundle": false,
   "_integrity": "sha1-pEj8vpdMprQpiL00VRCdkj1sl2k=",
   "_location": "/cordova-plugin-inappbrowser",
   "_phantomChildren": {},
   "_requested": {
-    "type": "version",
+    "type": "range",
     "registry": true,
-    "raw": "cordova-plugin-inappbrowser@2.0.2",
+    "raw": "cordova-plugin-inappbrowser@^2.0.2",
     "name": "cordova-plugin-inappbrowser",
     "escapedName": "cordova-plugin-inappbrowser",
-    "rawSpec": "2.0.2",
+    "rawSpec": "^2.0.2",
     "saveSpec": null,
-    "fetchSpec": "2.0.2"
+    "fetchSpec": "^2.0.2"
   },
   "_requiredBy": [
     "#USER",
@@ -21,7 +21,7 @@
   ],
   "_resolved": "https://registry.npmjs.org/cordova-plugin-inappbrowser/-/cordova-plugin-inappbrowser-2.0.2.tgz",
   "_shasum": "a448fcbe974ca6b42988bd3455109d923d6c9769",
-  "_spec": "cordova-plugin-inappbrowser@2.0.2",
+  "_spec": "cordova-plugin-inappbrowser@^2.0.2",
   "_where": "/Users/kewinbrandsma/Projects/TradeJS/client-app",
   "author": {
     "name": "Apache Software Foundation"

@@ -9,14 +9,6 @@ module.exports = [
     ]
   },
   {
-    "id": "cordova-plugin-badge.Badge",
-    "file": "plugins/cordova-plugin-badge/www/badge.js",
-    "pluginId": "cordova-plugin-badge",
-    "clobbers": [
-      "cordova.plugins.notification.badge"
-    ]
-  },
-  {
     "id": "cordova-plugin-fileopener.FileOpener",
     "file": "plugins/cordova-plugin-fileopener/www/FileOpener.js",
     "pluginId": "cordova-plugin-fileopener",
@@ -25,11 +17,11 @@ module.exports = [
     ]
   },
   {
-    "id": "cordova-plugin-firebase.FirebasePlugin",
-    "file": "plugins/cordova-plugin-firebase/www/firebase.js",
-    "pluginId": "cordova-plugin-firebase",
+    "id": "cordova-plugin-badge.Badge",
+    "file": "plugins/cordova-plugin-badge/www/badge.js",
+    "pluginId": "cordova-plugin-badge",
     "clobbers": [
-      "FirebasePlugin"
+      "cordova.plugins.notification.badge"
     ]
   },
   {
@@ -48,19 +40,37 @@ module.exports = [
     "clobbers": [
       "facebookConnectPlugin"
     ]
+  },
+  {
+    "id": "cordova-plugin-firebase-messaging.FirebaseMessaging",
+    "file": "plugins/cordova-plugin-firebase-messaging/www/FirebaseMessaging.js",
+    "pluginId": "cordova-plugin-firebase-messaging",
+    "merges": [
+      "cordova.plugins.firebase.messaging"
+    ]
+  },
+  {
+    "id": "phonegap-plugin-push.PushNotification",
+    "file": "plugins/phonegap-plugin-push/www/push.js",
+    "pluginId": "phonegap-plugin-push",
+    "clobbers": [
+      "PushNotification"
+    ]
   }
 ];
 module.exports.metadata = 
 // TOP OF METADATA
 {
+  "cordova-plugin-whitelist": "1.3.3",
   "cordova-plugin-extension": "1.5.4",
   "cordova-plugin-admobpro": "2.31.4",
-  "cordova-plugin-badge": "0.8.7",
   "cordova-plugin-fileopener": "1.0.5",
-  "cordova-plugin-firebase": "0.1.25",
+  "cordova-plugin-badge": "0.8.7",
   "cordova-plugin-inappbrowser": "2.0.2",
-  "cordova-plugin-whitelist": "1.3.3",
-  "cordova-plugin-facebook4": "1.9.1"
+  "cordova-plugin-facebook4": "1.10.1",
+  "cordova-support-google-services": "1.1.0",
+  "cordova-plugin-firebase-messaging": "0.13.0",
+  "phonegap-plugin-push": "2.2.2"
 };
 // BOTTOM OF METADATA
 });

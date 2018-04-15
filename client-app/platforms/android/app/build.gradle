@@ -93,7 +93,8 @@ ext {
 // PLUGIN GRADLE EXTENSIONS START
 apply from: "../cordova-plugin-extension/coinpush-rjfun-libs.gradle"
 apply from: "../cordova-plugin-badge/coinpush-badge.gradle"
-apply from: "../cordova-plugin-firebase/coinpush-build.gradle"
+apply from: "../cordova-support-google-services/coinpush-build.gradle"
+apply from: "../phonegap-plugin-push/coinpush-push.gradle"
 // PLUGIN GRADLE EXTENSIONS END
 
 def hasBuildExtras = file('build-extras.gradle').exists()
@@ -262,14 +263,14 @@ dependencies {
     implementation fileTree(dir: 'libs', include: '*.jar')
     // SUB-PROJECT DEPENDENCIES START
     implementation(project(path: ":CordovaLib"))
-    compile "com.google.android.gms:play-services-ads:+"
-    compile "com.google.gms:google-services:+"
-    compile "com.google.android.gms:play-services-tagmanager:+"
-    compile "com.google.firebase:firebase-core:+"
-    compile "com.google.firebase:firebase-messaging:+"
-    compile "com.google.firebase:firebase-crash:+"
-    compile "com.google.firebase:firebase-config:+"
+    compile "com.google.android.gms:play-services-ads:11.8.0"
+    compile "com.google.android.gms:play-services-maps:11.8.0"
+    compile "com.google.android.gms:play-services-location:11.8.0"
     compile "com.facebook.android:facebook-android-sdk:4.+"
+    compile "com.google.firebase:firebase-messaging:11.8.0"
+    compile "com.android.support:support-v13:27.+"
+    compile "me.leolin:ShortcutBadger:1.1.17@aar"
+    compile "com.google.firebase:firebase-messaging:11.6.2"
     // SUB-PROJECT DEPENDENCIES END
 }
 

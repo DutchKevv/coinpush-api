@@ -121,15 +121,15 @@ export class App extends MicroEvent {
         this.address = getAddress();
         await this._loadStoredUser();
 
-
         this.prettyBootty.step('data', 0);
 
         try {
             await this._preload()
 
              // set initial unread notification badge count
-            if (this.data.notifications)
-            this.notification.updateBadgeCounter(parseInt(this.data.notifications.unreadCount, 10));
+            if (this.data.notifications) {
+                this.notification.updateBadgeCounter(parseInt(this.data.notifications.unreadCount, 10));
+            }
         } catch (error) {
             console.error(error);
         }
@@ -138,6 +138,37 @@ export class App extends MicroEvent {
 
         this.isReady = true;
         this.emit('ready', true);
+    }
+
+     // TODO: move to helper class
+     public loadAds() {
+        // TODO: Desktop ads
+        if (!this.platform.isApp)
+            return;
+
+        let admobid: { banner?: string, interstitial?: string } = {};
+
+        if (/(android)/i.test(navigator.userAgent)) { // for android & amazon-fireos
+            admobid.banner = 'ca-app-pub-1181429338292864/7213864636';
+            admobid.interstitial = 'ca-app-pub-1181429338292864/7213864636';
+        } else if (/(ipod|iphone|ipad)/i.test(navigator.userAgent)) { // for ios
+            admobid.banner = 'ca-app-pub-1181429338292864/7213864636';
+            admobid.interstitial = 'ca-app-pub-1181429338292864/7213864636';
+        }
+
+        window['AdMob'].createBanner({
+            adSize: 'BANNER',
+            overlap: true,
+            height: 60, // valid when set adSize 'CUSTOM'
+            adId: admobid.banner,
+            position: window['AdMob'].AD_POSITION.BOTTOM_CENTER,
+            autoShow: true,
+            isTesting: false
+        });
+
+        document.addEventListener('onAdFailLoad', function (error) {
+            console.error(error);
+        });
     }
 
     /**
@@ -181,7 +212,6 @@ export class App extends MicroEvent {
 
                             resolve();
                         } else {
-                            console.log(xhr.status);
                             switch (xhr.status) {
                                 case 401: 
                                     await this.removeStoredUser();
@@ -204,36 +234,8 @@ export class App extends MicroEvent {
         ]);
     }
 
-    // TODO: move to helper class
-    public loadAds() {
-
-        // TODO: Desktop ads
-        if (!this.platform.isApp)
-            return;
-
-        let admobid: { banner?: string, interstitial?: string } = {};
-
-        if (/(android)/i.test(navigator.userAgent)) { // for android & amazon-fireos
-            admobid.banner = 'ca-app-pub-1181429338292864/7213864636';
-            admobid.interstitial = 'ca-app-pub-1181429338292864/7213864636';
-        } else if (/(ipod|iphone|ipad)/i.test(navigator.userAgent)) { // for ios
-            admobid.banner = 'ca-app-pub-1181429338292864/7213864636';
-            admobid.interstitial = 'ca-app-pub-1181429338292864/7213864636';
-        }
-
-        window['AdMob'].createBanner({
-            adSize: 'BANNER',
-            overlap: true,
-            height: 60, // valid when set adSize 'CUSTOM'
-            adId: admobid.banner,
-            position: window['AdMob'].AD_POSITION.BOTTOM_CENTER,
-            autoShow: true,
-            isTesting: false
-        });
-
-        document.addEventListener('onAdFailLoad', function (error) {
-            console.error(error);
-        });
+    public initNotifications(): Promise<void> {
+        return this.notification.init();
     }
 
     private _waitUntilAllScriptsLoaded() {
@@ -267,10 +269,6 @@ export class App extends MicroEvent {
 
         if (user && user.token)
             this.user = user
-    }
-
-    public initNotifications(): Promise<void> {
-        return this.notification.init();
     }
 }
 

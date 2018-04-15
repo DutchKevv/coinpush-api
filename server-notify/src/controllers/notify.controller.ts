@@ -1,7 +1,7 @@
 import * as nodeMailer from 'nodemailer';
 import { userController } from './user.controller';
 import { IUser } from 'coinpush/interface/IUser.interface';
-import * as gcm from 'node-gcm';
+import * as FCM from 'fcm-node';
 import { User } from '../schemas/user.schema';
 import { Notification } from '../schemas/notification.schema';
 import { INotification } from 'coinpush/interface/notification.interface';
@@ -9,7 +9,7 @@ import { IReqUser } from 'coinpush/interface/IReqUser.interface';
 import { pubClient } from 'coinpush/redis';
 
 const config = require('../../../tradejs.config');
-const sender = new gcm.Sender(config.firebase.key);
+const fcm = new FCM(config.firebase.key)
 
 export const notifyController = {
 
@@ -37,7 +37,7 @@ export const notifyController = {
      * @param data 
      * @param user 
      */
-    async sendToUser(userId, title, body, data: any = {}, user?: any) {
+    async sendToUser(notificationId, userId, title, body, data: any = {}, user?: any) {
         data.__userId = userId;
 
         user = user || await User.findById(userId);
@@ -45,45 +45,41 @@ export const notifyController = {
         if (!user)
             throw ({ code: 404 });
 
-        const registrationTokens = (user.devices || []).map(device => device.token);
+        const GCMTokens = (user.devices || []).map(device => device.token).filter(token => !!token);
 
-        const messageObj = {
+        const message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera)
             priority: 'high',
+            registration_ids: GCMTokens,
             data: {
                 title,
                 body,
-                data
+                ...data
             }
-        };
-
-        const message = new gcm.Message(messageObj);
-
-        // notify clients through websockets
-        // TODO - keep a list of websocket / GCM so it is not send without need
-        pubClient.publish('socket-notification', JSON.stringify(messageObj.data));
+        }
 
         // actually send the message
         const sendResult = await new Promise((resolve, reject) => {
 
-            sender.send(message, { registrationTokens }, async (error, response) => {
-                if (error)
+            fcm.send(message, async (error, response) => {
+                if (error) {
                     return reject(error);
+                } else {
+                    // cleanup old tokens
+                    if (response.failure > 0) {
+                        response.results.forEach((result, i) => {
+                            if (result.error === 'NotRegistered')
+                                user.devices.splice(user.devices.findIndex(device => device.token === GCMTokens[i]), 1);
+                            else
+                                console.log('Unhandled GCM error', result);
+                        });
+                    }
 
-                // cleanup old tokens
-                if (response.failure > 0) {
-                    response.results.forEach((result, i) => {
-                        if (result.error === 'NotRegistered')
-                            user.devices.splice(user.devices.findIndex(device => device.token === registrationTokens[i]), 1);
-                        else
-                            console.log('Unhandled GCM error', result.error);
-                    });
+                    // save removed devices + send date
+                    user.sendDate = new Date
+                    await user.save();
+
+                    resolve(response);
                 }
-
-                // save removed devices + send date
-                user.sendDate = new Date
-                await user.save();
-
-                resolve(response);
             });
         });
 
@@ -101,7 +97,7 @@ export const notifyController = {
             parentId: notification.data.parentId
         }
 
-        return this.sendToUser(notification.toUserId, title, body, data, user);
+        return this.sendToUser(notification._id, notification.toUserId, title, body, data, user);
     },
 
     async sendTypePostLike(notification: INotification, user) {
@@ -116,7 +112,7 @@ export const notifyController = {
             commentId: notification.data.commentId,
         }
 
-        return this.sendToUser(notification.toUserId, title, '', data, user);
+        return this.sendToUser(notification._id, notification.toUserId, title, '', data, user);
     },
 
     async sendTypeCommentLike(notification: INotification, user) {
@@ -129,7 +125,7 @@ export const notifyController = {
             parentId: notification.data.parentId
         }
 
-        return this.sendToUser(notification.toUserId, title, '', data, user);
+        return this.sendToUser(notification._id, notification.toUserId, title, '', data, user);
     },
 
     async sendTypeSymbolAlarm(notification: INotification, user) {
@@ -141,7 +137,7 @@ export const notifyController = {
             time: notification.data.time
         };
 
-        return this.sendToUser(notification.toUserId, title, '', data, user);
+        return this.sendToUser(notification._id, notification.toUserId, title, '', data, user);
     },
 
     async sendUserFollow(notification: INotification, user) {
@@ -154,11 +150,13 @@ export const notifyController = {
             fromUser
         };
 
-        return this.sendToUser(notification.toUserId, title, '', data, user);
+        return this.sendToUser(notification._id, notification.toUserId, title, '', data, user);
     },
 
     async parse(notification: INotification) {
-        const user = await User.findOneAndUpdate({_id: notification.toUserId}, { $inc: { unreadCount: 1 } });
+        const user = await User.findOneAndUpdate({ _id: notification.toUserId }, { $inc: { unreadCount: 1 } });
+        const document = await this.create(notification);
+        notification._id = document._id;
 
         switch (notification.type) {
             case 'post-comment':
@@ -178,7 +176,7 @@ export const notifyController = {
                 break;
         }
 
-        const document = await this.create(notification);
+
     },
 
     async markUnread(reqUser: IReqUser, notificationId: string) {
@@ -198,7 +196,7 @@ export const notifyController = {
 
         await Promise.all([
             notification.save(),
-            User.update({_id: reqUser.id, unreadCount: {$gt: 0}}, { $inc: { unreadCount: -1 } })
+            User.update({ _id: reqUser.id, unreadCount: { $gt: 0 } }, { $inc: { unreadCount: -1 } })
         ])
     },
 

@@ -23,14 +23,6 @@
     "is_top_level": false,
     "variables": {}
   },
-  "cordova-plugin-firebase": {
-    "source": {
-      "type": "registry",
-      "id": "cordova-plugin-firebase@^0.1.25"
-    },
-    "is_top_level": true,
-    "variables": {}
-  },
   "cordova-plugin-fileopener": {
     "source": {
       "type": "registry",
@@ -50,15 +42,7 @@
   "cordova-plugin-inappbrowser": {
     "source": {
       "type": "registry",
-      "id": "cordova-plugin-inappbrowser@2.0.2"
-    },
-    "is_top_level": true,
-    "variables": {}
-  },
-  "phonegap-facebook-plugin": {
-    "source": {
-      "type": "registry",
-      "id": "phonegap-facebook-plugin@^0.12.0"
+      "id": "cordova-plugin-inappbrowser@^2.0.2"
     },
     "is_top_level": true,
     "variables": {}
@@ -66,12 +50,28 @@
   "cordova-plugin-facebook4": {
     "source": {
       "type": "registry",
-      "id": "cordova-plugin-facebook4@^1.10.0"
+      "id": "cordova-plugin-facebook4@^1.10.1"
     },
     "is_top_level": true,
     "variables": {
       "APP_ID": "178901869390909",
       "APP_NAME": "“CoinPush”"
     }
+  },
+  "cordova-support-google-services": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-support-google-services@^1.1.0"
+    },
+    "is_top_level": true,
+    "variables": {}
+  },
+  "phonegap-plugin-push": {
+    "source": {
+      "type": "registry",
+      "id": "phonegap-plugin-push@2.2.2"
+    },
+    "is_top_level": true,
+    "variables": {}
   }
 }

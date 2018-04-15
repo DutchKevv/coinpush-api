@@ -30,7 +30,6 @@ export class SymbolSyncer extends EventEmitter {
                     this._symbols = symbols;
                 } else {
                     console.warn('EMPTY SYMBOL SET RECEIVED FROM REDIS!');
-                    console.log(symbols);
                 }
 
                 this.emit('synced');

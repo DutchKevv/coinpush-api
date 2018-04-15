@@ -131,7 +131,6 @@ export class SocialFeedComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 
 	public async toggleLike(model: CommentModel) {
-		console.log('sdf');
 		await this.commentService.toggleLike(model);
 		this.changeDetectorRef.detectChanges();
 	}
@@ -205,7 +204,7 @@ export class SocialFeedComponent implements OnInit, AfterViewInit, OnDestroy {
 	private async _loadTimeline() {
 		this.isLoading = true;
 		const items = await this.commentService.findTimeline(this._offset);
-		console.log(items);
+
 		this.isLoading = false;
 
 		if (items.length) {

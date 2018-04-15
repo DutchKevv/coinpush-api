@@ -1,41 +1,19 @@
 {
-  "_args": [
-    [
-      {
-        "raw": "cordova-plugin-fileopener@^1.0.5",
-        "scope": null,
-        "escapedName": "cordova-plugin-fileopener",
-        "name": "cordova-plugin-fileopener",
-        "rawSpec": "^1.0.5",
-        "spec": ">=1.0.5 <2.0.0",
-        "type": "range"
-      },
-      "/usr/src/app/client-app"
-    ]
-  ],
-  "_from": "cordova-plugin-fileopener@>=1.0.5 <2.0.0",
+  "_from": "cordova-plugin-fileopener@^1.0.5",
   "_id": "cordova-plugin-fileopener@1.0.5",
-  "_inCache": true,
+  "_inBundle": false,
+  "_integrity": "sha1-NphCi5PqAM8SXciYshpyvrkfcM4=",
   "_location": "/cordova-plugin-fileopener",
-  "_nodeVersion": "5.5.0",
-  "_npmOperationalInternal": {
-    "host": "packages-12-west.internal.npmjs.com",
-    "tmp": "tmp/cordova-plugin-fileopener-1.0.5.tgz_1465253772327_0.8072682274505496"
-  },
-  "_npmUser": {
-    "name": "smile",
-    "email": "opensource-contributions@smile.fr"
-  },
-  "_npmVersion": "3.3.12",
   "_phantomChildren": {},
   "_requested": {
+    "type": "range",
+    "registry": true,
     "raw": "cordova-plugin-fileopener@^1.0.5",
-    "scope": null,
-    "escapedName": "cordova-plugin-fileopener",
     "name": "cordova-plugin-fileopener",
+    "escapedName": "cordova-plugin-fileopener",
     "rawSpec": "^1.0.5",
-    "spec": ">=1.0.5 <2.0.0",
-    "type": "range"
+    "saveSpec": null,
+    "fetchSpec": "^1.0.5"
   },
   "_requiredBy": [
     "#USER",
@@ -43,30 +21,23 @@
   ],
   "_resolved": "https://registry.npmjs.org/cordova-plugin-fileopener/-/cordova-plugin-fileopener-1.0.5.tgz",
   "_shasum": "3698428b93ea00cf125dc898b21a72beb91f70ce",
-  "_shrinkwrap": null,
   "_spec": "cordova-plugin-fileopener@^1.0.5",
-  "_where": "/usr/src/app/client-app",
+  "_where": "/Users/kewinbrandsma/Projects/TradeJS/client-app",
   "author": {
     "name": "smile"
   },
   "bugs": {
     "url": "https://github.com/Smile-SA/cordova-plugin-fileopener/issues"
   },
+  "bundleDependencies": false,
   "cordova": {
     "id": "cordova-plugin-fileopener",
     "platforms": [
       "android"
     ]
   },
-  "dependencies": {},
+  "deprecated": false,
   "description": "Plugin to download and open files with default application for Android devices",
-  "devDependencies": {},
-  "directories": {},
-  "dist": {
-    "shasum": "3698428b93ea00cf125dc898b21a72beb91f70ce",
-    "tarball": "https://registry.npmjs.org/cordova-plugin-fileopener/-/cordova-plugin-fileopener-1.0.5.tgz"
-  },
-  "gitHead": "135a909d95205c35879660f469a5f7acaec21ddf",
   "homepage": "https://github.com/Smile-SA/cordova-plugin-fileopener#readme",
   "keywords": [
     "file",
@@ -81,19 +52,10 @@
     "cordova-android"
   ],
   "license": "MIT",
-  "maintainers": [
-    {
-      "name": "smile",
-      "email": "pole.mobile@smile.fr"
-    }
-  ],
   "name": "cordova-plugin-fileopener",
-  "optionalDependencies": {},
-  "readme": "ERROR: No README data found!",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Smile-SA/cordova-plugin-fileopener.git"
   },
-  "scripts": {},
   "version": "1.0.5"
 }

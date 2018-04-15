@@ -158,7 +158,7 @@
 
             // platform data
             window.platform = {
-                adsEnabled: false,
+                adsEnabled: true,
                 startTime: new Date(),
                 prettyBootTimeout: null,
                 isReady: false,
@@ -199,7 +199,7 @@
                     document.removeEventListener('deviceready', callback, false);
                     window.runningInCordova = true;
                     window.open = cordova.InAppBrowser.open;
-                    window.platform.isReady = true;
+                    window.platform.isReady = true;		;
                     resolve();
                 }, false);
             });

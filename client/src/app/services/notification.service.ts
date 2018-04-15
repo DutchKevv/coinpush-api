@@ -11,11 +11,7 @@ export class NotificationService {
 
 	public notifications = app.data.notifications;
 
-	public get unreadCount() {
-		return this._unreadCount;
-	}
-
-	private _unreadCount = parseInt(app.data.notifications.unreadCount, 10) || 0;
+	public unreadCount$: BehaviorSubject<number> = new BehaviorSubject(parseInt(app.data.notifications.unreadCount, 10) || 0);
 
 	constructor(
 		private _http: HttpClient,
@@ -57,8 +53,8 @@ export class NotificationService {
 	}
 
 	public async resetUnreadCounter(): Promise<void> {
-		if (this.unreadCount != 0) {
-			this._unreadCount = 0;
+		if (this.unreadCount$.getValue() != 0) {
+			this.unreadCount$.next(0);
 			app.notification.updateBadgeCounter(0);
 			await this._http.put('/notify/reset-unread-counter', {}).toPromise();
 		}
@@ -70,22 +66,28 @@ export class NotificationService {
 
 	private async _onNotification(notification) {
 		console.log('NOTIFICATION!', notification);
-		switch (notification.type) {
+		const unreadValue = this.unreadCount$.getValue();
+
+		switch (notification.data.type) {
 			case 'post-comment':
-				window.location.hash = '#/comment/' + notification.data.parentId + '?focus=' + notification.data.commentId;
+				this.unreadCount$.next(unreadValue+1);
+				// window.location.hash = '#/comment/' + notification.data.parentId + '?focus=' + notification.data.commentId;
 				break;
 			case 'post-like':
-				window.location.hash = '#/comment/' + notification.data.commentId;
+				this.unreadCount$.next(unreadValue+1);
+				// window.location.hash = '#/comment/' + notification.data.commentId;
 				break;
 			case 'comment-like':
-				window.location.hash = '#/comment/' + notification.data.parentId + '?focus=' + notification.data.commentId;
+				this.unreadCount$.next(unreadValue+1);
+				// window.location.hash = '#/comment/' + notification.data.parentId + '?focus=' + notification.data.commentId;
 				break
 			case 'symbol-alarm':
-				window.location.hash = '#/symbols/?symbol=' + notification.data.symbol;
-				app.emit('event-triggered', Object.assign(notification, { title: notification.data.title }));
+				this.unreadCount$.next(unreadValue+1);
+				// window.location.hash = '#/symbols/?symbol=' + notification.data.symbol;
+				app.emit('event-triggered', Object.assign(notification, { title: notification.title }));
 				break
 			default:
-				console.error('Uknown notification type: ' + notification.type);
+				console.error('Uknown notification type: ' + notification.data.type);
 		}
 	}
 }

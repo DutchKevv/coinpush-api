@@ -48,7 +48,7 @@ app.use('/user', require('./api/user.api'));
 app.use('/device', require('./api/device.api'));
 
 app.use((error, req, res, next) => {
-	console.error(error);
+	console.log('asdfsdfasdfasdfasdfasdf', error);
 
 	if (res.headersSent)
 		return next(error);

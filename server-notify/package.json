@@ -28,7 +28,7 @@
     "mongoose": "^5.0.0-rc0",
     "mongoose-beautiful-unique-validation": "^7.0.0",
     "morgan": "^1.9.0",
-    "node-gcm": "^0.14.9",
+    "fcm-node": "latest",
     "nodemailer": "^4.4.1",
     "typescript": "^2.6.2",
     "validator": "^9.2.0"

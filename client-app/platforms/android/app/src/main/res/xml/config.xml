@@ -1,25 +1,21 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="com.ff.coinpush" version="0.0.127" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <feature name="Whitelist">
+        <param name="android-package" value="org.apache.cordova.whitelist.WhitelistPlugin" />
+        <param name="onload" value="true" />
+    </feature>
     <feature name="AdMob">
         <param name="android-package" value="com.rjfun.cordova.admob.AdMobPlugin" />
         <param name="onload" value="true" />
     </feature>
-    <feature name="Badge">
-        <param name="android-package" value="de.appplant.cordova.plugin.badge.Badge" />
-    </feature>
     <feature name="FileOpener">
         <param name="android-package" value="fr.smile.cordova.fileopener.FileOpener" />
     </feature>
-    <feature name="FirebasePlugin">
-        <param name="android-package" value="org.apache.cordova.firebase.FirebasePlugin" />
-        <param name="onload" value="true" />
+    <feature name="Badge">
+        <param name="android-package" value="de.appplant.cordova.plugin.badge.Badge" />
     </feature>
     <feature name="InAppBrowser">
         <param name="android-package" value="org.apache.cordova.inappbrowser.InAppBrowser" />
-    </feature>
-    <feature name="Whitelist">
-        <param name="android-package" value="org.apache.cordova.whitelist.WhitelistPlugin" />
-        <param name="onload" value="true" />
     </feature>
     <feature name="FacebookConnectPlugin">
         <param name="android-package" value="org.apache.cordova.facebook.ConnectPlugin" />
@@ -30,6 +26,9 @@
     <access origin="https://api.facebook.com" />
     <access origin="https://*.fbcdn.net" />
     <access origin="https://*.akamaihd.net" />
+    <feature name="PushNotification">
+        <param name="android-package" value="com.adobe.phonegap.push.PushPlugin" />
+    </feature>
     <name>CoinPush</name>
     <description>
         Stock trading application with custom alarams
@@ -52,6 +51,7 @@
     <allow-navigation href="https://frontend-freelance.com" />
     <allow-navigation href="http://10.0.2.2" />
     <allow-intent href="market:*" />
+    <resource-file src="google-services.json" target="../../google-services.json" />
     <config-file parent="/resources" target="./res/values/strings.xml">
         <string name="fb_app_id">178901869390909</string>
         <string name="fb_app_name">CoinPush</string>
