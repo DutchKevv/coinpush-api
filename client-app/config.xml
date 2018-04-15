@@ -27,7 +27,7 @@
         <preference name="android-minSdkVersion" value="19" />
         <allow-intent href="market:*" />
         <config-file parent="/resources" target="./res/values/strings.xml">
-            <string name="fb_app_id">162805194523993</string>
+            <string name="fb_app_id">178901869390909</string>
             <string name="fb_app_name">CoinPush</string>
         </config-file>
     </platform>
@@ -42,8 +42,8 @@
     <plugin name="cordova-plugin-badge" spec="^0.8.7" />
     <plugin name="cordova-plugin-inappbrowser" spec="^2.0.2" />
     <plugin name="cordova-plugin-facebook4" spec="^1.10.0">
-        <variable name="APP_ID" value="162805194523993" />
-        <variable name="APP_NAME" value="CoinPush" />
+        <variable name="APP_ID" value="178901869390909" />
+        <variable name="APP_NAME" value="“CoinPush”" />
     </plugin>
     <engine name="browser" spec="5.0.3" />
     <engine name="android" spec="^7.1.0" />

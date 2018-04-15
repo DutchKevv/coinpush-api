@@ -24,7 +24,7 @@ UserSchema.statics.normalizeProfileImg = function (doc) {
 
 	// default img
 	if (!doc.createUser.img) {
-		doc.createUser.img = domainPrefix + config.image.profileDefaultUrl;
+		doc.createUser.img = config.image.profileDefaultUrl;
 		return;
 	}
 
@@ -33,7 +33,7 @@ UserSchema.statics.normalizeProfileImg = function (doc) {
 		return;
 
 	// user image
-	doc.createUser.img = domainPrefix + join(config.image.profileBaseUrl, doc.createUser.img);
+	doc.createUser.img = join(config.image.profileBaseUrl, doc.createUser.img);
 };
 
 UserSchema.statics.addDevice = async function(userId, device) {

@@ -6,6 +6,10 @@ import { environment } from '../../environments/environment';
 export class NormalizeImgUrlPipe implements PipeTransform {
 
 	transform(value: string): string {
-        return app.address.hostUrl + value;
+		if (value.startsWith('http'))
+			return value;
+
+		
+		return app.address.hostUrl + value;
 	}
 }

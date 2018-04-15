@@ -9,12 +9,12 @@
         "parents": {
           "/resources": [
             {
-              "xml": "<string name=\"fb_app_id\">162805194523993</string>",
-              "count": 3
+              "xml": "<string name=\"fb_app_id\">178901869390909</string>",
+              "count": 8
             },
             {
               "xml": "<string name=\"fb_app_name\">CoinPush</string>",
-              "count": 3
+              "count": 8
             }
           ]
         }
@@ -89,6 +89,22 @@
               "count": 1
             },
             {
+              "xml": "<feature name=\"FileOpener\"><param name=\"android-package\" value=\"fr.smile.cordova.fileopener.FileOpener\" /></feature>",
+              "count": 1
+            },
+            {
+              "xml": "<feature name=\"FirebasePlugin\"><param name=\"android-package\" value=\"org.apache.cordova.firebase.FirebasePlugin\" /><param name=\"onload\" value=\"true\" /></feature>",
+              "count": 1
+            },
+            {
+              "xml": "<feature name=\"InAppBrowser\"><param name=\"android-package\" value=\"org.apache.cordova.inappbrowser.InAppBrowser\" /></feature>",
+              "count": 1
+            },
+            {
+              "xml": "<feature name=\"Whitelist\"><param name=\"android-package\" value=\"org.apache.cordova.whitelist.WhitelistPlugin\" /><param name=\"onload\" value=\"true\" /></feature>",
+              "count": 1
+            },
+            {
               "xml": "<feature name=\"FacebookConnectPlugin\"><param name=\"android-package\" value=\"org.apache.cordova.facebook.ConnectPlugin\" /><param name=\"onload\" value=\"true\" /></feature>",
               "count": 1
             },
@@ -115,22 +131,6 @@
             {
               "xml": "<preference name=\"android-minSdkVersion\" value=\"15\" />",
               "count": 1
-            },
-            {
-              "xml": "<feature name=\"FileOpener\"><param name=\"android-package\" value=\"fr.smile.cordova.fileopener.FileOpener\" /></feature>",
-              "count": 1
-            },
-            {
-              "xml": "<feature name=\"FirebasePlugin\"><param name=\"android-package\" value=\"org.apache.cordova.firebase.FirebasePlugin\" /><param name=\"onload\" value=\"true\" /></feature>",
-              "count": 1
-            },
-            {
-              "xml": "<feature name=\"InAppBrowser\"><param name=\"android-package\" value=\"org.apache.cordova.inappbrowser.InAppBrowser\" /></feature>",
-              "count": 1
-            },
-            {
-              "xml": "<feature name=\"Whitelist\"><param name=\"android-package\" value=\"org.apache.cordova.whitelist.WhitelistPlugin\" /><param name=\"onload\" value=\"true\" /></feature>",
-              "count": 1
             }
           ]
         }
@@ -139,11 +139,11 @@
         "parents": {
           "/*": [
             {
-              "xml": "<string name=\"fb_app_id\">162805194523993</string>",
+              "xml": "<string name=\"fb_app_id\">178901869390909</string>",
               "count": 1
             },
             {
-              "xml": "<string name=\"fb_app_name\">CoinPush</string>",
+              "xml": "<string name=\"fb_app_name\">“CoinPush”</string>",
               "count": 1
             }
           ]
@@ -175,11 +175,6 @@
     "cordova-plugin-badge": {
       "PACKAGE_NAME": "com.ff.coinpush"
     },
-    "cordova-plugin-facebook4": {
-      "APP_ID": "162805194523993",
-      "APP_NAME": "CoinPush",
-      "PACKAGE_NAME": "com.ff.coinpush"
-    },
     "cordova-plugin-fileopener": {
       "PACKAGE_NAME": "com.ff.coinpush"
     },
@@ -190,6 +185,11 @@
       "PACKAGE_NAME": "com.ff.coinpush"
     },
     "cordova-plugin-whitelist": {
+      "PACKAGE_NAME": "com.ff.coinpush"
+    },
+    "cordova-plugin-facebook4": {
+      "APP_ID": "178901869390909",
+      "APP_NAME": "“CoinPush”",
       "PACKAGE_NAME": "com.ff.coinpush"
     }
   },
@@ -209,14 +209,6 @@
       "pluginId": "cordova-plugin-badge",
       "clobbers": [
         "cordova.plugins.notification.badge"
-      ]
-    },
-    {
-      "id": "cordova-plugin-facebook4.FacebookConnectPlugin",
-      "file": "plugins/cordova-plugin-facebook4/www/facebook-native.js",
-      "pluginId": "cordova-plugin-facebook4",
-      "clobbers": [
-        "facebookConnectPlugin"
       ]
     },
     {
@@ -243,16 +235,24 @@
         "cordova.InAppBrowser.open",
         "window.open"
       ]
+    },
+    {
+      "id": "cordova-plugin-facebook4.FacebookConnectPlugin",
+      "file": "plugins/cordova-plugin-facebook4/www/facebook-native.js",
+      "pluginId": "cordova-plugin-facebook4",
+      "clobbers": [
+        "facebookConnectPlugin"
+      ]
     }
   ],
   "plugin_metadata": {
     "cordova-plugin-extension": "1.5.4",
     "cordova-plugin-admobpro": "2.31.4",
     "cordova-plugin-badge": "0.8.7",
-    "cordova-plugin-facebook4": "1.9.1",
     "cordova-plugin-fileopener": "1.0.5",
     "cordova-plugin-firebase": "0.1.25",
     "cordova-plugin-inappbrowser": "2.0.2",
-    "cordova-plugin-whitelist": "1.3.3"
+    "cordova-plugin-whitelist": "1.3.3",
+    "cordova-plugin-facebook4": "1.9.1"
   }
 }

@@ -263,13 +263,13 @@ dependencies {
     // SUB-PROJECT DEPENDENCIES START
     implementation(project(path: ":CordovaLib"))
     compile "com.google.android.gms:play-services-ads:+"
-    compile "com.facebook.android:facebook-android-sdk:4.+"
     compile "com.google.gms:google-services:+"
     compile "com.google.android.gms:play-services-tagmanager:+"
     compile "com.google.firebase:firebase-core:+"
     compile "com.google.firebase:firebase-messaging:+"
     compile "com.google.firebase:firebase-crash:+"
     compile "com.google.firebase:firebase-config:+"
+    compile "com.facebook.android:facebook-android-sdk:4.+"
     // SUB-PROJECT DEPENDENCIES END
 }
 

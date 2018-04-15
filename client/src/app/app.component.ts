@@ -8,6 +8,7 @@ import { app } from '../core/app';
 import { EventService } from './services/event.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { SocketService } from './services/socket.service';
+import { environment } from '../environments/environment';
 
 declare let Module: any;
 
@@ -31,6 +32,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 	@ViewChild('input') inputRef: ElementRef;
 	@ViewChild('globeContainer') globeContainerRef: ElementRef;
 
+	public version = 'v0.0.2-alpha-' + (environment.production ? 'prod' : 'dev');
 	public searchOpen = false;
 	public platform = app.platform;
 
@@ -39,7 +41,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 	private _isNavOpen: boolean = false;
 	private _navBarWidth: number = 250;
 	private _navBarPosition: number = -this._navBarWidth;
-	private _touchStartX = 0;
+	private _touchStartX = 0
 
 	/**
 	 * mobile nav menu back press close

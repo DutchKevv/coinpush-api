@@ -5,7 +5,7 @@
     <a (click)="toggleNav( false)" [routerLink]="['/user/', userService.model.options._id]" [routerLinkActive]="['active']" class="profile"
         style="padding-top: 0">
         <h6 style="text-align: right; line-height: 40px; padding-right: 20px;">
-            <i>v0.0.2-alpha</i>
+            <i>{{version}}</i>
         </h6>
         <img class="logo" width="70" height="70" [attr.src]="userService.model.options.img ? (userService.model.options.img | NormalizeImgUrl) : undefined">
         <h4>{{userService.model.options.name}}</h4>

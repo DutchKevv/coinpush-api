@@ -7,15 +7,6 @@
     <feature name="Badge">
         <param name="android-package" value="de.appplant.cordova.plugin.badge.Badge" />
     </feature>
-    <feature name="FacebookConnectPlugin">
-        <param name="android-package" value="org.apache.cordova.facebook.ConnectPlugin" />
-        <param name="onload" value="true" />
-    </feature>
-    <access origin="https://m.facebook.com" />
-    <access origin="https://graph.facebook.com" />
-    <access origin="https://api.facebook.com" />
-    <access origin="https://*.fbcdn.net" />
-    <access origin="https://*.akamaihd.net" />
     <feature name="FileOpener">
         <param name="android-package" value="fr.smile.cordova.fileopener.FileOpener" />
     </feature>
@@ -30,6 +21,15 @@
         <param name="android-package" value="org.apache.cordova.whitelist.WhitelistPlugin" />
         <param name="onload" value="true" />
     </feature>
+    <feature name="FacebookConnectPlugin">
+        <param name="android-package" value="org.apache.cordova.facebook.ConnectPlugin" />
+        <param name="onload" value="true" />
+    </feature>
+    <access origin="https://m.facebook.com" />
+    <access origin="https://graph.facebook.com" />
+    <access origin="https://api.facebook.com" />
+    <access origin="https://*.fbcdn.net" />
+    <access origin="https://*.akamaihd.net" />
     <name>CoinPush</name>
     <description>
         Stock trading application with custom alarams
@@ -53,7 +53,7 @@
     <allow-navigation href="http://10.0.2.2" />
     <allow-intent href="market:*" />
     <config-file parent="/resources" target="./res/values/strings.xml">
-        <string name="fb_app_id">162805194523993</string>
+        <string name="fb_app_id">178901869390909</string>
         <string name="fb_app_name">CoinPush</string>
     </config-file>
     <preference name="loglevel" value="DEBUG" />
