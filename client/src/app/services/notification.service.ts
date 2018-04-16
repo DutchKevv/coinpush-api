@@ -5,6 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { HttpClient, HttpParams } from '@angular/common/http';
 // import { INotification } from '../../../../shared/modules/coinpush/interface/notification.interface';
 import { SocketService } from './socket.service';
+import * as moment from 'moment';
 
 @Injectable()
 export class NotificationService {
@@ -41,7 +42,12 @@ export class NotificationService {
 			}
 		});
 
-		return this._http.get('/notify', { params });
+		return this._http.get('/notify', { params }).map((notifications: any) => {
+			notifications.forEach(notification => {
+				notification.fromNow = moment(notification.createDate).fromNow();
+			})
+			return notifications;
+		});
 	}
 
 	public markAsRead(notificationId: string): Promise<Response> {

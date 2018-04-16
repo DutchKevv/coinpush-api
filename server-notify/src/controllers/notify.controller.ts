@@ -21,7 +21,14 @@ export const notifyController = {
         const limit = parseInt(params.limit, 10) || 20;
         const sort = params.sort || -1;
 
-        return Notification.find({ toUserId: reqUser.id }).sort({ _id: sort }).limit(limit).lean();
+        return Notification
+            .find({
+                toUserId: reqUser.id
+            })
+            .populate('fromUserId', ['_id', 'name', 'img'])
+            .sort({ _id: sort })
+            .limit(limit)
+            .lean();
     },
 
     async create(notification): Promise<any> {

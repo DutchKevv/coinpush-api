@@ -84,7 +84,7 @@
             border-top: 1px solid grey;
             padding: 5px;
             font-size: 14px;
-            padding: 10px;
+            padding: 4px;
             border-bottom: $border-color-grey;
             color: $font-color-light;
             text-align: left;
@@ -95,13 +95,28 @@
             }
 
             &:hover {
-                background: $background-light2
+                background: #4c5b5d;
+            }
+
+            span {
+                line-height: 30px;
+            }
+
+            b {
+                text-transform: capitalize;
+            }
+
+            img {
+                width: 40px;
+                height: 40px;
+                margin-right: 10px;
+                border-radius: 50%;
             }
         }
 
         p {
-            font-size: 12px;
-            line-height: 15px;
+            font-size: 14px;
+            line-height: 18px;
         }
 
         .fa-bell {
@@ -122,7 +137,7 @@
    
     .notification-drop-down {
         left: 0;
-        min-height: 100px;
+        // min-height: 100px;
         max-height: 300px;
         overflow-y: auto;
     }

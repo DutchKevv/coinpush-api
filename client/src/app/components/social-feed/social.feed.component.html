@@ -40,7 +40,8 @@
 					<a [routerLink]="['/user/', comment.options.createUser._id]" class="g-username">
 						{{comment.options.createUser.name}}
 					</a>
-					<a [routerLink]="['/comment/', comment.options._id]">{{comment.options.created | date:'shortTime'}}</a>
+					<a [routerLink]="['/comment/', comment.options._id]">{{comment.options.fromNow}}</a>
+					<!-- <a [routerLink]="['/comment/', comment.options._id]">{{comment.options.created | date:'shortTime'}}</a> -->
 				</div>
 				<i class="fa fa-ellipsis-v more-post-actions-button" (click)="showMorePostActions(comment)"></i>
 			</header>
@@ -81,7 +82,8 @@
 									<i class="fa fa-thumbs-o-up"></i>{{(child.options$ | async).likeCount}} -
 								</span>
 							</a>
-							<span>&nbsp;{{child.options.created | date:'shortTime'}}</span>
+							<span>&nbsp;{{child.options.fromNow}}</span>
+							<!-- <span>&nbsp;{{child.options.created | date:'shortTime'}}</span> -->
 							<i class="fa fa-ellipsis-v more-comment-actions-button" (click)="showMoreCommentActions(child)"></i>
 						</div>
 					</div>

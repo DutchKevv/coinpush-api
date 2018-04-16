@@ -31,7 +31,6 @@ services:
       - /bin/sh
       - -c
       - |
-          npm -v
           npm run install-shared
           npm i
           npm start

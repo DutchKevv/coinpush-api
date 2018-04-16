@@ -44,6 +44,5 @@
     "d-prune": "docker system prune",
     "clean-server": "",
     "clean-db": ""
-  },
-  "dependencies": {}
+  }
 }

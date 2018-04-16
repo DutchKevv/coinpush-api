@@ -33,6 +33,7 @@
     "@types/node": "9.6.5",
     "bootstrap": "4.1.0",
     "highcharts": "6.1.0",
+    "moment": "latest",
     "localforage": "1.7.1",
     "socket.io-client": "2.1.0",
     "typescript": "2.7",

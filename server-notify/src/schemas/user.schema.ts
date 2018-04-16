@@ -19,6 +19,10 @@ export const UserSchema = new Schema({
         required: true,
         trim: true
     },
+    img: {
+        type: String,
+        trim: true
+    },
     devices: [{
         token: {
             type: String
