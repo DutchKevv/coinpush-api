@@ -14,7 +14,7 @@
                     <b>{{notification.fromUserId.name}}</b>
                     started following you
                 </p>
-                <p>{{notification.fromNow}}</p>
+                <p><i class="fa fa-user-plus"></i>{{notification.fromNow}}</p>
             </div>
         </a>
         <a [routerLink]="['/comment/' + (notification.data.parentId || notification.data.commentId)]" *ngIf="notification.type === 'post-comment'">
@@ -24,7 +24,7 @@
                     <b>{{notification.fromUserId.name}}</b>
                     commented on your post
                 </p>
-                <p>{{notification.fromNow}}</p>
+                <p><i class="fa fa-comment"></i>{{notification.fromNow}}</p>
             </div>
         </a>
         <a [routerLink]="['/comment/' + (notification.data.parentId || notification.data.commentId)]" *ngIf="notification.type === 'post-like'">
@@ -34,7 +34,7 @@
                     <b>{{notification.fromUserId.name}}</b>
                     liked your post
                 </p>
-                <p>{{notification.fromNow}}</p>
+                <p><i class="fa fa-thumbs-up"></i>{{notification.fromNow}}</p>
             </div>
         </a>
         <a [routerLink]="['/comment/' + (notification.data.parentId || notification.data.commentId)]" *ngIf="notification.type === 'comment-like'">
@@ -44,16 +44,18 @@
                     <b>{{notification.fromUserId.name}}</b>
                     liked your comment
                 </p>
-                <p>{{notification.fromNow}}</p>
+                <p><i class="fa fa-thumbs-up"></i>{{notification.fromNow}}</p>
             </div>
         </a>
-        <a *ngIf="notification.type === 'symbol-alarm'" [routerLink]="['/symbols']" [queryParams]="{ symbol: notification.data[0].symbol }"
+        <a *ngIf="notification.type === 'symbol-alarm'" [routerLink]="['/symbols']" [queryParams]="{ symbol: notification.data.symbol }"
             (click)="onClickNotification($event, notification)">
-            <span class="notification-image symbol-img-{{notification.data[0].symbol}}"></span>
+            <span class="notification-image symbol-img-{{notification.data.symbol}}"></span>
             <div class="notification-content">
-                <p>{{notification.data[0].symbol}} - ${{notification.data[0].target}}</p>
+                <p>{{notification.data.symbol}} - ${{notification.data.target}}</p>
                 <p>
-                    <i class="fa fa-bell"></i>{{notification.createDate | date:'medium'}}</p>
+                    <i class="fa fa-bell"></i>
+                    {{notification.fromNow}}
+                </p>
             </div>
         </a>
     </div>

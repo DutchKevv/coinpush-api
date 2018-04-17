@@ -29,6 +29,10 @@
     <feature name="PushNotification">
         <param name="android-package" value="com.adobe.phonegap.push.PushPlugin" />
     </feature>
+    <feature name="StatusBar">
+        <param name="android-package" value="org.apache.cordova.statusbar.StatusBar" />
+        <param name="onload" value="true" />
+    </feature>
     <name>CoinPush</name>
     <description>
         Stock trading application with custom alarams
@@ -59,5 +63,6 @@
     <preference name="loglevel" value="DEBUG" />
     <preference name="android-minSdkVersion" value="19" />
     <preference name="BackgroundColor" value="0xff222122" />
-    <preference name="fullscreen" value="true" />
+    <preference name="fullscreen" value="false" />
+    <preference name="StatusBarBackgroundColor" value="#000000" />
 </widget>

@@ -17,7 +17,7 @@
     display: block;
 
     .fa-globe {
-        font-size: 34px;
+        font-size: 32px;
     }
 
     @media only screen and (min-width : 992px) {
@@ -107,9 +107,10 @@
             }
 
             img {
-                width: 40px;
-                height: 40px;
-                margin-right: 10px;
+                width: 30px;
+                height: 30px;
+                margin-right: 6px;
+                margin-left: 2px;
                 border-radius: 50%;
             }
         }
@@ -119,14 +120,21 @@
             line-height: 18px;
         }
 
-        .fa-bell {
-            margin-right: 6px;
+        .fa-bell,
+        .fa-thumbs-up,
+        .fa-comment,
+        .fa-user-plus {
+            margin-right: 9px;
             color: #bfbfbf;
+        }
+
+        .fa-user-plus {
+            margin-right: 6px;
         }
     }
     
     .notification-image {
-        margin-right: 10px;
+        margin-right: 6px;
     }
 }
 

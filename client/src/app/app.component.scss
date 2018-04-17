@@ -30,7 +30,7 @@ header {
     display: flex;
     flex-shrink: 0;
     border-bottom: 1px solid $border-color-grey;
-    height: 46px;
+    height: 40px;
     background: black;
     z-index: 2;
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.4);
@@ -73,11 +73,14 @@ header {
 
     .fa-navicon {
         font-size: 40px;
-        margin-top: 3px;
+        margin-top: 0px;
+        margin-right: 10px;
     }
 
     .fa-filter {
-        font-size: 35px;
+        font-size: 38px;
+        margin-left: 6px;
+        margin-top: 2px;
     }
 
     .fa-ellipsis-v,
@@ -88,7 +91,8 @@ header {
 
     .fa-search {
         margin-right: 5px;
-        font-size: 30px;
+        font-size: 32px;
+        margin-top: 1px;
     }
 
     .search-container {
@@ -110,7 +114,7 @@ header {
         color: $input-color-text;
         text-align: center;
         border: none;
-        margin-top: 5px;
+        margin-top: 0px;
 
         &:focus {
             outline: none;

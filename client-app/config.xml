@@ -8,7 +8,8 @@
         H.K.Brandsma
     </author>
     <preference name="BackgroundColor" value="0xff222122" />
-    <preference name="fullscreen" value="true" />
+    <preference name="fullscreen" value="false" />
+    <preference name="StatusBarBackgroundColor" value="#000000" />
     <icon src="assets/icon.png" />
     <content src="index.html" />
     <access origin="http://10.0.2.2" />
@@ -50,6 +51,7 @@
         <variable name="ANDROID_SUPPORT_V13_VERSION" value="27.+" />
         <variable name="FCM_VERSION" value="11.6.2" />
     </plugin>
+    <plugin name="cordova-plugin-statusbar" spec="^2.4.2" />
     <engine name="browser" spec="5.0.3" />
     <engine name="android" spec="^7.1.0" />
 </widget>

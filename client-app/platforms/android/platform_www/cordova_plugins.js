@@ -42,19 +42,19 @@ module.exports = [
     ]
   },
   {
-    "id": "cordova-plugin-firebase-messaging.FirebaseMessaging",
-    "file": "plugins/cordova-plugin-firebase-messaging/www/FirebaseMessaging.js",
-    "pluginId": "cordova-plugin-firebase-messaging",
-    "merges": [
-      "cordova.plugins.firebase.messaging"
-    ]
-  },
-  {
     "id": "phonegap-plugin-push.PushNotification",
     "file": "plugins/phonegap-plugin-push/www/push.js",
     "pluginId": "phonegap-plugin-push",
     "clobbers": [
       "PushNotification"
+    ]
+  },
+  {
+    "id": "cordova-plugin-statusbar.statusbar",
+    "file": "plugins/cordova-plugin-statusbar/www/statusbar.js",
+    "pluginId": "cordova-plugin-statusbar",
+    "clobbers": [
+      "window.StatusBar"
     ]
   }
 ];
@@ -69,8 +69,8 @@ module.exports.metadata =
   "cordova-plugin-inappbrowser": "2.0.2",
   "cordova-plugin-facebook4": "1.10.1",
   "cordova-support-google-services": "1.1.0",
-  "cordova-plugin-firebase-messaging": "0.13.0",
-  "phonegap-plugin-push": "2.2.2"
+  "phonegap-plugin-push": "2.2.2",
+  "cordova-plugin-statusbar": "2.4.2"
 };
 // BOTTOM OF METADATA
 });

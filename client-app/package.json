@@ -10,18 +10,19 @@
   },
   "main": "index.js",
   "scripts": {
-    "build-mobile": "cordova build --no-inc",
-    "build-android": "cordova build android --no-inc",
-    "build-ios": "cordova build ios --no-inc",
-    "build-mobile-release": "cordova build --release --inc-version",
-    "build-android-release": "cordova build android --release --inc-version",
-    "build-ios-release": "npm run clean && cordova build ios --release --inc-version",
-    "emulate-android": "ncp ./../client/www ./www && cordova emulate android",
-    "emulate-ios": "cordova emulate ios",
-    "run-android": "cordova run android",
-    "run-ios": "cordova run android",
+    "build-mobile": "npm run copy-www && cordova build --no-inc",
+    "build-android": "npm run copy-www && cordova build android --no-inc",
+    "build-ios": "npm run copy-www && cordova build ios --no-inc",
+    "build-mobile-release": "npm run copy-www && cordova build --release --inc-version",
+    "build-android-release": "npm run copy-www && cordova build android --release --inc-version",
+    "build-ios-release": "npm run copy-www && npm run clean && cordova build ios --release --inc-version",
+    "emulate-android": "npm run copy-www && cordova emulate android",
+    "emulate-ios": "npm run copy-www && cordova emulate ios",
+    "run-android": "npm run copy-www && cordova run android",
+    "run-ios": "npm run copy-www && cordova run ios",
     "clean": "",
-    "clean2": "cordova clean"
+    "clean2": "cordova clean",
+    "copy-www": "ncp ./../client/www ./www "
   },
   "author": "Apache Cordova Team",
   "license": "Apache-2.0",
@@ -35,6 +36,7 @@
     "cordova-plugin-facebook4": "^1.10.1",
     "cordova-plugin-fileopener": "^1.0.5",
     "cordova-plugin-inappbrowser": "^2.0.2",
+    "cordova-plugin-statusbar": "^2.4.2",
     "cordova-plugin-whitelist": "^1.3.3",
     "cordova-support-google-services": "^1.1.0",
     "ncp": "^2.0.0",
@@ -57,7 +59,8 @@
       "phonegap-plugin-push": {
         "ANDROID_SUPPORT_V13_VERSION": "27.+",
         "FCM_VERSION": "11.6.2"
-      }
+      },
+      "cordova-plugin-statusbar": {}
     },
     "platforms": [
       "browser",

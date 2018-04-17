@@ -8,7 +8,7 @@ export class NormalizeImgUrlPipe implements PipeTransform {
 	transform(value: string, type: string = 'user'): string {
 		if (!value) {
 			if (type === 'user') {
-				return '/assets/image/default-profile.jpg';
+				value = '/assets/image/default-profile.jpg';
 			} else {
 				return '';
 			}
