@@ -30,6 +30,7 @@
     "start-nginx": "docker-compose up nginx",
     "build-prod-client": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml build client",
     "build-prod-server": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml build nginx redis gateway notify user event cache comment",
+    "build-prod-nginx": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml build nginx",
     "prod-client": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d client",
     "prod-server": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up nginx redis gateway notify user event cache comment",
     "prod-nginx": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d nginx",
