@@ -2,7 +2,7 @@ version: '3.3'
 
 services:
   nginx:
-    restart: unless-stopped
+    restart: always
     build: ./server-nginx
     image: nginx
     container_name: nginx 
@@ -18,13 +18,13 @@ services:
       - ./_data/db:/_data/db
     command: mongod --smallfiles --logpath=/dev/null
   redis:
-    restart: unless-stopped
+    restart: always
     image: "redis:alpine"
     ports:
         - 6379
     container_name: redis
   gateway:
-    restart: unless-stopped
+    restart: always
     image: mhart/alpine-node:8.9.4
     container_name: gateway
     build:
@@ -56,7 +56,7 @@ services:
       - ./client-app:/usr/src/app/client-app
       - ./client/www:/usr/src/app/client-app/www
   cache:
-    restart: unless-stopped
+    restart: always
     image: cache
     container_name: "cache"
     build:
@@ -72,7 +72,7 @@ services:
       - redis
       - mongodb
   user:
-    restart: unless-stopped
+    restart: always
     image: user
     container_name: user
     build:
@@ -88,7 +88,7 @@ services:
       - redis
       - mongodb
   notify:
-    restart: unless-stopped
+    restart: always
     image: notify
     container_name: notify
     build:
@@ -104,6 +104,7 @@ services:
       - redis
       - mongodb
   comment:
+    restart: always
     image: comment
     container_name: comment
     build:
@@ -119,6 +120,7 @@ services:
       - redis
       - mongodb
   event:
+    restart: always
     image: event
     container_name: event
     build:
