@@ -47,11 +47,21 @@ export const authenticateController = {
 					});
 
 					if (options.profile && user && user._id) {
-						// get unread notification counter and active events (alarms) 
-						userData = await Promise.all([
-							notifyController.getUnreadCount({ id: user._id }),
-							eventController.findMany({ id: user._id })
-						]);
+						// get unread notification counter and active events (alarms)
+
+						await new Promise((resolve, reject) => {
+							let done = 0;
+
+							notifyController.getUnreadCount({ id: user._id }).then(data => userData[0] = data).catch(console.error).finally(() => {
+								if (++done === 2)
+									resolve();
+							});
+							
+							eventController.findMany({ id: user._id }).then(data => userData[1] = data).catch(console.error).finally(() => {
+								if (++done === 2)
+									resolve();
+							});
+						});			
 					}
 				}
 			})()

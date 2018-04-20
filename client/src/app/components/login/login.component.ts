@@ -17,10 +17,17 @@ export class LoginComponent implements OnInit {
 	@Input() formType = 'login';
 	@Output() public loading$: EventEmitter<boolean> = new EventEmitter;
 
-	loginModel: any = {};
+	loginModel = {
+		email: '',
+		password: ''
+	};
 	registerModel: any = {
 		country: 'US'
 	};
+	passwordResetModel = {
+		email: ''
+	};
+
 	loading = false;
 	returnUrl: string;
 
@@ -53,7 +60,7 @@ export class LoginComponent implements OnInit {
 
 	async fbLogin() {
 		this.loading$.emit(true);
-		
+
 		try {
 			await this.authenticationService.authenticateFacebook();
 		} catch (errorObj) {
@@ -73,7 +80,7 @@ export class LoginComponent implements OnInit {
 			}
 		} finally {
 			this.loading$.emit(false);
-		}		
+		}
 	}
 
 	async register() {
@@ -115,6 +122,21 @@ export class LoginComponent implements OnInit {
 			}
 		} finally {
 			this.loading$.emit(false);
+		}
+	}
+
+	async requestPasswordReset() {
+		this.loading = true;
+
+		// store email to prevent 2 way binding altering with value
+		// this ensures same address shows in alert box after async request
+		const email = this.passwordResetModel.email;
+		const result = await this.authenticationService.requestPasswordReset(email);
+
+		this.loading = false;
+
+		if (result) {
+			return this.router.navigate(['/login']);
 		}
 	}
 
