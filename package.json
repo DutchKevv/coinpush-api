@@ -32,7 +32,7 @@
     "build-prod-server": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml build nginx redis gateway notify user event cache comment",
     "build-prod-nginx": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml build nginx",
     "prod-client": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d client",
-    "prod-server": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --restart=always nginx redis gateway notify user event cache comment",
+    "prod-server": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d nginx redis gateway notify user event cache comment",
     "prod-nginx": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d nginx",
     "stop-server": "docker-compose stop nginx redis gateway notify user event cache comment",
     "prod": "pm2 start ecosystem.config.js --env production && pm2 monit",
