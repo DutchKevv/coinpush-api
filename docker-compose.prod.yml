@@ -17,6 +17,8 @@ services:
     environment:
        ENV: prod
     command: sh -c "envsubst \"`env | awk -F = '{printf \" $$%s\", $$1}'`\" < /etc/nginx/nginx.conf > /etc/nginx/nginx.conf && nginx -g 'daemon on;'"
+    stdin_open: true
+    tty: true
   mongodb:
     ports:
       - 27017
