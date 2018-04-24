@@ -13,7 +13,7 @@ services:
       - ./server-nginx/pages:/usr/src/app/server-nginx/pages
     environment:
       ENV: dev
-    command: sh -c "envsubst \"`env | awk -F = '{printf \" $$%s\", $$1}'`\" < /etc/nginx/nginx.conf > /etc/nginx/nginx.conf && nginx -t && nginx -g 'daemon off;'"
+    # command: sh -c "envsubst \"`env | awk -F = '{printf \" $$%s\", $$1}'`\" < /etc/nginx/nginx.conf > /etc/nginx/nginx.conf && nginx -t && nginx -g 'daemon off;'"
   mongodb:
     ports:
       - "27017:27017"
