@@ -23,7 +23,7 @@
     "NodeJS"
   ],
   "scripts": {
-    "copy-ssl": "cp -r /etc/letsencrypt/ ./server-nginx/letsencrypt && chmod -R 777 ./server-nginx/letsencrypt/",
+    "copy-ssl": "cp -r /etc/letsencrypt/ ./server-nginx/ssl && chmod -R 777 ./server-nginx/ssl/",
     "start": "npm run d-up",
     "start-server": "docker-compose up -d nginx redis gateway notify cache event comment user",
     "start-client": "docker-compose up client",
