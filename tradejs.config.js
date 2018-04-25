@@ -7,7 +7,7 @@ let domain = {
     port: 4000
 };
 
-if (process.env.ENV === 'production') {
+if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'prod') {
     domain = {
         host: 'frontend-freelance.com',
         apiUrl: 'https://frontend-freelance.com',
