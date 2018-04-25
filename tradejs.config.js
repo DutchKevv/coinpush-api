@@ -7,6 +7,14 @@ let domain = {
     port: 4000
 };
 
+if (process.env.ENV === 'production') {
+    let domain = {
+        host: 'frontend-freelance.com',
+        apiUrl: 'https://frontend-freelance.com',
+        port: 4000
+    };
+}
+
 const config = {
     domain,
     path: {
