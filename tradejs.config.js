@@ -8,7 +8,7 @@ let domain = {
 };
 
 if (process.env.ENV === 'production') {
-    let domain = {
+    domain = {
         host: 'frontend-freelance.com',
         apiUrl: 'https://frontend-freelance.com',
         port: 4000

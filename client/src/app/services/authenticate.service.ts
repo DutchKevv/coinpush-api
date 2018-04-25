@@ -50,7 +50,7 @@ export class AuthenticationService {
 		let result = false;
 
 		try {
-			result = <any>await this._http.post('/authenticate/request-password-reset', { email }).toPromise();
+			<any>await this._http.post('/authenticate/request-password-reset', { email }).toPromise();
 			this._alertService.success(`Email send to: ${email}`);
 			result = true;
 		} catch (error) {
