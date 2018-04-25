@@ -21,7 +21,6 @@ import { SettingsComponent } from './components/settings/settings.component';
 import { ParseCommentContentPipe, SocialFeedComponent } from './components/social-feed/social.feed.component';
 import { CommentBoxComponent } from './components/comment-box/comment-box.component';
 import { CommentService } from "./services/comment.service";
-import { PasswordResetComponent } from "./components/password-reset/password-reset.component";
 import { BootstrapService } from "./services/bootstrap.service";
 import { EventOverviewComponent } from './components/event-overview/event-overview.component';
 import { NewsService } from './services/news.service';
@@ -46,7 +45,6 @@ import { NormalizeImgUrlPipe } from './pipes/normalize-image.pipe';
 		ParseCommentContentPipe,
 		SocialFeedComponent,
 		LoginComponent,
-		PasswordResetComponent,
 		AlertComponent,
 		UserOverviewComponent,
 		ProfileComponent,

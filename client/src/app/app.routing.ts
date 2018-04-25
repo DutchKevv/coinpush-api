@@ -6,13 +6,11 @@ import { ChartOverviewComponent } from './components/chart-overview/chart-overvi
 import { ProfileComponent } from './components/profile/profile.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { SocialFeedComponent } from './components/social-feed/social.feed.component';
-import { PasswordResetComponent } from "./components/password-reset/password-reset.component";
 import { EventOverviewComponent } from './components/event-overview/event-overview.component';
 import { TimelineComponent } from './components/timeline/timeline.component';
 
 const routes: Routes = [
 	{ path: '', redirectTo: 'symbols', pathMatch: 'full', canActivate: [AuthGuard] },
-	{ path: 'password-reset', component: PasswordResetComponent },
 	{ path: 'timeline', component: TimelineComponent, canActivate: [AuthGuard] },
 	{ path: 'comment/:id', component: SocialFeedComponent, canActivate: [AuthGuard] },
 	{ path: 'user', component: UserOverviewComponent, canActivate: [AuthGuard] },
