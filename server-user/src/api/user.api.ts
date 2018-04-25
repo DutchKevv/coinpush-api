@@ -61,7 +61,6 @@ router.post('/', async (req: any, res, next) => {
  * update password
  */
 router.put('/password', async (req: any, res, next) => {
-	console.log('PASSWQORD');
 	try {
 		res.send(await userController.updatePassword(req.user, req.body.token, req.body.password));
 	} catch (error) {

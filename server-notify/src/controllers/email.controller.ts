@@ -40,7 +40,7 @@ export const emailController = {
 
 		return new Promise((resolve, reject) => {
 
-			const url = `${config.domain.apiUrl}/#/password-reset?token=${user.resetPasswordToken}`;
+			const url = `${config.domain.apiUrl}/#/symbols/?loginRoute=resetpassword&token=${user.resetPasswordToken}`;
 			const HTML = `
 Hi there ${user.name} <br /><br />
 

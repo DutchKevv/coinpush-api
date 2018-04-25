@@ -48,9 +48,9 @@
     "d-build": "docker-compose build",
     "d-up": "docker-compose up",
     "d-prune": "docker system prune",
-    "clean-client": "cd ./scripts && ./remove-npm-modules.sh",
-    "clean-app": "cd ./scripts && ./remove-npm-modules.sh",
-    "clean-server": "cd ./scripts && ./remove-npm-modules.sh",
+    "clean-client": "cd ./scripts && sh ./clean-npm-modules.sh",
+    "clean-app": "cd ./scripts && sh ./clean-npm-modules.sh",
+    "clean-server": "cd ./scripts && sh ./clean-npm-modules.sh",
     "clean-db": "",
     "_prod": "pm2 start ecosystem.config.js --env production && pm2 monit"
   }

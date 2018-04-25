@@ -158,7 +158,7 @@ export const userController = {
 	},
 
 	// TODO - Filter fields
-	async updatePassword(reqUser: IReqUser, token, password): Promise<void> {
+	async updatePassword(reqUser: IReqUser, token: string, password: string): Promise<void> {
 		let user;
 
 		if (token)

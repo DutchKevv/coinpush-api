@@ -29,18 +29,5 @@ export class PasswordResetComponent implements OnInit {
 
 	}
 
-	async resetPassword(e) {
-		e.preventDefault();
-
-		this.loading = true;
-
-		const token = this.route.snapshot.queryParams['token'];
-		const result = await this.authenticationService.updatePassword(token, this.model.password);
-
-		if (result)
-			return this.router.navigate(['/login']);
-
-		this.alertService.error('Invalid username / password');
-		this.loading = false;
-	}
+	
 }

@@ -24,8 +24,12 @@ export class LoginComponent implements OnInit {
 	registerModel: any = {
 		country: 'US'
 	};
-	passwordResetModel = {
+	requestPasswordResetModel = {
 		email: ''
+	};
+	passwordResetModel = {
+		password: '',
+		passwordConf: ''
 	};
 
 	loading = false;
@@ -34,12 +38,12 @@ export class LoginComponent implements OnInit {
 	countries = window['countries'];
 
 	constructor(
+		public changeDetectorRef: ChangeDetectorRef,
 		public authenticationService: AuthenticationService,
 		public activeModal: NgbActiveModal,
 		private route: ActivatedRoute,
 		private router: Router,
 		private _alertService: AlertService,
-		private _changeDetectorRef: ChangeDetectorRef,
 		private _userService: UserService
 	) { }
 
@@ -102,7 +106,7 @@ export class LoginComponent implements OnInit {
 
 			// switch to login tab
 			this.formType = 'login';
-			this._changeDetectorRef.detectChanges();
+			this.changeDetectorRef.detectChanges();
 		} catch (errorObj) {
 			this.loading$.emit(false);
 
@@ -126,17 +130,36 @@ export class LoginComponent implements OnInit {
 	}
 
 	async requestPasswordReset() {
-		this.loading = true;
+		this.loading$.emit(true);
 
 		// store email to prevent 2 way binding altering with value
 		// this ensures same address shows in alert box after async request
-		const email = this.passwordResetModel.email;
+		const email = this.requestPasswordResetModel.email;
 		const result = await this.authenticationService.requestPasswordReset(email);
 
-		this.loading = false;
+		this.loading$.emit(false);
 
 		if (result) {
-			return this.router.navigate(['/login']);
+			this.activeModal.dismiss('Cross click');
+		}
+	}
+
+	async resetPassword(e) {
+		e.preventDefault();
+		if (this.passwordResetModel.password !== this.passwordResetModel.passwordConf) {
+			this.loading$.emit(false);
+			this._alertService.error(`Passwords do not match`);
+			return;
+		}
+
+		const token = decodeURIComponent(this.route.snapshot.queryParams['token']);
+
+		this.loading$.emit(true);
+		const result = await this.authenticationService.updatePassword(token, this.passwordResetModel.password);
+		this.loading$.emit(false);
+
+		if (result) {
+			this.activeModal.dismiss('Cross click');
 		}
 	}
 

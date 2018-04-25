@@ -5,8 +5,8 @@ import { LoginComponent } from '../components/login/login.component';
 import { app } from '../../core/app';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from '../../environments/environment';
-import { CustomHttp } from './http.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 
 declare const window: any;
 
@@ -24,34 +24,56 @@ export class AuthenticationService {
 		private _userService: UserService,
 		private _alertService: AlertService,
 		private _modalService: NgbModal,
+		private _router: Router,
+		private _activetedRoute: ActivatedRoute,
 		private _http: HttpClient) {
 		this.init();
 	}
 
 	init() {
+		this._activetedRoute.queryParamMap
+			// .distinctUntilChanged()
+			.subscribe((params: any) => {
+				for (let key in params.params) {
+					switch (key) {
+						case 'loginRoute':
+							this.showLoginRegisterPopup(params.params.loginRoute);
+							break;
+					}
+				}
+			});
+
 		app.on('firebase-token-refresh', () => this.saveDevice());
 	}
 
-	public async requestPasswordReset(email: string) {
-		const result = <any>await this._http.post('/authenticate/request-password-reset', { email }).toPromise();
+	public async requestPasswordReset(email: string): Promise<boolean> {
+		let result = false;
 
-		if (result.status === 200)
+		try {
+			result = <any>await this._http.post('/authenticate/request-password-reset', { email }).toPromise();
 			this._alertService.success(`Email send to: ${email}`);
-		else
+			result = true;
+		} catch (error) {
+			console.error(error);
 			this._alertService.error(`An error occured`);
-
+		}
+		
 		return result;
 	}
 
-	public async updatePassword(token: string, password: string) {
-		const result = <any>await this._http.put('/authenticate', { token, password }).toPromise();
+	public async updatePassword(token: string, password: string): Promise<boolean> {
+		let result = false; 
 
-		if (result.status === 200)
-			this._alertService.success('Your password has been reset');
-		else
-			this._alertService.error('An error occurred...');
+		try {
+			result = <any>await this._http.put('/authenticate', { token, password }).toPromise();
+			this._alertService.success(`Password has been updated`);
+			result = true;
+		} catch (error) {
+			console.error(error);
+			this._alertService.error(`An error occured`);
+		}
 
-		return result.status === 200;
+		return result;
 	}
 
 	async authenticate(email?: string, password?: string, token?: string, profile = false, reload = false): Promise<boolean> {
@@ -123,7 +145,7 @@ export class AuthenticationService {
 				window.facebookConnectPlugin.login(scope.split(','), async (response) => {
 					console.log(response)
 					const token = response.authResponse.accessToken;
-					
+
 					if (token) {
 						const authResult = <any>await this._http.post(`/authenticate/facebook`, { token }).toPromise();
 						if (authResult && authResult.token) {
@@ -137,7 +159,7 @@ export class AuthenticationService {
 					reject(error);
 				});
 
-			// browser
+				// browser
 			} else {
 				const clientId = environment.production ? FB_APP_ID_PROD : FB_APP_ID_DEV;
 
@@ -209,12 +231,15 @@ export class AuthenticationService {
 		});
 	}
 
-	public async showLoginRegisterPopup() {
+	public async showLoginRegisterPopup(activeForm?: string) {
 		if (this.loginOpen)
 			return;
 
 		const modalRef = this._modalService.open(LoginComponent);
-		modalRef.componentInstance.name = 'World';
+		if (activeForm) {
+			modalRef.componentInstance.formType = activeForm;
+		}
+		
 		this.loginOpen = true;
 	}
 
