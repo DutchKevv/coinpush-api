@@ -9,14 +9,14 @@ services:
       - ./images:/usr/src/app/images
       - ./client:/usr/src/app/client
       - ./server-nginx/pages:/usr/src/app/server-nginx/pages
-      - /etc/letsencrypt:/usr/src/app/server-nginx/ssl
+      # - /etc/letsencrypt:/usr/src/app/server-nginx/ssl
       # - ./server-nginx/ssl:/usr/src/app/server-nginx/ssl
     build:
       args:
         COPY_FILE: nginx.prod.conf
     environment:
        ENV: prod
-    command: sh -c "envsubst \"`env | awk -F = '{printf \" $$%s\", $$1}'`\" < /etc/nginx/nginx.conf > /etc/nginx/nginx.conf && nginx"
+    command: sh -c "envsubst \"`env | awk -F = '{printf \" $$%s\", $$1}'`\" < /etc/nginx/nginx.conf > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"
   mongodb:
     ports:
       - 27017

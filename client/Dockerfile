@@ -1,4 +1,4 @@
-FROM mhart/alpine-node:8.11.1
+FROM mhart/alpine-node:10.0.0
 
 # TODO - only needed if want to rebuild spritesheet
 RUN apk update && apk add git
