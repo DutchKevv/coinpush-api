@@ -9,37 +9,47 @@ const config = require('../../../tradejs.config');
 export const commentController = {
 
 	async findById(reqUser, id: string, params: any = {}): Promise<any> {
-		const comment = <any>await Comment.findById(id).populate('createUser').lean();
+		const comment = <any>await Comment
+			.findById(id)
+			.populate('createUser')
+			.populate('toUser')
+			.populate({
+				options: {
+					sort: { created: -1 },
+					limit: 5
+				},
+				path: 'children',
+				populate: { path: 'createUser' }
+			})
+			.lean();
 
 		if (!comment)
 			return;
 
-		if (comment.childCount)
-			comment.children = await this.findChildren(reqUser, comment._id);
-
 		(<any>Comment).addILike(reqUser.id, [comment]);
-		(<any>User).normalizeProfileImg(comment);
 
 		return comment;
 	},
 
 	async findByToUserId(reqUser, params: { toUserId: string, offset: any, limit: any }) {
-
 		let comments = <Array<any>>await Comment
-			.find({ toUser: params.toUserId, parentId: { $eq: undefined } })
+			.find({ $or: [{ toUser: params.toUserId }, { $and: [{ toUser: { $eq: undefined }, createUser: params.toUserId }] }], parentId: { $eq: undefined } })
 			.skip(parseInt(params.offset, 10) || 0)
 			.limit(parseInt(params.limit, 10) || 10)
 			.sort({ _id: -1 })
 			.populate('createUser')
+			.populate('toUser')
+			.populate({
+				path: 'children',
+				populate: { path: 'createUser' },
+				options: {
+					sort: { created: -1 },
+					limit: 5
+				}
+			})
 			.lean();
 
-		comments = await Promise.all(comments.map(async comment => {
-			comment.children = await this.findChildren(reqUser, comment._id);
-			return comment;
-		}));
-
 		(<any>Comment).addILike(reqUser.id, comments);
-		comments.forEach((<any>User).normalizeProfileImg);
 
 		return comments;
 	},
@@ -58,8 +68,6 @@ export const commentController = {
 			.populate('createUser')
 			.lean();
 
-		children.forEach((<any>User).normalizeProfileImg);
-
 		return children.reverse();
 	},
 
@@ -73,8 +81,8 @@ export const commentController = {
 		});
 
 		if (options.parentId) {
-			const parent = <any>await Comment.findOneAndUpdate({ _id: comment.parentId }, { $inc: { childCount: 1 } });
-			console.log(parent);
+			const parent = <any>await Comment.findOneAndUpdate({ _id: comment.parentId }, { $inc: { childCount: 1 }, $addToSet: { children: comment._id } });
+
 			// notify if not responding on self
 			if (parent.createUser.toString() !== reqUser.id) {
 				let pubOptions = {

@@ -1,5 +1,5 @@
-import {Schema, model, Types} from 'mongoose';
-import {join} from 'path';
+import { Schema, model, Types } from 'mongoose';
+import { join } from 'path';
 
 const config = require('../../../tradejs.config');
 
@@ -19,6 +19,11 @@ export const CommentSchema = new Schema({
 	content: {
 		type: String,
 		required: true
+	},
+	children: {
+		type: [Schema.Types.ObjectId],
+		default: [],
+		ref: 'Comment'
 	},
 	childCount: {
 		type: Number,
@@ -59,16 +64,16 @@ CommentSchema.statics.addILike = async function (userId, comments: Array<any>): 
 };
 
 CommentSchema.statics.toggleLike = async function (userId, commentId: string): Promise<any> {
-	const comment = await this.findById(commentId, {liked: 1, createUser: 1, parentId: 1});
+	const comment = await this.findById(commentId, { liked: 1, createUser: 1, parentId: 1 });
 
 	if (!comment)
 		return;
 
 	const isLiked = comment.liked.map(l => l.toString()).includes(userId);
 
-	await comment.update(isLiked ? {$pull: {liked: userId}, $inc: {likeCount: -1}} : {$addToSet: {liked: userId}, $inc: {likeCount: 1}});
+	await comment.update(isLiked ? { $pull: { liked: userId }, $inc: { likeCount: -1 } } : { $addToSet: { liked: userId }, $inc: { likeCount: 1 } });
 
-	return {iLike: !isLiked, comment};
+	return { iLike: !isLiked, comment };
 };
 
 export const Comment = model('Comment', CommentSchema);
