@@ -219,6 +219,7 @@ export class App extends MicroEvent {
                                     return;
                                 case 0:
                                 case 404:
+                                case 500:
                                 case 502:
                                 case 503:
                                 case 504:

@@ -14,8 +14,8 @@ RUN apk update && apk add git
 # RUN npm set progress=false && npm config set depth 0 && npm cache clean --force
 
 # shared
-WORKDIR /usr/src/app/shared
-COPY /shared .
+# WORKDIR /usr/src/app/shared
+# COPY /shared .
 
 # client
 WORKDIR /usr/src/app/client

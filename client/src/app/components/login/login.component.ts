@@ -5,6 +5,7 @@ import { AlertService } from '../../services/alert.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from '../../services/user.service';
 import { G_ERROR_DUPLICATE } from 'coinpush/constant';
+import { LocationStrategy } from '@angular/common';
 
 @Component({
 	styleUrls: ['./login.component.scss'],
@@ -41,6 +42,7 @@ export class LoginComponent implements OnInit {
 		public changeDetectorRef: ChangeDetectorRef,
 		public authenticationService: AuthenticationService,
 		public activeModal: NgbActiveModal,
+		private _location: LocationStrategy,
 		private route: ActivatedRoute,
 		private router: Router,
 		private _alertService: AlertService,
@@ -160,6 +162,9 @@ export class LoginComponent implements OnInit {
 
 		if (result) {
 			this.activeModal.dismiss('Cross click');
+
+			// make sure token etc is removed from URL and history
+			this.router.navigate(['symbols'], { replaceUrl: true });
 		}
 	}
 

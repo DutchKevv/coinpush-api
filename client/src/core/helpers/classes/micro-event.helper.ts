@@ -1,16 +1,16 @@
-import { Context } from "vm";
+// import { Context } from "vm";
 
 export class MicroEvent {
     private _events: any = {};
 
-    public on(event: string, fct: Function, scope?: Context) {
+    public on(event: string, fct: Function, scope?) {
         if (!this._events[event])
             this._events[event] = [];
 
         this._events[event].push([fct, scope]);
     }
 
-    public once(event: string, fct: Function, scope?: Context) {
+    public once(event: string, fct: Function, scope?) {
         if (!this._events[event])
             this._events[event] = [];
 

@@ -212,7 +212,8 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 
 
 	public trackByFunc(index, item) {
-		return item.options.name;
+		if (item && item.options)
+			return item.options.name;
 	}
 
 	public onSymbolChange(symbolModel: SymbolModel): void {

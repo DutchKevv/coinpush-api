@@ -2,6 +2,7 @@
 .idea/
 .vscode/
 .gradle
+temp.txt
 
 node_modules
 /_data

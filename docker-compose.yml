@@ -39,6 +39,7 @@ services:
     links:
       - redis
   client:
+    working_dir: /usr/src/app/client/
     image: client
     container_name: client
     build:
@@ -46,6 +47,12 @@ services:
       dockerfile: ./client/Dockerfile
     volumes:
       - ./client:/usr/src/app/client
+      # - ./client/src:/usr/src/app/client/src
+      # - ./client/www:/usr/src/app/client/www
+#      - ./client:/usr/src/app/client
+      - ./shared:/usr/src/app/shared
+#      - ./client/node_modules:/usr/src/app/client/node_modules
+      # - /usr/src/app/client/node_modules
   client-app:
     image: client-app
     container_name: client-app
@@ -135,3 +142,5 @@ services:
     links:
       - redis
       - mongodb
+volumes:
+  node_modules:

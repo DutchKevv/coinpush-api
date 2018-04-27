@@ -33,6 +33,7 @@ import { NotificationMenuComponent } from './components/notification-menu/notifi
 import { SocketService } from './services/socket.service';
 import { TimelineComponent } from './components/timeline/timeline.component';
 import { NormalizeImgUrlPipe } from './pipes/normalize-image.pipe';
+import { ConfirmationBoxComponent } from './components/confirmation-box/confirmation-box.component';
 
 @NgModule({
 	declarations: [
@@ -52,7 +53,8 @@ import { NormalizeImgUrlPipe } from './pipes/normalize-image.pipe';
 		CommentBoxComponent,
 		TimelineComponent,
 		AlarmMenuActiveSymbolEventPipe,
-		NormalizeImgUrlPipe
+		NormalizeImgUrlPipe,
+		ConfirmationBoxComponent
 	],
 	imports: [
 		BrowserModule,
@@ -75,21 +77,13 @@ import { NormalizeImgUrlPipe } from './pipes/normalize-image.pipe';
 		CacheService,
 		SocketService,
 		{ provide: APP_INITIALIZER, useFactory: (config: BootstrapService) => () => config.load(), deps: [BootstrapService], multi: true },
-		{ provide: HTTP_INTERCEPTORS, useClass: CustomHttp, multi: true },
-		// {
-		// 	provide: Http,
-		// 	useFactory: (backend: XHRBackend, options: RequestOptions, route: Router, inj: Injector) => {
-		// 		return new CustomHttp(backend, options, route, inj);
-		// 	},
-		// 	deps: [XHRBackend, RequestOptions, Router, Injector]
-		// },
-		// { provide: CacheService, useClass: CacheService }
+		{ provide: HTTP_INTERCEPTORS, useClass: CustomHttp, multi: true }
 	],
 	bootstrap: [
 		AppComponent
 	],
 
-	entryComponents: [LoginComponent]
+	entryComponents: [LoginComponent, ConfirmationBoxComponent]
 })
 
 export class AppModule {

@@ -37,6 +37,9 @@
     },
     "cordova-plugin-statusbar": {
       "PACKAGE_NAME": "com.ff.coinpush"
+    },
+    "cordova-plugin-x-toast": {
+      "PACKAGE_NAME": "com.ff.coinpush"
     }
   },
   "dependent_plugins": {

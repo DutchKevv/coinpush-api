@@ -10,7 +10,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { SocketService } from './services/socket.service';
 import { environment } from '../environments/environment';
 
-declare let Module: any;
+declare let window: any;
+declare let navigator: any;
 
 @Component({
 	selector: 'app',
@@ -43,6 +44,9 @@ export class AppComponent implements OnInit, AfterViewInit {
 	private _navBarPosition: number = -this._navBarWidth;
 	private _touchStartX = 0
 
+	private _lastTimeBackPress = 0;
+	private _timePeriodToExit = 2000;
+
 	/**
 	 * mobile nav menu back press close
 	 * @param event 
@@ -51,6 +55,16 @@ export class AppComponent implements OnInit, AfterViewInit {
 	onPopState(event) {
 		this.toggleNav(false);
 		return false;
+	}
+
+	/**
+	 * mobile nav menu back press close
+	 * @param event 
+	 */
+	@HostListener('document:backbutton', ['$event'])
+	onBackButton(event) {
+		this._onBackKeyDown(event);
+		window.history.go(-1);
 	}
 
 	/**
@@ -130,7 +144,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 		});
 
 		if (this.userService.model.options._id) {
-			app.initNotifications().catch(console.error);				
+			app.initNotifications().catch(console.error);
 		}
 	}
 
@@ -221,4 +235,33 @@ export class AppComponent implements OnInit, AfterViewInit {
 		this._navBarPosition = Math.max(-this._navBarWidth, Math.min(0, distance));
 		this.navbar.nativeElement.style.transform = `translateX(${this._navBarPosition}px)`;
 	}
+
+	private _ba() {
+		window.plugins.toast.showLongBottom('Hello there!', (a) => { }, (error) => { alert('toast error: ' + error) })
+	}
+
+	private _onBackKeyDown(e) {
+		// TODO - Hack
+		if (!app.platform.isApp || window.location.hash !== '#/symbols')
+			return;
+
+		e.preventDefault();
+		e.stopPropagation();
+
+		if (new Date().getTime() - this._lastTimeBackPress < this._timePeriodToExit) {
+			navigator.app.exitApp();
+		} else {
+			window.plugins.toast.showWithOptions(
+				{
+					message: "Press again to exit.",
+					duration: "short", // which is 2000 ms. "long" is 4000. Or specify the nr of ms yourself.
+					position: "bottom",
+					addPixelsY: -40  // added a negative value to move it up a bit (default 0)
+				}
+			);
+
+			this._lastTimeBackPress = new Date().getTime();
+		}
+	};
+
 }

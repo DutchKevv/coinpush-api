@@ -1,5 +1,3 @@
-import { clearInterval } from "timers";
-
 declare let Highcharts: any;
 
 export class Chart {

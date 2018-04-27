@@ -22,23 +22,23 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@angular/cli": "1.7.4",
-    "@angular/common": "5.2.9",
-    "@angular/compiler": "5.2.9",
-    "@angular/compiler-cli": "5.2.9",
-    "@angular/core": "5.2.9",
-    "@angular/forms": "5.2.9",
-    "@angular/platform-browser": "5.2.9",
-    "@angular/router": "5.2.9",
+    "@angular/common": "5.2.10",
+    "@angular/compiler": "5.2.10",
+    "@angular/compiler-cli": "5.2.10",
+    "@angular/core": "5.2.10",
+    "@angular/forms": "5.2.10",
+    "@angular/platform-browser": "5.2.10",
+    "@angular/router": "5.2.10",
     "@ng-bootstrap/ng-bootstrap": "1.1.2",
-    "@types/node": "9.6.5",
     "bootstrap": "4.1.0",
     "highcharts": "6.1.0",
     "moment": "latest",
     "node-sass": "beta",
     "localforage": "1.7.1",
     "socket.io-client": "2.1.0",
-    "typescript": "2.7",
+    "typescript": "2.8",
     "webpack-bundle-analyzer": "2.11.1",
-    "zone.js": "0.8.26"
+    "zone.js": "0.8.26",
+    "coinpush": "file:/usr/src/app/shared/modules/coinpush"
   }
 }

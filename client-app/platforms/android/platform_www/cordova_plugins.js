@@ -56,6 +56,14 @@ module.exports = [
     "clobbers": [
       "window.StatusBar"
     ]
+  },
+  {
+    "id": "cordova-plugin-x-toast.Toast",
+    "file": "plugins/cordova-plugin-x-toast/www/Toast.js",
+    "pluginId": "cordova-plugin-x-toast",
+    "clobbers": [
+      "window.plugins.toast"
+    ]
   }
 ];
 module.exports.metadata = 
@@ -70,7 +78,8 @@ module.exports.metadata =
   "cordova-plugin-facebook4": "1.10.1",
   "cordova-support-google-services": "1.1.0",
   "phonegap-plugin-push": "2.2.2",
-  "cordova-plugin-statusbar": "2.4.2"
+  "cordova-plugin-statusbar": "2.4.2",
+  "cordova-plugin-x-toast": "2.6.2"
 };
 // BOTTOM OF METADATA
 });

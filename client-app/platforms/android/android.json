@@ -10,11 +10,11 @@
           "/resources": [
             {
               "xml": "<string name=\"fb_app_id\">178901869390909</string>",
-              "count": 59
+              "count": 73
             },
             {
               "xml": "<string name=\"fb_app_name\">CoinPush</string>",
-              "count": 59
+              "count": 73
             }
           ]
         }
@@ -76,6 +76,10 @@
             },
             {
               "xml": "<feature name=\"StatusBar\"><param name=\"android-package\" value=\"org.apache.cordova.statusbar.StatusBar\" /><param name=\"onload\" value=\"true\" /></feature>",
+              "count": 1
+            },
+            {
+              "xml": "<feature name=\"Toast\"><param name=\"android-package\" value=\"nl.xservices.plugins.Toast\" /></feature>",
               "count": 1
             }
           ]
@@ -207,6 +211,9 @@
     },
     "cordova-plugin-statusbar": {
       "PACKAGE_NAME": "com.ff.coinpush"
+    },
+    "cordova-plugin-x-toast": {
+      "PACKAGE_NAME": "com.ff.coinpush"
     }
   },
   "dependent_plugins": {},
@@ -267,6 +274,14 @@
       "clobbers": [
         "window.StatusBar"
       ]
+    },
+    {
+      "id": "cordova-plugin-x-toast.Toast",
+      "file": "plugins/cordova-plugin-x-toast/www/Toast.js",
+      "pluginId": "cordova-plugin-x-toast",
+      "clobbers": [
+        "window.plugins.toast"
+      ]
     }
   ],
   "plugin_metadata": {
@@ -279,6 +294,7 @@
     "cordova-plugin-facebook4": "1.10.1",
     "cordova-support-google-services": "1.1.0",
     "phonegap-plugin-push": "2.2.2",
-    "cordova-plugin-statusbar": "2.4.2"
+    "cordova-plugin-statusbar": "2.4.2",
+    "cordova-plugin-x-toast": "2.6.2"
   }
 }

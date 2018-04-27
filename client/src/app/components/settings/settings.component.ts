@@ -9,6 +9,8 @@ import { UserModel } from '../../models/user.model';
 import { AuthenticationService } from '../../services/authenticate.service';
 import { AlertService } from '../../services/alert.service';
 import { HttpClient } from '@angular/common/http';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ConfirmationBoxComponent } from '../confirmation-box/confirmation-box.component';
 
 declare let $: any;
 
@@ -36,6 +38,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 		private _formBuilder: FormBuilder,
 		private _authenticationService: AuthenticationService,
 		private _userService: UserService,
+		private _modalService: NgbModal,
 		private _alertService: AlertService) {
 	}
 
@@ -86,6 +89,31 @@ export class SettingsComponent implements OnInit, OnDestroy {
 				this._userService.update(changes);
 			});
 		});
+	}
+
+	public showDeleteAccountConfirmationBox() {
+		const self = this;
+
+		const modalRef = this._modalService.open(ConfirmationBoxComponent);
+		modalRef.componentInstance.title = 'Remove account';
+		modalRef.componentInstance.text = 'Do you really want to remove your account?';
+		modalRef.componentInstance.buttons = [
+			{
+				text: 'remove',
+				type: 'danger',
+				async onClick() {
+					await self.removeAccount();
+					modalRef.componentInstance.destroy();
+				}
+			},
+			{
+				text: 'cancel',
+				type: 'success',
+				onClick() {
+					modalRef.componentInstance.destroy();
+				}
+			}
+		];
 	}
 
 	onChangeFileInput(event) {
@@ -144,10 +172,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 		console.log(event);
 	}
 
-	async onClickRemoveAccount(event) {
-		event.preventDefault();
-		event.stopPropagation();
-
+	async removeAccount() {
 		const result = await this._userService.remove();
 		this._authenticationService.logout();
 	}

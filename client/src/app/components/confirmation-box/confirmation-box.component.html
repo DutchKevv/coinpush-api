@@ -1,0 +1,19 @@
+<div class="modal show fade" style="display: block;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>{{title}}</h4>>
+            </div>
+            <div class="modal-body">
+                <p>{{text}}</p>
+                
+                <div class="form-group modal-footer-buttons">
+                    <button *ngFor="let button of buttons" [disabled]="loading$ | async" class="btn btn-{{button.type}} pull-right" (click)="button.onClick()">{{button.text}}</button>
+                </div>
+            </div>
+            <!-- <div class="modal-footer">
+
+            </div> -->
+        </div>
+    </div>
+</div>
