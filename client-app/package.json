@@ -22,7 +22,7 @@
     "run-ios": "npm run copy-www && cordova run ios",
     "clean": "",
     "clean2": "cordova clean",
-    "copy-www": "ncp ./../client/www ./www "
+    "copy-www": "ncp ./../client/dist/www ./www "
   },
   "author": "Apache Cordova Team",
   "license": "Apache-2.0",

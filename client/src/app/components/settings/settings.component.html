@@ -28,7 +28,7 @@
             <div class="profileImg">
 
                 <input accept="image/*" class="uploadInput" id="uploadProfileImg" type="file" #uploadBtn (change)="onChangeFileInput($event)">
-                <label class="uploadInputBtn" for="uploadProfileImg" [ngStyle]="{'background-image': 'url(' + model.options.img + ')'}"
+                <label class="uploadInputBtn" for="uploadProfileImg" [ngStyle]="{'background-image': 'url(' + (model.options.img | NormalizeImgUrl) + ')'}"
                        #uploadImageHolder></label>
                 <div class="saveOptions hidden" #saveOptions>
                     <span>save?</span>

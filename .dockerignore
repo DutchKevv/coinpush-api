@@ -13,7 +13,6 @@
 **/*.txt
 **/*.tmp
 **/npm-debug.log
-**/package-lock.json
 
 ### root
 /_data
@@ -25,7 +24,6 @@
 
 ### client
 client/images/
-client/www/
 
 # mobile app
 client-app/.gradle

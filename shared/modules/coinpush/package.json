@@ -1,5 +1,5 @@
 {
-  "name": "coinpush",
+  "name": "coinpush-shared",
   "version": "0.0.1",
   "description": "asdf",
   "repository": {
@@ -9,8 +9,7 @@
   "main": "index.js",
   "scripts": {
     "start": "tsc-watch --sourceMap",
-    "build": "tsc",
-    "postinstall": "npm run build"
+    "build": "tsc"
   },
   "author": "hk brandsma",
   "license": "ISC",

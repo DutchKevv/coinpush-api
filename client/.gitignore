@@ -1,15 +1,9 @@
 node_modules
 .git
-.gitignore
 .npmignore
 npm-debug.log
-/hooks
 /images
-/platforms
-/plugins
-/res
-/scripts
-/www
+/dist/www
 
 *.map
 *.js

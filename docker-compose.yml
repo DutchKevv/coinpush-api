@@ -39,19 +39,20 @@ services:
     links:
       - redis
   client:
-    working_dir: /usr/src/app/client/
+    # working_dir: /usr/src/app/client/
     image: client
     container_name: client
     build:
       context: ./
       dockerfile: ./client/Dockerfile
     volumes:
-      - ./client:/usr/src/app/client
+      - ./client/src:/usr/src/app/client/src
+      - ./client/dist:/usr/src/app/client/dist
       # - ./client/src:/usr/src/app/client/src
       # - ./client/www:/usr/src/app/client/www
 #      - ./client:/usr/src/app/client
       - ./shared:/usr/src/app/shared
-#      - ./client/node_modules:/usr/src/app/client/node_modules
+      - /usr/src/app/client/node_modules
       # - /usr/src/app/client/node_modules
   client-app:
     image: client-app
@@ -61,7 +62,7 @@ services:
       dockerfile: /client-app/Dockerfile
     volumes:
       - ./client-app:/usr/src/app/client-app
-      - ./client/www:/usr/src/app/client-app/www
+      - ./client/dist/www:/usr/src/app/client-app/www
   cache:
     restart: always
     image: cache

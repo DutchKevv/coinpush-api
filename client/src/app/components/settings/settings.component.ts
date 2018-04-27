@@ -169,6 +169,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 	}
 
 	onChange(event) {
+		// this._userService.update(this.model);
 		console.log(event);
 	}
 

@@ -10,13 +10,14 @@
   "main": "index.js",
   "scripts": {
     "start": "ng build --watch --aot ---env=development -output-hashing none",
-    "build": "ng build --prod --aot --env=production --output-hashing none",
+    "build": "ng build --prod --aot --env=production --stats-json --output-hashing none",
     "build-stats": "ng build --prod --aot --env=production --stats-json --output-hashing none",
     "build-verbose": "ng build --prod --env=production --stats-json --output-hashing none --verbose > build.txt",
     "load-symbol-images": "node ./tools/load-symbol-images.js",
     "build-spritesheet": "node ./tools/build-spritesheet.js",
-    "bundle-report": "webpack-bundle-analyzer www/stats.json",
-    "install-shared": "cd ../shared/modules/coinpush && npm i"
+    "bundle-report": "webpack-bundle-analyzer dist/www/stats.json",
+    "install-shared": "cd ../shared/modules/coinpush && npm i",
+    "coinpush": "file:/usr/src/app/shared/modules/coinpush"
   },
   "author": "Apache Cordova Team",
   "license": "Apache-2.0",

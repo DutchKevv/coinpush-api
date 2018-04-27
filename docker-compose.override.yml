@@ -9,7 +9,7 @@ services:
         COPY_FILE: nginx.dev.conf
     volumes:
       - ./images:/usr/src/app/images
-      - ./client:/usr/src/app/client
+      - ./client/dist:/usr/src/app/client/dist
       - ./server-nginx/pages:/usr/src/app/server-nginx/pages
     environment:
       ENV: dev
@@ -35,7 +35,7 @@ services:
       - -c
       - |
           # npm run install-shared
-          npm i
+          # npm i
           npm start
   client-app:
     environment:
