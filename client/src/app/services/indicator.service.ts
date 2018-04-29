@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { app } from "core/app";
 
 const SERIES_MAIN_NAME = 'main';
 const SERIES_VOLUME_NAME = 'volume';
@@ -16,10 +17,12 @@ export class IndicatorService {
 
 	public indicators: Array<IIndicator> = [];
 
-	constructor() {}
+	constructor() {
+        this.init().catch(console.error);
+    }
 
-	public init() {
-        
+	public async init() {
+        await this._loadLocal();
     }
 
     findById(id: string | number): IIndicator {
@@ -149,12 +152,26 @@ export class IndicatorService {
         
         this.indicators.push(indicatorOptions);
 
-        // TODO - store in localstorage / server
+        this._storeLocal();
 
         return indicatorOptions;
     }
 
     remove(id: string | number) {
         this.indicators.splice(this.indicators.findIndex(indicator => indicator.id === id, 1));
+    }
+
+    private async _loadLocal() {
+        const indicators = await app.storage.get('indicators');
+        console.log(indicators);
+
+        // quality check
+        if (indicators && indicators.length) {
+            this.indicators = indicators;
+        }
+    }
+
+    private _storeLocal() {
+        app.storage.set('indicators', JSON.stringify(this.indicators));
     }
 }
