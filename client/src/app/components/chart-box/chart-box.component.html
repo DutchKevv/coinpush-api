@@ -1,8 +1,4 @@
 <ul class="header-buttons">
-	<li class="chart-title d-none d-xl-block">
-		{{symbolModel?.options.name}}
-	</li>
-
 	<li class="d-none d-xl-block">
 		<button (click)="setZoom(-1)" type="button" class="text-dark button-zoom-out btn-menu" aria-expanded="false">
 			<i class="fa fa-search-minus">
@@ -30,14 +26,24 @@
 		</select>
 	</li>
 	<li class="indicator-wrapper">
-		<a (click)="onClickIndicatorsButton()" class="indicator-button">FX</a>
+		<a (click)="onClickIndicatorsButton()" class="indicator-button" [ngClass]="{active: indicatorContainerOpen}">FX</a>
 		<div *ngIf="indicatorContainerOpen === true" class="indicator-container">
-		<!-- <div [ngClass]="{visible: indicatorContainerOpen === true}" class="indicator-container"> -->
-			<h5>Current indicators</h5>
-			<ul>
-				<li>Moving average
-					<i class="fa fa-trash"></i>
-					<i class="fa fa-gear"></i>
+			<div class="back-button-container clearfix d-block d-sm-none">
+				<a (click)="onClickIndicatorsButton()" class="fa fa-arrow-left"></a>
+				<h2>Indicators</h2>
+			</div>
+			<!-- <div [ngClass]="{visible: indicatorContainerOpen === true}" class="indicator-container"> -->
+			<h5 *ngIf="indicatorService.indicators.length > 0">Current indicators</h5>
+			<ul class="current-indicators">
+				<li *ngFor="let indicator of indicatorService.indicators">
+					<span>
+						<p>{{indicator.name}}</p>
+						<p>{{indicator.getParamString()}}</p>
+					</span>
+					<span>
+						<i class="fa fa-trash" (click)="removeIndicator(indicator.id)"></i>
+						<i class="fa fa-gear"></i>
+					</span>
 				</li>
 			</ul>
 			<h5>Available indicators</h5>
@@ -71,6 +77,9 @@
 				</li>
 			</ul>
 		</div>
+	</li>
+	<li class="chart-title d-none d-xl-block">
+		{{symbolModel?.options.name}}
 	</li>
 </ul>
 

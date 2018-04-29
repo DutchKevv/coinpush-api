@@ -2,6 +2,7 @@
 @import '~bootstrap/scss/_variables';
 @import '~bootstrap/scss/_mixins';
 @import '~bootstrap/scss/utilities/_display';
+@import '~bootstrap/scss/utilities/_clearfix';
 
 @import '../../style/variables/variables';
 @import '../../style/helpers/normalize';
@@ -12,7 +13,10 @@
     display: flex;
     flex-flow: column;
     border-top: 1px solid $border-color-grey;
-    position: relative;
+
+    @media screen and (min-width: 768px) {
+		position: relative;
+	}
 }
 
 .fa-close {
@@ -24,7 +28,6 @@
     margin: 0;
     padding: 0;
     display: flex;
-    justify-content: flex-end;
     flex-shrink: 0;
     width: 100%;
     padding-left: 6px;
@@ -95,8 +98,8 @@
     font-size: 18px;
     line-height: 24px;
     text-align: left;
-    margin-right: auto;
-    padding-left: 220px;
+    margin-left: auto;
+    padding-right: 20px;
 }
 
 .chart-content {
@@ -134,19 +137,50 @@
 .indicator-button {
     line-height: 24px;
     padding: 0 20px;
+    user-select: none;
+    
+    &.active {
+        border-bottom: 1px solid white;
+    }
 }
 
 .indicator-container {
     overflow: auto;
-    width: 300px;
-    border: 1px solid grey;
     padding: 5px 0;
     position: absolute;
-    top: 25px;
+    top: 0;
     bottom: 0;
     z-index: 1000000000;
-    background: $background-dark;
+    background: $background-light;
     right: 0;
+    left: 0;
+
+    .back-button-container {
+        
+        .fa-arrow-left {
+            color: white;
+            font-size: 30px;
+            margin: 0 10px 10px 10px;
+            float: left;
+        }
+
+        h2 {
+            float: left;
+            line-height: 30px;
+            margin-left: 20px;
+        }
+
+        // @media screen and (min-width: 768px) {
+        //     display: none;
+        // }
+    }
+
+    @media screen and (min-width: 768px) {
+        right: auto;
+        top: 25px;
+        width: 300px;
+        border-right: 1px solid grey;
+	}
 
     h5 {
         padding: 5px 10px;
@@ -154,24 +188,48 @@
         text-transform: uppercase;
     }
 
+    i {
+        user-select: none;
+    }
+
     li {
         padding: 5px 20px;
-        
+        line-height: 30px;
+        display: flex;
+
         &:hover {
             background: $font-color-link-hover;
+        }
+
+        > span {
+            width: 50%;
         }
 
         i {
             float: right;
             margin-left: 15px;
+            line-height: 30px;
+            font-size: 20px;
 
             &:hover {
                 color: grey;
             }
         }
-    }
 
-    a {
-        display: block;
+        @media screen and (min-width: 768px) {
+            
+            line-height: normal;
+
+            i {
+                line-height: normal;
+                font-size: 16px;
+            }
+
+        }
+
+        a {
+            display: block;
+            width: 100%;
+        }
     }
 }

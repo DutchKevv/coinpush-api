@@ -34,6 +34,7 @@ import { SocketService } from './services/socket.service';
 import { TimelineComponent } from './components/timeline/timeline.component';
 import { NormalizeImgUrlPipe } from './pipes/normalize-image.pipe';
 import { ConfirmationBoxComponent } from './components/confirmation-box/confirmation-box.component';
+import { IndicatorService } from './services/indicator.service';
 
 @NgModule({
 	declarations: [
@@ -75,6 +76,7 @@ import { ConfirmationBoxComponent } from './components/confirmation-box/confirma
 		NotificationService,
 		AuthenticationService,
 		CacheService,
+		IndicatorService,
 		SocketService,
 		{ provide: APP_INITIALIZER, useFactory: (config: BootstrapService) => () => config.load(), deps: [BootstrapService], multi: true },
 		{ provide: HTTP_INTERCEPTORS, useClass: CustomHttp, multi: true }

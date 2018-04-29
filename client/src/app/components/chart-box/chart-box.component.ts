@@ -33,6 +33,7 @@ require('highcharts/indicators/zigzag')(HighStock);
 // bollingerBands(HighStock);
 // ema(HighStock);
 import '../../..//etc/custom/js/highcharts/highstock.theme.dark.js';
+import { IndicatorService } from '../../services/indicator.service';
 
 const SERIES_MAIN_NAME = 'main';
 const SERIES_VOLUME_NAME = 'volume';
@@ -72,8 +73,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 
 	private _data = {
 		candles: [],
-		volume: [],
-		indicators: []
+		volume: []
 	};
 
 	private minimized = false;
@@ -96,6 +96,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	public static readonly DEFAULT_CHUNK_LENGTH = 500;
 
 	constructor(
+		public indicatorService: IndicatorService,
 		private _zone: NgZone,
 		private _changeDetectorRef: ChangeDetectorRef,
 		private _cacheService: CacheService,
@@ -139,6 +140,13 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 		this._createChart();
 	}
 
+	/**
+	 * 
+	 * @param id 
+	 * @param value 
+	 * @param type 
+	 * @param render 
+	 */
 	public updatePlotLine(id: string, value: number, type: number, render: boolean = false) {
 		if (!this._chart)
 			return;
@@ -211,16 +219,30 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 
 	}
 
+	/**
+	 * 
+	 * @param id 
+	 * @param render 
+	 */
 	public removePlotLine(id, render: boolean = false) {
 		if (this._chart)
 			this._chart.yAxis[0].removePlotLine(id, render, false);
 	}
 
+	/**
+	 * 
+	 * @param amount 
+	 */
 	public setZoom(amount) {
 		this.zoom += amount;
 		this._updateViewPort(0, true);
 	}
 
+	/**
+	 * 
+	 * @param type 
+	 * @param render 
+	 */
 	public changeGraphType(type, render: boolean = true) {
 		if (!this._chart)
 			return;
@@ -230,119 +252,59 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 		this._chart.series[0].update({ type }, render, false);
 	}
 
+	/**
+	 * 
+	 * @param timeFrame 
+	 */
 	public toggleTimeFrame(timeFrame: string) {
 		this.timeFrame = timeFrame;
 		this._fetchCandles();
 		this._chart.series.forEach(serie => serie.setData([], false));
 	}
 
+	/**
+	 * 
+	 * @param type 
+	 */
 	public addIndicator(type: string) {
 		if (!type)
 			return;
 
-		const id = this._indicatorIdCounter++ + type;
-		let indicatorOptions = null;
-
-		switch (type) {
-			case 'bollingerbands':
-				indicatorOptions = {
-					name: id,
-					type: 'bb',
-					linkedTo: SERIES_MAIN_NAME
-				}
-				break;
-			case 'cci':
-				indicatorOptions = {
-					name: id,
-					type: 'cci',
-					linkedTo: SERIES_MAIN_NAME,
-					yAxis: 1,
-					params: {
-						period: 7
-					}
-				}
-				break;
-			case 'ema':
-				indicatorOptions = {
-					type: 'ema',
-					linkedTo: SERIES_MAIN_NAME,
-					params: {
-						period: 7
-					}
-				}
-				break;
-			case 'mfi':
-				indicatorOptions = {
-					name: id,
-					type: 'mfi',
-					linkedTo: SERIES_MAIN_NAME,
-					params: {
-						volumeSeriesID: SERIES_VOLUME_NAME
-					}
-				}
-				break;
-			case 'momentum':
-				indicatorOptions = {
-					name: id,
-					type: 'momentum',
-					linkedTo: SERIES_MAIN_NAME,
-					params: {
-						volumeSeriesID: SERIES_VOLUME_NAME
-					}
-				}
-				break;
-			case 'macd':
-				indicatorOptions = {
-					name: id,
-					type: 'macd',
-					linkedTo: SERIES_MAIN_NAME,
-					params: {
-						period: 7
-					}
-				}
-				break;
-			case 'sma':
-				indicatorOptions = {
-					name: id,
-					type: 'sma',
-					linkedTo: SERIES_MAIN_NAME,
-					params: {
-						period: 7
-					}
-				}
-				break;
-			case 'wma':
-				indicatorOptions = {
-					name: id,
-					type: 'wma',
-					linkedTo: SERIES_MAIN_NAME,
-					params: {
-						period: undefined
-					}
-				}
-				break;
-			case 'zigzag':
-				indicatorOptions = {
-					name: id,
-					type: 'zigzag',
-					linkedTo: SERIES_MAIN_NAME,
-					params: {
-						deviation: 5
-					}
-				}
-				break;
-			default:
-				throw new Error('uknown indicator! : ' + type);
+		const indicator = this.indicatorService.add(type);
+		if (indicator) {
+			this._zone.runOutsideAngular(() => this._chart.addSeries(indicator));
+			this._changeDetectorRef.detectChanges();
 		}
-
-		this._chart.addSeries(indicatorOptions);
 	}
 
+	/**
+	 * 
+	 * @param id 
+	 */
+	public removeIndicator(id: string | number) {
+		// remove from service
+		this.indicatorService.remove(id);
+
+		// remove from highcharts
+		const serie = this._chart.series.find(serie => serie.userOptions.id === id);
+		if (serie) {
+			this._zone.runOutsideAngular(() => serie.remove());
+			this._changeDetectorRef.detectChanges();
+		}
+	}
+
+	/**
+	 * 
+	 */
 	public onClickIndicatorsButton() {
 		this.indicatorContainerOpen = !this.indicatorContainerOpen; //.next(!this.indicatorContainerOpen$.getValue());
 		this._changeDetectorRef.detectChanges();
 	}
 
+	/**
+	 * 
+	 * @param state 
+	 */
 	public toggleLoading(state?: boolean) {
 		// this.loadingRef.nativeElement.classList.toggle('active', !!state);
 	}
@@ -354,7 +316,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 				this._destroyChart();
 
 			var self = this;
-
+			console.log(this.indicatorService.indicators);
 			this._chart = HighStock.chart(this.chartRef.nativeElement, {
 				xAxis: [
 					{},
@@ -421,7 +383,8 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 						name: SERIES_VOLUME_NAME,
 						data: this._data.volume,
 						yAxis: 1
-					}
+					},
+					...this.indicatorService.indicators
 				]
 			}, false);
 		});
@@ -625,8 +588,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 			this._data = null;
 			this._data = {
 				candles: [],
-				volume: [],
-				indicators: []
+				volume: []
 			};
 		}
 	}
