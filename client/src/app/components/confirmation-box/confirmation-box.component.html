@@ -11,9 +11,6 @@
                     <button *ngFor="let button of buttons" [disabled]="loading$ | async" class="btn btn-{{button.type}} pull-right" (click)="button.onClick()">{{button.text}}</button>
                 </div>
             </div>
-            <!-- <div class="modal-footer">
-
-            </div> -->
         </div>
     </div>
 </div>

@@ -16,9 +16,5 @@
     "comments": false,
     "entryModule": "./app/app.module#AppModule",
     "skipMetadataEmit": true
-  },
-  "exclude": [
-    "node_modules",
-    ".npm"
-  ]
+  }
 }

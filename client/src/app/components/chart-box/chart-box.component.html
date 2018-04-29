@@ -4,16 +4,14 @@
 	</li>
 
 	<li class="d-none d-xl-block">
-		<button (click)="setZoom(-1)" type="button" class="text-dark button-zoom-out btn-menu"
-		 aria-expanded="false">
+		<button (click)="setZoom(-1)" type="button" class="text-dark button-zoom-out btn-menu" aria-expanded="false">
 			<i class="fa fa-search-minus">
 			</i>
 		</button>
 	</li>
 
 	<li class="d-none d-xl-block">
-		<button (click)="setZoom(1)" type="button" class="text-dark btn-menu button-zoom-in"
-		 aria-expanded="false">
+		<button (click)="setZoom(1)" type="button" class="text-dark btn-menu button-zoom-in" aria-expanded="false">
 			<i class="fa fa-search-plus"></i>
 		</button>
 	</li>
@@ -31,13 +29,48 @@
 			<option value="candlestick" [selected]="graphType === 'candlestick'">Candle</option>
 		</select>
 	</li>
-	<li class="dropdown">
-		<select>
-			<option value="MA">MA</option>
-			<option value="SMA">SMA</option>
-			<option value="EMA">EMA</option>
-			<option value="BollingerBands">BollingerBands</option>
-		</select>
+	<li class="indicator-wrapper">
+		<a (click)="onClickIndicatorsButton()" class="indicator-button">FX</a>
+		<div *ngIf="indicatorContainerOpen === true" class="indicator-container">
+		<!-- <div [ngClass]="{visible: indicatorContainerOpen === true}" class="indicator-container"> -->
+			<h5>Current indicators</h5>
+			<ul>
+				<li>Moving average
+					<i class="fa fa-trash"></i>
+					<i class="fa fa-gear"></i>
+				</li>
+			</ul>
+			<h5>Available indicators</h5>
+			<ul (click)="addIndicator($event.target.getAttribute('data-value'))">
+				<li>
+					<a data-value="bollingerbands">BollingerBands</a>
+				</li>
+				<li>
+					<a data-value="cci">CCI</a>
+				</li>
+				<li>
+					<a data-value="ema">EMA</a>
+				</li>
+				<li>
+					<a data-value="mfi">MFI</a>
+				</li>
+				<li>
+					<a data-value="momentum">MOMENTUM</a>
+				</li>
+				<li>
+					<a data-value="macd">MACD</a>
+				</li>
+				<li>
+					<a data-value="sma">SMA</a>
+				</li>
+				<li>
+					<a data-value="wma">WMA</a>
+				</li>
+				<li>
+					<a data-value="zigzag">ZigZag</a>
+				</li>
+			</ul>
+		</div>
 	</li>
 </ul>
 

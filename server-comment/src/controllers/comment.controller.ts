@@ -8,6 +8,12 @@ const config = require('../../../tradejs.config');
 
 export const commentController = {
 
+	/**
+	 * 
+	 * @param reqUser 
+	 * @param id 
+	 * @param params 
+	 */
 	async findById(reqUser, id: string, params: any = {}): Promise<any> {
 		const comment = <any>await Comment
 			.findById(id)
@@ -31,9 +37,26 @@ export const commentController = {
 		return comment;
 	},
 
+	/**
+	 * 
+	 * @param reqUser 
+	 * @param params 
+	 */
 	async findByToUserId(reqUser, params: { toUserId: string, offset: any, limit: any }) {
 		let comments = <Array<any>>await Comment
-			.find({ $or: [{ toUser: params.toUserId }, { $and: [{ toUser: { $eq: undefined }, createUser: params.toUserId }] }], parentId: { $eq: undefined } })
+			.find({
+				$or: [
+					{ toUser: params.toUserId },
+					{
+						$and: [{
+							toUser: {
+								$eq: undefined
+							},
+							createUser: params.toUserId
+						}]
+					}
+				], parentId: { $eq: undefined }
+			})
 			.skip(parseInt(params.offset, 10) || 0)
 			.limit(parseInt(params.limit, 10) || 10)
 			.sort({ _id: -1 })
@@ -54,10 +77,21 @@ export const commentController = {
 		return comments;
 	},
 
+	/**
+	 * 
+	 * @param reqUser 
+	 * @param userId 
+	 */
 	async findMany(reqUser, userId) {
 		return [];
 	},
 
+	/**
+	 * 
+	 * @param reqUser 
+	 * @param parentId 
+	 * @param params 
+	 */
 	async findChildren(reqUser: IReqUser, parentId: string, params: any = {}) {
 
 		const children = <Array<any>>await Comment
@@ -71,6 +105,11 @@ export const commentController = {
 		return children.reverse();
 	},
 
+	/**
+	 * 
+	 * @param reqUser 
+	 * @param options 
+	 */
 	async create(reqUser, options): Promise<any> {
 		const comment = <any>await Comment.create({
 			createUser: reqUser.id,
@@ -103,6 +142,11 @@ export const commentController = {
 		return { _id: comment._id };
 	},
 
+	/**
+	 * 
+	 * @param reqUser 
+	 * @param commentId 
+	 */
 	async toggleLike(reqUser, commentId) {
 		const { iLike, comment } = await (<any>Comment).toggleLike(reqUser.id, commentId);
 

@@ -32,14 +32,14 @@
     "@angular/router": "5.2.10",
     "@ng-bootstrap/ng-bootstrap": "1.1.2",
     "bootstrap": "4.1.0",
+    "coinpush": "file:/usr/src/app/shared/modules/coinpush",
     "highcharts": "6.1.0",
+    "localforage": "1.7.1",
     "moment": "latest",
     "node-sass": "beta",
-    "localforage": "1.7.1",
     "socket.io-client": "2.1.0",
     "typescript": "2.8",
     "webpack-bundle-analyzer": "2.11.1",
-    "zone.js": "0.8.26",
-    "coinpush": "file:/usr/src/app/shared/modules/coinpush"
+    "zone.js": "0.8.26"
   }
 }

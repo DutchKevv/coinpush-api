@@ -1,31 +1,38 @@
 // import * as throttle from 'lodash/throttle';
 import {
 	Component, OnDestroy, ElementRef, Input, ViewChild,
-	OnInit, AfterViewInit, NgZone, Output, SimpleChanges, OnChanges, ChangeDetectionStrategy, ViewEncapsulation
+	OnInit, AfterViewInit, NgZone, Output, SimpleChanges, OnChanges, ChangeDetectionStrategy, ViewEncapsulation, ChangeDetectorRef
 } from '@angular/core';
 import { CacheService } from '../../services/cache.service';
 import { SymbolModel } from "../../models/symbol.model";
 import { EventService } from '../../services/event.service';
+import { BehaviorSubject } from 'rxjs';
 import { CUSTOM_EVENT_TYPE_ALARM, CUSTOM_EVENT_TYPE_PRICE, CUSTOM_EVENT_TYPE_ALARM_NEW } from 'coinpush/constant';
 import { EventModel } from '../../models/event.model';
 
+// for some reason typescript gives all kind of errors when using the @types/node package
+// so this is a quick / temp fix
+declare var require: any;
 
-import * as HighStock from "highcharts/highstock";
-import 'highcharts/modules/exporting';
-import 'highcharts/indicators/indicators';
-import 'highcharts/indicators/ema';
-import 'highcharts/indicators/bollinger-bands';
-import 'highcharts/indicators/atr';
-import 'highcharts/indicators/rsi';
+const HighStock = require('highcharts/highstock');
+require('highcharts/modules/exporting')(HighStock);
+require('highcharts/indicators/indicators')(HighStock);
+require('highcharts/indicators/bollinger-bands')(HighStock);
+require('highcharts/indicators/cci')(HighStock);
+require('highcharts/indicators/ema')(HighStock);
+require('highcharts/indicators/macd')(HighStock);
+require('highcharts/indicators/momentum')(HighStock);
+require('highcharts/indicators/mfi')(HighStock);
+// require('highcharts/indicators/sma')(HighStock);
+require('highcharts/indicators/wma')(HighStock);
+require('highcharts/indicators/zigzag')(HighStock);
+// import * as bollingerBands from 'highcharts/indicators/bollinger-bands';
+// import * as atr from 'highcharts/indicators/atr';
+// import * as rsi from 'highcharts/indicators/rsi';
+
+// bollingerBands(HighStock);
+// ema(HighStock);
 import '../../..//etc/custom/js/highcharts/highstock.theme.dark.js';
-// "./etc/vendor/js/highcharts/indicators/indicators.js",
-// "./etc/vendor/js/highcharts/indicators/ema.js",
-// "./etc/vendor/js/highcharts/indicators/bollinger-bands.js",
-// "./etc/vendor/js/highcharts/indicators/atr.js",
-// "./etc/vendor/js/highcharts/indicators/rsi.js",
-// "./etc/custom/js/highcharts/highstock.theme.dark.js"
-
-declare let Highcharts: any;
 
 const SERIES_MAIN_NAME = 'main';
 const SERIES_VOLUME_NAME = 'volume';
@@ -55,9 +62,11 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	@ViewChild('chart') private chartRef: ElementRef;
 	@ViewChild('loading') private loadingRef: ElementRef;
 
-	public graphType = DEFAULT_GRAPHTYPE;
-	public zoom = 1;
-	public timeFrame = 'H1';
+	public graphType: string = DEFAULT_GRAPHTYPE;
+	public zoom: number = 1;
+	public timeFrame: string = 'H1';
+	public indicatorContainerOpen$: BehaviorSubject<Boolean> = new BehaviorSubject(false);
+	public indicatorContainerOpen = false;
 
 	$el: any;
 
@@ -82,19 +91,24 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	private _eventsSubscribtion;
 	private _labelEl: any;
 
+	private _indicatorIdCounter = 0;
+
 	public static readonly DEFAULT_CHUNK_LENGTH = 500;
 
 	constructor(
 		private _zone: NgZone,
+		private _changeDetectorRef: ChangeDetectorRef,
 		private _cacheService: CacheService,
 		private _eventService: EventService,
 		private _elementRef: ElementRef) {
+		this._changeDetectorRef.detach();
 		this._buildLabelEl();
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
 		if (changes.symbolModel && changes.symbolModel.currentValue) {
 			this.init();
+			this._changeDetectorRef.detectChanges();
 		} else {
 			this._destroyChart();
 		}
@@ -222,14 +236,116 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 		this._chart.series.forEach(serie => serie.setData([], false));
 	}
 
-	public addIndicator(name: string) {
+	public addIndicator(type: string) {
+		if (!type)
+			return;
 
+		const id = this._indicatorIdCounter++ + type;
+		let indicatorOptions = null;
+
+		switch (type) {
+			case 'bollingerbands':
+				indicatorOptions = {
+					name: id,
+					type: 'bb',
+					linkedTo: SERIES_MAIN_NAME
+				}
+				break;
+			case 'cci':
+				indicatorOptions = {
+					name: id,
+					type: 'cci',
+					linkedTo: SERIES_MAIN_NAME,
+					yAxis: 1,
+					params: {
+						period: 7
+					}
+				}
+				break;
+			case 'ema':
+				indicatorOptions = {
+					type: 'ema',
+					linkedTo: SERIES_MAIN_NAME,
+					params: {
+						period: 7
+					}
+				}
+				break;
+			case 'mfi':
+				indicatorOptions = {
+					name: id,
+					type: 'mfi',
+					linkedTo: SERIES_MAIN_NAME,
+					params: {
+						volumeSeriesID: SERIES_VOLUME_NAME
+					}
+				}
+				break;
+			case 'momentum':
+				indicatorOptions = {
+					name: id,
+					type: 'momentum',
+					linkedTo: SERIES_MAIN_NAME,
+					params: {
+						volumeSeriesID: SERIES_VOLUME_NAME
+					}
+				}
+				break;
+			case 'macd':
+				indicatorOptions = {
+					name: id,
+					type: 'macd',
+					linkedTo: SERIES_MAIN_NAME,
+					params: {
+						period: 7
+					}
+				}
+				break;
+			case 'sma':
+				indicatorOptions = {
+					name: id,
+					type: 'sma',
+					linkedTo: SERIES_MAIN_NAME,
+					params: {
+						period: 7
+					}
+				}
+				break;
+			case 'wma':
+				indicatorOptions = {
+					name: id,
+					type: 'wma',
+					linkedTo: SERIES_MAIN_NAME,
+					params: {
+						period: undefined
+					}
+				}
+				break;
+			case 'zigzag':
+				indicatorOptions = {
+					name: id,
+					type: 'zigzag',
+					linkedTo: SERIES_MAIN_NAME,
+					params: {
+						deviation: 5
+					}
+				}
+				break;
+			default:
+				throw new Error('uknown indicator! : ' + type);
+		}
+
+		this._chart.addSeries(indicatorOptions);
+	}
+
+	public onClickIndicatorsButton() {
+		this.indicatorContainerOpen = !this.indicatorContainerOpen; //.next(!this.indicatorContainerOpen$.getValue());
+		this._changeDetectorRef.detectChanges();
 	}
 
 	public toggleLoading(state?: boolean) {
 		// this.loadingRef.nativeElement.classList.toggle('active', !!state);
 	}
-
 
 	private _createChart() {
 
@@ -239,9 +355,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 
 			var self = this;
 
-			// create the chart
 			this._chart = HighStock.chart(this.chartRef.nativeElement, {
-
 				xAxis: [
 					{},
 					{
@@ -307,18 +421,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 						name: SERIES_VOLUME_NAME,
 						data: this._data.volume,
 						yAxis: 1
-					},
-					// {
-					// 	type: 'ema',
-					// 	linkedTo: SERIES_MAIN_NAME,
-					// 	params: {
-					// 		period: 7
-					// 	}
-					// },
-					// {
-					// 	type: 'bb',
-					// 	linkedTo: SERIES_MAIN_NAME
-					// }
+					}
 				]
 			}, false);
 		});
@@ -389,11 +492,11 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 		this._chart.yAxis[0].plotLinesAndBands.forEach(plot => {
 			if (plot.id === 'new-alarm' || plot.id === 'cPrice')
 				return;
-				
+
 			if (!selfEvents.find(event => event._id === plot.id))
 				this.removePlotLine(plot.id, true);
 		})
-		
+
 		selfEvents.forEach(event => {
 			switch (event.type) {
 				case CUSTOM_EVENT_TYPE_ALARM:
@@ -489,23 +592,6 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 		this._chart.series[1].setData([], render, false);
 	}
 
-	private _destroyChart(destroyData: boolean = true) {
-		if (this._chart)
-			this._chart.destroy();
-
-		this._chart = null;
-		this._scrollOffset = -1;
-
-		if (destroyData) {
-			this._data = null;
-			this._data = {
-				candles: [],
-				volume: [],
-				indicators: []
-			};
-		}
-	}
-
 	private _prepareData(data: any): void {
 		let i = 0, rowLength = 10, length = data.length;
 
@@ -525,6 +611,23 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 				data[i],
 				data[i + 9] // the volume
 			];
+		}
+	}
+
+	private _destroyChart(destroyData: boolean = true) {
+		if (this._chart)
+			this._chart.destroy();
+
+		this._chart = null;
+		this._scrollOffset = -1;
+
+		if (destroyData) {
+			this._data = null;
+			this._data = {
+				candles: [],
+				volume: [],
+				indicators: []
+			};
 		}
 	}
 
