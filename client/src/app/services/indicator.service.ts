@@ -162,7 +162,7 @@ export class IndicatorService {
     }
 
     private async _loadLocal() {
-        const indicators = await app.storage.get('indicators');
+        const indicators = JSON.parse(await app.storage.get('indicators'));
         console.log(indicators);
 
         // quality check
