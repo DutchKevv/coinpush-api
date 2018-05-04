@@ -159,11 +159,16 @@ export class IndicatorService {
 
     remove(id: string | number) {
         this.indicators.splice(this.indicators.findIndex(indicator => indicator.id === id, 1));
+        this._storeLocal();
     }
 
     private async _loadLocal() {
         const indicators = JSON.parse(await app.storage.get('indicators'));
-        console.log(indicators);
+        
+        // temp
+        indicators.forEach(indicator => {
+            indicator.getParamString = function() {}
+        });
 
         // quality check
         if (indicators && indicators.length) {
@@ -171,7 +176,7 @@ export class IndicatorService {
         }
     }
 
-    private _storeLocal() {
-        app.storage.set('indicators', JSON.stringify(this.indicators));
+    private async _storeLocal() {
+        await app.storage.set('indicators', JSON.stringify(this.indicators));
     }
 }

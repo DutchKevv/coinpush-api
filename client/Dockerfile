@@ -8,7 +8,7 @@ COPY /shared .
 
 # client
 WORKDIR /usr/src/app/client
-COPY /client/package*.json /client/angular-cli.json ./
+COPY /client/package*.json /client/angular.json ./
 RUN npm i
 # RUN npm i && mkdir /ng-app && cp -R ./node_modules ./ng-app
 # WORKDIR /ng-app

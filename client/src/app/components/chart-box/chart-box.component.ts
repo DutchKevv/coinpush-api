@@ -63,6 +63,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	@ViewChild('chart') private chartRef: ElementRef;
 	@ViewChild('loading') private loadingRef: ElementRef;
 
+	public hasError = false;
 	public graphType: string = DEFAULT_GRAPHTYPE;
 	public zoom: number = 1;
 	public timeFrame: string = 'H1';
@@ -131,7 +132,8 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	}
 
 	init() {
-		this.toggleLoading(true);
+		this._toggleError(false);
+		this._toggleLoading(true);
 
 		if (!this.symbolModel)
 			return;
@@ -301,14 +303,6 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 		this._changeDetectorRef.detectChanges();
 	}
 
-	/**
-	 * 
-	 * @param state 
-	 */
-	public toggleLoading(state?: boolean) {
-		// this.loadingRef.nativeElement.classList.toggle('active', !!state);
-	}
-
 	private _createChart() {
 
 		this._zone.runOutsideAngular(() => {
@@ -316,7 +310,6 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 				this._destroyChart();
 
 			var self = this;
-			console.log(this.indicatorService.indicators);
 			this._chart = HighStock.chart(this.chartRef.nativeElement, {
 				xAxis: [
 					{},
@@ -421,6 +414,8 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	private _fetchCandles() {
 
 		this._zone.runOutsideAngular(async () => {
+			this._toggleError(false);
+
 			try {
 				this._prepareData(await this._cacheService.read({
 					symbol: this.symbolModel.options.name,
@@ -429,7 +424,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 					offset: this._offset
 				}));
 
-				this.toggleLoading(false);
+				this._toggleLoading(false);
 
 				this._onPriceChange(false); // asign current price to latest candle
 
@@ -441,6 +436,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 				this._updateViewPort(0, true);
 			} catch (error) {
 				console.log('error error error', error);
+				this._toggleError(true);
 			}
 		});
 	}
@@ -575,6 +571,19 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 				data[i + 9] // the volume
 			];
 		}
+	}
+	
+	/**
+	 * 
+	 * @param state 
+	 */
+	private _toggleLoading(state?: boolean) {
+		// this.loadingRef.nativeElement.classList.toggle('active', !!state);
+	}
+
+	private _toggleError(state: boolean) {
+		this.hasError = !!state;
+		this._changeDetectorRef.detectChanges();
 	}
 
 	private _destroyChart(destroyData: boolean = true) {
