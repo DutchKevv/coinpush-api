@@ -7,7 +7,9 @@ declare const window: any;
 const FB_APP_ID_PROD = '178901869390909';
 const FB_APP_ID_DEV = '162805194523993';
 
-@Injectable()
+@Injectable({
+	providedIn: 'root',
+})
 export class BootstrapService {
 
 	public async load() {

@@ -5,7 +5,9 @@ import { AlertService } from './alert.service';
 import { UserService } from "./user.service";
 import { HttpClient, HttpParams } from '@angular/common/http';
 
-@Injectable()
+@Injectable({
+	providedIn: 'root',
+})
 export class CommentService {
 
 	constructor(private _http: HttpClient, private _alertService: AlertService, private _userService: UserService) {

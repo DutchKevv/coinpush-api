@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 
-@Injectable()
+@Injectable({
+	providedIn: 'root',
+})
 export class AlertService {
 
 	private subject = new Subject<any>();

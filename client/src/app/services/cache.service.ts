@@ -5,7 +5,9 @@ import { app } from '../../core/app';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { SocketService } from './socket.service';
 
-@Injectable()
+@Injectable({
+	providedIn: 'root',
+})
 export class CacheService {
 
 	@Output() public changed$: EventEmitter<any[]> = new EventEmitter();

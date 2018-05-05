@@ -7,7 +7,9 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { SocketService } from './socket.service';
 import * as moment from 'moment';
 
-@Injectable()
+@Injectable({
+	providedIn: 'root',
+})
 export class NotificationService {
 
 	public notifications = app.data.notifications;

@@ -18,7 +18,9 @@ export interface IRequestOptions {
 	body?: any;
 }
 
-@Injectable()
+@Injectable({
+	providedIn: 'root',
+})
 export class CustomHttp implements HttpInterceptor {
 	constructor(
 		public http: HttpClient,

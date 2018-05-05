@@ -6,7 +6,9 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 const API_KEY = '4c6cf9f4344d4475949be83f9432db78';
 
-@Injectable()
+@Injectable({
+	providedIn: 'root',
+})
 export class NewsService {
 
 	constructor() {

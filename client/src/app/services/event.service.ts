@@ -9,7 +9,9 @@ import { EventModel } from '../models/event.model';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
-@Injectable()
+@Injectable({
+	providedIn: 'root',
+})
 export class EventService {
 
 	public events$: BehaviorSubject<Array<EventModel>> = new BehaviorSubject([]);

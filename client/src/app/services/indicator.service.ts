@@ -10,7 +10,9 @@ interface IIndicator {
     params?: any;
 }
 
-@Injectable()
+@Injectable({
+	providedIn: 'root',
+})
 export class IndicatorService {
 
     private _idCounter = 0;

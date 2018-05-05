@@ -3,7 +3,9 @@ import * as io from 'socket.io-client';
 import { UserService } from './user.service';
 import { app } from '../../core/app';
 
-@Injectable()
+@Injectable({
+	providedIn: 'root',
+})
 export class SocketService {
 
     private _socket: any = {};

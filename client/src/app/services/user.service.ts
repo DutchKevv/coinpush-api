@@ -6,7 +6,9 @@ import { SymbolModel } from "../models/symbol.model";
 import { app } from '../../core/app';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
-@Injectable()
+@Injectable({
+	providedIn: 'root',
+})
 export class UserService {
 
 	public model: UserModel = new UserModel(app.user || {

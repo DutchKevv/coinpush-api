@@ -66,18 +66,6 @@ import { IndicatorService } from './services/indicator.service';
 		NgbModule.forRoot()
 	],
 	providers: [
-		BootstrapService,
-		AuthGuard,
-		AlertService,
-		UserService,
-		CommentService,
-		NewsService,
-		EventService,
-		NotificationService,
-		AuthenticationService,
-		CacheService,
-		IndicatorService,
-		SocketService,
 		{ provide: APP_INITIALIZER, useFactory: (config: BootstrapService) => () => config.load(), deps: [BootstrapService], multi: true },
 		{ provide: HTTP_INTERCEPTORS, useClass: CustomHttp, multi: true }
 	],
