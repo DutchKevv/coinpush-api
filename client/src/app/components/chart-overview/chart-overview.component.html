@@ -19,7 +19,7 @@
         <a [ngClass]="{active: activeFilter === 'all2'}" (click)="toggleActiveFilter('all2')">Popular indices (ni)</a>
     </div>
 
-    <div class="instrument-list" *ngIf="symbols">
+    <div class="instrument-list" #instrumentList>
         <a class="table-header">
             <div class="col-bookmark"></div>
             <h4 class="col-instrument">Instrument Price</h4>

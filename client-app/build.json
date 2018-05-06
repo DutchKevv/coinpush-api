@@ -1,1 +1,11 @@
-{}
+{
+    "android": {
+        "release": {
+            "keystore": "key.keystore",
+            "storePassword": "halo33221",
+            "alias": "CordovaRelease",
+            "password" : "halo33221",
+            "keystoreType": ""
+        }
+    }
+}

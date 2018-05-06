@@ -36,10 +36,10 @@
     "build-prod-server": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml build nginx redis gateway notify user event cache comment",
     "build-prod-nginx": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml build nginx",
     "build-prod-all": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml build",
-    "prod-client": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d client",
+    "prod-client": "npm run inc-build-number && docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d client",
     "prod-server": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d nginx redis gateway notify user event cache comment",
     "prod-nginx": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d nginx",
-    "stop-server": "docker-compose stop nginx redis gateway notify user event cache comment",
+    "stop-server": "docker-compose stop nginx redis gateway notify user event cache comment mongodb",
     "d-rmi-none": "docker rmi $(docker images --filter 'dangling=true' -q --no-trunc)",
     "d-rmi-all": "docker rmi -f $(docker images -q)",
     "d-mongo-shell": "docker exec -it mongodb mongo",
@@ -52,6 +52,7 @@
     "clean-app": "cd ./scripts && sh ./clean-npm-modules.sh",
     "clean-server": "cd ./scripts && sh ./clean-npm-modules.sh",
     "clean-db": "",
-    "_prod": "pm2 start ecosystem.config.js --env production && pm2 monit"
+    "_prod": "pm2 start ecosystem.config.js --env production && pm2 monit",
+    "inc-build-number": "node ./scripts/inc-build-number.js"
   }
 }

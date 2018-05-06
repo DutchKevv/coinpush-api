@@ -6,6 +6,7 @@ import {
 	Output,
 	OnDestroy,
 	ApplicationRef,
+	EventEmitter,
 } from '@angular/core';
 
 import { SymbolModel } from "../../models/symbol.model";
@@ -29,6 +30,9 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 
 	@ViewChild('filter') filterRef: ElementRef;
 	@ViewChild('chart') chartRef: ElementRef;
+	@ViewChild('instrumentList') instrumentList: ElementRef;
+
+	@Output() filterChange: EventEmitter<boolean> = new EventEmitter();
 
 	public CUSTOM_EVENT_TYPE_ALARM_NEW = CUSTOM_EVENT_TYPE_ALARM_NEW;
 
@@ -173,8 +177,10 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 				this.symbols = [];
 		}
 
+		this.activeSymbol = null;
+		this.scrollToTop();
 		this._changeDetectorRef.detectChanges();
-
+		
 		// if (this.symbols.length)
 		// this.setActiveSymbol(undefined, this.symbols[0]);
 	}
@@ -208,6 +214,10 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 
 		this.activeSymbol = symbol;
 		this._changeDetectorRef.detectChanges();
+	}
+
+	public scrollToTop() {
+		this.instrumentList.nativeElement.scrollTop = 0;
 	}
 
 

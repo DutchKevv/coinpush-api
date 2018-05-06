@@ -5,9 +5,9 @@ const SERIES_MAIN_NAME = 'main';
 const SERIES_VOLUME_NAME = 'volume';
 
 interface IIndicator {
-    id: string | number;
-    type: string;
-    params?: any;
+	id: string | number;
+	type: string;
+	params?: any;
 }
 
 @Injectable({
@@ -15,170 +15,173 @@ interface IIndicator {
 })
 export class IndicatorService {
 
-    private _idCounter = 0;
+	private _idCounter = 0;
 
 	public indicators: Array<IIndicator> = [];
 
 	constructor() {
-        this.init().catch(console.error);
-    }
+		this.init().catch(console.error);
+	}
 
 	public async init() {
-        await this._loadLocal();
-    }
+		await this._loadLocal();
+	}
 
-    findById(id: string | number): IIndicator {
-        return this.indicators.find(indicator => indicator.id === id);
-    }
+	findById(id: string | number): IIndicator {
+		return this.indicators.find(indicator => indicator.id === id);
+	}
 
-    add(type: string, options?: any): IIndicator {
-        const id = type + '_' + this._idCounter++;
-        let indicatorOptions: any = {};
+	add(type: string, options?: any): IIndicator {
+		const id = type + '_' + this._idCounter++;
+		let indicatorOptions: any = {};
 
-        switch (type) {
+		switch (type) {
 			case 'bollingerbands':
 				indicatorOptions = {
-                    id,
+					id,
 					name: 'Bollinger Bands',
 					type: 'bb',
-                    linkedTo: SERIES_MAIN_NAME,
-                    params: {
-                        period: 20,
-                        standardDeviation: 2
-                    },
-                    getParamString: function() {
-                        return `(${this.params.period},${this.params.standardDeviation})`;
-                    }
+					linkedTo: SERIES_MAIN_NAME,
+					params: {
+						period: 20,
+						standardDeviation: 2
+					},
+					getParamString: function () {
+						return `(${this.params.period},${this.params.standardDeviation})`;
+					}
 				}
 				break;
 			case 'cci':
 				indicatorOptions = {
-                    id,
+					id,
 					name: 'CCI',
 					type: 'cci',
 					linkedTo: SERIES_MAIN_NAME,
 					yAxis: 1,
 					params: {
 						period: 7
-                    },
-                    getParamString: function() {}
+					},
+					getParamString: function () { }
 				}
 				break;
 			case 'ema':
 				indicatorOptions = {
-                    id,
-                    name: 'EMA',
+					id,
+					name: 'EMA',
 					type: 'ema',
 					linkedTo: SERIES_MAIN_NAME,
 					params: {
 						period: 7
 					},
-                    getParamString: function() {}
+					getParamString: function () { }
 				}
 				break;
 			case 'mfi':
 				indicatorOptions = {
-                    id,
+					id,
 					name: 'MFI',
 					type: 'mfi',
 					linkedTo: SERIES_MAIN_NAME,
 					params: {
 						volumeSeriesID: SERIES_VOLUME_NAME
 					},
-                    getParamString: function() {}
+					getParamString: function () { }
 				}
 				break;
 			case 'momentum':
 				indicatorOptions = {
-                    id,
+					id,
 					name: id,
 					type: 'momentum',
 					linkedTo: SERIES_MAIN_NAME,
 					params: {
 						volumeSeriesID: SERIES_VOLUME_NAME
 					},
-                    getParamString: function() {}
+					getParamString: function () { }
 				}
 				break;
 			case 'macd':
 				indicatorOptions = {
-                    id,
+					id,
 					name: 'MACD',
 					type: 'macd',
 					linkedTo: SERIES_MAIN_NAME,
 					params: {
-                        volumeSeriesID: SERIES_VOLUME_NAME
+						volumeSeriesID: SERIES_VOLUME_NAME
 					},
-                    getParamString: function() {}
+					getParamString: function () { }
 				}
 				break;
 			case 'sma':
 				indicatorOptions = {
-                    id,
+					id,
 					name: 'SMA',
 					type: 'sma',
 					linkedTo: SERIES_MAIN_NAME,
 					params: {
 						period: 7
 					},
-                    getParamString: function() {}
+					getParamString: function () { }
 				}
 				break;
 			case 'wma':
 				indicatorOptions = {
-                    id,
+					id,
 					name: id,
 					type: 'wma',
 					linkedTo: SERIES_MAIN_NAME,
 					params: {
 						period: undefined
 					},
-                    getParamString: function() {}
+					getParamString: function () { }
 				}
 				break;
 			case 'zigzag':
 				indicatorOptions = {
-                    id,
+					id,
 					name: id,
 					type: 'zigzag',
 					linkedTo: SERIES_MAIN_NAME,
 					params: {
 						deviation: 5
 					},
-                    getParamString: function() {}
+					getParamString: function () { }
 				}
 				break;
 			default:
 				throw new Error('uknown indicator! : ' + type);
-        }
-        
-        this.indicators.push(indicatorOptions);
+		}
 
-        this._storeLocal();
+		this.indicators.push(indicatorOptions);
 
-        return indicatorOptions;
-    }
+		this._storeLocal();
 
-    remove(id: string | number) {
-        this.indicators.splice(this.indicators.findIndex(indicator => indicator.id === id, 1));
-        this._storeLocal();
-    }
+		return indicatorOptions;
+	}
 
-    private async _loadLocal() {
-        const indicators = JSON.parse(await app.storage.get('indicators'));
-        
-        // temp
-        indicators.forEach(indicator => {
-            indicator.getParamString = function() {}
-        });
+	remove(id: string | number) {
+		this.indicators.splice(this.indicators.findIndex(indicator => indicator.id === id, 1));
+		this._storeLocal();
+	}
 
-        // quality check
-        if (indicators && indicators.length) {
-            this.indicators = indicators;
-        }
-    }
+	private async _loadLocal() {
+		try {
+			const indicators = JSON.parse(await app.storage.get('indicators')) || [];
 
-    private async _storeLocal() {
-        await app.storage.set('indicators', JSON.stringify(this.indicators));
-    }
+			// temp
+			indicators.forEach(indicator => {
+				indicator.getParamString = function () { }
+			});
+
+			this.indicators = indicators;
+
+		} catch (error) {
+			console.error(error);
+
+		}
+	}
+
+	private async _storeLocal() {
+		await app.storage.set('indicators', JSON.stringify(this.indicators));
+	}
 }

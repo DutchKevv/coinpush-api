@@ -27,7 +27,7 @@ services:
       - /bin/sh
       - -c
       - |
-          npm i
+          npm i --only=production
           npm run build
     volumes:
       - /usr/src/app/client/node_modules
@@ -39,7 +39,7 @@ services:
       - -c
       - |
           npm run install-shared
-          npm i
+          npm i --only=production
           npm run build
           npm run prod
     volumes:
@@ -53,7 +53,7 @@ services:
       - -c
       - |
           npm run install-shared
-          npm i
+          npm i --only=production
           npm run build
           npm run prod
     volumes:
@@ -66,7 +66,7 @@ services:
       - -c
       - |
           npm run install-shared
-          npm i
+          npm i --only=production
           npm run build
           npm run prod
     volumes:
@@ -79,7 +79,7 @@ services:
       - -c
       - |
           npm run install-shared
-          npm i
+          npm i --only=production
           npm run build
           npm run prod
     volumes:
@@ -92,7 +92,7 @@ services:
       - -c
       - |
           npm run install-shared
-          npm i
+          npm i --only=production
           npm run build
           npm run prod
     volumes:
@@ -105,7 +105,7 @@ services:
       - -c
       - |
           npm run install-shared
-          npm i
+          npm i --only=production
           npm run build
           npm run prod
     volumes:

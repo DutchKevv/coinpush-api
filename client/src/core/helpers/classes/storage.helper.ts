@@ -22,4 +22,8 @@ export class StorageHelper {
     public remove(key: string) {
         return localForage.removeItem(key);
     }
+
+    public clear() {
+        return localForage.clear();
+    }    
 }

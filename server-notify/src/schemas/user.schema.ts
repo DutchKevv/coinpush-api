@@ -25,7 +25,8 @@ export const UserSchema = new Schema({
     },
     devices: [{
         token: {
-            type: String
+            type: String,
+            // unique: true
         },
         name: {
             type: String,
@@ -73,17 +74,25 @@ export const UserSchema = new Schema({
 });
 
 UserSchema.statics.addDevice = async function (userId, device): Promise<void> {
-    const prevUsers: any = await User.find({ devices: { $elemMatch: { token: device.token } } }, { _id: 1 }).lean();
-
+    const prevUsers: any = await User.find({ devices: { $elemMatch: { token: device.token } } }, { _id: 1, devices: 1 });
+    console.log('device devi', device.token, userId);
     // remove previous owners of token
     // TODO: really needed?
-    await Promise.all(prevUsers.map(user => {
-        if (user._id !== userId)
-            return UserSchema.statics.removeDevice(userId, device);
-    }));
+    // await Promise.all(prevUsers.map(user => {
+    //     if (user._id !== userId)
+    //         return UserSchema.statics.removeDevice(userId, device);
+    // }));
+
+    if (prevUsers.length) {
+        await Promise.all(prevUsers.map(user => {
+            user.devices = user.devices.filter(_device => _device.token !== device.token);
+            return user.save();
+        }));
+    }
+    // const present = await User.find({'de'})
 
     const user = await User.findByIdAndUpdate(
-        Types.ObjectId(userId),
+        userId,
         {
             $addToSet: {
                 devices: {
@@ -98,8 +107,9 @@ UserSchema.statics.addDevice = async function (userId, device): Promise<void> {
         throw ({ code: G_ERROR_USER_NOT_FOUND });
 }
 
-UserSchema.statics.removeDevice = async function (userId, device) {
-    return User.update({_id: userId}, { $pull: { devices: device } });
+UserSchema.statics.removeDevice = async function (userId, token) {
+    console.log('sdfsdf', userId, token);
+    return User.update({_id: userId}, { $pull: { token: token } });
 }
 
 UserSchema.plugin(beautifyUnique);

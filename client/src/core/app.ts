@@ -262,7 +262,7 @@ export class App extends MicroEvent {
     }
 
     public async removeStoredUser(): Promise<void> {
-        await this.storage.remove('current-user');
+        await this.storage.clear();
     }
 
     private async _loadStoredUser(): Promise<any> {

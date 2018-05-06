@@ -8,6 +8,7 @@ import { environment } from '../../environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 
+
 declare const window: any;
 
 const FB_APP_ID_PROD = '178901869390909';
@@ -214,6 +215,7 @@ export class AuthenticationService {
 	}
 
 	public async logout(): Promise<void> {
+		await this.removeDevice();
 		await app.removeStoredUser();
 
 		window.location = app.platform.isApp ? 'file:///android_asset/www/index.html' : window.location.origin;

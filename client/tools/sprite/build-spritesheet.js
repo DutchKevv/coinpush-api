@@ -1,7 +1,7 @@
 const path = require('path');
 const spritesheet = require('spritesheet-js');
 
-const IMAGES_WRITE_PATH = path.join(__dirname, '..', 'images', 'symbols');
+const IMAGES_WRITE_PATH = path.join(__dirname, 'images', 'symbols');
 const SPRITE_WRITE_PATH = path.join(__dirname, '..', 'src', 'app', 'style', 'sprite');
 
 const build = async function () {

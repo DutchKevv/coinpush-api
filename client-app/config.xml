@@ -7,6 +7,7 @@
     <author email="kewin@frontend-freelance.com" href="">
         H.K.Brandsma
     </author>
+    <preference name="android-targetSdkVersion" value="23" />
     <preference name="BackgroundColor" value="0xff222122" />
     <preference name="fullscreen" value="false" />
     <preference name="StatusBarBackgroundColor" value="#000000" />
@@ -32,6 +33,9 @@
             <string name="fb_app_id">178901869390909</string>
             <string name="fb_app_name">CoinPush</string>
         </config-file>
+        <config-file parent="/manifest" target="AndroidManifest.xml" xmlns:android="http://schemas.android.com/apk/res/android">
+            <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+        </config-file>
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />
@@ -53,6 +57,15 @@
     </plugin>
     <plugin name="cordova-plugin-statusbar" spec="^2.4.2" />
     <plugin name="cordova-plugin-x-toast" spec="^2.6.2" />
+    <plugin name="cordova-hot-code-push-plugin" spec="^1.5.3" />
+    <plugin name="cordova-hot-code-push-local-dev-addon" spec="^0.4.2" />
+    <plugin name="cordova-plugin-file" spec="^6.0.1" />
+    <plugin name="cordova-plugin-file-transfer" spec="^1.7.1" />
+    <plugin name="com.borismus.webintent" spec="https://github.com/cordova-misc/cordova-webintent.git" />
+    <plugin name="cordova-plugin-file-opener2" spec="^2.0.19" />
+    <plugin name="cordova-android-support-gradle-release" spec="^1.4.2">
+        <variable name="ANDROID_SUPPORT_VERSION" value="27.+" />
+    </plugin>
     <engine name="browser" spec="5.0.3" />
     <engine name="android" spec="^7.1.0" />
 </widget>

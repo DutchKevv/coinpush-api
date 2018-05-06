@@ -1,0 +1,65 @@
+{
+  "_from": "cordova-plugin-file-opener2",
+  "_id": "cordova-plugin-file-opener2@2.0.19",
+  "_inBundle": false,
+  "_integrity": "sha1-yjrhIlOVt3qx/lsgrMv+zGiOJJM=",
+  "_location": "/cordova-plugin-file-opener2",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "cordova-plugin-file-opener2",
+    "name": "cordova-plugin-file-opener2",
+    "escapedName": "cordova-plugin-file-opener2",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/cordova-plugin-file-opener2/-/cordova-plugin-file-opener2-2.0.19.tgz",
+  "_shasum": "ca3ae1225395b77ab1fe5b20accbfecc688e2493",
+  "_spec": "cordova-plugin-file-opener2",
+  "_where": "/Users/kewinbrandsma/Projects/TradeJS/client-app",
+  "author": {
+    "name": "pwlin05@gmail.com"
+  },
+  "bugs": {
+    "url": "https://github.com/pwlin/cordova-plugin-file-opener2/issues"
+  },
+  "bundleDependencies": false,
+  "cordova": {
+    "id": "cordova-plugin-file-opener2",
+    "platforms": [
+      "android",
+      "ios",
+      "wp8",
+      "windows"
+    ]
+  },
+  "deprecated": false,
+  "description": "A File Opener Plugin for Cordova. (The Original Version)",
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=3.0.0"
+    }
+  ],
+  "homepage": "https://github.com/pwlin/cordova-plugin-file-opener2#readme",
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios",
+    "cordova-wp8",
+    "cordova-windows"
+  ],
+  "license": "MIT",
+  "name": "cordova-plugin-file-opener2",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pwlin/cordova-plugin-file-opener2.git"
+  },
+  "version": "2.0.19"
+}

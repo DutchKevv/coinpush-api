@@ -8,6 +8,10 @@ import { AuthenticationService } from './authenticate.service';
 import { app } from '../../core/app';
 import { HttpHeaders, HttpParams, HttpClient, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse, HttpInterceptor } from '@angular/common/http';
 
+declare const require: any;
+
+const config = require('../../custom_config.json');
+
 export interface IRequestOptions {
 	headers?: HttpHeaders;
 	observe?: 'body';
@@ -25,7 +29,7 @@ export class CustomHttp implements HttpInterceptor {
 	constructor(
 		public http: HttpClient,
 		private _authenticationService: AuthenticationService
-	) {}
+	) { }
 
 	intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 		return next.handle(this._normalizeRequest(req)).catch((event) => this.catch401(event));
@@ -33,7 +37,7 @@ export class CustomHttp implements HttpInterceptor {
 
 	private _normalizeRequest(req: HttpRequest<any>): HttpRequest<any> {
 		if (!req.url.startsWith('http://') && !req.url.startsWith('https://'))
-			req =  req.clone({url: (app.address.apiUrl + req.url).replace(/([^:]\/)\/+/g, "$1")});
+			req = req.clone({ url: (app.address.apiUrl + req.url).replace(/([^:]\/)\/+/g, "$1") });
 
 		req = this._addHeaderJwt(req);
 
@@ -43,7 +47,12 @@ export class CustomHttp implements HttpInterceptor {
 	private _addHeaderJwt(req: HttpRequest<any>): HttpRequest<any> {
 		// add authorization header with jwt token
 		if (app.user && app.user.token)
-			return req.clone({ setHeaders: { Authorization: 'Bearer ' + app.user.token } });
+			return req.clone({
+				setHeaders: {
+					Authorization: 'Bearer ' + app.user.token,
+					clientVersion: config.version
+				}
+			});
 
 		return req;
 	}
