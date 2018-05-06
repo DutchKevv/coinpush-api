@@ -50,7 +50,7 @@ export class CustomHttp implements HttpInterceptor {
 			return req.clone({
 				setHeaders: {
 					Authorization: 'Bearer ' + app.user.token,
-					clientVersion: config.version
+					clientversion: config.version
 				}
 			});
 

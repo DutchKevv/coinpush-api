@@ -1,6 +1,17 @@
 version: '3.3'
 
 services:
+  jenkins:
+    restart: always
+    build: ./server-jenkins
+    image: jenkins
+    container_name: jenkins 
+    ports:
+      - "8080:8080"
+      - "49005:49005"
+      - "50000:50000"
+    # links:
+    #   - gateway   
   nginx:
     restart: always
     build: ./server-nginx
@@ -25,7 +36,7 @@ services:
     container_name: redis
   gateway:
     restart: always
-    image: mhart/alpine-node:8.9.4
+    image: mhart/alpine-node:10.0.0
     container_name: gateway
     build:
       context: ./
@@ -59,7 +70,7 @@ services:
     container_name: client-app
     build:
       context: ./
-      dockerfile: /client-app/Dockerfile
+      dockerfile: ./client-app/Dockerfile
     volumes:
       - ./client-app:/usr/src/app/client-app
       - ./client/dist/www:/usr/src/app/client-app/www

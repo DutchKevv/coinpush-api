@@ -122,7 +122,7 @@ export const app = {
 
 		this.api.use((req, res, next) => {
 			res.header('Access-Control-Allow-Origin', '*');
-			res.header('Access-Control-Allow-Headers', 'App verion', 'Authorization, Origin, X-Requested-With, Content-Type, Accept');
+			res.header('Access-Control-Allow-Headers', 'clientVersion', 'Authorization, Origin, X-Requested-With, Content-Type, Accept');
 			next();
 		});
 
@@ -180,6 +180,17 @@ export const app = {
 					next();
 				}
 			}
+		});
+
+
+		/**
+		 * error - unauthorized
+		 */
+		this.api.use((req, res, next) => {
+			if (req.headers.clientversion && req.headers.clientversion !== config.appVersion)
+				return res.status(400).send({reason: 'outdated'});
+
+			next();
 		});
 
 		// this.api.get('/', function (req, res, next) {
