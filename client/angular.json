@@ -21,6 +21,7 @@
               "src/assets",
               "src/favicon.ico",
               "src/index.redirect.facebook.html",
+              "src/google-services.json",
               "src/GoogleService-info.plist",
               "src/manifest.json",
               "src/core/update-helper.js",
