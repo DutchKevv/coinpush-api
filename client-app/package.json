@@ -23,7 +23,7 @@
     "clean": "",
     "clean2": "cordova clean",
     "copy-www": "rm -rf ./www && ncp ./../client/dist/www ./www",
-    "cp-pp-file": "cp -rf project.properties ./platforms/android"
+    "cp-pp-file": "mkdir -p ./platforms/android && cp -rf project.properties ./platforms/android"
   },
   "author": "Apache Cordova Team",
   "license": "Apache-2.0",
