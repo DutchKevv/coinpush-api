@@ -34,7 +34,7 @@
     "cordova-browser": "5.0.3",
     "cordova-hot-code-push-plugin": "^1.5.3",
     "cordova-ios": "^4.5.4",
-    "cordova-plugin-admobpro": "^2.31.4",
+    "cordova-plugin-admobpro": "^2.31.5",
     "cordova-plugin-badge": "^0.8.7",
     "cordova-plugin-extension": "^1.5.4",
     "cordova-plugin-facebook4": "^2.1.0",
@@ -61,7 +61,8 @@
       "cordova-plugin-inappbrowser": {},
       "cordova-plugin-facebook4": {
         "APP_ID": "178901869390909",
-        "APP_NAME": "“CoinPush”"
+        "APP_NAME": "“CoinPush”",
+        "ANDROID_SDK_VERSION": "4.+"
       },
       "cordova-support-google-services": {},
       "phonegap-plugin-push": {
@@ -80,7 +81,6 @@
       }
     },
     "platforms": [
-      "browser",
       "android",
       "ios"
     ]

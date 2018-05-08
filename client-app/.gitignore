@@ -2,6 +2,9 @@ node_modules
 .gradle
 www
 
+platforms
+plugins
+
 # iOS
 platforms/ios/build/
 platforms/ios/www/
