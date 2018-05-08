@@ -1,15 +1,17 @@
 node {
-    stage('Initialize') {
-        echo 'Initializing...'
-        def nodeHome = tool 'nodejs5'
-        env.PATH="${env.PATH}:${nodeHome}/bin"
-    }
     stage('get source') {
-        checkout scm
-        // git 'https://github.com/DutchKevv/TradeJS'
+        // checkout scm
+        git branch: 'development', url: 'https://github.com/DutchKevv/TradeJS'
     }
-    stage('install npm modules') {
-        node -v
-        npm i
+    // stage('install & build client') {
+    //     dir('client') {
+    //         sh 'rm -rf node_modules && rm -f package-lock.json && npm i && npm run build'
+    //     }
+    // }
+    stage('install & build app') {
+        dir('client-app') {
+            // sh 'rm -rf node_modules && rm -f package-lock.json && npm i && npm run build-android'
+            sh 'npm i && npm run build-android'
+        }
     }
 }

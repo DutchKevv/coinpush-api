@@ -27,12 +27,13 @@
   "author": "Apache Cordova Team",
   "license": "Apache-2.0",
   "dependencies": {
+    "com.borismus.webintent": "https://github.com/cordova-misc/cordova-webintent.git",
     "cordova": "^8.0.0",
     "cordova-android": "^7.1.0",
     "cordova-android-support-gradle-release": "^1.4.2",
     "cordova-browser": "5.0.3",
-    "cordova-hot-code-push-local-dev-addon": "^0.4.2",
     "cordova-hot-code-push-plugin": "^1.5.3",
+    "cordova-ios": "^4.5.4",
     "cordova-plugin-admobpro": "^2.31.4",
     "cordova-plugin-badge": "^0.8.7",
     "cordova-plugin-extension": "^1.5.4",
@@ -70,7 +71,6 @@
       "cordova-plugin-statusbar": {},
       "cordova-plugin-x-toast": {},
       "cordova-hot-code-push-plugin": {},
-      "cordova-hot-code-push-local-dev-addon": {},
       "cordova-plugin-file": {},
       "cordova-plugin-file-transfer": {},
       "com.borismus.webintent": {},
@@ -81,7 +81,8 @@
     },
     "platforms": [
       "browser",
-      "android"
+      "android",
+      "ios"
     ]
   }
 }

@@ -13,14 +13,18 @@ RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
 
 USER root
 
+ENV SDK_URL="https://dl.google.com/android/repository/sdk-tools-linux-3859397.zip" \
+    ANDROID_HOME="/usr/src/android-sdk" \
+    ANDROID_VERSION=27 \
+    ANDROID_BUILD_TOOLS_VERSION=27.0.3 \
+    GRADLE_HOME=/gradle/gradle-4.7 \
+    PATH=$PATH:/gradle/gradle-4.7/bin
+
 # nodejs
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && apt-get install -yq nodejs build-essential
 
-# android SDK
-ENV SDK_URL="https://dl.google.com/android/repository/sdk-tools-linux-3859397.zip" \
-    ANDROID_HOME="/usr/src/android-sdk" \
-    ANDROID_VERSION=26 \
-    ANDROID_BUILD_TOOLS_VERSION=27.0.3
+# gradle
+RUN wget https://services.gradle.org/distributions/gradle-4.7-bin.zip && unzip -d /gradle gradle-4.7-bin.zip
 
 # Download Android SDK
 # RUN chmod +x "/usr/local/"

@@ -44,9 +44,6 @@
     "cordova-hot-code-push-plugin": {
       "PACKAGE_NAME": "com.ff.coinpush"
     },
-    "cordova-hot-code-push-local-dev-addon": {
-      "PACKAGE_NAME": "com.ff.coinpush"
-    },
     "cordova-plugin-file": {
       "PACKAGE_NAME": "com.ff.coinpush"
     },

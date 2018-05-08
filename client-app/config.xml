@@ -45,8 +45,8 @@
     <plugin name="cordova-plugin-admobpro" spec="^2.31.4" />
     <plugin name="cordova-plugin-fileopener" spec="^1.0.5" />
     <plugin name="cordova-plugin-badge" spec="^0.8.7" />
-    <plugin name="cordova-plugin-inappbrowser" spec="^2.0.2" />
-    <plugin name="cordova-plugin-facebook4" spec="^1.10.1">
+    <plugin name="cordova-plugin-inappbrowser" spec="^3.0.0" />
+    <plugin name="cordova-plugin-facebook4" spec="^2.1.0">
         <variable name="APP_ID" value="178901869390909" />
         <variable name="APP_NAME" value="“CoinPush”" />
     </plugin>
@@ -58,7 +58,6 @@
     <plugin name="cordova-plugin-statusbar" spec="^2.4.2" />
     <plugin name="cordova-plugin-x-toast" spec="^2.6.2" />
     <plugin name="cordova-hot-code-push-plugin" spec="^1.5.3" />
-    <plugin name="cordova-hot-code-push-local-dev-addon" spec="^0.4.2" />
     <plugin name="cordova-plugin-file" spec="^6.0.1" />
     <plugin name="cordova-plugin-file-transfer" spec="^1.7.1" />
     <plugin name="com.borismus.webintent" spec="https://github.com/cordova-misc/cordova-webintent.git" />
@@ -68,4 +67,5 @@
     </plugin>
     <engine name="browser" spec="5.0.3" />
     <engine name="android" spec="^7.1.0" />
+    <engine name="ios" spec="^4.5.4" />
 </widget>
