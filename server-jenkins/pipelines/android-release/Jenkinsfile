@@ -1,0 +1,10 @@
+node {
+    stage('get source') {
+        checkout scm
+        // git 'https://github.com/DutchKevv/TradeJS'
+    }
+    stage('install npm modules') {
+        node -v
+        npm i
+    }
+}
