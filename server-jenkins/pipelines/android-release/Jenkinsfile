@@ -1,17 +1,20 @@
 node {
+    stage('clean workspace') {
+        cleanWs()
+    }
     stage('get source') {
-        // checkout scm
         git branch: 'development', url: 'https://github.com/DutchKevv/TradeJS'
     }
-    // stage('install & build client') {
-    //     dir('client') {
-    //         sh 'rm -rf node_modules && rm -f package-lock.json && npm i && npm run build'
-    //     }
-    // }
+    stage('install & build client') {
+        dir('client') {
+            sh 'npm i && npm run build'
+        }
+    }
     stage('install & build app') {
         dir('client-app') {
-            // sh 'rm -rf node_modules && rm -f package-lock.json && npm i && npm run build-android'
-            sh 'npm i && npm run build-android'
+            sh 'npm i'
+            sh './node_modules/.bin/cordova platform add android'
+            sh 'npm run build-android'
         }
     }
 }
