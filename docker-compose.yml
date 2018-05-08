@@ -2,16 +2,17 @@ version: '3.3'
 
 services:
   jenkins:
-    restart: always
     build: ./server-jenkins
     image: jenkins
     container_name: jenkins 
     ports:
       - "8080:8080"
-      - "49005:49005"
-      - "50000:50000"
-    # links:
-    #   - gateway   
+      - "50000:50000"  
+    volumes:
+      - ./server-jenkins/_data:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      JENKINS_HOST_HOME: "./server-jenkins/_data"
   nginx:
     restart: always
     build: ./server-nginx
@@ -155,4 +156,5 @@ services:
       - redis
       - mongodb
 volumes:
-  node_modules:
+  jenkins_home:
+    driver: local

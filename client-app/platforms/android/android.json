@@ -10,11 +10,11 @@
           "/resources": [
             {
               "xml": "<string name=\"fb_app_id\">178901869390909</string>",
-              "count": 172
+              "count": 187
             },
             {
               "xml": "<string name=\"fb_app_name\">CoinPush</string>",
-              "count": 172
+              "count": 187
             }
           ]
         }
@@ -208,7 +208,7 @@
             },
             {
               "xml": "<uses-permission android:name=\"android.permission.REQUEST_INSTALL_PACKAGES\" />",
-              "count": 5
+              "count": 20
             }
           ]
         }
