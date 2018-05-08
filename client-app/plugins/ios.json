@@ -1,0 +1,66 @@
+{
+  "prepare_queue": {
+    "installed": [],
+    "uninstalled": []
+  },
+  "config_munge": {
+    "files": {}
+  },
+  "installed_plugins": {
+    "com.borismus.webintent": {
+      "PACKAGE_NAME": "com.ff.coinpush"
+    },
+    "cordova-android-support-gradle-release": {
+      "PACKAGE_NAME": "com.ff.coinpush"
+    },
+    "cordova-hot-code-push-plugin": {
+      "PACKAGE_NAME": "com.ff.coinpush"
+    },
+    "cordova-plugin-admobpro": {
+      "PACKAGE_NAME": "com.ff.coinpush"
+    },
+    "cordova-plugin-badge": {
+      "PACKAGE_NAME": "com.ff.coinpush"
+    },
+    "cordova-plugin-facebook4": {
+      "APP_ID": "178901869390909",
+      "APP_NAME": "“CoinPush”",
+      "PACKAGE_NAME": "com.ff.coinpush"
+    },
+    "cordova-plugin-file": {
+      "PACKAGE_NAME": "com.ff.coinpush"
+    },
+    "cordova-plugin-file-opener2": {
+      "PACKAGE_NAME": "com.ff.coinpush"
+    },
+    "cordova-plugin-file-transfer": {
+      "PACKAGE_NAME": "com.ff.coinpush"
+    },
+    "cordova-plugin-fileopener": {
+      "PACKAGE_NAME": "com.ff.coinpush"
+    },
+    "cordova-plugin-inappbrowser": {
+      "PACKAGE_NAME": "com.ff.coinpush"
+    },
+    "cordova-plugin-statusbar": {
+      "PACKAGE_NAME": "com.ff.coinpush"
+    },
+    "cordova-plugin-whitelist": {
+      "PACKAGE_NAME": "com.ff.coinpush"
+    },
+    "cordova-plugin-x-toast": {
+      "PACKAGE_NAME": "com.ff.coinpush"
+    },
+    "cordova-support-google-services": {
+      "PACKAGE_NAME": "com.ff.coinpush"
+    },
+    "phonegap-plugin-push": {
+      "PACKAGE_NAME": "com.ff.coinpush"
+    }
+  },
+  "dependent_plugins": {
+    "cordova-plugin-extension": {
+      "PACKAGE_NAME": "com.ff.coinpush"
+    }
+  }
+}
