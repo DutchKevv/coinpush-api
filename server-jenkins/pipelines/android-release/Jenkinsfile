@@ -1,4 +1,9 @@
 node {
+    stage('Initialize') {
+        echo 'Initializing...'
+        def nodeHome = tool 'nodejs5'
+        env.PATH="${env.PATH}:${nodeHome}/bin"
+    }
     stage('get source') {
         checkout scm
         // git 'https://github.com/DutchKevv/TradeJS'

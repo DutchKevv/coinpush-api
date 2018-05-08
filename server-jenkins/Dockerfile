@@ -10,3 +10,30 @@ ENV JAVA_OPTS="-Xmx8192m"
 
 COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
 RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
+
+USER root
+
+# nodejs
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && apt-get install -yq nodejs build-essential
+
+# android SDK
+ENV SDK_URL="https://dl.google.com/android/repository/sdk-tools-linux-3859397.zip" \
+    ANDROID_HOME="/usr/src/android-sdk" \
+    ANDROID_VERSION=26 \
+    ANDROID_BUILD_TOOLS_VERSION=27.0.3
+
+# Download Android SDK
+# RUN chmod +x "/usr/local/"
+RUN mkdir -p "$ANDROID_HOME" \
+    mkdir "$ANDROID_HOME" .android \
+    && cd "$ANDROID_HOME" \
+    && curl -o sdk.zip $SDK_URL \
+    && unzip sdk.zip \
+    && rm sdk.zip \
+    && yes | $ANDROID_HOME/tools/bin/sdkmanager --licenses
+
+# Install Android Build Tool and Libraries
+RUN $ANDROID_HOME/tools/bin/sdkmanager --update
+RUN $ANDROID_HOME/tools/bin/sdkmanager "build-tools;${ANDROID_BUILD_TOOLS_VERSION}" \
+    "platforms;android-${ANDROID_VERSION}" \
+    "platform-tools"

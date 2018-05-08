@@ -9,3 +9,4 @@ npm-debug.log
 *.js
 !/tools/**/*.js
 !/src/etc/**/*.js
+!/src/core/**/*.js
