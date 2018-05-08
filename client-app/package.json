@@ -11,18 +11,19 @@
   "main": "index.js",
   "scripts": {
     "build-mobile": "npm run copy-www && cordova build --no-inc",
-    "build-android": "npm run copy-www && cordova build android --inc-version",
+    "build-android": "npm run copy-www && npm run cp-pp-file && cordova build android --inc-version",
     "build-ios": "npm run copy-www && cordova build ios --no-inc",
     "build-mobile-release": "npm run copy-www && cordova build --release --inc-version",
-    "build-android-release": "npm run copy-www && cordova build android --release --inc-version",
+    "build-android-release": "npm run copy-www && cp-pp-file && cordova build android --release --inc-version",
     "build-ios-release": "npm run copy-www && npm run clean && cordova build ios --release --inc-version",
-    "emulate-android": "npm run copy-www && cordova emulate android",
+    "emulate-android": "npm run copy-www && cp-pp-file && cordova emulate android",
     "emulate-ios": "npm run copy-www && cordova emulate ios",
     "run-android": "npm run copy-www && cordova run android",
     "run-ios": "npm run copy-www && cordova run ios",
     "clean": "",
     "clean2": "cordova clean",
-    "copy-www": "rm -rf ./www && ncp ./../client/dist/www ./www "
+    "copy-www": "rm -rf ./www && ncp ./../client/dist/www ./www",
+    "cp-pp-file": "cp -rf project.properties ./platforms/android"
   },
   "author": "Apache Cordova Team",
   "license": "Apache-2.0",

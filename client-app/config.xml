@@ -26,6 +26,7 @@
     <allow-navigation href="https://frontend-freelance.com" />
     <allow-navigation href="http://10.0.2.2" />
     <platform name="android">
+        <resource-file src="www/google-services.json" target="/app/google-services.json" />
         <preference name="android-minSdkVersion" value="19" />
         <allow-intent href="market:*" />
         <resource-file src="google-services.json" target="../../google-services.json" />
