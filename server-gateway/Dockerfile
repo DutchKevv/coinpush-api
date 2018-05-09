@@ -10,5 +10,8 @@ RUN apk add --update \
 WORKDIR /usr/src/app/shared/
 COPY /shared .
 
-WORKDIR /usr/src/app/server-gateway/
-COPY /server-gateway .
+WORKDIR /usr/src/app/server-gateway
+COPY /server-gateway/package*.json ./
+RUN npm i
+
+COPY /server-gateway/src ./src

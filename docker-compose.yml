@@ -45,37 +45,12 @@ services:
     ports:
       - 3100
     volumes:
-      - ./server-gateway:/usr/src/app/server-gateway
+      - ./server-gateway/src:/usr/src/app/server-gateway/src
       - ./shared:/usr/src/app/shared
       - ./tradejs.config.js:/usr/src/app/tradejs.config.js
       - ./tradejs.config.custom.js:/usr/src/app/tradejs.config.custom.js
     links:
       - redis
-  client:
-    # working_dir: /usr/src/app/client/
-    image: client
-    container_name: client
-    build:
-      context: ./
-      dockerfile: ./client/Dockerfile
-    volumes:
-      - ./client/src:/usr/src/app/client/src
-      - ./client/dist:/usr/src/app/client/dist
-      # - ./client/src:/usr/src/app/client/src
-      # - ./client/www:/usr/src/app/client/www
-#      - ./client:/usr/src/app/client
-      - ./shared:/usr/src/app/shared
-      - /usr/src/app/client/node_modules
-      # - /usr/src/app/client/node_modules
-  client-app:
-    image: client-app
-    container_name: client-app
-    build:
-      context: ./
-      dockerfile: ./client-app/Dockerfile
-    volumes:
-      - ./client-app:/usr/src/app/client-app
-      - ./client/dist/www:/usr/src/app/client-app/www
   cache:
     restart: always
     image: cache
@@ -156,6 +131,31 @@ services:
     links:
       - redis
       - mongodb
+  client:
+    # working_dir: /usr/src/app/client/
+    image: client
+    container_name: client
+    build:
+      context: ./
+      dockerfile: ./client/Dockerfile
+    volumes:
+      - ./client/src:/usr/src/app/client/src
+      - ./client/dist:/usr/src/app/client/dist
+      # - ./client/src:/usr/src/app/client/src
+      # - ./client/www:/usr/src/app/client/www
+#      - ./client:/usr/src/app/client
+      - ./shared:/usr/src/app/shared
+      - /usr/src/app/client/node_modules
+      # - /usr/src/app/client/node_modules
+  client-app:
+    image: client-app
+    container_name: client-app
+    build:
+      context: ./
+      dockerfile: ./client-app/Dockerfile
+    volumes:
+      - ./client-app:/usr/src/app/client-app
+      - ./client/dist/www:/usr/src/app/client-app/www
 volumes:
   jenkins_home:
     driver: local

@@ -27,37 +27,11 @@ services:
           npm run install-shared
           npm i
           npm start
-  client:
-    environment:
-      - NODE_ENV=development
-    command:
-      - /bin/sh
-      - -c
-      - |
-          npm start
-  client-app:
-    environment:
-      - NODE_ENV=development
-    ports:
-      - "2222:22"
-      - "5554:5554"
-    command:
-      - /bin/sh
-      - -c
-      - |
-          # npm i
-          # cordova platform add android
-          npm run emulate-android
   gateway:
     environment:
       - NODE_ENV=development
     command:
-      - /bin/sh
-      - -c
-      - |
-          # npm run install-shared
-          npm i
-          npm run start
+      - npm start
     volumes:
       - ./images:/usr/src/app/images
   user:
@@ -100,4 +74,22 @@ services:
           npm run install-shared
           npm i
           npm run start
+  client:
+    environment:
+      - NODE_ENV=development
+    command:
+      - npm start
+  client-app:
+    environment:
+      - NODE_ENV=development
+    ports:
+      - "2222:22"
+      - "5554:5554"
+    command:
+      - /bin/sh
+      - -c
+      - |
+          # npm i
+          # cordova platform add android
+          npm run emulate-android
   
