@@ -37,7 +37,7 @@ services:
     container_name: redis
   gateway:
     restart: unless-stopped
-    image: mhart/alpine-node:10.1.0
+    image: gateway
     container_name: gateway
     build:
       context: ./
