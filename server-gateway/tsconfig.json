@@ -4,6 +4,11 @@
     "target": "es2017",
     "lib": ["esnext"],
     "module": "commonjs",
-    "pretty": true
+    "pretty": true,
+    "paths": {
+      "coinpush/*": [
+        "../shared/modules/coinpush/*"
+      ]
+    }
   }
 }

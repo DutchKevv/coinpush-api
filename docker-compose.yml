@@ -14,12 +14,12 @@ services:
     environment:
       JENKINS_HOST_HOME: "./server-jenkins/_data"
   nginx:
-    restart: always
+    restart: unless-stopped
     build: ./server-nginx
     image: nginx
     container_name: nginx 
-    # links:
-    #   - gateway    
+    links:
+      - gateway    
   mongodb:
     image: mongo:latest
     container_name: "mongodb"
