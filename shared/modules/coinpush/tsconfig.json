@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "rootDir": "./",
     "lib": ["es2017"],
     "target": "es5",
     "pretty": true

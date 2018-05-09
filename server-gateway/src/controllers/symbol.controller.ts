@@ -6,8 +6,8 @@ export const symbolController = {
 
     symbolSyncer: new SymbolSyncer(),
 
-    async init() {
-        await this.symbolSyncer.sync();
+    init() {
+        this.symbolSyncer.sync();
         this.symbolSyncer.startSyncInterval();
     },
 

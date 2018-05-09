@@ -36,8 +36,8 @@ services:
         - 6379
     container_name: redis
   gateway:
-    restart: always
-    image: mhart/alpine-node:10.0.0
+    restart: unless-stopped
+    image: mhart/alpine-node:10.1.0
     container_name: gateway
     build:
       context: ./
@@ -46,13 +46,15 @@ services:
       - 3100
     volumes:
       - ./server-gateway/src:/usr/src/app/server-gateway/src
-      - ./shared:/usr/src/app/shared
       - ./tradejs.config.js:/usr/src/app/tradejs.config.js
       - ./tradejs.config.custom.js:/usr/src/app/tradejs.config.custom.js
-    links:
-      - redis
+      - ./images:/usr/src/app/images
+      - /usr/src/app/server-gateway/node_modules
+      - /usr/src/app/shared/node_modules
+    # links:
+    #   - redis
   cache:
-    restart: always
+    restart: unless-stopped
     image: cache
     container_name: "cache"
     build:
@@ -61,14 +63,16 @@ services:
     ports:
       - 3001
     volumes:
-      - ./server-cache:/usr/src/app/server-cache
+      - ./server-cache/src:/usr/src/app/server-cache/src
       - ./tradejs.config.js:/usr/src/app/tradejs.config.js
       - ./tradejs.config.custom.js:/usr/src/app/tradejs.config.custom.js
+      - /usr/src/app/server-cache/node_modules
+      - /usr/src/app/shared/node_modules
     links:
       - redis
       - mongodb
   user:
-    restart: always
+    restart: unless-stopped
     image: user
     container_name: user
     build:
@@ -77,14 +81,16 @@ services:
     ports:
       - 3008
     volumes:
-      - ./server-user:/usr/src/app/server-user
+      - ./server-user/src:/usr/src/app/server-user/src
       - ./tradejs.config.js:/usr/src/app/tradejs.config.js
       - ./tradejs.config.custom.js:/usr/src/app/tradejs.config.custom.js
+      - /usr/src/app/server-user/node_modules
+      - /usr/src/app/shared/node_modules
     links:
       - redis
       - mongodb
   notify:
-    restart: always
+    restart: unless-stopped
     image: notify
     container_name: notify
     build:
@@ -93,14 +99,16 @@ services:
     ports:
       - 3010
     volumes:
-      - ./server-notify:/usr/src/app/server-notify
+      - ./server-notify/src:/usr/src/app/server-notify/src
       - ./tradejs.config.js:/usr/src/app/tradejs.config.js
       - ./tradejs.config.custom.js:/usr/src/app/tradejs.config.custom.js
+      - /usr/src/app/server-notify/node_modules
+      - /usr/src/app/shared/node_modules
     links:
       - redis
       - mongodb
   comment:
-    restart: always
+    restart: unless-stopped
     image: comment
     container_name: comment
     build:
@@ -109,14 +117,16 @@ services:
     ports:
       - 3009
     volumes:
-      - ./server-comment:/usr/src/app/server-comment
+      - ./server-comment/src:/usr/src/app/server-comment/src
       - ./tradejs.config.js:/usr/src/app/tradejs.config.js
       - ./tradejs.config.custom.js:/usr/src/app/tradejs.config.custom.js
+      - /usr/src/app/server-comment/node_modules
+      - /usr/src/app/shared/node_modules
     links:
       - redis
       - mongodb
   event:
-    restart: always
+    restart: unless-stopped
     image: event
     container_name: event
     build:
@@ -125,14 +135,15 @@ services:
     ports:
       - 3011
     volumes:
-      - ./server-event:/usr/src/app/server-event
+      - ./server-event/src:/usr/src/app/server-event/src
       - ./tradejs.config.js:/usr/src/app/tradejs.config.js
       - ./tradejs.config.custom.js:/usr/src/app/tradejs.config.custom.js
+      - /usr/src/app/server-event/node_modules
+      - /usr/src/app/shared/node_modules
     links:
       - redis
       - mongodb
   client:
-    # working_dir: /usr/src/app/client/
     image: client
     container_name: client
     build:
@@ -141,12 +152,8 @@ services:
     volumes:
       - ./client/src:/usr/src/app/client/src
       - ./client/dist:/usr/src/app/client/dist
-      # - ./client/src:/usr/src/app/client/src
-      # - ./client/www:/usr/src/app/client/www
-#      - ./client:/usr/src/app/client
       - ./shared:/usr/src/app/shared
       - /usr/src/app/client/node_modules
-      # - /usr/src/app/client/node_modules
   client-app:
     image: client-app
     container_name: client-app

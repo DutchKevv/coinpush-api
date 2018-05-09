@@ -1,7 +1,12 @@
-FROM mhart/alpine-node:10.0.0
+FROM mhart/alpine-node:10.1.0
 
-WORKDIR /usr/src/app/shared
-COPY /shared .
+# shared
+WORKDIR /usr/src/app/shared/modules/coinpush
+COPY /shared/modules/coinpush .
+RUN npm i
 
-WORKDIR /usr/src/app/server-event/
-COPY /server-event .
+# server
+WORKDIR /usr/src/app/server-event
+COPY /server-event/package*.json /server-event/tsconfig.json /server-event/index.ts ./
+RUN npm i
+COPY /server-event/src ./src

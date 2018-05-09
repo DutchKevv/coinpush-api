@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const win = require("winston");
-const path = require("path");
-const fs = require("fs");
-const mkdirp = require("mkdirp");
-const PATH_SERVER_LOG = path.join(__dirname, '..', '..', '..', '..', '_log'), PATH_SERVER_LOG_FILE = path.join(PATH_SERVER_LOG, 'server.txt'), OWNER_MIN_LENGTH = 20;
+var win = require("winston");
+var path = require("path");
+var fs = require("fs");
+var mkdirp = require("mkdirp");
+var PATH_SERVER_LOG = path.join(__dirname, '..', '..', '..', '..', '_log'), PATH_SERVER_LOG_FILE = path.join(PATH_SERVER_LOG, 'server.txt'), OWNER_MIN_LENGTH = 20;
 if (!fs.existsSync(PATH_SERVER_LOG)) {
     mkdirp.sync(PATH_SERVER_LOG);
 }
@@ -14,7 +14,7 @@ function ensureStringLength(str) {
     }
     return str;
 }
-const logger = new win.Logger({
+var logger = new win.Logger({
     transports: [
         new win.transports.File({
             level: 'info',
@@ -34,14 +34,26 @@ const logger = new win.Logger({
     exitOnError: false
 });
 exports.log = {
-    info(owner, ...params) {
-        logger.info(ensureStringLength(owner) + ' : ', ...params);
+    info: function (owner) {
+        var params = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            params[_i - 1] = arguments[_i];
+        }
+        logger.info.apply(logger, [ensureStringLength(owner) + ' : '].concat(params));
     },
-    warn(owner, ...params) {
-        logger.warn(ensureStringLength(owner) + ' : ', ...params);
+    warn: function (owner) {
+        var params = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            params[_i - 1] = arguments[_i];
+        }
+        logger.warn.apply(logger, [ensureStringLength(owner) + ' : '].concat(params));
     },
-    error(owner, ...params) {
-        logger.error(ensureStringLength(owner) + ' : ', ...params);
+    error: function (owner) {
+        var params = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            params[_i - 1] = arguments[_i];
+        }
+        logger.error.apply(logger, [ensureStringLength(owner) + ' : '].concat(params));
     }
 };
 //# sourceMappingURL=util.log.js.map

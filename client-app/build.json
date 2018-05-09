@@ -1,6 +1,6 @@
 {
     "android": {
-        "release2": {
+        "release": {
             "keystore": "key.keystore",
             "storePassword": "Halo33221",
             "alias": "TradeJS",

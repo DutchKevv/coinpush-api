@@ -20,94 +20,34 @@ services:
   mongodb:
     ports:
       - 27017
-  client:
-    environment:
-      - NODE_ENV=production
-    command:
-      - /bin/sh
-      - -c
-      - |
-          npm i --only=production
-          npm run build
-    volumes:
-      - /usr/src/app/client/node_modules
   gateway:
     environment:
       - NODE_ENV=production
-    command:
-      - /bin/sh
-      - -c
-      - |
-          npm run install-shared
-          npm i --only=production
-          npm run build
-          npm run prod
-    volumes:
-      - ./images:/usr/src/app/images
-      - /usr/src/app/server-gateway/node_modules
+    command: sh -c "npm run build && npm run prod"
   cache:
     environment:
       - NODE_ENV=production
-    command:
-      - /bin/sh
-      - -c
-      - |
-          npm run install-shared
-          npm i --only=production
-          npm run build
-          npm run prod
-    volumes:
-      - /usr/src/app/server-cache/node_modules
+    command: sh -c "npm run build && npm run prod"
   event:
     environment:
       - NODE_ENV=production
-    command:
-      - /bin/sh
-      - -c
-      - |
-          npm run install-shared
-          npm i --only=production
-          npm run build
-          npm run prod
-    volumes:
-      - /usr/src/app/server-event/node_modules
+    command: sh -c "npm run build && npm run prod"
   notify:
     environment:
       - NODE_ENV=production
-    command:
-      - /bin/sh
-      - -c
-      - |
-          npm run install-shared
-          npm i --only=production
-          npm run build
-          npm run prod
-    volumes:
-      - /usr/src/app/server-notify/node_modules
+    command: sh -c "npm run build && npm run prod"
   user:
     environment:
       - NODE_ENV=production
-    command:
-      - /bin/sh
-      - -c
-      - |
-          npm run install-shared
-          npm i --only=production
-          npm run build
-          npm run prod
-    volumes:
-      - /usr/src/app/server-user/node_modules
+    command: sh -c "npm run build && npm run prod"
   comment:
     environment:
       - NODE_ENV=production
-    command:
-      - /bin/sh
-      - -c
-      - |
-          npm run install-shared
-          npm i --only=production
-          npm run build
-          npm run prod
+    command: sh -c "npm run build && npm run prod"
     volumes:
       - /usr/src/app/server-comment/node_modules
+  client:
+    environment:
+      - NODE_ENV=production
+    command: npm run build
   

@@ -15,7 +15,7 @@ const READ_COUNT_DEFAULT = 2000;
  */
 export const dataLayer = {
 
-	async read(params: {symbol: string, timeFrame: string, from?: number, until?: number, count?: number | string, fields?: any, toArray?: boolean }): Promise<NodeBuffer | Float64Array> {
+	async read(params: {symbol: string, timeFrame: string, from?: number, until?: number, count?: number | string, fields?: any, toArray?: boolean }): Promise<any> {
 
 		// symbol required
 		if (!params.symbol || typeof params.symbol !== 'string')

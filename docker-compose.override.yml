@@ -13,72 +13,38 @@ services:
       - ./server-nginx/pages:/usr/src/app/server-nginx/pages
     environment:
       ENV: dev
-    # command: sh -c "envsubst \"`env | awk -F = '{printf \" $$%s\", $$1}'`\" < /etc/nginx/nginx.conf > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"
+    command: sh -c "envsubst \"`env | awk -F = '{printf \" $$%s\", $$1}'`\" < /etc/nginx/nginx.conf > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"
   mongodb:
     ports:
       - "27017:27017"
   cache:
     environment:
       - NODE_ENV=development
-    command:
-      - /bin/sh
-      - -c
-      - |
-          npm run install-shared
-          npm i
-          npm start
+    command: npm start
   gateway:
     environment:
       - NODE_ENV=development
-    command:
-      - npm start
-    volumes:
-      - ./images:/usr/src/app/images
+    command: npm start
   user:
     environment:
       - NODE_ENV=development
-    command:
-      - /bin/sh
-      - -c
-      - |
-          npm run install-shared
-          npm i
-          npm run start
+    command: npm start
   comment:
     environment:
       - NODE_ENV=development
-    command:
-      - /bin/sh
-      - -c
-      - |
-          npm run install-shared
-          npm i
-          npm run start
+    command: npm start
   event:
     environment:
       - NODE_ENV=development
-    command:
-      - /bin/sh
-      - -c
-      - |
-          npm run install-shared
-          npm i
-          npm run start
+    command: npm start
   notify:
     environment:
       - NODE_ENV=development
-    command:
-      - /bin/sh
-      - -c
-      - |
-          npm run install-shared
-          npm i
-          npm run start
+    command: npm start
   client:
     environment:
       - NODE_ENV=development
-    command:
-      - npm start
+    command: npm start
   client-app:
     environment:
       - NODE_ENV=development

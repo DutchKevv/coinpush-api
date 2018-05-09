@@ -25,7 +25,7 @@ export const cacheController = {
 	 * can return candles as Float64Array or as raw buffer
 	 * @param params 
 	 */
-	find(params: { symbol: string, timeFrame: string, from?: number, until?: number, count?: number, toArray?: boolean }): Promise<Float64Array | NodeBuffer> {
+	find(params: { symbol: string, timeFrame: string, from?: number, until?: number, count?: number, toArray?: boolean }): Promise<any> {
 		return dataLayer.read(params);
 	},
 

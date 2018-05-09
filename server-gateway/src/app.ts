@@ -37,10 +37,10 @@ export const app = {
 	_socketTickIntervalTime: 500,
 
 	async init(): Promise<void> {
-		await this._setRedisListeners();
+		this._setRedisListeners();
 
 		// load symbols
-		await symbolController.init();
+		symbolController.init();
 
 		this._toggleWebSocketTickInterval();
 
@@ -48,7 +48,7 @@ export const app = {
 		this._setupApi();
 	},
 
-	async _setRedisListeners() {
+	_setRedisListeners() {
 		// if (!subClient.isConnected) {
 		// 	await new Promise((resolve, reject) => {
 		// 		subClient.on("connect", function () {

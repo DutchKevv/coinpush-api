@@ -1,15 +1,9 @@
 {
   "compilerOptions": {
-    "baseUrl": "./",
-    "rootDir": "./src",
     "target": "es2017",
     "lib": ["esnext"],
+    "moduleResolution": "node",
     "module": "commonjs",
-    "pretty": true,
-    "paths": {
-      "coinpush/*": [
-        "../shared/modules/coinpush/*"
-      ]
-    }
+    "pretty": true
   }
 }
