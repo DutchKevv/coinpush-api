@@ -46,6 +46,7 @@ services:
       - 3100
     volumes:
       - ./server-gateway:/usr/src/app/server-gateway
+      - ./shared:/usr/src/app/shared
       - ./tradejs.config.js:/usr/src/app/tradejs.config.js
       - ./tradejs.config.custom.js:/usr/src/app/tradejs.config.custom.js
     links:

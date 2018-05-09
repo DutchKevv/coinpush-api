@@ -34,8 +34,6 @@ services:
       - /bin/sh
       - -c
       - |
-          # npm run install-shared
-          # npm i
           npm start
   client-app:
     environment:
@@ -57,7 +55,7 @@ services:
       - /bin/sh
       - -c
       - |
-          npm run install-shared
+          # npm run install-shared
           npm i
           npm run start
     volumes:
