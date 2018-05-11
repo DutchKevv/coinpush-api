@@ -246,7 +246,7 @@ const HighstockTheme = {
     chart: {
         pinchType: 'x',
         marginLeft: 4,
-        marginTop: 1,
+        marginTop: 5,
         marginBottom: 25,
         backgroundColor: {
             linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },

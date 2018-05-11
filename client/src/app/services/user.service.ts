@@ -12,13 +12,13 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 export class UserService {
 
 	public model: UserModel = new UserModel(app.user || {
-        name: 'Anonymous',
-        img: '/assets/image/default-profile.jpg'
-    });
+		name: 'Anonymous',
+		img: '/assets/image/default-profile.jpg'
+	});
 
 	constructor(
 		private _http: HttpClient,
-		private _alertService: AlertService) {}
+		private _alertService: AlertService) { }
 
 	findById(id: string, options: any = {}): Promise<UserModel> {
 		const params = new HttpParams({
@@ -40,25 +40,22 @@ export class UserService {
 	}
 
 	async update(changes, toServer = true, showAlert: boolean = true) {
-		this.model.set(changes);
+		try {
+			this.model.set(changes);
 
-		if (toServer) {
-			try {
+			if (toServer) {
 				await this._http.put('/user/' + this.model.get('_id'), changes).toPromise();
-				await app.updateStoredUser(this.model.options);
-
-				if (showAlert)
-					this._alertService.success('Settings saved');
-			} catch (error) {
-				console.error(error);
-				this._alertService.error('Error saving settings')
 			}
-		}
-		else {
+			
 			await app.updateStoredUser(this.model.options);
-
-			if (showAlert)
+			
+			if (showAlert) {
 				this._alertService.success('Settings saved');
+			}
+		} catch (error) {
+			console.error(error);
+			this._alertService.error('Error saving settings');
+			throw error;
 		}
 	}
 
@@ -66,11 +63,11 @@ export class UserService {
 		try {
 			const result = await this._http.post('/favorite', {
 				symbol: symbol.options.name,
-				state: !symbol.options.iFavorite 
-			}, {responseType: "text"}).toPromise();
+				state: !symbol.options.iFavorite
+			}, { responseType: "text" }).toPromise();
 
 			symbol.options.iFavorite = !symbol.options.iFavorite;
-			
+
 		} catch (error) {
 			console.error(error);
 		}

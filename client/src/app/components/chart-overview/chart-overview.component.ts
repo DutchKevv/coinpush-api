@@ -7,6 +7,7 @@ import {
 	OnDestroy,
 	ApplicationRef,
 	EventEmitter,
+	ViewEncapsulation
 } from '@angular/core';
 
 import { SymbolModel } from "../../models/symbol.model";
@@ -18,12 +19,14 @@ import { SYMBOL_CAT_TYPE_FOREX, SYMBOL_CAT_TYPE_RESOURCE, SYMBOL_CAT_TYPE_CRYPTO
 import { NgForm } from '@angular/forms';
 import { app } from '../../../core/app';
 import { EventService } from '../../services/event.service';
+import { InstrumentList } from './instrument-list';
 
 @Component({
 	selector: 'chart-overview',
 	templateUrl: './chart-overview.component.html',
 	styleUrls: ['./chart-overview.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	// encapsulation: ViewEncapsulation.None
 })
 
 export class ChartOverviewComponent implements OnInit, OnDestroy {
@@ -31,6 +34,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 	@ViewChild('filter') filterRef: ElementRef;
 	@ViewChild('chart') chartRef: ElementRef;
 	@ViewChild('instrumentList') instrumentList: ElementRef;
+	@ViewChild('grid') grid: ElementRef;
 
 	@Output() filterChange: EventEmitter<boolean> = new EventEmitter();
 
@@ -46,6 +50,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 	private _filterSub;
 	private _priceChangeSub;
 	private _eventSub;
+	private _instrumentList: InstrumentList = new InstrumentList(this.cacheService);
 
 	constructor(
 		public userService: UserService,
@@ -176,6 +181,11 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 			default:
 				this.symbols = [];
 		}
+
+		// console.log(this._instrumentList.build(this.symbols));
+		// this.grid.nativeElement.parentNode.replaceChild(this._instrumentList.build(this.symbols), this.grid.nativeElement)
+		// this.grid.nativeElement.appendChild(this._instrumentList.build(this.symbols));
+		// this.grid.nativeElement.appendChild(this._instrumentList.build(this.symbols));
 
 		this.activeSymbol = null;
 		this.scrollToTop();

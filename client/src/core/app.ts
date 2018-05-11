@@ -117,8 +117,9 @@ export class App extends MicroEvent {
 
     public async init(): Promise<void> {
         this.prettyBootty.step('config');
-
         this.address = getAddress();
+
+        await this.storage.init();
         await this._loadStoredUser();
 
         this.prettyBootty.step('data', 0);
@@ -256,9 +257,9 @@ export class App extends MicroEvent {
         });
     }
 
-    public async updateStoredUser(user = this.user): Promise<void> {
+    public updateStoredUser(user = this.user): Promise<void> {
         this.user = user;
-        await this.storage.set('current-user', user);
+        return this.storage.set('current-user', user);
     }
 
     public async removeStoredUser(): Promise<void> {

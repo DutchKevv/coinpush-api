@@ -29,21 +29,6 @@ export class UpdateService {
         if (!app.platform.isApp)
             return;
 
-
-        window.updateApp();
-    }
-
-    async find(): Promise<any> {
-        const results = await Promise.all(
-            [
-                // $.get(`https://newsapi.org/v2/top-headlines?sources=bloomberg&apiKey=${API_KEY}`),
-                // $.get(`https://newsapi.org/v2/everything?q=bitcoin&sortBy=publishedAt&apiKey=${API_KEY}`)
-            ]
-        );
-
-        return {
-            top: results[0].articles,
-            crypto: results[1].articles
-        }
+        // window.updateApp();
     }
 }

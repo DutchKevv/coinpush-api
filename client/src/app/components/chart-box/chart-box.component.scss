@@ -63,14 +63,15 @@
 }
 
 .dropdown select {
-    margin: 2px 5px;
+    margin: 2px 10px 2px 0px;
     min-width: 80px;
     max-width: 80px;
     background-color: #000000;
     color: white;
     height: 20px;
     line-height: 20px;
-    font-size: 13px;
+    font-size: 14px;
+    border-radius: 0;
 }
 
 .btn-menu {
@@ -136,7 +137,7 @@
 
 .indicator-button {
     line-height: 24px;
-    padding: 0 20px;
+    padding: 0 5px;
     user-select: none;
     
     &.active {
@@ -159,8 +160,8 @@
         
         .fa-arrow-left {
             color: white;
-            font-size: 30px;
-            margin: 0 10px 10px 10px;
+            font-size: 20px;
+            margin: 5px 10px 10px 10px;
             float: left;
         }
 

@@ -6,6 +6,9 @@
     <div class="notification-drop-down-header">
         <a (click)="onClickMarkAllAsRead($event)">mark all as read</a>
     </div>
+    <!-- <div *ngIf="(notifications$ | async).length === 0">
+        No notifications. Get active!
+    </div> -->
     <div class="notification-drop-down-item" *ngFor="let notification of notifications$ | async" [ngClass]="{unread: !notification.isRead}">
         <a [routerLink]="['/user/' + notification.fromUserId._id]" *ngIf="notification.type === 'user-follow'" (click)="onClickNotification($event, notification)">
             <img src="{{notification.fromUserId.img | NormalizeImgUrl: 'user'}}">

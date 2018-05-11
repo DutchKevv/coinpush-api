@@ -201,7 +201,7 @@
                 document.addEventListener("deviceready", function callback() {
                     document.removeEventListener('deviceready', callback, false);
                     window.runningInCordova = true;
-                    window.open = cordova.InAppBrowser.open;
+                    // window.open = cordova.InAppBrowser.open;
                     window.platform.isReady = true;;
                     resolve();
                 }, false);

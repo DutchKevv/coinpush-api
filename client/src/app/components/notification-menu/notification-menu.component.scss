@@ -9,7 +9,7 @@
 :host {
     min-width: 36px;
     text-align: left;
-    margin-right: 10px;
+    margin-right: 6px;
 }
 
 .globe-container {
@@ -17,7 +17,8 @@
     display: block;
 
     .fa-globe {
-        font-size: 32px;
+        font-size: 34px;
+        margin-top: -2px;
     }
 
     @media only screen and (min-width : 992px) {

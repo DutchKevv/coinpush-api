@@ -30,6 +30,7 @@ header {
     display: flex;
     flex-shrink: 0;
     border-bottom: 1px solid $border-color-grey;
+    border-top: 1px solid $border-color-grey;
     height: 40px;
     background: black;
     z-index: 2;
@@ -74,13 +75,13 @@ header {
     .fa-navicon {
         font-size: 40px;
         margin-top: 0px;
-        margin-right: 10px;
+        margin-right: 6px;
     }
 
     .fa-filter {
         font-size: 38px;
-        margin-left: 6px;
-        margin-top: 2px;
+        margin-left: 0px;
+        margin-top: 0px;
     }
 
     .fa-ellipsis-v,
@@ -92,7 +93,7 @@ header {
     .fa-search {
         margin-right: 5px;
         font-size: 32px;
-        margin-top: 1px;
+        margin-top: 0px;
     }
 
     .search-container {

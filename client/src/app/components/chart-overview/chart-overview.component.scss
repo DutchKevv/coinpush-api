@@ -2,6 +2,7 @@
 @import '~bootstrap/scss/_variables';
 @import '~bootstrap/scss/_mixins';
 @import '~bootstrap/scss/utilities/_display';
+@import '~bootstrap/scss/utilities/_clearfix';
 
 @import '../../style/variables/variables';
 @import '../../style/helpers/normalize';
@@ -30,10 +31,9 @@
     width: 100%;
     background: $background-light;
 	font-size: 12px;
-    position: relative;
     
     &.split {
-        height: 42%;
+        height: 50%;
     }
     
     @media only screen and (min-width : 992px) { 
@@ -123,7 +123,7 @@
 	background: $background-th;
 	color: white;
 	padding: 5px 0;
-    height: auto !important;
+    height: 30px !important;
 
     h4 {
         margin: 0;
@@ -171,19 +171,39 @@
         display: block;
     }
 
-    h2 {
-        padding-bottom: 4px;
+    .filter-list-options {
+        h2 {
+            padding-bottom: 4px;
+        }
+    
+        a {
+            padding: 10px 20px;
+            display: block;
+            font-size: 14px;
+            
+            &:hover,
+            &.active {
+                background: $general-active;
+            }
+        }
     }
 
-	a {
-		padding: 10px 20px;
-		display: block;
-        font-size: 14px;
+    .back-button-container {
         
-		&:hover,
-		&.active {
-			background: $general-active;
-		}
+        .fa-arrow-left {
+            color: white;
+            font-size: 20px;
+            margin: 5px 10px 10px 0px;
+        }
+    
+        h2 {
+            line-height: 30px;
+            margin-left: 20px;
+        }
+    
+        // @media screen and (min-width: 768px) {
+        //     display: none;
+        // }
     }
     
     @media only screen and (min-width : 992px) {
@@ -201,7 +221,7 @@
 }
 
 app-chart-box {
-    height: 58%;
+    height: 50%;
     // height: 100%;
     width: 100%;
     background: $background-dark;
