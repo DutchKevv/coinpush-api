@@ -110,7 +110,7 @@ export class AuthenticationService {
 
 			if (reload) {
 				if (app.platform.isApp) {
-					window.location = 'file:///android_asset/www/index.html';
+					window.location = 'index.html';
 				} else {
 					window.location.reload();
 				}

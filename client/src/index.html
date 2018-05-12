@@ -6,7 +6,8 @@
     <base href="./">
     <meta charset="utf-8">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="viewport" content="width=device-width, height=device-height, user-scalable=no, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <!-- <meta name="viewport" content="width=device-width, height=device-height, user-scalable=no, initial-scale=1, minimum-scale=1, maximum-scale=1"> -->
+    <meta name="viewport" content="initial-scale=1, width=device-width, height=device-height, viewport-fit=cover">
     <meta name="robots" content="noindex, nofollow">
     <meta name="googlebot" content="noindex, nofollow">
 
@@ -23,7 +24,8 @@
             background: #222122;
             margin: 0;
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-            overflow: hidden;
+            margin-top: constant(safe-area-inset-top);
+            margin-top: env(safe-area-inset-top);
         }
 
         /* browser not supported */
@@ -126,7 +128,6 @@
         (adsbygoogle = window.adsbygoogle || []).push({});
     </script> -->
 
-
     <div id="preload-box" class="fade-out">
         <h4>Crypto, Forex, Resources you name it...</h4>
         <div id="initialProgressBar">
@@ -134,13 +135,14 @@
             <div>&nbsp;</div>
         </div>
     </div>
+
     <app>
         <i class="font-awesome-preload-trigger fa fa-square-o"></i>
     </app>
 
+    <!-- inject:js:cordova -->
+
     <script>
-
-
         // is browser supported
         (function () {
             window.BROWSERSUPPORTED = function () {
@@ -168,8 +170,9 @@
                 isReady$: Promise.resolve(),
                 version: '',
                 isSecure: location.protocol === 'https:',
-                isApp: !!window['_cordovaNative'],
-                isEmulator: navigator.platform === 'Linux i686',
+                isApp: document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1,
+                // isApp: !!window['_cordovaNative'],
+                
                 isLocal: document.URL.indexOf('file://') > -1
             };
 
@@ -199,26 +202,17 @@
             // device ready listener
             window.platform.isReady$ = new Promise((resolve, reject) => {
                 document.addEventListener("deviceready", function callback() {
+                    window.platform.isEmulator = (device && device.isVirtual) || navigator.platform === 'Linux i686',
                     document.removeEventListener('deviceready', callback, false);
-                    window.runningInCordova = true;
-                    // window.open = cordova.InAppBrowser.open;
                     window.platform.isReady = true;;
                     resolve();
                 }, false);
             });
 
-            // cordova script
-            let script = document.createElement('script');
-            script.src = 'cordova.js';
-            document.head.appendChild(script);
-
             // special root class
             document.body.querySelector('app').classList.add('app');
-
-
         })();
     </script>
-    <!-- <script type="text/javascript" server="0.0.0.0" manifest="manifest.json" src="bootstrap.js"></script> -->
 </body>
 
 </html>

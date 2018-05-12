@@ -12,7 +12,9 @@
     width: 100%;
 
     &.app {
-        padding-bottom: 52px;
+        position: relative;
+        padding-bottom: 50px;
+        padding-bottom: calc(env(safe-area-inset-bottom) + 60px);
     }
 }
 
@@ -73,13 +75,13 @@ header {
     }
 
     .fa-navicon {
-        font-size: 40px;
+        font-size: 36px;
         margin-top: 0px;
         margin-right: 6px;
     }
 
     .fa-filter {
-        font-size: 38px;
+        font-size: 36px;
         margin-left: 0px;
         margin-top: 0px;
     }

@@ -11,19 +11,21 @@
   "main": "index.js",
   "scripts": {
     "build-mobile": "npm run copy-www && cordova build --no-inc",
-    "build-android": "npm run copy-www && npm run cp-pp-file && cordova build android --inc-version",
-    "build-ios": "npm run copy-www && cordova build ios --no-inc",
-    "build-mobile-release": "npm run copy-www && cordova build --release --inc-version",
-    "build-android-release": "npm run copy-www && npm run cp-pp-file && cordova build android --release --inc-version",
-    "build-ios-release": "npm run copy-www && npm run clean && cordova build ios --release --inc-version",
-    "emulate-android": "npm run copy-www && npm run cp-pp-file && cordova emulate android",
-    "emulate-ios": "npm run copy-www && cordova emulate ios",
-    "run-android": "npm run copy-www && cordova run android",
-    "run-ios": "npm run copy-www && cordova run ios",
+    "build-android": "npm run prepare-build && cordova build android --inc-version",
+    "build-ios": "npm run prepare-build && cordova build ios --no-inc",
+    "build-mobile-release": "npm run prepare-build && cordova build --release --inc-version",
+    "build-android-release": "npm run prepare-build && cordova build android --release --inc-version",
+    "build-ios-release": "npm run prepare-build && cordova build ios --release --inc-version",
+    "emulate-android": "npm run prepare-build && cordova emulate android",
+    "emulate-ios": "npm run prepare-build && cordova emulate ios",
+    "run-android": "npm run prepare-build && cordova run android",
+    "run-ios": "npm run prepare-build && cordova run ios",
     "clean": "",
     "clean2": "cordova clean",
+    "prepare-build": "npm run copy-www && npm run cp-pp-file && npm run inject-cordova",
     "copy-www": "rm -rf ./www && ncp ./../client/dist/www ./www",
-    "cp-pp-file": "mkdir -p ./platforms/android && cp -rf project.properties ./platforms/android"
+    "cp-pp-file": "mkdir -p ./platforms/android && cp -rf project.properties ./platforms/android",
+    "inject-cordova": "cd ./scripts && node inject-scripts.js"
   },
   "author": "Apache Cordova Team",
   "license": "Apache-2.0",
@@ -32,9 +34,11 @@
     "cordova-android": "7.1.0",
     "cordova-android-support-gradle-release": "1.4.2",
     "cordova-browser": "5.0.3",
-    "cordova-ios": "4.5.4",
+    "cordova-ios": "^4.5.4",
     "cordova-plugin-admobpro": "2.31.5",
     "cordova-plugin-badge": "0.8.7",
+    "cordova-plugin-device": "^2.0.2",
+    "cordova-plugin-disable-ios11-statusbar": "^1.0.0",
     "cordova-plugin-extension": "1.5.4",
     "cordova-plugin-facebook4": "2.1.0",
     "cordova-plugin-file": "6.0.1",
@@ -45,6 +49,7 @@
     "cordova-plugin-x-toast": "2.6.2",
     "cordova-support-google-services": "1.1.0",
     "cordova-webintent": "git+https://github.com/cordova-misc/cordova-webintent.git",
+    "front-end-dependency-inject": "^1.0.6",
     "localforage": "1.7.1",
     "ncp": "2.0.0",
     "phonegap-facebook-plugin": "0.12.0",
@@ -72,11 +77,13 @@
       "cordova-plugin-file-opener2": {},
       "cordova-android-support-gradle-release": {
         "ANDROID_SUPPORT_VERSION": "27.+"
-      }
+      },
+      "cordova-plugin-device": {},
+      "cordova-plugin-disable-ios11-statusbar": {}
     },
     "platforms": [
-      "ios",
-      "android"
+      "android",
+      "ios"
     ]
   }
 }

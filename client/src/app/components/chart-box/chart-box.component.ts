@@ -138,10 +138,11 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 		if (!this.symbolModel)
 			return;
 
+		this._fetchCandles();
+
 		requestAnimationFrame(() => {
-			this._fetchCandles();
-			this._createChart();
-		});
+			this._destroyChart();
+		});	
 	}
 
 	/**
@@ -178,7 +179,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 					align: 'right',
 					textAlign: 'left',
 					y: 4,
-					x: 2
+					x: 1
 				}
 			};
 
@@ -262,8 +263,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	 */
 	public toggleTimeFrame(timeFrame: string) {
 		this.timeFrame = timeFrame;
-		this._fetchCandles();
-		this._chart.series.forEach(serie => serie.setData([], false));
+		this.init();
 	}
 
 	/**
@@ -308,9 +308,6 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	private _createChart() {
 
 		this._zone.runOutsideAngular(() => {
-			if (this._chart)
-				this._destroyChart();
-
 			var self = this;
 			this._chart = HighStock.chart(this.chartRef.nativeElement, {
 				xAxis: [
@@ -370,18 +367,21 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 						id: SERIES_MAIN_NAME,
 						type: this.graphType,
 						name: this.symbolModel.options.displayName,
+						// data: [],
 						data: this._data.candles,
 						cropThreshold: 0
 					},
 					{
+						id: SERIES_VOLUME_NAME,
 						type: 'column',
 						name: SERIES_VOLUME_NAME,
+						// data: [],
 						data: this._data.volume,
 						yAxis: 1
 					},
 					...this.indicatorService.indicators
 				]
-			}, false);
+			}, false, false);
 		});
 	}
 
@@ -413,12 +413,18 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 		});
 	}
 
+	/**
+	 * 
+	 */
 	private _fetchCandles() {
 
 		this._zone.runOutsideAngular(async () => {
 			this._toggleError(false);
+			let success = false;
 
 			try {
+				success = true;
+
 				this._prepareData(await this._cacheService.read({
 					symbol: this.symbolModel.options.name,
 					timeFrame: this.timeFrame,
@@ -426,23 +432,34 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 					offset: this._offset
 				}));
 
-				this._toggleLoading(false);
+				// this._chart.series[0].setData(this._data.candles, false);
+				// this._chart.series[1].setData(this._data.volume, false);
 
-				this._onPriceChange(false); // asign current price to latest candle
-
-				this._chart.series[0].setData(this._data.candles, false);
-				this._chart.series[1].setData(this._data.volume, false);
-
-				this._updateCurrentPricePlot();
-				this._updateAlarms();
-				this._updateViewPort(0, true);
 			} catch (error) {
 				console.log('error error error', error);
 				this._toggleError(true);
 			}
+
+			if (success) {
+				
+				if (!this._chart) {
+					this._createChart();
+				}
+
+				this._onPriceChange(false); // asign current price to latest candle
+				this._updateCurrentPricePlot();
+				this._updateAlarms();
+				this._updateViewPort(0, true);
+				this._toggleLoading(false);
+			}
 		});
 	}
 
+	/**
+	 * 
+	 * @param events 
+	 * @param render 
+	 */
 	private _updateAlarms(events: Array<EventModel> = this._eventService.events$.getValue(), render: boolean = false) {
 		if (!this._chart)
 			return;
@@ -536,8 +553,8 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 
 	private _buildLabelEl() {
 		const labelHTML = `
-				<div style="position: absolute; left: 0; float: left; width: 0; height: 0; border-top: 7px solid transparent; border-bottom: 7px solid transparent; border-right: 7px solid blue;"></div>
-				<span style="position: absolute; left: 7px; color: black; font-size: 12px; padding-right: 2px;"></span>
+				<div style="position: absolute; left: 0; float: left; width: 0; height: 0; border-top: 7px solid transparent; border-bottom: 7px solid transparent; border-right: 5px solid blue;"></div>
+				<span style="position: absolute; left: 5px; color: black; font-size: 11px; padding-right: 2px;"></span>
 		`
 		this._labelEl = document.createElement('div');
 		this._labelEl.innerHTML = labelHTML;
@@ -574,13 +591,13 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 			];
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @param state 
 	 */
 	private _toggleLoading(state?: boolean) {
-		// this.loadingRef.nativeElement.classList.toggle('active', !!state);
+		this.loadingRef.nativeElement.classList.toggle('active', !!state);
 	}
 
 	private _toggleError(state: boolean) {
@@ -589,8 +606,9 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	}
 
 	private _destroyChart(destroyData: boolean = true) {
-		if (this._chart)
+		if (this._chart) {
 			this._chart.destroy();
+		}
 
 		this._chart = null;
 		this._scrollOffset = -1;

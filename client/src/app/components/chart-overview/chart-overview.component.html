@@ -1,4 +1,4 @@
-<div class="instrument-list-outer" [ngClass]="{split: !!activeSymbol}">
+<div class="instrument-list-outer">
     <div class="filter-list" #filter>
         <div class="back-button-container clearfix d-flex d-sm-none">
             <a class="fa fa-arrow-left"></a>
@@ -31,7 +31,7 @@
             <h4 class="col-changes">1h / 24h</h4>
             <div class="col-alert"></div>
         </a>
-        <a *ngFor="let symbol of symbols; trackBy:trackByFunc" [ngClass]="{'active': activeSymbol === symbol}" (click)="setActiveSymbol($event, symbol)">
+        <a *ngFor="let symbol of symbols; trackBy:trackByFunc" [ngClass]="{'active': activeSymbol === symbol}" (click)="setActiveSymbol($event, symbol)" [attr.data-symbol]="symbol.options.name">
             <i (click)="onClickToggleFavorite($event, symbol);" [ngClass]="{'active-icon': symbol.options.iFavorite}" class="fa fa-star col-bookmark"></i>
             <div class="col-instrument">
                 <span class="instrument-image symbol-img-{{symbol.options.name}}"></span>
@@ -66,4 +66,5 @@
         (onDestroy)="onDestroyTriggerMenu(); chart.removePlotLine('new-alarm')" (inputValueChange)="chart.updatePlotLine('new-alarm', $event, CUSTOM_EVENT_TYPE_ALARM_NEW, true)"></app-alarm-menu>
 </div>
 
+<!-- <app-chart-box #chart></app-chart-box> -->
 <app-chart-box #chart [symbolModel]="activeSymbol" class="hidden" [ngClass]="{hidden: !activeSymbol}"></app-chart-box>

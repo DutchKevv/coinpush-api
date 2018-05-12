@@ -190,7 +190,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 		this.activeSymbol = null;
 		this.scrollToTop();
 		this._changeDetectorRef.detectChanges();
-		
+
 		// if (this.symbols.length)
 		// this.setActiveSymbol(undefined, this.symbols[0]);
 	}
@@ -212,18 +212,15 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 			}
 		}
 
-		if (!this.activeSymbol) {
-			setTimeout(() => {
-				const el = this._elementRef.nativeElement.querySelector('.instrument-list a.active');
-				if (el && !this.isElementInViewport(el))
-					el.scrollIntoView();
-			}, 0);
-		}
-
 		this._applicationRef.components[0].instance.titleText$.next(symbol ? symbol.options.displayName : '');
 
 		this.activeSymbol = symbol;
 		this._changeDetectorRef.detectChanges();
+
+		if (symbol) {
+			const el = this._elementRef.nativeElement.querySelector(`.instrument-list [data-symbol=${symbol.options.name}]`);
+			this.scrollIntoView(el);
+		}
 	}
 
 	public scrollToTop() {
@@ -265,14 +262,13 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	private isElementInViewport(el) {
-		var rect = el.getBoundingClientRect();
-
-		return (
-			rect.top >= 0 &&
-			rect.left >= 0 &&
-			rect.bottom <= (el.parentNode.innerHeight)
-		);
+	private scrollIntoView(el): void {
+		const rect = el.getBoundingClientRect();
+		const isInView = (rect.top >= 0 && rect.left >= 0 && rect.bottom <= (el.parentNode.offsetHeight + el.offsetHeight));
+		
+		if (!isInView) {
+			el.parentNode.scrollTop = el.offsetTop - el.offsetHeight;
+		}
 	}
 
 	ngOnDestroy() {

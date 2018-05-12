@@ -71,10 +71,6 @@ export class InstrumentList {
             <i (click)="toggleAlarmMenu($event, symbol, true)" class="fa fa-bell col-alert" [ngClass]="{'active-icon': symbol.options.iAlarm}"></i>
             </a>`);
 
-            rowContainer.children[0].onclick = () => {
-
-            }
-
             // favorite btn
             const rowObj = {
                 el: rowContainer,

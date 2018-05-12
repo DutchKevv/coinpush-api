@@ -27,18 +27,13 @@
 }
 
 .instrument-list-outer {
-    height: 100%;
     width: 100%;
     background: $background-light;
-	font-size: 12px;
-    
-    &.split {
-        height: 50%;
-    }
-    
-    @media only screen and (min-width : 992px) { 
-        display: flex;
-    }
+    font-size: 12px;
+    flex: 0 50%;
+    flex-grow: 1;
+    display: flex;
+    position: relative;
 }
 
 .instrument-list {
@@ -221,8 +216,7 @@
 }
 
 app-chart-box {
-    height: 50%;
-    // height: 100%;
+    flex: 0 50%;
     width: 100%;
     background: $background-dark;
     display: flex;
