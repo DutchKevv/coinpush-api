@@ -10,6 +10,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { SocketService } from './services/socket.service';
 import { environment } from '../environments/environment';
 import { UpdateService } from './services/update.service';
+import { Location } from '@angular/common';
 
 declare let window: any;
 declare let navigator: any;
@@ -29,9 +30,10 @@ export class AppComponent implements OnInit, AfterViewInit {
 
 	@Input() public titleText$: Subject<string> = new Subject();
 
-	@ViewChild('dropdown') public dropdown;
-	@ViewChild('navbar') navbar: ElementRef;
-	@ViewChild('input') inputRef: ElementRef;
+	@ViewChild('header') public header: ElementRef;
+	@ViewChild('dropdown') public dropdown: ElementRef;
+	@ViewChild('navbar') public navbar: ElementRef;
+	@ViewChild('input') public inputRef: ElementRef;
 	@ViewChild('globeContainer') globeContainerRef: ElementRef;
 
 	public version = 'v0.0.2-alpha-' + (environment.production ? 'prod' : 'dev');
@@ -125,6 +127,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 		public activatedRoute: ActivatedRoute,
 		public userService: UserService,
 		public authenticationService: AuthenticationService,
+		private _location: Location,
 		private _changeDetectorRef: ChangeDetectorRef,
 		private _eventService: EventService,
 		private _updateService: UpdateService,
@@ -149,6 +152,10 @@ export class AppComponent implements OnInit, AfterViewInit {
 		if (this.userService.model.options._id) {
 			app.initNotifications().catch(console.error);
 		}
+
+		setTimeout(() => {
+			console.log(this.router);
+		}, 1000);
 	}
 
 	ngAfterViewInit() {
@@ -192,6 +199,10 @@ export class AppComponent implements OnInit, AfterViewInit {
 		this.toggleDropdownVisibility(false);
 	}
 
+	public onClickBackButton() {
+		this._location.back();
+	}
+
 	public toggleDropdownVisibility(state) {
 		if (this.dropdown) {
 			this.dropdown.nativeElement.classList.toggle('hidden', !state)
@@ -215,9 +226,11 @@ export class AppComponent implements OnInit, AfterViewInit {
 
 	public toggleSearch() {
 		this.searchOpen = !this.searchOpen;
+		this.header.nativeElement.classList.toggle('searchOpen', this.searchOpen);
+		this.inputRef.nativeElement.focus();
 
 		// wait until visible
-		setTimeout(() => this.inputRef.nativeElement.focus())
+		// requestAnimationFrame(() => this.inputRef.nativeElement.focus());
 	}
 
 	public onClickFilter(event?, state?: boolean) {
@@ -237,10 +250,6 @@ export class AppComponent implements OnInit, AfterViewInit {
 	private _updateNavPosition(distance: number) {
 		this._navBarPosition = Math.max(-this._navBarWidth, Math.min(0, distance));
 		this.navbar.nativeElement.style.transform = `translateX(${this._navBarPosition}px)`;
-	}
-
-	private _ba() {
-		window.plugins.toast.showLongBottom('Hello there!', (a) => { }, (error) => { alert('toast error: ' + error) })
 	}
 
 	private _onBackKeyDown(e) {

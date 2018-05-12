@@ -218,7 +218,11 @@ export class AuthenticationService {
 		await this.removeDevice();
 		await app.removeStoredUser();
 
-		window.location = app.platform.isApp ? 'file:///android_asset/www/index.html' : window.location.origin;
+		if (app.platform.isApp) {
+			window.location = 'index.html';
+		} else {
+			window.location.reload();
+		}
 	}
 
 	private _getDeviceToken() {

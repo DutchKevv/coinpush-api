@@ -93,6 +93,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	private _labelEl: any;
 
 	private _indicatorIdCounter = 0;
+	private _fetchSub = null;
 
 	public static readonly DEFAULT_CHUNK_LENGTH = 500;
 
@@ -132,17 +133,14 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	}
 
 	init() {
-		this._toggleError(false);
 		this._toggleLoading(true);
+		this._toggleError(false);
 
 		if (!this.symbolModel)
 			return;
 
 		this._fetchCandles();
-
-		requestAnimationFrame(() => {
-			this._destroyChart();
-		});	
+		this._destroyChart();
 	}
 
 	/**
@@ -418,30 +416,21 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	 */
 	private _fetchCandles() {
 
+		if (this._fetchSub)
+			this._fetchSub.unsubscribe();
+
 		this._zone.runOutsideAngular(async () => {
 			this._toggleError(false);
 			let success = false;
 
 			try {
-				success = true;
-
 				this._prepareData(await this._cacheService.read({
 					symbol: this.symbolModel.options.name,
 					timeFrame: this.timeFrame,
 					count: ChartBoxComponent.DEFAULT_CHUNK_LENGTH,
 					offset: this._offset
 				}));
-
-				// this._chart.series[0].setData(this._data.candles, false);
-				// this._chart.series[1].setData(this._data.volume, false);
-
-			} catch (error) {
-				console.log('error error error', error);
-				this._toggleError(true);
-			}
-
-			if (success) {
-				
+	
 				if (!this._chart) {
 					this._createChart();
 				}
@@ -450,10 +439,49 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 				this._updateCurrentPricePlot();
 				this._updateAlarms();
 				this._updateViewPort(0, true);
+
+				requestAnimationFrame(() => {
+					this._toggleLoading(false);
+				});
+			} catch (error) {
+				console.log('error error error', error);
 				this._toggleLoading(false);
+				this._toggleError(true);
 			}
 		});
 	}
+
+	// private _fetchCandles() {
+
+	// 	if (this._fetchSub)
+	// 		this._fetchSub.unsubscribe();
+
+	// 	this._zone.runOutsideAngular(async () => {
+	// 		this._toggleError(false);
+	// 		let success = false;
+
+	// 		this._fetchSub = this._cacheService.read({
+	// 			symbol: this.symbolModel.options.name,
+	// 			timeFrame: this.timeFrame,
+	// 			count: ChartBoxComponent.DEFAULT_CHUNK_LENGTH,
+	// 			offset: this._offset
+	// 		});
+
+	// 		this._fetchSub.subscribe(data => {
+	// 			this._prepareData(data);
+
+	// 			if (!this._chart) {
+	// 				this._createChart();
+	// 			}
+
+	// 			this._onPriceChange(false); // asign current price to latest candle
+	// 			this._updateCurrentPricePlot();
+	// 			this._updateAlarms();
+	// 			this._updateViewPort(0, true);
+	// 			this._toggleLoading(false);
+	// 		});
+	// 	});
+	// }
 
 	/**
 	 * 

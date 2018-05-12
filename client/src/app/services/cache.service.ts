@@ -4,6 +4,7 @@ import { UserService } from './user.service';
 import { app } from '../../core/app';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { SocketService } from './socket.service';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable({
 	providedIn: 'root',

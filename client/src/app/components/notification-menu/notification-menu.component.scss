@@ -7,9 +7,10 @@
 @import '../../style/helpers/normalize';
 
 :host {
-    min-width: 36px;
+    min-width: 50px;
     text-align: left;
-    margin-right: 6px;
+    padding-right: 10px;
+    padding-left: 10px;
 }
 
 .globe-container {

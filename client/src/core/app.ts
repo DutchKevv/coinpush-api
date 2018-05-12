@@ -127,22 +127,22 @@ export class App extends MicroEvent {
         try {
             await this._preload()
 
-             // set initial unread notification badge count
+            // set initial unread notification badge count
             if (this.data.notifications) {
                 this.notification.updateBadgeCounter(parseInt(this.data.notifications.unreadCount, 10));
             }
         } catch (error) {
             console.error(error);
         }
-       
+
         await this._waitUntilAllScriptsLoaded();
 
         this.isReady = true;
         this.emit('ready', true);
     }
 
-     // TODO: move to helper class
-     public loadAds() {
+    // TODO: move to helper class
+    public loadAds() {
         // TODO: Desktop ads
         if (!this.platform.isApp)
             return;
@@ -214,7 +214,7 @@ export class App extends MicroEvent {
                             resolve();
                         } else {
                             switch (xhr.status) {
-                                case 401: 
+                                case 401:
                                     await this.removeStoredUser();
                                     window.location.reload();
                                     return;
@@ -275,4 +275,9 @@ export class App extends MicroEvent {
 }
 
 export const app = window['app'] = new App();
-app.init().catch(console.error);
+window['app'] = app;
+
+// self start if not app (no need to wait for cordova)
+if (!window['platform'].isApp) {
+    app.init().catch(console.error);
+}

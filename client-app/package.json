@@ -50,6 +50,7 @@
     "cordova-support-google-services": "1.1.0",
     "cordova-webintent": "git+https://github.com/cordova-misc/cordova-webintent.git",
     "front-end-dependency-inject": "^1.0.6",
+    "ios-deploy": "^1.9.2",
     "localforage": "1.7.1",
     "ncp": "2.0.0",
     "phonegap-facebook-plugin": "0.12.0",

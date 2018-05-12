@@ -9,7 +9,6 @@ import { G_ERROR_MAX_SIZE } from 'coinpush/constant';
 import { IReqUser } from 'coinpush/interface/IReqUser.interface';
 
 const config = require('../../../tradejs.config');
-const domainPrefix = 'http://' + (process.env.NODE_ENV === 'production' ? config.ip.prod : config.ip.local) + ':' + config.port;
 
 const upload = multer({ storage: multer.memoryStorage({}) });
 export const router = Router();
@@ -19,10 +18,10 @@ function normalizeProfileImg(filename) {
 		if (filename.indexOf('http://') > -1)
 			return filename;
 
-		return domainPrefix + join(config.image.profileBaseUrl, filename);
+		return join(config.image.profileBaseUrl, filename);
 	}
 	else
-		return domainPrefix + config.image.profileDefaultUrl;
+		return config.image.profileDefaultUrl;
 };
 
 router.post('/profile', upload.single('image'), async (req: any, res, next) => {
@@ -44,7 +43,7 @@ router.post('/profile', upload.single('image'), async (req: any, res, next) => {
 		await userController.update(req.user, req.user.id, { img: fileName });
 
 		// return full img url to client
-		res.send({ url: normalizeProfileImg(fileName) });
+		res.send({ url: fileName });
 	} catch (error) {
 		console.error(error);
 		next(error);

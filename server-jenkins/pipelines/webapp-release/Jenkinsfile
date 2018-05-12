@@ -1,0 +1,26 @@
+node {
+    stage('clean workspace') {
+        cleanWs()
+    }
+    stage('get source') {
+        git branch: 'development', url: 'https://github.com/DutchKevv/TradeJS'
+    }
+    stage('install & build client') {
+        dir('client') {
+            sh 'npm i && npm run build'
+        }
+    }
+    stage('enable maintenance mode') {
+        sh 'sshpass -p Bettie123! ssh -o StrictHostKeyChecking=no kewin@frontend-freelance.com cp /home/kewin/Projects/TradeJS/server-nginx/pages/maintenance_off.html /home/kewin/Projects/TradeJS/server-nginx/pages/maintenance_on.html'
+    }
+    stage ('deploy to production') {
+        dir('client/dist') {
+            sh 'sshpass -p Bettie123! ssh -o StrictHostKeyChecking=no kewin@frontend-freelance.com rm -rf /home/kewin/Projects/TradeJS/client/dist/www'
+            sh 'sshpass -p Bettie123! ssh -o StrictHostKeyChecking=no kewin@frontend-freelance.com mkdir -p /home/kewin/Projects/TradeJS/client/dist/www'
+            sh 'sshpass -p Bettie123! scp -rp ./www kewin@frontend-freelance.com:/home/kewin/Projects/TradeJS/client/dist'
+        }
+    }
+    stage('disable maintenance mode') {
+        sh 'sshpass -p Bettie123! ssh -o StrictHostKeyChecking=no kewin@frontend-freelance.com rm -f /home/kewin/Projects/TradeJS/server-nginx/pages/maintenance_on.html'
+    }
+}

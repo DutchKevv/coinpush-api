@@ -50,7 +50,9 @@
 <main class="main-container">
 
     <!-- header -->
-    <header [ngClass]="{searchOpen: searchOpen}">
+    <header #header>
+        <!-- mobile nav button -->
+        <i (click)="onClickBackButton()" class="fa fa-angle-left d-lg-none" *ngIf="router.url !== '/symbols'"></i>
 
         <!-- mobile nav button -->
         <i (click)="toggleNav(true)" class="fa fa-navicon d-lg-none"></i>

@@ -4,9 +4,10 @@ node_modules
 npm-debug.log
 /images
 /dist/www
-
+ß
 *.map
 *.js
 !/tools/**/*.js
 !/src/etc/**/*.js
 !/src/core/**/*.js
+!/src/assets/**/*.js

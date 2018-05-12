@@ -74,10 +74,19 @@ header {
         flex-shrink: 0;
     }
 
+    .fa-angle-left {
+        font-size: 40px;
+        line-height: 28px;
+        width: auto;
+        padding-right: 10px;
+        padding-left: 10px;
+    }
+
     .fa-navicon {
         font-size: 36px;
         margin-top: 0px;
-        margin-right: 6px;
+        padding-right: 10px;
+        padding-left: 10px;
     }
 
     .fa-filter {
@@ -95,7 +104,7 @@ header {
     .fa-search {
         margin-right: 5px;
         font-size: 32px;
-        margin-top: 0px;
+        margin-top: -1px;
     }
 
     .search-container {
@@ -108,7 +117,7 @@ header {
     }
     
     input {
-        padding: 5px;
+        padding: 4px;
         line-height: 16px;
         width: 100%;
         border-radius: 0;
@@ -117,7 +126,7 @@ header {
         color: $input-color-text;
         text-align: center;
         border: none;
-        margin-top: 0px;
+        margin-top: 1px;
 
         &:focus {
             outline: none;
