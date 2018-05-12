@@ -11,6 +11,7 @@
     <preference name="BackgroundColor" value="0xff222122" />
     <preference name="fullscreen" value="false" />
     <preference name="StatusBarBackgroundColor" value="#000000" />
+    <preference name="StatusBarOverlaysWebView" value="false" />
     <icon src="assets/icon.png" />
     <content src="index.html" />
     <access origin="http://10.0.2.2" />

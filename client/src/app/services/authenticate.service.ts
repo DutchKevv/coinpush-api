@@ -109,11 +109,7 @@ export class AuthenticationService {
 			await this._userService.update(result.user, false, false);
 
 			if (reload) {
-				if (app.platform.isApp) {
-					window.location = 'index.html';
-				} else {
-					window.location.reload();
-				}
+				this.reload();
 			}
 
 			return true;
@@ -153,7 +149,7 @@ export class AuthenticationService {
 						const authResult = <any>await this._http.post(`/authenticate/facebook`, { token }).toPromise();
 						if (authResult && authResult.token) {
 							await this._userService.update({ token: authResult.token }, false, false);
-							window.location = 'file:///android_asset/www/index.html';
+							this.reload();
 						}
 					} else {
 						console.error(response);
@@ -218,6 +214,22 @@ export class AuthenticationService {
 		await this.removeDevice();
 		await app.removeStoredUser();
 
+		this.reload();
+	}
+
+	public async showLoginRegisterPopup(activeForm?: string) {
+		if (this.loginOpen)
+			return;
+
+		const modalRef = this._modalService.open(LoginComponent);
+		if (activeForm) {
+			modalRef.componentInstance.formType = activeForm;
+		}
+		
+		this.loginOpen = true;
+	}
+
+	public reload() {
 		if (app.platform.isApp) {
 			window.location = 'index.html';
 		} else {
@@ -237,22 +249,6 @@ export class AuthenticationService {
 				resolve(token);
 			});
 		});
-	}
-
-	public async showLoginRegisterPopup(activeForm?: string) {
-		if (this.loginOpen)
-			return;
-
-		const modalRef = this._modalService.open(LoginComponent);
-		if (activeForm) {
-			modalRef.componentInstance.formType = activeForm;
-		}
-		
-		this.loginOpen = true;
-	}
-
-	public async showForgotPasswordPopup() {
-
 	}
 
 
