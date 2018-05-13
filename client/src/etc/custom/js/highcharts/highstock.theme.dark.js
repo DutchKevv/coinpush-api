@@ -70,7 +70,7 @@ const HighstockTheme = {
     },
 
     chart: {
-        pinchType: 'x',
+        // pinchType: 'x',
         marginLeft: 4,
         marginTop: 5,
         marginBottom: 25,
@@ -95,10 +95,8 @@ const HighstockTheme = {
                 color: '#E0E0E3'
             }
         },
-        // lineColor: '#707073',
         tickColor: '#707073',
-        tickLength: 0,
-        minorTickLength: 0,
+        // tickLength: 0,
         minorGridLineColor: '#505053',
         title: {
             style: {
@@ -113,7 +111,7 @@ const HighstockTheme = {
         gridLineDashStyle: 'dot',
         gridZIndex: -1,
         tickPixelInterval: 80,
-        minorTickLength: 0,
+        // minorTickLength: 0,
         minPadding: 0,
         maxPadding: 0,
 
@@ -150,7 +148,8 @@ const HighstockTheme = {
         backgroundColor: 'rgba(0, 0, 0, 0.85)',
         style: {
             color: '#F0F0F0'
-        }
+        },
+        animation: false
     },
     plotOptions: {
         series: {
@@ -162,7 +161,7 @@ const HighstockTheme = {
             marker: {
                 lineColor: 'white'
             },
-            minPointLength: 1
+            // minPointLength: 1
         },
         boxplot: {
             fillColor: '#505053'
@@ -171,13 +170,13 @@ const HighstockTheme = {
             borderWidth: 0,
             color: 'rgb(8, 84, 128)'
         },
-        candles: {
-            pointPadding: 0,
-            borderWidth: 0,
-            groupPadding: 0,
-            shadow: false,
-            stacking: 'percent'
-        },
+        // candles: {
+        //     pointPadding: 0,
+        //     borderWidth: 0,
+        //     groupPadding: 0,
+        //     shadow: false,
+        //     stacking: 'percent'
+        // },
         ema: {
             lineWidth: 0.5,
             color: 'grey',
@@ -191,10 +190,10 @@ const HighstockTheme = {
         },
         candlestick: {
             lineColor: 'white',
-            lineWidth: 0,
+            lineWidth: 0.5,
             color: '#f00',
             upColor: '#00ee5e'
-            // upColor: '#67C8FF'
+        //     // upColor: '#67C8FF'
         },
         errorbar: {
             color: 'white'

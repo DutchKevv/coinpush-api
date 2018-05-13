@@ -10,17 +10,17 @@ node {
             sh 'npm i && npm run build'
         }
     }
-    stage('enable maintenance mode') {
+    stage('enable maintenance mode on nginx') {
         sh 'sshpass -p Bettie123! ssh -o StrictHostKeyChecking=no kewin@frontend-freelance.com cp /home/kewin/Projects/TradeJS/server-nginx/pages/maintenance_off.html /home/kewin/Projects/TradeJS/server-nginx/pages/maintenance_on.html'
     }
-    stage ('deploy to production') {
+    stage ('deploy build assets to live server') {
         dir('client/dist') {
             sh 'sshpass -p Bettie123! ssh -o StrictHostKeyChecking=no kewin@frontend-freelance.com rm -rf /home/kewin/Projects/TradeJS/client/dist/www'
             sh 'sshpass -p Bettie123! ssh -o StrictHostKeyChecking=no kewin@frontend-freelance.com mkdir -p /home/kewin/Projects/TradeJS/client/dist/www'
             sh 'sshpass -p Bettie123! scp -rp ./www kewin@frontend-freelance.com:/home/kewin/Projects/TradeJS/client/dist'
         }
     }
-    stage('disable maintenance mode') {
+    stage('disable maintenance mode on nginx') {
         sh 'sshpass -p Bettie123! ssh -o StrictHostKeyChecking=no kewin@frontend-freelance.com rm -f /home/kewin/Projects/TradeJS/server-nginx/pages/maintenance_on.html'
     }
 }

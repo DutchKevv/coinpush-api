@@ -38,7 +38,6 @@ import { app } from 'core/app';
 
 const SERIES_MAIN_NAME = 'main';
 const SERIES_VOLUME_NAME = 'volume';
-const DEFAULT_GRAPHTYPE = 'line';
 
 @Component({
 	selector: 'app-chart-box',
@@ -48,36 +47,30 @@ const DEFAULT_GRAPHTYPE = 'line';
 	],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-
-
 export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
-	static PLOTLINE_TYPE_DEFAULT = 0;
-	static PLOTLINE_TYPE_NEW_ALARM = 1;
-	static PLOTLINE_TYPE_ALARM = 2;
-	static PLOTLINE_TYPE_PRICE = 100;
-
 	@Input() symbolModel: SymbolModel;
-
-	@Input() showBox: Boolean = false;
-	@Input() quickBuy: Boolean = false;
-
 	@ViewChild('chart') private chartRef: ElementRef;
 	@ViewChild('loading') private loadingRef: ElementRef;
 
-	public hasError = false;
-	// public graphType: string = DEFAULT_GRAPHTYPE;
-	// public zoom: number = app.platform.isApp ? 2 : -10;
-	// public timeFrame: string = 'H1';
-	public indicatorContainerOpen$: BehaviorSubject<Boolean> = new BehaviorSubject(false);
-	public indicatorContainerOpen = false;
+	static readonly PLOTLINE_TYPE_DEFAULT = 0;
+	static readonly PLOTLINE_TYPE_NEW_ALARM = 1;
+	static readonly PLOTLINE_TYPE_ALARM = 2;
+	static readonly PLOTLINE_TYPE_PRICE = 100;
+	static readonly DEFAULT_CHUNK_LENGTH = 350;
 
-	// defaults
+	public hasError: boolean = false;
+	public indicatorContainerOpen$: BehaviorSubject<Boolean> = new BehaviorSubject(false);
+	public indicatorContainerOpen: boolean = false;
+	
+
+	// merge defaults with custom config
 	public config = Object.assign({
 		zoom: app.platform.isApp ? 2 : 1,
-		graphType: DEFAULT_GRAPHTYPE,
+		graphType: app.platform.isApp ? 'line' : 'candlestick',
 		timeFrame: 'H1'
 	}, app.storage.profileData.chartConfig || {});
 
+	// chart data
 	private _data = {
 		candles: [],
 		volume: []
@@ -100,8 +93,6 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 
 	private _indicatorIdCounter = 0;
 	private _fetchSub = null;
-
-	public static readonly DEFAULT_CHUNK_LENGTH = 500;
 
 	constructor(
 		public indicatorService: IndicatorService,
