@@ -53,7 +53,8 @@
     width: 100%;
     background: $background-light;
     overflow: auto;
-
+    -webkit-overflow-scrolling: touch;
+    
     &.hidden {
         display: none;
     }
@@ -154,10 +155,17 @@
         left: 0;
         // min-height: 100px;
         max-height: 300px;
+        min-height: 80px;
         overflow-y: auto;
     }
 
     .fa-globe {
         display: block !important;
     }
+}
+
+.no-notifications-container {
+   p {
+    text-align: center;
+   }
 }

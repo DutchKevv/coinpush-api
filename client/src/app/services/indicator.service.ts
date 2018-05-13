@@ -23,7 +23,7 @@ export class IndicatorService {
 		this.init().catch(console.error);
 	}
 
-	public async init() {
+	public async init(): Promise<void> {
 		await this._loadLocal();
 	}
 
@@ -159,9 +159,9 @@ export class IndicatorService {
 		return indicatorOptions;
 	}
 
-	remove(id: string | number) {
+	remove(id: string | number): void {
 		this.indicators.splice(this.indicators.findIndex(indicator => indicator.id === id, 1));
-		this._storeLocal();
+		this._storeLocal().catch(console.error);
 	}
 
 	private async _loadLocal() {
@@ -181,7 +181,7 @@ export class IndicatorService {
 		}
 	}
 
-	private async _storeLocal() {
-		await app.storage.set('indicators', JSON.stringify(this.indicators));
+	private async _storeLocal(): Promise<void> {
+		await app.storage.updateProfile({chartConfig: {indicators: this.indicators}});
 	}
 }

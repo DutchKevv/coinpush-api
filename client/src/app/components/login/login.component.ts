@@ -64,7 +64,11 @@ export class LoginComponent implements OnInit {
 			this.loading$.emit(false);
 	}
 
-	async fbLogin() {
+	async fbLogin(event) {
+		if (event) {
+			event.preventDefault();
+			event.stopPropogation();
+		}
 		this.loading$.emit(true);
 
 		try {
@@ -79,9 +83,11 @@ export class LoginComponent implements OnInit {
 							this._alertService.error(`Email already used`);
 						break;
 					default:
+						console.error(errorObj);
 						this._alertService.error(`Facebook login failed...`);
 				}
 			} else {
+				console.error(errorObj);
 				this._alertService.error(`Facebook login failed...`);
 			}
 		} finally {

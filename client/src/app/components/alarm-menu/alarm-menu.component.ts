@@ -130,9 +130,9 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 				const percDiff = (this.formModel.amount / this.symbol.options.bid * 100) - 100;
 
 				if (percDiff > 0) {
-					this.formModel.amount += this.symbol.options.bid * 0.005;
+					this.formModel.amount += this.symbol.options.bid * 0.05;
 				} else {
-					this.formModel.amount -= this.symbol.options.bid * 0.005;
+					this.formModel.amount -= this.symbol.options.bid * 0.05;
 				}
 
 				this.formModel.amount = parseFloat(this._cacheService.priceToFixed(this.formModel.amount, this.symbol));

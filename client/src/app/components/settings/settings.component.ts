@@ -139,17 +139,23 @@ export class SettingsComponent implements OnInit, OnDestroy {
 		this._http.post('/upload/profile', data).subscribe((result: any) => {
 			this._userService.update({ img: result.url }, false);
 		}, (result) => {
+			switch (result.status) {
+				case 413:
+					this._alertService.error('Max file size is 3MB');
+					break;
+				default:
+					try {
+						const error = JSON.parse(result).error;
 
-			try {
-				const error = JSON.parse(result).error;
-
-				switch (error.code) {
-					case G_ERROR_MAX_SIZE:
-						this._alertService.error('Max file size is 10MB');
-						break;
-				}
-			} catch (catchError) {
-				console.error(result)
+						switch (error.code) {
+							case G_ERROR_MAX_SIZE:
+								this._alertService.error('Max file size is 10MB');
+								break;
+						}
+					} catch (catchError) {
+						this._alertService.error('Error uploading image');
+						console.error(result)
+					}
 			}
 		});
 	}

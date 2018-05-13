@@ -75,8 +75,8 @@ export class NotificationHelper {
 
             const body = typeof message.data === 'string' ? JSON.parse(message.data) : message.data;
 
-            if (!app.user || !app.user._id || app.user._id !== body.__userId)
-                return console.warn('notification __userId mismatch')
+            if (app.storage.profileData._id !== body.__userId)
+                return console.warn('**notification __userId mismatch**');
 
             app.emit('notification', { title: message.title, data: body });
 

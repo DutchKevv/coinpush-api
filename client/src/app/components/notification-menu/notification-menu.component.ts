@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, Output, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Output, OnDestroy, EventEmitter } from '@angular/core';
 import { NotificationService } from '../../services/notification.service';
 import { Router, NavigationStart } from '@angular/router';
 import { AuthenticationService } from '../../services/authenticate.service';
 import { UserService } from '../../services/user.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
 	selector: 'app-notification-menu',
@@ -13,7 +14,8 @@ import { UserService } from '../../services/user.service';
 export class NotificationMenuComponent implements OnDestroy {
 
 	@Output() public open: boolean = false;
-	public notifications$;
+	public notifications$ = new BehaviorSubject([]);
+	public showNoNotifications$ = new BehaviorSubject(false);
 
 	private _routerEventsSub;
 
@@ -23,7 +25,14 @@ export class NotificationMenuComponent implements OnDestroy {
 		private _authenticationSerice: AuthenticationService,
 		private _userService: UserService
 	) {
-		this.notifications$ = this.notificationService.findMany();
+		this.notificationService.findMany().subscribe(notifications => {
+			console.log(notifications);
+			this.notifications$.next(notifications);
+
+			if (!notifications.length) {
+				this.showNoNotifications$.next(true);
+			}
+		});
 
 		this._routerEventsSub = this.router.events.subscribe((val) => {
 			if (val instanceof NavigationStart)

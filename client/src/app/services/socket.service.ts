@@ -39,6 +39,8 @@ export class SocketService {
         this._socket.close();
     }
 
+    private _bindOnBackground
+
     private _getSocketUrl(): string {
         return (app.address.host ? `${app.address.host}://` : '') + app.address.ip + (app.address.port ? ':' + app.address.port : '');
         // return app.address.host + '://' + app.address.ip + (app.address.port ? ':' + app.address.port : '';

@@ -34,6 +34,7 @@ require('highcharts/indicators/zigzag')(HighStock);
 // ema(HighStock);
 import '../../..//etc/custom/js/highcharts/highstock.theme.dark.js';
 import { IndicatorService } from '../../services/indicator.service';
+import { app } from 'core/app';
 
 const SERIES_MAIN_NAME = 'main';
 const SERIES_VOLUME_NAME = 'volume';
@@ -64,13 +65,18 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	@ViewChild('loading') private loadingRef: ElementRef;
 
 	public hasError = false;
-	public graphType: string = DEFAULT_GRAPHTYPE;
-	public zoom: number = 2;
-	public timeFrame: string = 'H1';
+	// public graphType: string = DEFAULT_GRAPHTYPE;
+	// public zoom: number = app.platform.isApp ? 2 : -10;
+	// public timeFrame: string = 'H1';
 	public indicatorContainerOpen$: BehaviorSubject<Boolean> = new BehaviorSubject(false);
 	public indicatorContainerOpen = false;
 
-	$el: any;
+	// defaults
+	public config = Object.assign({
+		zoom: app.platform.isApp ? 2 : 1,
+		graphType: DEFAULT_GRAPHTYPE,
+		timeFrame: 'H1'
+	}, app.storage.profileData.chartConfig || {});
 
 	private _data = {
 		candles: [],
@@ -237,7 +243,18 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	 * @param amount 
 	 */
 	public setZoom(amount) {
-		this.zoom += amount;
+		this.config.zoom += amount;
+
+		// reset back to current min/max 
+		// the setting could be hanging 'outside' from previous versions/releases
+		if (this.config.zoom > 5) {
+			this.config.zoom = 5;
+		}
+		else if (this.config.zoom < 0) {
+			this.config.zoom = 0;
+		}
+
+		app.storage.updateProfile({chartConfig: this.config}).catch(console.error);
 		this._updateViewPort(0, true);
 	}
 
@@ -246,13 +263,13 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	 * @param type 
 	 * @param render 
 	 */
-	public changeGraphType(type, render: boolean = true) {
+	public changeGraphType(graphType: string, render: boolean = true) {
 		if (!this._chart)
 			return;
 
-		this.graphType = type;
-
-		this._chart.series[0].update({ type }, render, false);
+		this.config.graphType = graphType;
+		app.storage.updateProfile({chartConfig: this.config}).catch(console.error);
+		this._chart.series[0].update({ type: graphType }, render, false);
 	}
 
 	/**
@@ -260,7 +277,8 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	 * @param timeFrame 
 	 */
 	public toggleTimeFrame(timeFrame: string) {
-		this.timeFrame = timeFrame;
+		this.config.timeFrame = timeFrame;
+		app.storage.updateProfile({chartConfig: this.config}).catch(console.error);
 		this.init();
 	}
 
@@ -380,9 +398,8 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 				series: [
 					{
 						id: SERIES_MAIN_NAME,
-						type: this.graphType,
+						type: this.config.graphType,
 						name: this.symbolModel.options.displayName,
-						// data: [],
 						data: this._data.candles,
 						cropThreshold: 0
 					},
@@ -390,7 +407,6 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 						id: SERIES_VOLUME_NAME,
 						type: 'column',
 						name: SERIES_VOLUME_NAME,
-						// data: [],
 						data: this._data.volume,
 						yAxis: 1
 					},
@@ -443,7 +459,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 			try {
 				this._prepareData(await this._cacheService.read({
 					symbol: this.symbolModel.options.name,
-					timeFrame: this.timeFrame,
+					timeFrame: this.config.timeFrame,
 					count: ChartBoxComponent.DEFAULT_CHUNK_LENGTH,
 					offset: this._offset
 				}));
@@ -543,7 +559,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	 */
 	private _calculateViewableBars(checkParent = true) {
 		let el = this._elementRef.nativeElement,
-			barW = 6 * this.zoom;
+			barW = 6 * this.config.zoom;
 
 		return Math.floor(el.clientWidth / barW);
 	}
@@ -564,7 +580,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 			if (lastPoint.clientX === null)
 				return;
 
-			if (this.graphType === 'line') {
+			if (this.config.graphType === 'line') {
 				this._chart.series[0].data[this._chart.series[0].data.length - 1].update({
 					y: this.symbolModel.options.bid
 				}, render, false);
@@ -583,7 +599,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	private _onScroll(event: MouseWheelEvent): boolean {
 		event.stopPropagation();
 		event.preventDefault();
-		console.log(event);
+
 		let shift = Math.ceil(this._calculateViewableBars() / this._scrollSpeedStep);
 
 		if (shift < this._scrollSpeedMin)

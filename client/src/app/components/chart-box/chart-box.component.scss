@@ -41,7 +41,7 @@
         cursor: pointer;
 
         i.fa {
-            line-height: 24px;
+            line-height: 34px;
             font-size: 18px;
             display: block;
         }
@@ -66,10 +66,9 @@
     max-width: 80px;
     background-color: #000000;
     color: white;
-    height: 20px;
-    line-height: 14px;
+    height: 30px;
+    line-height: 28px;
     font-size: 14px;
-    border-radius: 0;
     -webkit-appearance: none;
     padding-left: 10px;
     border-radius: 5px;
@@ -99,7 +98,7 @@
 
 .chart-title {
     font-size: 14px;
-    line-height: 24px;
+    line-height: 34px;
     text-align: left;
     margin-left: auto;
     padding-right: 20px;
@@ -112,7 +111,7 @@
 }
 
 .indicator-button {
-    line-height: 24px;
+    line-height: 34px;
     padding: 0 5px;
     user-select: none;
     
@@ -154,7 +153,7 @@
 
     @media screen and (min-width: 768px) {
         right: auto;
-        top: 25px;
+        top: 34px;
         width: 300px;
         border-right: 1px solid grey;
 	}
@@ -214,7 +213,7 @@
 .chart-overlay-error {
     position: absolute;
     display: none;
-    top: 25px;
+    top: 34px;
     left: 0;
     right: 0;
     bottom: 0;
@@ -241,7 +240,7 @@
     background: #2b2a29;
     position: absolute;
     display: none;
-    top: 25px;
+    top: 34px;
     left: 0;
     right: 0;
     bottom: 0;

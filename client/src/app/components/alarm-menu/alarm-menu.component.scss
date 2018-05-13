@@ -117,7 +117,7 @@ form {
     padding: 10px 20px;
 
     i {
-        font-size: 20px;
+        font-size: 16px;
     }
 }
 
@@ -133,9 +133,11 @@ input[type=text] {
     margin: 0;
     background: #353535;
     color: white;
-
+    font-size: 16px;
+    
     &:disabled {
-        background-color: #989898; 
+        background: #353535;
+        color: #a3a3a3;
     }
 }
 

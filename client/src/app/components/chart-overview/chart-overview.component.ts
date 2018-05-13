@@ -70,6 +70,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 		this._filterSub = this._applicationRef.components[0].instance.filterClick$.subscribe(state => this.toggleFilterNav(null, state));
 		this._eventSub = this._eventService.events$.subscribe(() => this._changeDetectorRef.detectChanges());
 
+		
 		// requestAnimationFrame(() => {
 		this.toggleActiveFilter(this.defaultActiveFilter);
 
@@ -124,9 +125,10 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 	}
 
 	public toggleActiveFilter(filter: string, removeSymbolFromUrl = true) {
-		console.log('toggleFilter!');
 		if (filter === this.activeFilter)
 			return;
+
+		app.storage.updateProfile({chartConfig: {filter}}).catch(console.error);
 
 		// remove specific symbol in url
 		if (removeSymbolFromUrl && this._route.snapshot.queryParams['symbol']) {

@@ -60,12 +60,12 @@ export class AuthenticationService {
 			console.error(error);
 			this._alertService.error(`An error occured`);
 		}
-		
+
 		return result;
 	}
 
 	public async updatePassword(token: string, password: string): Promise<boolean> {
-		let result = false; 
+		let result = false;
 
 		try {
 			result = <any>await this._http.put('/authenticate', { token, password }).toPromise();
@@ -89,7 +89,7 @@ export class AuthenticationService {
 	 */
 	async authenticate(email?: string, password?: string, token?: string, loadProfile = false, reload = false): Promise<boolean> {
 		if (!email && !password && !token) {
-			token = app.user.token;
+			token = app.storage.profileData.token;
 
 			if (!token) {
 				return false;
@@ -104,7 +104,7 @@ export class AuthenticationService {
 
 		try {
 			const params = new HttpParams({
-				fromObject: { loadProfile: '0' }
+				fromObject: { profile: '0' }
 			});
 
 			const result = <any>await this._http.post('/authenticate', postData, { params }).toPromise();
@@ -115,6 +115,7 @@ export class AuthenticationService {
 
 			// does not save to server but updates persistant storage
 			await this._userService.update(result.user, false, false);
+			await app.storage.set('last-user-id', result.user._id);
 
 			if (reload) {
 				this.reload();
@@ -144,6 +145,7 @@ export class AuthenticationService {
 	}
 
 	public authenticateFacebook(): Promise<any> {
+
 		return new Promise((resolve, reject) => {
 			const scope = 'email,public_profile,user_location,user_birthday';
 
@@ -156,11 +158,11 @@ export class AuthenticationService {
 					if (token) {
 						const authResult = <any>await this._http.post(`/authenticate/facebook`, { token }).toPromise();
 						if (authResult && authResult.token) {
-							await this._userService.update({ token: authResult.token }, false, false);
+							await app.storage.updateProfile({ _id: authResult._id, token: authResult.token }, true);
 							this.reload();
 						}
 					} else {
-						console.error(response);
+						reject('inpcomplete response')
 					}
 				}, (error) => {
 					reject(error);
@@ -177,22 +179,29 @@ export class AuthenticationService {
 
 				const self = this;
 				window.addEventListener('message', async function cb(message) {
-					console.log(message);
 					window.removeEventListener('message', cb, false);
-
+					console.log(message);
+					
 					if (message.data.error)
 						return reject(message.error);
 
-					const authResult = <any>await self._http.post(`/authenticate/facebook`, { token: message.data.token }).toPromise();
+					try {
+						const authResult = <any>await self._http.post(`/authenticate/facebook`, { token: message.data.token }).toPromise();
 
-					if (authResult && authResult.token) {
-						await self._userService.update({ token: authResult.token }, false, false);
-						window.location.reload();
+						if (authResult && authResult.token && authResult._id) {
+
+							await app.storage.updateProfile({ _id: authResult._id, token: authResult.token }, true);
+							self.reload();
+						} else {
+							reject('inpcomplete response')
+						}
+					} catch (error) {
+						reject(error)
 					}
+
 				}, false);
 
 				const fbWindow = window.open(loginUrl, '_system');
-				console.log('asd', fbWindow);
 
 				fbWindow.focus();
 			}
@@ -220,7 +229,7 @@ export class AuthenticationService {
 
 	public async logout(): Promise<void> {
 		await this.removeDevice();
-		await app.removeStoredUser();
+		await app.storage.clearProfile();
 
 		this.reload();
 	}
@@ -233,7 +242,7 @@ export class AuthenticationService {
 		if (activeForm) {
 			modalRef.componentInstance.formType = activeForm;
 		}
-		
+
 		this.loginOpen = true;
 	}
 

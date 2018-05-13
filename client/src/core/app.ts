@@ -70,7 +70,6 @@ export class App extends MicroEvent {
     public notification = new NotificationHelper();
     public helpers = generalHelpers;
 
-    public user;
     public data: any = {
         notifications: {
             unreadCount: 0
@@ -120,7 +119,6 @@ export class App extends MicroEvent {
         this.address = getAddress();
 
         await this.storage.init();
-        await this._loadStoredUser();
 
         this.prettyBootty.step('data', 0);
 
@@ -199,7 +197,9 @@ export class App extends MicroEvent {
                 xhr.open('GET', this.address.apiUrl + 'authenticate?profile=true', true);
 
                 // user authentication token
-                xhr.setRequestHeader('Authorization', this.user ? 'Bearer ' + this.user.token : '');
+                if (this.storage.profileData.token) {
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + this.storage.profileData.token);
+                }
 
                 // on progress
                 xhr.onprogress = event => this.prettyBootty.step('data', (event.loaded / event.total) * 100);
@@ -211,7 +211,7 @@ export class App extends MicroEvent {
                             this.data = JSON.parse(xhr.response);
 
                             if (this.data.user) {
-                                this.user = this.data.user;
+                                await this.storage.updateProfile(this.data.user);
                                 delete this.data.user;
                             }
 
@@ -219,7 +219,7 @@ export class App extends MicroEvent {
                         } else {
                             switch (xhr.status) {
                                 case 401:
-                                    await this.removeStoredUser();
+                                    await this.storage.clearProfile(this.storage.profileData._id);
                                     window.location.reload();
                                     return;
                                 case 0:
@@ -259,22 +259,6 @@ export class App extends MicroEvent {
                 resolve();
             }, false);
         });
-    }
-
-    public updateStoredUser(user = this.user): Promise<void> {
-        this.user = user;
-        return this.storage.set('current-user', user);
-    }
-
-    public async removeStoredUser(): Promise<void> {
-        await this.storage.clear();
-    }
-
-    private async _loadStoredUser(): Promise<any> {
-        const user = await this.storage.get('current-user')
-
-        if (user && user.token)
-            this.user = user
     }
 }
 

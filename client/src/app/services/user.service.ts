@@ -11,10 +11,10 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 })
 export class UserService {
 
-	public model: UserModel = new UserModel(app.user || {
+	public model: UserModel = new UserModel(Object.assign({
 		name: 'Anonymous',
 		img: '/assets/image/default-profile.jpg'
-	});
+	}, app.storage.profileData || {}));
 
 	constructor(
 		private _http: HttpClient,
@@ -47,7 +47,7 @@ export class UserService {
 				await this._http.put('/user/' + this.model.get('_id'), changes).toPromise();
 			}
 			
-			await app.updateStoredUser(this.model.options);
+			await app.storage.updateProfile(this.model.options);
 			
 			if (showAlert) {
 				this._alertService.success('Settings saved');

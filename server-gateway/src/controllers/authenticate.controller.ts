@@ -100,6 +100,7 @@ export const authenticateController = {
 			}
 
 			return {
+				_id: user._id,
 				token: user.token
 			};
 		}

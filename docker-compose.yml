@@ -152,7 +152,7 @@ services:
     volumes:
       - ./client/src:/usr/src/app/client/src
       - ./client/dist:/usr/src/app/client/dist
-      - ./shared:/usr/src/app/shared
+      # - ./shared:/usr/src/app/shared
       - /usr/src/app/client/node_modules
   client-app:
     image: client-app

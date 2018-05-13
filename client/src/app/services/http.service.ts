@@ -46,10 +46,10 @@ export class CustomHttp implements HttpInterceptor {
 
 	private _addHeaderJwt(req: HttpRequest<any>): HttpRequest<any> {
 		// add authorization header with jwt token
-		if (app.user && app.user.token)
+		if (app.storage.profileData.token)
 			return req.clone({
 				setHeaders: {
-					Authorization: 'Bearer ' + app.user.token,
+					Authorization: 'Bearer ' + app.storage.profileData.token,
 					clientversion: config.version
 				}
 			});
