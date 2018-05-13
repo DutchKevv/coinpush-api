@@ -21,7 +21,7 @@ export const getAddress = function () {
 				host = 'http';
 			} else {
 				ip = iosEmulatorIp;
-				host = '';
+				host = 'http';
 			}
 			ws = 'ws';
 			port = 4000;
@@ -37,8 +37,8 @@ export const getAddress = function () {
 		host = location.protocol.replace(/:/g, '');
 	}
 
-	const hostUrl = host + '://' + (ip + (port ? ':' + port : ''));
-	const apiUrl = hostUrl + '/api/v1/';
+	const hostUrl = (host ? `${host}://` : '') + (ip + (port ? `:${port}` : ''));
+	const apiUrl = `${hostUrl}/api/v1/`;
 
 	return { host, ip, port, hostUrl, apiUrl, ws, secure };
 }

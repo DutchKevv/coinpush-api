@@ -33,7 +33,6 @@
     flex: 0 55%;
     flex-grow: 1;
     display: flex;
-    position: relative;
 }
 
 .instrument-list {
@@ -59,8 +58,8 @@
 
     .instrument-title,
     .col-1h {
-        line-height: 13px;
-        padding-bottom: 5px;
+        line-height: 11px;
+        padding-bottom: 4px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -72,12 +71,12 @@
     }
 
     .col-instrument {
-        flex: 0 47%;
+        flex: 0 44%;
         padding: 10px 0;
     }
 
     .col-changes {
-        flex: 0 37%;
+        flex: 0 40%;
         padding: 10px 0;
     }
 
@@ -152,12 +151,13 @@
 
 .filter-list {
 	background: $background-light;
-	overflow: auto;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
 	padding: 6px 6px 6px 10px;
 
     display: none;
     position: absolute;
-    top: 0;
+    top: 40px;
     bottom: 0;
     left: 0;
     right: 0;

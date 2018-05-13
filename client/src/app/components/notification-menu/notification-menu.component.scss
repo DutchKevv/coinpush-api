@@ -20,6 +20,11 @@
     .fa-globe {
         font-size: 34px;
         margin-top: -2px;
+        transition: transform .4s;
+        
+        &:active {
+            transform: scale(1.4);
+        }
     }
 
     @media only screen and (min-width : 992px) {
@@ -29,7 +34,7 @@
 
 .notification-unread-circle {
     background: red;
-    border-radius: 50%;
+    border-radius: 20%;
     position: absolute;
     padding: 1px 6px;
     font-size: 12px;

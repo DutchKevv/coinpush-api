@@ -142,7 +142,7 @@ export class App extends MicroEvent {
     }
 
     // TODO: move to helper class
-    public loadAds() {
+    public loadAds(retry = 0) {
         // TODO: Desktop ads
         if (!this.platform.isApp)
             return;
@@ -167,8 +167,12 @@ export class App extends MicroEvent {
             isTesting: false
         });
 
-        document.addEventListener('onAdFailLoad', function (error) {
-            console.error(error);
+        document.addEventListener('onAdFailLoad', (error) => {
+            console.log('Could not load ad', error);
+            
+            if (++retry < 10) {
+                // setTimeout(() =>  this.loadAds(retry), 5000);
+            }
         });
     }
 

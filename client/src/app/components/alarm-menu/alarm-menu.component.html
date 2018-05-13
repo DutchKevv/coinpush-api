@@ -1,6 +1,6 @@
 <header>
     <i class="fa fa-bell"></i>
-    <h3>{{symbol.options.displayName}}</h3>
+    <h2>Price alarm</h2>
     <i (click)="onDestroy.emit(true)" class="fa fa-close"></i>
 </header>
 <main>
@@ -16,36 +16,34 @@
                     <sup>(min 1%, max 50% difference)</sup>
                 </label>
                 <div class="input-group" style="display: flex;">
-                    <span class="input-group-btn" (touchstart)="onMouseDownNumberInput($event, -1)" (mousedown)="onMouseDownNumberInput($event, -1)"
-                        (mouseout)="onMouseUpNumberInput($event, -1)" (touchend)="onMouseUpNumberInput($event, -1)"
+                    <button type="button" class="btn btn-sm btn-danger btn-number" data-type="minus" [disabled]="saving === true" (touchstart)="onMouseDownNumberInput($event, -1)"
+                        (mousedown)="onMouseDownNumberInput($event, -1)" (mouseout)="onMouseUpNumberInput($event, -1)" (touchend)="onMouseUpNumberInput($event, -1)"
                         (mouseup)="onMouseUpNumberInput($event, -1)">
-                        <button type="button" class="btn btn-sm btn-danger btn-number" data-type="minus">
-                            <i class="fa fa-minus"></i>
-                        </button>
-                    </span>
-                    <input type="text" [(ngModel)]="formModel.amount" name="amount" class="form-control input-number" (change)="onChangeInputValue()">
-                    <span class="input-group-btn" (touchstart)="onMouseDownNumberInput($event, 1)" (mousedown)=" onMouseDownNumberInput($event, 1) "
-                        (mouseout)="onMouseUpNumberInput($event, 1)" (touchend)="onMouseUpNumberInput($event, 1)"
+                        <i class="fa fa-minus"></i>
+                    </button>
+
+                    <input type="text" [(ngModel)]="formModel.amount" name="amount" class="form-control input-number" (change)="onChangeInputValue()"
+                        [disabled]="saving === true">
+
+                    <button type="button" class="btn btn-sm btn-success btn-number" data-type="plus" [disabled]="saving === true" (touchstart)="onMouseDownNumberInput($event, 1)"
+                        (mousedown)=" onMouseDownNumberInput($event, 1) " (mouseout)="onMouseUpNumberInput($event, 1)" (touchend)="onMouseUpNumberInput($event, 1)"
                         (mouseup)="onMouseUpNumberInput($event, 1)">
-                        <button type="button" class="btn btn-sm btn-success btn-number" data-type="plus">
-                            <i class="fa fa-plus"></i>
-                        </button>
-                    </span>
+                        <i class="fa fa-plus"></i>
+                    </button>
                 </div>
             </div>
-            <div class="form-group">
-                <span class="muted">Diff: {{(((formModel.amount / symbol.options.bid) * 100) - 100).toFixed(2)}}%
-                    <i class="fa fa-arrow-{{formModel.amount > symbol.options.bid ? 'up' : 'down'}}"></i>
-                </span>
-                <p>Current price: {{symbol.options.bid}}</p>
-            </div>
-            <div class="form-group">
-                <!-- <label for="alarmName" style="width: 100%;">Name
-                    <sup>(optional)</sup>
-                </label>
-                <input class="form-control form-input w-50 p-3 d-inline-block pull-left" type="text" name="name" id="alarmName" [(ngModel)]="formModel.name"
-                    placeholder="name"> -->
-                <button class="btn btn-sm btn-success pull-right">Add</button>
+            <div class="footer-new-alarm">
+                <div>
+                    <p class="muted">Diff: {{(((formModel.amount / symbol.options.bid) * 100) - 100).toFixed(2)}}%
+                        <i class="fa fa-arrow-{{formModel.amount > symbol.options.bid ? 'up' : 'down'}}"></i>
+                    </p>
+                    <p>Current price: {{symbol.options.bid}}</p>
+                </div>
+                <div>
+                    <button class="btn btn-sm btn-success pull-right" [disabled]="saving === true">Add
+                        <i class="fa fa-spinner" *ngIf="saving === true"></i>
+                    </button>
+                </div>
             </div>
         </form>
     </ng-container>

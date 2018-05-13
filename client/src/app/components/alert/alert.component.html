@@ -1,6 +1,6 @@
 <ng-container *ngIf="message$ | async as message">
     <div [ngClass]="{ 'alert': message, 'alert-success': message.type === 'success', 'alert-danger': message.type === 'error' }">
-        <span>{{message.text}}</span>
-        <i class="fa fa-close" (click)="onClickClose()"></i>
+        <p>{{message.text}}</p>
+        <!-- <i class="fa fa-close" (click)="onClickClose()"></i> -->
     </div>
 </ng-container>

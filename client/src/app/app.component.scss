@@ -6,6 +6,9 @@
 @import 'style/variables/variables';
 @import 'style/helpers/normalize';
 
+$header-icon-padding-x: 10px;
+$header-height: 18px;
+
 :host {
     display: flex;
     height: 100%;
@@ -41,7 +44,7 @@ header {
     .header-title {
         width: 100%;
         text-align: center;
-        line-height: 32px;
+        line-height: 30px;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
@@ -72,26 +75,29 @@ header {
         width: 50px;
         padding: 0 5px;
         flex-shrink: 0;
+        transition: transform .4s;
+
+        &:active {
+            transform: scale(1.4);
+        }
     }
 
     .fa-angle-left {
         font-size: 40px;
         line-height: 28px;
         width: auto;
-        padding-right: 10px;
-        padding-left: 10px;
+        padding: 0 $header-icon-padding-x;
     }
 
     .fa-navicon {
-        font-size: 36px;
+        font-size: 34px;
         margin-top: 0px;
-        padding-right: 10px;
-        padding-left: 10px;
+        padding: 0 $header-icon-padding-x;
     }
 
     .fa-filter {
         font-size: 36px;
-        margin-left: 0px;
+        padding: 0 $header-icon-padding-x;
         margin-top: 0px;
     }
 
@@ -103,7 +109,7 @@ header {
 
     .fa-search {
         margin-right: 5px;
-        font-size: 32px;
+        font-size: 30px;
         margin-top: -1px;
     }
 
@@ -118,15 +124,21 @@ header {
     
     input {
         padding: 4px;
-        line-height: 16px;
         width: 100%;
         border-radius: 0;
-        font-size: 16px;
-        background-color: $input-color-glyphicon-background;
-        color: $input-color-text;
+        font-size: 22px;
+        background-color: #353535;
+        // background-color: $input-color-glyphicon-background;
+        color: white;
+        // color: $input-color-text;
         text-align: center;
         border: none;
-        margin-top: 1px;
+        height: 30px;
+        // margin-top: 1px;
+
+        &::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+            color: darkgray;
+        }
 
         &:focus {
             outline: none;
@@ -136,13 +148,14 @@ header {
     .header-drop-down {
         position: absolute;
         z-index: 122;
-        top: 39px;
+        top: 40px;
+        bottom: 0;
         left: 0;
         width: 100%;
         background: $background-light;
-        height: 100%;
         overflow: auto;
-
+        -webkit-overflow-scrolling: touch;
+        
         &.hidden {
             display: none;
         }
@@ -206,7 +219,8 @@ header {
     width: 250px;
     min-width: 250px;
     display: block;
-    transition: transform .2s ease-in-out;
+    // transition: transform .2s ease-in-out;
+    
 
     @media only screen and (max-width : 992px) {
         position: absolute;
@@ -214,10 +228,15 @@ header {
         transform: translateX(-250px);
         bottom: 0;
         z-index: 1001;
-        animation: fadeOut .3s;
+        // animation: moveOut .3s;
+
+        + .nav-overlay {
+            //  animation: fadeOut 13s;
+        }
 
         &.show {
             transform: translateX(0);
+            animation: moveIn .2s ease-in-out;
 
             + .nav-overlay {
                 display: block;
@@ -294,8 +313,6 @@ header {
     }
 }
 
-$header-height: 18px;
-
 .splitter {
     position: absolute;
     top: -6px;
@@ -348,14 +365,6 @@ $header-height: 18px;
     }
 }
 
-
-.tab-content {
-    height: calc(100% - 21px);
-    background: $background-light;
-    overflow-y: scroll;
-    overflow-x: hidden;
-}
-
 .fa-info {
     color: $general-info;
 }
@@ -368,7 +377,12 @@ $header-height: 18px;
     color: $general-warning;
 }
 
-status {
-    display: flex;
-    margin-left: auto;
+@keyframes moveIn {
+    from { transform: translateX(-250px); }
+    to { transform: translateX(0); }
+}
+
+@keyframes moveOut {
+    from { transform: translateX(0); }
+    to { transform: translateX(-250px); }
 }

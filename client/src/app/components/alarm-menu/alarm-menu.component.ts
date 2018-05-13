@@ -12,11 +12,11 @@ import { CacheService } from '../../services/cache.service';
 import { AuthenticationService } from '../../services/authenticate.service';
 import { EventModel } from '../../models/event.model';
 
-@Pipe({name: 'alarmMenuActiveSymbolEvent'})
+@Pipe({ name: 'alarmMenuActiveSymbolEvent' })
 export class AlarmMenuActiveSymbolEventPipe implements PipeTransform {
-    transform(items: any[], symbolName: string): any {
-        return items.filter(item => item.symbol === symbolName && !item.triggered);
-    }
+	transform(items: any[], symbolName: string): any {
+		return items.filter(item => item.symbol === symbolName && !item.triggered);
+	}
 }
 
 @Component({
@@ -33,6 +33,7 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 	@Output() onDestroy: EventEmitter<boolean> = new EventEmitter;
 
 	public historyEvents$;
+	public saving: boolean = false;
 
 	public activeTab = 'new';
 	public formModel: any = {
@@ -44,8 +45,6 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 
 	private _mouseDownTimeout = null;
 	private _mouseDownSpeedUp = 2;
-
-	private eventsSub;
 
 	constructor(
 		public eventService: EventService,
@@ -117,15 +116,32 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 		if (!this.symbol)
 			return;
 
+		this.toggleSaving(true);
+
 		this.formModel.symbol = this.symbol.options.name;
 		this.formModel.type = CUSTOM_EVENT_TYPE_ALARM;
 		this.formModel.alarm.dir = this.formModel.amount < this.symbol.options.bid ? ALARM_TRIGGER_DIRECTION_DOWN : ALARM_TRIGGER_DIRECTION_UP;
 
 		try {
-			await this.eventService.create(this.formModel);
-			// this.onDestroy.emit(true);
+			const event = await this.eventService.create(this.formModel);
+
+			// on success - move the alarm cursor x amount
+			if (event) {
+				const percDiff = (this.formModel.amount / this.symbol.options.bid * 100) - 100;
+
+				if (percDiff > 0) {
+					this.formModel.amount += this.symbol.options.bid * 0.005;
+				} else {
+					this.formModel.amount -= this.symbol.options.bid * 0.005;
+				}
+
+				this.formModel.amount = parseFloat(this._cacheService.priceToFixed(this.formModel.amount, this.symbol));
+				this.inputValueChange.next(this.formModel.amount);
+			}
 		} catch (error) {
 			console.error(error);
+		} finally {
+			this.toggleSaving(false);
 		}
 	}
 
@@ -173,9 +189,10 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 	private _unsubscribe() {
 		if (this.historyEvents$ && this.historyEvents$.unsubscribe)
 			this.historyEvents$.unsubscribe();
+	}
 
-		if (this.eventsSub && this.eventsSub.unsubscribe)
-			this.eventsSub.unsubscribe();
+	toggleSaving(state?: boolean) {
+		this.saving = !!state;
 	}
 
 	ngOnDestroy() {

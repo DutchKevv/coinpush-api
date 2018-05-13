@@ -38,7 +38,7 @@ sup {
         position: absolute;
         left: 0;
         right: 0;
-        top: 0;
+        top: 40px;
         bottom: 0;
     }
 
@@ -57,9 +57,10 @@ header {
     display: flex;
     background: $background-th;
     flex-shrink: 0;
+    height: 40px;
 
     i {
-        font-size: 20px;
+        font-size: 28px;
     }
 
     .fa-close {
@@ -68,16 +69,16 @@ header {
     }
 
     .fa-bell {
-        font-size: 18px;
+        font-size: 24px;
         margin-top: 2px;
         margin-right: 10px;
     }
 
-    h3 {
+    h2 {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        line-height: 20px;
+        line-height: 28px;
     }
 }
 
@@ -94,28 +95,42 @@ form {
     margin-bottom: 10px;
 
     li {
-        padding: 6px 8px;
+        padding: 8px 10px;
         width: 100%;
         cursor: pointer;
+        font-size: 16px;
+
+        &.active {
+            background: $background-th;
+        }
 
         &:hover {
-            background: $general-active;
+            background: $background-th;
         }
     }
 }
 
 .btn-number {
+    margin: 0;
     border-radius: 0;
     border: none;
-    padding: 5px 15px;
+    padding: 10px 20px;
 }
 
 .form-control {
     padding: 2px 8px;
     border-radius: 0;
     border: none;
-    font-size: 13px;
-    line-height: 25px
+    font-size: 16px;
+    line-height: 25px;
+}
+
+input[type=text] {
+    margin: 0;
+
+    &:disabled {
+        background-color: #989898; 
+    }
 }
 
 .alarm-row {
@@ -140,5 +155,17 @@ form {
 
     &:nth-child(even) {
         background: #222122;
+    }
+}
+
+.footer-new-alarm {
+    display: flex;
+
+    > div {
+        width: 50%;
+    }
+
+    p {
+        line-height: 20px;
     }
 }

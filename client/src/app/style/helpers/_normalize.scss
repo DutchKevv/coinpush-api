@@ -7,6 +7,17 @@
 * {
 	box-sizing: border-box;
 	-webkit-tap-highlight-color: rgba(0,0,0,0);
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+input[type=text] {
+	-webkit-user-select: text;
+	-moz-user-select: text;
+	-ms-user-select: text;
+	user-select: text;
 }
 
 :host {
@@ -66,4 +77,19 @@ sup,
 sub {
 	margin-left: 4px;
 	font-size: 12px;
+}
+
+button .fa-spinner {
+	margin-left: 5px;
+	animation: button-spinner 2s infinite linear
+}
+
+.btn {
+	border-radius: 0;
+	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes button-spinner {
+    from { transform: scale(1) rotate(0deg); }
+    to { transform: scale(1) rotate(360deg); }
 }

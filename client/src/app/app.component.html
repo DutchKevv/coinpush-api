@@ -21,7 +21,7 @@
     <a (click)="toggleNav( false)" [routerLink]="['/user']" [routerLinkActive]="['active']">
         <i class="fa fa-users"></i>
         <span>Users</span>
-    </a> 
+    </a>
     <a (click)="toggleNav( false)" [routerLink]="['/symbols']" [routerLinkActive]="['active']">
         <i class="fa fa-bar-chart"></i>
         <span>Stocks</span>
@@ -52,7 +52,7 @@
     <!-- header -->
     <header #header>
         <!-- mobile nav button -->
-        <i (click)="onClickBackButton()" class="fa fa-angle-left d-lg-none" *ngIf="router.url !== '/symbols'"></i>
+        <i *ngIf="showBackButton === true" (click)="onClickBackButton()" class="fa fa-angle-left d-lg-none"></i>
 
         <!-- mobile nav button -->
         <i (click)="toggleNav(true)" class="fa fa-navicon d-lg-none"></i>
@@ -62,14 +62,15 @@
 
         <!-- filter -->
 
-        <i *ngIf="router.url.startsWith('/symbols')" (click)="onClickFilter($event)" class="fa fa-filter d-lg-none"></i>
+        <i *ngIf="showFilterButton === true" (click)="onClickFilter($event)" class="fa fa-filter d-lg-none"></i>
 
         <!-- title -->
         <h3 class="d-lg-none header-title">{{titleText$ | async}}</h3>
 
         <!-- search container -->
         <div class="search-container">
-            <input (keyup)="onSearchKeyUp($event)" (focus)="onSearchKeyUp($event)" placeholder="Markets / People" #input title="Markets / People">
+            <input (keyup)="onSearchKeyUp($event)" (focus)="onSearchKeyUp($event)" placeholder="Markets / People" id="mainSearchInput"
+                #input title="Markets / People" type="text" autocapitalize="none">
             <div class="header-drop-down" *ngIf="(searchResults$ | async) as result" (click)="onClickDropdownItem()" #dropdown>
                 <h4 *ngIf="result.symbols.length">Symbols</h4>
                 <a *ngFor="let symbol of result.symbols" [routerLink]="['/symbols']" [queryParams]="{symbol: symbol.options.name}">

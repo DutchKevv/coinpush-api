@@ -67,9 +67,13 @@
     background-color: #000000;
     color: white;
     height: 20px;
-    line-height: 20px;
+    line-height: 14px;
     font-size: 14px;
     border-radius: 0;
+    -webkit-appearance: none;
+    padding-left: 10px;
+    border-radius: 5px;
+    border: 1px solid grey;
 }
 
 .btn-menu {
@@ -234,6 +238,7 @@
 }
 
 .chart-overlay-loading {
+    background: #2b2a29;
     position: absolute;
     display: none;
     top: 25px;

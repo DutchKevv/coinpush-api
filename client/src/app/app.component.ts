@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, Output, ViewChild, ElementRef, EventEmitter, HostListener, ChangeDetectorRef, AfterViewInit, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Output, ViewChild, ElementRef, EventEmitter, HostListener, ChangeDetectorRef, AfterViewInit, Input, OnChanges } from '@angular/core';
 import { AuthenticationService } from "./services/authenticate.service";
 import { CacheService } from "./services/cache.service";
 import { Subject } from "rxjs/Subject";
@@ -22,7 +22,7 @@ declare let navigator: any;
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class AppComponent implements OnInit, AfterViewInit {
+export class AppComponent implements OnInit, AfterViewInit, OnChanges {
 
 	@Output() public filterClick$: EventEmitter<boolean> = new EventEmitter();
 	@Output() public searchResults$: Subject<any> = new Subject();
@@ -37,8 +37,10 @@ export class AppComponent implements OnInit, AfterViewInit {
 	@ViewChild('globeContainer') globeContainerRef: ElementRef;
 
 	public version = 'v0.0.2-alpha-' + (environment.production ? 'prod' : 'dev');
-	public searchOpen = false;
+	public searchOpen: boolean = false;
 	public platform = app.platform;
+	public showBackButton: boolean = false;
+	public showFilterButton: boolean = true;
 
 	private _sub: any;
 	private _routerEventsSub: any;
@@ -76,6 +78,10 @@ export class AppComponent implements OnInit, AfterViewInit {
 	 */
 	@HostListener('window:click', ['$event'])
 	onWindowClick(event) {
+		if (event.target.id !== 'mainSearchInput' && !event.target.classList.contains('fa-search')) {
+			this.toggleSearch(false);
+		}
+
 		if (this.dropdown) {
 			this.searchResults$.next(null);
 		}
@@ -133,17 +139,33 @@ export class AppComponent implements OnInit, AfterViewInit {
 		private _updateService: UpdateService,
 		private _cacheService: CacheService,
 		private _socketService: SocketService) {
-		// this._changeDetectorRef.detach();
+			
 	}
 
 	ngOnInit() {
+		// alert(this.userService.model.options.img);
 		this._updateService.do();
 		this._cacheService.init(); // cacheService must init before eventService
 		this._eventService.init();
 		this._socketService.connect();
 
-		this._routerEventsSub = this.router.events.subscribe((val) => {
-			if (val instanceof NavigationEnd) {
+		this._routerEventsSub = this.router.events.subscribe((event) => {
+			
+			if (event instanceof NavigationStart) {
+				const route = event.url.split('?')[0];
+
+				if (['/', '/symbols'].includes(route)) {
+					this.showFilterButton = true;
+					this.showBackButton = false;
+				} else {
+					this.showFilterButton = false;
+					this.showBackButton = true;
+				}
+
+				this._changeDetectorRef.detectChanges();
+			}
+
+			if (event instanceof NavigationEnd) {
 				this.searchOpen = false;
 				this.filterClick$.emit(false);
 			}
@@ -152,19 +174,24 @@ export class AppComponent implements OnInit, AfterViewInit {
 		if (this.userService.model.options._id) {
 			app.initNotifications().catch(console.error);
 		}
-
-		setTimeout(() => {
-			console.log(this.router);
-		}, 1000);
 	}
 
 	ngAfterViewInit() {
+		app.prettyBootty.step('done');
+		
 		// small break before loading ads and receiving for push messages
-		setTimeout(() => {
-			app.prettyBootty.step('done');
+		setTimeout(() => {	
 			app.loadAds();
-		}, 100);
+		}, 1000);
 	}
+
+	ngOnChanges(values) {
+		// this._changeDetectorRef.reattach();
+		
+		// setTimeout(() => {
+		//   this._changeDetectorRef.detach();
+		// })
+	  }
 
 	public onSearchKeyUp(event): void {
 		const value = event.target.value.trim();
@@ -201,6 +228,11 @@ export class AppComponent implements OnInit, AfterViewInit {
 
 	public onClickBackButton() {
 		this._location.back();
+		this._changeDetectorRef.detectChanges();
+		setTimeout(() => {
+			
+		}, 0);
+		// this._location.back();
 	}
 
 	public toggleDropdownVisibility(state) {
@@ -215,22 +247,22 @@ export class AppComponent implements OnInit, AfterViewInit {
 
 		this._navBarPosition = this._isNavOpen ? 0 : -this._navBarWidth;
 		this.navbar.nativeElement.removeAttribute('style');
-		setTimeout(() => {
-			if (this._isNavOpen)
-				this.router.navigate(this.activatedRoute.snapshot.url, { queryParamsHandling: 'merge', queryParams: { menu: 1 }, relativeTo: this.activatedRoute })
-			else {
-				this.router.navigate(this.activatedRoute.snapshot.url, { queryParamsHandling: 'merge', queryParams: { menu: null }, replaceUrl: true, relativeTo: this.activatedRoute })
-			}
-		}, 0);
+		// setTimeout(() => {
+		// 	if (this._isNavOpen)
+		// 		this.router.navigate(this.activatedRoute.snapshot.url, { queryParamsHandling: 'merge', queryParams: { menu: 1 }, relativeTo: this.activatedRoute })
+		// 	else {
+		// 		this.router.navigate(this.activatedRoute.snapshot.url, { queryParamsHandling: 'merge', queryParams: { menu: null }, replaceUrl: true, relativeTo: this.activatedRoute })
+		// 	}
+		// }, 0);
 	}
 
-	public toggleSearch() {
-		this.searchOpen = !this.searchOpen;
+	public toggleSearch(state?: boolean) {
+		this.searchOpen = typeof state === 'boolean' ? state : !this.searchOpen;
 		this.header.nativeElement.classList.toggle('searchOpen', this.searchOpen);
-		this.inputRef.nativeElement.focus();
 
-		// wait until visible
-		// requestAnimationFrame(() => this.inputRef.nativeElement.focus());
+		if (this.searchOpen) {
+			this.inputRef.nativeElement.focus();
+		}
 	}
 
 	public onClickFilter(event?, state?: boolean) {

@@ -55,6 +55,7 @@ export class ProfileComponent implements OnInit {
 	}
 
 	ngOnDestroy() {
-		this._routeSub.unsubscribe();
+		if (this._routeSub)
+			this._routeSub.unsubscribe();
 	}
 }

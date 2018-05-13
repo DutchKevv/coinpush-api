@@ -12,6 +12,7 @@
     <preference name="fullscreen" value="false" />
     <preference name="StatusBarBackgroundColor" value="#000000" />
     <preference name="StatusBarOverlaysWebView" value="false" />
+    <preference name="KeyboardShrinksView" value="true" />
     <icon src="assets/icon.png" />
     <content src="index.html" />
     <access origin="http://10.0.2.2" />
@@ -66,6 +67,7 @@
     </plugin>
     <plugin name="cordova-plugin-device" spec="^2.0.2" />
     <plugin name="cordova-plugin-disable-ios11-statusbar" spec="^1.0.0" />
+    <plugin name="cordova-plugin-keyboard" spec="^1.2.0" />
     <engine name="android" spec="7.1.0" />
     <engine name="ios" spec="^4.5.4" />
 </widget>

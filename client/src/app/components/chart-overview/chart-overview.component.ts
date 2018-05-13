@@ -25,8 +25,7 @@ import { InstrumentList } from './instrument-list';
 	selector: 'chart-overview',
 	templateUrl: './chart-overview.component.html',
 	styleUrls: ['./chart-overview.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	// encapsulation: ViewEncapsulation.None
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class ChartOverviewComponent implements OnInit, OnDestroy {
@@ -50,7 +49,8 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 	private _filterSub;
 	private _priceChangeSub;
 	private _eventSub;
-	private _instrumentList: InstrumentList = new InstrumentList(this.cacheService);
+	private _destroyed = false;
+	// private _instrumentList: InstrumentList = new InstrumentList(this.cacheService);
 
 	constructor(
 		public userService: UserService,
@@ -66,18 +66,24 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
+		
 		this._filterSub = this._applicationRef.components[0].instance.filterClick$.subscribe(state => this.toggleFilterNav(null, state));
-		this._priceChangeSub = this.cacheService.changed$.subscribe(changedSymbols => this._onPriceChange(changedSymbols));
-		this._eventSub = this._eventService.events$.subscribe(() => {
-			this._changeDetectorRef.detectChanges();
-		});
+		this._eventSub = this._eventService.events$.subscribe(() => this._changeDetectorRef.detectChanges());
 
+		// requestAnimationFrame(() => {
 		this.toggleActiveFilter(this.defaultActiveFilter);
 
+		// start priceChange listener after first render to prevent quick
+		this._priceChangeSub = this.cacheService.changed$.subscribe(changedSymbols => this._onPriceChange(changedSymbols));
+
 		this._routeSub = this._route.queryParams.subscribe(params => {
-			// // if its the same as the current, do nothing
+			console.log('params', params);
+
+			// if its the same as the current, do nothing
 			if (this.activeSymbol && this.activeSymbol.options.name === params['symbol'])
 				return;
+
+			console.log('routesub');
 
 			// only continue if symbol is known (could be old bookmark)
 			if (params['symbol']) {
@@ -86,16 +92,16 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 					return;
 				}
 
-				// showing a specific symbol, so no active filter
-				this.toggleActiveFilter('', false);
+				this.toggleActiveFilter('', false)
 
 				// set symbol
 				this.symbols = [symbol];
 				this.setActiveSymbol(null, this.symbols[0]);
 			} else {
-				this.toggleActiveFilter(this.defaultActiveFilter);
+				// this.toggleActiveFilter(this.defaultActiveFilter)
 			}
 		});
+		// });
 	}
 
 	public toggleAlarmMenu(event: any, symbol: SymbolModel, state?: boolean) {
@@ -118,6 +124,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 	}
 
 	public toggleActiveFilter(filter: string, removeSymbolFromUrl = true) {
+		console.log('toggleFilter!');
 		if (filter === this.activeFilter)
 			return;
 
@@ -185,12 +192,12 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 		// console.log(this._instrumentList.build(this.symbols));
 		// this.grid.nativeElement.parentNode.replaceChild(this._instrumentList.build(this.symbols), this.grid.nativeElement)
 		// this.grid.nativeElement.appendChild(this._instrumentList.build(this.symbols));
-		// this.grid.nativeElement.appendChild(this._instrumentList.build(this.symbols));
+		// this.grid.nativeElemeßnt.appendChild(this._instrumentList.build(this.symbols));
 
 		this.activeSymbol = null;
-		this.scrollToTop();
-		this._changeDetectorRef.detectChanges();
-
+		// this._changeDetectorRef.detectChanges()
+		// this.scrollToTop();
+		this._changeDetectorRef.detectChanges())
 		// if (this.symbols.length)
 		// this.setActiveSymbol(undefined, this.symbols[0]);
 	}
@@ -265,13 +272,15 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 	private scrollIntoView(el): void {
 		const rect = el.getBoundingClientRect();
 		const isInView = (rect.top >= 0 && rect.left >= 0 && rect.bottom <= (el.parentNode.offsetHeight + el.offsetHeight));
-		
+
 		if (!isInView) {
 			el.parentNode.scrollTop = el.offsetTop - el.offsetHeight;
 		}
 	}
 
 	ngOnDestroy() {
+		this._destroyed = true;
+
 		this._applicationRef.components[0].instance.titleText$.next('');
 
 		if (this._priceChangeSub)

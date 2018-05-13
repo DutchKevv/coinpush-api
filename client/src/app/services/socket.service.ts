@@ -40,7 +40,7 @@ export class SocketService {
     }
 
     private _getSocketUrl(): string {
-        return app.address.host + '://' + app.address.ip + (app.address.port ? ':' + app.address.port : '');
+        return (app.address.host ? `${app.address.host}://` : '') + app.address.ip + (app.address.port ? ':' + app.address.port : '');
         // return app.address.host + '://' + app.address.ip + (app.address.port ? ':' + app.address.port : '';
     }
 }

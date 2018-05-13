@@ -66,5 +66,4 @@
         (onDestroy)="onDestroyTriggerMenu(); chart.removePlotLine('new-alarm')" (inputValueChange)="chart.updatePlotLine('new-alarm', $event, CUSTOM_EVENT_TYPE_ALARM_NEW, true)"></app-alarm-menu>
 </div>
 
-<!-- <app-chart-box #chart></app-chart-box> -->
 <app-chart-box #chart [symbolModel]="activeSymbol" class="hidden" [ngClass]="{hidden: !activeSymbol}"></app-chart-box>

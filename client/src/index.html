@@ -18,9 +18,11 @@
         html {
             height: 100%;
             touch-action: manipulation;
+            overflow: hidden;
         }
 
         body {
+            overflow: hidden;
             height: 100%;
             background: #222122;
             margin: 0;
@@ -56,17 +58,17 @@
             /* top: calc(50% - 120px); */
             left: 0;
             right: 0;
-            z-index: 100000000;
+            z-index: -100000000;
             transition: opacity .4s ease;
             opacity: 1;
         }
 
         #preload-box.fade-in {
-            opacity: 1;
+            /* animation: fadeIn .4s linear forwards;  */
         }
 
         #preload-box.fade-out {
-            opacity: 0;
+            animation: fadeOut .4s linear forwards; 
         }
 
         #initialProgressBar {
@@ -111,6 +113,18 @@
             opacity: 0.75;
             z-index: 1000;
         }
+
+        @keyframes fadeIn {
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            100% {
+                opacity: 0;
+            }
+        }
     </style>
 
     <!-- <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script> -->
@@ -129,7 +143,7 @@
         (adsbygoogle = window.adsbygoogle || []).push({});
     </script> -->
 
-    <div id="preload-box" class="fade-out">
+    <div id="preload-box" class="fade-in">
         <h4>Crypto, Forex, Resources you name it...</h4>
         <div id="initialProgressBar">
             <span>2% init</span>
@@ -177,13 +191,6 @@
                 isLocal: document.URL.indexOf('file://') > -1
             };
 
-            window.platform.prettyBootTimeout = setTimeout(() => {
-                const el = document.getElementById('preload-box').classList.remove('fade-out');
-
-                if (!el)
-                    return;
-            }, 200);
-
             /**
              * 
              * browser browser browser browser browser browser 
@@ -203,7 +210,7 @@
             // device ready listener
             window.platform.isReady$ = new Promise((resolve, reject) => {
                 document.addEventListener("deviceready", function callback() {
-                    window.platform.isEmulator = (device && device.isVirtual) || navigator.platform === 'Linux i686',
+                    window.platform.isEmulator = (device && device.isVirtual) || navigator.platform === 'Linux i686';
                     document.removeEventListener('deviceready', callback, false);
                     window.platform.isReady = true;;
                     window.app.init().catch(console.error);

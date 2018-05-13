@@ -65,7 +65,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 
 	public hasError = false;
 	public graphType: string = DEFAULT_GRAPHTYPE;
-	public zoom: number = 1;
+	public zoom: number = 2;
 	public timeFrame: string = 'H1';
 	public indicatorContainerOpen$: BehaviorSubject<Boolean> = new BehaviorSubject(false);
 	public indicatorContainerOpen = false;
@@ -308,6 +308,23 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 		this._zone.runOutsideAngular(() => {
 			var self = this;
 			this._chart = HighStock.chart(this.chartRef.nativeElement, {
+				plotOptions: {
+					sma: {
+						marker: {
+							enabled: false
+						},
+						lineWidth: 1
+					},
+					bollingerBands: {
+						marker: {
+							enabled: false
+						},
+						lineWidth: 1
+					},
+					line: {
+						lineWidth: 3
+					}
+				},
 				xAxis: [
 					{},
 					{

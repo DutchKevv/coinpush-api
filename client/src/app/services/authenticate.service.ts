@@ -79,7 +79,15 @@ export class AuthenticationService {
 		return result;
 	}
 
-	async authenticate(email?: string, password?: string, token?: string, profile = false, reload = false): Promise<boolean> {
+	/**
+	 * 
+	 * @param email 
+	 * @param password 
+	 * @param token 
+	 * @param profile 
+	 * @param reload 
+	 */
+	async authenticate(email?: string, password?: string, token?: string, loadProfile = false, reload = false): Promise<boolean> {
 		if (!email && !password && !token) {
 			token = app.user.token;
 
@@ -96,7 +104,7 @@ export class AuthenticationService {
 
 		try {
 			const params = new HttpParams({
-				fromObject: { profile: '0' }
+				fromObject: { loadProfile: '0' }
 			});
 
 			const result = <any>await this._http.post('/authenticate', postData, { params }).toPromise();

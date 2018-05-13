@@ -16,11 +16,15 @@
     background-color: #4267b2;
     color: white;
 
-    i {
+    i.fa-facebook-square {
         border-right: 1px solid white;
         margin-right: 10px;
         padding-right: 10px;
         font-size: 20px;
+    }
+
+    span.align-middle {
+        margin-right: 5px;
     }
 }
 
