@@ -49,9 +49,9 @@
     z-index: 122;
     top: 39px;
     left: 0;
+    bottom: 0;
     width: 100%;
     background: $background-light;
-    height: 100%;
     overflow: auto;
 
     &.hidden {
@@ -63,7 +63,7 @@
         left: calc(50% - 200px);
         height: auto;
         top: 35px;
-        box-shadow: -3px 4px 6px rgba(0, 0, 0, 0.6), 4px 3px 6px rgba(0, 0, 0, 0.6);
+        box-shadow: -3px 4px 4px rgba(0, 0, 0, 0.4), 4px 3px 4px rgba(0, 0, 0, 0.4);
     } 
 
     .notification-drop-down-header {

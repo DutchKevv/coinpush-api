@@ -115,18 +115,24 @@ form {
     border-radius: 0;
     border: none;
     padding: 10px 20px;
+
+    i {
+        font-size: 20px;
+    }
 }
 
 .form-control {
     padding: 2px 8px;
     border-radius: 0;
     border: none;
-    font-size: 16px;
+    font-size: 13px;
     line-height: 25px;
 }
 
 input[type=text] {
     margin: 0;
+    background: #353535;
+    color: white;
 
     &:disabled {
         background-color: #989898; 

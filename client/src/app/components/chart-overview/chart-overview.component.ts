@@ -197,7 +197,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 		this.activeSymbol = null;
 		// this._changeDetectorRef.detectChanges()
 		// this.scrollToTop();
-		this._changeDetectorRef.detectChanges())
+		this._changeDetectorRef.detectChanges();
 		// if (this.symbols.length)
 		// this.setActiveSymbol(undefined, this.symbols[0]);
 	}
