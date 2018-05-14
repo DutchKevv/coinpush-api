@@ -39,7 +39,7 @@ export class EventService {
 
 			const eventModel = new EventModel(
 				result._id,
-				result.createDate,
+				result.createdAt,
 				result.symbol,
 				result.type,
 				result.alarm,
@@ -115,7 +115,7 @@ export class EventService {
 	private _initializeEvents() {
 		this.events$.next((app.data.events || []).map(event => new EventModel(
 			event._id,
-			event.createDate,
+			event.createdAt,
 			event.symbol,
 			event.type,
 			event.alarm,

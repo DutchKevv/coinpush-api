@@ -33,6 +33,7 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 	@Output() onDestroy: EventEmitter<boolean> = new EventEmitter;
 
 	public historyEvents$;
+	public historyEvents;
 	public saving: boolean = false;
 
 	public activeTab = 'new';
@@ -57,7 +58,7 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 		// this._changeDetectorRef.detach();
 	}
 
-	ngOnChanges(changes: SimpleChanges) {
+	async ngOnChanges(changes: SimpleChanges) {
 		if (changes.symbol && changes.symbol.currentValue) {
 			this._unsubscribe();
 
@@ -130,9 +131,9 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 				const percDiff = (this.formModel.amount / this.symbol.options.bid * 100) - 100;
 
 				if (percDiff > 0) {
-					this.formModel.amount += this.symbol.options.bid * 0.05;
+					this.formModel.amount += this.symbol.options.bid * 0.008;
 				} else {
-					this.formModel.amount -= this.symbol.options.bid * 0.05;
+					this.formModel.amount -= this.symbol.options.bid * 0.008;
 				}
 
 				this.formModel.amount = parseFloat(this._cacheService.priceToFixed(this.formModel.amount, this.symbol));

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Output, OnDestroy, EventEmitter } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Output, OnDestroy, EventEmitter, OnInit } from '@angular/core';
 import { NotificationService } from '../../services/notification.service';
 import { Router, NavigationStart } from '@angular/router';
 import { AuthenticationService } from '../../services/authenticate.service';
@@ -8,10 +8,11 @@ import { BehaviorSubject } from 'rxjs';
 @Component({
 	selector: 'app-notification-menu',
 	templateUrl: './notification-menu.component.html',
-	styleUrls: ['./notification-menu.component.scss']
+	styleUrls: ['./notification-menu.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class NotificationMenuComponent implements OnDestroy {
+export class NotificationMenuComponent implements OnDestroy, OnInit {
 
 	@Output() public open: boolean = false;
 	public notifications$ = new BehaviorSubject([]);
@@ -25,19 +26,16 @@ export class NotificationMenuComponent implements OnDestroy {
 		private _authenticationSerice: AuthenticationService,
 		private _userService: UserService
 	) {
-		this.notificationService.findMany().subscribe(notifications => {
-			console.log(notifications);
-			this.notifications$.next(notifications);
-
-			if (!notifications.length) {
-				this.showNoNotifications$.next(true);
-			}
-		});
-
+		
 		this._routerEventsSub = this.router.events.subscribe((val) => {
 			if (val instanceof NavigationStart)
 				this.open = false;
 		});
+	}
+
+	async ngOnInit() {
+		const notifications = await this.notificationService.findMany().toPromise();
+		this.notifications$.next(notifications);
 	}
 
 	public toggleNotificationMenu(state?: boolean) {
@@ -56,6 +54,7 @@ export class NotificationMenuComponent implements OnDestroy {
 		event.stopPropagation();
 
 		this.notificationService.markAllAsRead();
+
 	}
 
 	public onClickNotification(event, notification) {

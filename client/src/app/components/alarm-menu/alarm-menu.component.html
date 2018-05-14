@@ -4,11 +4,17 @@
     <i (click)="onDestroy.emit(true)" class="fa fa-close"></i>
 </header>
 <main>
+    <!-- tabs header -->
     <ul class="side-menu-top-nav">
         <li [ngClass]="{active: activeTab === 'new'}" (click)="toggleTab('new')">New</li>
         <li [ngClass]="{active: activeTab === 'active'}" (click)="toggleTab('active')">Active</li>
         <li [ngClass]="{active: activeTab === 'history'}" (click)="toggleTab('history')">History</li>
     </ul>
+
+    <!-- loading spinner-->
+    <!-- <div *ngIf="loading" class="spinner"></div> -->
+
+    <!-- tab new -->
     <ng-container *ngIf="activeTab === 'new'">
         <form class="form" (ngSubmit)="onFormSubmit()">
             <div class="form-group">
@@ -40,26 +46,45 @@
                     <p>Current price: {{symbol.options.bid}}</p>
                 </div>
                 <div>
-                    <button class="btn btn-sm btn-success pull-right" [disabled]="saving === true">Add
+                    <button class="btn btn-success pull-right" [disabled]="saving === true">
+                        Add alarm
                         <i class="fa fa-spinner" *ngIf="saving === true"></i>
                     </button>
                 </div>
             </div>
         </form>
     </ng-container>
+
+    <!-- tab active-->
     <ng-container *ngIf="activeTab === 'active'" class="active-alarm-view" style="padding-top: 10px;">
         <div class="alarm-row" *ngFor="let event of this.eventService.events$ | async | alarmMenuActiveSymbolEvent: symbol.options.name">
             <i class="fa fa-arrow-{{event.alarm.dir === 1 ? 'up' : 'down'}}"></i>
             <span>{{event.alarm.price}}</span>
-            <span>{{event.createDate | date: 'dd/MM/yyyy HH:MM:SS'}}</span>
-            <i (click)="onClickRemoveEvent(event);" class="fa fa-close" style="float: right"></i>
+            <span>{{event.createdAt | date: 'dd/MM/yyyy HH:MM:SS'}}</span>
+            <i (click)="onClickRemoveEvent(event);" class="fa fa-trash" style="float: right"></i>
         </div>
     </ng-container>
+
+    <!-- tab history-->
+
+
     <ng-container *ngIf="activeTab === 'history'" style="padding-top: 10px;">
-        <div class="alarm-row" *ngFor="let event of this.historyEvents$ | async">
-            <i class="fa fa-arrow-{{event.alarm.dir === 1 ? 'up' : 'down'}}"></i>
-            <span>{{event.alarm.price}}</span>
-            <span>{{event.triggeredDate | date: 'dd/MM/yyyy HH:MM:SS'}}</span>
+        <div *ngIf="historyEvents$ | async as events; else loading">
+            <ng-container *ngIf="events.length; else noItems">
+                <div class="alarm-row" *ngFor="let event of events">
+                    <i class="fa fa-arrow-{{event.alarm.dir === 1 ? 'up' : 'down'}}"></i>
+                    <span>{{event.alarm.price}}</span>
+                    <span>{{event.triggeredDate | date: 'dd/MM/yyyy HH:MM:SS'}}</span>
+                </div>
+            </ng-container>
+            <ng-template #noItems>
+                <p class="no-history-events">No alarms triggered yet</p>
+            </ng-template>
         </div>
+        <ng-template #loading>
+            <div class="spinner"></div>
+        </ng-template>
+
+
     </ng-container>
 </main>

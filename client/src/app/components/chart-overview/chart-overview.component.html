@@ -36,7 +36,7 @@
             <div class="col-instrument">
                 <span class="instrument-image symbol-img-{{symbol.options.name}}"></span>
                 <p class="instrument-title">{{symbol.options.displayName}}</p>
-                <span>${{symbol.options.bid || 0}}</span>
+                <span>{{symbol.options.bid || 0}}</span>
             </div>
             <div class="col-changes">
                 <div class="col-1h">
@@ -51,9 +51,9 @@
                 </div>
                 <div *ngIf="!symbol.options.halted;else halted">
                     <span class="value-bid">
-                        ${{symbol.options.highD | number : '1.2-2'}}
+                        {{symbol.options.highD | number : '1.2-2'}}
                         <i class="fa fa-exchange"></i>
-                        ${{symbol.options.lowD | number : '1.2-2'}}
+                        {{symbol.options.lowD | number : '1.2-2'}}
                     </span>
                 </div>
                 <ng-template #halted>Market closed</ng-template>

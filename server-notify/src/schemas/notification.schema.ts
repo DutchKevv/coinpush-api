@@ -2,10 +2,6 @@ import { Schema, model } from 'mongoose';
 import * as beautifyUnique from 'mongoose-beautiful-unique-validation';
 
 export const NotificationSchema = new Schema({
-    createDate: {
-        type: Date,
-        default: Date.now
-    },
     toUserId: {
         type: Schema.Types.ObjectId,
         required: true,
@@ -33,6 +29,8 @@ export const NotificationSchema = new Schema({
     readDate: {
         type: Date
     }
+}, {
+	timestamps: true
 });
 
 NotificationSchema.plugin(beautifyUnique);

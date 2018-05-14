@@ -71,6 +71,8 @@ export const UserSchema = new Schema({
             default: 1
         }
     }
+}, {
+	timestamps: true
 });
 
 UserSchema.statics.addDevice = async function (userId, device): Promise<void> {

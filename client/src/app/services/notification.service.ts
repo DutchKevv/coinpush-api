@@ -7,6 +7,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { SocketService } from './socket.service';
 import * as moment from 'moment';
 
+import { INotification } from 'coinpush/interface/notification.interface';
+
 @Injectable({
 	providedIn: 'root',
 })
@@ -46,7 +48,7 @@ export class NotificationService {
 
 		return this._http.get('/notify', { params }).map((notifications: any) => {
 			notifications.forEach(notification => {
-				notification.fromNow = moment(notification.createDate).fromNow();
+				notification.fromNow = moment(notification.createdAt).fromNow();
 			})
 			return notifications;
 		});
@@ -57,6 +59,10 @@ export class NotificationService {
 	}
 
 	public markAllAsRead(): Promise<Response> {
+		this.notifications.forEach((notification: INotification) => {
+			notification.isRead = true;
+		});
+
 		return <any>this._http.put('/notify/unread', {}).toPromise();
 	}
 
@@ -78,19 +84,19 @@ export class NotificationService {
 
 		switch (notification.data.type) {
 			case 'post-comment':
-				this.unreadCount$.next(unreadValue+1);
+				this.unreadCount$.next(unreadValue + 1);
 				// window.location.hash = '#/comment/' + notification.data.parentId + '?focus=' + notification.data.commentId;
 				break;
 			case 'post-like':
-				this.unreadCount$.next(unreadValue+1);
+				this.unreadCount$.next(unreadValue + 1);
 				// window.location.hash = '#/comment/' + notification.data.commentId;
 				break;
 			case 'comment-like':
-				this.unreadCount$.next(unreadValue+1);
+				this.unreadCount$.next(unreadValue + 1);
 				// window.location.hash = '#/comment/' + notification.data.parentId + '?focus=' + notification.data.commentId;
 				break
 			case 'symbol-alarm':
-				this.unreadCount$.next(unreadValue+1);
+				this.unreadCount$.next(unreadValue + 1);
 				// window.location.hash = '#/symbols/?symbol=' + notification.data.symbol;
 				app.emit('event-triggered', Object.assign(notification, { title: notification.title }));
 				break

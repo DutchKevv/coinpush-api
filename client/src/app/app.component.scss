@@ -91,14 +91,14 @@ header {
 
     .fa-navicon {
         font-size: 34px;
-        margin-top: 0px;
+        margin-top: -1px;
         padding: 0 $header-icon-padding-x;
     }
 
     .fa-filter {
-        font-size: 36px;
+        font-size: 33px;
         padding: 0 $header-icon-padding-x;
-        margin-top: 0px;
+        margin-top: -1px;
     }
 
     .fa-ellipsis-v,
@@ -110,7 +110,7 @@ header {
     .fa-search {
         margin-right: 5px;
         font-size: 30px;
-        margin-top: -1px;
+        margin-top: -2px;
     }
 
     .search-container {

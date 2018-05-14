@@ -39,11 +39,9 @@ export const CommentSchema = new Schema({
 	},
 	public: {
 		type: Boolean
-	},
-	created: {
-		type: Date,
-		default: Date.now
 	}
+}, {
+	timestamps: true
 });
 
 CommentSchema.statics.addILike = async function (userId, comments: Array<any>): Promise<any> {

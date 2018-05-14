@@ -3,12 +3,20 @@
     <span *ngIf="(notificationService.unreadCount$ | async) > 0" class="notification-unread-circle">{{notificationService.unreadCount$ | async}}</span>
 </a>
 <div class="notification-drop-down" *ngIf="open">
-    <div class="notification-drop-down-header">
-        <a (click)="onClickMarkAllAsRead($event)">mark all as read</a>
-    </div>
-    <div *ngIf="(showNoNotifications$ | async) === true" class="no-notifications-container">
-        <p>No notifications. <br>Try setting some price alarms.</p>
-    </div>
+    <ng-container *ngIf="notifications$ | async as notifications">
+        <div *ngIf="notifications.length; else noNotitifications" class="notification-drop-down-header else noNotitifications">
+            <a (click)="onClickMarkAllAsRead($event)">mark all as read</a>
+        </div>
+    </ng-container>
+
+    <ng-template #noNotitifications>
+        <div class="no-notifications-container">
+            <p>No notifications yet22
+                <br>
+                <br>Try setting some price alarms.</p>
+        </div>
+    </ng-template>
+
     <div class="notification-drop-down-item" *ngFor="let notification of notifications$ | async" [ngClass]="{unread: !notification.isRead}">
         <a [routerLink]="['/user/' + notification.fromUserId._id]" *ngIf="notification.type === 'user-follow'" (click)="onClickNotification($event, notification)">
             <img src="{{notification.fromUserId.img | NormalizeImgUrl: 'user'}}">
@@ -17,37 +25,44 @@
                     <b>{{notification.fromUserId.name}}</b>
                     started following you
                 </p>
-                <p><i class="fa fa-user-plus"></i>{{notification.fromNow}}</p>
+                <p>
+                    <i class="fa fa-user-plus"></i>{{notification.fromNow}}</p>
             </div>
         </a>
-        <a [routerLink]="['/comment/' + (notification.data.parentId || notification.data.commentId)]" *ngIf="notification.type === 'post-comment'" (click)="onClickNotification($event, notification)">
+        <a [routerLink]="['/comment/' + (notification.data.parentId || notification.data.commentId)]" *ngIf="notification.type === 'post-comment'"
+            (click)="onClickNotification($event, notification)">
             <img src="{{notification.fromUserId.img | NormalizeImgUrl: 'user'}}">
             <div>
                 <p>
                     <b>{{notification.fromUserId.name}}</b>
                     commented on your post
                 </p>
-                <p><i class="fa fa-comment"></i>{{notification.fromNow}}</p>
+                <p>
+                    <i class="fa fa-comment"></i>{{notification.fromNow}}</p>
             </div>
         </a>
-        <a [routerLink]="['/comment/' + (notification.data.parentId || notification.data.commentId)]" *ngIf="notification.type === 'post-like'" (click)="onClickNotification($event, notification)">
+        <a [routerLink]="['/comment/' + (notification.data.parentId || notification.data.commentId)]" *ngIf="notification.type === 'post-like'"
+            (click)="onClickNotification($event, notification)">
             <img src="{{notification.fromUserId.img | NormalizeImgUrl: 'user'}}">
             <div>
                 <p>
                     <b>{{notification.fromUserId.name}}</b>
                     liked your post
                 </p>
-                <p><i class="fa fa-thumbs-up"></i>{{notification.fromNow}}</p>
+                <p>
+                    <i class="fa fa-thumbs-up"></i>{{notification.fromNow}}</p>
             </div>
         </a>
-        <a [routerLink]="['/comment/' + (notification.data.parentId || notification.data.commentId)]" *ngIf="notification.type === 'comment-like'" (click)="onClickNotification($event, notification)">
+        <a [routerLink]="['/comment/' + (notification.data.parentId || notification.data.commentId)]" *ngIf="notification.type === 'comment-like'"
+            (click)="onClickNotification($event, notification)">
             <img src="{{notification.fromUserId.img | NormalizeImgUrl: 'user'}}">
             <div>
                 <p>
                     <b>{{notification.fromUserId.name}}</b>
                     liked your comment
                 </p>
-                <p><i class="fa fa-thumbs-up"></i>{{notification.fromNow}}</p>
+                <p>
+                    <i class="fa fa-thumbs-up"></i>{{notification.fromNow}}</p>
             </div>
         </a>
         <a *ngIf="notification.type === 'symbol-alarm'" [routerLink]="['/symbols']" [queryParams]="{ symbol: notification.data.symbol }"

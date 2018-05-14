@@ -15,6 +15,8 @@ const UserSchema = new Schema({
     img: {
         type: String
     }
+}, {
+	timestamps: true
 });
 
 UserSchema.plugin(beautifyUnique);

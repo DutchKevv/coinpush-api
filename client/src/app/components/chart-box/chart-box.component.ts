@@ -590,7 +590,8 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	private _onScroll(event: MouseWheelEvent): boolean {
 		event.stopPropagation();
 		event.preventDefault();
-
+		console.log('scroll', event);
+		
 		let shift = Math.ceil(this._calculateViewableBars() / this._scrollSpeedStep);
 
 		if (shift < this._scrollSpeedMin)

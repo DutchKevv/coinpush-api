@@ -13,6 +13,8 @@ export const StatusSchema = new Schema({
 		type: Number,
 		required: true
 	}
+}, {
+	timestamps: true
 });
 
 export const Status = model('__status', StatusSchema);
