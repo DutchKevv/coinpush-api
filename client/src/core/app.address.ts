@@ -5,7 +5,7 @@ declare let window: any;
 const localIp = '127.0.0.1';
 const androidEmulatorIp = '10.0.2.2';
 const iosEmulatorIp = 'localhost';
-const liveIp = 'frontend-freelance.com';
+const liveIp = 'coinpush.app';
 
 export const getAddress = function () {
 	let secure = true;

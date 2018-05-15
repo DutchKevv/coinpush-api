@@ -9,8 +9,8 @@ let domain = {
 
 if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'prod') {
     domain = {
-        host: 'frontend-freelance.com',
-        apiUrl: 'https://frontend-freelance.com',
+        host: 'coinpush.app',
+        apiUrl: 'https://coinpush.app',
         port: 4000
     };
 }

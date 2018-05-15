@@ -174,7 +174,7 @@ export class AuthenticationService {
 
 				// const redirectUrl = 'https://www.facebook.com/connect/login_success.html';
 				// const redirectUrl = window.location.origin + 'index.redirect.facebook.html';
-				const redirectUrl = (environment.production ? 'https://frontend-freelance.com' : 'http://localhost:4000') + '/index.redirect.facebook.html';
+				const redirectUrl = app.address.hostUrl + '/index.redirect.facebook.html';
 				const loginUrl = `https://graph.facebook.com/oauth/authorize?client_id=${clientId}&response_type=token&redirect_uri=${redirectUrl}&scope=${scope}`;
 
 				const self = this;

@@ -31,7 +31,7 @@ module.exports =
     },
     "ip": {
         "local": "127.0.0.1",
-        "prod": "frontend-freelance.com",
+        "prod": "coinpush.app",
         "devLocal": "127.0.0.1",
         "devApp": "10.0.2.2"
     },

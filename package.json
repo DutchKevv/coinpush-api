@@ -57,7 +57,9 @@
     "clean-server": "cd ./scripts && sh ./clean-npm-modules.sh",
     "clean-db": "",
     "_prod": "pm2 start ecosystem.config.js --env production && pm2 monit",
-    "inc-build-number": "node ./scripts/inc-build-number.js"
+    "inc-build-number": "node ./scripts/inc-build-number.js",
+    "test": "echo $(pwd)",
+    "get-ssl-cert": "docker run -v $(pwd)/server-nginx/ssl:/etc/letsencrypt -e http_proxy=$http_proxy -e domains=\"coinpush.app\" -e email=\"kewin@frontend-freelance.com\" -p 80:80 -p 443:443  --rm pierreprinetti/certbot:latest"
   },
   "dependencies": {}
 }
