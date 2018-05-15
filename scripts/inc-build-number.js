@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const FILE_PATH = path.join(__dirname, '../client/package.json');
-const OUT_FILE_PATH = path.join(__dirname, '../client/dist/www/config.json');
+const OUT_FILE_PATH = path.join(__dirname, '../static/clients/web/config.json');
 
 const packageObject = require(FILE_PATH);
 

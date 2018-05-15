@@ -62,9 +62,9 @@ const config = {
     },
     image: {
         maxUploadSize: 10 * 1024 * 1024,
-        profilePath: path.join(__dirname, 'images', 'profile'),
-        profileBaseUrl: '/images/profile/',
-        profileDefaultPath: path.join(__dirname, 'images', 'default', 'profile', 'nl.png'),
+        profilePath: path.join(__dirname, 'static/image/profile'),
+        profileBaseUrl: '/image/profile/',
+        profileDefaultPath: path.join(__dirname, 'static/image/default/profile/nl.png'),
         profileDefaultUrl: '/assets/image/default-profile.jpg'
     },
     redis: {

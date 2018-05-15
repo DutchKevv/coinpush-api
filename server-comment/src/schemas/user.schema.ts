@@ -22,8 +22,6 @@ const UserSchema = new Schema({
 UserSchema.plugin(beautifyUnique);
 
 UserSchema.statics.normalizeProfileImg = function (doc) {
-	const domainPrefix = 'http://' + (process.env.NODE_ENV === 'production' ? config.ip.prod : config.ip.local) + ':' + config.port;
-
 	// default img
 	if (!doc.createUser.img) {
 		doc.createUser.img = config.image.profileDefaultUrl;

@@ -10,16 +10,16 @@
   "main": "index.js",
   "scripts": {
     "start": "ng build --watch --aot --output-hashing=none",
-    "build": "ng build --build-optimizer --prod --aot --output-hashing=none",
-    "build-stats": "ng build --build-optimizer --prod --aot --stats-json --output-hashing=none",
-    "build-verbose": "ng build --build-optimizer --prod --stats-json --output-hashing=none --verbose > build.txt",
+    "build-prod": "ng build --build-optimizer --prod --aot --output-hashing=none",
+    "build-prod-stats": "ng build --build-optimizer --prod --aot --stats-json --output-hashing=none",
+    "build-prod-verbose": "ng build --build-optimizer --prod --stats-json --output-hashing=none --verbose > build.txt",
     "load-symbol-images": "node ./tools/load-symbol-images.js",
     "build-spritesheet": "node ./tools/build-spritesheet.js",
-    "bundle-report": "webpack-bundle-analyzer dist/www/stats.json",
+    "bundle-report": "webpack-bundle-analyzer ../static/clients/web/stats.json",
     "install-shared": "cd ../shared/modules/coinpush && npm i",
     "coinpush": "file:/usr/src/app/shared/modules/coinpush"
   },
-  "author": "Apache Cordova Team",
+  "author": "HK Brandsma",
   "license": "Apache-2.0",
   "dependencies": {
     "@angular-devkit/build-angular": "latest",

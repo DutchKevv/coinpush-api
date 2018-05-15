@@ -18,7 +18,7 @@ export class NormalizeImgUrlPipe implements PipeTransform {
 			return value;
 
 		if (!value.startsWith('/'))
-			value = '/images/profile/' + value;
+			value = '/image/profile/' + value;
 
 		return app.address.hostUrl + value;
 	}

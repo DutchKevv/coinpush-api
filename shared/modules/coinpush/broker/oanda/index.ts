@@ -117,7 +117,7 @@ export class OandaApi extends EventEmitter {
 
 					return {
 						precision: -Math.floor(Math.log(symbol.precision, ) / Math.log(10) + 1),
-						img: '/images/default/symbol/spx500-70x70.png',
+						img: '/image/default/symbol/spx500-70x70.png',
 						name: symbol.instrument,
 						displayName: symbol.displayName,
 						broker: BROKER_GENERAL_TYPE_OANDA,

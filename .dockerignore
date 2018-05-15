@@ -23,9 +23,6 @@
 ### shared
 !shared/modules/coinpush/**/*.js
 
-### client
-client/images/
-
 # mobile app
 client-app/.gradle
 client-app/hooks/

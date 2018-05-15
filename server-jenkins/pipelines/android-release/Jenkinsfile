@@ -7,18 +7,18 @@ node {
     }
     stage('install & build client') {
         dir('client') {
-            sh 'npm i && npm run build'
+            sh 'npm i && npm run build-prod'
         }
     }
     stage('install & build app') {
         dir('client-app') {
             sh 'npm i'
             sh './node_modules/.bin/cordova prepare android'
-            sh 'npm run build-android'
+            sh 'npm run build-android-debug'
         }
     }
     stage('deploy to Google Play Console') {
-        dir('client-app/platforms/android/app/build/outputs/apk/debug') {
+        dir('static/clients/android/debug') {
             androidApkUpload googleCredentialsId: 'CoinPush', apkFilesPattern: 'app-debug.apk', trackName: 'alpha'
         }
     }

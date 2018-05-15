@@ -3,7 +3,7 @@
         "release": {
             "keystore": "key.keystore",
             "storePassword": "Halo33221",
-            "alias": "TradeJS",
+            "alias": "CoinPush",
             "password": "Halo33221"
         }
     },

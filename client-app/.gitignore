@@ -1,9 +1,9 @@
-node_modules
-.gradle
-www
-dist/android
-dist/ios
+.idea
 
-platforms
-plugins
+/node_modules
+/www
+/platforms
+/plugins
 
+/adb0.log
+/npm-debug.log

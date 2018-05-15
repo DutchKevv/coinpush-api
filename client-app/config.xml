@@ -13,7 +13,7 @@
     <preference name="StatusBarBackgroundColor" value="#000000" />
     <preference name="StatusBarOverlaysWebView" value="false" />
     <preference name="KeyboardShrinksView" value="true" />
-    <icon src="assets/icon.png" />
+    <icon src="assets/icon/icon.png" />
     <content src="index.html" />
     <access origin="http://10.0.2.2" />
     <access origin="https://coinpush.app" subdomains="true" />
@@ -31,7 +31,6 @@
         <resource-file src="www/google-services.json" target="/app/google-services.json" />
         <preference name="android-minSdkVersion" value="19" />
         <allow-intent href="market:*" />
-        <resource-file src="google-services.json" target="../../google-services.json" />
         <config-file parent="/resources" target="./res/values/strings.xml">
             <string name="fb_app_id">178901869390909</string>
             <string name="fb_app_name">CoinPush</string>
