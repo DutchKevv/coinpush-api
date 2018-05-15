@@ -112,7 +112,7 @@ UserSchema.statics.addDevice = async function (userId, device): Promise<void> {
 UserSchema.statics.removeDevice = async function (userId, token) {
     console.log('sdfsdf', userId, token);
     if (token) {
-        return User.update({_id: userId}, { $pull: { token } });
+        // return User.update({_id: userId}, { $pull: { token: token } });
     }
 }
 
