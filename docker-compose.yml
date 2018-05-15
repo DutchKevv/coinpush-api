@@ -1,18 +1,6 @@
 version: '3.3'
 
 services:
-  jenkins:
-    build: ./server-jenkins
-    image: jenkins
-    container_name: jenkins 
-    ports:
-      - "8080:8080"
-      - "50000:50000"  
-    volumes:
-      - ./server-jenkins/_data:/var/jenkins_home
-      - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      JENKINS_HOST_HOME: "./server-jenkins/_data"
   nginx:
     restart: unless-stopped
     build: ./server-nginx
@@ -164,7 +152,7 @@ services:
       dockerfile: ./client-app/Dockerfile
     volumes:
       - ./client-app:/usr/src/app/client-app
-      - ./static/clients/web:/usr/src/app/static/web
+      - ./static/clients/web:/usr/src/app/static/clients/web
 volumes:
   jenkins_home:
     driver: local
