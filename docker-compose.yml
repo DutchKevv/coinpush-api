@@ -17,9 +17,12 @@ services:
     restart: unless-stopped
     build: ./server-nginx
     image: nginx
-    container_name: nginx 
-    links:
-      - gateway    
+    container_name: nginx  
+    volumes:
+      - ./images:/usr/src/app/images
+      - ./client:/usr/src/app/client
+      - ./server-nginx/pages:/usr/src/app/server-nginx/pages
+      # - ./server-nginx/config:/usr/src/app/server-nginx/config
   mongodb:
     image: mongo:latest
     container_name: "mongodb"

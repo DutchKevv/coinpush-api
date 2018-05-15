@@ -6,10 +6,6 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./images:/usr/src/app/images
-      - ./client:/usr/src/app/client
-      - ./server-nginx/pages:/usr/src/app/server-nginx/pages
-      # - /etc/letsencrypt:/usr/src/app/server-nginx/ssl
       - ./server-nginx/ssl:/usr/src/app/server-nginx/ssl:ro
     build:
       args:
