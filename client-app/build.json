@@ -4,7 +4,15 @@
             "keystore": "key.keystore",
             "storePassword": "Halo33221",
             "alias": "TradeJS",
-            "password" : "Halo33221"
+            "password": "Halo33221"
+        }
+    },
+    "ios": {
+        "debug": {
+            "developmentTeam": "Q37NWTASFN"
+        },
+        "release": {
+            "developmentTeam": "Q37NWTASFN"
         }
     }
 }

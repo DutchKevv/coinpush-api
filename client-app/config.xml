@@ -16,7 +16,7 @@
     <icon src="assets/icon.png" />
     <content src="index.html" />
     <access origin="http://10.0.2.2" />
-    <access origin="https://frontend-freelance.com" subdomains="true" />
+    <access origin="https://coinpush.app" subdomains="true" />
     <access origin="https://facebook.com" subdomains="true" />
     <access origin="https://graph.facebook.com" subdomains="true" />
     <access origin="https://connect.facebook.net" subdomains="true" />
@@ -25,7 +25,7 @@
     <allow-navigation href="https://graph.facebook.com/*" />
     <allow-navigation href="https://connect.facebook.net/*" />
     <allow-navigation href="https://staticxx.facebook.com/*" />
-    <allow-navigation href="https://frontend-freelance.com" />
+    <allow-navigation href="https://coinpush.app" />
     <allow-navigation href="http://10.0.2.2" />
     <platform name="android">
         <resource-file src="www/google-services.json" target="/app/google-services.json" />
@@ -68,6 +68,6 @@
     <plugin name="cordova-plugin-device" spec="^2.0.2" />
     <plugin name="cordova-plugin-disable-ios11-statusbar" spec="^1.0.0" />
     <plugin name="cordova-plugin-keyboard" spec="^1.2.0" />
-    <engine name="android" spec="7.1.0" />
+    <engine name="android" spec="^7.1.0" />
     <engine name="ios" spec="^4.5.4" />
 </widget>

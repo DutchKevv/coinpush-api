@@ -1,6 +1,8 @@
 node_modules
 .gradle
 www
+dist/android
+dist/ios
 
 platforms
 plugins
