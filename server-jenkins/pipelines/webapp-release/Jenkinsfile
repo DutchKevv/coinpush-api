@@ -23,16 +23,16 @@ node {
     }
     stage('build docker container') {
         dir('client') { 
-             sh 'npm run build-prod-client'
+             sh 'npm i && npm run build-prod'
         }
        
     }
-    stage('build client through docker') {
-         dir('client') { 
-             sh 'npm run prod-client'
-        }
+    // stage('build client through docker') {
+    //      dir('client') { 
+    //          sh 'npm run prod-client'
+    //     }
        
-    }
+    // }
     // stage('remove docker container') {
     //     sh 'docker rm client'
     // }
