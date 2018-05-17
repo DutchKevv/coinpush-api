@@ -1,5 +1,9 @@
 def call(Map pipelineParams) {
     node {
+        stage('get source') {
+            checkout scm
+            // load 'server-jenkins/pipelines/client-prod-build/Jenkinsfile'
+        }
         // stage('clean workspace') {
         //     cleanWs()
         // }
