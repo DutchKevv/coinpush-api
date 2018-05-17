@@ -1,4 +1,5 @@
 @Library('clientBuild') _
+clientBuild()
 
 node {
     // stage('clean workspace') {
