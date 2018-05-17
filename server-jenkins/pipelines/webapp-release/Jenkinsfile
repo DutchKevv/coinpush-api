@@ -7,13 +7,16 @@ node {
     }
     stage('get source') {
         checkout scm
-        clientBuild()
+        // clientBuild()
         // load 'server-jenkins/pipelines/client-prod-build/Jenkinsfile'
     }
     stage('build client through docker') {
+         dir('static/clients/web') { 
+            sh 'docker-compose -f docker-compose.yml -f docker-compose.prod.yml build --no-cache client'
+            sh 'docker-compose -f docker-compose.yml -f docker-compose.prod.yml up client'
+         }
         // sh 'npm run d-rmi-all'
-        sh 'docker-compose -f docker-compose.yml -f docker-compose.prod.yml build --no-cache client'
-        sh 'docker-compose -f docker-compose.yml -f docker-compose.prod.yml up client'
+       
     }
     stage('remove docker container') {
         // sh 'docker rm client'
