@@ -1,9 +1,11 @@
+@Library('clientBuild') _
+
 node {
     stage('clean workspace') {
         cleanWs()
     }
     stage('get source') {
-        git branch: 'development', url: 'https://github.com/DutchKevv/TradeJS'
+        checkout scm
     }
     stage('build docker container') {
         sh 'npm run build-prod-client'
