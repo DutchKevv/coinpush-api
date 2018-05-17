@@ -10,7 +10,7 @@
   "main": "index.js",
   "scripts": {
     "start": "ng build --watch --aot --output-hashing=none",
-    "build-prod": "ls && ng build --build-optimizer --prod --aot --output-hashing=none --no-progress",
+    "build-prod": "echo ${pwd} && ng build --build-optimizer --prod --aot --output-hashing=none",
     "build-prod-stats": "ng build --build-optimizer --prod --aot --stats-json --output-hashing=none",
     "build-prod-verbose": "ng build --build-optimizer --prod --stats-json --output-hashing=none --verbose > build.txt",
     "load-symbol-images": "node ./tools/load-symbol-images.js",
