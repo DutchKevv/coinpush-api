@@ -11,7 +11,7 @@ COPY /shared .
 # client
 WORKDIR /usr/src/app/client
 COPY /client/package*.json /client/angular.json ./
-RUN npm i --silent
+RUN npm i
 
 COPY /client/src ./src
 # RUN cd /usr/src/app/client/src && ls
