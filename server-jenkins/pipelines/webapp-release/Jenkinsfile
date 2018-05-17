@@ -2,9 +2,9 @@
 
 
 node {
-    // stage('clean workspace') {
-    //     cleanWs()
-    // }
+    stage('clean workspace') {
+        sh 'docker rm client'
+    }
     stage('get source') {
         sh 'ls'
         checkout scm
