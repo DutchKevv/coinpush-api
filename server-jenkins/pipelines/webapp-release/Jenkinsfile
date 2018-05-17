@@ -1,14 +1,15 @@
 @Library('clientBuild') _
-clientBuild()
+
 
 node {
     // stage('clean workspace') {
     //     cleanWs()
     // }
-    // stage('get source') {
-    //     checkout scm
-    //     // load 'server-jenkins/pipelines/client-prod-build/Jenkinsfile'
-    // }
+    stage('get source') {
+        // checkout scm
+        clientBuild()
+        // load 'server-jenkins/pipelines/client-prod-build/Jenkinsfile'
+    }
     // stage('build docker container') {
     //     sh 'npm run build-prod-client'
     // }
