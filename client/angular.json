@@ -58,7 +58,7 @@
           },
           "configurations": {
             "prod": {
-              "browserTarget": "tradejs:build:production"
+              "browserTarget": "tradejs:build:prod"
             }
           }
         },
