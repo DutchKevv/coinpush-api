@@ -3,11 +3,11 @@ def call(Map pipelineParams) {
         // stage('clean workspace') {
         //     cleanWs()
         // }
-        // stage('get source') {
-        //     // checkout scm
-        //     sh 'ls && echo ${pwd}'
-        //     // load 'server-jenkins/pipelines/client-prod-build/Jenkinsfile'
-        // }
+        stage('get source') {
+            checkout scm
+            // sh 'ls && echo ${pwd}'
+            // load 'server-jenkins/pipelines/client-prod-build/Jenkinsfile'
+        }
         
         // stage('get source') {
         //     git branch: 'development', url: 'https://github.com/DutchKevv/TradeJS'
