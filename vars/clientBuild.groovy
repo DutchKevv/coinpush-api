@@ -16,7 +16,7 @@ def call(Map pipelineParams) {
         //     sh 'ls && npm run build-prod-client'
         // }
         stage('build client through docker') {
-            sh 'npm run d-rmi-all'
+            // sh 'npm run d-rmi-all'
             sh 'docker-compose -f docker-compose.yml -f docker-compose.prod.yml build --no-cache client'
             sh 'docker-compose -f docker-compose.yml -f docker-compose.prod.yml up client'
         }
