@@ -20,7 +20,7 @@ ENV SDK_URL="https://dl.google.com/android/repository/sdk-tools-linux-3859397.zi
     GRADLE_HOME=/gradle/gradle-4.7 \
     PATH=$PATH:/gradle/gradle-4.7/bin
 
-# (temp login with username password)
+(temp login with username password)
 RUN apt-get update && apt-get install sshpass
 
 # nodejs
@@ -44,3 +44,7 @@ RUN $ANDROID_HOME/tools/bin/sdkmanager --update
 RUN $ANDROID_HOME/tools/bin/sdkmanager "build-tools;${ANDROID_BUILD_TOOLS_VERSION}" \
     "platforms;android-${ANDROID_VERSION}" \
     "platform-tools"
+
+# docker compose
+RUN curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+RUN chmod +x /usr/local/bin/docker-compose
