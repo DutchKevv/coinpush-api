@@ -153,7 +153,6 @@ services:
       context: ./
       dockerfile: ./client/Dockerfile
     volumes:
-      - ./client/src:/usr/src/app/client/src
       - ./static/clients:/usr/src/app/static/clients
       # - ./shared:/usr/src/app/shared
       - /usr/src/app/client/node_modules

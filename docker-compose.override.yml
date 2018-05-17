@@ -42,6 +42,8 @@ services:
     environment:
       - NODE_ENV=development
     command: npm start
+    volumes:
+      - ./client/src:/usr/src/app/client/src
   client-app:
     environment:
       - NODE_ENV=development

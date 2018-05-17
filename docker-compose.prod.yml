@@ -47,4 +47,6 @@ services:
     environment:
       - NODE_ENV=production
     command: npm run build-prod
+    volumes:
+      - /usr/src/app/client/src
   
