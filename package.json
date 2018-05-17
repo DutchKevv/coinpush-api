@@ -61,7 +61,7 @@
     "_prod": "pm2 start ecosystem.config.js --env production && pm2 monit",
     "inc-build-number": "node ./scripts/inc-build-number.js",
     "test": "echo $(pwd)",
-    "get-ssl-cert": "docker run -v $(pwd)/server-nginx/ssl:/etc/letsencrypt -e http_proxy=$http_proxy -e domains=\"coinpush.app,jenkins.coinpush.app\" -e email=\"kewin@frontend-freelance.com\" -p 443:443  --rm pierreprinetti/certbot:latest -e --expand"
+    "get-ssl-cert": "docker run -v $(pwd)/server-nginx/ssl:/etc/letsencrypt -e http_proxy=$http_proxy -e domains=\"coinpush.app,jenkins.coinpush.app\" -e email=\"kewin@frontend-freelance.com\" -p 443:443  --rm pierreprinetti/certbot:latest --expand"
   },
   "dependencies": {}
 }
