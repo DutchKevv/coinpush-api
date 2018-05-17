@@ -9,7 +9,7 @@ node {
         sh 'ls'
         checkout scm
         sh 'docker-compose rm client'
-        clientBuild()
+        // clientBuild()
         // load 'server-jenkins/pipelines/client-prod-build/Jenkinsfile'
     }
     // stage('build docker container') {

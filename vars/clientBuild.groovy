@@ -19,7 +19,7 @@ def call(Map pipelineParams) {
             sh 'ls && npm run prod-client'
         }
         stage('remove docker container') {
-            sh 'docker rm client'
+            // sh 'docker rm client'
         }
     }
 }
