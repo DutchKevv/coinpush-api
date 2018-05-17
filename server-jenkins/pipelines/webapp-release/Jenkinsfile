@@ -7,7 +7,7 @@ node {
     // }
     stage('get source') {
         sh 'ls'
-        // checkout scm
+        checkout scm
         clientBuild()
         // load 'server-jenkins/pipelines/client-prod-build/Jenkinsfile'
     }
