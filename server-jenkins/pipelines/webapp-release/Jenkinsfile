@@ -8,7 +8,7 @@ node {
     stage('get source') {
         sh 'ls'
         // checkout scm
-        sh 'docker-compose rm client'
+        sh 'y | docker-compose rm client'
         clientBuild()
         // load 'server-jenkins/pipelines/client-prod-build/Jenkinsfile'
     }
