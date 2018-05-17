@@ -165,6 +165,6 @@ services:
     volumes:
       - ./client-app:/usr/src/app/client-app
       - ./static/clients/web:/usr/src/app/static/clients/web
-volumes:
-  jenkins_home:
-    driver: local
+# volumes:
+#   jenkins_home:
+#     driver: local
