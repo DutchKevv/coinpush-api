@@ -1,0 +1,34 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job@2.21">
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <com.coravy.hudson.plugins.github.GithubProjectProperty plugin="github@1.29.0">
+      <projectUrl>https://github.com/DutchKevv/TradeJS/</projectUrl>
+      <displayName></displayName>
+    </com.coravy.hudson.plugins.github.GithubProjectProperty>
+  </properties>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.53">
+    <script>node {
+    stage(&apos;clean workspace&apos;) {
+        cleanWs()
+    }
+    stage(&apos;get source&apos;) {
+        git branch: &apos;development&apos;, url: &apos;https://github.com/DutchKevv/TradeJS&apos;
+    }
+    stage(&apos;build docker container&apos;) {
+        sh &apos;npm run build-prod-client&apos;
+    }
+    stage(&apos;build client through docker&apos;) {
+        sh &apos;npm run prod-client&apos;
+    }
+    stage(&apos;remove docker container&apos;) {
+        sh &apos;docker rm client&apos;
+    }
+}</script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers/>
+  <disabled>false</disabled>
+</flow-definition>

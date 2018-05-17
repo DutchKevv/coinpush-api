@@ -1,6 +1,6 @@
 FROM mhart/alpine-node:10.1.0
 
-RUN npm i -g npm
+RUN npm i -g --silent npm
 
 # RUN npm set progress=false && npm config set depth 0 && npm cache clean --force
 
@@ -11,6 +11,6 @@ COPY /shared .
 # client
 WORKDIR /usr/src/app/client
 COPY /client/package*.json /client/angular.json ./
-RUN npm i
+RUN npm i --silent
 
 COPY /client/src ./src

@@ -1,0 +1,51 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job@2.21">
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <com.coravy.hudson.plugins.github.GithubProjectProperty plugin="github@1.29.0">
+      <projectUrl>https://github.com/DutchKevv/TradeJS/</projectUrl>
+      <displayName></displayName>
+    </com.coravy.hudson.plugins.github.GithubProjectProperty>
+    <jenkins.model.BuildDiscarderProperty>
+      <strategy class="hudson.tasks.LogRotator">
+        <daysToKeep>-1</daysToKeep>
+        <numToKeep>-1</numToKeep>
+        <artifactDaysToKeep>-1</artifactDaysToKeep>
+        <artifactNumToKeep>-1</artifactNumToKeep>
+      </strategy>
+    </jenkins.model.BuildDiscarderProperty>
+  </properties>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.53">
+    <script>node {
+    stage(&apos;clean workspace&apos;) {
+        cleanWs()
+    }
+    stage(&apos;get source&apos;) {
+        git branch: &apos;development&apos;, url: &apos;https://github.com/DutchKevv/TradeJS&apos;
+    }
+    stage(&apos;install &amp; build client&apos;) {
+        dir(&apos;client&apos;) {
+            sh &apos;npm i &amp;&amp; npm run build-prod&apos;
+        }
+    }
+    stage(&apos;enable maintenance mode on nginx&apos;) {
+        sh &apos;sshpass -p Bettie123! ssh -o StrictHostKeyChecking=no kewin@coinpush.app cp /home/kewin/Projects/TradeJS/server-nginx/pages/maintenance_off.html /home/kewin/Projects/TradeJS/server-nginx/pages/maintenance_on.html&apos;
+    }
+    stage (&apos;deploy build assets to live server&apos;) {
+        dir(&apos;static/clients/web&apos;) {
+            sh &apos;sshpass -p Bettie123! ssh -o StrictHostKeyChecking=no kewin@coinpush.app rm -rf /home/kewin/Projects/TradeJS/static/clients/web&apos;
+            sh &apos;sshpass -p Bettie123! ssh -o StrictHostKeyChecking=no kewin@coinpush.app mkdir -p /home/kewin/Projects/TradeJS/static/clients/web&apos;
+            sh &apos;sshpass -p Bettie123! scp -rp ./ kewin@coinpush.app:/home/kewin/Projects/TradeJS/static/clients/web&apos;
+        }
+    }
+    stage(&apos;disable maintenance mode on nginx&apos;) {
+        sh &apos;sshpass -p Bettie123! ssh -o StrictHostKeyChecking=no kewin@coinpush.app rm -f /home/kewin/Projects/TradeJS/server-nginx/pages/maintenance_on.html&apos;
+    }
+}</script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers/>
+  <disabled>false</disabled>
+</flow-definition>
