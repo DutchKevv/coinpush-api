@@ -1,5 +1,5 @@
 def call(Map pipelineParams) {
-    pipeline {
+    node {
         // stage('clean workspace') {
         //     cleanWs()
         // }
