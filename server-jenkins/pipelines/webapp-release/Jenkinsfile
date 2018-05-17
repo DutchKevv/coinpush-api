@@ -6,9 +6,7 @@ node {
         cleanWs()
     }
     stage('get source') {
-        sh 'ls'
         checkout scm
-        sh 'ls'
         clientBuild()
         // load 'server-jenkins/pipelines/client-prod-build/Jenkinsfile'
     }
