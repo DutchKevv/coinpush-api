@@ -1,4 +1,4 @@
-@Library('clientBuild') _
+@Library 'clientBuild'
 
 
 node {
