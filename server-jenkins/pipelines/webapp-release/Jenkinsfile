@@ -5,9 +5,9 @@ node {
     stage('clean workspace') {
         
     }
-    stage('get source') {
+    stage('get source2') {
         sh 'ls'
-        // checkout scm
+        checkout scm
         sh 'docker-compose rm -f client'
         clientBuild()
         // load 'server-jenkins/pipelines/client-prod-build/Jenkinsfile'
