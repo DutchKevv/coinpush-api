@@ -1,12 +1,11 @@
 def call(Map pipelineParams) {
-
     pipeline {
-        stage('clean workspace') {
-            cleanWs()
-        }
-        stage('get source') {
-            git branch: 'development', url: 'https://github.com/DutchKevv/TradeJS'
-        }
+        // stage('clean workspace') {
+        //     cleanWs()
+        // }
+        // stage('get source') {
+        //     git branch: 'development', url: 'https://github.com/DutchKevv/TradeJS'
+        // }
         stage('build docker container') {
             sh 'npm run build-prod-client'
         }
