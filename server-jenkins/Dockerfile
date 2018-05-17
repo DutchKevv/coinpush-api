@@ -20,7 +20,7 @@ ENV SDK_URL="https://dl.google.com/android/repository/sdk-tools-linux-3859397.zi
     GRADLE_HOME=/gradle/gradle-4.7 \
     PATH=$PATH:/gradle/gradle-4.7/bin
 
-(temp login with username password)
+# (temp login with username password)
 RUN apt-get update && apt-get install sshpass
 
 # nodejs
