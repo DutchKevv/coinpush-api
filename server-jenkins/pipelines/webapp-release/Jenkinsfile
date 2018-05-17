@@ -6,7 +6,7 @@ node {
     }
     stage('get source') {
         checkout scm
-        load 'server-jenkins/pipelines/client-prod-build/Jenkinsfile'
+        // load 'server-jenkins/pipelines/client-prod-build/Jenkinsfile'
     }
     stage('build docker container') {
         sh 'npm run build-prod-client'
