@@ -5,6 +5,7 @@ services:
     build: ./server-jenkins
     image: jenkins
     container_name: jenkins 
+    privileged: true
     ports:
       - "8080:8080"
       - "50000:50000"  
