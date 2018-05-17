@@ -14,4 +14,4 @@ COPY /client/package*.json /client/angular.json ./
 RUN npm i --silent
 
 COPY /client/src ./src
-RUN cd /client/src && ls
+RUN cd /usr/src/app/client/src && ls
