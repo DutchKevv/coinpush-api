@@ -12,11 +12,11 @@ def call(Map pipelineParams) {
         // stage('get source') {
         //     git branch: 'development', url: 'https://github.com/DutchKevv/TradeJS'
         // }
-        stage('build docker container') {
-            sh 'ls && npm run build-prod-client'
-        }
+        // stage('build docker container') {
+        //     sh 'ls && npm run build-prod-client'
+        // }
         stage('build client through docker') {
-            sh 'ls && npm run prod-client'
+            sh 'docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --build client'
         }
         stage('remove docker container') {
             // sh 'docker rm client'
