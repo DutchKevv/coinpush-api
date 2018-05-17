@@ -16,7 +16,7 @@ def call(Map pipelineParams) {
         //     sh 'ls && npm run build-prod-client'
         // }
         stage('build client through docker') {
-            sh 'docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --build client'
+            sh 'echo ${pwd} && docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --build client'
         }
         stage('remove docker container') {
             // sh 'docker rm client'

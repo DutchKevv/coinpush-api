@@ -1,6 +1,6 @@
 FROM mhart/alpine-node:10.1.0
 
-RUN npm i -g --silent npm
+# RUN npm i -g --silent npm
 
 # RUN npm set progress=false && npm config set depth 0 && npm cache clean --force
 

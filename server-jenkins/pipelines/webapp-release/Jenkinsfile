@@ -6,7 +6,6 @@ node {
         
     }
     stage('get source2') {
-        sh 'ls'
         checkout scm
         sh 'docker-compose rm -f client'
         clientBuild()
