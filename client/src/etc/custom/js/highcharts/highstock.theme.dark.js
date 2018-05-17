@@ -88,10 +88,11 @@ const HighstockTheme = {
     xAxis: {
         gridLineColor: '#707073',
         labels: {
-            step: 1, // Disable label rotating when there is not enough space
-            staggerLines: false,
+            staggerLines: 1,
+            // step: 1, // Disable label rotating when there is not enough space
             y: 16,
             style: {
+                // whiteSpace: 'nowrap',
                 color: '#E0E0E3'
             }
         },
@@ -215,6 +216,30 @@ const HighstockTheme = {
         activeDataLabelStyle: {
             color: '#F0F0F3'
         }
+    },
+
+    responsive: {
+        rules: [{
+            condition: {
+                maxWidth: 500
+            },
+            chartOptions: {
+                xAxis: {
+                    gridLineColor: '#707073',
+                    labels: {
+                        staggerLines: 1,
+                        step: 1,
+                        // step: 1, // Disable label rotating when there is not enough space
+                        y: 16,
+                        fontSize: '10px',
+                        style: {
+                            fontSize: '8px',
+                            whiteSpace: 'nowrap',
+                        }
+                    }
+                }
+            }
+        }]
     },
 
     // special colors for some of the

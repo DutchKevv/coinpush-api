@@ -1,5 +1,7 @@
 FROM mhart/alpine-node:10.1.0
 
+RUN npm i -g npm
+
 # shared
 WORKDIR /usr/src/app/shared/modules/coinpush
 COPY /shared/modules/coinpush .

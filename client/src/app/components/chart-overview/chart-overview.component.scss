@@ -9,10 +9,11 @@
 
 :host {
     display: flex;
+    flex: 1;
     flex-flow: column;
-    height: 100%;
-    width: 100%;
-    
+    flex-grow: 1;
+    overflow: hidden;
+
     @media only screen and (min-width : 992px) { 
         border-left: none;
     }
@@ -30,9 +31,10 @@
     width: 100%;
     background: $background-light;
     font-size: 12px;
-    flex: 0 55%;
-    flex-grow: 1;
+    flex: 1 1 100%;
     display: flex;
+    overflow: hidden;
+    max-height: 100%;
 }
 
 .instrument-list {
@@ -217,8 +219,7 @@
 }
 
 app-chart-box {
-    flex: 0 45%;
-    width: 100%;
+    flex: 1 1 100%;
     background: $background-dark;
     display: flex;
     flex-flow: column;

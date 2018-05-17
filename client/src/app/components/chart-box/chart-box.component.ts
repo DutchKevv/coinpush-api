@@ -1,7 +1,7 @@
 // import * as throttle from 'lodash/throttle';
 import {
 	Component, OnDestroy, ElementRef, Input, ViewChild,
-	OnInit, AfterViewInit, NgZone, Output, SimpleChanges, OnChanges, ChangeDetectionStrategy, ViewEncapsulation, ChangeDetectorRef
+	OnInit, AfterViewInit, NgZone, Output, SimpleChanges, OnChanges, ChangeDetectionStrategy, ViewEncapsulation, ChangeDetectorRef, HostListener
 } from '@angular/core';
 import { CacheService } from '../../services/cache.service';
 import { SymbolModel } from "../../models/symbol.model";
@@ -93,6 +93,33 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 
 	private _indicatorIdCounter = 0;
 	private _fetchSub = null;
+
+	private _resizeTimeout = null;
+	/**
+	 * mobile nav menu back press close
+	 * @param event 
+	 */
+	@HostListener('window:resize', ['$event'])
+	onPopState(event) {
+		this._toggleVisibility(false);
+		this._toggleLoading(true);
+
+		if (this._resizeTimeout) {
+			clearTimeout(this._resizeTimeout);
+		}
+
+		this._resizeTimeout = setTimeout(() => {
+			if (this._chart) {
+				this._chart.reflow();
+			}
+			this._toggleVisibility(true);
+			this._toggleLoading(false);
+
+			clearTimeout(this._resizeTimeout);
+		}, 500);
+		
+		return false;
+	}
 
 	constructor(
 		public indicatorService: IndicatorService,
@@ -317,6 +344,9 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 		this._zone.runOutsideAngular(() => {
 			var self = this;
 			this._chart = HighStock.chart(this.chartRef.nativeElement, {
+				chart: {
+					reflow: false
+				},
 				plotOptions: {
 					sma: {
 						marker: {
@@ -656,6 +686,10 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	private _toggleError(state: boolean) {
 		this.hasError = !!state;
 		this._changeDetectorRef.detectChanges();
+	}
+
+	private _toggleVisibility(state?: boolean) {
+		this.chartRef.nativeElement.children[0].style.display = state ? 'block' : 'none';
 	}
 
 	private _destroyChart(destroyData: boolean = true) {

@@ -29,11 +29,13 @@ $header-height: 18px;
     color: $general-error;
 }
 
+
+
 header {
     width: 100%;
     padding: 4px 0;
     display: flex;
-    flex-shrink: 0;
+    // flex-shrink: 0;
     border-bottom: 1px solid $border-color-grey;
     border-top: 1px solid $border-color-grey;
     height: 40px;
@@ -220,30 +222,27 @@ header {
     min-width: 250px;
     display: block;
     // transition: transform .2s ease-in-out;
-    
+    position: absolute;
+    top: 0;
+    transform: translateX(-250px);
+    bottom: 0;
+    z-index: 1001;
 
-    @media only screen and (max-width : 992px) {
-        position: absolute;
-        top: 0;
-        transform: translateX(-250px);
-        bottom: 0;
-        z-index: 1001;
-        // animation: moveOut .3s;
+    &.show {
+        transform: translateX(0);
+        animation: moveIn .2s ease-in-out;
 
         + .nav-overlay {
-            //  animation: fadeOut 13s;
+            display: block;
+            
+            animation: fadeIn .3s;
         }
+    }
 
-        &.show {
-            transform: translateX(0);
-            animation: moveIn .2s ease-in-out;
-
-            + .nav-overlay {
-                display: block;
-                
-                animation: fadeIn .3s;
-            }
-        }
+    @media only screen and (min-width : 992px) {
+        position: static;
+        transform: none;
+        // transform: translateX(0px);
     }
 
     a {
@@ -300,6 +299,11 @@ header {
     height: 100%;
     display: flex;
     flex-flow: column;
+    position: relative;
+    
+    // @media only screen and (min-width : 992px) {
+    //     padding-left: 250px;
+    // }
 }
 
 .ad-container {

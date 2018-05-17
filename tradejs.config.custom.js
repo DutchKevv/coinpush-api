@@ -15,7 +15,7 @@ module.exports =
             "noReply": {
                 "service": "Gmail",
                 "auth": {
-                    "user": "brandsma1987@gmail.com",
+                    "user": "no-reply@coinpush.app",
                     "pass": "Bettie123!"
                 }
             }

@@ -1,5 +1,7 @@
 FROM mhart/alpine-node:10.1.0
 
+RUN npm i -g npm
+
 # Install Python + sharp image processing
 RUN apk add --no-cache make gcc g++ python
 RUN apk add --update \

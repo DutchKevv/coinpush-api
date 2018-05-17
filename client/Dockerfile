@@ -1,6 +1,8 @@
 FROM mhart/alpine-node:10.1.0
 
-RUN npm set progress=false && npm config set depth 0 && npm cache clean --force
+RUN npm i -g npm
+
+# RUN npm set progress=false && npm config set depth 0 && npm cache clean --force
 
 # shared
 WORKDIR /usr/src/app/shared
