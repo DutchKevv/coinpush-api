@@ -12,8 +12,8 @@ node {
     }
     stage('build client through docker') {
          dir('./') { 
-            sh 'docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --build client'
-            // sh 'docker-compose -f docker-compose.yml -f docker-compose.prod.yml up client'
+            sh 'docker-compose -f docker-compose.yml -f docker-compose.prod.yml build --no-cache client'
+            sh 'docker-compose -f docker-compose.yml -f docker-compose.prod.yml up client'
          }
         // sh 'npm run d-rmi-all'
        
