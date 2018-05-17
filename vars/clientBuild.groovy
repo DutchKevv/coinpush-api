@@ -14,7 +14,7 @@ def call(Map pipelineParams) {
             sh 'npm run build-prod-client'
         }
         stage('build client through docker') {
-            sh 'npm run prod-client'
+            sh 'ls && npm run prod-client'
         }
         stage('remove docker container') {
             sh 'docker rm client'
