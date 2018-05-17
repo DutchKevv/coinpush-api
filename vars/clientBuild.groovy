@@ -4,7 +4,8 @@ def call(Map pipelineParams) {
         //     cleanWs()
         // }
         stage('get source') {
-            checkout scm
+            // checkout scm
+            sh 'ls && echo ${pwd}'
             // load 'server-jenkins/pipelines/client-prod-build/Jenkinsfile'
         }
         
