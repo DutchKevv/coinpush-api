@@ -13,6 +13,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       JENKINS_HOST_HOME: "./server-jenkins/_data"
+    tty: true
   nginx:
     restart: unless-stopped
     build: ./server-nginx

@@ -43,6 +43,7 @@ services:
     volumes:
       - /usr/src/app/server-comment/node_modules
   client:
+    privileged: true
     environment:
       - NODE_ENV=production
     command: npm run build-prod
