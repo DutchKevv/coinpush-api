@@ -1,7 +1,7 @@
 {
   "name": "coinpush",
   "displayName": "App",
-  "version": "0.0.12",
+  "version": "0.0.16",
   "description": "CoinPush client",
   "repository": {
     "type": "git",
@@ -10,7 +10,7 @@
   "main": "index.js",
   "scripts": {
     "start": "ng build --watch --aot --output-hashing=none",
-    "build-prod": "ng build --build-optimizer --prod --aot --output-hashing=none --env=prod",
+    "build-prod": "ng build --build-optimizer --prod --aot --output-hashing=none --configuration=prod",
     "build-prod-stats": "ng build --build-optimizer --prod --aot --stats-json --output-hashing=none",
     "build-prod-verbose": "ng build --build-optimizer --prod --stats-json --output-hashing=none --verbose > build.txt",
     "load-symbol-images": "node ./tools/load-symbol-images.js",
