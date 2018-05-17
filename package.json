@@ -40,7 +40,7 @@
     "start-client": "docker-compose up client",
     "start-jenkins": "docker-compose up jenkins",
     "start-nginx": "docker-compose up nginx",
-    "prod-client": "npm run inc-build-number && docker-compose -f docker-compose.yml -f docker-compose.prod.yml up client",
+    "prod-client": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up client && npm run inc-build-number",
     "prod-jenkins": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d jenkins",
     "prod-server": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d redis gateway notify user event cache comment",
     "prod-nginx": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d nginx",
