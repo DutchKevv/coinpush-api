@@ -1,7 +1,6 @@
 def call(Map pipelineParams) {
 
     pipeline {
-        agent any
         stage('clean workspace') {
             cleanWs()
         }
