@@ -70,7 +70,7 @@ const HighstockTheme = {
     },
 
     chart: {
-        // pinchType: 'x',
+        pinchType: 'x',
         marginLeft: 4,
         marginTop: 5,
         marginBottom: 25,

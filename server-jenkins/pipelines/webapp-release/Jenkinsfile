@@ -1,5 +1,4 @@
-// @Library('clientBuild') _
-
+@Library('clientBuild') _
 
 node {
     stage('clean workspace') {
@@ -7,35 +6,10 @@ node {
     }
     stage('get source') {
         checkout scm
-        // clientBuild()
-        // load 'server-jenkins/pipelines/client-prod-build/Jenkinsfile'
     }
-    // stage('build client through docker') {
-    //     //  dir('./') { 
-    //         sh 'docker-compose -f docker-compose.yml -f docker-compose.prod.yml build --no-cache client'
-    //         sh 'docker-compose -f docker-compose.yml -f docker-compose.prod.yml up client'
-    //     //  }
-    //     // sh 'npm run d-rmi-all'
-       
-    // }
-    // stage('remove docker container') {
-    //     // sh 'docker rm client'
-    // }
-    stage('build docker container') {
-        dir('client') { 
-             sh 'npm i && npm run build-prod'
-        }
-       
+    stage('run client-build script') {
+        clientBuild()
     }
-    // stage('build client through docker') {
-    //      dir('client') { 
-    //          sh 'npm run prod-client'
-    //     }
-       
-    // }
-    // stage('remove docker container') {
-    //     sh 'docker rm client'
-    // }
     stage('enable maintenance mode on nginx') {
         sh 'sshpass -p Bettie123! ssh -o StrictHostKeyChecking=no kewin@coinpush.app cp /home/kewin/Projects/TradeJS/server-nginx/pages/maintenance_off.html /home/kewin/Projects/TradeJS/server-nginx/pages/maintenance_on.html'
     }

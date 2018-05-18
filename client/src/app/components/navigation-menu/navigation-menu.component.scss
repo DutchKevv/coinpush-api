@@ -1,0 +1,117 @@
+@import '../../style/helpers/normalize';
+@import '../../style/variables/variables';
+
+.nav-main {
+    background: $background-light;
+    overflow-y: auto;
+    width: 250px;
+    min-width: 250px;
+    display: block;
+    position: absolute;
+    top: 0;
+    transform: translateX(-250px);
+    bottom: 0;
+    z-index: 1001;
+
+    &.show {
+        transform: translateX(0);
+        animation: moveIn .2s ease-in-out;
+
+        + .nav-overlay {
+            display: block;
+            
+            animation: fadeIn .3s;
+        }
+    }
+
+    @media only screen and (min-width : 992px) {
+        position: static;
+        transform: none;
+        // transform: translateX(0px);
+    }
+
+    a {
+        padding: 15px 10px 15px 20px;
+        font-size: 18px;
+        box-sizing: border-box;
+        display: block;
+
+        i {
+            margin-right: 10px;
+            width: 20px;
+        }
+
+        &:hover {
+            background: $background-light2;
+        }
+
+        &.active {
+            background: $background-light2;
+        }
+    }
+
+    .profile {
+        padding-top: 40px;
+
+        img {
+            display: block;
+            border-radius: 50%;
+        }
+
+        h4 {
+            margin-top: 10px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    }
+}
+
+.nav-overlay {
+    background: rgba(0, 0, 0, 0.7);
+    display: none;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+}
+
+.nav-tabs {
+    border-bottom: 0;
+
+    > li {
+        margin-bottom: 0;
+        font-size: 10px;
+        color: $font-color-light;
+        cursor: pointer;
+
+        &.active a {
+            background: $general-active !important;
+        }
+
+        a {
+            padding: 0 15px;
+            border-radius: 0;
+            margin-right: 0;
+            border: none;
+            line-height: 20px;
+            display: block;
+            border-right: 1px solid $border-color-grey;
+
+            &:hover {
+                background: $general-secondary;
+            }
+
+            &:active {
+                background: blue;
+            }
+
+            &:focus {
+                background: blue;
+            }
+        }
+    }
+}

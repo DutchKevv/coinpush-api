@@ -35,10 +35,14 @@ import { TimelineComponent } from './components/timeline/timeline.component';
 import { NormalizeImgUrlPipe } from './pipes/normalize-image.pipe';
 import { ConfirmationBoxComponent } from './components/confirmation-box/confirmation-box.component';
 import { IndicatorService } from './services/indicator.service';
+import { HeaderComponent } from './components/header/header.component';
+import { NavigationMenuComponent } from './components/navigation-menu/navigation-menu.component';
 
 @NgModule({
 	declarations: [
 		AppComponent,
+		HeaderComponent,
+		NavigationMenuComponent,
 		AlarmMenuComponent,
 		NotificationMenuComponent,
 		ChartBoxComponent,

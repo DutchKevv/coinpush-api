@@ -1,0 +1,38 @@
+<!-- header -->
+<!-- mobile nav button -->
+<i *ngIf="showBackButton === true" (click)="onClickBackButton()" class="fa fa-angle-left d-lg-none"></i>
+
+<!-- mobile nav button -->
+<i (click)="navClicked.next(true)" class="fa fa-navicon d-lg-none"></i>
+
+<!-- notifications -->
+<app-notification-menu></app-notification-menu>
+
+<!-- filter -->
+
+<i *ngIf="showFilterButton === true" (click)="onClickFilter($event)" class="fa fa-filter d-lg-none"></i>
+
+<!-- title -->
+<h3 class="d-lg-none header-title">{{titleText$ | async}}</h3>
+
+<!-- search container -->
+<div class="search-container">
+    <input (keyup)="onSearchKeyUp($event)" (focus)="onSearchKeyUp($event)" placeholder="Markets / People" id="mainSearchInput"
+        #input title="Markets / People" type="text" autocapitalize="none">
+    <div class="header-drop-down" *ngIf="(searchResults$ | async) as result" (click)="onClickDropdownItem()" #dropdown>
+        <h4 *ngIf="result.symbols.length">Symbols</h4>
+        <a *ngFor="let symbol of result.symbols" [routerLink]="['/symbols']" [queryParams]="{symbol: symbol.options.name}">
+            <span class="symbol-img-{{symbol.options.name}}" style="margin-right: 10px;"></span>
+            <span>{{symbol.options.displayName}}</span>
+        </a>
+        <h4 *ngIf="result.users.length">Users</h4>
+        <a *ngFor="let user of result.users" [routerLink]="['/user/', user._id]">
+            <img width="30" height="30" style="margin-right: 10px;" src="{{user.img | NormalizeImgUrl}}">
+            <span>{{user.name}}</span>
+        </a>
+        <p class="dropdown-no-results-text" *ngIf="!result.symbols.length && !result.users.length">No results</p>
+    </div>
+</div>
+
+<!-- mobile search button -->
+<i (click)="toggleSearch()" class="fa fa-search d-lg-none"></i>

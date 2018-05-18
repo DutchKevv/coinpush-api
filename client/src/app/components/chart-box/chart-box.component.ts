@@ -335,7 +335,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	 * 
 	 */
 	public onClickIndicatorsButton() {
-		this.indicatorContainerOpen = !this.indicatorContainerOpen; //.next(!this.indicatorContainerOpen$.getValue());
+		this.indicatorContainerOpen = !this.indicatorContainerOpen;
 		this._changeDetectorRef.detectChanges();
 	}
 
@@ -689,7 +689,9 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	}
 
 	private _toggleVisibility(state?: boolean) {
-		this.chartRef.nativeElement.children[0].style.display = state ? 'block' : 'none';
+		if (this.chartRef.nativeElement && this.chartRef.nativeElement.children.length) {
+			this.chartRef.nativeElement.children[0].style.display = state ? 'block' : 'none';
+		}
 	}
 
 	private _destroyChart(destroyData: boolean = true) {

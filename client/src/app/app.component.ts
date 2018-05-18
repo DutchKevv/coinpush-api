@@ -11,6 +11,7 @@ import { SocketService } from './services/socket.service';
 import { environment } from '../environments/environment';
 import { UpdateService } from './services/update.service';
 import { Location } from '@angular/common';
+import { HeaderComponent } from './components/header/header.component';
 
 declare let window: any;
 declare let navigator: any;
@@ -30,11 +31,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnChanges {
 
 	@Input() public titleText$: Subject<string> = new Subject();
 
-	@ViewChild('header') public header: ElementRef;
-	@ViewChild('dropdown') public dropdown: ElementRef;
-	@ViewChild('navbar') public navbar: ElementRef;
-	@ViewChild('input') public inputRef: ElementRef;
-	@ViewChild('globeContainer') globeContainerRef: ElementRef;
+	@ViewChild(HeaderComponent) public header: ElementRef;
 
 	public version = 'v0.0.2-alpha-' + (environment.production ? 'prod' : 'dev');
 	public searchOpen: boolean = false;
@@ -52,81 +49,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnChanges {
 	private _lastTimeBackPress = 0;
 	private _timePeriodToExit = 2000;
 
-	/**
-	 * mobile nav menu back press close
-	 * @param event 
-	 */
-	@HostListener('window:popstate', ['$event'])
-	onPopState(event) {
-		this.toggleNav(false);
-		return false;
-	}
-
-	/**
-	 * mobile nav menu back press close
-	 * @param event 
-	 */
-	@HostListener('document:backbutton', ['$event'])
-	onBackButton(event) {
-		this._onBackKeyDown(event);
-		window.history.go(-1);
-	}
-
-	/**
-	 * outside click for searchdropdown
-	 * @param event 
-	 */
-	@HostListener('window:click', ['$event'])
-	onWindowClick(event) {
-		if (event.target.id !== 'mainSearchInput' && !event.target.classList.contains('fa-search')) {
-			this.toggleSearch(false);
-		}
-
-		if (this.dropdown) {
-			this.searchResults$.next(null);
-		}
-	}
-
-	/**
-	 * mobile nav menu touch swipe
-	 * @param event
-	 */
-	@HostListener('touchstart', ['$event'])
-	onTouchStart(event) {
-		if (!this._isNavOpen)
-			return;
-
-		this._touchStartX = event.touches[0].clientX;
-	}
-
-	/**
-	 * mobile nav menu touch swipe
-	 * @param event 
-	 */
-	@HostListener('touchmove', ['$event'])
-	onTouchMove(event) {
-		if (!this._isNavOpen)
-			return;
-
-		const diff = event.touches[0].clientX - this._touchStartX;
-
-		this._updateNavPosition(diff * 2);
-	}
-
-	/**
-	 * mobile nav menu touch swipe
-	 * @param event 
-	 */
-	@HostListener('touchend', ['$event'])
-	onTouchEnd(event) {
-		if (!this._isNavOpen)
-			return;
-
-		this._touchStartX = 0;
-
-		this.toggleNav(this._navBarPosition > -(this._navBarWidth / 2));
-	}
-
+	
 	constructor(
 		public http: HttpClient,
 		public router: Router,
@@ -209,7 +132,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnChanges {
 			channels: []
 		};
 
-		this.toggleDropdownVisibility(true);
+		// this.toggleDropdownVisibility(true);
 		this.searchResults$.next(currentResult);
 
 		const params = new HttpParams({
@@ -223,7 +146,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnChanges {
 	}
 
 	public onClickDropdownItem() {
-		this.toggleDropdownVisibility(false);
+		// this.toggleDropdownVisibility(false);
 	}
 
 	public onClickBackButton() {
@@ -235,35 +158,35 @@ export class AppComponent implements OnInit, AfterViewInit, OnChanges {
 		// this._location.back();
 	}
 
-	public toggleDropdownVisibility(state) {
-		if (this.dropdown) {
-			this.dropdown.nativeElement.classList.toggle('hidden', !state)
-		}
-	}
+	// public toggleDropdownVisibility(state) {
+	// 	if (this.dropdown) {
+	// 		this.dropdown.nativeElement.classList.toggle('hidden', !state)
+	// 	}
+	// }
 
-	public toggleNav(state?: boolean) {
-		this.navbar.nativeElement.classList.toggle('show', state);
-		this._isNavOpen = typeof state === 'boolean' ? state : !this._isNavOpen;
+	// public toggleNav(state?: boolean) {
+	// 	this.navbar.nativeElement.classList.toggle('show', state);
+	// 	this._isNavOpen = typeof state === 'boolean' ? state : !this._isNavOpen;
 
-		this._navBarPosition = this._isNavOpen ? 0 : -this._navBarWidth;
-		this.navbar.nativeElement.removeAttribute('style');
-		// setTimeout(() => {
-		// 	if (this._isNavOpen)
-		// 		this.router.navigate(this.activatedRoute.snapshot.url, { queryParamsHandling: 'merge', queryParams: { menu: 1 }, relativeTo: this.activatedRoute })
-		// 	else {
-		// 		this.router.navigate(this.activatedRoute.snapshot.url, { queryParamsHandling: 'merge', queryParams: { menu: null }, replaceUrl: true, relativeTo: this.activatedRoute })
-		// 	}
-		// }, 0);
-	}
+	// 	this._navBarPosition = this._isNavOpen ? 0 : -this._navBarWidth;
+	// 	this.navbar.nativeElement.removeAttribute('style');
+	// 	// setTimeout(() => {
+	// 	// 	if (this._isNavOpen)
+	// 	// 		this.router.navigate(this.activatedRoute.snapshot.url, { queryParamsHandling: 'merge', queryParams: { menu: 1 }, relativeTo: this.activatedRoute })
+	// 	// 	else {
+	// 	// 		this.router.navigate(this.activatedRoute.snapshot.url, { queryParamsHandling: 'merge', queryParams: { menu: null }, replaceUrl: true, relativeTo: this.activatedRoute })
+	// 	// 	}
+	// 	// }, 0);
+	// }
 
-	public toggleSearch(state?: boolean) {
-		this.searchOpen = typeof state === 'boolean' ? state : !this.searchOpen;
-		this.header.nativeElement.classList.toggle('searchOpen', this.searchOpen);
+	// public toggleSearch(state?: boolean) {
+	// 	this.searchOpen = typeof state === 'boolean' ? state : !this.searchOpen;
+	// 	this.header.nativeElement.classList.toggle('searchOpen', this.searchOpen);
 
-		if (this.searchOpen) {
-			this.inputRef.nativeElement.focus();
-		}
-	}
+	// 	if (this.searchOpen) {
+	// 		this.inputRef.nativeElement.focus();
+	// 	}
+	// }
 
 	public onClickFilter(event?, state?: boolean) {
 		if (event) {
@@ -275,37 +198,37 @@ export class AppComponent implements OnInit, AfterViewInit, OnChanges {
 		this.filterClick$.emit(state);
 	}
 
-	public logout(): void {
-		this.authenticationService.logout();
-	}
+	// public logout(): void {
+	// 	this.authenticationService.logout();
+	// }
 
-	private _updateNavPosition(distance: number) {
-		this._navBarPosition = Math.max(-this._navBarWidth, Math.min(0, distance));
-		this.navbar.nativeElement.style.transform = `translateX(${this._navBarPosition}px)`;
-	}
+	// private _updateNavPosition(distance: number) {
+	// 	this._navBarPosition = Math.max(-this._navBarWidth, Math.min(0, distance));
+	// 	this.navbar.nativeElement.style.transform = `translateX(${this._navBarPosition}px)`;
+	// }
 
-	private _onBackKeyDown(e) {
-		// TODO - Hack
-		if (!app.platform.isApp || window.location.hash !== '#/symbols')
-			return;
+	// private _onBackKeyDown(e) {
+	// 	// TODO - Hack
+	// 	if (!app.platform.isApp || window.location.hash !== '#/symbols')
+	// 		return;
 
-		e.preventDefault();
-		e.stopPropagation();
+	// 	e.preventDefault();
+	// 	e.stopPropagation();
 
-		if (new Date().getTime() - this._lastTimeBackPress < this._timePeriodToExit) {
-			navigator.app.exitApp();
-		} else {
-			window.plugins.toast.showWithOptions(
-				{
-					message: "Press again to exit.",
-					duration: "short", // which is 2000 ms. "long" is 4000. Or specify the nr of ms yourself.
-					position: "bottom",
-					addPixelsY: -40  // added a negative value to move it up a bit (default 0)
-				}
-			);
+	// 	if (new Date().getTime() - this._lastTimeBackPress < this._timePeriodToExit) {
+	// 		navigator.app.exitApp();
+	// 	} else {
+	// 		window.plugins.toast.showWithOptions(
+	// 			{
+	// 				message: "Press again to exit.",
+	// 				duration: "short", // which is 2000 ms. "long" is 4000. Or specify the nr of ms yourself.
+	// 				position: "bottom",
+	// 				addPixelsY: -40  // added a negative value to move it up a bit (default 0)
+	// 			}
+	// 		);
 
-			this._lastTimeBackPress = new Date().getTime();
-		}
-	};
+	// 		this._lastTimeBackPress = new Date().getTime();
+	// 	}
+	// };
 
 }

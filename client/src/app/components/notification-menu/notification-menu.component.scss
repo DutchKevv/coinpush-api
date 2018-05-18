@@ -11,6 +11,14 @@
     text-align: left;
     padding-right: 10px;
     padding-left: 10px;
+
+    @media only screen and (min-width : 768px) {
+        position: relative;
+    
+        .fa-globe {
+            display: block !important;
+        }
+    }
 }
 
 .globe-container {
@@ -29,6 +37,10 @@
 
     @media only screen and (min-width : 992px) {
         margin-left: 10px;
+
+        .fa-globe { 
+            display: block !important;
+        }
     }
 }
 
@@ -45,6 +57,8 @@
 }
 
 .notification-drop-down {
+    display: flex;
+    flex-flow: column;
     position: absolute;
     z-index: 122;
     top: 39px;
@@ -52,7 +66,6 @@
     bottom: 0;
     width: 100%;
     background: $background-light;
-    overflow: auto;
     -webkit-overflow-scrolling: touch;
     
     &.hidden {
@@ -61,107 +74,96 @@
 
     @media only screen and (min-width : 768px) {
         width: 400px;
-        left: calc(50% - 200px);
         height: auto;
         top: 35px;
         box-shadow: -3px 4px 4px rgba(0, 0, 0, 0.4), 4px 3px 4px rgba(0, 0, 0, 0.4);
+        bottom: auto;
+        max-height: 300px;
+        min-height: 80px;
+        
     } 
+}
 
-    .notification-drop-down-header {
-        text-align: right;
-        padding: 0 5px;
+.notification-drop-down-header {
+    text-align: right;
+    padding: 0 5px;
 
-       a {
-           display: inline-block;
-           line-height: 30px;
-            margin-right: 10px;
+   a {
+       display: inline-block;
+       line-height: 30px;
+        margin-right: 10px;
 
-           &:hover {
-               text-decoration: underline;
-           }
+       &:hover {
+           text-decoration: underline;
        }
+   }
+}
+
+.notification-drop-down-inner {
+    overflow-y: auto;
+}
+
+.notification-drop-down-item {
+
+    &.unread {
+        background: #444444;
     }
 
-    .notification-drop-down-item {
+    a {
+        border-top: 1px solid grey;
+        padding: 5px;
+        font-size: 14px;
+        padding: 4px;
+        border-bottom: $border-color-grey;
+        color: $font-color-light;
+        text-align: left;
+        display: flex;
 
         &.unread {
-            background: #444444;
+            background: #6b6b6b
         }
 
-        a {
-            border-top: 1px solid grey;
-            padding: 5px;
-            font-size: 14px;
-            padding: 4px;
-            border-bottom: $border-color-grey;
-            color: $font-color-light;
-            text-align: left;
-            display: flex;
-
-            &.unread {
-                background: #6b6b6b
-            }
-
-            &:hover {
-                background: #4c5b5d;
-            }
-
-            span {
-                line-height: 30px;
-            }
-
-            b {
-                text-transform: capitalize;
-            }
-
-            img {
-                width: 30px;
-                height: 30px;
-                margin-right: 6px;
-                margin-left: 2px;
-                border-radius: 50%;
-            }
+        &:hover {
+            background: #4c5b5d;
         }
 
-        p {
-            font-size: 14px;
-            line-height: 18px;
+        span {
+            line-height: 30px;
         }
 
-        .fa-bell,
-        .fa-thumbs-up,
-        .fa-comment,
-        .fa-user-plus {
-            margin-right: 9px;
-            color: #bfbfbf;
+        b {
+            text-transform: capitalize;
         }
 
-        .fa-user-plus {
+        img {
+            width: 30px;
+            height: 30px;
             margin-right: 6px;
+            margin-left: 2px;
+            border-radius: 50%;
         }
     }
-    
-    .notification-image {
+
+    p {
+        font-size: 14px;
+        line-height: 18px;
+    }
+
+    .fa-bell,
+    .fa-thumbs-up,
+    .fa-comment,
+    .fa-user-plus {
+        margin-right: 9px;
+        color: #bfbfbf;
+    }
+
+    .fa-user-plus {
         margin-right: 6px;
     }
 }
 
-@media only screen and (min-width : 768px) {
-    :host {
-        position: relative;
-    }
-   
-    .notification-drop-down {
-        left: 0;
-        // min-height: 100px;
-        max-height: 300px;
-        min-height: 80px;
-        overflow-y: auto;
-    }
-
-    .fa-globe {
-        display: block !important;
-    }
+.notification-image {
+    margin-right: 6px;
 }
 
 .no-notifications-container {

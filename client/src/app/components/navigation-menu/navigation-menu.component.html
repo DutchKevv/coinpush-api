@@ -1,0 +1,45 @@
+<nav class="nav-main">
+    <a (click)="toggleNav( false)" [routerLink]="['/user/', userService.model.options._id]" [routerLinkActive]="['active']" class="profile"
+        style="padding-top: 0">
+        <h6 style="text-align: right; line-height: 40px; padding-right: 20px;">
+            <i>{{version}}</i>
+        </h6>
+        <img alt="profile-image" class="logo" width="70" height="70" [attr.src]="userService.model.options.img ? (userService.model.options.img | NormalizeImgUrl) : undefined">
+        <h4>{{userService.model.options.name}}</h4>
+    </a>
+    <!-- <a (click)="toggleNav( false)" [routerLink]="['/calendar']" [routerLinkActive]="['active']">
+            <i class="fa fa-calendar"></i>
+            <span>News (TODO)</span>
+        </a> -->
+    <!-- <a (click)="toggleNav( false)" [routerLink]="['/timeline']" [routerLinkActive]="['active']">
+            <i class="fa fa-calendar"></i>
+            <span>Timeline</span>
+        </a> -->
+    <a (click)="toggleNav( false)" [routerLink]="['/user']" [routerLinkActive]="['active']">
+        <i class="fa fa-users"></i>
+        <span>Users</span>
+    </a>
+    <a (click)="toggleNav( false)" [routerLink]="['/symbols']" [routerLinkActive]="['active']">
+        <i class="fa fa-bar-chart"></i>
+        <span>Stocks</span>
+    </a>
+    <a (click)="toggleNav( false)" [routerLink]="['/settings']" [routerLinkActive]="['active']">
+        <i class="fa fa-gears"></i>
+        <span>Settings</span>
+    </a>
+    <a (click)="toggleNav( false)" *ngIf="userService.model.options._id" (click)="authenticationService.logout()">
+        <i class="fa fa-sign-out"></i>
+        <span>Logout</span>
+    </a>
+    <a (click)="toggleNav( false)" *ngIf="!userService.model.options._id" (click)="authenticationService.showLoginRegisterPopup()">
+        <i class="fa fa-sign-out"></i>
+        <span>Login</span>
+    </a>
+
+    <!-- navigation -->
+    <!-- <div *ngIf="!platform.isApp && platform.adsEnabled" style="width:220px; height: 300px; margin: 0 auto; border: 1px solid #5d5c5c;">
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1181429338292864" data-ad-slot="1307246775" data-ad-format="auto"></ins>
+        </div> -->
+</nav>
+
+<div (click)="toggleNav(false)" class="nav-overlay"></div>
