@@ -18,11 +18,13 @@
     </jenkins.model.BuildDiscarderProperty>
   </properties>
   <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.53">
-    <script>node {
+    <script>// @Library(&apos;clientBuild&apos;) _
+node {
     stage(&apos;clean workspace&apos;) {
         cleanWs()
     }
     stage(&apos;get source&apos;) {
+        //checkout scm
         git branch: &apos;development&apos;, url: &apos;https://github.com/DutchKevv/TradeJS&apos;
     }
     stage(&apos;install &amp; build client&apos;) {
