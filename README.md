@@ -21,7 +21,7 @@ Can be run as
 ## Installation
 Make sure you have Docker installed
 ```
-git clone https://github.com/DutchKevv/TradeJS.git
+git clone https://github.com/DutchKevv/CoinPush.git
 cd TradeJS
 npm run d-up
 ```
