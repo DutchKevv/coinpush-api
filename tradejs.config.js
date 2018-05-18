@@ -17,14 +17,9 @@ if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'prod') {
 
 const config = {
     domain,
-    path: {
-        'custom': path.join(__dirname, 'custom'),
-        'config': path.join(__dirname, '_config')
-    },
     server: {
         gateway: {
-            port: 3100,
-            protocol: 'https'
+            port: 3100
         },
         oldApi: {
             port: 3000,
