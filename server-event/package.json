@@ -5,7 +5,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/DutchKevv/TradeJS.git"
+    "url": "https://github.com/DutchKevv/CoinPush.git"
   },
   "scripts": {
     "install-shared": "cd ../shared/modules/coinpush && npm i",

@@ -4,7 +4,7 @@
   "description": "Javascript Trading Client and Server",
   "repository": {
     "type": "git",
-    "url": "https://github.com/DutchKevv/TradeJS.git"
+    "url": "https://github.com/DutchKevv/CoinPush.git"
   },
   "main": "index.js",
   "scripts": {
