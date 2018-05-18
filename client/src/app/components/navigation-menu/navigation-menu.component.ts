@@ -15,22 +15,28 @@ export class NavigationMenuComponent {
     public state: boolean = false;
     public version = 'v0.0.2-alpha-' + (environment.production ? 'prod' : 'dev');
     
-    constructor(public userService: UserService) {
+    private _navBarPosition: number;
+    private _navBarWidth: number;
+
+    constructor(
+        public userService: UserService,
+        private _elementRf: ElementRef) {
 
     }
 
     public toggleNav(state?: boolean) {
-		this.navbar.nativeElement.classList.toggle('show', state);
-		this._isNavOpen = typeof state === 'boolean' ? state : !this._isNavOpen;
+		this._elementRf.nativeElement.classList.toggle('show', state);
+		this.state = typeof state === 'boolean' ? state : !this.state;
 
-		this._navBarPosition = this._isNavOpen ? 0 : -this._navBarWidth;
-		this.navbar.nativeElement.removeAttribute('style');
-		setTimeout(() => {
-			if (this._isNavOpen)
-				this.router.navigate(this.activatedRoute.snapshot.url, { queryParamsHandling: 'merge', queryParams: { menu: 1 }, relativeTo: this.activatedRoute })
-			else {
-				this.router.navigate(this.activatedRoute.snapshot.url, { queryParamsHandling: 'merge', queryParams: { menu: null }, replaceUrl: true, relativeTo: this.activatedRoute })
-			}
-		}, 0);
+		this._navBarPosition = this.state ? 0 : -this._navBarWidth;
+        this._elementRf.nativeElement.removeAttribute('style');
+        
+		// setTimeout(() => {
+		// 	if (this._isNavOpen)
+		// 		this.router.navigate(this.activatedRoute.snapshot.url, { queryParamsHandling: 'merge', queryParams: { menu: 1 }, relativeTo: this.activatedRoute })
+		// 	else {
+		// 		this.router.navigate(this.activatedRoute.snapshot.url, { queryParamsHandling: 'merge', queryParams: { menu: null }, replaceUrl: true, relativeTo: this.activatedRoute })
+		// 	}
+		// }, 0);
 	}
 }
