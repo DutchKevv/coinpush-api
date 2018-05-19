@@ -1,8 +1,8 @@
 def call(Map pipelineParams) {
     node {
         stage('install client dependencies (production)') {
-            dir ('client') {
-                sh 'npm i --silent  --production'
+            dir('client') {
+                sh 'npm i --silent --production && npm run build-prod'
             }
         }
         stage('build client (production)') {
