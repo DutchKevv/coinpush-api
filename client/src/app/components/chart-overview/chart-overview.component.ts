@@ -66,11 +66,9 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
-		
-		this._filterSub = this._applicationRef.components[0].instance.filterClick$.subscribe(state => this.toggleFilterNav(null, state));
+		this._filterSub = this._applicationRef.components[0].instance.filterClicked$.subscribe(state => this.toggleFilterNav(null, state));
 		this._eventSub = this._eventService.events$.subscribe(() => this._changeDetectorRef.detectChanges());
 
-		
 		// requestAnimationFrame(() => {
 		this.toggleActiveFilter(this.defaultActiveFilter);
 

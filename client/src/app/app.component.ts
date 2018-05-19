@@ -25,7 +25,7 @@ declare let navigator: any;
 
 export class AppComponent implements OnInit, AfterViewInit, OnChanges {
 
-	@Output() public filterClick$: EventEmitter<boolean> = new EventEmitter();
+	@Output() public filterClicked$: EventEmitter<boolean> = new EventEmitter();
 	@Output() public searchResults$: Subject<any> = new Subject();
 	@Output() public searchOpen$: EventEmitter<boolean> = new EventEmitter();
 
@@ -56,7 +56,6 @@ export class AppComponent implements OnInit, AfterViewInit, OnChanges {
 		public activatedRoute: ActivatedRoute,
 		public userService: UserService,
 		public authenticationService: AuthenticationService,
-		private _location: Location,
 		private _changeDetectorRef: ChangeDetectorRef,
 		private _eventService: EventService,
 		private _updateService: UpdateService,
@@ -66,8 +65,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnChanges {
 	}
 
 	ngOnInit() {
-		// alert(this.userService.model.options.img);
-		this._updateService.do();
+		// this._updateService.do();
 		this._cacheService.init(); // cacheService must init before eventService
 		this._eventService.init();
 		this._socketService.connect();
@@ -90,7 +88,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnChanges {
 
 			if (event instanceof NavigationEnd) {
 				this.searchOpen = false;
-				this.filterClick$.emit(false);
+				this.filterClicked$.emit(false);
 			}
 		});
 
@@ -115,120 +113,4 @@ export class AppComponent implements OnInit, AfterViewInit, OnChanges {
 		//   this._changeDetectorRef.detach();
 		// })
 	  }
-
-	public onSearchKeyUp(event): void {
-		const value = event.target.value.trim();
-
-		if (!value.length) {
-			this.searchResults$.next();
-			return;
-		}
-
-		const symbols = this._cacheService.getByText(value).slice(0, 5);
-
-		const currentResult = {
-			users: [],
-			symbols: symbols,
-			channels: []
-		};
-
-		// this.toggleDropdownVisibility(true);
-		this.searchResults$.next(currentResult);
-
-		const params = new HttpParams({
-			fromObject: { limit: '5', text: value }
-		});
-
-		this.http.get('/search/', { params }).subscribe((result: any) => {
-			currentResult.users = result.users;
-			this.searchResults$.next(currentResult);
-		});
-	}
-
-	public onClickDropdownItem() {
-		// this.toggleDropdownVisibility(false);
-	}
-
-	public onClickBackButton() {
-		this._location.back();
-		this._changeDetectorRef.detectChanges();
-		setTimeout(() => {
-			
-		}, 0);
-		// this._location.back();
-	}
-
-	// public toggleDropdownVisibility(state) {
-	// 	if (this.dropdown) {
-	// 		this.dropdown.nativeElement.classList.toggle('hidden', !state)
-	// 	}
-	// }
-
-	// public toggleNav(state?: boolean) {
-	// 	this.navbar.nativeElement.classList.toggle('show', state);
-	// 	this._isNavOpen = typeof state === 'boolean' ? state : !this._isNavOpen;
-
-	// 	this._navBarPosition = this._isNavOpen ? 0 : -this._navBarWidth;
-	// 	this.navbar.nativeElement.removeAttribute('style');
-	// 	// setTimeout(() => {
-	// 	// 	if (this._isNavOpen)
-	// 	// 		this.router.navigate(this.activatedRoute.snapshot.url, { queryParamsHandling: 'merge', queryParams: { menu: 1 }, relativeTo: this.activatedRoute })
-	// 	// 	else {
-	// 	// 		this.router.navigate(this.activatedRoute.snapshot.url, { queryParamsHandling: 'merge', queryParams: { menu: null }, replaceUrl: true, relativeTo: this.activatedRoute })
-	// 	// 	}
-	// 	// }, 0);
-	// }
-
-	// public toggleSearch(state?: boolean) {
-	// 	this.searchOpen = typeof state === 'boolean' ? state : !this.searchOpen;
-	// 	this.header.nativeElement.classList.toggle('searchOpen', this.searchOpen);
-
-	// 	if (this.searchOpen) {
-	// 		this.inputRef.nativeElement.focus();
-	// 	}
-	// }
-
-	public onClickFilter(event?, state?: boolean) {
-		if (event) {
-			event.preventDefault();
-			event.stopPropagation();
-		}
-
-		this.searchOpen = false;
-		this.filterClick$.emit(state);
-	}
-
-	// public logout(): void {
-	// 	this.authenticationService.logout();
-	// }
-
-	// private _updateNavPosition(distance: number) {
-	// 	this._navBarPosition = Math.max(-this._navBarWidth, Math.min(0, distance));
-	// 	this.navbar.nativeElement.style.transform = `translateX(${this._navBarPosition}px)`;
-	// }
-
-	// private _onBackKeyDown(e) {
-	// 	// TODO - Hack
-	// 	if (!app.platform.isApp || window.location.hash !== '#/symbols')
-	// 		return;
-
-	// 	e.preventDefault();
-	// 	e.stopPropagation();
-
-	// 	if (new Date().getTime() - this._lastTimeBackPress < this._timePeriodToExit) {
-	// 		navigator.app.exitApp();
-	// 	} else {
-	// 		window.plugins.toast.showWithOptions(
-	// 			{
-	// 				message: "Press again to exit.",
-	// 				duration: "short", // which is 2000 ms. "long" is 4000. Or specify the nr of ms yourself.
-	// 				position: "bottom",
-	// 				addPixelsY: -40  // added a negative value to move it up a bit (default 0)
-	// 			}
-	// 		);
-
-	// 		this._lastTimeBackPress = new Date().getTime();
-	// 	}
-	// };
-
 }

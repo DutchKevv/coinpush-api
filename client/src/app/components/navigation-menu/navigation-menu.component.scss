@@ -1,7 +1,17 @@
 @import '../../style/helpers/normalize';
 @import '../../style/variables/variables';
 
-.nav-main {
+:host {
+    &.show {
+        animation: moveIn .2s ease-in-out forwards;
+
+        .nav-overlay {
+            display: block;
+            
+            animation: fadeIn .3s;
+        }
+    }
+
     background: $background-light;
     overflow-y: auto;
     width: 250px;
@@ -13,23 +23,15 @@
     bottom: 0;
     z-index: 1001;
 
-    &.show {
-        transform: translateX(0);
-        animation: moveIn .2s ease-in-out;
-
-        + .nav-overlay {
-            display: block;
-            
-            animation: fadeIn .3s;
-        }
-    }
-
     @media only screen and (min-width : 992px) {
         position: static;
         transform: none;
-        // transform: translateX(0px);
+        transform: translateX(0px);
     }
+}
 
+.nav-main {
+    
     a {
         padding: 15px 10px 15px 20px;
         font-size: 18px;
@@ -67,18 +69,6 @@
     }
 }
 
-.nav-overlay {
-    background: rgba(0, 0, 0, 0.7);
-    display: none;
-
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1000;
-}
-
 .nav-tabs {
     border-bottom: 0;
 
@@ -114,4 +104,14 @@
             }
         }
     }
+}
+
+@keyframes moveIn {
+    from { transform: translateX(-250px); }
+    to { transform: translateX(0); }
+}
+
+@keyframes moveOut {
+    from { transform: translateX(0); }
+    to { transform: translateX(-250px); }
 }

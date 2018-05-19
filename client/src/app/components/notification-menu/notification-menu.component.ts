@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Output, OnDestroy, EventEmitter, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Output, OnDestroy, EventEmitter, OnInit, HostListener, ChangeDetectorRef } from '@angular/core';
 import { NotificationService } from '../../services/notification.service';
 import { Router, NavigationStart } from '@angular/router';
 import { AuthenticationService } from '../../services/authenticate.service';
@@ -20,9 +20,21 @@ export class NotificationMenuComponent implements OnDestroy, OnInit {
 
 	private _routerEventsSub;
 
+	/**
+	 * outside click for searchdropdown
+	 * @param event 
+	 */
+	@HostListener('window:click', ['$event'])
+	onWindowClick(event) {
+		if (!event.target.classList.contains('fa-globe')) {
+			this.toggleNotificationMenu(false);
+		}
+	}
+
 	constructor(
 		public notificationService: NotificationService,
 		public router: Router,
+		private _changeDetectorRef: ChangeDetectorRef,
 		private _authenticationSerice: AuthenticationService,
 		private _userService: UserService
 	) {
@@ -53,6 +65,7 @@ export class NotificationMenuComponent implements OnDestroy, OnInit {
 		event.preventDefault();
 		event.stopPropagation();
 
+		this.notifications$.getValue().forEach(notification => notification.isRead = true);
 		this.notificationService.markAllAsRead();
 
 	}
