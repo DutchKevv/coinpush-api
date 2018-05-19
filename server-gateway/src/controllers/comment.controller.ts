@@ -3,7 +3,7 @@ import {userController} from "./user.controller";
 import { IReqUser } from 'coinpush/interface/IReqUser.interface';
 import { IUser } from 'coinpush/interface/IUser.interface';
 
-const config = require('../../../tradejs.config');
+const config = require('../../../tradejs.config.js');
 
 export const commentController = {
 

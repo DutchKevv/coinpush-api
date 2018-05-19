@@ -6,7 +6,7 @@ import { CandleSchema } from '../schemas/candle';
 import { Status } from '../schemas/status.schema';
 import { BulkWriteResult } from 'mongodb';
 
-const config = require('../../../tradejs.config');
+const config = require('../../../tradejs.config.js');
 
 const READ_COUNT_DEFAULT = 2000;
 

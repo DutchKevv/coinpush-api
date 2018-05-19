@@ -1,7 +1,7 @@
 import { Schema, model, Types } from 'mongoose';
 import { join } from 'path';
 
-const config = require('../../../tradejs.config');
+const config = require('../../../tradejs.config.js');
 
 export const CommentSchema = new Schema({
 	createUser: {

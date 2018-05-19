@@ -4,7 +4,7 @@ import { pubClient } from 'coinpush/redis';
 import { User } from '../schemas/user.schema';
 import { IReqUser } from 'coinpush/interface/IReqUser.interface';
 
-const config = require('../../../tradejs.config');
+const config = require('../../../tradejs.config.js');
 
 export const timelineController = {
 

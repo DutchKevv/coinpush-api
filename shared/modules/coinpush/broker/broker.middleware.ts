@@ -4,7 +4,7 @@ import { OandaApi} from './oanda/index';
 import CyrptoCompareApi from './cc/cryptocompare.broker';
 import { BROKER_GENERAL_TYPE_CC, BROKER_GENERAL_TYPE_OANDA } from '../constant';
 
-const config = require('../../../../tradejs.config');
+const config = require('../../../../tradejs.config.js');
 
 export class BrokerMiddleware extends EventEmitter {
 

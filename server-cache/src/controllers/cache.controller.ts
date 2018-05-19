@@ -8,7 +8,7 @@ import { timeFrameSteps } from 'coinpush/util/util.date';
 import * as ProgressBar from 'progress';
 import { pubClient } from 'coinpush/redis';
 
-const config = require('../../../tradejs.config');
+const config = require('../../../tradejs.config.js');
 
 const HISTORY_COUNT_DEFAULT = 2000;
 

@@ -68,9 +68,9 @@ export class HeaderComponent {
 		this._routerEventsSub = this._router.events.subscribe((event) => {
 			
 			if (event instanceof NavigationStart) {
-				const route = event.url.split('?')[0];
-
-				if (['/', '/symbols'].includes(route)) {
+				const isHome = event.url === '/' || event.url === '/symbols';
+9
+				if (isHome) {
 					this.showFilterButton = true;
 					this.showBackButton = false;
 				} else {

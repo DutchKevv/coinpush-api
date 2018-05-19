@@ -1,6 +1,6 @@
 import * as request from 'request-promise';
 
-const config = require('../../../tradejs.config');
+const config = require('../../../tradejs.config.js');
 
 export const searchController = {
 

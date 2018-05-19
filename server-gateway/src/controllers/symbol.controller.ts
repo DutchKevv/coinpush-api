@@ -1,6 +1,6 @@
 import { SymbolSyncer } from '../modules/symbol-syncer';
 
-const config = require('../../../tradejs.config');
+const config = require('../../../tradejs.config.js');
 
 export const symbolController = {
 

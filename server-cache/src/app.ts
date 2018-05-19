@@ -17,7 +17,7 @@ process.on('unhandledRejection', (reason, p) => {
 });
 
 // configuration
-const config = require('../../tradejs.config');
+const config = require('../../tradejs.config.js');
 
 export const app = {
 

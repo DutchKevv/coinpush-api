@@ -8,7 +8,7 @@ import { INotification } from 'coinpush/interface/notification.interface';
 import { IReqUser } from 'coinpush/interface/IReqUser.interface';
 import { pubClient } from 'coinpush/redis';
 
-const config = require('../../../tradejs.config');
+const config = require('../../../tradejs.config.js');
 const fcm = new FCM(config.firebase.key)
 
 export const notifyController = {

@@ -5,11 +5,16 @@
     <title>CoinPush</title>
     <base href="./">
     <meta charset="utf-8">
-    <meta name="mobile-web-app-capable" content="yes">
-    <!-- <meta name="viewport" content="width=device-width, height=device-height, user-scalable=no, initial-scale=1, minimum-scale=1, maximum-scale=1"> -->
-    <meta name="viewport" content="initial-scale=1, width=device-width, height=device-height, viewport-fit=cover, user-scalable=no">
     <meta name="robots" content="noindex, nofollow">
     <meta name="googlebot" content="noindex, nofollow">
+
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="initial-scale=1, width=device-width, height=device-height, viewport-fit=cover, user-scalable=no">
+
+    <!-- URL bar background color | Chrome, FireFox OS, MS, Apple -->
+    <meta name="theme-color" content="#000000">
+    <meta name="msapplication-navbutton-color" content="#000000">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
@@ -18,11 +23,11 @@
         html {
             height: 100%;
             touch-action: manipulation;
-            overflow: hidden;
+            /* overflow: hidden; */
         }
 
         body {
-            overflow: hidden;
+            /* overflow: hidden; */
             height: 100%;
             background: #222122;
             margin: 0;
@@ -64,7 +69,7 @@
         }
 
         #preload-box.fade-out {
-            animation: fadeOut .4s linear forwards; 
+            animation: fadeOut .4s linear forwards;
         }
 
         #initialProgressBar {
@@ -154,6 +159,10 @@
     <!-- inject:js:cordova -->
 
     <script>
+        document.addEventListener('touchmove', event => {
+            event.preventDefault();
+        });
+
         // is browser supported
         (function () {
             window.BROWSERSUPPORTED = function () {

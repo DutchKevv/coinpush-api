@@ -18,6 +18,11 @@ input[type=text] {
 	-moz-user-select: text;
 	-ms-user-select: text;
 	user-select: text;
+
+	&:disabled {
+        background: #353535;
+        color: #a3a3a3;
+    }
 }
 
 :host {

@@ -73,7 +73,8 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	// chart data
 	private _data = {
 		candles: [],
-		volume: []
+		volume: [],
+		plotLines: []
 	};
 
 	private minimized = false;
@@ -163,7 +164,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 		if (!this.symbolModel)
 			return;
 
-		this._fetchCandles();
+		this._fetch();
 		this._destroyChart();
 	}
 
@@ -175,14 +176,16 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	 * @param render 
 	 */
 	public updatePlotLine(id: string, value: number, type: number, render: boolean = false) {
-		if (!this._chart)
-			return;
 
 		return this._zone.runOutsideAngular(() => {
 			this.removePlotLine(id);
 
-			if (!value)
-				return;
+			// if (!value) {
+			// 	console.log(type);
+			// 	console.warn(`updatePlotline() - no value given! id: ${id}`);
+			// 	value = this.symbolModel.options.bid;
+			// 	console.log(this.symbolModel.options.bid);
+			// }
 
 			const labelEl = this._labelEl;
 
@@ -223,11 +226,11 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 					options.dashStyle = 'solid';
 					options.width = 2;
 
-					if (this._chart.yAxis[0].max < value) {
+					if (this._chart && this._chart.yAxis[0].max < value) {
 						this._chart.yAxis[0].update({ max: value, min: null }, true);
 					}
-					if (this._chart.yAxis[0].min > value) {
-						this._chart.yAxis[0].update({ min: value, max: null }, true);
+					if (this._chart && this._chart.yAxis[0].min > value) {
+						this._chart.yAxis[0].update({ max: null, min: value }, true);
 					}
 					break;
 				case CUSTOM_EVENT_TYPE_PRICE:
@@ -241,9 +244,12 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 
 			options.label.text = labelEl.innerHTML;
 
-			this._chart.yAxis[0].addPlotLine(options, render, false);
-		});
+			this._data.plotLines.push(options);
 
+			if (this._chart) {
+				this._chart.yAxis[0].addPlotLine(options, render, false);
+			}
+		});
 	}
 
 	/**
@@ -252,6 +258,10 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	 * @param render 
 	 */
 	public removePlotLine(id, render: boolean = false) {
+		// remove from data
+		this._data.plotLines.splice(this._data.plotLines.findIndex(plotLine => plotLine.id === id));
+
+		// remove from chart
 		if (this._chart)
 			this._chart.yAxis[0].removePlotLine(id, render, false);
 	}
@@ -398,7 +408,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 						resize: {
 							enabled: true
 						},
-						plotLines: []
+						plotLines: this._data.plotLines
 					},
 					{
 						opposite: true,
@@ -414,8 +424,8 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 						height: '20%',
 						// offset: 10,
 						lineWidth: 1
-					}],
-
+					},
+				],
 				series: [
 					{
 						id: SERIES_MAIN_NAME,
@@ -468,14 +478,13 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	/**
 	 * 
 	 */
-	private _fetchCandles() {
+	private _fetch() {
 
 		if (this._fetchSub)
 			this._fetchSub.unsubscribe();
 
 		this._zone.runOutsideAngular(async () => {
 			this._toggleError(false);
-			let success = false;
 
 			try {
 				this._prepareData(await this._cacheService.read({
@@ -492,9 +501,9 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 				this._onPriceChange(false); // asign current price to latest candle
 				this._updateCurrentPricePlot();
 				this._updateAlarms();
-				this._updateViewPort(0, true);
-
+				
 				requestAnimationFrame(() => {
+					this._updateViewPort(0, true);
 					this._toggleLoading(false);
 				});
 			} catch (error) {
@@ -706,7 +715,8 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 			this._data = null;
 			this._data = {
 				candles: [],
-				volume: []
+				volume: [],
+				plotLines: []
 			};
 		}
 	}

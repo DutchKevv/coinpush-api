@@ -4,7 +4,7 @@ import * as morgan from 'morgan';
 import * as mongoose from 'mongoose';
 import {json, urlencoded} from 'body-parser';
 
-const config = require('../../tradejs.config');
+const config = require('../../tradejs.config.js');
 const app = express();
 app.listen(config.server.comment.port, '0.0.0.0', () => console.log(`\n Comment service started on      : 0.0.0.0:${config.server.comment.port}`));
 

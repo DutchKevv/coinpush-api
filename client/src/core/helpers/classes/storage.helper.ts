@@ -1,6 +1,8 @@
 import * as localforage from "localforage";
 import * as deepmerge from "deepmerge";
 
+declare let window: any;
+
 export class StorageHelper {
 
     public profileData: any = {};
@@ -9,9 +11,9 @@ export class StorageHelper {
     private _userProfileKey: string = null;
 
     async init(): Promise<void> {
-        console.log(deepmerge);
+        
         this._instance = localforage.createInstance({
-            size: 10428800, // 10mb
+            // size: 10428800, // 10mb
             name: 'CoinPush',
             storeName: 'data'
             // OR instead of passing the `driver` option,
