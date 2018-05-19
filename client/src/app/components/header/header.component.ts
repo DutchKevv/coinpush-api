@@ -1,5 +1,4 @@
 import { Component, OnInit, Output, ChangeDetectionStrategy, ChangeDetectorRef, EventEmitter, ViewChild, ElementRef, HostListener, Input } from '@angular/core';
-import { AlertService } from '../../services/alert.service';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { CacheService } from '../../services/cache.service';
 import { Subject } from 'rxjs';
@@ -21,7 +20,7 @@ declare let navigator: any;
 })
 
 export class HeaderComponent {
-	@Input() public titleText$: Subject<string> = new Subject();
+	@Input() public titleText$: Subject<string>;
 	
 	@Output() public filterClicked$: EventEmitter<void | boolean> = new EventEmitter();
 	@Output() public navClicked$: EventEmitter<void | boolean> = new EventEmitter();
@@ -38,13 +37,11 @@ export class HeaderComponent {
 	private _routerEventsSub: any;
 
 	/**
-	 * outside click for searchdropdown
+	 * outside click for menus auto close
 	 * @param event 
 	 */
 	@HostListener('window:click', ['$event'])
 	onWindowClick(event) {
-		// this.closeAllMenus();
-
 		if (event.target.id !== 'mainSearchInput' && !event.target.classList.contains('fa-search')) {
 			this.toggleSearch(false);
 		}
@@ -58,7 +55,7 @@ export class HeaderComponent {
 	}
 
 	constructor(
-		public http: HttpClient,
+		private _http: HttpClient,
 		private _router: Router,
 		private _cacheService: CacheService,
 		private _location: Location,
@@ -121,7 +118,7 @@ export class HeaderComponent {
 			fromObject: { limit: '5', text: value }
 		});
 
-		this.http.get('/search/', { params }).subscribe((result: any) => {
+		this._http.get('/search/', { params }).subscribe((result: any) => {
 			currentResult.users = result.users;
 			this.searchResults$.next(currentResult);
 		});
@@ -141,16 +138,6 @@ export class HeaderComponent {
 			this.inputRef.nativeElement.focus();
 		}
 	}
-
-	// public onClickFilter(event?, state?: boolean) {
-	// 	if (event) {
-	// 		event.preventDefault();
-	// 		event.stopPropagation();
-	// 	}
-
-	// 	this.searchOpen = false;
-	// 	this.filterClicked$.emit(state);
-	// }
 
 	public closeAllMenus() {
 		this.filterClicked$.emit(false);

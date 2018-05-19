@@ -10,23 +10,20 @@ declare let navigator: any;
 
 @Component({
 	selector: 'app-navigation-menu',
-    styleUrls: ['./navigation-menu.component.scss'],
-    templateUrl: 'navigation-menu.component.html',
+	styleUrls: ['./navigation-menu.component.scss'],
+	templateUrl: 'navigation-menu.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class NavigationMenuComponent {
 
-    public state: boolean = false;
-    public version = 'v0.0.2-alpha-' + (environment.production ? 'prod' : 'dev');
+	public state: boolean = false;
+	public version = 'v0.0.2-alpha-' + (environment.production ? 'prod' : 'dev');
 
-	private _isNavOpen: boolean = false;
-	private _navBarWidth: number = 250;
+	private _navBarWidth: number = this._elementRf.nativeElement.clientWidth;
 	private _navBarPosition: number = -this._navBarWidth;
 	private _touchStartX = 0
-	private _lastTimeBackPress = 0;
-	private _timePeriodToExit = 2000;
-	
+
 	/**
 	 * mobile nav menu back press close
 	 * @param event 
@@ -37,15 +34,6 @@ export class NavigationMenuComponent {
 		return false;
 	}
 
-	/**
-	 * mobile nav menu back press close
-	 * @param event 
-	 */
-	@HostListener('document:backbutton', ['$event'])
-	onBackButton(event) {
-		this._onBackKeyDown(event);
-		window.history.go(-1);
-	}
 
 	/**
 	 * mobile nav menu touch swipe
@@ -87,20 +75,19 @@ export class NavigationMenuComponent {
 		this.toggleNav(this._navBarPosition > -(this._navBarWidth / 2));
 	}
 
-    constructor(
+	constructor(
 		public userService: UserService,
 		private _authenticationService: AuthenticationService,
-        private _elementRf: ElementRef) {
+		private _elementRf: ElementRef) {
+	}
 
-    }
-
-    public toggleNav(state?: boolean) {	
+	public toggleNav(state?: boolean) {
 		this.state = typeof state === 'boolean' ? state : !this.state;
 		this._elementRf.nativeElement.classList.toggle('show', this.state);
 
 		this._navBarPosition = this.state ? 0 : -this._navBarWidth;
-        this._elementRf.nativeElement.removeAttribute('style');
-        
+		this._elementRf.nativeElement.removeAttribute('style');
+
 		// setTimeout(() => {
 		// 	if (this._isNavOpen)
 		// 		this.router.navigate(this.activatedRoute.snapshot.url, { queryParamsHandling: 'merge', queryParams: { menu: 1 }, relativeTo: this.activatedRoute })
@@ -117,29 +104,5 @@ export class NavigationMenuComponent {
 	private _updateNavPosition(distance: number) {
 		this._navBarPosition = Math.max(-this._navBarWidth, Math.min(0, distance));
 		this._elementRf.nativeElement.style.transform = `translateX(${this._navBarPosition}px)`;
-	}
-
-	private _onBackKeyDown(e) {
-		// TODO - Hack
-		if (!app.platform.isApp || window.location.hash !== '#/symbols')
-			return;
-
-		e.preventDefault();
-		e.stopPropagation();
-
-		if (new Date().getTime() - this._lastTimeBackPress < this._timePeriodToExit) {
-			navigator.app.exitApp();
-		} else {
-			window.plugins.toast.showWithOptions(
-				{
-					message: "Press again to exit.",
-					duration: "short", // which is 2000 ms. "long" is 4000. Or specify the nr of ms yourself.
-					position: "bottom",
-					addPixelsY: -40  // added a negative value to move it up a bit (default 0)
-				}
-			);
-
-			this._lastTimeBackPress = new Date().getTime();
-		}
 	}
 }
