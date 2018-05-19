@@ -170,10 +170,16 @@ export class AuthenticationService {
 
 				// browser
 			} else {
-				const clientId = environment.production ? FB_APP_ID_PROD : FB_APP_ID_DEV;
+				/** TODO - TODO - TODO - TODO
+				 * Cordova facebook plugins cannot handle multiple facebook account settings 
+				 * 
+				 * Still looking for a way without cordova plugins...
+				 * 
+				 * So for now using always prod
+				 **/
+				// const clientId = environment.production ? FB_APP_ID_PROD : FB_APP_ID_DEV;
+				const clientId = FB_APP_ID_PROD;
 
-				// const redirectUrl = 'https://www.facebook.com/connect/login_success.html';
-				// const redirectUrl = window.location.origin + 'index.redirect.facebook.html';
 				const redirectUrl = app.address.hostUrl + '/index.redirect.facebook.html';
 				const loginUrl = `https://graph.facebook.com/oauth/authorize?client_id=${clientId}&response_type=token&redirect_uri=${redirectUrl}&scope=${scope}`;
 

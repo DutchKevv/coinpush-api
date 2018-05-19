@@ -7,7 +7,7 @@
 
 :host {
 	position: absolute;
-	top: 45px;
+	top: 55px;
 	z-index: 200000;
 	left: 50%;
 	transform: translateX(-50%);
@@ -27,7 +27,7 @@
 	font-weight: bold;
 	text-align: center;
 	padding: 0 20px;
-	border-radius: 10px;
+	border-radius: 4px;
 
 	i {
 		color: white;
@@ -49,12 +49,12 @@
 }
 
 .alert-success {
-	background-color: rgba(0, 250, 50, 0.8);
+	background-color: #12ad31;
 	color: $font-color-light;
 	// border: 1px solid green;
 }
 
 .alert-error {
-	background-color: rgba(250, 50, 50, 0.8);
+	background-color: rgba(250, 50, 50, 0.9);
 	color: $font-color-light;
 }

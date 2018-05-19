@@ -18,7 +18,7 @@ declare let navigator: any;
 export class NavigationMenuComponent {
 
 	public state: boolean = false;
-	public version = 'v0.0.2-alpha-' + (environment.production ? 'prod' : 'dev');
+	public version = 'v0.0.2-' + (environment.production ? 'prod' : 'dev');
 
 	private _navBarWidth: number = this._elementRf.nativeElement.clientWidth;
 	private _navBarPosition: number = -this._navBarWidth;

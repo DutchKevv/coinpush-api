@@ -11,6 +11,7 @@ import { ALARM_TRIGGER_DIRECTION_DOWN, ALARM_TRIGGER_DIRECTION_UP, CUSTOM_EVENT_
 import { CacheService } from '../../services/cache.service';
 import { AuthenticationService } from '../../services/authenticate.service';
 import { EventModel } from '../../models/event.model';
+import { Subject } from 'rxjs/Subject';
 
 @Pipe({ name: 'alarmMenuActiveSymbolEvent' })
 export class AlarmMenuActiveSymbolEventPipe implements PipeTransform {
@@ -29,7 +30,7 @@ export class AlarmMenuActiveSymbolEventPipe implements PipeTransform {
 export class AlarmMenuComponent implements OnChanges, OnDestroy {
 
 	@Input() symbol: SymbolModel;
-	@Output() inputValueChange: BehaviorSubject<number> = new BehaviorSubject(null);
+	@Output() inputValueChange: Subject<number> = new Subject();
 	@Output() onDestroy: EventEmitter<boolean> = new EventEmitter;
 
 	public historyEvents$;
@@ -41,7 +42,8 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 		alarmType: "1",
 		alarm: {
 
-		}
+		},
+		amount: 0
 	};
 
 	private _mouseDownTimeout = null;
@@ -56,6 +58,10 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 		private _changeRef: ChangeDetectorRef,
 		private _route: ActivatedRoute) {
 		// this._changeDetectorRef.detach();
+	}
+
+	ngOnInit() {
+		this.inputValueChange.next(this.symbol.options.bid);
 	}
 
 	async ngOnChanges(changes: SimpleChanges) {

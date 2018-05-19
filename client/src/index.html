@@ -69,7 +69,7 @@
         }
 
         #preload-box.fade-out {
-            animation: fadeOut .4s linear forwards; 
+            animation: fadeOut .4s linear forwards;
         }
 
         #initialProgressBar {
@@ -159,6 +159,10 @@
     <!-- inject:js:cordova -->
 
     <script>
+        document.addEventListener('touchmove', event => {
+            event.preventDefault();
+        });
+
         // is browser supported
         (function () {
             window.BROWSERSUPPORTED = function () {
