@@ -23,11 +23,11 @@
         cleanWs()
     }
     stage(&apos;get source&apos;) {
-        git branch: &apos;development&apos;, url: &apos;https://github.com/DutchKevv/TradeJS&apos;
+        git branch: &apos;development&apos;, url: &apos;https://github.com/DutchKevv/CoinPush&apos;, credentialsId: &apos;a1adac75-3785-49d3-ab33-3f7b51accd46&apos;
     }
     stage(&apos;install &amp; build client&apos;) {
         dir(&apos;client&apos;) {
-            sh &apos;npm i &amp;&amp; npm run build-prod&apos;
+            sh &apos;npm i --silent --production &amp;&amp; npm run build-prod&apos;
         }
     }
     stage(&apos;enable maintenance mode on nginx&apos;) {
