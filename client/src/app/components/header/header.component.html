@@ -3,14 +3,14 @@
 <i *ngIf="showBackButton === true" (click)="onClickBackButton()" class="fa fa-angle-left d-lg-none"></i>
 
 <!-- mobile nav button -->
-<i (click)="navClicked.next(true)" class="fa fa-navicon d-lg-none"></i>
+<i (click)="navClicked$.next(true)" class="fa fa-navicon d-lg-none"></i>
 
 <!-- notifications -->
 <app-notification-menu></app-notification-menu>
 
 <!-- filter -->
 
-<i *ngIf="showFilterButton === true" (click)="onClickFilter($event)" class="fa fa-filter d-lg-none"></i>
+<i *ngIf="showFilterButton === true" (click)="filterClicked$.emit(); " class="fa fa-filter d-lg-none"></i>
 
 <!-- title -->
 <h3 class="d-lg-none header-title">{{titleText$ | async}}</h3>
@@ -19,7 +19,7 @@
 <div class="search-container">
     <input (keyup)="onSearchKeyUp($event)" (focus)="onSearchKeyUp($event)" placeholder="Markets / People" id="mainSearchInput"
         #input title="Markets / People" type="text" autocapitalize="none">
-    <div class="header-drop-down" *ngIf="(searchResults$ | async) as result" (click)="onClickDropdownItem()" #dropdown>
+    <div class="header-drop-down" *ngIf="(searchResults$ | async) as result" (click)="toggleDropdownVisibility(false)" #dropdown>
         <h4 *ngIf="result.symbols.length">Symbols</h4>
         <a *ngFor="let symbol of result.symbols" [routerLink]="['/symbols']" [queryParams]="{symbol: symbol.options.name}">
             <span class="symbol-img-{{symbol.options.name}}" style="margin-right: 10px;"></span>
@@ -35,4 +35,4 @@
 </div>
 
 <!-- mobile search button -->
-<i (click)="toggleSearch()" class="fa fa-search d-lg-none"></i>
+<i (click)="toggleSearch();" class="fa fa-search d-lg-none"></i>

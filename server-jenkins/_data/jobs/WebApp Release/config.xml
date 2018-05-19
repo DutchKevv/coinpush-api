@@ -18,7 +18,8 @@
     </jenkins.model.BuildDiscarderProperty>
   </properties>
   <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.53">
-    <script>node {
+    <script>// @Library(&apos;clientBuild&apos;) _
+node {
     stage(&apos;clean workspace&apos;) {
         cleanWs()
     }

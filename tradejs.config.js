@@ -17,14 +17,9 @@ if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'prod') {
 
 const config = {
     domain,
-    path: {
-        'custom': path.join(__dirname, 'custom'),
-        'config': path.join(__dirname, '_config')
-    },
     server: {
         gateway: {
-            port: 3100,
-            protocol: 'https'
+            port: 3100
         },
         oldApi: {
             port: 3000,
@@ -86,10 +81,12 @@ const config = {
     email: {
         account: {
             noReply: {
-                service: 'Gmail',
+                host: '',
+                port: 465,
+                secure: true, // true for 465, false for other ports
                 auth: {
-                    user: '**', // Your email id
-                    pass: '**' // Your password
+                    user: '', // generated ethereal user
+                    pass: '' // generated ethereal password
                 }
             }
         }
@@ -103,23 +100,21 @@ const config = {
     firebase: {
         key: "" // Your firebase accound id (push messages)
     },
-    port: 4000,
-    app: {
-        version: "0.0.1",
-        ip: {
-            local: '0.0.0.0', 
-            appEmulator: '10.0.2.2',
-            live: '**',
-        }
+    ip: {
+        "local": "127.0.0.1",
+        "prod": "",
+        "devLocal": "127.0.0.1",
+        "devApp": "10.0.2.2"
     },
+    port: 4000,
     auth: {
         jwt: {
-            secret: 'BUTTERFLY1942',
-            passwordResetSecret: 'BEAVER_COMMUNITY_12_1'
+            secret: '',
+            passwordResetSecret: ''
         },
         facebook: {
-            clientID      : '178901869390909', // your App ID
-            clientSecret  : 'be8d6625e76a24899b2585d65d3522c1', // your App Secret
+            clientID      : '', // your App ID
+            clientSecret  : '', // your App Secret
             'callbackURL'   : 'http://localhost:8080/auth/facebook/callback',
             'profileURL'    : 'https://graph.facebook.com/v2.12/me?fields=first_name,last_name,email',
             'profileFields' : ['id', 'email', 'name'] // For requesting permissions from Facebook API
