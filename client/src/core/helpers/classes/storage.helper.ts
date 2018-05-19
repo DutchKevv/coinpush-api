@@ -9,9 +9,9 @@ export class StorageHelper {
 
     private _instance: LocalForage = null;
     private _userProfileKey: string = null;
-    private _zoneHandle
 
     async init(): Promise<void> {
+        
         this._instance = localforage.createInstance({
             // size: 10428800, // 10mb
             name: 'CoinPush',
@@ -43,17 +43,7 @@ export class StorageHelper {
     }
 
     public set(key: string, value: any): Promise<any> {
-        // console.log('key', value);
-        if (window.ng && window.getAllAngularRootElements) {
-            const zone = window.ng.probe(window.getAllAngularRootElements()[0]).injector.get(window.ng.coreTokens.NgZone);
-            console.log('with zone!');
-            return zone.runOutsideAngular(() => {
-                return this._instance.setItem(key, value);
-            });
-        } else {
-            console.log('without zone!');
-            return this._instance.setItem(key, value);
-        }
+        return this._instance.setItem(key, value);
     }
 
     public async updateProfile(value: any, newProfile: boolean = false): Promise<void> {

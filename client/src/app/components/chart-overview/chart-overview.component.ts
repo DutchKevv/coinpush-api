@@ -76,13 +76,9 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 		this._priceChangeSub = this.cacheService.changed$.subscribe(changedSymbols => this._onPriceChange(changedSymbols));
 
 		this._routeSub = this._route.queryParams.subscribe(params => {
-			console.log('params', params);
-
 			// if its the same as the current, do nothing
 			if (this.activeSymbol && this.activeSymbol.options.name === params['symbol'])
 				return;
-
-			console.log('routesub');
 
 			// only continue if symbol is known (could be old bookmark)
 			if (params['symbol']) {
@@ -126,7 +122,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 		if (filter === this.activeFilter)
 			return;
 
-		app.storage.updateProfile({chartConfig: {filter}}).catch(console.error);
+		// app.storage.updateProfile({chartConfig: {filter}}).catch(console.error);
 
 		// remove specific symbol in url
 		if (removeSymbolFromUrl && this._route.snapshot.queryParams['symbol']) {
