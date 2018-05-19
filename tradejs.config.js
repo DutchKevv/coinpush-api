@@ -81,10 +81,12 @@ const config = {
     email: {
         account: {
             noReply: {
-                service: 'Gmail',
+                host: '',
+                port: 465,
+                secure: true, // true for 465, false for other ports
                 auth: {
-                    user: '**', // Your email id
-                    pass: '**' // Your password
+                    user: '', // generated ethereal user
+                    pass: '' // generated ethereal password
                 }
             }
         }
