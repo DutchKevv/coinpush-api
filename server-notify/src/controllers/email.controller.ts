@@ -2,8 +2,8 @@ import * as nodeMailer from 'nodemailer';
 import { userController } from './user.controller';
 import { IUser } from 'coinpush/interface/IUser.interface';
 
-const config = require('../../../tradejs.config');
-console.log(config.email);
+const config = require('../../../tradejs.config.js');
+
 const transporter = nodeMailer.createTransport(config.email.account.noReply);
 
 const templates = {
