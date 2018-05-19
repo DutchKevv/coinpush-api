@@ -1,7 +1,7 @@
 <nav class="nav-main">
     <a (click)="toggleNav( false)" [routerLink]="['/user/', userService.model.options._id]" [routerLinkActive]="['active']" class="profile"
         style="padding-top: 0">
-        <h6 style="text-align: right; line-height: 40px; padding-right: 20px;">
+        <h6 class="version">
             <i>{{version}}</i>
         </h6>
         <img alt="profile-image" class="logo" width="70" height="70" [attr.src]="userService.model.options.img ? (userService.model.options.img | NormalizeImgUrl) : undefined">

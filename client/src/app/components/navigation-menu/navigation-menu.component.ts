@@ -77,7 +77,7 @@ export class NavigationMenuComponent {
 
 	constructor(
 		public userService: UserService,
-		private _authenticationService: AuthenticationService,
+		public authenticationService: AuthenticationService,
 		private _elementRf: ElementRef) {
 	}
 
@@ -95,10 +95,6 @@ export class NavigationMenuComponent {
 		// 		this.router.navigate(this.activatedRoute.snapshot.url, { queryParamsHandling: 'merge', queryParams: { menu: null }, replaceUrl: true, relativeTo: this.activatedRoute })
 		// 	}
 		// }, 0);
-	}
-
-	public logout(): void {
-		this._authenticationService.logout();
 	}
 
 	private _updateNavPosition(distance: number) {
