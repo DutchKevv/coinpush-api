@@ -6,7 +6,7 @@ import { json, urlencoded } from 'body-parser';
 import { notifyController } from './controllers/notify.controller';
 import { subClient } from 'coinpush/redis';
 
-const config = require('../../tradejs.config');
+const config = require('../../tradejs.config.js');
 const app = express();
 app.listen(config.server.notify.port, '0.0.0.0', () => console.log(`\n Notify service started on      : 0.0.0.0:${config.server.notify.port}`));
 

@@ -4,7 +4,7 @@ import { CUSTOM_EVENT_TYPE_ALARM, ALARM_TRIGGER_TYPE_PRICE, ALARM_TRIGGER_TYPE_P
 import { flatten } from 'lodash';
 import { pubClient } from 'coinpush/redis';
 
-const config = require('./../../../tradejs.config');
+const config = require('./../../../tradejs.config.js');
 
 export const eventController = {
 

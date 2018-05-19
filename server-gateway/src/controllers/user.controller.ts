@@ -6,7 +6,7 @@ import { IUser } from 'coinpush/interface/IUser.interface';
 import { downloadProfileImgFromUrl } from '../api/upload.api';
 import { commentController } from './comment.controller';
 
-const config = require('../../../tradejs.config');
+const config = require('../../../tradejs.config.js');
 
 export const userController = {
 
@@ -93,7 +93,7 @@ export const userController = {
 
 			// send newMember email
 			if (sendEmail) {
-				await request({
+				request({
 					uri: config.server.notify.apiUrl + '/mail/new-member',
 					headers: { '_id': user._id },
 					method: 'POST',
@@ -101,7 +101,7 @@ export const userController = {
 						userId: user._id
 					},
 					json: true
-				});
+				}).catch(console.error);
 			}
 
 			return user;

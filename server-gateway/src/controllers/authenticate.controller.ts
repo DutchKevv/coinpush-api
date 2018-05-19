@@ -11,7 +11,7 @@ import { IReqUser } from 'coinpush/interface/IReqUser.interface';
 import { notifyController } from './notify.controller';
 import { eventController } from './event.controller';
 
-const config = require('../../../tradejs.config');
+const config = require('../../../tradejs.config.js');
 
 export const authenticateController = {
 

@@ -4,7 +4,7 @@ import {User} from '../schemas/user.schema';
 import {IUser} from "coinpush/interface/IUser.interface";
 import { IReqUser } from 'coinpush/interface/IReqUser.interface';
 
-const config = require('../../../tradejs.config');
+const config = require('../../../tradejs.config.js');
 
 export const authenticateController = {
 

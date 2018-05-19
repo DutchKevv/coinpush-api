@@ -1,7 +1,7 @@
 import {Router} from 'express';
 import { eventController } from '../controllers/event.controller';
 
-const config = require('../../../tradejs.config');
+const config = require('../../../tradejs.config.js');
 
 const router = Router();
 

@@ -17,12 +17,12 @@ export const emailController = {
 
 		await new Promise((resolve, reject) => {
 
-			const HTML = `Hi there ${user.name} <br /><br />Welcome to <a href="${config.domain.apiUrl}">TradeJS</a>`;
+			const HTML = `Hi there ${user.name} <br /><br />Welcome to <a href="${config.domain.apiUrl}">CoinPush</a>`;
 
 			const mailOptions = {
 				from: config.email.account.noReply.auth.user, // sender address
 				to: [user.email],
-				subject: `Hi there ${user.name} - TradeJS`,
+				subject: `Hi there ${user.name} - CoinPush`,
 				html: HTML
 			};
 
