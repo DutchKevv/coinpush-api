@@ -7,7 +7,7 @@ importScripts('https://www.gstatic.com/firebasejs/4.8.1/firebase-messaging.js');
 // Initialize the Firebase app in the service worker by passing in the
 // messagingSenderId.
 firebase.initializeApp({
-  'messagingSenderId': 'YOUR-SENDER-ID'
+  'messagingSenderId': '484918912130'
 });
 
 // Retrieve an instance of Firebase Messaging so that it can handle background
@@ -20,7 +20,7 @@ messaging.setBackgroundMessageHandler(function(payload) {
   const notificationTitle = payload.data.title
   const notificationOptions = {
     body: payload.data.body,
-    icon: '/images/corp/icon.png'
+    icon: '/image/corp/icon.png'
   };
 
   return self.registration.showNotification(notificationTitle, notificationOptions);

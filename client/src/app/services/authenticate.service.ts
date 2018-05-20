@@ -186,7 +186,6 @@ export class AuthenticationService {
 				const self = this;
 				window.addEventListener('message', async function cb(message) {
 					window.removeEventListener('message', cb, false);
-					console.log(message);
 					
 					if (message.data.error)
 						return reject(message.error);

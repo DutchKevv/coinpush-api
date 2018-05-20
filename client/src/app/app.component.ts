@@ -46,11 +46,20 @@ export class AppComponent implements OnInit, AfterViewInit, OnChanges {
 	 * @param event 
 	 */
 	@HostListener('document:backbutton', ['$event'])
-	onBackButton(event) {
+	onWindowResize(event) {
 		this._onBackKeyDown(event);
 		window.history.go(-1);
 	}
 
+	/**
+	 * mobile nav menu back press close
+	 * @param event 
+	 */
+	@HostListener('document:backbutton', ['$event'])
+	onBackButton(event) {
+		this._onBackKeyDown(event);
+		window.history.go(-1);
+	}
 
 	constructor(
 		public http: HttpClient,

@@ -1,7 +1,7 @@
 @import '~bootstrap/scss/_functions';
 @import '~bootstrap/scss/_variables';
 @import '~bootstrap/scss/_mixins';
-@import '~bootstrap/scss/_alert';
+// @import '~bootstrap/scss/_alert';
 
 @import '../../style/variables/variables';
 
@@ -9,12 +9,15 @@
 	position: absolute;
 	top: 55px;
 	z-index: 200000;
-	left: 50%;
-	transform: translateX(-50%);
 	display: flex;
+	left: 0;
+	right: 0;
+	opacity: 1;
 
 	@media only screen and (min-width : 768px) {
+		transform: translateX(-50%);
 		max-width: 500px;
+		left: 50%;
 	}
 
 	> div {
@@ -23,11 +26,18 @@
 }
 
 .alert {
-	border-radius: 0;
 	font-weight: bold;
 	text-align: center;
 	padding: 0 20px;
-	border-radius: 4px;
+	width: 100%;
+	border: none;
+	border-radius: 0;
+	animation: fadeOut 1s 7s forwards;
+
+	@media only screen and (min-width : 768px) {
+		width: auto;
+		border-radius: 4px;
+	}
 
 	i {
 		color: white;
@@ -54,7 +64,7 @@
 	// border: 1px solid green;
 }
 
-.alert-error {
-	background-color: rgba(250, 50, 50, 0.9);
+.alert-danger {
+	background-color: #c51d1d;
 	color: $font-color-light;
 }

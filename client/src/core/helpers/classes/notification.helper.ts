@@ -68,7 +68,7 @@ export class NotificationHelper {
      * @param message 
      */
     private _onNotification(message: any): void {
-        console.log(message);
+        console.log('_onNotification', message);
         try {
             if (!message.data)
                 console.info('no-data', message);
@@ -100,7 +100,7 @@ export class NotificationHelper {
                 const config = {
                     apiKey: "AAAAcOdrZII:APA91bHdt3bPaqUW4sWF7tht0xJs13B_X-4Svm4TlWeLnXXFoVsPxWRQGxUPdqudCP1OHkQ-IJCVO10DJKi8G2fLekqfpy0xAXGakQmj-7FZW3DwB18BxcHNIWlgNC9T3T1tbXEnbaxM",
                     // authDomain: "<PROJECT_ID>.firebaseapp.com",
-                    messagingSenderId: "484918912130",
+                    messagingSenderId: '484918912130',
                 };
 
                 firebase.initializeApp(config);
@@ -147,16 +147,10 @@ export class NotificationHelper {
         });
 
         push.on('notification', (data) => {
-            console.log('message!', data);
+            console.log('PushNotification!', data);
             data.data = Object.assign({}, data.additionalData);
             delete data.additionalData;
             this._onNotification(data);
-            // data.message,
-            // data.title,
-            // data.count,
-            // data.sound,
-            // data.image,
-            // data.additionalData
         });
 
         push.on('error', error => {
@@ -164,7 +158,7 @@ export class NotificationHelper {
         });
 
         push.on('accept', (data) => {
-            console.log('asdfasdf', data);
+            console.log('accept????', data);
             // do something with the notification data
         
             push.finish(() => {
@@ -186,7 +180,7 @@ export class NotificationHelper {
         });
         
         push.on('maybe', (data) => {
-            console.log('asdfasdf', data);
+            console.log('maybe???????', data);
             // do something with the notification data
         
             push.finish(() => {
@@ -215,33 +209,6 @@ export class NotificationHelper {
                 console.log('NO PUSH PERMISSION!');
             }
           });
-
-        // try {
-        //     // set badge style 
-        //     cordova.plugins.notification.badge.configure({ indicator: 'circular', autoClear: false });
-
-        //     const permis = await cordova.plugins.firebase.messaging.requestPermission();
-
-        //     cordova.plugins.firebase.messaging.onMessage(payload => {
-        //         payload.data = JSON.parse(payload.data);
-        //         this._onNotification(payload);
-        //     });
-
-        //     cordova.plugins.firebase.messaging.onBackgroundMessage((payload) => {
-        //         payload.data = JSON.parse(payload.data);
-        //         this._onNotification(payload);
-        //     });
-
-        //     this._token = await cordova.plugins.firebase.messaging.getToken();
-        //     app.emit('firebase-token-refresh', this._token);
-
-        // } catch (error) {
-        //     console.error(error);
-        // }
-
-        //     app.emit('firebase-token-refresh', this._token);
-
-
 
         // cordova.plugins.firebase.messaging.requestPermission((data) => {
         //     cordova.plugins.firebase.messaging.getToken(token => {

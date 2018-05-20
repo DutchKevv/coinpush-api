@@ -98,7 +98,12 @@ export class NotificationService {
 				break
 			case 'symbol-alarm':
 				this.unreadCount$.next(unreadValue + 1);
-				// window.location.hash = '#/symbols/?symbol=' + notification.data.symbol;
+
+				// jump to route
+				if (!notification.data.foreground) {
+					window.location.hash = '#/symbols/?symbol=' + notification.data.symbol;
+				}
+				
 				app.emit('event-triggered', Object.assign(notification, { title: notification.title }));
 				break
 			default:
