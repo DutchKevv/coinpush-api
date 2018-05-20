@@ -4,6 +4,7 @@ import { Router, NavigationStart } from '@angular/router';
 import { AuthenticationService } from '../../services/authenticate.service';
 import { UserService } from '../../services/user.service';
 import { BehaviorSubject } from 'rxjs';
+import { INotification } from 'coinpush/interface/notification.interface';
 
 @Component({
 	selector: 'app-notification-menu',
@@ -76,11 +77,11 @@ export class NotificationMenuComponent implements OnDestroy, OnInit {
 
 	}
 
-	public onClickNotification(event, notification) {
+	public onClickNotification(event, notification: INotification) {
 		this.open = false;
 
 		if (!notification.isRead)
-			this.notificationService.markAsRead(notification._id);
+			this.notificationService.markAsRead(notification);
 	}
 
 	ngOnDestroy() {

@@ -96,6 +96,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	private _fetchSub = null;
 
 	private _resizeTimeout = null;
+	
 	/**
 	 * mobile nav menu back press close
 	 * @param event 
@@ -119,6 +120,16 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 			clearTimeout(this._resizeTimeout);
 		}, 500);
 		
+		return false;
+	}
+
+	/**
+	 * mobile nav menu back press close
+	 * @param event 
+	 */
+	@HostListener('scroll', ['$event'])
+	onScroll(event) {
+		this._onScrollBounced(event);
 		return false;
 	}
 
@@ -629,7 +640,6 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	private _onScroll(event: MouseWheelEvent): boolean {
 		event.stopPropagation();
 		event.preventDefault();
-		console.log('scroll', event);
 		
 		let shift = Math.ceil(this._calculateViewableBars() / this._scrollSpeedStep);
 

@@ -54,8 +54,9 @@ export class NotificationService {
 		});
 	}
 
-	public markAsRead(notificationId: string): Promise<Response> {
-		return <any>this._http.put('/notify/unread/' + notificationId, {}).toPromise();
+	public markAsRead(notification: INotification): Promise<Response> {
+		notification.isRead = true;
+		return <any>this._http.put('/notify/unread/' + notification._id, {}).toPromise();
 	}
 
 	public markAllAsRead(): Promise<Response> {

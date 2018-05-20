@@ -12,7 +12,10 @@
     &.app {
         position: relative;
         padding-bottom: 50px;
-        padding-bottom: calc(env(safe-area-inset-bottom) + 60px);
+       
+        &.ios {
+            padding-bottom: calc(env(safe-area-inset-bottom) + 80px);
+        }
     }
 }
 
