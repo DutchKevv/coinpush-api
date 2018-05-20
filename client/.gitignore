@@ -1,6 +1,8 @@
 node_modules
 npm-debug.log
 
+src/address_overwrite.json
+
 *.map
 *.js
 !/tools/**/*.js

@@ -26,7 +26,7 @@ export class NotificationMenuComponent implements OnDestroy, OnInit {
 	 */
 	@HostListener('window:click', ['$event'])
 	onWindowClick(event) {
-		if (!event.target.classList.contains('fa-globe')) {
+		if (!event.target.classList.contains('globe-container') && !event.target.parentNode.classList.contains('globe-container')) {
 			this.toggleNotificationMenu(false);
 		}
 	}

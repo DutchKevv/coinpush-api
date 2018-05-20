@@ -1,7 +1,7 @@
 import { MicroEvent } from "./helpers/classes/micro-event.helper";
 import { generalHelpers } from './helpers/general';
 import { StorageHelper } from "./helpers/classes/storage.helper";
-import { getAddress } from './app.address';
+import address from './app.address';
 import { NotificationHelper } from "./helpers/classes/notification.helper";
 
 class PrettyBootty {
@@ -65,7 +65,7 @@ class PrettyBootty {
 export class App extends MicroEvent {
 
     public platform = window['platform'];
-    public address;
+    public address = address;
     public storage = new StorageHelper();
     public notification = new NotificationHelper();
     public helpers = generalHelpers;
@@ -116,7 +116,6 @@ export class App extends MicroEvent {
 
     public async init(): Promise<void> {
         this.prettyBootty.step('config');
-        this.address = getAddress();
 
         await this.storage.init();
 

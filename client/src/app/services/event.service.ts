@@ -101,7 +101,6 @@ export class EventService {
 	private _onEventTriggered(event) {
 		console.log('_onEventTriggered', event);
 		this._alertService.success(event.title);
-		
 	}
 
 	private _updateSymbolIAlarms(events?: Array<EventModel>) {

@@ -10,6 +10,8 @@ export class NotificationHelper {
     private _token: string = null;
     private _originalTitle = document.title;
 
+    private _firebaseMessaging = null;
+
     get token() {
         return this._token;
     }
@@ -54,10 +56,14 @@ export class NotificationHelper {
      */
     public async askPermissionBrowser() {
         try {
-            const messaging = firebase.messaging();
-            await messaging.requestPermission();
-            this._token = await messaging.getToken();
-            app.emit('firebase-token-refresh', this._token);
+            await this._firebaseMessaging.requestPermission();
+            const token = await this._firebaseMessaging.getToken();
+            if (token) {
+                this._token = token;
+                app.emit('firebase-token-refresh', this._token);
+            } else {
+                console.warn('empty token received');
+            }
         } catch (error) {
             console.error(error);
         }
@@ -69,16 +75,21 @@ export class NotificationHelper {
      */
     private _onNotification(message: any): void {
         console.log('_onNotification', message);
+
         try {
             if (!message.data)
                 console.info('no-data', message);
 
-            const body = typeof message.data === 'string' ? JSON.parse(message.data) : message.data;
+            const data = typeof message.data === 'string' ? JSON.parse(message.data) : message.data;
 
-            if (app.storage.profileData._id !== body.__userId)
+            if (app.storage.profileData._id !== data.__userId)
                 return console.warn('**notification __userId mismatch**');
 
-            app.emit('notification', { title: message.title, data: body });
+            if (!data.title) {
+                data.title = message.title;
+            }
+
+            app.emit('notification', { data });
 
         } catch (error) {
             console.info('message', message);
@@ -104,12 +115,16 @@ export class NotificationHelper {
                 };
 
                 firebase.initializeApp(config);
-                const messaging = firebase.messaging();
+                this._firebaseMessaging = window['messaging_'] = firebase.messaging();
 
-                messaging.onMessage((message) => this._onNotification(message));
-
-                messaging.onTokenRefresh(async () => {
-                    this._token = await messaging.getToken();
+                this._firebaseMessaging.onMessage((message) => {
+                    // function is only get called when on foreground 
+                    message.data.foreground = true;
+                    this._onNotification(message);
+                });
+                
+                this._firebaseMessaging.onTokenRefresh(async () => {
+                    this._token = await this._firebaseMessaging.getToken();
                     app.emit('firebase-token-refresh', this._token);
                 });
 
