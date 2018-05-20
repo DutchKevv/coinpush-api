@@ -142,7 +142,7 @@ export class HeaderComponent {
 	}
 
 	public closeAllMenus() {
-		this.filterClicked$.emit(false);
+		this.filterClicked$.next(false);
 		this.navClicked$.emit(false);
 	}
 }
