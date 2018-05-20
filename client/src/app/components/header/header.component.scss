@@ -46,7 +46,6 @@ $header-icon-padding-x: 10px;
 	color: white;
 	font-size: 28px;
 	line-height: 31px;
-	width: 50px;
 	padding: 0 5px;
 	flex-shrink: 0;
 	transition: transform .1s ease-in-out;
@@ -57,12 +56,11 @@ $header-icon-padding-x: 10px;
 	}
 }
 
-.fa-angle-left {
-	font-size: 40px;
-	line-height: 28px;
-	width: auto;
-	padding: 0 $header-icon-padding-x;
-	padding-top: 3px;
+.fa-arrow-left {
+	font-size: 28px;
+    line-height: 28px;
+    padding: 0 10px;
+    padding-top: 4px;
 }
 
 .fa-navicon {

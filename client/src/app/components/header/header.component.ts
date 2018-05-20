@@ -24,7 +24,7 @@ export class HeaderComponent {
 	
 	@Output() public filterClicked$: BehaviorSubject<void | boolean> = new BehaviorSubject(false);
 	@Output() public navClicked$: EventEmitter<void | boolean> = new EventEmitter();
-	@Output() public searchResults$: Subject<any> = new Subject();
+	@Output() public searchResults$: BehaviorSubject<any> = new BehaviorSubject(null);
 	@Output() public searchOpen$: EventEmitter<boolean> = new EventEmitter();
 	
 	@ViewChild('dropdown') public dropdown: ElementRef;
@@ -35,6 +35,10 @@ export class HeaderComponent {
 	public showFilterButton: boolean = true;
 
 	private _routerEventsSub: any;
+	private _defaultSearchResults = {
+		symbols: [],
+		users: []
+	};
 
 	/**
 	 * outside click for menus auto close
@@ -52,7 +56,7 @@ export class HeaderComponent {
 		}
 
 		if (this.dropdown) {
-			this.searchResults$.next(null);
+			this.searchResults$.next(this._defaultSearchResults);
 		}
 	}
 
@@ -103,7 +107,7 @@ export class HeaderComponent {
 		const value = event.target.value.trim();
 
 		if (!value.length) {
-			this.searchResults$.next();
+			this.searchResults$.next(null);
 			return;
 		}
 

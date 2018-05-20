@@ -102,7 +102,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	 */
 	@HostListener('window:resize', ['$event'])
 	onPopState(event) {
-		this._toggleVisibility(false);
+		// this._toggleVisibility(false);
 		this._toggleLoading(true);
 
 		if (this._resizeTimeout) {

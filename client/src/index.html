@@ -159,6 +159,8 @@
     <!-- inject:js:cordova -->
 
     <script>
+        document.body.querySelector('app').classList.add('app');
+        
         document.addEventListener('touchmove', event => {
             event.preventDefault();
         });
@@ -224,7 +226,7 @@
             });
 
             // special root class
-            document.body.querySelector('app').classList.add('app');
+            // document.body.querySelector('app').classList.add('app');
         })();
     </script>
 </body>
