@@ -83,7 +83,7 @@ export class NotificationService {
 	private _onNotification(notification) {
 		console.log('NOTIFICATION!', notification);
 		const unreadValue = this.unreadCount$.getValue();
-
+		
 		switch (notification.data.type) {
 			/**
 			 * COMMENTS EVENTS (LIKE, REACTION etc)

@@ -1,5 +1,9 @@
 @import '../../style/helpers/normalize';
 
+.modal {
+    overflow-y: auto;
+}
+
 .modal-dialog {
     box-shadow: 4px 7px 13px rgba(0, 0, 0, 0.6);
     margin: 3rem auto;
