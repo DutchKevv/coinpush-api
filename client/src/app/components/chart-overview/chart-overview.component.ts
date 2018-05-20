@@ -20,6 +20,7 @@ import { NgForm } from '@angular/forms';
 import { app } from '../../../core/app';
 import { EventService } from '../../services/event.service';
 import { InstrumentList } from './instrument-list';
+import { AuthenticationService } from '../../services/authenticate.service';
 
 const DEFAULT_FILTER_POPULAR_LENGTH = 40;
 
@@ -63,6 +64,8 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 		private _route: ActivatedRoute,
 		private _router: Router,
 		private _applicationRef: ApplicationRef,
+		private _userService: UserService,
+		private _authenticationService: AuthenticationService,
 		private _eventService: EventService
 	) {
 		this._changeDetectorRef.detach();
@@ -213,6 +216,11 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 	public async onClickToggleFavorite(event, symbol: SymbolModel) {
 		event.preventDefault();
 		event.stopPropagation();
+
+		if (!this._userService.model.options._id) {
+			this._authenticationService.showLoginRegisterPopup();
+			return;
+		}
 
 		if (await this.userService.toggleFavoriteSymbol(symbol)) {
 			this._changeDetectorRef.detectChanges();

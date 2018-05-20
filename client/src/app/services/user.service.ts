@@ -19,7 +19,6 @@ export class UserService {
 
 	constructor(
 		private _http: HttpClient,
-		private _authenticationService: AuthenticationService,
 		private _alertService: AlertService) { }
 
 	findById(id: string, options: any = {}): Promise<UserModel> {
@@ -62,11 +61,6 @@ export class UserService {
 	}
 
 	async toggleFavoriteSymbol(symbol: SymbolModel) {
-		if (!this.model.options._id) {
-			this._authenticationService.showLoginRegisterPopup();
-			return false;
-		}
-
 		try {
 			const result = await this._http.post('/favorite', {
 				symbol: symbol.options.name,
@@ -77,6 +71,7 @@ export class UserService {
 			return true;
 		} catch (error) {
 			console.error(error);
+			return false;
 		}
 	}
 
