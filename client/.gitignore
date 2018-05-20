@@ -5,6 +5,7 @@ src/address_overwrite.json
 
 *.map
 *.js
+!/src/service-worker/**/*.js
 !/tools/**/*.js
 !/src/etc/**/*.js
 !/src/core/**/*.js

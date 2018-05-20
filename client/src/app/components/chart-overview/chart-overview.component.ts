@@ -117,7 +117,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 			event.stopPropagation();
 		}
 
-		this.filterRef.nativeElement.classList.toggle('show', state);
+		this.filterRef.nativeElement.classList.toggle('show', !!state);
 	}
 
 	public toggleActiveFilter(filter: string, removeSymbolFromUrl = true) {

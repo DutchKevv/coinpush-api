@@ -4,6 +4,7 @@ declare let firebase: any;
 declare let PushNotification: any;
 declare let FCMPlugin: any;
 declare let cordova: any;
+declare var Notification: any;
 
 export class NotificationHelper {
 
@@ -100,7 +101,7 @@ export class NotificationHelper {
     /**
      * browser (firebase)
      */
-    private async _loadBrowser() {
+    private _loadBrowser(): Promise<any> {
         return new Promise((resolve, reject) => {
             // firebase script
             let script = document.createElement('script');
@@ -122,7 +123,7 @@ export class NotificationHelper {
                     message.data.foreground = true;
                     this._onNotification(message);
                 });
-                
+
                 this._firebaseMessaging.onTokenRefresh(async () => {
                     this._token = await this._firebaseMessaging.getToken();
                     app.emit('firebase-token-refresh', this._token);
@@ -175,29 +176,29 @@ export class NotificationHelper {
         push.on('accept', (data) => {
             console.log('accept????', data);
             // do something with the notification data
-        
+
             push.finish(() => {
                 console.log('accept callback finished');
             }, () => {
                 console.log('accept callback failed');
             }, data.additionalData.notId);
         });
-        
+
         push.on('reject', (data) => {
             console.log('asdfasdf', data);
             // do something with the notification data
-        
+
             push.finish(() => {
                 console.log('accept callback finished');
             }, () => {
                 console.log('accept callback failed');
             }, data.additionalData.notId);
         });
-        
+
         push.on('maybe', (data) => {
             console.log('maybe???????', data);
             // do something with the notification data
-        
+
             push.finish(() => {
                 console.log('accept callback finished');
             }, () => {
@@ -223,7 +224,7 @@ export class NotificationHelper {
             if (!data.isEnabled) {
                 console.log('NO PUSH PERMISSION!');
             }
-          });
+        });
 
         // cordova.plugins.firebase.messaging.requestPermission((data) => {
         //     cordova.plugins.firebase.messaging.getToken(token => {

@@ -32,8 +32,7 @@ export class EventService {
 
 	public async create(params: any): Promise<EventModel> {
 		try {
-			const result = <any>await this._http.post('/event', params)
-				.toPromise();
+			const result = <any>await this._http.post('/event', params).toPromise();
 
 			// this._alertService.success(`Alarm set on ${params.symbol} - Price $${params.amount}`);
 

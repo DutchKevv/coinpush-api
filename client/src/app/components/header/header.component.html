@@ -1,5 +1,4 @@
-<!-- header -->
-<!-- mobile nav button -->
+<!-- back navigation button -->
 <i *ngIf="showBackButton === true" (click)="onClickBackButton()" class="fa fa-angle-left d-lg-none"></i>
 
 <!-- mobile nav button -->
@@ -8,9 +7,10 @@
 <!-- notifications -->
 <app-notification-menu></app-notification-menu>
 
-<!-- filter -->
-
-<i *ngIf="showFilterButton === true" (click)="filterClicked$.emit(); " class="fa fa-filter d-lg-none"></i>
+<!-- filter (for symbol page) -->
+<a (click)="filterClicked$.next(!filterClicked$.getValue());" *ngIf="showFilterButton === true" class="filter-btn" [ngClass]="{active: (filterClicked$ | async) === true}">
+    <i class="fa fa-filter d-lg-none"></i>
+</a>
 
 <!-- title -->
 <h3 class="d-lg-none header-title">{{titleText$ | async}}</h3>

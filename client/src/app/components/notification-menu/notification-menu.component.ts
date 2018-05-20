@@ -26,8 +26,10 @@ export class NotificationMenuComponent implements OnDestroy, OnInit {
 	 */
 	@HostListener('window:click', ['$event'])
 	onWindowClick(event) {
-		if (!event.target.classList.contains('globe-container') && !event.target.parentNode.classList.contains('globe-container')) {
+		if (!event.target.classList.contains('globe-container') && 
+			event.target.parentNode && !event.target.parentNode.classList.contains('globe-container')) {
 			this.toggleNotificationMenu(false);
+			this._changeDetectorRef.detectChanges();
 		}
 	}
 
@@ -58,7 +60,11 @@ export class NotificationMenuComponent implements OnDestroy, OnInit {
 		}
 
 		this.open = typeof state === 'boolean' ? state : !this.open;
-		this.notificationService.resetUnreadCounter();
+
+		// reset counter when user opens menu
+		if (this.open) {
+			this.notificationService.resetUnreadCounter();
+		}
 	}
 	
 	public onClickMarkAllAsRead(event) {

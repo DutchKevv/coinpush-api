@@ -22,7 +22,7 @@ declare let navigator: any;
 export class HeaderComponent {
 	@Input() public titleText$: Subject<string>;
 	
-	@Output() public filterClicked$: EventEmitter<void | boolean> = new EventEmitter();
+	@Output() public filterClicked$: BehaviorSubject<void | boolean> = new BehaviorSubject(false);
 	@Output() public navClicked$: EventEmitter<void | boolean> = new EventEmitter();
 	@Output() public searchResults$: Subject<any> = new Subject();
 	@Output() public searchOpen$: EventEmitter<boolean> = new EventEmitter();
@@ -44,9 +44,11 @@ export class HeaderComponent {
 	onWindowClick(event) {
 		if (event.target.id !== 'mainSearchInput' && !event.target.classList.contains('fa-search')) {
 			this.toggleSearch(false);
+			this._changeDetectorRef.detectChanges();
 		}
 		if (!event.target.classList.contains('fa-filter')) {
 			this.filterClicked$.next(false);
+			this._changeDetectorRef.detectChanges();
 		}
 
 		if (this.dropdown) {
@@ -83,7 +85,7 @@ export class HeaderComponent {
 
 			if (event instanceof NavigationEnd) {
 				this.searchOpen = false;
-				this.filterClicked$.emit(false);
+				this.filterClicked$.next(false);
 			}
 		});
 	}
