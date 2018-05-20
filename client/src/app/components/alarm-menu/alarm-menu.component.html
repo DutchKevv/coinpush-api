@@ -63,7 +63,7 @@
             <span>{{event.createdAt | date: 'dd/MM/yyyy HH:MM:SS'}}</span>
             <i (click)="onClickRemoveEvent(event);" class="fa fa-trash" style="float: right"></i>
         </div>
-        <p *ngIf="!events.length" style="color: white; text-align: center">No active events. Set some new ones</p>
+        <p *ngIf="!events.length" class="no-events-text">No active events yet. Set some new ones.</p>
     </ng-container>
 
     <!-- tab history-->
@@ -79,7 +79,7 @@
                 </div>
             </ng-container>
             <ng-template #noItems>
-                <p class="no-history-events">No alarms triggered yet</p>
+                <p class="no-events-text">No alarms triggered yet. Set some new ones.</p>
             </ng-template>
         </div>
         <ng-template #loading>

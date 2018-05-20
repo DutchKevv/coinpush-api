@@ -20,8 +20,8 @@
     position: relative;
     display: block;
     padding-top: 2px;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: $header-icon-padding-x;
+    padding-right: $header-icon-padding-x;
     height: 38px;
 
     &.active {
@@ -52,8 +52,8 @@
     position: absolute;
     padding: 1px 6px;
     font-size: 12px;
-    left: 30px;
-    top: 0;
+    left: 28px;
+    top: 1px;
     line-height: 16px;
     font-weight: bold;
 }

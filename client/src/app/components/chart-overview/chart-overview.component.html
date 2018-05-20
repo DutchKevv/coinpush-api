@@ -5,23 +5,13 @@
             <h2>Filters</h2>
         </div>
         <div class="filter-list-options">
-            <h2>Popular</h2>
-            <a [ngClass]="{active: activeFilter === 'all popular'}" (click)="toggleActiveFilter('all popular')">All popular</a>
-            <a [ngClass]="{active: activeFilter === 'rise and fall'}" (click)="toggleActiveFilter('rise and fall')">Risers and fallers</a>
-            <a [ngClass]="{active: activeFilter === 'favorite'}" (click)="toggleActiveFilter('favorite')">My favorites</a>
-            <a [ngClass]="{active: activeFilter === 'all'}" (click)="toggleActiveFilter('all')">All</a>
-            <h2>Crypto</h2>
-            <a [ngClass]="{active: activeFilter === 'crypto all'}" (click)="toggleActiveFilter('crypto all')">All crypto</a>
-            <a [ngClass]="{active: activeFilter === 'crypto popular'}" (click)="toggleActiveFilter('crypto popular')">Popular crypto</a>
-            <h2>Forex</h2>
-            <a [ngClass]="{active: activeFilter === 'forex'}" (click)="toggleActiveFilter('forex')">All forex</a>
-            <a [ngClass]="{active: activeFilter === 'forex popular'}" (click)="toggleActiveFilter('forex popular')">Popular forex</a>
-            <h2>Resources</h2>
-            <a [ngClass]="{active: activeFilter === 'resources'}" (click)="toggleActiveFilter('resources')">All resources</a>
-            <a [ngClass]="{active: activeFilter === 'resources popular'}" (click)="toggleActiveFilter('resources popular')">Popular resources (ni)</a>
-            <h2>Indices</h2>
-            <a [ngClass]="{active: activeFilter === 'all2'}" (click)="toggleActiveFilter('all2')">All indices (ni)</a>
-            <a [ngClass]="{active: activeFilter === 'all2'}" (click)="toggleActiveFilter('all2')">Popular indices (ni)</a>
+            <ng-container *ngFor="let group of filterGroups">
+                <h2>{{group.name}}</h2>
+                <a *ngFor="let filter of group.items" [ngClass]="{active: activeFilter === filter.key}" (click)="toggleActiveFilter(filter.key)">
+                    {{filter.displayName}}
+                    <span>{{filter.length}}</span>
+                </a>
+            </ng-container>
         </div>
     </div>
     <div class="instrument-list" #instrumentList>
@@ -31,7 +21,8 @@
             <h4 class="col-changes">1h / 24h</h4>
             <div class="col-alert"></div>
         </a>
-        <a *ngFor="let symbol of symbols; trackBy:trackByFunc" [ngClass]="{'active': activeSymbol === symbol}" (click)="setActiveSymbol($event, symbol)" [attr.data-symbol]="symbol.options.name">
+        <a *ngFor="let symbol of symbols; trackBy:trackByFunc" [ngClass]="{'active': activeSymbol === symbol}" (click)="setActiveSymbol($event, symbol)"
+            [attr.data-symbol]="symbol.options.name">
             <i (click)="onClickToggleFavorite($event, symbol);" [ngClass]="{'active-icon': symbol.options.iFavorite}" class="fa fa-star col-bookmark"></i>
             <div class="col-instrument">
                 <span class="instrument-image symbol-img-{{symbol.options.name}}"></span>

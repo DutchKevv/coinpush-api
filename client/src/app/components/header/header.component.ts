@@ -76,13 +76,8 @@ export class HeaderComponent {
 			if (event instanceof NavigationStart) {
 				const isHome = event.url === '/' || event.url === '/symbols';
 9
-				if (isHome) {
-					this.showFilterButton = true;
-					this.showBackButton = false;
-				} else {
-					this.showFilterButton = false;
-					this.showBackButton = true;
-				}
+				this.showBackButton = !isHome;
+				this.showFilterButton = isHome || event.url.includes('/symbols');
 
 				this._changeDetectorRef.detectChanges();
 			}

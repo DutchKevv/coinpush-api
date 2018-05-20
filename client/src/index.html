@@ -163,6 +163,13 @@
             event.preventDefault();
         });
 
+        window.addEventListener('native.keyboardshow', function (e) {
+            alert('show');
+            setTimeout(function () {
+                document.activeElement.scrollIntoViewIfNeeded();
+            }, 100);
+        });
+
         // is browser supported
         (function () {
             window.BROWSERSUPPORTED = function () {
@@ -227,7 +234,7 @@
             // special root class
             document.body.querySelector('app').classList.add('app');
 
-            if (app.platform.isIos) {
+            if (window.platform.isIos) {
                 document.body.querySelector('app').classList.add('ios');
             }
         })();

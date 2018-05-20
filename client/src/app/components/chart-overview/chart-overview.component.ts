@@ -21,6 +21,8 @@ import { app } from '../../../core/app';
 import { EventService } from '../../services/event.service';
 import { InstrumentList } from './instrument-list';
 
+const DEFAULT_FILTER_POPULAR_LENGTH = 40;
+
 @Component({
 	selector: 'chart-overview',
 	templateUrl: './chart-overview.component.html',
@@ -39,9 +41,9 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 
 	public CUSTOM_EVENT_TYPE_ALARM_NEW = CUSTOM_EVENT_TYPE_ALARM_NEW;
 
+	public filterGroups: Array<any> = [];
 	public activeSymbol: SymbolModel;
 	public symbols = [];
-	public defaultActiveFilter: string = 'all popular';
 	public activeFilter: string = '';
 	public activeMenu: string = null;
 
@@ -50,6 +52,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 	private _priceChangeSub;
 	private _eventSub;
 	private _destroyed = false;
+	
 	// private _instrumentList: InstrumentList = new InstrumentList(this.cacheService);
 
 	constructor(
@@ -66,6 +69,17 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
+		// build filter list
+		// TODO - move to header / botstrap
+		this._setFilterOptions();
+
+		if (app.storage.profileData.chartConfig) {
+			// check if still valid filter (could be old from localstorage)
+			if (!!this._getFilterObjectByName(app.storage.profileData.chartConfig.filter)) {
+				this.activeFilter = app.storage.profileData.chartConfig.filter;
+			}
+		}
+
 		this._filterSub = this._applicationRef.components[0].instance.filterClicked$.subscribe(state => this.toggleFilterNav(null, state));
 		this._eventSub = this._eventService.events$.subscribe(() => this._changeDetectorRef.detectChanges());
 
@@ -86,7 +100,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 
 				// unknown symbol, so go back to default overview
 				if (!symbol) {
-					this.toggleActiveFilter(this.defaultActiveFilter)
+					this.toggleActiveFilter(this.filterGroups[0].items[0].key)
 					return;
 				}
 
@@ -96,7 +110,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 				this.symbols = [symbol];
 				this.setActiveSymbol(null, this.symbols[0]);
 			} else {
-				this.toggleActiveFilter(this.defaultActiveFilter)
+				this.toggleActiveFilter(this.filterGroups[0].items[0].key);
 			}
 		});
 	}
@@ -121,10 +135,10 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 	}
 
 	public toggleActiveFilter(filter: string, removeSymbolFromUrl = true) {
-		if (filter === this.activeFilter)
-			return;
+		// if (filter === this.activeFilter)
+		// 	return;
 
-		// app.storage.updateProfile({chartConfig: {filter}}).catch(console.error);
+		app.storage.updateProfile({chartConfig: {filter}}).catch(console.error);
 
 		// remove specific symbol in url
 		if (removeSymbolFromUrl && this._route.snapshot.queryParams['symbol']) {
@@ -134,7 +148,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 		this.activeFilter = filter;
 		this.activeMenu = null;
 
-		this.toggleFilterNav(undefined, false);
+		// this.toggleFilterNav(undefined, false);
 
 		switch (filter) {
 			case 'all':
@@ -142,8 +156,8 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 				break;
 			case 'all popular':
 				const sorted = this.cacheService.symbols.sort((a, b) => a.options.volume - b.options.volume).reverse()
-				const cc = sorted.filter(symbol => symbol.options.broker === BROKER_GENERAL_TYPE_CC).slice(0, 20);
-				const oanda = sorted.filter(symbol => symbol.options.broker === BROKER_GENERAL_TYPE_OANDA).slice(0, 20);
+				const cc = sorted.filter(symbol => symbol.options.broker === BROKER_GENERAL_TYPE_CC).slice(0, DEFAULT_FILTER_POPULAR_LENGTH / 2);
+				const oanda = sorted.filter(symbol => symbol.options.broker === BROKER_GENERAL_TYPE_OANDA).slice(0, DEFAULT_FILTER_POPULAR_LENGTH / 2);
 
 				const mixedArr = [];
 				let max = cc.length + oanda.length;
@@ -156,7 +170,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 				break;
 			case 'rise and fall':
 				const sortedByDayAmount = this.cacheService.symbols.sort((a, b) => a.options.changedDAmount - b.options.changedDAmount);
-				this.symbols = [].concat(sortedByDayAmount.slice(-20).reverse(), sortedByDayAmount.slice(0, 20));
+				this.symbols = [].concat(sortedByDayAmount.slice(-(DEFAULT_FILTER_POPULAR_LENGTH / 2)).reverse(), sortedByDayAmount.slice(0, DEFAULT_FILTER_POPULAR_LENGTH / 2));
 				break;
 			case 'favorite':
 				this.symbols = this.cacheService.symbols.filter(symbol => symbol.options.iFavorite);
@@ -167,7 +181,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 			case 'forex popular':
 				this.symbols = this.cacheService.symbols.filter(s => s.options.broker === BROKER_GENERAL_TYPE_OANDA)
 					.sort((a, b) => a.options.volume - b.options.volume)
-					.slice(-40)
+					.slice(-DEFAULT_FILTER_POPULAR_LENGTH)
 					.reverse();
 				break;
 			case 'crypto all':
@@ -177,7 +191,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 				this.symbols = this.cacheService.symbols
 					.filter(s => s.options.type === SYMBOL_CAT_TYPE_CRYPTO)
 					.sort((a, b) => a.options.volume - b.options.volume)
-					.slice(-40)
+					.slice(-DEFAULT_FILTER_POPULAR_LENGTH)
 					.reverse();
 				break;
 			case 'resources':
@@ -187,28 +201,25 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 				this.symbols = [];
 		}
 
-		// console.log(this._instrumentList.build(this.symbols));
-		// this.grid.nativeElement.parentNode.replaceChild(this._instrumentList.build(this.symbols), this.grid.nativeElement)
-		// this.grid.nativeElement.appendChild(this._instrumentList.build(this.symbols));
-		// this.grid.nativeElemeßnt.appendChild(this._instrumentList.build(this.symbols));
-
+		this.setActiveSymbol(null, null);
 		this.activeSymbol = null;
-		// this._changeDetectorRef.detectChanges()
+
+		this._updateHeaderTitle();
+
 		// this.scrollToTop();
 		this._changeDetectorRef.detectChanges();
-		// if (this.symbols.length)
-		// this.setActiveSymbol(undefined, this.symbols[0]);
 	}
 
-	async onClickToggleFavorite(event, symbol: SymbolModel) {
+	public async onClickToggleFavorite(event, symbol: SymbolModel) {
 		event.preventDefault();
 		event.stopPropagation();
 
-		await this.userService.toggleFavoriteSymbol(symbol);
-		this._changeDetectorRef.detectChanges();
+		if (await this.userService.toggleFavoriteSymbol(symbol)) {
+			this._changeDetectorRef.detectChanges();
+		}
 	}
 
-	setActiveSymbol(event, symbol: SymbolModel): void {
+	public setActiveSymbol(event, symbol: SymbolModel): void {
 		if (symbol === this.activeSymbol) {
 			if (event && event.target.classList.contains('fa-bell')) {
 				return;
@@ -217,15 +228,16 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 			}
 		}
 
-		this._applicationRef.components[0].instance.titleText$.next(symbol ? symbol.options.displayName : '');
-
 		this.activeSymbol = symbol;
-		this._changeDetectorRef.detectChanges();
+
+		this._updateHeaderTitle();
 
 		if (symbol) {
 			const el = this._elementRef.nativeElement.querySelector(`.instrument-list [data-symbol=${symbol.options.name}]`);
 			this.scrollIntoView(el);
 		}
+
+		this._changeDetectorRef.detectChanges();
 	}
 
 	public scrollToTop() {
@@ -251,13 +263,9 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 		this._changeDetectorRef.detectChanges();
 	}
 
-	addIndicator(name: string) {
-
-	}
-
 	private _onSymbolUpdate() {
 		if (!this._route.snapshot.queryParams['symbol']) {
-			this.toggleActiveFilter(this.defaultActiveFilter)
+			this.toggleActiveFilter(this.filterGroups[0].items[0].key)
 		} else {
 			const symbol = this.cacheService.getSymbolByName(this._route.snapshot.queryParams['symbol']);
 			if (symbol) {
@@ -274,6 +282,119 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 		if (!isInView) {
 			el.parentNode.scrollTop = el.offsetTop - el.offsetHeight;
 		}
+	}
+
+	private _updateHeaderTitle() {
+		// set header title by symbol
+		if (this.activeSymbol) {
+			this._applicationRef.components[0].instance.titleText$.next(this.activeSymbol.options.displayName)
+		} 
+		
+		// set header title by active filter
+		else if (this.activeFilter) {
+			const filter = this._getFilterObjectByName(this.activeFilter);
+
+			if (filter) {
+				this._applicationRef.components[0].instance.titleText$.next(filter.displayName);
+			}	
+		}
+	}
+
+	private _getFilterObjectByName(filterName: string) {
+		for (let i = 0; i < this.filterGroups.length; i++) {
+			for (let k = 0; k < this.filterGroups[i].items.length; k++) {
+				if (this.filterGroups[i].items[k].key === filterName) {
+					return this.filterGroups[i].items[k];
+				}
+			}
+		}
+	}
+
+	private _setFilterOptions() {
+		this.filterGroups = [
+			{
+				name: 'Popular',
+				items: [
+					{
+						key: 'all popular',
+						displayName: 'All popular',
+						length: DEFAULT_FILTER_POPULAR_LENGTH
+					},
+					{
+						key: 'rise and fall',
+						displayName: 'Risers and fallers',
+						length:  DEFAULT_FILTER_POPULAR_LENGTH
+					},
+					{
+						key: 'favorite',
+						displayName: 'My favorites',
+						length: this.cacheService.symbols.filter(symbol => symbol.options.iFavorite).length
+					},
+					{
+						key: 'all',
+						displayName: 'All',
+						length: this.cacheService.symbols.length
+					}
+				],
+			},
+			{
+				name: 'Crypto',
+				items: [
+					{
+						key: 'crypto all',
+						displayName: 'All crypto',
+						length: this.cacheService.symbols.filter(s => s.options.type === SYMBOL_CAT_TYPE_CRYPTO).length
+		
+					},
+					{
+						key: 'crypto popular',
+						displayName: 'Popular crypto',
+						length: DEFAULT_FILTER_POPULAR_LENGTH
+					}
+				]
+			},
+			{
+				name: 'Forex',
+				items: [
+					{
+						key: 'forex',
+						displayName: 'All forex',
+						length: this.cacheService.symbols.filter(s => s.options.broker === BROKER_GENERAL_TYPE_OANDA).length
+					},
+					{
+						key: 'forex popular',
+						displayName: 'Popular forex',
+						length: DEFAULT_FILTER_POPULAR_LENGTH
+					}
+				]
+			},
+			{
+				name: 'Resources',
+				items: [
+					{
+						key: 'resources',
+						displayName: 'All resources'
+					},
+					{
+						key: 'resources popular',
+						displayName: 'Popular resources (ni)'
+					}
+				]
+			},
+			{
+				name: 'Indicies',
+				items: [
+					{
+						key: 'indices',
+						displayName: 'All indices (ni)'
+					},
+					{
+						key: 'popular indicies',
+						displayName: 'Popular indicies'
+					},
+				]
+			}
+		];
 	}
 
 	ngOnDestroy() {
