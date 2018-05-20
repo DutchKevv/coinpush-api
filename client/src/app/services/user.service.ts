@@ -5,6 +5,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { SymbolModel } from "../models/symbol.model";
 import { app } from '../../core/app';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { AuthenticationService } from './authenticate.service';
 
 @Injectable({
 	providedIn: 'root',
@@ -67,9 +68,10 @@ export class UserService {
 			}, { responseType: "text" }).toPromise();
 
 			symbol.options.iFavorite = !symbol.options.iFavorite;
-
+			return true;
 		} catch (error) {
 			console.error(error);
+			return false;
 		}
 	}
 

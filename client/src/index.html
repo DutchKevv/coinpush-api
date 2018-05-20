@@ -163,6 +163,13 @@
             event.preventDefault();
         });
 
+        window.addEventListener('native.keyboardshow', function (e) {
+            alert('show');
+            setTimeout(function () {
+                document.activeElement.scrollIntoViewIfNeeded();
+            }, 100);
+        });
+
         // is browser supported
         (function () {
             window.BROWSERSUPPORTED = function () {
@@ -191,6 +198,7 @@
                 version: '',
                 isSecure: location.protocol === 'https:',
                 isApp: document.URL.indexOf('http://') === -1 && document.URL.indexOf('https://') === -1,
+                isIos: /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream,
                 // isApp: !!window['_cordovaNative'],
 
                 isLocal: document.URL.indexOf('file://') > -1
@@ -225,6 +233,10 @@
 
             // special root class
             document.body.querySelector('app').classList.add('app');
+
+            if (window.platform.isIos) {
+                document.body.querySelector('app').classList.add('ios');
+            }
         })();
     </script>
 </body>

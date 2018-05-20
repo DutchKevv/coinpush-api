@@ -13,16 +13,21 @@
 	user-select: none;
 }
 
-input[type=text] {
-	-webkit-user-select: text;
-	-moz-user-select: text;
-	-ms-user-select: text;
-	user-select: text;
-
-	&:disabled {
-        background: #353535;
-        color: #a3a3a3;
-    }
+input {
+	&[type=text],
+	&[type=password],
+	&[type=email],
+	&[type=number] {
+		-webkit-user-select: text;
+		-moz-user-select: text;
+		-ms-user-select: text;
+		user-select: text;
+	
+		&:disabled {
+			background: #686868;
+			color: #a3a3a3;
+		}
+	}
 }
 
 :host {

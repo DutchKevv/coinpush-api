@@ -4,11 +4,14 @@ declare let firebase: any;
 declare let PushNotification: any;
 declare let FCMPlugin: any;
 declare let cordova: any;
+declare var Notification: any;
 
 export class NotificationHelper {
 
     private _token: string = null;
     private _originalTitle = document.title;
+
+    private _firebaseMessaging = null;
 
     get token() {
         return this._token;
@@ -54,10 +57,14 @@ export class NotificationHelper {
      */
     public async askPermissionBrowser() {
         try {
-            const messaging = firebase.messaging();
-            await messaging.requestPermission();
-            this._token = await messaging.getToken();
-            app.emit('firebase-token-refresh', this._token);
+            await this._firebaseMessaging.requestPermission();
+            const token = await this._firebaseMessaging.getToken();
+            if (token) {
+                this._token = token;
+                app.emit('firebase-token-refresh', this._token);
+            } else {
+                console.warn('empty token received');
+            }
         } catch (error) {
             console.error(error);
         }
@@ -68,17 +75,22 @@ export class NotificationHelper {
      * @param message 
      */
     private _onNotification(message: any): void {
-        console.log(message);
+        console.log('_onNotification', message);
+
         try {
             if (!message.data)
                 console.info('no-data', message);
 
-            const body = typeof message.data === 'string' ? JSON.parse(message.data) : message.data;
+            const data = typeof message.data === 'string' ? JSON.parse(message.data) : message.data;
 
-            if (app.storage.profileData._id !== body.__userId)
+            if (app.storage.profileData._id !== data.__userId)
                 return console.warn('**notification __userId mismatch**');
 
-            app.emit('notification', { title: message.title, data: body });
+            if (!data.title) {
+                data.title = message.title;
+            }
+
+            app.emit('notification', { data });
 
         } catch (error) {
             console.info('message', message);
@@ -89,7 +101,7 @@ export class NotificationHelper {
     /**
      * browser (firebase)
      */
-    private async _loadBrowser() {
+    private _loadBrowser(): Promise<any> {
         return new Promise((resolve, reject) => {
             // firebase script
             let script = document.createElement('script');
@@ -100,16 +112,20 @@ export class NotificationHelper {
                 const config = {
                     apiKey: "AAAAcOdrZII:APA91bHdt3bPaqUW4sWF7tht0xJs13B_X-4Svm4TlWeLnXXFoVsPxWRQGxUPdqudCP1OHkQ-IJCVO10DJKi8G2fLekqfpy0xAXGakQmj-7FZW3DwB18BxcHNIWlgNC9T3T1tbXEnbaxM",
                     // authDomain: "<PROJECT_ID>.firebaseapp.com",
-                    messagingSenderId: "484918912130",
+                    messagingSenderId: '484918912130',
                 };
 
                 firebase.initializeApp(config);
-                const messaging = firebase.messaging();
+                this._firebaseMessaging = window['messaging_'] = firebase.messaging();
 
-                messaging.onMessage((message) => this._onNotification(message));
+                this._firebaseMessaging.onMessage((message) => {
+                    // function is only get called when on foreground 
+                    message.data.foreground = true;
+                    this._onNotification(message);
+                });
 
-                messaging.onTokenRefresh(async () => {
-                    this._token = await messaging.getToken();
+                this._firebaseMessaging.onTokenRefresh(async () => {
+                    this._token = await this._firebaseMessaging.getToken();
                     app.emit('firebase-token-refresh', this._token);
                 });
 
@@ -147,16 +163,10 @@ export class NotificationHelper {
         });
 
         push.on('notification', (data) => {
-            console.log('message!', data);
+            console.log('PushNotification!', data);
             data.data = Object.assign({}, data.additionalData);
             delete data.additionalData;
             this._onNotification(data);
-            // data.message,
-            // data.title,
-            // data.count,
-            // data.sound,
-            // data.image,
-            // data.additionalData
         });
 
         push.on('error', error => {
@@ -164,31 +174,31 @@ export class NotificationHelper {
         });
 
         push.on('accept', (data) => {
-            console.log('asdfasdf', data);
+            console.log('accept????', data);
             // do something with the notification data
-        
+
             push.finish(() => {
                 console.log('accept callback finished');
             }, () => {
                 console.log('accept callback failed');
             }, data.additionalData.notId);
         });
-        
+
         push.on('reject', (data) => {
             console.log('asdfasdf', data);
             // do something with the notification data
-        
+
             push.finish(() => {
                 console.log('accept callback finished');
             }, () => {
                 console.log('accept callback failed');
             }, data.additionalData.notId);
         });
-        
+
         push.on('maybe', (data) => {
-            console.log('asdfasdf', data);
+            console.log('maybe???????', data);
             // do something with the notification data
-        
+
             push.finish(() => {
                 console.log('accept callback finished');
             }, () => {
@@ -214,34 +224,7 @@ export class NotificationHelper {
             if (!data.isEnabled) {
                 console.log('NO PUSH PERMISSION!');
             }
-          });
-
-        // try {
-        //     // set badge style 
-        //     cordova.plugins.notification.badge.configure({ indicator: 'circular', autoClear: false });
-
-        //     const permis = await cordova.plugins.firebase.messaging.requestPermission();
-
-        //     cordova.plugins.firebase.messaging.onMessage(payload => {
-        //         payload.data = JSON.parse(payload.data);
-        //         this._onNotification(payload);
-        //     });
-
-        //     cordova.plugins.firebase.messaging.onBackgroundMessage((payload) => {
-        //         payload.data = JSON.parse(payload.data);
-        //         this._onNotification(payload);
-        //     });
-
-        //     this._token = await cordova.plugins.firebase.messaging.getToken();
-        //     app.emit('firebase-token-refresh', this._token);
-
-        // } catch (error) {
-        //     console.error(error);
-        // }
-
-        //     app.emit('firebase-token-refresh', this._token);
-
-
+        });
 
         // cordova.plugins.firebase.messaging.requestPermission((data) => {
         //     cordova.plugins.firebase.messaging.getToken(token => {

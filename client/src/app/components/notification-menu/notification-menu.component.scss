@@ -7,11 +7,6 @@
 @import '../../style/helpers/normalize';
 
 :host {
-    min-width: 50px;
-    text-align: left;
-    padding-right: 10px;
-    padding-left: 10px;
-
     @media only screen and (min-width : 768px) {
         position: relative;
     
@@ -24,15 +19,22 @@
 .globe-container {
     position: relative;
     display: block;
+    padding-top: 2px;
+    padding-left: $header-icon-padding-x;
+    padding-right: $header-icon-padding-x;
+    height: 38px;
+
+    &.active {
+        background: $background-light;
+
+        .fa-globe {
+            transform: scale(1.1);
+        }
+    }
 
     .fa-globe {
         font-size: 34px;
-        margin-top: -2px;
-        transition: transform .4s;
-        
-        &:active {
-            transform: scale(1.4);
-        }
+        transition: transform .1s ease-in-out;
     }
 
     @media only screen and (min-width : 992px) {
@@ -50,8 +52,8 @@
     position: absolute;
     padding: 1px 6px;
     font-size: 12px;
-    left: 20px;
-    top: 0;
+    left: 28px;
+    top: 1px;
     line-height: 16px;
     font-weight: bold;
 }
@@ -61,7 +63,7 @@
     flex-flow: column;
     position: absolute;
     z-index: 122;
-    top: 39px;
+    top: 40px;
     left: 0;
     bottom: 0;
     width: 100%;

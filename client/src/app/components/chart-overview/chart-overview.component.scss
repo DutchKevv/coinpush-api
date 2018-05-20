@@ -155,7 +155,7 @@
 	background: $background-light;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
-	padding: 6px 6px 6px 10px;
+	padding: 6px 10px 6px 10px;
 
     display: none;
     position: absolute;
@@ -172,16 +172,26 @@
     .filter-list-options {
         h2 {
             padding-bottom: 4px;
+            margin: 6px 0;
         }
     
         a {
-            padding: 10px 20px;
+            padding: 10px 0 10px 10px;
             display: block;
             font-size: 14px;
-            
+            margin-left: 5px;
+
             &:hover,
+            &:active,
             &.active {
                 background: $general-active;
+            }
+
+            span {
+                float: right;
+                width: 30px;
+                font-size: 12px;
+                line-height: 18px;
             }
         }
     }
@@ -191,12 +201,12 @@
         .fa-arrow-left {
             color: white;
             font-size: 20px;
-            margin: 5px 10px 10px 0px;
+            margin: 4px 10px 10px 0px;
         }
     
         h2 {
             line-height: 30px;
-            margin-left: 0px;
+            margin-left: auto;
         }
     
         // @media screen and (min-width: 768px) {

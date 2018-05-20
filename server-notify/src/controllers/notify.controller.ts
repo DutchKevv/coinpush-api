@@ -57,6 +57,7 @@ export const notifyController = {
         const message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera)
             priority: 'high',
             registration_ids: GCMTokens,
+            collapse_key: data.type,
             data: {
                 title,
                 body,

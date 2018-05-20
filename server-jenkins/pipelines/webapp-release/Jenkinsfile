@@ -1,6 +1,9 @@
 @Library('clientBuild') _
 
 node {
+    stage('info') {
+        sh 'echo Building ${BRANCH_NAME}...'
+    }
     stage('clean workspace') {
         cleanWs()
     }

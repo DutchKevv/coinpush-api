@@ -16,6 +16,8 @@ import { HeaderComponent } from './components/header/header.component';
 declare let window: any;
 declare let navigator: any;
 
+const _originalSize = window.innerWidth + window.innerHeight;
+
 @Component({
 	selector: 'app',
 	templateUrl: './app.component.html',
@@ -45,12 +47,31 @@ export class AppComponent implements OnInit, AfterViewInit, OnChanges {
 	 * mobile nav menu back press close
 	 * @param event 
 	 */
+	@HostListener('window:resize', ['$event'])
+	onWindowResize(event) {
+		const size = window.innerWidth + window.innerHeight;
+
+		if (app.platform.isApp) {
+			console.log('sdf', _originalSize, size);
+
+			if (_originalSize !== size) {
+				document.body.querySelector('app').classList.remove('app');
+			} else {
+				document.body.querySelector('app').classList.add('app');
+				// app.repositionAds();
+			}
+		}
+	}
+
+	/**
+	 * mobile nav menu back press close
+	 * @param event 
+	 */
 	@HostListener('document:backbutton', ['$event'])
 	onBackButton(event) {
 		this._onBackKeyDown(event);
 		window.history.go(-1);
 	}
-
 
 	constructor(
 		public http: HttpClient,
@@ -75,15 +96,17 @@ export class AppComponent implements OnInit, AfterViewInit, OnChanges {
 		if (this.userService.model.options._id) {
 			app.initNotifications().catch(console.error);
 		}
+
+		app.loadAds();
 	}
 
 	ngAfterViewInit() {
 		app.prettyBootty.step('done');
 
-		// small break before loading ads and receiving for push messages
-		setTimeout(() => {
-			app.loadAds();
-		}, 1000);
+		// // small break before loading ads and receiving for push messages
+		// setTimeout(() => {
+			
+		// }, 1000);
 	}
 
 	ngOnChanges(values) {

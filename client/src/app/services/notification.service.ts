@@ -54,8 +54,9 @@ export class NotificationService {
 		});
 	}
 
-	public markAsRead(notificationId: string): Promise<Response> {
-		return <any>this._http.put('/notify/unread/' + notificationId, {}).toPromise();
+	public markAsRead(notification: INotification): Promise<Response> {
+		notification.isRead = true;
+		return <any>this._http.put('/notify/unread/' + notification._id, {}).toPromise();
 	}
 
 	public markAllAsRead(): Promise<Response> {
@@ -79,27 +80,43 @@ export class NotificationService {
 
 	}
 
-	private async _onNotification(notification) {
+	private _onNotification(notification) {
 		console.log('NOTIFICATION!', notification);
 		const unreadValue = this.unreadCount$.getValue();
-
+		
 		switch (notification.data.type) {
+			/**
+			 * COMMENTS EVENTS (LIKE, REACTION etc)
+			 */
 			case 'post-comment':
-				this.unreadCount$.next(unreadValue + 1);
-				// window.location.hash = '#/comment/' + notification.data.parentId + '?focus=' + notification.data.commentId;
-				break;
 			case 'post-like':
-				this.unreadCount$.next(unreadValue + 1);
-				// window.location.hash = '#/comment/' + notification.data.commentId;
-				break;
 			case 'comment-like':
 				this.unreadCount$.next(unreadValue + 1);
-				// window.location.hash = '#/comment/' + notification.data.parentId + '?focus=' + notification.data.commentId;
-				break
+
+				// jump to comment
+				if (!notification.data.foreground) {
+					let routeString =  '#/comment/' + notification.data.parentId || notification.data.commentId;
+
+					if (notification.data.parentId) {
+						routeString += '?focus=' + notification.data.commentId;
+					}
+
+					window.location.hash = routeString;
+				}
+
+				break;
+			/**
+			 * SYMBOL ALARM
+			 */
 			case 'symbol-alarm':
 				this.unreadCount$.next(unreadValue + 1);
-				// window.location.hash = '#/symbols/?symbol=' + notification.data.symbol;
-				app.emit('event-triggered', Object.assign(notification, { title: notification.title }));
+
+				// jump to symbol
+				if (!notification.data.foreground) {
+					window.location.hash = '#/symbols/?symbol=' + notification.data.symbol;
+				}
+
+				app.emit('event-triggered', notification.data);
 				break
 			default:
 				console.error('Uknown notification type: ' + notification.data.type);

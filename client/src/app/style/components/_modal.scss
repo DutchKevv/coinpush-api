@@ -1,3 +1,9 @@
+@import '../../style/helpers/normalize';
+
+.modal {
+    overflow-y: auto;
+}
+
 .modal-dialog {
     box-shadow: 4px 7px 13px rgba(0, 0, 0, 0.6);
     margin: 3rem auto;
@@ -10,6 +16,12 @@
 
 .modal-content {
     background: transparent;
+    border-left: 0;
+    border-right: 0;
+
+    @media only screen and (min-width : 768px) {
+		border: 1px solid rgba(0, 0, 0, 0.2);
+	}
 }
 
 .modal-header {

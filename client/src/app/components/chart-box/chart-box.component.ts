@@ -96,13 +96,14 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	private _fetchSub = null;
 
 	private _resizeTimeout = null;
+	
 	/**
 	 * mobile nav menu back press close
 	 * @param event 
 	 */
 	@HostListener('window:resize', ['$event'])
 	onPopState(event) {
-		this._toggleVisibility(false);
+		// this._toggleVisibility(false);
 		this._toggleLoading(true);
 
 		if (this._resizeTimeout) {
@@ -119,6 +120,16 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 			clearTimeout(this._resizeTimeout);
 		}, 500);
 		
+		return false;
+	}
+
+	/**
+	 * mobile nav menu back press close
+	 * @param event 
+	 */
+	@HostListener('scroll', ['$event'])
+	onScroll(event) {
+		this._onScrollBounced(event);
 		return false;
 	}
 
@@ -629,7 +640,6 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	private _onScroll(event: MouseWheelEvent): boolean {
 		event.stopPropagation();
 		event.preventDefault();
-		console.log('scroll', event);
 		
 		let shift = Math.ceil(this._calculateViewableBars() / this._scrollSpeedStep);
 
@@ -699,7 +709,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 
 	private _toggleVisibility(state?: boolean) {
 		if (this.chartRef.nativeElement && this.chartRef.nativeElement.children.length) {
-			this.chartRef.nativeElement.children[0].style.display = state ? 'block' : 'none';
+			this.chartRef.nativeElement.children[0].style.visibility = state ? 'visible' : 'hidden';
 		}
 	}
 

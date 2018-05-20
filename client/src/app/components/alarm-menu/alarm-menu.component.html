@@ -56,13 +56,14 @@
     </ng-container>
 
     <!-- tab active-->
-    <ng-container *ngIf="activeTab === 'active'" class="active-alarm-view" style="padding-top: 10px;">
-        <div class="alarm-row" *ngFor="let event of this.eventService.events$ | async | alarmMenuActiveSymbolEvent: symbol.options.name">
+    <ng-container *ngIf="activeTab === 'active' && eventService.events$ | async as events" class="active-alarm-view" style="padding-top: 10px;">
+        <div class="alarm-row" *ngFor="let event of eventService.events$ | async | alarmMenuActiveSymbolEvent: symbol.options.name">
             <i class="fa fa-arrow-{{event.alarm.dir === 1 ? 'up' : 'down'}}"></i>
             <span>{{event.alarm.price}}</span>
             <span>{{event.createdAt | date: 'dd/MM/yyyy HH:MM:SS'}}</span>
             <i (click)="onClickRemoveEvent(event);" class="fa fa-trash" style="float: right"></i>
         </div>
+        <p *ngIf="!events.length" class="no-events-text">No active events yet. Set some new ones.</p>
     </ng-container>
 
     <!-- tab history-->
@@ -78,7 +79,7 @@
                 </div>
             </ng-container>
             <ng-template #noItems>
-                <p class="no-history-events">No alarms triggered yet</p>
+                <p class="no-events-text">No alarms triggered yet. Set some new ones.</p>
             </ng-template>
         </div>
         <ng-template #loading>

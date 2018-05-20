@@ -4,6 +4,7 @@ import { Router, NavigationStart } from '@angular/router';
 import { AuthenticationService } from '../../services/authenticate.service';
 import { UserService } from '../../services/user.service';
 import { BehaviorSubject } from 'rxjs';
+import { INotification } from 'coinpush/interface/notification.interface';
 
 @Component({
 	selector: 'app-notification-menu',
@@ -26,8 +27,10 @@ export class NotificationMenuComponent implements OnDestroy, OnInit {
 	 */
 	@HostListener('window:click', ['$event'])
 	onWindowClick(event) {
-		if (!event.target.classList.contains('fa-globe')) {
+		if (!event.target.classList.contains('globe-container') && 
+			event.target.parentNode && !event.target.parentNode.classList.contains('globe-container')) {
 			this.toggleNotificationMenu(false);
+			this._changeDetectorRef.detectChanges();
 		}
 	}
 
@@ -58,7 +61,11 @@ export class NotificationMenuComponent implements OnDestroy, OnInit {
 		}
 
 		this.open = typeof state === 'boolean' ? state : !this.open;
-		this.notificationService.resetUnreadCounter();
+
+		// reset counter when user opens menu
+		if (this.open) {
+			this.notificationService.resetUnreadCounter();
+		}
 	}
 	
 	public onClickMarkAllAsRead(event) {
@@ -70,11 +77,11 @@ export class NotificationMenuComponent implements OnDestroy, OnInit {
 
 	}
 
-	public onClickNotification(event, notification) {
+	public onClickNotification(event, notification: INotification) {
 		this.open = false;
 
 		if (!notification.isRead)
-			this.notificationService.markAsRead(notification._id);
+			this.notificationService.markAsRead(notification);
 	}
 
 	ngOnDestroy() {
