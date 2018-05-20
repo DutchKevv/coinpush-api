@@ -699,7 +699,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 
 	private _toggleVisibility(state?: boolean) {
 		if (this.chartRef.nativeElement && this.chartRef.nativeElement.children.length) {
-			this.chartRef.nativeElement.children[0].style.display = state ? 'block' : 'none';
+			this.chartRef.nativeElement.children[0].style.visibility = state ? 'visible' : 'hidden';
 		}
 	}
 

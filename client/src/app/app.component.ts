@@ -58,6 +58,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnChanges {
 				document.body.querySelector('app').classList.remove('app');
 			} else {
 				document.body.querySelector('app').classList.add('app');
+				// app.repositionAds();
 			}
 		}
 	}

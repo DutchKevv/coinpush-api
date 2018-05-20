@@ -78,6 +78,7 @@ export class App extends MicroEvent {
     public isReady = false;
     public angularReady = false;
     public angularReady$ = Promise.resolve();
+    public banners = [];
 
     private _boottySteps = [
         {
@@ -154,8 +155,8 @@ export class App extends MicroEvent {
             admobid.interstitial = 'ca-app-pub-1181429338292864/7213864636';
         }
 
-        window['AdMob'].createBanner({
-            adSize: 'BANNER',
+        const banner = window['AdMob'].createBanner({
+            adSize: 'CUSTOM',
             overlap: true,
             height: 60, // valid when set adSize 'CUSTOM'
             adId: admobid.banner,
@@ -164,6 +165,8 @@ export class App extends MicroEvent {
             isTesting: false
         });
 
+        this.banners.push(banner);
+
         document.addEventListener('onAdFailLoad', (error) => {
             console.log('Could not load ad', error);
             
@@ -171,6 +174,12 @@ export class App extends MicroEvent {
                 // setTimeout(() =>  this.loadAds(retry), 5000);
             }
         });
+    }
+
+    public repositionAds() {
+       this.banners.forEach(banner => {
+            banner.showBanner(window['AdMob'].AD_POSITION.BOTTOM_CENTER);
+        })
     }
 
     /**

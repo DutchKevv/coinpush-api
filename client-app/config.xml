@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.ff.coinpush" version="0.0.127" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.ff.coinpush" version="0.0.127" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>CoinPush</name>
     <description>
         Stock trading application with custom alarams
@@ -32,6 +32,7 @@
     <platform name="android">
         <resource-file src="www/google-services.json" target="/app/google-services.json" />
         <preference name="android-minSdkVersion" value="19" />
+        <preference name="android-manifest/application/activity/@android:windowSoftInputMode" value="adjustPan" />
         <allow-intent href="market:*" />
         <config-file parent="/resources" target="./res/values/strings.xml">
             <string name="fb_app_id">178901869390909</string>
@@ -69,6 +70,9 @@
     <plugin name="cordova-plugin-device" spec="^2.0.2" />
     <plugin name="cordova-plugin-disable-ios11-statusbar" spec="^1.0.0" />
     <plugin name="cordova-plugin-keyboard" spec="^1.2.0" />
+    <edit-config file="AndroidManifest.xml" mode="merge" target="/manifest/application/activity[@android:name='MainActivity']">
+        <activity android:windowSoftInputMode="adjustPan" />
+    </edit-config>
     <engine name="android" spec="^7.1.0" />
     <engine name="ios" spec="^4.5.4" />
 </widget>
