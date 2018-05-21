@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnInit, Output, ViewChild, ElementRef, EventEmitter, HostListener, ChangeDetectorRef, AfterViewInit, Input, OnChanges } from '@angular/core';
 import { AuthenticationService } from "./services/authenticate.service";
 import { CacheService } from "./services/cache.service";
-import { Subject } from "rxjs/Subject";
+import { Subject } from "rxjs";
 import { Router, NavigationEnd, NavigationStart, ActivatedRoute } from '@angular/router';
 import { UserService } from './services/user.service';
 import { app } from '../core/app';

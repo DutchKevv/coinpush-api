@@ -10,9 +10,8 @@ import { UserService } from '../../services/user.service';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from "@angular/router";
 import { CommentService } from "../../services/comment.service";
-import { Subject } from "rxjs/Subject";
+import { Subject, BehaviorSubject } from "rxjs";
 import { CommentModel } from "../../models/comment.model";
-import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { ProfileComponent } from "../profile/profile.component";
 import { UserModel } from '../../models/user.model';
 

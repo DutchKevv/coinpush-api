@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 
 import { SymbolModel } from "../../models/symbol.model";
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import { UserService } from '../../services/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CacheService } from '../../services/cache.service';

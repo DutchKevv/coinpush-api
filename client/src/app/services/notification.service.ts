@@ -1,13 +1,12 @@
 import { Injectable, Output } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { app } from '../../core/app';
-import { Observable } from 'rxjs/Observable';
 import { HttpClient, HttpParams } from '@angular/common/http';
-// import { INotification } from '../../../../shared/modules/coinpush/interface/notification.interface';
 import { SocketService } from './socket.service';
-import * as moment from 'moment';
+import { map } from 'rxjs/operators';
 
 import { INotification } from 'coinpush/interface/notification.interface';
+import { DateService } from './date.service';
 
 @Injectable({
 	providedIn: 'root',
@@ -20,7 +19,8 @@ export class NotificationService {
 
 	constructor(
 		private _http: HttpClient,
-		private _socketService: SocketService
+		private _socketService: SocketService,
+		private _dateService: DateService
 	) {
 		this.init();
 	}
@@ -46,12 +46,12 @@ export class NotificationService {
 			}
 		});
 
-		return this._http.get('/notify', { params }).map((notifications: any) => {
+		return this._http.get('/notify', { params }).pipe(map((notifications: any) => {
 			notifications.forEach(notification => {
-				notification.fromNow = moment(notification.createdAt).fromNow();
+				notification.fromNow = this._dateService.convertToTimePast(notification.createdAt);
 			})
 			return notifications;
-		});
+		}));
 	}
 
 	public markAsRead(notification: INotification): Promise<Response> {

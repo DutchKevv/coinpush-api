@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { AlertService } from '../../services/alert.service';
 import { UserModel } from '../../models/user.model';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { SymbolModel } from '../../models/symbol.model';
 import { EventService } from '../../services/event.service';
 import { NgForm } from '@angular/forms';
@@ -11,7 +11,6 @@ import { ALARM_TRIGGER_DIRECTION_DOWN, ALARM_TRIGGER_DIRECTION_UP, CUSTOM_EVENT_
 import { CacheService } from '../../services/cache.service';
 import { AuthenticationService } from '../../services/authenticate.service';
 import { EventModel } from '../../models/event.model';
-import { Subject } from 'rxjs/Subject';
 
 @Pipe({ name: 'alarmMenuActiveSymbolEvent' })
 export class AlarmMenuActiveSymbolEventPipe implements PipeTransform {

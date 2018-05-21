@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { AlertService } from '../../services/alert.service';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
 	selector: 'app-alert',
