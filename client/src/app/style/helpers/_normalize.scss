@@ -26,6 +26,10 @@ input {
 		&:disabled {
 			background: #686868;
 			color: #a3a3a3;
+
+			&::-webkit-input-placeholder {
+				color: rgb(207, 207, 207);
+			}
 		}
 	}
 }

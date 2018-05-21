@@ -33,7 +33,7 @@ messaging.setBackgroundMessageHandler(function (payload) {
     case 'symbol-alarm':
       notificationTitle = 'Price alarm';
       body = `${data.symbol} - ${data.target}`;
-      navigationUrl = `/#/symbols?symbol=${data.symbol}`;
+      navigationUrl = `${self.location.origin}/#/symbols?symbol=${data.symbol}`;
       tag = 'symbol-alarm';
       break;
   }

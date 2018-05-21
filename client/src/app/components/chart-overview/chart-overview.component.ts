@@ -140,7 +140,8 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 	public toggleActiveFilter(filter: string, removeSymbolFromUrl = true) {
 		// if (filter === this.activeFilter)
 		// 	return;
-
+		this.scrollToTop();
+		
 		app.storage.updateProfile({chartConfig: {filter}}).catch(console.error);
 
 		// remove specific symbol in url
@@ -208,8 +209,6 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 		this.activeSymbol = null;
 
 		this._updateHeaderTitle();
-
-		// this.scrollToTop();
 		this._changeDetectorRef.detectChanges();
 	}
 

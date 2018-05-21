@@ -115,6 +115,35 @@
             z-index: 1002;
         }
 
+        .spinner {
+            margin: 0 auto;
+            border: 12px solid #4c4c4c;
+            border-top: 12px solid #228b07;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            opacity: 0;
+            animation: spin 2s linear infinite, fade-in .8s linear .5s forwards;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes fade-in {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
         @keyframes fadeIn {
             100% {
                 opacity: 1;
@@ -144,7 +173,7 @@
         (adsbygoogle = window.adsbygoogle || []).push({});
     </script> -->
 
-    <div id="preload-box" class="fade-in">
+    <div id="preload-box" class="fade-in" style="display: none">
         <h4>Crypto, Forex, Resources you name it...</h4>
         <div id="initialProgressBar">
             <span>2% init</span>
@@ -154,6 +183,9 @@
 
     <app>
         <i class="font-awesome-preload-trigger fa fa-square-o"></i>
+        <div style="position: absolute; top: calc(30% - 30px); left: calc(50% - 30px);">
+            <div class="spinner"></div>
+        </div>
     </app>
 
     <!-- inject:js:cordova -->

@@ -30,7 +30,6 @@ export const emailController = {
 				if (error)
 					return reject(error);
 
-				console.log('Email sent: ' + info.response);
 				resolve();
 			});
 		});

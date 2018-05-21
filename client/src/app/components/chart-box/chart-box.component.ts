@@ -39,6 +39,15 @@ import { app } from 'core/app';
 const SERIES_MAIN_NAME = 'main';
 const SERIES_VOLUME_NAME = 'volume';
 
+/**
+ * custom highcharts label element
+ * only needs to be created once
+ */
+const labelEl: any = document.createElement('div');
+labelEl.innerHTML = `
+	<div style="position: absolute; left: 0; float: left; width: 0; height: 0; border-top: 7px solid transparent; border-bottom: 7px solid transparent; border-right: 5px solid blue;"></div>
+	<span style="position: absolute; left: 5px; color: black; font-size: 11px; padding-right: 2px;"></span>`;
+
 @Component({
 	selector: 'app-chart-box',
 	templateUrl: './chart-box.component.html',
@@ -61,7 +70,6 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	public hasError: boolean = false;
 	public indicatorContainerOpen$: BehaviorSubject<Boolean> = new BehaviorSubject(false);
 	public indicatorContainerOpen: boolean = false;
-	
 
 	// merge defaults with custom config
 	public config = Object.assign({
@@ -86,19 +94,17 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	private _scrollSpeedMax = 20;
 
 	private _chart: any;
-	private _onScrollBounced: Function = null;
 	private _mouseActive = true;
 	private _changeSubscription;
 	private _eventsSubscribtion;
-	private _labelEl: any;
 
 	private _indicatorIdCounter = 0;
 	private _fetchSub = null;
 
 	private _resizeTimeout = null;
-	
+
 	/**
-	 * mobile nav menu back press close
+	 * resize chart with delay
 	 * @param event 
 	 */
 	@HostListener('window:resize', ['$event'])
@@ -119,17 +125,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 
 			clearTimeout(this._resizeTimeout);
 		}, 500);
-		
-		return false;
-	}
 
-	/**
-	 * mobile nav menu back press close
-	 * @param event 
-	 */
-	@HostListener('scroll', ['$event'])
-	onScroll(event) {
-		this._onScrollBounced(event);
 		return false;
 	}
 
@@ -141,7 +137,6 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 		private _eventService: EventService,
 		private _elementRef: ElementRef) {
 		this._changeDetectorRef.detach();
-		this._buildLabelEl();
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
@@ -163,9 +158,6 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 		this._eventsSubscribtion = this._eventService.events$.subscribe(events => {
 			this._updateAlarms(events, true);
 		});
-
-		this._onScrollBounced = this._onScroll.bind(this);
-		this.chartRef.nativeElement.addEventListener('mousewheel', <any>this._onScrollBounced);
 	}
 
 	init() {
@@ -197,8 +189,6 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 			// 	value = this.symbolModel.options.bid;
 			// 	console.log(this.symbolModel.options.bid);
 			// }
-
-			const labelEl = this._labelEl;
 
 			const options = {
 				id: id,
@@ -293,7 +283,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 			this.config.zoom = 0;
 		}
 
-		app.storage.updateProfile({chartConfig: this.config}).catch(console.error);
+		app.storage.updateProfile({ chartConfig: this.config }).catch(console.error);
 		this._updateViewPort(0, true);
 	}
 
@@ -307,7 +297,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 			return;
 
 		this.config.graphType = graphType;
-		app.storage.updateProfile({chartConfig: this.config}).catch(console.error);
+		app.storage.updateProfile({ chartConfig: this.config }).catch(console.error);
 		this._chart.series[0].update({ type: graphType }, render, false);
 	}
 
@@ -317,7 +307,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	 */
 	public toggleTimeFrame(timeFrame: string) {
 		this.config.timeFrame = timeFrame;
-		app.storage.updateProfile({chartConfig: this.config}).catch(console.error);
+		app.storage.updateProfile({ chartConfig: this.config }).catch(console.error);
 		this.init();
 	}
 
@@ -360,10 +350,31 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 		this._changeDetectorRef.detectChanges();
 	}
 
+	/**
+	 * execute on scroll
+	 * @param event 
+	 */
+	public onScroll(event: MouseWheelEvent): boolean {
+		event.stopPropagation();
+		event.preventDefault();
+
+		let shift = Math.ceil(this._calculateViewableBars() / this._scrollSpeedStep);
+
+		if (shift < this._scrollSpeedMin)
+			shift = this._scrollSpeedMin;
+		else if (shift > this._scrollSpeedMax)
+			shift = this._scrollSpeedMax;
+
+		this._updateViewPort(event.wheelDelta > 0 ? -shift : shift, true);
+
+		return false;
+	}
+
 	private _createChart() {
 
 		this._zone.runOutsideAngular(() => {
 			var self = this;
+
 			this._chart = HighStock.chart(this.chartRef.nativeElement, {
 				chart: {
 					reflow: false
@@ -419,7 +430,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 						resize: {
 							enabled: true
 						},
-						plotLines: this._data.plotLines
+						// plotLines: this._data.plotLines
 					},
 					{
 						opposite: true,
@@ -504,7 +515,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 					count: ChartBoxComponent.DEFAULT_CHUNK_LENGTH,
 					offset: this._offset
 				}));
-	
+
 				if (!this._chart) {
 					this._createChart();
 				}
@@ -512,7 +523,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 				this._onPriceChange(false); // asign current price to latest candle
 				this._updateCurrentPricePlot();
 				this._updateAlarms();
-				
+
 				requestAnimationFrame(() => {
 					this._updateViewPort(0, true);
 					this._toggleLoading(false);
@@ -633,33 +644,8 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 		}
 	}
 
-	/**
-	 * execute on scroll
-	 * @param event 
-	 */
-	private _onScroll(event: MouseWheelEvent): boolean {
-		event.stopPropagation();
-		event.preventDefault();
-		
-		let shift = Math.ceil(this._calculateViewableBars() / this._scrollSpeedStep);
-
-		if (shift < this._scrollSpeedMin)
-			shift = this._scrollSpeedMin;
-		else if (shift > this._scrollSpeedMax)
-			shift = this._scrollSpeedMax;
-
-		this._updateViewPort(event.wheelDelta > 0 ? -shift : shift, true);
-
-		return false;
-	}
-
 	private _buildLabelEl() {
-		const labelHTML = `
-				<div style="position: absolute; left: 0; float: left; width: 0; height: 0; border-top: 7px solid transparent; border-bottom: 7px solid transparent; border-right: 5px solid blue;"></div>
-				<span style="position: absolute; left: 5px; color: black; font-size: 11px; padding-right: 2px;"></span>
-		`
-		this._labelEl = document.createElement('div');
-		this._labelEl.innerHTML = labelHTML;
+
 	}
 
 	private _clearData(render: boolean = false) {
@@ -732,9 +718,6 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	}
 
 	async ngOnDestroy() {
-		this._labelEl = null;
-		this.chartRef.nativeElement.removeEventListener('mousewheel', <any>this._onScrollBounced);
-
 		if (this._changeSubscription && this._changeSubscription.unsubscribe)
 			this._changeSubscription.unsubscribe();
 
