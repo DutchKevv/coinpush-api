@@ -40,7 +40,7 @@ export class CacheService {
 		});
 	}
 
-	public async read(params: any) {
+	public read(params: any): Observable<any> {
 		params = new HttpParams({
 			fromObject: params
 		});
@@ -48,9 +48,7 @@ export class CacheService {
 		return this._http.get('/cache', {
 			responseType: "arraybuffer",
 			params
-		})
-			.pipe(map(res => new Float64Array(res)))
-			.toPromise();
+		}).pipe(map(res => new Float64Array(res)));
 	}
 
 	/**

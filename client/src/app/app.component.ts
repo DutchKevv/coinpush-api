@@ -9,7 +9,6 @@ import { EventService } from './services/event.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { SocketService } from './services/socket.service';
 import { environment } from '../environments/environment';
-import { UpdateService } from './services/update.service';
 import { Location } from '@angular/common';
 import { HeaderComponent } from './components/header/header.component';
 
@@ -81,14 +80,12 @@ export class AppComponent implements OnInit, AfterViewInit, OnChanges {
 		public authenticationService: AuthenticationService,
 		private _changeDetectorRef: ChangeDetectorRef,
 		private _eventService: EventService,
-		private _updateService: UpdateService,
 		private _cacheService: CacheService,
 		private _socketService: SocketService) {
 
 	}
 
 	ngOnInit() {
-		// this._updateService.do();
 		this._cacheService.init(); // cacheService must init before eventService
 		this._eventService.init();
 		this._socketService.connect();

@@ -22,9 +22,7 @@
               "src/favicon.ico",
               "src/index.redirect.facebook.html",
               "src/google-services.json",
-              "src/manifest.json",
-              "src/core/update-helper.js",
-              "src/core/update.js"
+              "src/manifest.json"
             ],
             "styles": [
               "src/app/style/sprite/spritesheet.css"

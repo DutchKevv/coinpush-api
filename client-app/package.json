@@ -23,7 +23,7 @@
     "ios": "npm run prepare-build && cordova run ios",
     "clean": "",
     "clean2": "cordova clean",
-    "prepare-build": "cordova clean && npm run copy-www && npm run cp-pp-file && npm run inject-scripts",
+    "prepare-build": "npm run copy-www && npm run cp-pp-file && npm run inject-scripts",
     "copy-www": "rm -rf ./www && ncp ./../static/clients/web ./www",
     "cp-pp-file": "mkdir -p ./platforms/android && cp -rf project.properties ./platforms/android",
     "inject-scripts": "cd ./scripts && node inject-scripts.js",

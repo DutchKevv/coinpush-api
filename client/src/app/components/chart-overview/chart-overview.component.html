@@ -14,7 +14,9 @@
             </ng-container>
         </div>
     </div>
-    <div class="instrument-list" #instrumentList>
+    <app-instrument-list class="instrument-list" (list.symbolListService.alarmButtonClicked$)="alert('sdf')" #list></app-instrument-list>
+
+    <!-- <div class="instrument-list" #instrumentList id="instrumentList">
         <a class="table-header">
             <div class="col-bookmark"></div>
             <h4 class="col-instrument">Instrument Price</h4>
@@ -51,10 +53,11 @@
             </div>
             <i (click)="toggleAlarmMenu($event, symbol, true)" class="fa fa-bell col-alert" [ngClass]="{'active-icon': symbol.options.iAlarm}"></i>
         </a>
-    </div>
+    </div> -->
 
     <app-alarm-menu #alarmMenu *ngIf="activeMenu === 'alarm' && activeSymbol" class="side-menu" [symbol]="activeSymbol" [ngClass]="{'open': activeMenu !== null}"
         (onDestroy)="onDestroyTriggerMenu(); chart.removePlotLine('new-alarm')" (inputValueChange)="chart.updatePlotLine('new-alarm', $event, CUSTOM_EVENT_TYPE_ALARM_NEW, true)"></app-alarm-menu>
 </div>
 
-<app-chart-box #chart [symbolModel]="activeSymbol" class="hidden" [ngClass]="{hidden: !activeSymbol}"></app-chart-box>
+<!-- <app-chart-box #chart [symbolModel]="activeSymbol" class="hidden" [ngClass]="{hidden: !activeSymbol}"></app-chart-box> -->
+<app-chart-box #chart class="hidden"></app-chart-box>

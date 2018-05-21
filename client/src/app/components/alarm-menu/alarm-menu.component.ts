@@ -11,6 +11,7 @@ import { ALARM_TRIGGER_DIRECTION_DOWN, ALARM_TRIGGER_DIRECTION_UP, CUSTOM_EVENT_
 import { CacheService } from '../../services/cache.service';
 import { AuthenticationService } from '../../services/authenticate.service';
 import { EventModel } from '../../models/event.model';
+import { SymbolListService } from '../../services/symbol-list.service';
 
 @Pipe({ name: 'alarmMenuActiveSymbolEvent' })
 export class AlarmMenuActiveSymbolEventPipe implements PipeTransform {
@@ -48,8 +49,11 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 	private _mouseDownTimeout = null;
 	private _mouseDownSpeedUp = 2;
 
+	private _alarmButtonClickedSubsribtion;
+
 	constructor(
 		public eventService: EventService,
+		private _symbolListService: SymbolListService,
 		private _authenticationService: AuthenticationService,
 		private _userService: UserService,
 		private _cacheService: CacheService,

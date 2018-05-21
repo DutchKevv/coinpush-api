@@ -72,6 +72,7 @@ export class UserService {
 			symbol.options.iFavorite = !symbol.options.iFavorite;
 			return true;
 		} catch (error) {
+			symbol.options.iFavorite = !symbol.options.iFavorite;
 			console.error(error);
 			return false;
 		}
