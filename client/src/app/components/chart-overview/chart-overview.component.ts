@@ -284,6 +284,10 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 	}
 
 	private scrollIntoView(el): void {
+		if (!el) {
+			return console.warn('no element given');
+		}
+
 		const rect = el.getBoundingClientRect();
 		const isInView = (rect.top >= 0 && rect.left >= 0 && rect.bottom <= (el.parentNode.offsetHeight + el.offsetHeight));
 

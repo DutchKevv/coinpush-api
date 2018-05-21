@@ -103,7 +103,7 @@ export const eventController = {
 								toUserId: event.userId,
 								fromUserId: event.userId,
 								data: {
-									_id: event._id,
+									eventId: event._id,
 									time: event.triggeredDate,
 									symbol: event.symbol,
 									target: event.alarm.price
