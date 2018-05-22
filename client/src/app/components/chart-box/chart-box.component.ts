@@ -35,9 +35,19 @@ require('highcharts/indicators/zigzag')(HighStock);
 import '../../..//etc/custom/js/highcharts/highstock.theme.dark.js';
 import { IndicatorService } from '../../services/indicator.service';
 import { app } from 'core/app';
+import { SymbolListService } from '../../services/symbol-list.service';
 
 const SERIES_MAIN_NAME = 'main';
 const SERIES_VOLUME_NAME = 'volume';
+
+/**
+ * custom highcharts label element
+ * only needs to be created once
+ */
+const labelEl: any = document.createElement('div');
+labelEl.innerHTML = `
+	<div style="position: absolute; left: 0; float: left; width: 0; height: 0; border-top: 7px solid transparent; border-bottom: 7px solid transparent; border-right: 5px solid blue;"></div>
+	<span style="position: absolute; left: 5px; color: black; font-size: 11px; padding-right: 2px;"></span>`;
 
 @Component({
 	selector: 'app-chart-box',
@@ -47,7 +57,7 @@ const SERIES_VOLUME_NAME = 'volume';
 	],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
+export class ChartBoxComponent implements OnDestroy, AfterViewInit {
 	@Input() symbolModel: SymbolModel;
 	@ViewChild('chart') private chartRef: ElementRef;
 	@ViewChild('loading') private loadingRef: ElementRef;
@@ -56,12 +66,11 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	static readonly PLOTLINE_TYPE_NEW_ALARM = 1;
 	static readonly PLOTLINE_TYPE_ALARM = 2;
 	static readonly PLOTLINE_TYPE_PRICE = 100;
-	static readonly DEFAULT_CHUNK_LENGTH = 350;
+	static readonly DEFAULT_CHUNK_LENGTH = 150;
 
 	public hasError: boolean = false;
 	public indicatorContainerOpen$: BehaviorSubject<Boolean> = new BehaviorSubject(false);
 	public indicatorContainerOpen: boolean = false;
-	
 
 	// merge defaults with custom config
 	public config = Object.assign({
@@ -77,8 +86,6 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 		plotLines: []
 	};
 
-	private minimized = false;
-
 	private _offset = 0;
 	private _scrollOffset = -1;
 	private _scrollSpeedStep = 6;
@@ -86,19 +93,18 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	private _scrollSpeedMax = 20;
 
 	private _chart: any;
-	private _onScrollBounced: Function = null;
 	private _mouseActive = true;
 	private _changeSubscription;
 	private _eventsSubscribtion;
-	private _labelEl: any;
+	private _activeSymbolSubscribtion;
 
 	private _indicatorIdCounter = 0;
-	private _fetchSub = null;
+	private _lastFetchSub = null;
 
 	private _resizeTimeout = null;
-	
+
 	/**
-	 * mobile nav menu back press close
+	 * resize chart with delay
 	 * @param event 
 	 */
 	@HostListener('window:resize', ['$event'])
@@ -119,17 +125,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 
 			clearTimeout(this._resizeTimeout);
 		}, 500);
-		
-		return false;
-	}
 
-	/**
-	 * mobile nav menu back press close
-	 * @param event 
-	 */
-	@HostListener('scroll', ['$event'])
-	onScroll(event) {
-		this._onScrollBounced(event);
 		return false;
 	}
 
@@ -137,23 +133,26 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 		public indicatorService: IndicatorService,
 		private _zone: NgZone,
 		private _changeDetectorRef: ChangeDetectorRef,
+		private _symbolListService: SymbolListService,
 		private _cacheService: CacheService,
 		private _eventService: EventService,
 		private _elementRef: ElementRef) {
 		this._changeDetectorRef.detach();
-		this._buildLabelEl();
-	}
-
-	ngOnChanges(changes: SimpleChanges) {
-		if (changes.symbolModel && changes.symbolModel.currentValue) {
-			this.init();
-			this._changeDetectorRef.detectChanges();
-		} else {
-			this._destroyChart();
-		}
 	}
 
 	ngAfterViewInit() {
+		this._activeSymbolSubscribtion = this._symbolListService.activeSymbol$.subscribe((symbol: SymbolModel) => {
+			if (symbol) {
+				this.symbolModel = symbol;
+				this.init();
+				this._elementRef.nativeElement.classList.remove('hidden');
+			} else {
+				this._elementRef.nativeElement.classList.add('hidden')
+				this._destroyChart();
+			}
+		});
+
+		
 		this._changeSubscription = this._cacheService.changed$.subscribe(symbols => {
 			if (this.symbolModel && symbols.includes(this.symbolModel.options.name)) {
 				this._onPriceChange(true);
@@ -163,15 +162,11 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 		this._eventsSubscribtion = this._eventService.events$.subscribe(events => {
 			this._updateAlarms(events, true);
 		});
-
-		this._onScrollBounced = this._onScroll.bind(this);
-		this.chartRef.nativeElement.addEventListener('mousewheel', <any>this._onScrollBounced);
 	}
 
 	init() {
 		this._toggleLoading(true);
 		this._toggleError(false);
-
 		if (!this.symbolModel)
 			return;
 
@@ -186,74 +181,78 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	 * @param type 
 	 * @param render 
 	 */
+	public getPlotLineOptions(id: string, value: number, type: number, render: boolean = false) {
+		const options = {
+			id: id,
+			color: 'yellow',
+			// color: '#FF0000',
+			width: 1,
+			dashStyle: 'solid',
+			value: value,
+			textAlign: 'left',
+			label: {
+				text: '',
+				// text: '<div class="plot-label plot-label-alarm"><span style="background: red !important;">' + value + '</span></div>',
+				useHTML: true,
+				align: 'right',
+				textAlign: 'left',
+				y: 4,
+				x: 1
+			}
+		};
+
+		labelEl.children[1].innerText = this._cacheService.priceToFixed(value, this.symbolModel);
+
+		switch (type) {
+			case CUSTOM_EVENT_TYPE_ALARM:
+				labelEl.children[0].style.borderRightColor = 'yellow';
+				labelEl.children[1].style.background = 'yellow';
+				labelEl.children[0].style.zIndex = labelEl.children[1].style.zIndex = 1;
+				options.color = 'yellow';
+				options.dashStyle = 'dash';
+				break;
+			case CUSTOM_EVENT_TYPE_ALARM_NEW:
+				labelEl.children[0].style.borderRightColor = 'orange';
+				labelEl.children[1].style.background = 'orange';
+				labelEl.children[0].style.zIndex = labelEl.children[1].style.zIndex = 11;
+				options.color = 'orange';
+				options.dashStyle = 'solid';
+				options.width = 2;
+
+				if (this._chart && this._chart.yAxis[0].max < value) {
+					this._chart.yAxis[0].update({ max: value, min: null }, true);
+				}
+				if (this._chart && this._chart.yAxis[0].min > value) {
+					this._chart.yAxis[0].update({ max: null, min: value }, true);
+				}
+				break;
+			case CUSTOM_EVENT_TYPE_PRICE:
+				labelEl.children[0].style.borderRightColor = '#67C8FF';
+				labelEl.children[1].style.background = '#67C8FF';
+				labelEl.children[0].style.zIndex = labelEl.children[1].style.zIndex = 10;
+				options.color = '#67C8FF';
+				options.dashStyle = 'dot';
+				break
+		}
+
+		options.label.text = labelEl.innerHTML;
+
+		return options;
+	}
+
+	/**
+	 * 
+	 * @param id 
+	 * @param value 
+	 * @param type 
+	 * @param render 
+	 */
 	public updatePlotLine(id: string, value: number, type: number, render: boolean = false) {
 
 		return this._zone.runOutsideAngular(() => {
 			this.removePlotLine(id);
 
-			// if (!value) {
-			// 	console.log(type);
-			// 	console.warn(`updatePlotline() - no value given! id: ${id}`);
-			// 	value = this.symbolModel.options.bid;
-			// 	console.log(this.symbolModel.options.bid);
-			// }
-
-			const labelEl = this._labelEl;
-
-			const options = {
-				id: id,
-				color: 'yellow',
-				// color: '#FF0000',
-				width: 1,
-				dashStyle: 'solid',
-				value: value,
-				textAlign: 'left',
-				label: {
-					text: '',
-					// text: '<div class="plot-label plot-label-alarm"><span style="background: red !important;">' + value + '</span></div>',
-					useHTML: true,
-					align: 'right',
-					textAlign: 'left',
-					y: 4,
-					x: 1
-				}
-			};
-
-			labelEl.children[1].innerText = this._cacheService.priceToFixed(value, this.symbolModel);
-
-			switch (type) {
-				case CUSTOM_EVENT_TYPE_ALARM:
-					labelEl.children[0].style.borderRightColor = 'yellow';
-					labelEl.children[1].style.background = 'yellow';
-					labelEl.children[0].style.zIndex = labelEl.children[1].style.zIndex = 1;
-					options.color = 'yellow';
-					options.dashStyle = 'dash';
-					break;
-				case CUSTOM_EVENT_TYPE_ALARM_NEW:
-					labelEl.children[0].style.borderRightColor = 'orange';
-					labelEl.children[1].style.background = 'orange';
-					labelEl.children[0].style.zIndex = labelEl.children[1].style.zIndex = 11;
-					options.color = 'orange';
-					options.dashStyle = 'solid';
-					options.width = 2;
-
-					if (this._chart && this._chart.yAxis[0].max < value) {
-						this._chart.yAxis[0].update({ max: value, min: null }, true);
-					}
-					if (this._chart && this._chart.yAxis[0].min > value) {
-						this._chart.yAxis[0].update({ max: null, min: value }, true);
-					}
-					break;
-				case CUSTOM_EVENT_TYPE_PRICE:
-					labelEl.children[0].style.borderRightColor = '#67C8FF';
-					labelEl.children[1].style.background = '#67C8FF';
-					labelEl.children[0].style.zIndex = labelEl.children[1].style.zIndex = 10;
-					options.color = '#67C8FF';
-					options.dashStyle = 'dot';
-					break
-			}
-
-			options.label.text = labelEl.innerHTML;
+			const options = this.getPlotLineOptions(id, value, type);
 
 			this._data.plotLines.push(options);
 
@@ -290,10 +289,10 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 			this.config.zoom = 5;
 		}
 		else if (this.config.zoom < 0) {
-			this.config.zoom = 0;
+			this.config.zoom = 1;
 		}
 
-		app.storage.updateProfile({chartConfig: this.config}).catch(console.error);
+		app.storage.updateProfile({ chartConfig: this.config }).catch(console.error);
 		this._updateViewPort(0, true);
 	}
 
@@ -307,7 +306,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 			return;
 
 		this.config.graphType = graphType;
-		app.storage.updateProfile({chartConfig: this.config}).catch(console.error);
+		app.storage.updateProfile({ chartConfig: this.config }).catch(console.error);
 		this._chart.series[0].update({ type: graphType }, render, false);
 	}
 
@@ -317,7 +316,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	 */
 	public toggleTimeFrame(timeFrame: string) {
 		this.config.timeFrame = timeFrame;
-		app.storage.updateProfile({chartConfig: this.config}).catch(console.error);
+		app.storage.updateProfile({ chartConfig: this.config }).catch(console.error);
 		this.init();
 	}
 
@@ -360,13 +359,37 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 		this._changeDetectorRef.detectChanges();
 	}
 
+	/**
+	 * execute on scroll
+	 * @param event 
+	 */
+	public onScroll(event: MouseWheelEvent): boolean {
+		event.stopPropagation();
+		event.preventDefault();
+
+		let shift = Math.ceil(this._calculateViewableBars() / this._scrollSpeedStep);
+
+		if (shift < this._scrollSpeedMin)
+			shift = this._scrollSpeedMin;
+		else if (shift > this._scrollSpeedMax)
+			shift = this._scrollSpeedMax;
+
+		this._updateViewPort(event.wheelDelta > 0 ? -shift : shift, true);
+
+		return false;
+	}
+
 	private _createChart() {
 
 		this._zone.runOutsideAngular(() => {
 			var self = this;
+
+			const minMax = this._getViewPortMinMax();
+
 			this._chart = HighStock.chart(this.chartRef.nativeElement, {
 				chart: {
-					reflow: false
+					reflow: false,
+					animation: false
 				},
 				plotOptions: {
 					sma: {
@@ -386,8 +409,9 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 					}
 				},
 				xAxis: [
-					{},
 					{
+						// min: minMax.min,
+						// max: minMax.max,
 						lineWidth: 0,
 						gridLineWidth: 1,
 						gridLineDashStyle: 'dot',
@@ -406,9 +430,9 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 							align: 'left',
 							x: 6,
 							y: 8,
-							formatter: function () {
-								return self._cacheService.priceToFixed(this.value, self.symbolModel);
-							}
+							// formatter: function () {
+							// 	return self._cacheService.priceToFixed(this.value, self.symbolModel);
+							// }
 						},
 						title: {
 							text: null
@@ -419,7 +443,10 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 						resize: {
 							enabled: true
 						},
-						plotLines: this._data.plotLines
+						plotLines: [
+							this.getPlotLineOptions('cPrice', this.symbolModel.options.bid, CUSTOM_EVENT_TYPE_PRICE)
+						]
+						// plotLines: this._data.plotLines
 					},
 					{
 						opposite: true,
@@ -442,6 +469,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 						id: SERIES_MAIN_NAME,
 						type: this.config.graphType,
 						name: this.symbolModel.options.displayName,
+						// data: [],
 						data: this._data.candles,
 						cropThreshold: 0
 					},
@@ -449,6 +477,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 						id: SERIES_VOLUME_NAME,
 						type: 'column',
 						name: SERIES_VOLUME_NAME,
+						// data: [],
 						data: this._data.volume,
 						yAxis: 1
 					},
@@ -459,6 +488,16 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	}
 
 	private _updateViewPort(shift = 0, render: boolean = false) {
+		return this._zone.runOutsideAngular(() => {
+
+			const minMax = this._getViewPortMinMax();
+
+			if (this._chart)
+				this._chart.xAxis[0].setExtremes(minMax.min, minMax.max, render, false);
+		});
+	}
+
+	private _getViewPortMinMax(shift = 0, render: boolean = false) {
 		return this._zone.runOutsideAngular(() => {
 
 			let data = this._data.candles,
@@ -474,15 +513,17 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 				offset = minOffset;
 
 			this._scrollOffset = offset;
-
+			
 			let firstBar = (data[data.length - viewable - offset] || data[0]),
 				lastBar = data[data.length - 1 - offset] || data[data.length - 1];
-
+			console.log(firstBar, lastBar);
 			if (!firstBar || !lastBar)
 				return;
 
-			if (this._chart)
-				this._chart.xAxis[0].setExtremes(firstBar[0], lastBar[0], render, false);
+				return {
+					min: firstBar[0],
+					max: lastBar[0]
+				}
 		});
 	}
 
@@ -491,37 +532,37 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	 */
 	private _fetch() {
 
-		if (this._fetchSub)
-			this._fetchSub.unsubscribe();
+		if (this._lastFetchSub)
+			this._lastFetchSub.unsubscribe();
 
 		this._zone.runOutsideAngular(async () => {
 			this._toggleError(false);
 
-			try {
-				this._prepareData(await this._cacheService.read({
-					symbol: this.symbolModel.options.name,
-					timeFrame: this.config.timeFrame,
-					count: ChartBoxComponent.DEFAULT_CHUNK_LENGTH,
-					offset: this._offset
-				}));
-	
+			this._lastFetchSub = this._cacheService.read({
+				symbol: this.symbolModel.options.name,
+				timeFrame: this.config.timeFrame,
+				count: ChartBoxComponent.DEFAULT_CHUNK_LENGTH,
+				offset: this._offset
+			}).subscribe(data => {
+				const start = Date.now();
+
+				this._prepareData(data);
+				console.log('prepareData', Date.now() - start);
+
 				if (!this._chart) {
 					this._createChart();
+					console.log('createChart', Date.now() - start);
 				}
 
-				this._onPriceChange(false); // asign current price to latest candle
-				this._updateCurrentPricePlot();
+				// this._onPriceChange(false); // asign current price to latest candle
 				this._updateAlarms();
-				
-				requestAnimationFrame(() => {
-					this._updateViewPort(0, true);
-					this._toggleLoading(false);
-				});
-			} catch (error) {
-				console.log('error error error', error);
+				this._toggleLoading(false);
+				console.log('total', Date.now() - start);
+			}, error => {
+				console.log('fetch error', error);
 				this._toggleLoading(false);
 				this._toggleError(true);
-			}
+			});
 		});
 	}
 
@@ -600,8 +641,8 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	 */
 	private _calculateViewableBars(checkParent = true) {
 		let el = this._elementRef.nativeElement,
-			barW = 6 * this.config.zoom;
-
+			barW = 6 * (this.config.zoom || 1);
+			
 		return Math.floor(el.clientWidth / barW);
 	}
 
@@ -610,7 +651,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	 * @param render 
 	 */
 	private _onPriceChange(render: boolean = false) {
-		if (this._data && this._data.candles && this._data.candles.length) {
+		if (this._data.candles.length) {
 			this._data.candles[this._data.candles.length - 1][1] = this.symbolModel.options.bid;
 		}
 
@@ -633,33 +674,8 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 		}
 	}
 
-	/**
-	 * execute on scroll
-	 * @param event 
-	 */
-	private _onScroll(event: MouseWheelEvent): boolean {
-		event.stopPropagation();
-		event.preventDefault();
-		
-		let shift = Math.ceil(this._calculateViewableBars() / this._scrollSpeedStep);
-
-		if (shift < this._scrollSpeedMin)
-			shift = this._scrollSpeedMin;
-		else if (shift > this._scrollSpeedMax)
-			shift = this._scrollSpeedMax;
-
-		this._updateViewPort(event.wheelDelta > 0 ? -shift : shift, true);
-
-		return false;
-	}
-
 	private _buildLabelEl() {
-		const labelHTML = `
-				<div style="position: absolute; left: 0; float: left; width: 0; height: 0; border-top: 7px solid transparent; border-bottom: 7px solid transparent; border-right: 5px solid blue;"></div>
-				<span style="position: absolute; left: 5px; color: black; font-size: 11px; padding-right: 2px;"></span>
-		`
-		this._labelEl = document.createElement('div');
-		this._labelEl.innerHTML = labelHTML;
+
 	}
 
 	private _clearData(render: boolean = false) {
@@ -732,8 +748,11 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit, OnChanges {
 	}
 
 	async ngOnDestroy() {
-		this._labelEl = null;
-		this.chartRef.nativeElement.removeEventListener('mousewheel', <any>this._onScrollBounced);
+		if (this._lastFetchSub && this._lastFetchSub.unsubscribe)
+			this._lastFetchSub.unsubscribe();
+
+		if (this._activeSymbolSubscribtion && this._activeSymbolSubscribtion.unsubscribe)
+			this._activeSymbolSubscribtion.unsubscribe();
 
 		if (this._changeSubscription && this._changeSubscription.unsubscribe)
 			this._changeSubscription.unsubscribe();

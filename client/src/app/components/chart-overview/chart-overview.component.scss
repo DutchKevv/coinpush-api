@@ -7,6 +7,8 @@
 @import '../../style/variables/variables';
 @import '../../style/helpers/normalize';
 
+@import '../instrument-list/instrument-list.component.scss';
+
 :host {
     display: flex;
     flex: 1;
@@ -25,130 +27,6 @@
 
 .hidden {
     display: none;
-}
-
-.instrument-list-outer {
-    width: 100%;
-    background: $background-light;
-    font-size: 12px;
-    flex: 1 1 100%;
-    display: flex;
-    overflow: hidden;
-    max-height: 100%;
-}
-
-.instrument-list {
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    -webkit-overflow-scrolling: touch;
-    box-shadow: 2px -2px 6px rgba(0, 0, 0, 0.7) inset;
-    
-    > a {
-        width: 100%;
-        height: 50px;
-        display: flex;
-        flex-flow: row wrap;
-        flex-shrink: 0;
-        border-bottom: 1px solid $border-color-grey;
-    }
-
-    .instrument-image {
-        float: left;
-        margin-right: 6px;
-    }
-
-    .instrument-title,
-    .col-1h {
-        line-height: 11px;
-        padding-bottom: 4px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-
-    .col-bookmark,
-    .col-alert {
-        flex: 0 8%;
-    }
-
-    .col-instrument {
-        flex: 0 44%;
-        padding: 10px 0;
-    }
-
-    .col-changes {
-        flex: 0 40%;
-        padding: 10px 0;
-    }
-
-    .fa-star,
-    .fa-bell {
-        color: #666;
-        font-size: 22px;
-        // width: 10%;
-        text-align: center;
-        line-height: 50px;
-        
-        &.active-icon {
-			color: #fff;
-		}
-    }
-
-    @media only screen and (min-width : 768px) {
-        .instrument-image {
-            margin-right: 10px;
-        }
-
-        .col-bookmark,
-        .col-alert {
-            flex: 0 10%;
-        }
-
-        .col-changes {
-            flex: 0 30%;
-        }
-
-        .col-instrument {
-            flex: 0 50%;
-        }
-	}
-}
-
-.table-header {
-	font-size: 14px;
-	background: $background-th;
-	color: white;
-	padding: 5px 0;
-    height: 30px !important;
-
-    h4 {
-        margin: 0;
-        padding: 2px !important;
-    }
-
-	> div {
-        padding: 0 !important;
-	}
-
-	.col-2 {
-		padding-left: 18px;
-	}
-}
-
-.fa-exchange {
-	font-size: 10px;
-	transform: rotate(90deg);
-}
-
-// TODO - Move to general font file
-.font-color-up,
-.text-positive {
-	color: #38cc38;
-}
-.font-color-down,
-.text-negative {
-	color: #f92929;
 }
 
 .filter-list {

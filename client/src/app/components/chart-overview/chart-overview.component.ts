@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 
 import { SymbolModel } from "../../models/symbol.model";
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import { UserService } from '../../services/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CacheService } from '../../services/cache.service';
@@ -19,8 +19,8 @@ import { SYMBOL_CAT_TYPE_FOREX, SYMBOL_CAT_TYPE_RESOURCE, SYMBOL_CAT_TYPE_CRYPTO
 import { NgForm } from '@angular/forms';
 import { app } from '../../../core/app';
 import { EventService } from '../../services/event.service';
-import { InstrumentList } from './instrument-list';
 import { AuthenticationService } from '../../services/authenticate.service';
+import { InstrumentListComponent } from '../instrument-list/instrument-list.component';
 
 const DEFAULT_FILTER_POPULAR_LENGTH = 40;
 
@@ -35,7 +35,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 
 	@ViewChild('filter') filterRef: ElementRef;
 	@ViewChild('chart') chartRef: ElementRef;
-	@ViewChild('instrumentList') instrumentList: ElementRef;
+	@ViewChild(InstrumentListComponent) instrumentList: InstrumentListComponent;
 	@ViewChild('grid') grid: ElementRef;
 
 	@Output() filterChange: EventEmitter<boolean> = new EventEmitter();
@@ -53,8 +53,6 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 	private _priceChangeSub;
 	private _eventSub;
 	private _destroyed = false;
-	
-	// private _instrumentList: InstrumentList = new InstrumentList(this.cacheService);
 
 	constructor(
 		public userService: UserService,
@@ -71,6 +69,9 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 		this._changeDetectorRef.detach();
 	}
 
+	test() {
+		alert('test');
+	}
 	ngOnInit() {
 		// build filter list
 		// TODO - move to header / botstrap
@@ -94,7 +95,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 
 			// only continue if symbol is known (could be old bookmark)
 			if (symbolName) {
-				
+
 				// if its the same as the current, do nothing
 				if (this.activeSymbol && this.activeSymbol.options.name === symbolName)
 					return;
@@ -113,7 +114,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 				this.symbols = [symbol];
 				this.setActiveSymbol(null, this.symbols[0]);
 			} else {
-				this.toggleActiveFilter(this.filterGroups[0].items[0].key);
+				this.toggleActiveFilter(this.activeFilter || this.filterGroups[0].items[0].key);
 			}
 		});
 	}
@@ -140,8 +141,9 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 	public toggleActiveFilter(filter: string, removeSymbolFromUrl = true) {
 		// if (filter === this.activeFilter)
 		// 	return;
+		this.scrollToTop();
 
-		app.storage.updateProfile({chartConfig: {filter}}).catch(console.error);
+		app.storage.updateProfile({ chartConfig: { filter } }).catch(console.error);
 
 		// remove specific symbol in url
 		if (removeSymbolFromUrl && this._route.snapshot.queryParams['symbol']) {
@@ -206,25 +208,11 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 
 		this.setActiveSymbol(null, null);
 		this.activeSymbol = null;
-
 		this._updateHeaderTitle();
+		this.instrumentList.build(this.symbols);
 
-		// this.scrollToTop();
-		this._changeDetectorRef.detectChanges();
-	}
-
-	public async onClickToggleFavorite(event, symbol: SymbolModel) {
-		event.preventDefault();
-		event.stopPropagation();
-
-		if (!this._userService.model.options._id) {
-			this._authenticationService.showLoginRegisterPopup();
-			return;
-		}
-
-		if (await this.userService.toggleFavoriteSymbol(symbol)) {
-			this._changeDetectorRef.detectChanges();
-		}
+		// document.getElementById('instrumentList').appendChild(this._instrumentList.containerEl);
+		// this._changeDetectorRef.detectChanges();
 	}
 
 	public setActiveSymbol(event, symbol: SymbolModel): void {
@@ -249,7 +237,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 	}
 
 	public scrollToTop() {
-		this.instrumentList.nativeElement.scrollTop = 0;
+		// this.instrumentList.nativeElement.scrollTop = 0;
 	}
 
 
@@ -284,6 +272,10 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 	}
 
 	private scrollIntoView(el): void {
+		if (!el) {
+			return console.warn('no element given');
+		}
+
 		const rect = el.getBoundingClientRect();
 		const isInView = (rect.top >= 0 && rect.left >= 0 && rect.bottom <= (el.parentNode.offsetHeight + el.offsetHeight));
 
@@ -296,15 +288,15 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 		// set header title by symbol
 		if (this.activeSymbol) {
 			this._applicationRef.components[0].instance.titleText$.next(this.activeSymbol.options.displayName)
-		} 
-		
+		}
+
 		// set header title by active filter
 		else if (this.activeFilter) {
 			const filter = this._getFilterObjectByName(this.activeFilter);
 
 			if (filter) {
 				this._applicationRef.components[0].instance.titleText$.next(filter.displayName);
-			}	
+			}
 		}
 	}
 
@@ -331,7 +323,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 					{
 						key: 'rise and fall',
 						displayName: 'Risers and fallers',
-						length:  DEFAULT_FILTER_POPULAR_LENGTH
+						length: DEFAULT_FILTER_POPULAR_LENGTH
 					},
 					{
 						key: 'favorite',
@@ -352,7 +344,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 						key: 'crypto all',
 						displayName: 'All crypto',
 						length: this.cacheService.symbols.filter(s => s.options.type === SYMBOL_CAT_TYPE_CRYPTO).length
-		
+
 					},
 					{
 						key: 'crypto popular',

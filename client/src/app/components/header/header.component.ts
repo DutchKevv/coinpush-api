@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, ChangeDetectionStrategy, ChangeDetectorRef, EventEmitter, ViewChild, ElementRef, HostListener, Input } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
 import { CacheService } from '../../services/cache.service';
 import { Subject } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';

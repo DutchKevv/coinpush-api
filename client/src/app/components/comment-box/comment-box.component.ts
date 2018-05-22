@@ -2,10 +2,10 @@ import {
 	ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild,
 	ViewEncapsulation
 } from '@angular/core';
-import {CommentService} from "../../services/comment.service";
-import {Subject} from "rxjs/Subject";
-import {CommentModel} from "../../models/comment.model";
-import {UserService} from "../../services/user.service";
+import { CommentService } from "../../services/comment.service";
+import { Subject } from "rxjs";
+import { CommentModel } from "../../models/comment.model";
+import { UserService } from "../../services/user.service";
 
 @Component({
 	selector: 'app-comment-box',

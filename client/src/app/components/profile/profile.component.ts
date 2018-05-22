@@ -3,8 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { AlertService } from '../../services/alert.service';
 import { UserModel } from '../../models/user.model';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subject } from "rxjs/Subject";
+import { BehaviorSubject, Subject } from 'rxjs';
 
 @Component({
 	selector: 'app-profile',

@@ -140,9 +140,7 @@ export const notifyController = {
         const title = `Price alarm triggered on ${notification.data.symbol} - ${notification.data.target}`;
         const data = {
             type: 'symbol-alarm',
-            symbol: notification.data.symbol,
-            target: notification.data.target,
-            time: notification.data.time
+            ...notification.data
         };
 
         return this.sendToUser(notification._id, notification.toUserId, title, '', data, user);

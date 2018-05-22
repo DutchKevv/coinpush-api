@@ -1,6 +1,5 @@
 import { BaseModel } from "./base.model";
-import { Subject } from "rxjs/Subject";
-import { Observable } from "rxjs/Observable";
+import { Observable } from "rxjs";
 
 export class SymbolModel {
 

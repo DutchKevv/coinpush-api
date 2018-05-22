@@ -3,7 +3,7 @@ import {
 	Component, OnInit, OnDestroy, ChangeDetectionStrategy, Output, ChangeDetectorRef
 } from '@angular/core';
 import { UserService } from '../../services/user.service';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
 import { UserModel } from '../../models/user.model';
 import { CacheService } from '../../services/cache.service';
 

@@ -1,11 +1,13 @@
 import { Injectable, Output } from '@angular/core';
 import { UserModel } from '../models/user.model';
 import { AlertService } from './alert.service';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { SymbolModel } from "../models/symbol.model";
 import { app } from '../../core/app';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { AuthenticationService } from './authenticate.service';
+
+import { map } from 'rxjs/operators';
 
 @Injectable({
 	providedIn: 'root',
@@ -25,7 +27,7 @@ export class UserService {
 		const params = new HttpParams({
 			fromObject: options
 		});
-		return this._http.get('/user/' + id, { params }).map((res: Response) => new UserModel(res)).toPromise();
+		return this._http.get('/user/' + id, { params }).pipe(map((res: Response) => new UserModel(res))).toPromise();
 	}
 
 	getOverview(options: any = {}) {
@@ -33,7 +35,7 @@ export class UserService {
 			fromObject: options
 		});
 
-		return this._http.get('/user', { params: options }).map((users: any) => users.map(user => new UserModel(user))).toPromise();
+		return this._http.get('/user', { params: options }).pipe(map((users: any) => users.map(user => new UserModel(user)))).toPromise();
 	}
 
 	create(user) {
@@ -70,6 +72,7 @@ export class UserService {
 			symbol.options.iFavorite = !symbol.options.iFavorite;
 			return true;
 		} catch (error) {
+			symbol.options.iFavorite = !symbol.options.iFavorite;
 			console.error(error);
 			return false;
 		}

@@ -1,7 +1,4 @@
-import { Injectable, Output } from '@angular/core';
-import * as io from 'socket.io-client';
-import { UserService } from './user.service';
-import { app } from '../../core/app';
+import { Injectable } from '@angular/core';
 
 @Injectable({
 	providedIn: 'root',

@@ -16,7 +16,7 @@ services:
       JENKINS_HOST_HOME: "./server-jenkins/_data"
     tty: true
   nginx:
-    restart: unless-stopped
+    # restart: unless-stopped
     build: ./server-nginx
     image: nginx
     container_name: nginx  

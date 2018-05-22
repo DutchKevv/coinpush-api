@@ -1,12 +1,17 @@
 import { Injectable, Injector } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/observable/throw';
+import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { AuthenticationService } from './authenticate.service';
 import { app } from '../../core/app';
 import { HttpHeaders, HttpParams, HttpClient, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse, HttpInterceptor } from '@angular/common/http';
+
+import { map, catchError } from 'rxjs/operators';
+
+// import 'rxjs/add/operator/catch';
+// import 'rxjs/add/operator/map';
+// import 'rxjs/add/observable/throw'
+
+// import 'rxjs/add/operator/map';
 
 declare const require: any;
 
@@ -32,7 +37,7 @@ export class CustomHttp implements HttpInterceptor {
 	) { }
 
 	intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-		return next.handle(this._normalizeRequest(req)).catch((event) => this.catch401(event));
+		return next.handle(this._normalizeRequest(req)).pipe(catchError((event) => this.catch401(event)));
 	}
 
 	private _normalizeRequest(req: HttpRequest<any>): HttpRequest<any> {

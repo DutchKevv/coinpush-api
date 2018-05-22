@@ -4,7 +4,9 @@ import { UserService } from './user.service';
 import { app } from '../../core/app';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { SocketService } from './socket.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
+
+import { map } from 'rxjs/operators';
 
 @Injectable({
 	providedIn: 'root',
@@ -19,7 +21,7 @@ export class CacheService {
 		private _userService: UserService,
 		private _socketService: SocketService,
 		private _http: HttpClient
-	) {}
+	) { }
 
 	public init() {
 		this._updateSymbols();
@@ -38,7 +40,7 @@ export class CacheService {
 		});
 	}
 
-	public async read(params: any) {
+	public read(params: any): Observable<any> {
 		params = new HttpParams({
 			fromObject: params
 		});
@@ -46,9 +48,7 @@ export class CacheService {
 		return this._http.get('/cache', {
 			responseType: "arraybuffer",
 			params
-		})
-			.map(res => new Float64Array(res))
-			.toPromise();
+		}).pipe(map(res => new Float64Array(res)));
 	}
 
 	/**
