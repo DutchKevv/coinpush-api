@@ -16,13 +16,13 @@ services:
       JENKINS_HOST_HOME: "./server-jenkins/_data"
     tty: true
   nginx:
-    restart: unless-stopped
+    # restart: unless-stopped
     build: ./server-nginx
     image: nginx
     container_name: nginx  
     volumes:
       - ./static:/usr/src/app/static
-      # - ./server-nginx/pages:/usr/src/app/server-nginx/pages
+      # - /usr/src/app/server-nginx/pages
       # - ./server-nginx/config:/usr/src/app/server-nginx/config
   mongodb:
     image: mongo:latest

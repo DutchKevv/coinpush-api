@@ -50,6 +50,8 @@ messaging.setBackgroundMessageHandler(function (payload) {
   return self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
+console.log(self.location.origin);
+
 // onclick handler
 self.addEventListener('notificationclick', function (event) {
 
@@ -71,7 +73,7 @@ self.addEventListener('notificationclick', function (event) {
     // If not, then open the target URL in a new window/tab.
     else {
       if (clients.openWindow) {
-        return clients.openWindow(navigationUrl);
+        return clients.openWindow(navigationUrl || '/');
       }
     }
   }));

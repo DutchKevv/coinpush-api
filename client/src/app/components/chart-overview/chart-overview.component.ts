@@ -69,6 +69,9 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
 		this._changeDetectorRef.detach();
 	}
 
+	test() {
+		alert('test');
+	}
 	ngOnInit() {
 		// build filter list
 		// TODO - move to header / botstrap
