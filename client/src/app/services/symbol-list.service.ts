@@ -134,7 +134,7 @@ export class SymbolListService {
 
             // static values
             rowEl.children[1].children[0].className += ' symbol-img-' + symbol.options.name; // img
-            rowEl.children[1].children[1].innerText = symbol.options.name; // name
+            rowEl.children[1].children[1].innerText = symbol.options.displayName; // name
 
             // favorite
             if (symbol.options.iFavorite) {
