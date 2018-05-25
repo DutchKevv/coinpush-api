@@ -138,7 +138,7 @@ export const UserSchema = new Schema(
 );
 
 UserSchema.pre('validate', function(next) {
-    if (!this.password && (!this.oauthFacebook || !this.oauthFacebook.id)) {
+    if (!this['password'] && (!this['oauthFacebook'] || !this['oauthFacebook']['id'])) {
         next(new Error('Password must be given'));
     } else {
         next();
@@ -152,7 +152,7 @@ UserSchema.statics.authenticate = async (params: IUser, fields = []) => {
 
 	let fieldsObj = { password: 1 };
 	fields.forEach(field => fieldsObj[field] = 1);
-	console.log('asdfasdf', params.email.toLowerCase());
+
 	const user = <IUser>(await User.findOne({ email: params.email.toLowerCase() }, { password: 1, ...fieldsObj || {} }).lean());
 
 	if (!user)
