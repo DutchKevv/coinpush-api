@@ -127,6 +127,9 @@ export const UserSchema = new Schema(
 				token: String
 			},
 			select: false
+		},
+		removed: {
+			type: Boolean
 		}
 	},
 	{
@@ -149,8 +152,8 @@ UserSchema.statics.authenticate = async (params: IUser, fields = []) => {
 
 	let fieldsObj = { password: 1 };
 	fields.forEach(field => fieldsObj[field] = 1);
-
-	const user = <IUser>(await User.findOne({ email: params.email }, { password: 1, ...fieldsObj || {} }).lean());
+	console.log('asdfasdf', params.email.toLowerCase());
+	const user = <IUser>(await User.findOne({ email: params.email.toLowerCase() }, { password: 1, ...fieldsObj || {} }).lean());
 
 	if (!user)
 		return null;

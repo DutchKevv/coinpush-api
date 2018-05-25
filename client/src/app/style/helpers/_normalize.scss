@@ -13,6 +13,7 @@
 	user-select: none;
 }
 
+select,
 input {
 	&[type=text],
 	&[type=password],
@@ -32,6 +33,10 @@ input {
 			}
 		}
 	}
+}
+
+input[type=email] {
+	text-transform: lowercase;
 }
 
 :host {

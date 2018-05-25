@@ -1,16 +1,12 @@
-import { Component, ChangeDetectionStrategy, OnInit, Output, ViewChild, ElementRef, EventEmitter, HostListener, ChangeDetectorRef, AfterViewInit, Input, OnChanges } from '@angular/core';
-import { AuthenticationService } from "./services/authenticate.service";
-import { CacheService } from "./services/cache.service";
+import { Component, ChangeDetectionStrategy, EventEmitter, ViewChild, Output, ElementRef, HostListener, OnInit } from "@angular/core";
 import { Subject } from "rxjs";
-import { Router, NavigationEnd, NavigationStart, ActivatedRoute } from '@angular/router';
-import { UserService } from './services/user.service';
-import { app } from '../core/app';
-import { EventService } from './services/event.service';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { SocketService } from './services/socket.service';
-import { environment } from '../environments/environment';
-import { Location } from '@angular/common';
-import { HeaderComponent } from './components/header/header.component';
+import { HeaderComponent } from "./components/header/header.component";
+import { app } from "core/app";
+import { HttpClient } from "@angular/common/http";
+import { UserService } from "./services/user.service";
+import { EventService } from "./services/event.service";
+import { CacheService } from "./services/cache.service";
+import { SocketService } from "./services/socket.service";
 
 declare let window: any;
 declare let navigator: any;
@@ -24,7 +20,7 @@ const _originalSize = window.innerWidth + window.innerHeight;
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class AppComponent implements OnInit, AfterViewInit, OnChanges {
+export class AppComponent implements OnInit {
 
 	@Output() public filterClicked$: EventEmitter<boolean> = new EventEmitter();
 	@Output() public searchResults$: Subject<any> = new Subject();
@@ -74,11 +70,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnChanges {
 
 	constructor(
 		public http: HttpClient,
-		public router: Router,
-		public activatedRoute: ActivatedRoute,
 		public userService: UserService,
-		public authenticationService: AuthenticationService,
-		private _changeDetectorRef: ChangeDetectorRef,
 		private _eventService: EventService,
 		private _cacheService: CacheService,
 		private _socketService: SocketService) {
@@ -95,23 +87,6 @@ export class AppComponent implements OnInit, AfterViewInit, OnChanges {
 		}
 
 		app.loadAds();
-	}
-
-	ngAfterViewInit() {
-		app.prettyBootty.step('done');
-
-		// // small break before loading ads and receiving for push messages
-		// setTimeout(() => {
-			
-		// }, 1000);
-	}
-
-	ngOnChanges(values) {
-		// this._changeDetectorRef.reattach();
-
-		// setTimeout(() => {
-		//   this._changeDetectorRef.detach();
-		// })
 	}
 
 	private _onBackKeyDown(event) {

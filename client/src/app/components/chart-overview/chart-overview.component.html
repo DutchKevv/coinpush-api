@@ -1,20 +1,5 @@
 <div class="instrument-list-outer">
-    <div class="filter-list" #filter>
-        <div class="back-button-container clearfix d-flex d-sm-none">
-            <a class="fa fa-arrow-left"></a>
-            <h2>Filters</h2>
-        </div>
-        <div class="filter-list-options">
-            <ng-container *ngFor="let group of filterGroups">
-                <h2>{{group.name}}</h2>
-                <a *ngFor="let filter of group.items" [ngClass]="{active: activeFilter === filter.key}" (click)="toggleActiveFilter(filter.key)">
-                    {{filter.displayName}}
-                    <span>{{filter.length}}</span>
-                </a>
-            </ng-container>
-        </div>
-    </div>
-    <app-instrument-list class="instrument-list" (list.symbolListService.alarmButtonClicked$)="test()" #list></app-instrument-list>
+    <app-instrument-list #list></app-instrument-list>
 
     <!-- <div class="instrument-list" #instrumentList id="instrumentList">
         <a class="table-header">
@@ -55,8 +40,8 @@
         </a>
     </div> -->
 
-    <app-alarm-menu #alarmMenu *ngIf="activeMenu === 'alarm' && activeSymbol" class="side-menu" [symbol]="activeSymbol" [ngClass]="{'open': activeMenu !== null}"
-        (onDestroy)="onDestroyTriggerMenu(); chart.removePlotLine('new-alarm')" (inputValueChange)="chart.updatePlotLine('new-alarm', $event, CUSTOM_EVENT_TYPE_ALARM_NEW, true)"></app-alarm-menu>
+    <app-alarm-menu #alarmMenu *ngIf="(symbolListService.alarmButtonClicked$ | async) === true" class="side-menu open" [symbol]="symbolListService.activeSymbol"
+        (onDestroy)="symbolListService.alarmButtonClicked$.next(false); chart.removePlotLine('new-alarm')" (inputValueChange)="chart.updatePlotLine('new-alarm', $event, CUSTOM_EVENT_TYPE_ALARM_NEW, true)"></app-alarm-menu>
 </div>
 
 <!-- <app-chart-box #chart [symbolModel]="activeSymbol" class="hidden" [ngClass]="{hidden: !activeSymbol}"></app-chart-box> -->

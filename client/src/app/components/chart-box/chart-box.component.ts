@@ -516,7 +516,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit {
 			
 			let firstBar = (data[data.length - viewable - offset] || data[0]),
 				lastBar = data[data.length - 1 - offset] || data[data.length - 1];
-			console.log(firstBar, lastBar);
+
 			if (!firstBar || !lastBar)
 				return;
 
@@ -547,19 +547,15 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit {
 				const start = Date.now();
 
 				this._prepareData(data);
-				console.log('prepareData', Date.now() - start);
 
 				if (!this._chart) {
 					this._createChart();
-					console.log('createChart', Date.now() - start);
 				}
 
 				// this._onPriceChange(false); // asign current price to latest candle
 				this._updateAlarms();
 				this._toggleLoading(false);
-				console.log('total', Date.now() - start);
 			}, error => {
-				console.log('fetch error', error);
 				this._toggleLoading(false);
 				this._toggleError(true);
 			});

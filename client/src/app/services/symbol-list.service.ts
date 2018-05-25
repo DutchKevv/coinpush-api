@@ -1,57 +1,55 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import { Injectable, EventEmitter, NgZone } from '@angular/core';
 import { SymbolModel } from '../models/symbol.model';
 import { BehaviorSubject } from 'rxjs';
 import { UserService } from './user.service';
 import { AuthenticationService } from './authenticate.service';
+import { CacheService } from './cache.service';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class SymbolListService {
 
+    public activeSymbol: SymbolModel;
     public activeSymbol$: BehaviorSubject<SymbolModel> = new BehaviorSubject(null);
-    public alarmButtonClicked$: EventEmitter<boolean> = new EventEmitter(null);
+    public alarmButtonClicked$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
     public containerEl: any = document.createElement('div');
 
     public isBuild = false;
 
+    private _priceChangeSub;
+
     constructor(
+        private _zone: NgZone,
+        private _cacheService: CacheService,
         private _authenticationService: AuthenticationService,
         private _userService: UserService
-    ) {}
-
-    /**
-     * 
-     * @param event 
-     */
-    onClick(event) {
-        event.preventDefault();
-
-        // favorite button
-        if (event.target.classList.contains('fa-star')) {
-            this.toggleFavorite(event.currentTarget.data.symbol, event.currentTarget, true);
-        }
-
-        // alarm button
-        else if (event.target.classList.contains('fa-bell')) {
-            this.alarmButtonClicked$.next(true);
-        }
-
-        // row clicked
-        else {
-            const state = this.toggleActive(undefined, undefined, event.currentTarget);
-            this.activeSymbol$.next(state ? event.currentTarget.data.symbol : null);
-        }
+    ) {
+        this._priceChangeSub = this._cacheService.changed$.subscribe(changedSymbols => this._onPriceChange(changedSymbols));
     }
+
+    private scrollIntoView(el): void {
+		if (!el) {
+			return console.warn('no element given');
+		}
+
+		const rect = el.getBoundingClientRect();
+		const isInView = (rect.top >= 0 && rect.left >= 0 && rect.bottom <= (el.parentNode.offsetHeight + el.offsetHeight));
+
+		if (!isInView) {
+			el.parentNode.scrollTop = el.offsetTop - el.offsetHeight;
+		}
+	}
 
     /**
      * 
      * @param state 
      * @param symbol 
      * @param rowEl 
+     * @param emit 
      */
-    public toggleActive(state: boolean, symbol?: SymbolModel, rowEl?): boolean {
+    public toggleActive(state: boolean, symbol?: SymbolModel, rowEl?, emit: boolean = false): boolean {
         rowEl = (rowEl || this._findRowByModel(symbol));
 
         // remove [active] class from all rows
@@ -60,10 +58,26 @@ export class SymbolListService {
                 this.containerEl.children[i].className = '';
 
         
-        // set [active] on selected row        
-        rowEl.classList.toggle('active', typeof state === 'boolean' ? state : !rowEl.classList.contains('active'));
+        // set [active] on selected row    
+        if (rowEl) {
+            state = typeof state === 'boolean' ? state : !rowEl.classList.contains('active');    
+            rowEl.classList.toggle('active', state);
 
-        return rowEl.classList.contains('active');
+            if (state) {
+                this.scrollIntoView(rowEl);
+            }
+        } else {
+            state = false;
+        }
+
+        this.activeSymbol = state && rowEl ? rowEl.data.symbol : null;
+
+        if (emit) {
+            this.activeSymbol$.next(this.activeSymbol);
+        }
+        
+
+        return state;
     }
 
     /**
@@ -90,6 +104,7 @@ export class SymbolListService {
      * @param symbols 
      */
     public build(symbols: Array<SymbolModel>, forceRebuild = false) {
+
         if (this.isBuild && !forceRebuild)
             return;
 
@@ -101,7 +116,7 @@ export class SymbolListService {
                 symbol
             };
 
-            rowEl.onclick = this.onClick.bind(this);
+            rowEl.onclick = this._onClick.bind(this);
 
             // static values
             rowEl.children[1].children[0].className += ' symbol-img-' + symbol.options.name; // img
@@ -153,17 +168,74 @@ export class SymbolListService {
         rowEl.children[2].children[1].children[0].innerText = symbol.options.highD + ' | ' + symbol.options.lowD;
     }
 
+    /**
+     * 
+     * @param event 
+     */
+    private _onClick(event) {
+        event.preventDefault();
+
+        // favorite button
+        if (event.target.classList.contains('fa-star')) {
+            this.toggleFavorite(event.currentTarget.data.symbol, event.currentTarget, true);
+        }
+
+        // alarm button
+        else if (event.target.classList.contains('fa-bell')) {
+            this.toggleActive(true, undefined, event.currentTarget, true);
+            this.alarmButtonClicked$.next(true);
+        }
+
+        // row clicked
+        else {
+            this.toggleActive(undefined, undefined, event.currentTarget, true);
+        }
+    }
+
+    private _onPriceChange(symbolNames) {
+        this._zone.runOutsideAngular(() => {
+            for (let i = 0, len = symbolNames.length; i < len; i++) {
+                const symbolName = symbolNames[i];
+                const symbolRow = this._findRowByName(symbolName);
+    
+                if (symbolRow) {
+                    this.updatePrice(symbolRow.data.symbol, symbolRow);
+                } 
+            }
+        });
+    }
+
+    /**
+     * 
+     * @param symbol 
+     */
+    private _findRowByModel(symbol: SymbolModel) {
+        for (let i = 0, len = this.containerEl.children.length; i < len; i++) {
+            if (this.containerEl.children[i].data.symbol === symbol)
+                return this.containerEl.children[i];
+        }
+    }
+
+    /**
+     * 
+     * @param name 
+     */
+    private _findRowByName(name: string) {
+        for (let i = 0, len = this.containerEl.children.length; i < len; i++) {
+            if (this.containerEl.children[i].data.symbol.options.name === name)
+                return this.containerEl.children[i];
+        }
+    }
+    
     private _clearContainer() {
         while (this.containerEl.firstChild) {
             this.containerEl.removeChild(this.containerEl.firstChild);
         }
     }
 
-    private _findRowByModel(symbol: SymbolModel) {
-        for (let i = 0, len = this.containerEl.children.length; i < len; i++) {
-            if (this.containerEl.children[i].data.symbol === symbol)
-                return this.containerEl.children[i];
-        }
+    ngOnDestroy() {
+        if (this._priceChangeSub)
+			this._priceChangeSub.unsubscribe();
     }
 }
 
@@ -223,3 +295,17 @@ function number_format(number, decimals, dec_point, thousands_sep) {
     }
     return s.join(dec);
 }
+
+// function isAnyPartOfElementInViewport(el) {
+
+// 	const rect = el.getBoundingClientRect();
+// 	// DOMRect { x: 8, y: 8, width: 100, height: 100, top: 8, right: 108, bottom: 108, left: 8 }
+// 	const windowHeight = (window.innerHeight || document.documentElement.clientHeight);
+// 	const windowWidth = (window.innerWidth || document.documentElement.clientWidth);
+
+// 	// http://stackoverflow.com/questions/325933/determine-whether-two-date-ranges-overlap
+// 	const vertInView = (rect.top <= windowHeight) && ((rect.top + rect.height) >= 0);
+// 	const horInView = (rect.left <= windowWidth) && ((rect.left + rect.width) >= 0);
+
+// 	return (vertInView && horInView);
+// }

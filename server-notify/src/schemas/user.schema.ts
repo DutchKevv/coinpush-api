@@ -70,6 +70,9 @@ export const UserSchema = new Schema({
             type: Number,
             default: 1
         }
+    },
+    removed: {
+        type: Boolean
     }
 }, {
 	timestamps: true
