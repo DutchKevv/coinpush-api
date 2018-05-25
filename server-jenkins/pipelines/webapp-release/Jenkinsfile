@@ -13,10 +13,7 @@ node {
     stage('run client-build script') {
         clientBuild()
     }
-    stage('enable maintenance mode on nginx') {
-        sh 'sshpass -p Bettie123! ssh -o StrictHostKeyChecking=no kewin@coinpush.app cp /home/kewin/Projects/TradeJS/server-nginx/pages/maintenance_off.html /home/kewin/Projects/TradeJS/server-nginx/pages/maintenance_on.html'
-    }
-    stage ('deploy build assets to live server') {
+    stage ('deploy assets to live server') {
         if (env.BRANCH_NAME == "master") {
             sh "./publish.sh"
         }
@@ -25,8 +22,5 @@ node {
             sh 'sshpass -p Bettie123! ssh -o StrictHostKeyChecking=no kewin@coinpush.app mkdir -p /home/kewin/Projects/TradeJS/static/clients/web'
             sh 'sshpass -p Bettie123! scp -rp ./ kewin@coinpush.app:/home/kewin/Projects/TradeJS/static/clients/web'
         }
-    }
-    stage('disable maintenance mode on nginx') {
-        sh 'sshpass -p Bettie123! ssh -o StrictHostKeyChecking=no kewin@coinpush.app rm -f /home/kewin/Projects/TradeJS/server-nginx/pages/maintenance_on.html'
     }
 }
