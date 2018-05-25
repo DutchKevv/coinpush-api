@@ -13,31 +13,31 @@ services:
   cache:
     environment:
       - NODE_ENV=development
-    command: bash -c "cd ../shared/modules/coinpush && npm run build && cd ../../../server-cache && npm start"
+    command: sh -c "cd ../shared/modules/coinpush && npm run build && cd ../../../server-cache && npm start"
   gateway:
     environment:
       - NODE_ENV=development
-    command: bash -c "cd ../shared/modules/coinpush && npm run build && cd ../../../server-gateway && npm start"
+    command: sh -c "cd ../shared/modules/coinpush && npm run build && cd ../../../server-gateway && npm start"
   user:
     environment:
       - NODE_ENV=development
-    command: bash -c "cd ../shared/modules/coinpush && npm run build && cd ../../../server-user && npm start"
+    command: sh -c "cd ../shared/modules/coinpush && npm run build && cd ../../../server-user && npm start"
   comment:
     environment:
       - NODE_ENV=development
-    command: bash -c "cd ../shared/modules/coinpush && npm run build && cd ../../../server-comment && npm start"
+    command: sh -c "cd ../shared/modules/coinpush && npm run build && cd ../../../server-comment && npm start"
   event:
     environment:
       - NODE_ENV=development
-    command: bash -c "cd ../shared/modules/coinpush && npm run build && cd ../../../server-event && npm start"
+    command: sh -c "cd ../shared/modules/coinpush && npm run build && cd ../../../server-event && npm start"
   notify:
     environment:
       - NODE_ENV=development
-    command: bash -c "cd ../shared/modules/coinpush && npm run build && cd ../../../server-notify && npm start"
+    command: sh -c "cd ../shared/modules/coinpush && npm run build && cd ../../../server-notify && npm start"
   client:
     environment:
       - NODE_ENV=development
-    command: bash -c "cd ../shared/modules/coinpush && npm run build && cd ../../../client && npm start"
+    command: sh -c "cd ../shared/modules/coinpush && npm run build && cd ../../../client && npm start"
     volumes:
       - ./client/src:/usr/src/app/client/src
   client-app:
