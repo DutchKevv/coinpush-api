@@ -113,7 +113,7 @@ export class OandaApi extends EventEmitter {
 					return reject(err);
 
 				const normalized = symbols.map(symbol => {
-					const meta = metaData.find(m => m.name === symbol.name);
+					const meta = metaData.find(m => m.name === symbol.instrument);
 
 					return {
 						precision: -Math.floor(Math.log(symbol.precision, ) / Math.log(10) + 1),

@@ -223,7 +223,7 @@ export const meta = [
 	},
 	{
 		"name": "NATGAS_USD",
-		"type": constants.SYMBOL_CAT_TYPE_FOREX
+		"type": constants.SYMBOL_CAT_TYPE_RESOURCE
 	},
 	{
 		"name": "NL25_EUR",
@@ -399,91 +399,91 @@ export const meta = [
 	},
 	{
 		"name": "WTICO_USD",
-		"type": constants.SYMBOL_CAT_TYPE_FOREX
+		"type": constants.SYMBOL_CAT_TYPE_RESOURCE
 	},
 	{
 		"name": "XAG_AUD",
-		"type": constants.SYMBOL_CAT_TYPE_FOREX
+		"type": constants.SYMBOL_CAT_TYPE_RESOURCE
 	},
 	{
 		"name": "XAG_CAD",
-		"type": constants.SYMBOL_CAT_TYPE_FOREX
+		"type": constants.SYMBOL_CAT_TYPE_RESOURCE
 	},
 	{
 		"name": "XAG_CHF",
-		"type": constants.SYMBOL_CAT_TYPE_FOREX
+		"type": constants.SYMBOL_CAT_TYPE_RESOURCE
 	},
 	{
 		"name": "XAG_EUR",
-		"type": constants.SYMBOL_CAT_TYPE_FOREX
+		"type": constants.SYMBOL_CAT_TYPE_RESOURCE
 	},
 	{
 		"name": "XAG_GBP",
-		"type": constants.SYMBOL_CAT_TYPE_FOREX
+		"type": constants.SYMBOL_CAT_TYPE_RESOURCE
 	},
 	{
 		"name": "XAG_HKD",
-		"type": constants.SYMBOL_CAT_TYPE_FOREX
+		"type": constants.SYMBOL_CAT_TYPE_RESOURCE
 	},
 	{
 		"name": "XAG_JPY",
-		"type": constants.SYMBOL_CAT_TYPE_FOREX
+		"type": constants.SYMBOL_CAT_TYPE_RESOURCE
 	},
 	{
 		"name": "XAG_NZD",
-		"type": constants.SYMBOL_CAT_TYPE_FOREX
+		"type": constants.SYMBOL_CAT_TYPE_RESOURCE
 	},
 	{
 		"name": "XAG_SGD",
-		"type": constants.SYMBOL_CAT_TYPE_FOREX
+		"type": constants.SYMBOL_CAT_TYPE_RESOURCE
 	},
 	{
 		"name": "XAG_USD",
-		"type": constants.SYMBOL_CAT_TYPE_FOREX
+		"type": constants.SYMBOL_CAT_TYPE_RESOURCE
 	},
 	{
 		"name": "XAU_AUD",
-		"type": constants.SYMBOL_CAT_TYPE_FOREX
+		"type": constants.SYMBOL_CAT_TYPE_RESOURCE
 	},
 	{
 		"name": "XAU_CAD",
-		"type": constants.SYMBOL_CAT_TYPE_FOREX
+		"type": constants.SYMBOL_CAT_TYPE_RESOURCE
 	},
 	{
 		"name": "XAU_CHF",
-		"type": constants.SYMBOL_CAT_TYPE_FOREX
+		"type": constants.SYMBOL_CAT_TYPE_RESOURCE
 	},
 	{
 		"name": "XAU_EUR",
-		"type": constants.SYMBOL_CAT_TYPE_FOREX
+		"type": constants.SYMBOL_CAT_TYPE_RESOURCE
 	},
 	{
 		"name": "XAU_GBP",
-		"type": constants.SYMBOL_CAT_TYPE_FOREX
+		"type": constants.SYMBOL_CAT_TYPE_RESOURCE
 	},
 	{
 		"name": "XAU_HKD",
-		"type": constants.SYMBOL_CAT_TYPE_FOREX
+		"type": constants.SYMBOL_CAT_TYPE_RESOURCE
 	},
 	{
 		"name": "XAU_JPY",
-		"type": constants.SYMBOL_CAT_TYPE_FOREX
+		"type": constants.SYMBOL_CAT_TYPE_RESOURCE
 	},
 	{
 		"name": "XAU_NZD",
-		"type": constants.SYMBOL_CAT_TYPE_FOREX
+		"type": constants.SYMBOL_CAT_TYPE_RESOURCE
 	},
 	{
 		"name": "XAU_SGD",
-		"type": constants.SYMBOL_CAT_TYPE_FOREX
+		"type": constants.SYMBOL_CAT_TYPE_RESOURCE
 	},
 	{
 		"name": "XAU_USD",
-		"type": constants.SYMBOL_CAT_TYPE_FOREX
+		"type": constants.SYMBOL_CAT_TYPE_RESOURCE
 	},
 	{
 		"name": "XAU_XAG",
-		"type": constants.SYMBOL_CAT_TYPE_FOREX
+		"type": constants.SYMBOL_CAT_TYPE_RESOURCE
 	},
 	{
 		"name": "XCU_USD",

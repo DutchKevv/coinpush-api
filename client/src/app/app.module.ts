@@ -37,7 +37,7 @@ import { ConfirmationBoxComponent } from './components/confirmation-box/confirma
 import { IndicatorService } from './services/indicator.service';
 import { HeaderComponent } from './components/header/header.component';
 import { NavigationMenuComponent } from './components/navigation-menu/navigation-menu.component';
-import { InstrumentListComponent } from './components/instrument-list/instrument-list.component';
+import { InstrumentListComponent, FilterIFavoritePipe } from './components/instrument-list/instrument-list.component';
 
 @NgModule({
 	declarations: [
@@ -51,6 +51,7 @@ import { InstrumentListComponent } from './components/instrument-list/instrument
 		InstrumentListComponent,
 		EventOverviewComponent,
 		ParseCommentContentPipe,
+		FilterIFavoritePipe,
 		SocialFeedComponent,
 		LoginComponent,
 		AlertComponent,

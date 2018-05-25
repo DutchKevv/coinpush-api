@@ -48,6 +48,9 @@
 
 .instrument-list {
     width: 100%;
+    overflow: auto;
+    height: 100%;
+    -webkit-overflow-scrolling: touch;
     
     a {
         width: 100%;

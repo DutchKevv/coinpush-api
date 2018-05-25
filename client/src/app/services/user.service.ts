@@ -62,22 +62,6 @@ export class UserService {
 		}
 	}
 
-	async toggleFavoriteSymbol(symbol: SymbolModel): Promise<boolean> {
-		try {
-			const result = await this._http.post('/favorite', {
-				symbol: symbol.options.name,
-				state: !symbol.options.iFavorite
-			}, { responseType: "text" }).toPromise();
-
-			symbol.options.iFavorite = !symbol.options.iFavorite;
-			return true;
-		} catch (error) {
-			symbol.options.iFavorite = !symbol.options.iFavorite;
-			console.error(error);
-			return false;
-		}
-	}
-
 	async toggleFollow(model: UserModel, state: boolean) {
 		try {
 			const result = <any>await this._http.post('/user/' + model.get('_id') + '/follow', null).toPromise();
