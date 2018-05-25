@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, Output, ChangeDetectorRef, EventEmitter, SimpleChanges, OnChanges, OnDestroy, Pipe, PipeTransform, NgZone } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { AlertService } from '../../services/alert.service';
 import { UserModel } from '../../models/user.model';
@@ -53,19 +53,22 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 
 	constructor(
 		public eventService: EventService,
-		private _zone: NgZone,
 		private _symbolListService: SymbolListService,
 		private _authenticationService: AuthenticationService,
 		private _userService: UserService,
 		private _cacheService: CacheService,
 		private _changeDetectorRef: ChangeDetectorRef,
-		private _changeRef: ChangeDetectorRef,
-		private _route: ActivatedRoute) {
+		private _router: Router) {
 		// this._changeDetectorRef.detach();
 	}
 
 	ngOnInit() {
-		this.inputValueChange.next(this.symbol.options.bid);
+		// close on route change
+		this._router.events.subscribe((val) => {
+			if (val instanceof NavigationEnd) {
+				this.onDestroy.emit(true);
+			}
+		})
 	}
 
 	async ngOnChanges(changes: SimpleChanges) {
@@ -157,8 +160,12 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 		this._changeDetectorRef.detectChanges();
 	}
 
-	public getActiveEvents() {
-		return this.eventService.events$.getValue().filter(event => event.symbol === this._symbolListService.activeSymbol.options.name);
+	public getActiveEvents(): Array<EventModel> {
+		if (this._symbolListService.activeSymbol) {
+			return this.eventService.events$.getValue().filter(event => event.symbol === this._symbolListService.activeSymbol.options.name);
+		}
+		
+		return [];
 	}
 
 	public updateSideMenuNumberInput(dir: number, setRepeat: boolean = false, repeatTime: number = 1000) {
@@ -209,6 +216,7 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 
 	toggleSaving(state?: boolean) {
 		this.saving = !!state;
+		this._changeDetectorRef.detectChanges();
 	}
 
 	ngOnDestroy() {

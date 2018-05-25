@@ -16,7 +16,7 @@ export class SymbolListService {
     public activeSymbol$: BehaviorSubject<SymbolModel> = new BehaviorSubject(null);
     public alarmButtonClicked$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
-    public containerEl: any = null;
+    public containerEl: any = document.createElement('div');;
     public isBuild = false;
 
     private _priceChangeSub;
@@ -29,12 +29,6 @@ export class SymbolListService {
         private _eventService: EventService,
         private _userService: UserService
     ) {
-        // create container element
-        this.containerEl = document.createElement('div');
-        this.containerEl.style.overflow = 'auto';
-        this.containerEl.style.height = 'calc(100% - 30px)';
-        this.containerEl.style.webkitOverflowScrolling = 'touch';
-
         this._priceChangeSub = this._cacheService.changed$.subscribe(changedSymbols => this._onPriceChange(changedSymbols));
         this._eventsChangeSub = this._eventService.events$.subscribe(changedSymbols => this._onEventsChange(changedSymbols));
     }
@@ -47,16 +41,16 @@ export class SymbolListService {
      * 
      * @param el 
      */
-    public scrollIntoView(el): void {
-		if (!el) {
-			return console.warn('no element given');
+    public scrollIntoView(el?: any, symbolModel?: SymbolModel): void {
+		if (!el && !symbolModel) {
+			return console.warn('no element or symbolModel given');
 		}
 
 		const rect = el.getBoundingClientRect();
-		const isInView = (rect.top >= 0 && rect.left >= 0 && rect.bottom <= (el.parentNode.offsetHeight + el.offsetHeight));
+		const isInView = (rect.top >= 0 && rect.left >= 0 && rect.bottom <= (el.parentNode.parentNode.offsetHeight + el.offsetHeight));
 
 		if (!isInView) {
-			el.parentNode.scrollTop = el.offsetTop - el.offsetHeight;
+			el.parentNode.parentNode.scrollTop = el.offsetTop - el.offsetHeight;
 		}
 	}
 
@@ -82,7 +76,9 @@ export class SymbolListService {
             rowEl.classList.toggle('active', state);
 
             if (state) {
-                this.scrollIntoView(rowEl);
+                requestAnimationFrame(() => {
+                    setTimeout(() => this.scrollIntoView(rowEl), 0);
+                });
             }
         } else {
             state = false;
@@ -94,7 +90,6 @@ export class SymbolListService {
             this.activeSymbol$.next(this.activeSymbol);
         }
         
-
         return state;
     }
 
@@ -113,7 +108,7 @@ export class SymbolListService {
         (rowEl || this._findRowByModel(symbol)).children[0].classList.toggle('active-icon', !symbol.options.iFavorite);
 
         if (sendToServer) {
-            return this._userService.toggleFavoriteSymbol(symbol);
+            return this._cacheService.toggleFavoriteSymbol(symbol);
         }
 	}
 
@@ -338,17 +333,3 @@ function number_format(number, decimals, dec_point, thousands_sep) {
     }
     return s.join(dec);
 }
-
-// function isAnyPartOfElementInViewport(el) {
-
-// 	const rect = el.getBoundingClientRect();
-// 	// DOMRect { x: 8, y: 8, width: 100, height: 100, top: 8, right: 108, bottom: 108, left: 8 }
-// 	const windowHeight = (window.innerHeight || document.documentElement.clientHeight);
-// 	const windowWidth = (window.innerWidth || document.documentElement.clientWidth);
-
-// 	// http://stackoverflow.com/questions/325933/determine-whether-two-date-ranges-overlap
-// 	const vertInView = (rect.top <= windowHeight) && ((rect.top + rect.height) >= 0);
-// 	const horInView = (rect.left <= windowWidth) && ((rect.left + rect.width) >= 0);
-
-// 	return (vertInView && horInView);
-// }

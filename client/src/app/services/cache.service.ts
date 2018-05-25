@@ -4,7 +4,7 @@ import { UserService } from './user.service';
 import { app } from '../../core/app';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { SocketService } from './socket.service';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 
 import { map } from 'rxjs/operators';
 
@@ -14,6 +14,7 @@ import { map } from 'rxjs/operators';
 export class CacheService {
 
 	@Output() public changed$: EventEmitter<any[]> = new EventEmitter();
+	@Output() public favoritesLength$: BehaviorSubject<number> = new BehaviorSubject(0);
 	@Output() public symbols: Array<SymbolModel> = [];
 
 	constructor(
@@ -63,6 +64,28 @@ export class CacheService {
 		return number.toPrecision(8);
 	}
 
+	public async toggleFavoriteSymbol(symbol: SymbolModel): Promise<boolean> {
+		try {
+			const result = await this._http.post('/favorite', {
+				symbol: symbol.options.name,
+				state: !symbol.options.iFavorite
+			}, { responseType: "text" }).toPromise();
+
+			symbol.options.iFavorite = !symbol.options.iFavorite;
+			
+			this.favoritesLength$.next(this.symbols.filter(symbolModel => symbolModel.options.iFavorite).length);
+
+			return true;
+		} catch (error) {
+			symbol.options.iFavorite = !symbol.options.iFavorite;
+
+			this.favoritesLength$.next(this.symbols.filter(symbolModel => symbolModel.options.iFavorite).length);
+
+			console.error(error);
+			return false;
+		}
+	}
+
 	private _updateSymbols() {
 
 		this._zone.runOutsideAngular(() => {
@@ -85,6 +108,8 @@ export class CacheService {
 				}
 			}
 
+			this.favoritesLength$.next(this.symbols.filter(symbolModel => symbolModel.options.iFavorite).length);
+			
 			delete app.data.symbols;
 		});
 	}

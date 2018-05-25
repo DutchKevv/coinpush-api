@@ -1,4 +1,4 @@
-FROM mhart/alpine-node:10.1.0
+FROM mhart/alpine-node:10.2.1
 
 RUN npm i -g npm
 

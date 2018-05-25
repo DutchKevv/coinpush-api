@@ -7,7 +7,9 @@ import {
 	OnDestroy,
 	ApplicationRef,
 	EventEmitter,
-	ViewEncapsulation
+	ViewEncapsulation,
+	Pipe,
+	PipeTransform
 } from '@angular/core';
 import { CacheService } from '../../services/cache.service';
 import { UserService } from '../../services/user.service';
@@ -19,6 +21,13 @@ import { app } from '../../../core/app';
 import { SYMBOL_CAT_TYPE_RESOURCE, SYMBOL_CAT_TYPE_CRYPTO, BROKER_GENERAL_TYPE_OANDA, BROKER_GENERAL_TYPE_CC } from 'coinpush/constant';
 
 const DEFAULT_FILTER_POPULAR_LENGTH = 40;
+
+@Pipe({ name: 'filterIFavorite' })
+export class FilterIFavoritePipe implements PipeTransform {
+	transform(symbols: Array<SymbolModel>): Array<SymbolModel> {
+		return symbols.filter(symbol => symbol.options.iFavorite);
+	}
+}
 
 @Component({
 	selector: 'app-instrument-list',
@@ -50,7 +59,7 @@ export class InstrumentListComponent implements OnInit, OnDestroy {
 		private _route: ActivatedRoute,
 		private _changeDetectorRef: ChangeDetectorRef
 	) {
-		
+		// this._changeDetectorRef.detach();
 	}
 
 	ngOnInit() {
@@ -99,7 +108,6 @@ export class InstrumentListComponent implements OnInit, OnDestroy {
 			}
 		});
 
-		// this._changeDetectorRef.detach();
 	}
 
 	public toggleActiveFilter(filter: string, removeSymbolFromUrl = true) {
@@ -172,6 +180,7 @@ export class InstrumentListComponent implements OnInit, OnDestroy {
 		this.symbolListService.toggleActive(false, undefined, undefined, true);
 		this.symbolListService.build(symbols, true);
 		this._updateHeaderTitle();
+		// this._changeDetectorRef.detectChanges();
 	}
 
 	private _setFilterOptions() {
@@ -192,7 +201,7 @@ export class InstrumentListComponent implements OnInit, OnDestroy {
 					{
 						key: 'favorite',
 						displayName: 'My favorites',
-						length: this.cacheService.symbols.filter(symbol => symbol.options.iFavorite).length
+						// length: this.cacheService.symbols.filter(symbol => symbol.options.iFavorite).length
 					},
 					{
 						key: 'all',
