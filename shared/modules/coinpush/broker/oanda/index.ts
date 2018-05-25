@@ -166,15 +166,11 @@ export class OandaApi extends EventEmitter {
 							const startIndex = index * 10;
 
 							candles[startIndex] = candle.time / 1000;
-							candles[startIndex + 1] = candle.openBid;
-							candles[startIndex + 2] = candle.openAsk;
-							candles[startIndex + 3] = candle.highBid;
-							candles[startIndex + 4] = candle.highAsk;
-							candles[startIndex + 5] = candle.lowBid;
-							candles[startIndex + 6] = candle.lowAsk;
-							candles[startIndex + 7] = candle.closeBid;
-							candles[startIndex + 8] = candle.closeAsk;
-							candles[startIndex + 9] = candle.volume;
+							candles[startIndex + 1] = candle.openAsk - ((candle.openAsk - candle.openBid) / 2);
+							candles[startIndex + 2] = candle.highAsk - ((candle.highAsk - candle.highBid) / 2);
+							candles[startIndex + 3] = candle.lowAsk - ((candle.lowAsk - candle.lowBid) / 2);
+							candles[startIndex + 4] = candle.closeAsk - ((candle.closeAsk - candle.closeBid) / 2);
+							candles[startIndex + 5] = candle.volume;
 						});
 
 						await onData(candles);

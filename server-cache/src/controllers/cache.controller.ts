@@ -37,7 +37,7 @@ export const cacheController = {
 	 */
 	async fetch(params: { symbol: string, timeFrame: string, from: number, until: number, count: number }, emitStatus?: boolean): Promise<void | any> {
 
-		await app.broker.getCandles(params.symbol, params.from, params.until, params.timeFrame, params.count, async (candles: Float64Array) => {
+		await app.broker.getCandles(params.symbol, params.from, params.until, params.timeFrame, params.count, async (candles: Array<any>) => {
 
 			// Store candles in DB, wait until finished before continueing to the next, 
 			// prevents 'holes' in data when 1 failed in between

@@ -192,14 +192,14 @@ export default class CyrptoCompareApi extends EventEmitter {
 
                 candles[startIndex] = candle.time * 1000;
                 candles[startIndex + 1] = candle.open;
-                candles[startIndex + 2] = candle.open;
-                candles[startIndex + 3] = candle.high;
-                candles[startIndex + 4] = candle.high;
-                candles[startIndex + 5] = candle.low;
-                candles[startIndex + 6] = candle.low;
-                candles[startIndex + 7] = candle.close;
-                candles[startIndex + 8] = candle.close;
-                candles[startIndex + 9] = Math.ceil(Math.abs(candle.volumeto - candle.volumefrom)); // TODO: can't be right but places BTC -> ETC -> LTC nice in order for some reason..
+                // candles[startIndex + 2] = candle.open;
+                candles[startIndex + 2] = candle.high;
+                // candles[startIndex + 4] = candle.high;
+                candles[startIndex + 3] = candle.low;
+                // candles[startIndex + 6] = candle.low;
+                candles[startIndex + 4] = candle.close;
+                // candles[startIndex + 8] = candle.close;
+                candles[startIndex + 5] = Math.ceil(Math.abs(candle.volumeto - candle.volumefrom)); // TODO: can't be right but places BTC -> ETC -> LTC nice in order for some reason..
                 // candles[startIndex + 9] = Math.ceil(Math.abs(candle.volumeto - candle.volumefrom));
             });
 

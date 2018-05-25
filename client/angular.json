@@ -19,6 +19,7 @@
             "assets": [
               "src/firebase-messaging-sw.js",
               "src/assets",
+              "src/assets/policy.pdf",
               "src/favicon.ico",
               "src/index.redirect.facebook.html",
               "src/google-services.json",
