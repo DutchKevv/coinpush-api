@@ -1,48 +1,7 @@
 <div class="instrument-list-outer">
     <app-instrument-list #list></app-instrument-list>
-
-    <!-- <div class="instrument-list" #instrumentList id="instrumentList">
-        <a class="table-header">
-            <div class="col-bookmark"></div>
-            <h4 class="col-instrument">Instrument Price</h4>
-            <h4 class="col-changes">1h / 24h</h4>
-            <div class="col-alert"></div>
-        </a>
-        <a *ngFor="let symbol of symbols; trackBy:trackByFunc" [ngClass]="{'active': activeSymbol === symbol}" (click)="setActiveSymbol($event, symbol)"
-            [attr.data-symbol]="symbol.options.name">
-            <i (click)="onClickToggleFavorite($event, symbol);" [ngClass]="{'active-icon': symbol.options.iFavorite}" class="fa fa-star col-bookmark"></i>
-            <div class="col-instrument">
-                <span class="instrument-image symbol-img-{{symbol.options.name}}"></span>
-                <p class="instrument-title">{{symbol.options.displayName}}</p>
-                <span>{{symbol.options.bid || 0}}</span>
-            </div>
-            <div class="col-changes">
-                <div class="col-1h">
-                    <span [ngClass]="{'text-positive': symbol.options.changedHAmount > 0, 'text-negative': symbol.options.changedHAmount < 0}"
-                        class="changed-amount">
-                        {{symbol.options.changedHAmount | number : '1.2-2'}}%
-                    </span>
-                    <span [ngClass]="{'text-positive': symbol.options.changedDAmount > 0, 'text-negative': symbol.options.changedDAmount < 0}"
-                        class="changed-amount">
-                        {{symbol.options.changedDAmount | number : '1.2-2'}}%
-                    </span>
-                </div>
-                <div *ngIf="!symbol.options.halted;else halted">
-                    <span class="value-bid">
-                        {{symbol.options.highD | number : '1.2-2'}}
-                        <i class="fa fa-exchange"></i>
-                        {{symbol.options.lowD | number : '1.2-2'}}
-                    </span>
-                </div>
-                <ng-template #halted>Market closed</ng-template>
-            </div>
-            <i (click)="toggleAlarmMenu($event, symbol, true)" class="fa fa-bell col-alert" [ngClass]="{'active-icon': symbol.options.iAlarm}"></i>
-        </a>
-    </div> -->
-
-    <app-alarm-menu #alarmMenu *ngIf="(symbolListService.alarmButtonClicked$ | async) === true" class="side-menu open" [symbol]="symbolListService.activeSymbol"
+    <app-alarm-menu #alarmMenu *ngIf="(symbolListService.alarmButtonClicked$ | async) === true" class="side-menu open" [symbol]="symbolListService.activeSymbol$ | async"
         (onDestroy)="symbolListService.alarmButtonClicked$.next(false); chart.removePlotLine('new-alarm')" (inputValueChange)="chart.updatePlotLine('new-alarm', $event, CUSTOM_EVENT_TYPE_ALARM_NEW, true)"></app-alarm-menu>
 </div>
 
-<!-- <app-chart-box #chart [symbolModel]="activeSymbol" class="hidden" [ngClass]="{hidden: !activeSymbol}"></app-chart-box> -->
 <app-chart-box #chart class="hidden"></app-chart-box>

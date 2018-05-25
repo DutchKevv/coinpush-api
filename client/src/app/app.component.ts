@@ -47,8 +47,6 @@ export class AppComponent implements OnInit {
 		const size = window.innerWidth + window.innerHeight;
 
 		if (app.platform.isApp) {
-			console.log('sdf', _originalSize, size);
-
 			if (_originalSize !== size) {
 				document.body.querySelector('app').classList.remove('app');
 			} else {
@@ -85,8 +83,6 @@ export class AppComponent implements OnInit {
 		if (this.userService.model.options._id) {
 			app.initNotifications().catch(console.error);
 		}
-
-		app.loadAds();
 	}
 
 	private _onBackKeyDown(event) {

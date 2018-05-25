@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, Output, ChangeDetectorRef, EventEmitter, SimpleChanges, OnChanges, OnDestroy, Pipe, PipeTransform } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, Output, ChangeDetectorRef, EventEmitter, SimpleChanges, OnChanges, OnDestroy, Pipe, PipeTransform, NgZone } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { AlertService } from '../../services/alert.service';
@@ -15,8 +15,8 @@ import { SymbolListService } from '../../services/symbol-list.service';
 
 @Pipe({ name: 'alarmMenuActiveSymbolEvent' })
 export class AlarmMenuActiveSymbolEventPipe implements PipeTransform {
-	transform(items: any[], symbolName: string): any {
-		return items.filter(item => item.symbol === symbolName && !item.triggered);
+	transform(items: Array<EventModel>, symbolName: string): Array<EventModel> {
+		return items.filter(item => item.symbol === symbolName && !item.triggeredDate && !item.removed);
 	}
 }
 
@@ -24,13 +24,13 @@ export class AlarmMenuActiveSymbolEventPipe implements PipeTransform {
 	selector: 'app-alarm-menu',
 	templateUrl: './alarm-menu.component.html',
 	styleUrls: ['./alarm-menu.component.scss'],
-	// changeDetection: ChangeDetectionStrategy.OnPush
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class AlarmMenuComponent implements OnChanges, OnDestroy {
 
 	@Input() symbol: SymbolModel;
-	@Output() inputValueChange: Subject<number> = new Subject();
+	@Output() inputValueChange: BehaviorSubject<number> = new BehaviorSubject(0);
 	@Output() onDestroy: EventEmitter<boolean> = new EventEmitter;
 
 	public historyEvents$;
@@ -53,6 +53,7 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 
 	constructor(
 		public eventService: EventService,
+		private _zone: NgZone,
 		private _symbolListService: SymbolListService,
 		private _authenticationService: AuthenticationService,
 		private _userService: UserService,
@@ -107,13 +108,9 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 		this.inputValueChange.next(this.formModel.amount);
 	}
 
-	public toggleTab(tab: string) {
-		this.activeTab = tab;
-		this._changeDetectorRef.detectChanges();
-	}
-
-	public onClickRemoveEvent(event) {
+	public async onClickRemoveEvent(event) {
 		this.eventService.remove(event);
+
 		this._changeDetectorRef.detectChanges();
 	}
 
@@ -153,6 +150,15 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 		} finally {
 			this.toggleSaving(false);
 		}
+	}
+
+	public toggleTab(tab: string) {
+		this.activeTab = tab;
+		this._changeDetectorRef.detectChanges();
+	}
+
+	public getActiveEvents() {
+		return this.eventService.events$.getValue().filter(event => event.symbol === this._symbolListService.activeSymbol.options.name);
 	}
 
 	public updateSideMenuNumberInput(dir: number, setRepeat: boolean = false, repeatTime: number = 1000) {

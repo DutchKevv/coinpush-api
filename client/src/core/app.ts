@@ -39,6 +39,7 @@ export class App extends MicroEvent {
 
         this.isReady = true;
         this.emit('ready', true);
+        this.loadAds();
     }
 
     // TODO: move to helper class

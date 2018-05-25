@@ -175,7 +175,7 @@
 
     <app>
         <i class="font-awesome-preload-trigger fa fa-square-o"></i>
-        <div style="position: absolute; top: calc(30% - 40px); left: calc(50% - 40px);">
+        <div style="position: absolute; top: calc(40% - 40px); left: calc(50% - 40px);">
             <div class="spinner"></div>
         </div>
     </app>
@@ -183,16 +183,6 @@
     <!-- inject:js:cordova -->
 
     <script>
-        document.addEventListener('touchmove', event => {
-            event.preventDefault();
-        });
-
-        window.addEventListener('native.keyboardshow', function (e) {
-            alert('show');
-            setTimeout(function () {
-                document.activeElement.scrollIntoViewIfNeeded();
-            }, 100);
-        });
 
         // is browser supported
         (function () {
@@ -246,13 +236,19 @@
 
             // device ready listener
             window.platform.isReady$ = new Promise((resolve, reject) => {
-                document.addEventListener("deviceready", function callback() {
+                document.addEventListener("deviceready", function () {
                     window.platform.isEmulator = (device && device.isVirtual) || navigator.platform === 'Linux i686';
-                    document.removeEventListener('deviceready', callback, false);
-                    window.platform.isReady = true;;
+                    window.platform.isReady = true;
                     window.app.init().catch(console.error);
+
+                    window.addEventListener('native.keyboardshow', function (e) {
+                        setTimeout(function () {
+                            document.activeElement.scrollIntoViewIfNeeded();
+                        }, 100);
+                    });
+
                     resolve();
-                }, false);
+                }, { once: true });
             });
 
             // special root class

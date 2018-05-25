@@ -1,9 +1,9 @@
 import { BaseModel } from "./base.model";
-import { Observable } from "rxjs";
+import { Observable, BehaviorSubject } from "rxjs";
 
 export class SymbolModel {
 
-	public price$: Observable<any> = new Observable();
+	public price$: BehaviorSubject<any> = new BehaviorSubject(0);
 
 	constructor(public options) {
 
@@ -22,6 +22,8 @@ export class SymbolModel {
 		});
 
 		this._updateChangedAmount();
+
+		this.price$.next(this.options.bid);
 	}
 
 	private _updateChangedAmount() {

@@ -18,7 +18,7 @@ export const eventController = {
 			triggered: !!params.history
 		};
 		const fields: any = {
-			createDate: 1,
+			createdAt: 1,
 			symbol: 1,
 			alarm: 1,
 			type: 1,

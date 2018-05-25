@@ -10,6 +10,7 @@ export class EventModel {
             dir: number;
         },
         public triggered: boolean,
-        public triggeredDate: Date
+        public triggeredDate: Date,
+        public removed: boolean
     ){}    
 }

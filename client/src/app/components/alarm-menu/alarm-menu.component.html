@@ -28,7 +28,7 @@
                         <i class="fa fa-minus"></i>
                     </button>
 
-                    <input type="text" [(ngModel)]="formModel.amount" name="amount" class="form-control input-number" (change)="onChangeInputValue()"
+                    <input type="number" [(ngModel)]="formModel.amount" name="amount" class="form-control input-number" (change)="onChangeInputValue()"
                         [disabled]="saving === true">
 
                     <button type="button" class="btn btn-sm btn-success btn-number" data-type="plus" [disabled]="saving === true" (touchstart)="onMouseDownNumberInput($event, 1)"
@@ -43,7 +43,7 @@
                     <p class="muted">Diff: {{(((formModel.amount / symbol.options.bid) * 100) - 100).toFixed(2)}}%
                         <i class="fa fa-arrow-{{formModel.amount > symbol.options.bid ? 'up' : 'down'}}"></i>
                     </p>
-                    <p>Current price: {{symbol.options.bid}}</p>
+                    <p>Current price: {{symbol.price$ | async}}</p>
                 </div>
                 <div>
                     <button class="btn btn-success pull-right" [disabled]="saving === true">
@@ -56,14 +56,15 @@
     </ng-container>
 
     <!-- tab active-->
-    <ng-container *ngIf="activeTab === 'active' && eventService.events$ | async as events" class="active-alarm-view" style="padding-top: 10px;">
-        <div class="alarm-row" *ngFor="let event of eventService.events$ | async | alarmMenuActiveSymbolEvent: symbol.options.name">
+    <ng-container *ngIf="activeTab === 'active'" class="active-alarm-view" style="padding-top: 10px;">
+        <div class="alarm-row" *ngFor="let event of getActiveEvents()">
+        <!-- <div class="alarm-row" *ngFor="let event of eventService.events$ | async | alarmMenuActiveSymbolEvent: symbol.options.name"> -->
             <i class="fa fa-arrow-{{event.alarm.dir === 1 ? 'up' : 'down'}}"></i>
             <span>{{event.alarm.price}}</span>
             <span>{{event.createdAt | date: 'dd/MM/yyyy HH:MM:SS'}}</span>
             <i (click)="onClickRemoveEvent(event);" class="fa fa-trash" style="float: right"></i>
         </div>
-        <p *ngIf="!events.length" class="no-events-text">No active events yet. Set some new ones.</p>
+        <p *ngIf="getActiveEvents().length === 0" class="no-events-text">No active events yet. Set some new ones.</p>
     </ng-container>
 
     <!-- tab history-->

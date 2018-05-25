@@ -62,7 +62,7 @@ export class UserService {
 		}
 	}
 
-	async toggleFavoriteSymbol(symbol: SymbolModel) {
+	async toggleFavoriteSymbol(symbol: SymbolModel): Promise<boolean> {
 		try {
 			const result = await this._http.post('/favorite', {
 				symbol: symbol.options.name,

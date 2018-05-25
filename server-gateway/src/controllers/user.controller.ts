@@ -65,6 +65,7 @@ export const userController = {
 
 			// create user on other services
 			await Promise.all([
+				
 				// notify
 				emailController.addUser({ id: user._id }, {
 					_id: user._id,
@@ -73,6 +74,7 @@ export const userController = {
 					email: user.email,
 					language: user.language
 				}),
+				
 				// comment
 				commentController.addUser({ id: user._id }, {
 					_id: user._id,

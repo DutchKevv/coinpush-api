@@ -4,6 +4,8 @@ import { BehaviorSubject } from 'rxjs';
 import { UserService } from './user.service';
 import { AuthenticationService } from './authenticate.service';
 import { CacheService } from './cache.service';
+import { EventService } from './event.service';
+import { EventModel } from '../models/event.model';
 
 @Injectable({
 	providedIn: 'root',
@@ -14,22 +16,38 @@ export class SymbolListService {
     public activeSymbol$: BehaviorSubject<SymbolModel> = new BehaviorSubject(null);
     public alarmButtonClicked$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
-    public containerEl: any = document.createElement('div');
-
+    public containerEl: any = null;
     public isBuild = false;
 
     private _priceChangeSub;
+    private _eventsChangeSub;
 
     constructor(
         private _zone: NgZone,
         private _cacheService: CacheService,
         private _authenticationService: AuthenticationService,
+        private _eventService: EventService,
         private _userService: UserService
     ) {
+        // create container element
+        this.containerEl = document.createElement('div');
+        this.containerEl.style.overflow = 'auto';
+        this.containerEl.style.height = 'calc(100% - 30px)';
+        this.containerEl.style.webkitOverflowScrolling = 'touch';
+
         this._priceChangeSub = this._cacheService.changed$.subscribe(changedSymbols => this._onPriceChange(changedSymbols));
+        this._eventsChangeSub = this._eventService.events$.subscribe(changedSymbols => this._onEventsChange(changedSymbols));
     }
 
-    private scrollIntoView(el): void {
+    public scrollToTop(): void {
+        this.containerEl.scrollTop = 0;
+    }
+
+    /**
+     * 
+     * @param el 
+     */
+    public scrollIntoView(el): void {
 		if (!el) {
 			return console.warn('no element given');
 		}
@@ -86,7 +104,7 @@ export class SymbolListService {
      * @param rowEl 
      * @param sendToServer 
      */
-    public async toggleFavorite(symbol?: SymbolModel, rowEl?, sendToServer: boolean = false) {
+    public toggleFavorite(symbol?: SymbolModel, rowEl?, sendToServer: boolean = false): Promise<boolean> {
 		if (sendToServer && !this._userService.model.options._id) {
 			this._authenticationService.showLoginRegisterPopup();
 			return;
@@ -103,12 +121,13 @@ export class SymbolListService {
      * 
      * @param symbols 
      */
-    public build(symbols: Array<SymbolModel>, forceRebuild = false) {
-
+    public build(symbols: Array<SymbolModel>, forceRebuild = false): void {
         if (this.isBuild && !forceRebuild)
             return;
 
         this._clearContainer();
+
+        const events = this._eventService.events$.getValue();
         
         symbols.forEach(symbol => {
             const rowEl: any = <HTMLElement>_rowEl.cloneNode(true);
@@ -126,15 +145,20 @@ export class SymbolListService {
             if (symbol.options.iFavorite) {
                 rowEl.children[0].className += ' active-icon';
             }
+
+            // alarm
+            if (events.some(event => event.symbol === symbol.options.name)) {
+                rowEl.children[3].className += ' active-icon';
+            }
            
-            this.updatePrice(symbol, rowEl);
+            this._updatePrice(symbol, rowEl);
 
             this.containerEl.appendChild(rowEl);
         });
 
         this.isBuild = true;
 
-        return this.containerEl;
+        this.scrollToTop();
     }
 
     /**
@@ -142,7 +166,7 @@ export class SymbolListService {
      * @param symbol 
      * @param rowEl 
      */
-    public updatePrice(symbol: SymbolModel, rowEl?) {
+    private _updatePrice(symbol: SymbolModel, rowEl?) {
         rowEl = rowEl || this._findRowByModel(symbol);
 
         // change only on price change
@@ -170,9 +194,20 @@ export class SymbolListService {
 
     /**
      * 
+     * @param events 
+     */
+    private _onEventsChange(events: Array<EventModel>): void {
+        for (let i = 0, len = this.containerEl.children.length; i < len; i++) {
+            const rowEl = this.containerEl.children[i];
+            rowEl.children[3].classList.toggle('active-icon', rowEl.data.symbol.options.iAlarm);
+        }
+    }
+
+    /**
+     * 
      * @param event 
      */
-    private _onClick(event) {
+    private _onClick(event): void {
         event.preventDefault();
 
         // favorite button
@@ -192,14 +227,18 @@ export class SymbolListService {
         }
     }
 
-    private _onPriceChange(symbolNames) {
+    /**
+     * 
+     * @param symbolNames 
+     */
+    private _onPriceChange(symbolNames: Array<string>): void {
         this._zone.runOutsideAngular(() => {
             for (let i = 0, len = symbolNames.length; i < len; i++) {
                 const symbolName = symbolNames[i];
                 const symbolRow = this._findRowByName(symbolName);
     
                 if (symbolRow) {
-                    this.updatePrice(symbolRow.data.symbol, symbolRow);
+                    this._updatePrice(symbolRow.data.symbol, symbolRow);
                 } 
             }
         });
@@ -209,7 +248,7 @@ export class SymbolListService {
      * 
      * @param symbol 
      */
-    private _findRowByModel(symbol: SymbolModel) {
+    private _findRowByModel(symbol: SymbolModel): any {
         for (let i = 0, len = this.containerEl.children.length; i < len; i++) {
             if (this.containerEl.children[i].data.symbol === symbol)
                 return this.containerEl.children[i];
@@ -220,14 +259,14 @@ export class SymbolListService {
      * 
      * @param name 
      */
-    private _findRowByName(name: string) {
+    private _findRowByName(name: string): any {
         for (let i = 0, len = this.containerEl.children.length; i < len; i++) {
             if (this.containerEl.children[i].data.symbol.options.name === name)
                 return this.containerEl.children[i];
         }
     }
     
-    private _clearContainer() {
+    private _clearContainer(): void {
         while (this.containerEl.firstChild) {
             this.containerEl.removeChild(this.containerEl.firstChild);
         }
@@ -235,7 +274,11 @@ export class SymbolListService {
 
     ngOnDestroy() {
         if (this._priceChangeSub)
-			this._priceChangeSub.unsubscribe();
+            this._priceChangeSub.unsubscribe();
+            
+        if (this._eventsChangeSub) {
+            this._priceChangeSub.unsubscribe();
+        }
     }
 }
 

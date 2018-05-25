@@ -106,8 +106,6 @@ export class InstrumentListComponent implements OnInit, OnDestroy {
 		// if (filter === this.activeFilter)
 		// 	return;
 
-		this._scrollToTop();
-
 		app.storage.updateProfile({ chartConfig: { filter } }).catch(console.error);
 
 		// remove specific symbol in url
@@ -172,8 +170,8 @@ export class InstrumentListComponent implements OnInit, OnDestroy {
 		}
 
 		this.symbolListService.toggleActive(false, undefined, undefined, true);
-		this._updateHeaderTitle();
 		this.symbolListService.build(symbols, true);
+		this._updateHeaderTitle();
 	}
 
 	private _setFilterOptions() {
@@ -293,10 +291,6 @@ export class InstrumentListComponent implements OnInit, OnDestroy {
 				}
 			}
 		}
-	}
-
-	private _scrollToTop() {
-		this.listRef.nativeElement.scrollTop = 0;
 	}
 
 	ngOnDestroy() {
