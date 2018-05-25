@@ -246,25 +246,14 @@ export class InstrumentListComponent implements OnInit, OnDestroy {
 				items: [
 					{
 						key: 'resources',
-						displayName: 'All resources'
+						displayName: 'All resources',
+						length: this.cacheService.symbols.filter(s => s.options.type === SYMBOL_CAT_TYPE_RESOURCE).length
 					},
 					{
 						key: 'resources popular',
-						displayName: 'Popular resources (ni)'
+						displayName: 'Popular resourcer',
+						length: this.cacheService.symbols.filter(s => s.options.type === SYMBOL_CAT_TYPE_RESOURCE).length
 					}
-				]
-			},
-			{
-				name: 'Indicies',
-				items: [
-					{
-						key: 'indices',
-						displayName: 'All indices (ni)'
-					},
-					{
-						key: 'popular indicies',
-						displayName: 'Popular indicies'
-					},
 				]
 			}
 		];
