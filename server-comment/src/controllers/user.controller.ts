@@ -27,13 +27,11 @@ export const userController = {
 	},
 
 	async create(reqUser, params, options) {
-		console.log(params, options);
 		return User.findOneAndUpdate({_id: params._id}, params, {upsert: true, new: true, setDefaultsOnInsert: true});
 	},
 
 	// TODO - Filter fields
 	async update(reqUser, userId, params): Promise<void> {
-		console.log(params);
 		if (params.device) {
 			await User['addDevice'](userId, params.device);
 			delete params.device;
@@ -45,7 +43,7 @@ export const userController = {
 			throw ({ code: G_ERROR_USER_NOT_FOUND });
 	},
 
-	remove(reqUser: IReqUser, userId: string) {
-		return User.findByIdAndRemove(userId);
+	remove(reqUser: IReqUser, userId: string): Promise<any> {
+		return this.update(reqUser, userId, {removed: true});
 	}
 };

@@ -7,7 +7,7 @@
 @import '../../style/variables/variables';
 @import '../../style/helpers/normalize';
 
-@import '../instrument-list/instrument-list.component.scss';
+// @import '../instrument-list/instrument-list.component.scss';
 
 :host {
     display: flex;
@@ -29,81 +29,9 @@
     display: none;
 }
 
-.filter-list {
-	background: $background-light;
-    overflow: auto;
-    -webkit-overflow-scrolling: touch;
-	padding: 6px 10px 6px 10px;
-
-    display: none;
-    position: absolute;
-    top: 40px;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 10;
-
-    &.show {
-        display: block;
-    }
-
-    .filter-list-options {
-        h2 {
-            padding-bottom: 4px;
-            margin: 6px 0;
-        }
-    
-        a {
-            padding: 10px 0 10px 10px;
-            display: block;
-            font-size: 14px;
-            margin-left: 5px;
-
-            &:hover,
-            &:active,
-            &.active {
-                background: $general-active;
-            }
-
-            span {
-                float: right;
-                width: 30px;
-                font-size: 12px;
-                line-height: 18px;
-            }
-        }
-    }
-
-    .back-button-container {
-        
-        .fa-arrow-left {
-            color: white;
-            font-size: 20px;
-            margin: 4px 10px 10px 0px;
-        }
-    
-        h2 {
-            line-height: 30px;
-            margin-left: auto;
-        }
-    
-        // @media screen and (min-width: 768px) {
-        //     display: none;
-        // }
-    }
-    
-    @media only screen and (min-width : 992px) {
-        position: static;
-        min-width: 200px;
-        max-width: 200px;
-        display: block;
-        z-index: auto;
-        box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.5) inset;
-
-        a {
-            padding: 4px 20px;
-        }
-	}
+app-instrument-list {
+    display: flex;
+    width: 100%;
 }
 
 app-chart-box {

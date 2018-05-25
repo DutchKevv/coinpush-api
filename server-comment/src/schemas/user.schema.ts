@@ -14,7 +14,10 @@ const UserSchema = new Schema({
     },
     img: {
         type: String
-    }
+	},
+	removed: {
+		type: Boolean
+	}
 }, {
 	timestamps: true
 });

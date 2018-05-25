@@ -141,7 +141,7 @@ export const userController = {
 	},
 
 	// TODO - Filter fields
-	async update(reqUser, userId, params): Promise<void> {
+	async update(reqUser: IReqUser, userId: string, params: any): Promise<void> {
 		if (params.password) {
 			// await this.updatePassword(reqUser, undefined, params.password);
 			delete params.password;
@@ -226,12 +226,10 @@ export const userController = {
 		return { state: !isCurrentlyFollowing };
 	},
 
-	async remove(reqUser, id): Promise<any> {
+	remove(reqUser, id): Promise<any> {
 		if (reqUser.id !== id)
 			throw ({ code: '???', message: 'Remove user - req.user.id and userId to not match' });
 
-		const user = await User.findByIdAndRemove(id).lean();
-
-		return user;
+		return this.update(reqUser, id, {removed: true});
 	}
 };

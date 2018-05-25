@@ -13,6 +13,7 @@
 	user-select: none;
 }
 
+select,
 input {
 	&[type=text],
 	&[type=password],
@@ -32,6 +33,22 @@ input {
 			}
 		}
 	}
+
+	// remove +- buttons from number input
+	&[type=number] {
+		&::-webkit-outer-spin-button,
+		&::-webkit-inner-spin-button {
+    		/* display: none; <- Crashes Chrome on hover */
+   			 -webkit-appearance: none;
+   			appearance: none;
+    		margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+		}
+	}
+}
+
+
+input[type=email] {
+	text-transform: lowercase;
 }
 
 :host {

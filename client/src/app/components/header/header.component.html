@@ -18,7 +18,7 @@
 <!-- search container -->
 <div class="search-container">
     <input (keyup)="onSearchKeyUp($event)" (focus)="onSearchKeyUp($event)" placeholder="Markets / People" id="mainSearchInput"
-        #input title="Markets / People" type="text" autocapitalize="none">
+        #input title="Markets / People" type="text" autocapitalize="none" autocomplete="off" autocorrect="off" spellcheck="false">
 
     <!-- <div class="header-drop-down" *ngIf="(searchResults$ | async) as result" (click)="toggleDropdownVisibility(false)" #dropdown> -->
     <div class="header-drop-down" *ngIf="(searchResults$ | async) as result" (click)="toggleDropdownVisibility(false)" #dropdown>

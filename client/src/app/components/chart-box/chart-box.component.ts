@@ -37,8 +37,11 @@ import { IndicatorService } from '../../services/indicator.service';
 import { app } from 'core/app';
 import { SymbolListService } from '../../services/symbol-list.service';
 
+const _originalSize = window.innerWidth + window.innerHeight;
+
 const SERIES_MAIN_NAME = 'main';
 const SERIES_VOLUME_NAME = 'volume';
+
 
 /**
  * custom highcharts label element
@@ -109,7 +112,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit {
 	 */
 	@HostListener('window:resize', ['$event'])
 	onPopState(event) {
-		// this._toggleVisibility(false);
+		this._toggleVisibility(false);
 		this._toggleLoading(true);
 
 		if (this._resizeTimeout) {
@@ -125,6 +128,16 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit {
 
 			clearTimeout(this._resizeTimeout);
 		}, 500);
+
+		// const size = window.innerWidth + window.innerHeight;
+
+		// if (app.platform.isApp) {
+		// 	if (_originalSize !== size) {
+		// 		this._toggleVisibility(false);
+		// 	} else {
+		// 		this._toggleVisibility(true);
+		// 	}
+		// }
 
 		return false;
 	}
@@ -248,7 +261,6 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit {
 	 * @param render 
 	 */
 	public updatePlotLine(id: string, value: number, type: number, render: boolean = false) {
-
 		return this._zone.runOutsideAngular(() => {
 			this.removePlotLine(id);
 
@@ -516,7 +528,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit {
 			
 			let firstBar = (data[data.length - viewable - offset] || data[0]),
 				lastBar = data[data.length - 1 - offset] || data[data.length - 1];
-			console.log(firstBar, lastBar);
+
 			if (!firstBar || !lastBar)
 				return;
 
@@ -547,56 +559,20 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit {
 				const start = Date.now();
 
 				this._prepareData(data);
-				console.log('prepareData', Date.now() - start);
 
 				if (!this._chart) {
 					this._createChart();
-					console.log('createChart', Date.now() - start);
 				}
 
-				// this._onPriceChange(false); // asign current price to latest candle
+				this._onPriceChange(true); // asign current price to latest candle
 				this._updateAlarms();
 				this._toggleLoading(false);
-				console.log('total', Date.now() - start);
 			}, error => {
-				console.log('fetch error', error);
 				this._toggleLoading(false);
 				this._toggleError(true);
 			});
 		});
 	}
-
-	// private _fetchCandles() {
-
-	// 	if (this._fetchSub)
-	// 		this._fetchSub.unsubscribe();
-
-	// 	this._zone.runOutsideAngular(async () => {
-	// 		this._toggleError(false);
-	// 		let success = false;
-
-	// 		this._fetchSub = this._cacheService.read({
-	// 			symbol: this.symbolModel.options.name,
-	// 			timeFrame: this.timeFrame,
-	// 			count: ChartBoxComponent.DEFAULT_CHUNK_LENGTH,
-	// 			offset: this._offset
-	// 		});
-
-	// 		this._fetchSub.subscribe(data => {
-	// 			this._prepareData(data);
-
-	// 			if (!this._chart) {
-	// 				this._createChart();
-	// 			}
-
-	// 			this._onPriceChange(false); // asign current price to latest candle
-	// 			this._updateCurrentPricePlot();
-	// 			this._updateAlarms();
-	// 			this._updateViewPort(0, true);
-	// 			this._toggleLoading(false);
-	// 		});
-	// 	});
-	// }
 
 	/**
 	 * 

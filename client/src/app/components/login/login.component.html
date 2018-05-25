@@ -52,13 +52,12 @@
                 </form>
 
                 <!-- register form -->
-                <form name="form" (ngSubmit)="registerForm.form.valid && register()" #registerForm="ngForm" *ngIf="formType === 'register'"
-                    novalidate>
+                <form name="form" (ngSubmit)="registerForm.form.valid && register()" #registerForm="ngForm" *ngIf="formType === 'register'" novalidate>
                     <div class="form-group" [ngClass]="{ 'has-error': registerForm.submitted && !name.valid }">
                         <label>Name
                             <span *ngIf="registerForm.submitted && !name.valid" class="help-block">Name is required</span>
                         </label>
-                        <input [disabled]="loading$ | async" id="name" class="form-control" name="name" [(ngModel)]="registerModel.name" #name="ngModel" minlength="2" maxlength="30"
+                        <input [disabled]="loading$ | async" id="name" class="form-control" name="name" type="text" [(ngModel)]="registerModel.name" #name="ngModel" minlength="2" maxlength="30"
                             autocomplete="off" required />
                         <small class="form-text form-text-muted">
                             min 2, max 30
@@ -68,7 +67,7 @@
                         <label for="email">Email
                             <span *ngIf="registerForm.submitted && !email.valid" class="help-block">Email is required</span>
                         </label>
-                        <input [disabled]="loading$ | async" id="email" class="form-control" name="email" [(ngModel)]="registerModel.email" #email="ngModel" autocomplete="off"
+                        <input [disabled]="loading$ | async" id="email" class="form-control" name="email" type="text" [(ngModel)]="registerModel.email" #email="ngModel" autocomplete="off"
                             required/>
                     </div>
                     <div class="form-group" [ngClass]="{ 'has-error': registerForm.submitted && !password.valid }">

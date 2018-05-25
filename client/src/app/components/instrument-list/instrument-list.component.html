@@ -1,8 +1,25 @@
-<a class="table-header">
-    <div class="col-bookmark"></div>
-    <h4 class="col-instrument">Instrument Price</h4>
-    <h4 class="col-changes">1h / 24h</h4>
-    <div class="col-alert"></div>
-</a>
+<div class="filter-list" #filter>
+    <div class="back-button-container d-flex d-sm-none">
+        <a class="fa fa-arrow-left"></a>
+        <h2>Filters</h2>
+    </div>
+    <div class="filter-list-options">
+        <ng-container *ngFor="let group of filterGroups">
+            <h2>{{group.name}}</h2>
+            <a *ngFor="let filter of group.items" [ngClass]="{active: activeFilter === filter.key}" (click)="toggleActiveFilter(filter.key)">
+                {{filter.displayName}}
+                <span>{{filter.length}}</span>
+            </a>
+        </ng-container>
+    </div>
+</div>
 
-<div #list></div>
+<div class="instrument-list" #list id="instrumentList">
+    <a class="instrument-list-header">
+        <div class="col-bookmark"></div>
+        <h4 class="col-instrument">Instrument Price</h4>
+        <h4 class="col-changes">1h / 24h</h4>
+        <div class="col-alert"></div>
+    </a>
+</div>
+

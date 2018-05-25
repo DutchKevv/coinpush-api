@@ -4,64 +4,6 @@ import { StorageHelper } from "./helpers/classes/storage.helper";
 import address from './app.address';
 import { NotificationHelper } from "./helpers/classes/notification.helper";
 
-class PrettyBootty {
-
-    public progress: number = 0;
-
-    constructor(
-        private _steps: Array<any>,
-        private _progressBarEl: any
-    ) { }
-
-    step(id: string, percentage?: number) {
-        const step = this._steps.find(step => step.id === id);
-
-        if (!step)
-            throw new Error(`step not found: ${id}`);
-
-        step.perc = typeof percentage === 'number' && percentage < 100 ? percentage : 100;
-
-        let total = 0;
-        this._steps.forEach(step => step.perc && (total += step.perc / this._steps.length));
-
-        this._updateEl(total, step.text);
-
-        if (id === 'done')
-            this.destroy();
-    }
-
-    public fakeProgress(id, time: number, start = 0, end = 0) {
-        const step = this._steps.find(step => step.id === id);
-        const startTime = Date.now();
-
-        const interval = setInterval(() => {
-            const timeDone = Date.now() - startTime;
-            this.step(step.id, (timeDone / time) * 100);
-        }, 100);
-    }
-
-    public destroy() {
-        if (!this._progressBarEl || !this._progressBarEl.parentNode)
-            return;
-
-        this._progressBarEl.parentNode.style.opacity = 0;
-
-        setTimeout(() => {
-            if (!this._progressBarEl || !this._progressBarEl.parentNode || !this._progressBarEl.parentNode.parentNode)
-                return;
-
-            this._progressBarEl.parentNode.parentNode.removeChild(this._progressBarEl.parentNode);
-        }, 500)
-    }
-
-    private _updateEl(progress, text) {
-        if (this._progressBarEl) {
-            this._progressBarEl.children[0].innerHTML = `${progress.toFixed(0)}% ${text}`;
-            this._progressBarEl.children[1].style.width = `${progress}%`;
-        }
-    }
-}
-
 export class App extends MicroEvent {
 
     public platform = window['platform'];
@@ -79,47 +21,8 @@ export class App extends MicroEvent {
     public angularReady = false;
     public angularReady$ = Promise.resolve();
 
-    private _boottySteps = [
-        {
-            id: 'init',
-            value: 5,
-            text: 'booting'
-        },
-        {
-            id: 'config',
-            value: 5,
-            text: 'config'
-        },
-        {
-            id: 'data',
-            value: 40,
-            text: 'data'
-        },
-        {
-            id: 'statics',
-            value: 48,
-            text: 'statics'
-        },
-        {
-            id: 'done',
-            value: 2,
-            text: 'done'
-        }
-    ];
-
-    public prettyBootty: PrettyBootty = new PrettyBootty(this._boottySteps, document.getElementById('initialProgressBar'));
-
-    constructor() {
-        super();
-        this.prettyBootty.step('init');
-    }
-
     public async init(): Promise<void> {
-        this.prettyBootty.step('config');
-
         await this.storage.init();
-
-        this.prettyBootty.step('data', 0);
 
         try {
             await this._preload()
@@ -136,6 +39,7 @@ export class App extends MicroEvent {
 
         this.isReady = true;
         this.emit('ready', true);
+        this.loadAds();
     }
 
     // TODO: move to helper class
@@ -201,7 +105,6 @@ export class App extends MicroEvent {
                 }
 
                 // on progress
-                xhr.onprogress = event => this.prettyBootty.step('data', (event.loaded / event.total) * 100);
                 xhr.timeout = 10000;
 
                 xhr.onreadystatechange = async () => {
@@ -246,7 +149,6 @@ export class App extends MicroEvent {
     private _waitUntilAllScriptsLoaded() {
         return new Promise((resolve, reject) => {
             const estimatedTime = (Date.now() - this.platform.startTime.getTime()) * 2.5;
-            this.prettyBootty.fakeProgress('statics', estimatedTime);
 
             // all scripts loaded
             if (document.readyState !== 'loading')

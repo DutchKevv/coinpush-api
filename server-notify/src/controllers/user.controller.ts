@@ -68,7 +68,7 @@ export const userController = {
 	},
 
 	remove(reqUser: IReqUser, userId: string) {
-		return User.findByIdAndRemove(userId);
+		return this.update(reqUser, userId, {removed: true});
 	},
 
 	async getUnreadCount(reqUser: IReqUser): Promise<number> {

@@ -31,6 +31,10 @@ export class EventService {
 		app.on('event-triggered', event => this._onEventTriggered(event));
 	}
 
+	/**
+	 * 
+	 * @param params 
+	 */
 	public async create(params: any): Promise<EventModel> {
 		try {
 			const result = <any>await this._http.post('/event', params).toPromise();
@@ -44,7 +48,8 @@ export class EventService {
 				result.type,
 				result.alarm,
 				result.triggered,
-				result.triggeredDate
+				result.triggeredDate,
+				result.removed
 			);
 
 			const events = this.events$.getValue();
@@ -59,6 +64,10 @@ export class EventService {
 		}
 	}
 
+	/**
+	 * 
+	 * @param id 
+	 */
 	public async findById(id: string): Promise<Array<CommentModel>> {
 		const result = <any>await this._http.get('/event/' + id)
 			.pipe(map(r => {
@@ -71,6 +80,13 @@ export class EventService {
 		return result;
 	}
 
+	/**
+	 * 
+	 * @param symbol 
+	 * @param offset 
+	 * @param limit 
+	 * @param history 
+	 */
 	public findBySymbol(symbol: string, offset: number = 0, limit: number = 5, history?: boolean): any {
 		const params = new HttpParams({
 			fromObject: {
@@ -84,33 +100,69 @@ export class EventService {
 		return this._http.get('/event', { params });
 	}
 
+	/**
+	 * 
+	 * @param model 
+	 * @param options 
+	 */
 	public update(model: CommentModel, options): Observable<Response> {
 		return <any>this._http.put('/event/' + model.get('_id'), options);
 	}
 
-	public remove(eventModel: EventModel): Promise<any> {
+	/**
+	 * 
+	 * @param eventModel 
+	 * @param syncWithServer 
+	 */
+	public remove(eventModel: EventModel, syncWithServer: boolean = true): Promise<any> {
 		const events = this.events$.getValue();
+		eventModel.removed = true;
+
 		events.splice(events.indexOf(eventModel), 1);
 
 		this._updateSymbolIAlarms(events);
 
 		this.events$.next(events);
-		return this._http.delete('/event/' + eventModel._id).toPromise();
+
+		if (syncWithServer) {
+			return this._http.delete('/event/' + eventModel._id).toPromise();
+		} else {
+			return Promise.resolve();
+		}
 	}
 
-	private _onEventTriggered(event) {
-		console.log('_onEventTriggered', event);
-		this._alertService.success(event.title);
+	/**
+	 * 
+	 * @param eventData 
+	 */
+	private _onEventTriggered(eventData) {
+		const event = this.events$.getValue().find(event => event._id === eventData.eventId);
+
+		if (event) {
+			this.remove(event, false);
+		} else {
+			console.warn('event not found in cache');
+		}
+
+		this._alertService.success(eventData.title);
 	}
 
+	/**
+	 * 
+	 * @param events 
+	 */
 	private _updateSymbolIAlarms(events?: Array<EventModel>) {
 		events = events || this.events$.getValue();
 
-		this._cacheService.symbols.forEach(symbol => {
+		for (let i = 0, len = this._cacheService.symbols.length; i < len; i++) {
+			const symbol = this._cacheService.symbols[i];
 			symbol.options.iAlarm = !!events.find(event => event.symbol === symbol.options.name);
-		});
+		}
 	}
 
+	/**
+	 * 
+	 */
 	private _initializeEvents() {
 		this.events$.next((app.data.events || []).map(event => new EventModel(
 			event._id,
@@ -119,9 +171,10 @@ export class EventService {
 			event.type,
 			event.alarm,
 			event.triggered,
-			event.triggeredDate
+			event.triggeredDate,
+			event.removed
 		)));
-
+		
 		delete app.data.events
 	}
 }

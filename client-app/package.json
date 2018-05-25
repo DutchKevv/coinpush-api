@@ -59,7 +59,7 @@
     "ios-deploy": "^1.9.2",
     "localforage": "1.7.1",
     "ncp": "^2.0.0",
-    "phonegap-plugin-push": "2.2.2"
+    "phonegap-plugin-push": "2.2.3"
   },
   "cordova": {
     "plugins": {

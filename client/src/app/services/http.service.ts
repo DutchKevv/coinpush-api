@@ -4,14 +4,8 @@ import { Router } from '@angular/router';
 import { AuthenticationService } from './authenticate.service';
 import { app } from '../../core/app';
 import { HttpHeaders, HttpParams, HttpClient, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse, HttpInterceptor } from '@angular/common/http';
-
 import { map, catchError } from 'rxjs/operators';
-
-// import 'rxjs/add/operator/catch';
-// import 'rxjs/add/operator/map';
-// import 'rxjs/add/observable/throw'
-
-// import 'rxjs/add/operator/map';
+import { throwError } from 'rxjs';
 
 declare const require: any;
 
@@ -70,7 +64,7 @@ export class CustomHttp implements HttpInterceptor {
 				this._authenticationService.showLoginRegisterPopup();
 				break;
 			case 409:
-				return Observable.throw(error);
+				return throwError(error);
 			case 424:
 				if (confirm('New version available. Download now?')) {
 
@@ -79,9 +73,9 @@ export class CustomHttp implements HttpInterceptor {
 				}
 				break;
 			default:
-				return Observable.throw(error);
+				return throwError(error);
 		}
 
-		return Observable.throw(error);
+		return throwError(error);
 	}
 }
