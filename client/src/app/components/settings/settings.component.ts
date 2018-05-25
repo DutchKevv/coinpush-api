@@ -15,6 +15,7 @@ import { ConfirmationBoxComponent } from '../confirmation-box/confirmation-box.c
 declare let $: any;
 
 @Component({
+	selector: 'app-settings-overview',
 	styleUrls: ['./settings.component.scss'],
 	templateUrl: 'settings.component.html',
 	// encapsulation: ViewEncapsulation.Native,
@@ -23,8 +24,9 @@ declare let $: any;
 
 export class SettingsComponent implements OnInit, OnDestroy {
 
-	model: any;
-	form: any;
+	public activeTab: string = 'profile';
+	public model: any;
+	public form: any;
 
 	@ViewChild('profileImg') profileImg: ElementRef;
 	@ViewChild('uploadBtn') uploadBtn: ElementRef;
@@ -91,6 +93,10 @@ export class SettingsComponent implements OnInit, OnDestroy {
 		});
 	}
 
+	public toggleTab(tabName: string) {
+		this.activeTab = tabName;
+	}
+
 	public showDeleteAccountConfirmationBox() {
 		const self = this;
 
@@ -116,7 +122,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 		];
 	}
 
-	onChangeFileInput(event) {
+	public onChangeFileInput(event) {
 		const input = event.target;
 
 		this.toggleSaveOptionsVisibility(input.files && input.files[0]);
@@ -130,7 +136,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	saveProfileImg() {
+	public saveProfileImg() {
 		this.toggleSaveOptionsVisibility(false);
 
 		let data = new FormData();
@@ -160,21 +166,21 @@ export class SettingsComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	resetProfileImg() {
+	public resetProfileImg() {
 		this.setProfileImgPreview(this.model.options.img);
 		this.uploadBtn.nativeElement.value = '';
 		this.toggleSaveOptionsVisibility(false);
 	}
 
-	setProfileImgPreview(url: string) {
+	public setProfileImgPreview(url: string) {
 		this.uploadImageHolder.nativeElement.style.background = 'url(' + url + ')';
 	}
 
-	toggleSaveOptionsVisibility(state) {
+	public toggleSaveOptionsVisibility(state) {
 		this.saveOptions.nativeElement.classList.toggle('hidden', !state);
 	}
 
-	onChange(event) {
+	public onChange(event) {
 		// this._userService.update(this.model);
 		console.log(event);
 	}

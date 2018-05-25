@@ -1,10 +1,11 @@
-@import '../../style/helpers/normalize';
 @import '~bootstrap/scss/_functions';
 @import '~bootstrap/scss/_variables';
 @import '~bootstrap/scss/_mixins';
 @import '~bootstrap/scss/_grid';
 @import '~bootstrap/scss/_buttons';
 @import '~bootstrap/scss/_forms';
+
+@import '../../style/helpers/normalize';
 @import '../../style/variables/variables';
 
 ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
@@ -16,10 +17,37 @@
 	background-color: $background-light2;
 	height: 100%;
 	width: 100%;
-	padding: 20px;
-	display: flex;
-	flex-flow: column;
 	overflow: auto;
+}
+
+nav {
+	display: flex;
+	background: $background-light;
+	justify-content: center;
+	margin-top: 10px;
+	border-top: 1px solid $border-color-light;
+	border-bottom: 1px solid $border-color-light;
+	margin-bottom: 30px;
+	
+	a {
+		padding: 10px 20px;
+		line-height: 34px;
+		display: flex;
+
+		&:hover,
+		&.active {
+			background: $background-light2;
+			color: #44f444;
+		}
+
+		i {
+			font-size: 30px !important;
+
+			@media only screen and (min-width : 768px) {
+				margin-right: 20px;
+			}
+		}
+	}
 }
 
 .headline-header {
