@@ -56,7 +56,7 @@ services:
       - ./tradejs.config.custom.js:/usr/src/app/tradejs.config.custom.js
       - ./static/image:/usr/src/app/static/image
       - /usr/src/app/server-gateway/node_modules
-      - /usr/src/app/shared/node_modules
+      - /usr/src/app/shared/modules/coinpush/node_modules
     # links:
     #   - redis
   cache:
@@ -73,7 +73,8 @@ services:
       - ./tradejs.config.js:/usr/src/app/tradejs.config.js
       - ./tradejs.config.custom.js:/usr/src/app/tradejs.config.custom.js
       - /usr/src/app/server-cache/node_modules
-      - /usr/src/app/shared/node_modules
+      # - ./shared/modules/coinpush:/usr/src/app/shared/modules/coinpush
+      - /usr/src/app/shared/modules/coinpush/node_modules
     links:
       - redis
       - mongodb
@@ -91,7 +92,7 @@ services:
       - ./tradejs.config.js:/usr/src/app/tradejs.config.js
       - ./tradejs.config.custom.js:/usr/src/app/tradejs.config.custom.js
       - /usr/src/app/server-user/node_modules
-      - /usr/src/app/shared/node_modules
+      - /usr/src/app/shared/modules/coinpush/node_modules
     links:
       - redis
       - mongodb
@@ -109,7 +110,7 @@ services:
       - ./tradejs.config.js:/usr/src/app/tradejs.config.js
       - ./tradejs.config.custom.js:/usr/src/app/tradejs.config.custom.js
       - /usr/src/app/server-notify/node_modules
-      - /usr/src/app/shared/node_modules
+      - /usr/src/app/shared/modules/coinpush/node_modules
     links:
       - redis
       - mongodb
@@ -127,7 +128,7 @@ services:
       - ./tradejs.config.js:/usr/src/app/tradejs.config.js
       - ./tradejs.config.custom.js:/usr/src/app/tradejs.config.custom.js
       - /usr/src/app/server-comment/node_modules
-      - /usr/src/app/shared/node_modules
+      - /usr/src/app/shared/modules/coinpush/node_modules
     links:
       - redis
       - mongodb
@@ -145,7 +146,7 @@ services:
       - ./tradejs.config.js:/usr/src/app/tradejs.config.js
       - ./tradejs.config.custom.js:/usr/src/app/tradejs.config.custom.js
       - /usr/src/app/server-event/node_modules
-      - /usr/src/app/shared/node_modules
+      - /usr/src/app/shared/modules/coinpush/node_modules
     links:
       - redis
       - mongodb

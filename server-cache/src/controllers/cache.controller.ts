@@ -60,7 +60,7 @@ export const cacheController = {
 
 		this.tickBuffer[tick.instrument] = [tick.time, tick.bid, tick.ask];
 		
-		if (symbolObj.name === 'NAV') {
+		if (symbolObj.name === 'BTS') {
 			console.log('ONTICK', tick);
 		}
 
@@ -90,7 +90,7 @@ export const cacheController = {
 			// this._syncByStatuses([statuses.filter(status => status.broker === BROKER_GENERAL_TYPE_OANDA)[0]]), // grab only 1 (for dev)
 			this._syncByStatuses(statuses.filter(status => status.broker === BROKER_GENERAL_TYPE_OANDA)),
 			// this._syncByStatuses([statuses.filter(status => status.broker === BROKER_GENERAL_TYPE_CC)[0]]), // grab only 1 (for dev)
-			// this._syncByStatuses(statuses.filter(status => status.broker === BROKER_GENERAL_TYPE_CC && status.symbol === 'NAV')), // grab only 1 (for dev)
+			// this._syncByStatuses(statuses.filter(status => status.broker === BROKER_GENERAL_TYPE_CC && status.symbol === 'BTS')), // grab only 1 (for dev)
 			this._syncByStatuses(statuses.filter(status => status.broker === BROKER_GENERAL_TYPE_CC)),
 		]);
 

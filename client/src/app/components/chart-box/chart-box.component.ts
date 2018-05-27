@@ -376,6 +376,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit {
 	 * @param event 
 	 */
 	public onScroll(event: MouseWheelEvent): boolean {
+		console.log('scroll!!');
 		event.stopPropagation();
 		event.preventDefault();
 
@@ -497,6 +498,8 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit {
 				]
 			}, false, false);
 		});
+
+		this.chartRef.nativeElement.children[0].addEventListener('scroll', this.onScroll.bind(this), false);
 	}
 
 	private _updateViewPort(shift = 0, render: boolean = false) {

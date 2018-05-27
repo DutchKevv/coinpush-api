@@ -90,7 +90,7 @@ export const app = {
 				resolve();
 			});
 
-			mongoose.connect(config.server.event.connectionString, { useMongoClient: true });
+			mongoose.connect(config.server.event.connectionString);
 		});
 	},
 

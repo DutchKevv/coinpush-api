@@ -15,7 +15,10 @@ export class SymbolModel {
 	 * @param number 
 	 */
 	public priceToFixed(number: number): string | number {
-		if (typeof number === 'string')
+		if (!number) 
+			return 0;
+			
+ 		if (typeof number === 'string')
 			number = parseFloat(number);
 
 		if (this.options.precision === 0 || this.options.precision < 0) {

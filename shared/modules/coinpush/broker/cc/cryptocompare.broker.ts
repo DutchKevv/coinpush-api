@@ -80,9 +80,9 @@ export default class CyrptoCompareApi extends EventEmitter {
             if (messageType == CCC.STATIC.TYPE.CURRENTAGG) {
 
                 res = CCC.CURRENT.unpack(message);
-               
+
                 // gives strange 'last-tick' bug??
-                if (res.VOLUMEHOUR == 0)
+                if (res.LASTMARKET === 'Yobit' || res.VOLUMEHOUR == 0)
                     return;
 
                 if (res.PRICE) {
