@@ -90,7 +90,7 @@ export const cacheController = {
 			// this._syncByStatuses([statuses.filter(status => status.broker === BROKER_GENERAL_TYPE_OANDA)[0]]), // grab only 1 (for dev)
 			this._syncByStatuses(statuses.filter(status => status.broker === BROKER_GENERAL_TYPE_OANDA)),
 			// this._syncByStatuses([statuses.filter(status => status.broker === BROKER_GENERAL_TYPE_CC)[0]]), // grab only 1 (for dev)
-			// this._syncByStatuses(statuses.filter(status => status.broker === BROKER_GENERAL_TYPE_CC && status.symbol === 'BTS')), // grab only 1 (for dev)
+			// this._syncByStatuses(statuses.filter(status => status.broker === BROKER_GENERAL_TYPE_CC && status.symbol === 'KNC')), // grab only 1 (for dev)
 			this._syncByStatuses(statuses.filter(status => status.broker === BROKER_GENERAL_TYPE_CC)),
 		]);
 

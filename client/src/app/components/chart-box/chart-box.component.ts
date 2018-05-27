@@ -175,6 +175,8 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit {
 		this._eventsSubscribtion = this._eventService.events$.subscribe(events => {
 			this._updateAlarms(events, true);
 		});
+
+		this.chartRef.nativeElement.addEventListener('mousewheel', this.onScroll.bind(this), false);
 	}
 
 	init() {
@@ -498,8 +500,6 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit {
 				]
 			}, false, false);
 		});
-
-		this.chartRef.nativeElement.children[0].addEventListener('scroll', this.onScroll.bind(this), false);
 	}
 
 	private _updateViewPort(shift = 0, render: boolean = false) {

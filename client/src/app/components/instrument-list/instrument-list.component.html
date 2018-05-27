@@ -8,7 +8,9 @@
             <h2>{{group.name}}</h2>
             <a *ngFor="let filter of group.items" [ngClass]="{active: activeFilter === filter.key}" (click)="toggleActiveFilter(filter.key)">
                 {{filter.displayName}}
-                <span>{{filter.key === 'favorite' ? (cacheService.favoritesLength$ | async) : filter.length}}</span>
+                <span *ngIf="filter.key === 'favorite'">{{cacheService.favoritesLength$ | async}}</span>
+                <span *ngIf="filter.key === 'alarm'">{{(eventService.events$ | async).length}}</span>
+                <span *ngIf="filter.key !== 'favorite' && filter.key !== 'alarm'">{{filter.length}}</span>
             </a>
         </ng-container>
     </div>

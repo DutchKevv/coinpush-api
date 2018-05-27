@@ -81,8 +81,11 @@ export default class CyrptoCompareApi extends EventEmitter {
 
                 res = CCC.CURRENT.unpack(message);
 
+                if (res.FROMSYMBOL === 'GAS') {
+                    console.log(res);
+                }
                 // gives strange 'last-tick' bug??
-                if (res.LASTMARKET === 'Yobit' || res.VOLUMEHOUR == 0)
+                if (res.LASTMARKET || res.VOLUMEHOUR == 0)
                     return;
 
                 if (res.PRICE) {

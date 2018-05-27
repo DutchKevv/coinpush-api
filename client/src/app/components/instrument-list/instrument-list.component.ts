@@ -19,6 +19,7 @@ import { AuthenticationService } from '../../services/authenticate.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { app } from '../../../core/app';
 import { SYMBOL_CAT_TYPE_RESOURCE, SYMBOL_CAT_TYPE_CRYPTO, BROKER_GENERAL_TYPE_OANDA, BROKER_GENERAL_TYPE_CC } from 'coinpush/constant';
+import { EventService } from '../../services/event.service';
 
 const DEFAULT_FILTER_POPULAR_LENGTH = 40;
 
@@ -51,10 +52,11 @@ export class InstrumentListComponent implements OnInit, OnDestroy {
 	private _activeSymbolSub;
 
 	constructor(
-		private _applicationRef: ApplicationRef,
-		private _userService: UserService,
+		public eventService: EventService,
 		public cacheService: CacheService,
 		public symbolListService: SymbolListService,
+		private _applicationRef: ApplicationRef,
+		private _userService: UserService,
 		private _router: Router,
 		private _route: ActivatedRoute,
 		private _changeDetectorRef: ChangeDetectorRef
@@ -130,6 +132,10 @@ export class InstrumentListComponent implements OnInit, OnDestroy {
 			case 'all':
 				symbols = this.cacheService.symbols;
 				break;
+			case 'alarm':
+				const events = this.eventService.events$.getValue();
+				symbols = this.cacheService.symbols.filter(symbol => events.some(eventModel => eventModel.symbol === symbol.options.name));
+				break;
 			case 'all popular':
 				const sorted = this.cacheService.symbols.sort((a, b) => a.options.volume - b.options.volume).reverse()
 				const cc = sorted.filter(symbol => symbol.options.broker === BROKER_GENERAL_TYPE_CC).slice(0, DEFAULT_FILTER_POPULAR_LENGTH / 2);
@@ -202,6 +208,10 @@ export class InstrumentListComponent implements OnInit, OnDestroy {
 						key: 'favorite',
 						displayName: 'My favorites',
 						// length: this.cacheService.symbols.filter(symbol => symbol.options.iFavorite).length
+					},
+					{
+						key: 'alarm',
+						displayName: 'My alarms'
 					},
 					{
 						key: 'all',
