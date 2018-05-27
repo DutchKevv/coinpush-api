@@ -6,7 +6,7 @@ COPY /shared .
 # shared
 WORKDIR /usr/src/app/shared/modules/coinpush
 COPY /shared/modules/coinpush .
-RUN npm i && npm run build
+RUN npm i
 
 # server
 WORKDIR /usr/src/app/server-cache

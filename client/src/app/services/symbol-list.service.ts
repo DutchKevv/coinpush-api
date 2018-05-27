@@ -34,7 +34,7 @@ export class SymbolListService {
     }
 
     public scrollToTop(): void {
-        this.containerEl.scrollTop = 0;
+        this.containerEl.parentNode.scrollTop = 0;
     }
 
     /**

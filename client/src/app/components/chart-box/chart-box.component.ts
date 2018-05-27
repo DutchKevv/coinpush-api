@@ -635,16 +635,21 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit {
 			this._updateCurrentPricePlot(false);
 
 			const lastPoint = this._chart.series[0].data[this._chart.series[0].data.length - 1];
+			const currentPrice = this.symbolModel.options.bid;
+			
 			if (lastPoint.clientX === null)
 				return;
 
 			if (this.config.graphType === 'line') {
-				this._chart.series[0].data[this._chart.series[0].data.length - 1].update({
-					y: this.symbolModel.options.bid
+				lastPoint.update({
+					y: currentPrice
 				}, render, false);
 			} else {
-				this._chart.series[0].data[this._chart.series[0].data.length - 1].update({
-					close: this.symbolModel.options.bid
+
+				lastPoint.update({
+					high: lastPoint.high < currentPrice ? currentPrice : lastPoint.high,
+					low: lastPoint.low > currentPrice ? currentPrice : lastPoint.low,
+					close: currentPrice
 				}, render, false);
 			}
 		}

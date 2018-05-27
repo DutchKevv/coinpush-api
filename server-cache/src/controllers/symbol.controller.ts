@@ -97,7 +97,7 @@ export const symbolController = {
 
 		// set price if it wasn't known before (closeBid price)
 		if (!symbol.bid && candles.length)
-			symbol.bid = last[3];
+			symbol.bid = last[4];
 
 		symbol.volume = volume;
 		symbol.highD = high;
@@ -115,10 +115,11 @@ export const symbolController = {
 
 			const results = await cacheController.find({ symbol: symbol.name, timeFrame: 'M1', count: 1})
 
-			if (results.length)
-				symbol.bid = results[0][1];
-			else
+			if (results.length) {
+				symbol.bid = results[0][4];
+			} else {
 				console.warn('unknown symbol: ' + symbol.displayName);
+			}	
 		}
 	}
 };

@@ -9,7 +9,7 @@ import { pubClient } from 'coinpush/redis';
 
 const config = require('../../../tradejs.config.js');
 
-const HISTORY_COUNT_DEFAULT = 2000;
+const HISTORY_COUNT_DEFAULT = 400;
 
 export const cacheController = {
 
@@ -59,9 +59,12 @@ export const cacheController = {
 			return log.warn('onTickReceive - symbol not found: ' + tick.instrument);
 
 		this.tickBuffer[tick.instrument] = [tick.time, tick.bid, tick.ask];
+		
+		if (symbolObj.name === 'NAV') {
+			console.log('ONTICK', tick);
+		}
 
 		symbolObj.bid = tick.bid;
-		symbolObj.ask = tick.ask;
 		symbolObj.lastTick = tick.time;
 	},
 
@@ -84,9 +87,10 @@ export const cacheController = {
 		// let statuses = <Array<any>>await Status.find({ timeFrame: { $in: timeFrames } }).lean();
 
 		const results = await Promise.all([
-			// this._syncByStatuses([statuses.filter(status => status.broker === BROKER_GENERAL_TYPE_OANDA)[0]], progressBar), // grab only 1 (for dev)
+			// this._syncByStatuses([statuses.filter(status => status.broker === BROKER_GENERAL_TYPE_OANDA)[0]]), // grab only 1 (for dev)
 			this._syncByStatuses(statuses.filter(status => status.broker === BROKER_GENERAL_TYPE_OANDA)),
-			// this._syncByStatuses([statuses.filter(status => status.broker === BROKER_GENERAL_TYPE_CC)[0]], progressBar), // grab only 1 (for dev)
+			// this._syncByStatuses([statuses.filter(status => status.broker === BROKER_GENERAL_TYPE_CC)[0]]), // grab only 1 (for dev)
+			// this._syncByStatuses(statuses.filter(status => status.broker === BROKER_GENERAL_TYPE_CC && status.symbol === 'NAV')), // grab only 1 (for dev)
 			this._syncByStatuses(statuses.filter(status => status.broker === BROKER_GENERAL_TYPE_CC)),
 		]);
 
@@ -129,7 +133,6 @@ export const cacheController = {
 					}
 				}
 
-				// the fetch promise, catches errors so the entire loop will not break if one fails
 				try {
 					await this.fetch({
 						symbol: status.symbol,

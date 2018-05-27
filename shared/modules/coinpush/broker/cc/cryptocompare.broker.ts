@@ -80,16 +80,12 @@ export default class CyrptoCompareApi extends EventEmitter {
             if (messageType == CCC.STATIC.TYPE.CURRENTAGG) {
 
                 res = CCC.CURRENT.unpack(message);
-
-                if (res.LASTMARKET === 'Yobit')
+               
+                // gives strange 'last-tick' bug??
+                if (res.VOLUMEHOUR == 0)
                     return;
 
-                // console.log(res);
-                // console.log(typeof res, res);
-                // dataUnpack(res);
-                // console.log(res);
                 if (res.PRICE) {
-
                     this.emit('tick', {
                         time: res.LASTUPDATE * 1000,
                         instrument: res.FROMSYMBOL,
@@ -174,7 +170,7 @@ export default class CyrptoCompareApi extends EventEmitter {
             const chunk = chunks[i];
 
             const result: any = await this._doRequest(url, {
-                limit: 2000,
+                limit: count || 400,
                 fsym: symbol,
                 tsym: 'USD',
                 toTs: chunk.until

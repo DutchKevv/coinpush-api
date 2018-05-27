@@ -8,7 +8,7 @@ import { BulkWriteResult } from 'mongodb';
 
 const config = require('../../../tradejs.config.js');
 
-const READ_COUNT_DEFAULT = 2000;
+const READ_COUNT_DEFAULT = 400;
 
 /**
  * handle all symbol specific actions that do concern writing data
@@ -53,7 +53,6 @@ export const dataLayer = {
 		const rows = <Array<any>>await model.find({}, { data: 1 }).limit(count || 500).sort({ _id: -1 });
 
 		return rows.map(row => row.data);
-		// return params.toArray ? new Float64Array(buffer.buffer, buffer.byteOffset, buffer.length / Float64Array.BYTES_PER_ELEMENT) : buffer;
 	},
 
 	async write(symbol, timeFrame, candles: Array<any>): Promise<BulkWriteResult> {
