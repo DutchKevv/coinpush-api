@@ -56,4 +56,3 @@ exports.log = {
         logger.error.apply(logger, [ensureStringLength(owner) + ' : '].concat(params));
     }
 };
-//# sourceMappingURL=util.log.js.map

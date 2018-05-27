@@ -42,14 +42,7 @@ export class CacheService {
 	}
 
 	public read(params: any): Observable<any> {
-		params = new HttpParams({
-			fromObject: params
-		});
-
-		return this._http.get('/cache', {
-			responseType: "arraybuffer",
-			params
-		}).pipe(map(res => new Float64Array(res)));
+		return this._http.get('/cache', { params: new HttpParams({ fromObject: params }) });
 	}
 
 	/**
@@ -72,7 +65,7 @@ export class CacheService {
 			}, { responseType: "text" }).toPromise();
 
 			symbol.options.iFavorite = !symbol.options.iFavorite;
-			
+
 			this.favoritesLength$.next(this.symbols.filter(symbolModel => symbolModel.options.iFavorite).length);
 
 			return true;
@@ -109,7 +102,7 @@ export class CacheService {
 			}
 
 			this.favoritesLength$.next(this.symbols.filter(symbolModel => symbolModel.options.iFavorite).length);
-			
+
 			delete app.data.symbols;
 		});
 	}

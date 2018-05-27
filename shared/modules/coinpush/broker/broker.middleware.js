@@ -50,7 +50,7 @@ var util_log_1 = require("../util/util.log");
 var index_1 = require("./oanda/index");
 var cryptocompare_broker_1 = require("./cc/cryptocompare.broker");
 var constant_1 = require("../constant");
-var config = require('../../../../tradejs.config');
+var config = require('../../../../tradejs.config.js');
 var BrokerMiddleware = /** @class */ (function (_super) {
     __extends(BrokerMiddleware, _super);
     function BrokerMiddleware() {
@@ -229,4 +229,3 @@ var BrokerMiddleware = /** @class */ (function (_super) {
     return BrokerMiddleware;
 }(events_1.EventEmitter));
 exports.BrokerMiddleware = BrokerMiddleware;
-//# sourceMappingURL=broker.middleware.js.map

@@ -4,7 +4,7 @@ import { splitToChunks, timeFrameSteps } from '../../util/util.date';
 import { stringify } from 'querystring';
 import { log } from '../../util/util.log';
 import { EventEmitter } from 'events';
-import { ORDER_TYPE_IF_TOUCHED, ORDER_TYPE_LIMIT, ORDER_TYPE_MARKET, ORDER_TYPE_STOP, BROKER_GENERAL_TYPE_CC, SYMBOL_CAT_TYPE_CRYPTO, ORDER_SIDE_BUY } from '../../constant';
+import { ORDER_TYPE_IF_TOUCHED, ORDER_TYPE_LIMIT, ORDER_TYPE_MARKET, ORDER_TYPE_STOP, BROKER_GENERAL_TYPE_CC, SYMBOL_CAT_TYPE_CRYPTO, ORDER_SIDE_BUY, CANDLE_DEFAULT_ROW_LENGTH } from '../../constant';
 import * as request from 'requestretry';
 import { symbols } from './symbols';
 import * as io from 'socket.io-client';
@@ -172,7 +172,6 @@ export default class CyrptoCompareApi extends EventEmitter {
 
         for (let i = 0, len = chunks.length; i < len; i++) {
             const chunk = chunks[i];
-            const now = Date.now();
 
             const result: any = await this._doRequest(url, {
                 limit: 2000,
@@ -184,23 +183,18 @@ export default class CyrptoCompareApi extends EventEmitter {
             if (!result.Data || !result.Data.length)
                 continue;
 
-            let candles = new Float64Array(result.Data.length * 10);
+            let candles = new Array(result.Data.length * CANDLE_DEFAULT_ROW_LENGTH);
 
             result.Data.forEach((candle, index) => {
-                const startIndex = index * 10;
+                const startIndex = index * CANDLE_DEFAULT_ROW_LENGTH;
                 const time = candle.time * 1000;
 
                 candles[startIndex] = candle.time * 1000;
                 candles[startIndex + 1] = candle.open;
-                // candles[startIndex + 2] = candle.open;
                 candles[startIndex + 2] = candle.high;
-                // candles[startIndex + 4] = candle.high;
                 candles[startIndex + 3] = candle.low;
-                // candles[startIndex + 6] = candle.low;
                 candles[startIndex + 4] = candle.close;
-                // candles[startIndex + 8] = candle.close;
                 candles[startIndex + 5] = Math.ceil(Math.abs(candle.volumeto - candle.volumefrom)); // TODO: can't be right but places BTC -> ETC -> LTC nice in order for some reason..
-                // candles[startIndex + 9] = Math.ceil(Math.abs(candle.volumeto - candle.volumefrom));
             });
 
             await onData(candles);
@@ -274,40 +268,6 @@ export default class CyrptoCompareApi extends EventEmitter {
             this._client.kill();
 
         this._client = null;
-    }
-
-    private _normalizeJSON(candles) {
-        let i = 0, len = candles.length;
-
-        for (; i < len; i++)
-            candles[i].time /= 1000;
-
-        return candles;
-    }
-
-    private normalizeJsonToArray(candles) {
-        let i = 0, len = candles.length, rowLength = 10, candle,
-            view = new Float64Array(candles.length * rowLength);
-
-        for (; i < len; i++) {
-            candle = candles[i];
-            view[i * rowLength] = candle.time / 1000;
-            view[(i * rowLength) + 1] = candle.openBid;
-            view[(i * rowLength) + 2] = candle.openAsk;
-            view[(i * rowLength) + 3] = candle.highBid;
-            view[(i * rowLength) + 4] = candle.highAsk;
-            view[(i * rowLength) + 5] = candle.lowBid;
-            view[(i * rowLength) + 6] = candle.lowAsk;
-            view[(i * rowLength) + 7] = candle.closeBid;
-            view[(i * rowLength) + 8] = candle.closeAsk;
-            view[(i * rowLength) + 9] = candle.volume;
-        }
-
-        return view;
-    }
-
-    private normalizeTypedArrayToBuffer(array) {
-        return new Buffer(array.buffer);
     }
 
     private orderTypeConstantToString(type) {

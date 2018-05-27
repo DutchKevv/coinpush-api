@@ -40,4 +40,3 @@ exports.createRedisClient = function (config) {
 };
 exports.pubClient = exports.createRedisClient();
 exports.subClient = exports.createRedisClient();
-//# sourceMappingURL=redis.js.map

@@ -1,7 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { cacheController } from './cache.controller';
-import { Status } from '../schemas/status.schema';
 import { dataLayer } from "./cache.datalayer";
 import { SYMBOL_CAT_TYPE_OTHER } from "coinpush/constant";
 import { app } from '../app';
@@ -39,18 +38,18 @@ export const symbolController = {
 	 */
 	async updateStartPrice(symbol) {
 		const results = await Promise.all([
-			cacheController.find({ symbol: symbol.name, timeFrame: 'H1', count: 1, toArray: true }), // 1 h
-			cacheController.find({ symbol: symbol.name, timeFrame: 'D', count: 1, toArray: true }) // 24 h
+			cacheController.find({ symbol: symbol.name, timeFrame: 'H1', count: 1}), // 1 h
+			cacheController.find({ symbol: symbol.name, timeFrame: 'D', count: 1}) // 24 h
 		]);
 
 		symbol.marks.H = {
-			time: results[0][0],
-			price: results[0][1]
+			time: results[0][0][0],
+			price: results[0][0][1]
 		}
 
 		symbol.marks.D = {
-			time: results[1][0],
-			price: results[1][1]
+			time: results[1][0][0],
+			price: results[1][0][1]
 		}
 	},
 
@@ -66,7 +65,7 @@ export const symbolController = {
 
 		// find last 24 hours of bars
 		const barsAmount = 60 * 24; // 1440 M1 bars
-		const candles = await cacheController.find({ symbol: symbol.name, timeFrame: 'M1', count: barsAmount, toArray: true });
+		const candles = await cacheController.find({ symbol: symbol.name, timeFrame: 'M1', count: barsAmount});
 
 		if (!candles.length)
 			return;
@@ -75,13 +74,20 @@ export const symbolController = {
 		let high = 0;
 		let low = 0;
 		let volume = 0;
-		let last = candles.slice(candles.length - 10, candles.length);
+		let last = candles[candles.length - 1];
 		
+		for (let i = 0, len = candles.length; i < len; i++) {
+			const candle = candles[i];
 
-		for (let i = 0, len = candles.length; i < len; i += 10) {
-			let cHigh = candles[i + 3];
-			let cLow = candles[i + 5];
-			volume += candles[i + 9];
+			let cHigh = candle[2];
+			let cLow = candle[3];
+
+			if (typeof candle[5] === 'number') {
+				volume += candle[5];
+			} else {
+				console.log('no volume', candle);
+			}
+			
 
 			if (cHigh > high)
 				high = cHigh;
@@ -91,26 +97,26 @@ export const symbolController = {
 
 		// set price if it wasn't known before (closeBid price)
 		if (!symbol.bid && candles.length)
-			symbol.bid = candles[candles.length - 3]
+			symbol.bid = last[3];
 
 		symbol.volume = volume;
 		symbol.highD = high;
-		symbol.highM = last[3]; // last candle high
+		symbol.highM = last[2]; // last candle high
 		symbol.lowD = low;
-		symbol.lowM = last[5]; // last candle low
+		symbol.lowM = last[3]; // last candle low
 	},
 
 	/**
 	 * set last known prices from DB so 
 	 */
 	async setLastKnownPrices() {
-		for (let i = 0, len = app.broker.symbols.length; i < len; i += 10) {
+		for (let i = 0, len = app.broker.symbols.length; i < len; i++) {
 			const symbol = app.broker.symbols[i];
 
-			const results = await cacheController.find({ symbol: symbol.name, timeFrame: 'M1', count: 1, toArray: true })
+			const results = await cacheController.find({ symbol: symbol.name, timeFrame: 'M1', count: 1})
 
 			if (results.length)
-				symbol.bid = results[1];
+				symbol.bid = results[0][1];
 			else
 				console.warn('unknown symbol: ' + symbol.displayName);
 		}

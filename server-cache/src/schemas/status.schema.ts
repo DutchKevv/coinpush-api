@@ -24,7 +24,10 @@ export const StatusSchema = new Schema({
 	lastPrice: {
 		type: Number,
 		required: true
-	}
+	},
+	timeFrames: {
+       type: Schema.Types.Mixed
+    }
 });
 
 export const Status = model('__status', StatusSchema);

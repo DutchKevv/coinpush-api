@@ -9,8 +9,7 @@ const router = Router();
  */
 router.get('/', async (req, res, next) => {
     try {
-        res.write(await cacheController.find(req.query));
-        res.end();
+        res.send(await cacheController.find(req.query));
     } catch (error) {
         console.error(error);
         next(error);

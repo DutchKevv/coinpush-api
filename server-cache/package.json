@@ -29,7 +29,6 @@
     "moment": "2.22.1",
     "mongoose": "5.1.2",
     "morgan": "1.9.0",
-    "progress": "2.0.0",
     "request": "2.87.0",
     "request-promise": "4.2.2",
     "requestretry": "1.13.0",

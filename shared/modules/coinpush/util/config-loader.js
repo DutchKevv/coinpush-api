@@ -6,4 +6,3 @@ setInterval(function () {
     var file = fs.readFileSync('../../tradejs.config.js');
     console.log(file);
 }, 5000);
-//# sourceMappingURL=config-loader.js.map

@@ -504,4 +504,3 @@ OandaAdapter.prototype.kill = function () {
     this.removeListener();
 };
 exports.Adapter = OandaAdapter;
-//# sourceMappingURL=OANDAAdapter.js.map

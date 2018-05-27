@@ -5,7 +5,6 @@ import { app } from '../app';
 import { Status } from '../schemas/status.schema';
 import { BROKER_GENERAL_TYPE_CC, BROKER_GENERAL_TYPE_OANDA } from 'coinpush/constant';
 import { timeFrameSteps } from 'coinpush/util/util.date';
-import * as ProgressBar from 'progress';
 import { pubClient } from 'coinpush/redis';
 
 const config = require('../../../tradejs.config.js');
@@ -26,6 +25,7 @@ export const cacheController = {
 	 * @param params 
 	 */
 	find(params: { symbol: string, timeFrame: string, from?: number, until?: number, count?: number, toArray?: boolean }): Promise<any> {
+		// return Promise.resolve([]);
 		return dataLayer.read(params);
 	},
 
@@ -43,7 +43,6 @@ export const cacheController = {
 			// prevents 'holes' in data when 1 failed in between
 			// TODO: Better way? This makes it slow
 			await dataLayer.write(params.symbol, params.timeFrame, candles);
-
 		});
 	},
 
@@ -57,7 +56,7 @@ export const cacheController = {
 		let symbolObj = app.broker.symbols.find(symbol => symbol.name === tick.instrument);
 
 		if (!symbolObj)
-			return console.warn('onTickReceive - symbol not found: ' + tick.instrument);
+			return log.warn('onTickReceive - symbol not found: ' + tick.instrument);
 
 		this.tickBuffer[tick.instrument] = [tick.time, tick.bid, tick.ask];
 
@@ -76,90 +75,79 @@ export const cacheController = {
 	async sync(silent: boolean = true): Promise<void> {
 		const timeFrames = Object.keys(timeFrameSteps);
 		let now = Date.now();
-		let progressBar;
 
 		// create collections for all symbols
 		await dataLayer.createCollections(app.broker.symbols);
 
 		// get all collection statuses
-		let statuses = <Array<any>>await Status.find({ timeFrame: { $in: timeFrames } }).lean();
-
-		// progress bar
-		if (!silent) {
-			progressBar = new ProgressBar(`Syncing [:total] collections | [:bar] :rate/ps :percent :etas`, {
-				complete: '=',
-				incomplete: ' ',
-				width: 30,
-				total: statuses.length
-			});
-		}
+		let statuses = <Array<any>>await Status.find().lean();
+		// let statuses = <Array<any>>await Status.find({ timeFrame: { $in: timeFrames } }).lean();
 
 		const results = await Promise.all([
-			this._syncByStatuses(statuses.filter(status => status.broker === BROKER_GENERAL_TYPE_OANDA), progressBar),
-			this._syncByStatuses(statuses.filter(status => status.broker === BROKER_GENERAL_TYPE_CC), progressBar),
+			// this._syncByStatuses([statuses.filter(status => status.broker === BROKER_GENERAL_TYPE_OANDA)[0]], progressBar), // grab only 1 (for dev)
+			this._syncByStatuses(statuses.filter(status => status.broker === BROKER_GENERAL_TYPE_OANDA)),
+			// this._syncByStatuses([statuses.filter(status => status.broker === BROKER_GENERAL_TYPE_CC)[0]], progressBar), // grab only 1 (for dev)
+			this._syncByStatuses(statuses.filter(status => status.broker === BROKER_GENERAL_TYPE_CC)),
 		]);
 
 		log.info('cache', `syncing took ${Date.now() - now}ms (oanda: ${results[0].time - now}ms | CC: ${results[1].time - now}ms)`);
-
-		// destroy? progress bar
-		progressBar = null;
 	},
 
 	/**
 	 * loop over statuses and sync symbols
 	 * this method exists so each broker can call this method in parrallel
 	 * @param statuses 
-	 * @param progressBar 
 	 */
-	async _syncByStatuses(statuses: Array<any>, progressBar?: ProgressBar): Promise<{ time: Number }> {
+	async _syncByStatuses(statuses: Array<any>): Promise<{ time: Number }> {
 		if (!statuses.length)
 			return;
 
 		const now = Date.now();
 		// TODO: get broker names from somewhere else then hardcoded (constants?)
 		const brokerName = statuses[0].broker === BROKER_GENERAL_TYPE_CC ? 'CryptoCompare' : 'Oanda';
+		
 		log.info('cache', `syncing ${statuses.length} collections for broker ${brokerName}`);
 
-		// loop over each symbol (in bulk)
+		// loop over each symbol
 		for (let i = 0, len = statuses.length; i < len; i++) {
 			const now = Date.now();
 			const status = statuses[i];
 
 			let lastSyncTimestamp;
 
-			// log.info('cache', `syncing ${status.symbol}: ` + brokerName + ' |  ' + i);
+			for (let timeFrameKey in status.timeFrames) {
+				const timeFrameObj = status.timeFrames[timeFrameKey];
 
-			// only continue if a new bar is there
-			if (status.lastSync) {
-				lastSyncTimestamp = (new Date(status.lastSync)).getTime();
+				// log.info('cache', `syncing ${status.symbol}: ` + brokerName + ' |  ' + i);
 
-				if (lastSyncTimestamp + timeFrameSteps[status.timeFrame] > now) {
-					progressBar && progressBar.tick();
-					continue;
+				// only continue if a new bar is there
+				if (timeFrameObj.lastSync) {
+					lastSyncTimestamp = (new Date(timeFrameObj.lastSync)).getTime();
+
+					if (lastSyncTimestamp + timeFrameSteps[timeFrameKey] > now) {
+						continue;
+					}
+				}
+
+				// the fetch promise, catches errors so the entire loop will not break if one fails
+				try {
+					await this.fetch({
+						symbol: status.symbol,
+						timeFrame: timeFrameKey,
+						from: lastSyncTimestamp || undefined,
+						count: status.lastSync ? undefined : HISTORY_COUNT_DEFAULT
+					});
+				} catch (error) {
+					log.error(error);
 				}
 			}
 
-			// the fetch promise, catches errors so the entire loop will not break if one fails
-			try {
-				await this.fetch({
-					symbol: status.symbol,
-					timeFrame: status.timeFrame,
-					from: lastSyncTimestamp || undefined,
-					count: status.lastSync ? undefined : HISTORY_COUNT_DEFAULT
-				});
+			await symbolController.updateSymbol(status.symbol);
 
-				await symbolController.updateSymbol(status.symbol);
-
-				pubClient.HMSET('symbols', {
-					[status.symbol]: JSON.stringify(app.broker.symbols.find(symbol => symbol.name === status.symbol))
-				});
-			} catch (error) {
-				console.error(error);
-			} finally {
-				progressBar && progressBar.tick();
-			}
+			pubClient.HMSET('symbols', {
+				[status.symbol]: JSON.stringify(app.broker.symbols.find(symbol => symbol.name === status.symbol))
+			});
 		}
-		// });
 
 		return {
 			time: Date.now()

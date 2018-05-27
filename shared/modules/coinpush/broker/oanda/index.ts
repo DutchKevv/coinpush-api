@@ -3,7 +3,7 @@ import { OandaAdapter } from './lib/OANDAAdapter';
 import { splitToChunks } from '../../util/util.date';
 import { log } from '../../util/util.log';
 import { EventEmitter } from 'events';
-import { ORDER_TYPE_IF_TOUCHED, ORDER_TYPE_LIMIT, ORDER_TYPE_MARKET, ORDER_TYPE_STOP, BROKER_GENERAL_TYPE_OANDA, SYMBOL_CAT_TYPE_OTHER, ORDER_SIDE_BUY } from '../../constant';
+import { ORDER_TYPE_IF_TOUCHED, ORDER_TYPE_LIMIT, ORDER_TYPE_MARKET, ORDER_TYPE_STOP, BROKER_GENERAL_TYPE_OANDA, SYMBOL_CAT_TYPE_OTHER, ORDER_SIDE_BUY, CANDLE_DEFAULT_ROW_LENGTH } from '../../constant';
 
 const metaData = require('./symbols-meta').meta;
 
@@ -160,11 +160,11 @@ export class OandaApi extends EventEmitter {
 						return console.error(error);
 
 					if (data.candles && data.candles.length) {
-						const candles = new Float64Array(data.candles.length * 10);
+						const candles = new Array(data.candles.length * CANDLE_DEFAULT_ROW_LENGTH);
 
 						data.candles.forEach((candle, index) => {
-							const startIndex = index * 10;
-
+							const startIndex = index * CANDLE_DEFAULT_ROW_LENGTH;
+							
 							candles[startIndex] = candle.time / 1000;
 							candles[startIndex + 1] = candle.openAsk - ((candle.openAsk - candle.openBid) / 2);
 							candles[startIndex + 2] = candle.highAsk - ((candle.highAsk - candle.highBid) / 2);
@@ -254,40 +254,6 @@ export class OandaApi extends EventEmitter {
 			this._client.kill();
 
 		this._client = null;
-	}
-
-	private _normalizeJSON(candles) {
-		let i = 0, len = candles.length;
-
-		for (; i < len; i++)
-			candles[i].time /= 1000;
-
-		return candles;
-	}
-
-	private normalizeJsonToArray(candles) {
-		let i = 0, len = candles.length, rowLength = 10, candle,
-			view = new Float64Array(candles.length * rowLength);
-
-		for (; i < len; i++) {
-			candle = candles[i];
-			view[i * rowLength] = candle.time / 1000;
-			view[(i * rowLength) + 1] = candle.openBid;
-			view[(i * rowLength) + 2] = candle.openAsk;
-			view[(i * rowLength) + 3] = candle.highBid;
-			view[(i * rowLength) + 4] = candle.highAsk;
-			view[(i * rowLength) + 5] = candle.lowBid;
-			view[(i * rowLength) + 6] = candle.lowAsk;
-			view[(i * rowLength) + 7] = candle.closeBid;
-			view[(i * rowLength) + 8] = candle.closeAsk;
-			view[(i * rowLength) + 9] = candle.volume;
-		}
-
-		return view;
-	}
-
-	private normalizeTypedArrayToBuffer(array) {
-		return new Buffer(array.buffer);
 	}
 
 	private orderTypeConstantToString(type) {

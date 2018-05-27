@@ -187,12 +187,11 @@ var CyrptoCompareApi = /** @class */ (function (_super) {
                                 break;
                         }
                         _loop_1 = function (i, len) {
-                            var chunk, now, result, candles;
+                            var chunk, result, candles;
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0:
                                         chunk = chunks[i];
-                                        now = Date.now();
                                         return [4 /*yield*/, this_1._doRequest(url, {
                                                 limit: 2000,
                                                 fsym: symbol,
@@ -203,21 +202,16 @@ var CyrptoCompareApi = /** @class */ (function (_super) {
                                         result = _a.sent();
                                         if (!result.Data || !result.Data.length)
                                             return [2 /*return*/, "continue"];
-                                        candles = new Float64Array(result.Data.length * 10);
+                                        candles = new Array(result.Data.length * constant_1.CANDLE_DEFAULT_ROW_LENGTH);
                                         result.Data.forEach(function (candle, index) {
-                                            var startIndex = index * 10;
+                                            var startIndex = index * constant_1.CANDLE_DEFAULT_ROW_LENGTH;
                                             var time = candle.time * 1000;
                                             candles[startIndex] = candle.time * 1000;
                                             candles[startIndex + 1] = candle.open;
-                                            candles[startIndex + 2] = candle.open;
-                                            candles[startIndex + 3] = candle.high;
-                                            candles[startIndex + 4] = candle.high;
-                                            candles[startIndex + 5] = candle.low;
-                                            candles[startIndex + 6] = candle.low;
-                                            candles[startIndex + 7] = candle.close;
-                                            candles[startIndex + 8] = candle.close;
-                                            candles[startIndex + 9] = Math.ceil(Math.abs(candle.volumeto - candle.volumefrom)); // TODO: can't be right but places BTC -> ETC -> LTC nice in order for some reason..
-                                            // candles[startIndex + 9] = Math.ceil(Math.abs(candle.volumeto - candle.volumefrom));
+                                            candles[startIndex + 2] = candle.high;
+                                            candles[startIndex + 3] = candle.low;
+                                            candles[startIndex + 4] = candle.close;
+                                            candles[startIndex + 5] = Math.ceil(Math.abs(candle.volumeto - candle.volumefrom)); // TODO: can't be right but places BTC -> ETC -> LTC nice in order for some reason..
                                         });
                                         return [4 /*yield*/, onData(candles)];
                                     case 2:
@@ -311,32 +305,6 @@ var CyrptoCompareApi = /** @class */ (function (_super) {
         if (this._client)
             this._client.kill();
         this._client = null;
-    };
-    CyrptoCompareApi.prototype._normalizeJSON = function (candles) {
-        var i = 0, len = candles.length;
-        for (; i < len; i++)
-            candles[i].time /= 1000;
-        return candles;
-    };
-    CyrptoCompareApi.prototype.normalizeJsonToArray = function (candles) {
-        var i = 0, len = candles.length, rowLength = 10, candle, view = new Float64Array(candles.length * rowLength);
-        for (; i < len; i++) {
-            candle = candles[i];
-            view[i * rowLength] = candle.time / 1000;
-            view[(i * rowLength) + 1] = candle.openBid;
-            view[(i * rowLength) + 2] = candle.openAsk;
-            view[(i * rowLength) + 3] = candle.highBid;
-            view[(i * rowLength) + 4] = candle.highAsk;
-            view[(i * rowLength) + 5] = candle.lowBid;
-            view[(i * rowLength) + 6] = candle.lowAsk;
-            view[(i * rowLength) + 7] = candle.closeBid;
-            view[(i * rowLength) + 8] = candle.closeAsk;
-            view[(i * rowLength) + 9] = candle.volume;
-        }
-        return view;
-    };
-    CyrptoCompareApi.prototype.normalizeTypedArrayToBuffer = function (array) {
-        return new Buffer(array.buffer);
     };
     CyrptoCompareApi.prototype.orderTypeConstantToString = function (type) {
         switch (type) {
@@ -454,4 +422,3 @@ function dataUnpack(data) {
     // displayData(currentPrice[pair], from, tsym, fsym);
 }
 ;
-//# sourceMappingURL=cryptocompare.broker.js.map

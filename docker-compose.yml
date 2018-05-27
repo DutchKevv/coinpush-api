@@ -34,11 +34,13 @@ services:
       - ./_data/db:/data/db
     command: mongod --smallfiles --logpath=/dev/null
   redis:
-    restart: always
-    image: "redis:alpine"
+    restart: unless-stopped
+    image: "redis"
     ports:
-        - 6379
+      - 6379
     container_name: redis
+    volumes: 
+      - ./_data/redis:/data
   gateway:
     restart: unless-stopped
     image: gateway

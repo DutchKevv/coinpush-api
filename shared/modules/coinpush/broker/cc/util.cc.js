@@ -489,4 +489,3 @@ exports.CCC.convertValueToDisplay = function (symbol, value, type, fullNumbers) 
         return prefix + exports.CCC.noExponents((valueSign * valueAbs).toPrecision(decimalsOnSmallNumbers));
     }
 };
-//# sourceMappingURL=util.cc.js.map

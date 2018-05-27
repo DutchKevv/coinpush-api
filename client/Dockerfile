@@ -7,6 +7,7 @@ FROM mhart/alpine-node:10.2.1
 # shared
 WORKDIR /usr/src/app/shared
 COPY /shared .
+RUN npm i
 
 # client
 WORKDIR /usr/src/app/client

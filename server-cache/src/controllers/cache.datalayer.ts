@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as mongoose from 'mongoose';
 import { log } from 'coinpush/util/util.log';
 import { timeFrameSteps } from 'coinpush/util/util.date'
-import { CandleSchema } from '../schemas/candle';
+import { CandleSchema } from '../schemas/candle.schema';
 import { Status } from '../schemas/status.schema';
 import { BulkWriteResult } from 'mongodb';
 
@@ -15,7 +15,7 @@ const READ_COUNT_DEFAULT = 2000;
  */
 export const dataLayer = {
 
-	async read(params: {symbol: string, timeFrame: string, from?: number, until?: number, count?: number | string, fields?: any, toArray?: boolean }): Promise<Array<any>> {
+	async read(params: { symbol: string, timeFrame: string, from?: number, until?: number, count?: number | string, fields?: any, toArray?: boolean }): Promise<Array<Array<Number>>> {
 
 		// symbol required
 		if (!params.symbol || typeof params.symbol !== 'string')
@@ -50,10 +50,9 @@ export const dataLayer = {
 			qs._id['$lt'] = until;
 		}
 
-		const rows = <Array<any>>await model.find({}, {data: 1}).limit(count || 1000).sort({ _id: -1 });
-		// const buffer = Buffer.concat(rows.reverse().map(row => row.data), rows.length * Float64Array.BYTES_PER_ELEMENT * 10);
+		const rows = <Array<any>>await model.find({}, { data: 1 }).limit(count || 500).sort({ _id: -1 });
 
-		return rows;
+		return rows.map(row => row.data);
 		// return params.toArray ? new Float64Array(buffer.buffer, buffer.byteOffset, buffer.length / Float64Array.BYTES_PER_ELEMENT) : buffer;
 	},
 
@@ -65,26 +64,22 @@ export const dataLayer = {
 			model = mongoose.model(collectionName, CandleSchema),
 			bulk = model.collection.initializeOrderedBulkOp(),
 			rowLength = 6, i = 0, len = candles.length;
-		console.log(candles);
+
 		// quick quality check (needs minimum 2 candles)
 		if (candles.length > rowLength)
 			if (candles[0] >= candles[rowLength])
 				throw new Error(`DataLayer - Write: Candle array timestamp needs to be in a forward order ${new Date(candles[0])} / ${new Date(candles[rowLength])}`)
 
-		// log.info('DataLayer', `WRITING ${candles.length / 10} candles to ${collectionName} starting ${new Date(candles[0])} until ${new Date(candles[candles.length - 10])}`);
-
 		for (; i < candles.length;) {
-			const time = Math.trunc(candles[i]);
-			// const data = Buffer.from(<any>candles.slice(i, i += rowLength).buffer);
+			const time = candles[i];
 			bulk.find({ _id: time }).upsert().replaceOne({ $set: { _id: time, data: candles.slice(i, i += rowLength) } });
 		}
 
 		const bulkResult = await bulk.execute();
-
 		const lastCandleTime = candles[candles.length - rowLength];
 		const lastCloseBidPrice = candles[candles.length - 2];
 
-		const result = await Status.update({ collectionName, timeFrame }, { lastSync: lastCandleTime, lastPrice: lastCloseBidPrice });
+		const result = await Status.update({ symbol }, { $set: { lastPrice: lastCloseBidPrice, [`timeFrames.${timeFrame}.lastCandleTime`]: lastCandleTime } });
 
 		if (!result.n)
 			throw new Error(`Status not found! [${symbol}]`);
@@ -97,17 +92,22 @@ export const dataLayer = {
 		const timeFrames = Object.keys(timeFrameSteps);
 		const bulk = Status.collection.initializeUnorderedBulkOp();
 
-		log.info('DataLayer', 'Creating ' + symbols.length * timeFrames.length + ' collections');
+		log.info('DataLayer', 'Creating ' + symbols.length + ' collections');
 
 		for (let i = 0; i < symbols.length; i++) {
-			let symbol = symbols[i];
+			const symbol = symbols[i];
 
 			for (let k = 0; k < timeFrames.length; k++) {
 				let timeFrame = timeFrames[k];
 
-				const collectionName = this.getCollectionName(symbol.name, timeFrame);
-
-				bulk.find({ collectionName }).upsert().updateOne({ $set: { collectionName, broker: symbol.broker, symbol: symbol.name, timeFrame } });
+				bulk.find({ symbol: symbol.name }).upsert().updateOne({
+					$set: {
+						broker: symbol.broker,
+						symbol: symbol.name,
+						[`timeFrames.${timeFrame}.collectionName`]: this.getCollectionName(symbol.name, timeFrame),
+						[`timeFrames.${timeFrame}.timeFrame`]: timeFrame
+					}
+				});
 			}
 		}
 
@@ -115,7 +115,7 @@ export const dataLayer = {
 		if (bulk.length)
 			await bulk.execute();
 
-		log.info('CacheController', `Creating ${symbols.length * timeFrames.length} collections took ${Date.now() - now}ms`);
+		log.info('CacheController', `Creating ${symbols.length} collections took ${Date.now() - now}ms`);
 	},
 
 	getCollectionName(symbol, timeFrame): string {

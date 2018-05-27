@@ -64,7 +64,6 @@ export const app = {
 
 		this.api.use((req, res, next) => {
 			res.header('Access-Control-Allow-Origin', '*');
-			res.header('Access-Control-Allow-Headers', '_id, Authorization, Origin, X-Requested-With, Content-Type, Accept');
 			next();
 		});
 

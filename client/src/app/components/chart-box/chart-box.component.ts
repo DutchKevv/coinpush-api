@@ -7,7 +7,7 @@ import { CacheService } from '../../services/cache.service';
 import { SymbolModel } from "../../models/symbol.model";
 import { EventService } from '../../services/event.service';
 import { BehaviorSubject } from 'rxjs';
-import { CUSTOM_EVENT_TYPE_ALARM, CUSTOM_EVENT_TYPE_PRICE, CUSTOM_EVENT_TYPE_ALARM_NEW } from 'coinpush/constant';
+import { CUSTOM_EVENT_TYPE_ALARM, CUSTOM_EVENT_TYPE_PRICE, CUSTOM_EVENT_TYPE_ALARM_NEW, CANDLE_DEFAULT_ROW_LENGTH } from 'coinpush/constant';
 import { EventModel } from '../../models/event.model';
 
 // for some reason typescript gives all kind of errors when using the @types/node package
@@ -664,24 +664,14 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit {
 		this._chart.series[1].setData([], render, false);
 	}
 
-	private _prepareData(data: any): void {
-		let i = 0, rowLength = 10, length = data.length;
+	private _prepareData(candles: Array<Array<number>>): void {
+		this._data.volume = new Array(candles.length);
+		this._data.candles = candles.reverse();
 
-		this._data.volume = new Array(length / rowLength);
-		this._data.candles = new Array(length / rowLength);
-
-		for (; i < length; i += rowLength) {
-			this._data.candles[i / rowLength] = [
-				data[i],
-				data[i + 1], // open
-				data[i + 3], // high
-				data[i + 5], // low
-				data[i + 7] // close
-			];
-
-			this._data.volume[i / rowLength] = [
-				data[i],
-				data[i + 9] // the volume
+		for (let i = 0, len = candles.length; i < len; i++) {
+			this._data.volume[i] = [
+				this._data.candles[i][0],
+				this._data.candles[i].pop() // the volume
 			];
 		}
 	}
