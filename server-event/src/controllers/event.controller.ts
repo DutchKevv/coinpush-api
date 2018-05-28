@@ -77,6 +77,10 @@ export const eventController = {
 				for (let key in symbols) {
 					let symbol = JSON.parse(symbols[key]);
 
+					// if (symbol.name === 'BTC') {
+					// 	console.log(symbol);
+					// }
+				
 					// HIGH / LOW MUST BE SET (otherwise all alarms trigger)
 					if (!symbol.highM || !symbol.lowM)
 						continue;

@@ -104,7 +104,6 @@ var BrokerMiddleware = /** @class */ (function (_super) {
                         return [4 /*yield*/, this.getSymbols()];
                     case 1:
                         _a._symbols = _b.sent();
-                        // this._symbols = [this._symbols[0]];
                         // remove img url (only needed when building spritesheet in client)
                         this.symbols.forEach(function (symbol) {
                             delete symbol.img;
@@ -169,11 +168,10 @@ var BrokerMiddleware = /** @class */ (function (_super) {
             return this._brokers.oanda.getCandles(symbolName, timeFrame, from, until, count, onData);
         throw new Error('UNKOWN BROKER: ' + JSON.stringify(symbol, null, 2));
     };
-    BrokerMiddleware.prototype.openTickStream = function (symbols, brokerNames) {
+    BrokerMiddleware.prototype.openTickStream = function (brokerNames) {
         var _this = this;
-        if (symbols === void 0) { symbols = this.symbols; }
         if (brokerNames === void 0) { brokerNames = []; }
-        var brokers = this.splitSymbolsToBrokers(symbols);
+        var brokers = this.splitSymbolsToBrokers(this.symbols);
         if (!brokerNames.length || brokerNames.indexOf('oanda') > -1) {
             this._brokers.oanda.on('tick', function (tick) { return _this.emit('tick', tick); });
             this._brokers.oanda.subscribePriceStream(brokers.oanda);
@@ -185,26 +183,16 @@ var BrokerMiddleware = /** @class */ (function (_super) {
             util_log_1.log.info('Cache', 'cryptocompare tick streams active');
         }
     };
+    BrokerMiddleware.prototype.getSymbolsByBroker = function (broker) {
+        return this.symbols.filter(function (symbol) { return symbol.broker === broker; });
+    };
     BrokerMiddleware.prototype.splitSymbolsToBrokers = function (symbols) {
-        var _this = this;
-        var oanda = [];
-        var cc = [];
-        symbols.forEach(function (symbol) {
-            var symbolObj = _this.symbols.find(function (s) { return s.name === symbol; });
-            if (!symbolObj)
-                return;
-            if (symbolObj.broker === constant_1.BROKER_GENERAL_TYPE_CC)
-                cc.push(symbol);
-            else
-                oanda.push(symbol);
-        });
         return {
-            oanda: oanda,
-            cc: cc
+            oanda: symbols.filter(function (symbol) { return symbol.broker === constant_1.BROKER_GENERAL_TYPE_OANDA; }),
+            cc: symbols.filter(function (symbol) { return symbol.broker === constant_1.BROKER_GENERAL_TYPE_CC; })
         };
     };
     BrokerMiddleware.prototype._installBrokerOanda = function () {
-        var _this = this;
         if (this._brokers.oanda) {
             try {
                 this._brokers.oanda.destroy();
@@ -214,11 +202,6 @@ var BrokerMiddleware = /** @class */ (function (_super) {
             }
         }
         this._brokers.oanda = new index_1.OandaApi(config.broker.oanda);
-        // handle tick stream timeout (the used oanda file does not reconnect for some reason)
-        this._brokers.oanda.once('stream-timeout', function () {
-            _this._installBrokerOanda();
-            _this.openTickStream(_this.symbols, ['oanda']);
-        });
         this._brokers.oanda.init();
     };
     BrokerMiddleware.prototype._installBrokerCC = function () {

@@ -15,6 +15,8 @@ let currentPrice = {};
 export default class CyrptoCompareApi extends EventEmitter {
 
     private _socket: any;
+    private _activeSubs: Array<string> = [];
+    private _latestBtcUsd = 0;
 
     public static readonly FAVORITE_SYMBOLS = [
         'EUR_USD',
@@ -29,85 +31,21 @@ export default class CyrptoCompareApi extends EventEmitter {
 
     constructor(public options: any) {
         super();
-    }
 
-    public init() {
-
-
+        this._setupSocketIO();
+        this._socket.emit('SubAdd', { subs: [`5~CCCAGG~BTC~USD`] });
     }
 
     public async testConnection(): Promise<boolean> {
         return Promise.resolve(true);
     }
 
-    public getAccounts(): Promise<any> {
-        return Promise.resolve();
-    }
-
-    public getTransactionHistory(minId: number): Promise<any> {
-        return Promise.resolve();
-    }
-
-    public getOpenOrders(): Promise<any> {
-        return Promise.resolve();
-    }
-
-    public subscribeEventStream(callback: Function) {
-
-        this._client.subscribeEvents(event => callback(event));
-    }
-
-    public unsubscribeEventStream(listener: Function) {
-        this._client.unsubscribeEvents(listener);
-    }
-
-    public subscribePriceStream(symbols: Array<string>): void {
-        this._socket = io.connect('https://streamer.cryptocompare.com/', {
-            reconnectionAttempts: 10000, // avoid having user reconnect manually in order to prevent dead clients after a server restart
-			timeout: 1000, // before connect_error and connect_timeout are emitted.
-        });
-
+    public subscribePriceStream(symbols: Array<any>): void {
         //Format: {SubscriptionId}~{ExchangeName}~{FromSymbol}~{ToSymbol}
         //Use SubscriptionId 0 for TRADE, 2 for CURRENT and 5 for CURRENTAGG
         //For aggregate quote updates use CCCAGG as market
-        const subs = symbols.map(symbol => `5~CCCAGG~${symbol}~USD`);
-
-        this._socket.on("m", (message) => {
-
-            var messageType = message.substring(0, message.indexOf("~"));
-            var res: any = {};
-
-            if (messageType == CCC.STATIC.TYPE.CURRENTAGG) {
-
-                res = CCC.CURRENT.unpack(message);
-
-                if (res.FROMSYMBOL === 'GAS') {
-                    console.log(res);
-                }
-                // gives strange 'last-tick' bug??
-                if (res.LASTMARKET || res.VOLUMEHOUR == 0)
-                    return;
-
-                if (res.PRICE) {
-                    this.emit('tick', {
-                        time: res.LASTUPDATE * 1000,
-                        instrument: res.FROMSYMBOL,
-                        bid: res.PRICE,
-                        ask: res.PRICE,
-                    })
-                }
-
-            }
-        });
-
-        this._socket.on('connect', () => {
-            console.info('CryptoCompare socket connected');
-            this._socket.emit('SubAdd', { subs });
-        });
-
-        this._socket.on("disconnect", (message) => {
-            console.warn('CryptoCompare socket disconnected');
-        });
+        this._activeSubs = symbols.map(symbol => `5~CCCAGG~${symbol.name}~BTC`);
+        this._socket.emit('SubAdd', { subs: this._activeSubs });
     }
 
     public unsubscribePriceStream(instruments) {
@@ -116,7 +54,6 @@ export default class CyrptoCompareApi extends EventEmitter {
     }
 
     public async getSymbols(): Promise<Array<any>> {
-
         try {
             const result = await request({
                 uri: 'https://min-api.cryptocompare.com/data/all/coinlist',
@@ -211,18 +148,6 @@ export default class CyrptoCompareApi extends EventEmitter {
         return priceArr;
     }
 
-    public getOpenPositions() {
-
-    }
-
-    public getOrder(id) {
-
-    }
-
-    public getOrderList(options) {
-
-    }
-
     public placeOrder(options) {
         return new Promise((resolve, reject) => {
             const _options = {
@@ -256,12 +181,7 @@ export default class CyrptoCompareApi extends EventEmitter {
         });
     }
 
-    public updateOrder(id, options) {
-
-    }
-
     public destroy(): void {
-        this.removeAllListeners();
 
         if (this._client)
             this._client.kill();
@@ -292,9 +212,6 @@ export default class CyrptoCompareApi extends EventEmitter {
                 fullResponse: false
             });
 
-            // if (!result || !result.Data)
-            //     throw new Error('empty result!');
-
             return result;
         } catch (error) {
             const calls = await this._getCallsInMinute();
@@ -323,6 +240,56 @@ export default class CyrptoCompareApi extends EventEmitter {
         } catch (error) {
             console.error(error);
         }
+    }
+
+    private _setupSocketIO() {
+        this._socket = io.connect('https://streamer.cryptocompare.com/', {
+            reconnectionAttempts: 10000, // avoid having user reconnect manually in order to prevent dead clients after a server restart
+            timeout: 1000, // before connect_error and connect_timeout are emitted.
+        });
+
+        this._socket.on('connect', () => {
+            log.info('CryptoCompare socket connected');
+            this._socket.emit('SubAdd', { subs: this._activeSubs });
+        });
+
+        this._socket.on("disconnect", (message) => {
+            log.info('CryptoCompare socket disconnected, reconnecting');
+            this._socket.connect();
+        });
+
+        this._socket.on("connect_error", (error) => {
+            log.error('connect error!', error);
+        });
+
+        this._socket.on("m", (message) => {
+
+            const messageType = message.substring(0, message.indexOf("~"));
+            const res = CCC.CURRENT.unpack(message);
+
+            if (res.FROMSYMBOL === 'BTC') {
+                if (res.TOSYMBOL === 'BTC') {
+                    return;
+                }
+                if (res.TOSYMBOL === 'USD') {
+                    this._latestBtcUsd = res.PRICE;
+                }
+            }
+
+            if (this._latestBtcUsd && res.PRICE) {
+                if (!(res.FROMSYMBOL === 'BTC' && res.TOSYMBOL === 'USD')) {
+                    res.PRICE = parseFloat(<any>(res.PRICE * this._latestBtcUsd)).toPrecision(5);
+                }
+
+                this.emit('tick', {
+                    time: res.LASTUPDATE * 1000,
+                    instrument: res.FROMSYMBOL,
+                    bid: res.PRICE
+                });
+            } else {
+                // console.log(res);
+            }
+        });
     }
 }
 

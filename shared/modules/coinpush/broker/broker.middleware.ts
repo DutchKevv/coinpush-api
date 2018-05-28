@@ -46,7 +46,6 @@ export class BrokerMiddleware extends EventEmitter {
 
     public async setSymbols(): Promise<void> {
         this._symbols = await this.getSymbols();
-        // this._symbols = [this._symbols[0]];
 
         // remove img url (only needed when building spritesheet in client)
         this.symbols.forEach(symbol => {
@@ -99,9 +98,9 @@ export class BrokerMiddleware extends EventEmitter {
         throw new Error('UNKOWN BROKER: ' + JSON.stringify(symbol, null, 2));
     }
 
-    public openTickStream(symbols: Array<string> = this.symbols, brokerNames: Array<string> = []): void {
-        const brokers = this.splitSymbolsToBrokers(symbols);
-
+    public openTickStream(brokerNames: Array<string> = []): void {
+        const brokers = this.splitSymbolsToBrokers(this.symbols);
+        
         if (!brokerNames.length || brokerNames.indexOf('oanda') > -1) {
             this._brokers.oanda.on('tick', tick => this.emit('tick', tick));
             this._brokers.oanda.subscribePriceStream(brokers.oanda);
@@ -115,24 +114,14 @@ export class BrokerMiddleware extends EventEmitter {
         }
     }
 
-    public splitSymbolsToBrokers(symbols: Array<string>): { oanda: Array<string>, cc: Array<string> } {
-        const oanda = [];
-        const cc = [];
+    public getSymbolsByBroker(broker: number) {
+        return this.symbols.filter(symbol => symbol.broker === broker);
+    }
 
-        symbols.forEach(symbol => {
-            let symbolObj = this.symbols.find(s => s.name === symbol);
-            if (!symbolObj)
-                return;
-
-            if (symbolObj.broker === BROKER_GENERAL_TYPE_CC)
-                cc.push(symbol);
-            else
-                oanda.push(symbol);
-        });
-
+    public splitSymbolsToBrokers(symbols: Array<any>): { oanda: Array<string>, cc: Array<string> } {
         return {
-            oanda,
-            cc
+            oanda: symbols.filter(symbol => symbol.broker === BROKER_GENERAL_TYPE_OANDA),
+            cc: symbols.filter(symbol => symbol.broker === BROKER_GENERAL_TYPE_CC)
         }
     }
 
@@ -146,13 +135,6 @@ export class BrokerMiddleware extends EventEmitter {
         }
 
         this._brokers.oanda = new OandaApi(config.broker.oanda);
-
-        // handle tick stream timeout (the used oanda file does not reconnect for some reason)
-        this._brokers.oanda.once('stream-timeout', () => {
-            this._installBrokerOanda();
-            this.openTickStream(this.symbols, ['oanda'])
-        });
-
         this._brokers.oanda.init();
     }
 

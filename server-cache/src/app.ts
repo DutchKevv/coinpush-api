@@ -7,6 +7,7 @@ import * as morgan from 'morgan';
 import { cacheController } from './controllers/cache.controller';
 import { symbolController } from './controllers/symbol.controller';
 import { BrokerMiddleware } from 'coinpush/broker';
+import { BROKER_GENERAL_TYPE_OANDA, BROKER_GENERAL_TYPE_CC } from 'coinpush/constant';
 import { pubClient } from 'coinpush/redis';
 import { log } from 'coinpush/util/util.log';
 
@@ -34,24 +35,25 @@ export const app = {
 	async init(): Promise<void> {
 		// database
 		this._connectMongo();
-		// await this._connectMongo();
 
 		// broker
 		this.broker = new BrokerMiddleware();
-		await this.broker.setSymbols()
-		// await this.broker.setLastKnownPrices(); // only needed at start
+		this.broker.on('tick', cacheController.onTick.bind(cacheController));
+		await this.broker.setSymbols();
 
 		// http api
 		this._setupApi();
 
-		// cache + symbols syncing
-		await cacheController.sync(false);
-
-		this._toggleSymbolUpdateInterval(true);
+		// tick to clients
 		this._toggleWebSocketTickInterval(true);
 
-		await this.broker.on('tick', cacheController.onTick.bind(cacheController)).openTickStream(app.broker.symbols.map(symbol => symbol.name));
+		// cache + symbols syncing
+		await Promise.all([
+			cacheController.sync(BROKER_GENERAL_TYPE_OANDA).then(() => this.broker.openTickStream(['oanda'])),
+			cacheController.sync(BROKER_GENERAL_TYPE_CC).then(() => this.broker.openTickStream(['cc']))
+		]);
 
+		this._toggleSymbolUpdateInterval(true);
 	},
 
 	_setupApi(): void {
@@ -109,9 +111,12 @@ export const app = {
 		if (!state)
 			return clearInterval(this._symbolUpdateInterval);
 
-		const timeoutFunc = async function () {
+		const timeoutFunc:any = async function() {
 			try {
-				await cacheController.sync();
+				await Promise.all([
+					cacheController.sync(BROKER_GENERAL_TYPE_OANDA),
+					cacheController.sync(BROKER_GENERAL_TYPE_CC)
+				]);
 			} catch (error) {
 				console.error(error);
 			} finally {

@@ -74,7 +74,7 @@ export const symbolController = {
 		let high = 0;
 		let low = 0;
 		let volume = 0;
-		let last = candles[candles.length - 1];
+		let last = candles[0];
 		
 		for (let i = 0, len = candles.length; i < len; i++) {
 			const candle = candles[i];

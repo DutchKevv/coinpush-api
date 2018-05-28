@@ -14,9 +14,6 @@ node {
         clientBuild()
     }
     stage ('deploy assets to live server') {
-        if (env.BRANCH_NAME == "master") {
-            sh "./publish.sh"
-        }
         dir('static/clients/web') {
             sh 'sshpass -p Bettie123! ssh -o StrictHostKeyChecking=no kewin@coinpush.app rm -rf /home/kewin/Projects/TradeJS/static/clients/web'
             sh 'sshpass -p Bettie123! ssh -o StrictHostKeyChecking=no kewin@coinpush.app mkdir -p /home/kewin/Projects/TradeJS/static/clients/web'

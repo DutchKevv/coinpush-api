@@ -80,6 +80,9 @@
 	<li class="chart-title d-none d-xl-block">
 		{{symbolModel?.options.name}}
 	</li>
+	<li class="d-xl-block">
+		<i class="fa fa-window-close" (click)="onClickClose($event)"></i>
+	</li>
 </ul>
 
 <div class="chart-overlay-error" [ngClass]="{active: hasError === true}">

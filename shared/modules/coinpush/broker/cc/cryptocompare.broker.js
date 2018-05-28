@@ -47,6 +47,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var util_date_1 = require("../../util/util.date");
 var querystring_1 = require("querystring");
+var util_log_1 = require("../../util/util.log");
 var events_1 = require("events");
 var constant_1 = require("../../constant");
 var request = require("requestretry");
@@ -59,11 +60,13 @@ var CyrptoCompareApi = /** @class */ (function (_super) {
     function CyrptoCompareApi(options) {
         var _this = _super.call(this) || this;
         _this.options = options;
+        _this._activeSubs = [];
+        _this._latestBtcUsd = 0;
         _this._client = null;
+        _this._setupSocketIO();
+        _this._socket.emit('SubAdd', { subs: ["5~CCCAGG~BTC~USD"] });
         return _this;
     }
-    CyrptoCompareApi.prototype.init = function () {
-    };
     CyrptoCompareApi.prototype.testConnection = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -71,59 +74,12 @@ var CyrptoCompareApi = /** @class */ (function (_super) {
             });
         });
     };
-    CyrptoCompareApi.prototype.getAccounts = function () {
-        return Promise.resolve();
-    };
-    CyrptoCompareApi.prototype.getTransactionHistory = function (minId) {
-        return Promise.resolve();
-    };
-    CyrptoCompareApi.prototype.getOpenOrders = function () {
-        return Promise.resolve();
-    };
-    CyrptoCompareApi.prototype.subscribeEventStream = function (callback) {
-        this._client.subscribeEvents(function (event) { return callback(event); });
-    };
-    CyrptoCompareApi.prototype.unsubscribeEventStream = function (listener) {
-        this._client.unsubscribeEvents(listener);
-    };
     CyrptoCompareApi.prototype.subscribePriceStream = function (symbols) {
-        var _this = this;
-        this._socket = io.connect('https://streamer.cryptocompare.com/', {
-            reconnectionAttempts: 10000,
-            timeout: 1000,
-        });
         //Format: {SubscriptionId}~{ExchangeName}~{FromSymbol}~{ToSymbol}
         //Use SubscriptionId 0 for TRADE, 2 for CURRENT and 5 for CURRENTAGG
         //For aggregate quote updates use CCCAGG as market
-        var subs = symbols.map(function (symbol) { return "5~CCCAGG~" + symbol + "~USD"; });
-        this._socket.on("m", function (message) {
-            var messageType = message.substring(0, message.indexOf("~"));
-            var res = {};
-            if (messageType == util_cc_1.CCC.STATIC.TYPE.CURRENTAGG) {
-                res = util_cc_1.CCC.CURRENT.unpack(message);
-                if (res.LASTMARKET === 'Yobit')
-                    return;
-                // console.log(res);
-                // console.log(typeof res, res);
-                // dataUnpack(res);
-                // console.log(res);
-                if (res.PRICE) {
-                    _this.emit('tick', {
-                        time: res.LASTUPDATE * 1000,
-                        instrument: res.FROMSYMBOL,
-                        bid: res.PRICE,
-                        ask: res.PRICE,
-                    });
-                }
-            }
-        });
-        this._socket.on('connect', function () {
-            console.info('CryptoCompare socket connected');
-            _this._socket.emit('SubAdd', { subs: subs });
-        });
-        this._socket.on("disconnect", function (message) {
-            console.warn('CryptoCompare socket disconnected');
-        });
+        this._activeSubs = symbols.map(function (symbol) { return "5~CCCAGG~" + symbol.name + "~BTC"; });
+        this._socket.emit('SubAdd', { subs: this._activeSubs });
     };
     CyrptoCompareApi.prototype.unsubscribePriceStream = function (instruments) {
         this._socket.disconnect();
@@ -193,7 +149,7 @@ var CyrptoCompareApi = /** @class */ (function (_super) {
                                     case 0:
                                         chunk = chunks[i];
                                         return [4 /*yield*/, this_1._doRequest(url, {
-                                                limit: 2000,
+                                                limit: count || 400,
                                                 fsym: symbol,
                                                 tsym: 'USD',
                                                 toTs: chunk.until
@@ -262,12 +218,6 @@ var CyrptoCompareApi = /** @class */ (function (_super) {
             });
         });
     };
-    CyrptoCompareApi.prototype.getOpenPositions = function () {
-    };
-    CyrptoCompareApi.prototype.getOrder = function (id) {
-    };
-    CyrptoCompareApi.prototype.getOrderList = function (options) {
-    };
     CyrptoCompareApi.prototype.placeOrder = function (options) {
         var _this = this;
         return new Promise(function (resolve, reject) {
@@ -298,10 +248,7 @@ var CyrptoCompareApi = /** @class */ (function (_super) {
             });
         });
     };
-    CyrptoCompareApi.prototype.updateOrder = function (id, options) {
-    };
     CyrptoCompareApi.prototype.destroy = function () {
-        this.removeAllListeners();
         if (this._client)
             this._client.kill();
         this._client = null;
@@ -336,8 +283,6 @@ var CyrptoCompareApi = /** @class */ (function (_super) {
                             })];
                     case 1:
                         result = _a.sent();
-                        // if (!result || !result.Data)
-                        //     throw new Error('empty result!');
                         return [2 /*return*/, result];
                     case 2:
                         error_2 = _a.sent();
@@ -389,6 +334,49 @@ var CyrptoCompareApi = /** @class */ (function (_super) {
                     case 3: return [2 /*return*/];
                 }
             });
+        });
+    };
+    CyrptoCompareApi.prototype._setupSocketIO = function () {
+        var _this = this;
+        this._socket = io.connect('https://streamer.cryptocompare.com/', {
+            reconnectionAttempts: 10000,
+            timeout: 1000,
+        });
+        this._socket.on('connect', function () {
+            util_log_1.log.info('CryptoCompare socket connected');
+            _this._socket.emit('SubAdd', { subs: _this._activeSubs });
+        });
+        this._socket.on("disconnect", function (message) {
+            util_log_1.log.info('CryptoCompare socket disconnected, reconnecting');
+            _this._socket.connect();
+        });
+        this._socket.on("connect_error", function (error) {
+            util_log_1.log.error('connect error!', error);
+        });
+        this._socket.on("m", function (message) {
+            var messageType = message.substring(0, message.indexOf("~"));
+            var res = util_cc_1.CCC.CURRENT.unpack(message);
+            if (res.FROMSYMBOL === 'BTC') {
+                if (res.TOSYMBOL === 'BTC') {
+                    return;
+                }
+                if (res.TOSYMBOL === 'USD') {
+                    _this._latestBtcUsd = res.PRICE;
+                }
+            }
+            if (_this._latestBtcUsd && res.PRICE) {
+                if (!(res.FROMSYMBOL === 'BTC' && res.TOSYMBOL === 'USD')) {
+                    res.PRICE = parseFloat((res.PRICE * _this._latestBtcUsd)).toPrecision(5);
+                }
+                _this.emit('tick', {
+                    time: res.LASTUPDATE * 1000,
+                    instrument: res.FROMSYMBOL,
+                    bid: res.PRICE
+                });
+            }
+            else {
+                // console.log(res);
+            }
         });
     };
     CyrptoCompareApi.FAVORITE_SYMBOLS = [

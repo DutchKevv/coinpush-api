@@ -58,11 +58,7 @@ export const cacheController = {
 		if (!symbolObj)
 			return log.warn('onTickReceive - symbol not found: ' + tick.instrument);
 
-		this.tickBuffer[tick.instrument] = [tick.time, tick.bid, tick.ask];
-		
-		if (symbolObj.name === 'BTS') {
-			console.log('ONTICK', tick);
-		}
+		this.tickBuffer[tick.instrument] = [tick.time, tick.bid];
 
 		symbolObj.bid = tick.bid;
 		symbolObj.lastTick = tick.time;
@@ -75,26 +71,22 @@ export const cacheController = {
 	 * TODO: Refactor so sync can run continuesly without setInterval
 	 * @param silent 
 	 */
-	async sync(silent: boolean = true): Promise<void> {
+	async sync(broker: number): Promise<void> {
 		const timeFrames = Object.keys(timeFrameSteps);
-		let now = Date.now();
+		const now = Date.now();
+		const symbols = app.broker.getSymbolsByBroker(broker)
 
 		// create collections for all symbols
-		await dataLayer.createCollections(app.broker.symbols);
+		await dataLayer.createCollections(symbols);
 
 		// get all collection statuses
-		let statuses = <Array<any>>await Status.find().lean();
+		let statuses = <Array<any>>await Status.find({ broker: broker }).lean();
 		// let statuses = <Array<any>>await Status.find({ timeFrame: { $in: timeFrames } }).lean();
 
-		const results = await Promise.all([
-			// this._syncByStatuses([statuses.filter(status => status.broker === BROKER_GENERAL_TYPE_OANDA)[0]]), // grab only 1 (for dev)
-			this._syncByStatuses(statuses.filter(status => status.broker === BROKER_GENERAL_TYPE_OANDA)),
-			// this._syncByStatuses([statuses.filter(status => status.broker === BROKER_GENERAL_TYPE_CC)[0]]), // grab only 1 (for dev)
-			// this._syncByStatuses(statuses.filter(status => status.broker === BROKER_GENERAL_TYPE_CC && status.symbol === 'KNC')), // grab only 1 (for dev)
-			this._syncByStatuses(statuses.filter(status => status.broker === BROKER_GENERAL_TYPE_CC)),
-		]);
+		const results = await this._syncByStatuses(statuses);
 
-		log.info('cache', `syncing took ${Date.now() - now}ms (oanda: ${results[0].time - now}ms | CC: ${results[1].time - now}ms)`);
+		log.info('cache', `syncing took ${Date.now() - now}ms`);
+		// log.info('cache', `syncing took ${Date.now() - now}ms (oanda: ${results[0].time - now}ms | CC: ${results[1].time - now}ms)`);
 	},
 
 	/**
@@ -109,7 +101,7 @@ export const cacheController = {
 		const now = Date.now();
 		// TODO: get broker names from somewhere else then hardcoded (constants?)
 		const brokerName = statuses[0].broker === BROKER_GENERAL_TYPE_CC ? 'CryptoCompare' : 'Oanda';
-		
+
 		log.info('cache', `syncing ${statuses.length} collections for broker ${brokerName}`);
 
 		// loop over each symbol
@@ -145,11 +137,11 @@ export const cacheController = {
 				}
 			}
 
-			await symbolController.updateSymbol(status.symbol);
-
-			pubClient.HMSET('symbols', {
-				[status.symbol]: JSON.stringify(app.broker.symbols.find(symbol => symbol.name === status.symbol))
-			});
+			symbolController.updateSymbol(status.symbol).then(() => {
+				return pubClient.HMSET('symbols', {
+					[status.symbol]: JSON.stringify(app.broker.symbols.find(symbol => symbol.name === status.symbol))
+				});
+			}).catch(console.error);
 		}
 
 		return {

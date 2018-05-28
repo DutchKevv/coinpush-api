@@ -176,11 +176,11 @@ export class SymbolListService {
         rowEl.children[1].children[2].innerText = symbol.options.bid;
 
         // changed hour diff
-        rowEl.children[2].children[0].children[0].innerText = symbol.options.changedHAmount + '%';
+        rowEl.children[2].children[0].children[0].innerText = symbol.options.changedHAmount.toFixed(2) + '%';
         rowEl.children[2].children[0].children[0].style.color = symbol.options.changedHAmount > 0 ? COLOR_GREEN : COLOR_RED;
 
         // changed day diff
-        rowEl.children[2].children[0].children[1].innerText = symbol.options.changedDAmount + '%';
+        rowEl.children[2].children[0].children[1].innerText = symbol.options.changedDAmount.toFixed(2) + '%';
         rowEl.children[2].children[0].children[1].style.color = symbol.options.changedDAmount > 0 ? COLOR_GREEN : COLOR_RED;
 
         // high / low

@@ -56,6 +56,8 @@ var OandaApi = /** @class */ (function (_super) {
         var _this = _super.call(this) || this;
         _this.options = options;
         _this._client = null;
+        _this._priceStreamCallback = null;
+        _this._priceStreamSymbols = [];
         return _this;
     }
     OandaApi.prototype.init = function () {
@@ -70,7 +72,8 @@ var OandaApi = /** @class */ (function (_super) {
         });
         this._client.on('stream-timeout', function () {
             try {
-                _this.emit('stream-timeout');
+                _this.unsubscribePriceStream();
+                _this.subscribePriceStream();
             }
             catch (error) {
                 console.log(error);
@@ -133,14 +136,12 @@ var OandaApi = /** @class */ (function (_super) {
         this._client.unsubscribeEvents(listener);
     };
     OandaApi.prototype.subscribePriceStream = function (symbols) {
-        var _this = this;
-        this._client.subscribePrices(this.options.accountId, symbols, function (tick) {
-            _this.emit('tick', tick);
-        });
+        if (symbols === void 0) { symbols = this._priceStreamSymbols; }
+        this._priceStreamSymbols = symbols;
+        this._client.subscribePrices(this.options.accountId, symbols, this._onPriceUpdateCallback, this);
     };
-    OandaApi.prototype.unsubscribePriceStream = function (instruments) {
-        var _this = this;
-        this._client.unsubscribePrices(this.options.accountId, instruments, function (tick) { return _this.emit('tick', tick); });
+    OandaApi.prototype.unsubscribePriceStream = function () {
+        this._client.unsubscribePrices(this.options.accountId, this._priceStreamSymbols, this._onPriceUpdateCallback, this);
     };
     OandaApi.prototype.getSymbols = function () {
         var _this = this;
@@ -194,23 +195,29 @@ var OandaApi = /** @class */ (function (_super) {
                                                 _this._client.getCandles(symbol, chunk.from, chunk.until, timeFrame, chunk.count, function (error, data) { return __awaiter(_this, void 0, void 0, function () {
                                                     var candles_1;
                                                     return __generator(this, function (_a) {
-                                                        if (error)
-                                                            return [2 /*return*/, console.error(error)];
-                                                        if (data.candles && data.candles.length) {
-                                                            candles_1 = new Array(data.candles.length * constant_1.CANDLE_DEFAULT_ROW_LENGTH);
-                                                            data.candles.forEach(function (candle, index) {
-                                                                var startIndex = index * constant_1.CANDLE_DEFAULT_ROW_LENGTH;
-                                                                candles_1[startIndex] = candle.time / 1000;
-                                                                candles_1[startIndex + 1] = candle.openAsk - ((candle.openAsk - candle.openBid) / 2);
-                                                                candles_1[startIndex + 2] = candle.highAsk - ((candle.highAsk - candle.highBid) / 2);
-                                                                candles_1[startIndex + 3] = candle.lowAsk - ((candle.lowAsk - candle.lowBid) / 2);
-                                                                candles_1[startIndex + 4] = candle.closeAsk - ((candle.closeAsk - candle.closeBid) / 2);
-                                                                candles_1[startIndex + 5] = candle.volume;
-                                                            });
-                                                            onData(candles_1);
+                                                        switch (_a.label) {
+                                                            case 0:
+                                                                if (error)
+                                                                    return [2 /*return*/, console.error(error)];
+                                                                if (!(data.candles && data.candles.length)) return [3 /*break*/, 2];
+                                                                candles_1 = new Array(data.candles.length * constant_1.CANDLE_DEFAULT_ROW_LENGTH);
+                                                                data.candles.forEach(function (candle, index) {
+                                                                    var startIndex = index * constant_1.CANDLE_DEFAULT_ROW_LENGTH;
+                                                                    candles_1[startIndex] = candle.time / 1000;
+                                                                    candles_1[startIndex + 1] = candle.openAsk - ((candle.openAsk - candle.openBid) / 2);
+                                                                    candles_1[startIndex + 2] = candle.highAsk - ((candle.highAsk - candle.highBid) / 2);
+                                                                    candles_1[startIndex + 3] = candle.lowAsk - ((candle.lowAsk - candle.lowBid) / 2);
+                                                                    candles_1[startIndex + 4] = candle.closeAsk - ((candle.closeAsk - candle.closeBid) / 2);
+                                                                    candles_1[startIndex + 5] = candle.volume;
+                                                                });
+                                                                return [4 /*yield*/, onData(candles_1)];
+                                                            case 1:
+                                                                _a.sent();
+                                                                _a.label = 2;
+                                                            case 2:
+                                                                resolve();
+                                                                return [2 /*return*/];
                                                         }
-                                                        resolve();
-                                                        return [2 /*return*/];
                                                     });
                                                 }); });
                                             })];
@@ -293,6 +300,9 @@ var OandaApi = /** @class */ (function (_super) {
         if (this._client)
             this._client.kill();
         this._client = null;
+    };
+    OandaApi.prototype._onPriceUpdateCallback = function (tick) {
+        this.emit('tick', tick);
     };
     OandaApi.prototype.orderTypeConstantToString = function (type) {
         switch (type) {

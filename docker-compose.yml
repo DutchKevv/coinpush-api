@@ -73,7 +73,7 @@ services:
       - ./tradejs.config.js:/usr/src/app/tradejs.config.js
       - ./tradejs.config.custom.js:/usr/src/app/tradejs.config.custom.js
       - /usr/src/app/server-cache/node_modules
-      # - ./shared/modules/coinpush:/usr/src/app/shared/modules/coinpush
+      - ./shared/modules/coinpush:/usr/src/app/shared/modules/coinpush
       - /usr/src/app/shared/modules/coinpush/node_modules
     links:
       - redis

@@ -198,13 +198,13 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 
 		const percDiff = (value / this.symbol.options.bid * 100) - 100;
 
-		if (value >= this.symbol.options.bid && percDiff < 1) {
-			return this.symbol.options.bid * (dir > 0 ? 1.01 : 0.99)
-		}
+		// if (value >= this.symbol.options.bid && percDiff < 1) {
+		// 	return this.symbol.options.bid * (dir > 0 ? 1.01 : 0.99)
+		// }
 
-		if (value < this.symbol.options.bid && percDiff > -1) {
-			return this.symbol.options.bid * (dir > 0 ? 1.01 : 0.99)
-		}
+		// if (value < this.symbol.options.bid && percDiff > -1) {
+		// 	return this.symbol.options.bid * (dir > 0 ? 1.01 : 0.99)
+		// }
 
 		return value;
 	}

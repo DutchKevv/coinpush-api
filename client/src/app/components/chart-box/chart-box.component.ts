@@ -189,6 +189,11 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit {
 		this._destroyChart();
 	}
 
+	public onClickClose(event) {
+		this._symbolListService.toggleActive(false, undefined, event.currentTarget.parentNode.parentNode.parentNode, true);
+		this._changeDetectorRef.detectChanges();
+	}
+
 	/**
 	 * 
 	 * @param id 

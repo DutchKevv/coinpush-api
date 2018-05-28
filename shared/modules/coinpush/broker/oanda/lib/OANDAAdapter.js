@@ -224,7 +224,6 @@ OandaAdapter.prototype.subscribePrices = function (accountId, symbols, listener)
 };
 OandaAdapter.prototype.unsubscribePrices = function (symbol, listener, context) {
     this.removeListener('price/' + symbol, listener, context);
-    this.streamPrices();
 };
 // Kills rates streaming keep alive request for account and creates a new one whenever subsciption list changes. Should always be throttled.
 OandaAdapter.prototype._streamPrices = function (accountId) {
@@ -249,6 +248,7 @@ OandaAdapter.prototype._streamPrices = function (accountId) {
     }
     clearTimeout(this.pricesTimeout);
     this.pricesTimeout = setTimeout(this._pricesHeartbeatTimeout.bind(this), 10000);
+    console.log('asdfasfasdfasdf', this.priceSubscriptions);
     this.pricesRequest = httpClient.sendRequest({
         hostname: this.streamHost,
         method: 'GET',
@@ -303,9 +303,7 @@ OandaAdapter.prototype._onPricesData = function (data) {
 };
 OandaAdapter.prototype._pricesHeartbeatTimeout = function () {
     console.warn('[WARN] OandaAdapter: No heartbeat received from prices stream for 10 seconds. Reconnecting.');
-    delete this.lastPriceSubscriptions;
     this.emit('stream-timeout');
-    this._streamPrices();
 };
 OandaAdapter.prototype._candlesJsonStringToArray = function (chunk) {
 };
