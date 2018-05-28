@@ -19,7 +19,6 @@ export class OandaApi extends EventEmitter {
 	public static readonly WRITE_CHUNK_COUNT = 5000;
 
 	private _client = null;
-	private _priceStreamCallback = null;
 	private _priceStreamSymbols = [];
 
 	constructor(public options: any) {
@@ -98,14 +97,16 @@ export class OandaApi extends EventEmitter {
 		this._client.unsubscribeEvents(listener);
 	}
 
-	public subscribePriceStream(symbols: Array<string> = this._priceStreamSymbols): void {
-		this._priceStreamSymbols = symbols;
+	public subscribePriceStream(symbols?: Array<any>): void {
+		if (symbols) {
+			this._priceStreamSymbols = symbols.map(symbol => symbol.name);
+		}
 
-		this._client.subscribePrices(this.options.accountId, symbols, this._onPriceUpdateCallback, this);
+		this._client.subscribePrices(this.options.accountId, this._priceStreamSymbols, tick => this._onPriceUpdateCallback(tick));
 	}
 
 	public unsubscribePriceStream() {
-		this._client.unsubscribePrices(this.options.accountId, this._priceStreamSymbols, this._onPriceUpdateCallback, this);
+		this._client.unsubscribePrices(this.options.accountId, this._priceStreamSymbols);
 	}
 
 	public getSymbols(): Promise<Array<any>> {
@@ -201,18 +202,6 @@ export class OandaApi extends EventEmitter {
 		});
 	}
 
-	public getOpenPositions() {
-
-	}
-
-	public getOrder(id) {
-
-	}
-
-	public getOrderList(options) {
-
-	}
-
 	public placeOrder(options) {
 		return new Promise((resolve, reject) => {
 			const _options = {
@@ -251,7 +240,6 @@ export class OandaApi extends EventEmitter {
 	}
 
 	public destroy(): void {
-		this.removeAllListeners();
 
 		if (this._client)
 			this._client.kill();
@@ -260,6 +248,8 @@ export class OandaApi extends EventEmitter {
 	}
 
 	private _onPriceUpdateCallback(tick) {
+		tick.bid = tick.bid.toPrecision(6);
+
 		this.emit('tick', tick);
 	}
 

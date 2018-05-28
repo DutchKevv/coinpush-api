@@ -357,16 +357,14 @@ var CyrptoCompareApi = /** @class */ (function (_super) {
             var messageType = message.substring(0, message.indexOf("~"));
             var res = util_cc_1.CCC.CURRENT.unpack(message);
             if (res.FROMSYMBOL === 'BTC') {
-                if (res.TOSYMBOL === 'BTC') {
+                if (res.TOSYMBOL === 'BTC')
                     return;
-                }
-                if (res.TOSYMBOL === 'USD') {
+                if (res.TOSYMBOL === 'USD')
                     _this._latestBtcUsd = res.PRICE;
-                }
             }
             if (_this._latestBtcUsd && res.PRICE) {
                 if (!(res.FROMSYMBOL === 'BTC' && res.TOSYMBOL === 'USD')) {
-                    res.PRICE = parseFloat((res.PRICE * _this._latestBtcUsd)).toPrecision(5);
+                    res.PRICE = parseFloat((res.PRICE * _this._latestBtcUsd)).toPrecision(6);
                 }
                 _this.emit('tick', {
                     time: res.LASTUPDATE * 1000,

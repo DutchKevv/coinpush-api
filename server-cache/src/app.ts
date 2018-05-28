@@ -117,6 +117,7 @@ export const app = {
 					cacheController.sync(BROKER_GENERAL_TYPE_OANDA),
 					cacheController.sync(BROKER_GENERAL_TYPE_CC)
 				]);
+				console.log('SYNC DONE!!')
 			} catch (error) {
 				console.error(error);
 			} finally {

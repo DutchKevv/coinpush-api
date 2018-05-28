@@ -114,23 +114,23 @@ export const cacheController = {
 			for (let timeFrameKey in status.timeFrames) {
 				const timeFrameObj = status.timeFrames[timeFrameKey];
 
-				// log.info('cache', `syncing ${status.symbol}: ` + brokerName + ' |  ' + i);
-
 				// only continue if a new bar is there
-				if (timeFrameObj.lastSync) {
-					lastSyncTimestamp = (new Date(timeFrameObj.lastSync)).getTime();
+				if (timeFrameObj.lastCandleTime) {
+					lastSyncTimestamp = timeFrameObj.lastCandleTime
 
 					if (lastSyncTimestamp + timeFrameSteps[timeFrameKey] > now) {
 						continue;
 					}
 				}
 
+				// log.info('cache', `syncing ${status.symbol}: ` + brokerName + ' |  ' + i, new Date(timeFrameObj.lastCandleTime));
+
 				try {
 					await this.fetch({
 						symbol: status.symbol,
 						timeFrame: timeFrameKey,
 						from: lastSyncTimestamp || undefined,
-						count: status.lastSync ? undefined : HISTORY_COUNT_DEFAULT
+						count: status.lastCandleTime ? undefined : HISTORY_COUNT_DEFAULT
 					});
 				} catch (error) {
 					log.error(error);

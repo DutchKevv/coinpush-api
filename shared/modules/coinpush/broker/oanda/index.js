@@ -56,7 +56,6 @@ var OandaApi = /** @class */ (function (_super) {
         var _this = _super.call(this) || this;
         _this.options = options;
         _this._client = null;
-        _this._priceStreamCallback = null;
         _this._priceStreamSymbols = [];
         return _this;
     }
@@ -136,12 +135,14 @@ var OandaApi = /** @class */ (function (_super) {
         this._client.unsubscribeEvents(listener);
     };
     OandaApi.prototype.subscribePriceStream = function (symbols) {
-        if (symbols === void 0) { symbols = this._priceStreamSymbols; }
-        this._priceStreamSymbols = symbols;
-        this._client.subscribePrices(this.options.accountId, symbols, this._onPriceUpdateCallback, this);
+        var _this = this;
+        if (symbols) {
+            this._priceStreamSymbols = symbols.map(function (symbol) { return symbol.name; });
+        }
+        this._client.subscribePrices(this.options.accountId, this._priceStreamSymbols, function (tick) { return _this._onPriceUpdateCallback(tick); });
     };
     OandaApi.prototype.unsubscribePriceStream = function () {
-        this._client.unsubscribePrices(this.options.accountId, this._priceStreamSymbols, this._onPriceUpdateCallback, this);
+        this._client.unsubscribePrices(this.options.accountId, this._priceStreamSymbols);
     };
     OandaApi.prototype.getSymbols = function () {
         var _this = this;
@@ -257,12 +258,6 @@ var OandaApi = /** @class */ (function (_super) {
             });
         });
     };
-    OandaApi.prototype.getOpenPositions = function () {
-    };
-    OandaApi.prototype.getOrder = function (id) {
-    };
-    OandaApi.prototype.getOrderList = function (options) {
-    };
     OandaApi.prototype.placeOrder = function (options) {
         var _this = this;
         return new Promise(function (resolve, reject) {
@@ -296,12 +291,12 @@ var OandaApi = /** @class */ (function (_super) {
     OandaApi.prototype.updateOrder = function (id, options) {
     };
     OandaApi.prototype.destroy = function () {
-        this.removeAllListeners();
         if (this._client)
             this._client.kill();
         this._client = null;
     };
     OandaApi.prototype._onPriceUpdateCallback = function (tick) {
+        tick.bid = tick.bid.toPrecision(6);
         this.emit('tick', tick);
     };
     OandaApi.prototype.orderTypeConstantToString = function (type) {

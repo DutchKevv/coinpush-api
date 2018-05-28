@@ -248,7 +248,6 @@ OandaAdapter.prototype._streamPrices = function (accountId) {
     }
     clearTimeout(this.pricesTimeout);
     this.pricesTimeout = setTimeout(this._pricesHeartbeatTimeout.bind(this), 10000);
-    console.log('asdfasfasdfasdf', this.priceSubscriptions);
     this.pricesRequest = httpClient.sendRequest({
         hostname: this.streamHost,
         method: 'GET',

@@ -268,17 +268,16 @@ export default class CyrptoCompareApi extends EventEmitter {
             const res = CCC.CURRENT.unpack(message);
 
             if (res.FROMSYMBOL === 'BTC') {
-                if (res.TOSYMBOL === 'BTC') {
+                if (res.TOSYMBOL === 'BTC')
                     return;
-                }
-                if (res.TOSYMBOL === 'USD') {
+
+                if (res.TOSYMBOL === 'USD')
                     this._latestBtcUsd = res.PRICE;
-                }
             }
 
             if (this._latestBtcUsd && res.PRICE) {
                 if (!(res.FROMSYMBOL === 'BTC' && res.TOSYMBOL === 'USD')) {
-                    res.PRICE = parseFloat(<any>(res.PRICE * this._latestBtcUsd)).toPrecision(5);
+                    res.PRICE = parseFloat(<any>(res.PRICE * this._latestBtcUsd)).toPrecision(6);
                 }
 
                 this.emit('tick', {
