@@ -206,6 +206,7 @@ var OandaApi = /** @class */ (function (_super) {
                                                                     var startIndex = index * constant_1.CANDLE_DEFAULT_ROW_LENGTH;
                                                                     candles_1[startIndex] = candle.time / 1000;
                                                                     candles_1[startIndex + 1] = candle.openAsk - ((candle.openAsk - candle.openBid) / 2);
+                                                                    // candles[startIndex + 1] = candle.openAsk - ((candle.openAsk - candle.openBid) / 2);
                                                                     candles_1[startIndex + 2] = candle.highAsk - ((candle.highAsk - candle.highBid) / 2);
                                                                     candles_1[startIndex + 3] = candle.lowAsk - ((candle.lowAsk - candle.lowBid) / 2);
                                                                     candles_1[startIndex + 4] = candle.closeAsk - ((candle.closeAsk - candle.closeBid) / 2);
@@ -296,7 +297,7 @@ var OandaApi = /** @class */ (function (_super) {
         this._client = null;
     };
     OandaApi.prototype._onPriceUpdateCallback = function (tick) {
-        tick.bid = tick.bid.toPrecision(6);
+        tick.bid = (tick.ask - (tick.ask - tick.bid) / 2).toPrecision(6);
         this.emit('tick', tick);
     };
     OandaApi.prototype.orderTypeConstantToString = function (type) {

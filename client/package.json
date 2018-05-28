@@ -1,7 +1,7 @@
 {
   "name": "coinpush",
   "displayName": "App",
-  "version": "0.0.24",
+  "version": "0.0.25",
   "description": "CoinPush client",
   "repository": {
     "type": "git",
