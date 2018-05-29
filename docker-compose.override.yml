@@ -4,9 +4,9 @@ services:
   nginx:
     ports:
       - "4000:80"
-    environment:
-      - "ENV=dev"
-    command:  sh -c "envsubst \"`env | awk -F = '{printf \" $$%s\", $$1}'`\" < /etc/nginx/nginx.conf > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"      
+    build:
+      args:
+        RUNNING_ENV: dev        
   mongodb:
     ports:
       - "27017:27017"

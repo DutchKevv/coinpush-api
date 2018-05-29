@@ -13,7 +13,7 @@ export class AlertComponent {
 	@Output() public message$: BehaviorSubject<any> = new BehaviorSubject(null);
 
 	private _timer;
-	private _timeout = 600000;
+	private _timeout = 6000000;
 
 	constructor(
 		private alertService: AlertService,

@@ -24,6 +24,7 @@ services:
       - ./static:/usr/src/app/static
       - ./server-nginx/pages:/usr/src/app/server-nginx/pages
       # - ./server-nginx/config:/usr/src/app/server-nginx/config
+    # command:  sh -c "sed -i \"s/~~RUNNING_ENV_PLACEHOLDER~~/$${RUNNING_ENV}/g\" /etc/nginx/nginx.conf && nginx -g 'daemon off;'"
   mongodb:
     image: mongo:latest
     container_name: "mongodb"
