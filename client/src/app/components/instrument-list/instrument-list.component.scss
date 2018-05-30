@@ -15,16 +15,6 @@
     display: none;
 }
 
-.instrument-list-outer {
-    width: 100%;
-    background: $background-light;
-    font-size: 12px;
-    flex: 1 1 100%;
-    display: flex;
-    overflow: hidden;
-    max-height: 100%;
-}
-
 .instrument-list-header {
 	font-size: 14px;
 	background: $background-th;
@@ -33,82 +23,64 @@
     height: 30px !important;
 
     h4 {
-        margin: 0;
-        padding: 2px !important;
+        &:first-child {
+            padding-left: 8%;
+        }
+
+        &:last-child {
+            margin-left: auto;
+            margin-right: 8%;
+        }
     }
-
-	> div {
-        padding: 0 !important;
-	}
-
-	.col-2 {
-		padding-left: 18px;
-	}
 }
 
 .instrument-list {
     width: 100%;
     overflow: auto;
-    height: 100%;
     -webkit-overflow-scrolling: touch;
-    
-    a {
-        width: 100%;
+
+    li {
+        font-size: 12px;
         height: 50px;
+        padding-top: 10px;
         display: flex;
-        flex-flow: row wrap;
-        flex-shrink: 0;
         border-bottom: 1px solid $border-color-grey;
     }
 
-    .instrument-image {
-        float: left;
-        margin-right: 6px;
-    }
-
-    .instrument-title,
-    .col-1h {
-        line-height: 11px;
+    .instrument-title {
         padding-bottom: 4px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
     }
 
-    .col-bookmark,
-    .col-alert {
-        flex: 0 8%;
-    }
-
     .col-instrument {
-        flex: 0 44%;
-        padding: 10px 0;
+        flex: 0 34%;
     }
 
     .col-changes {
         flex: 0 40%;
-        padding: 10px 0;
     }
 
-    .fa-star,
-    .fa-bell {
+    .fa {
+        flex: 0 8%;
         color: #666;
         font-size: 22px;
-        // width: 10%;
         text-align: center;
-        line-height: 50px;
+        line-height: 28px;
         
         &.active-icon {
 			color: #fff;
 		}
     }
 
+    .instrument-image {
+        margin-right: 10px;
+        width: 30px;
+    }
+
     @media only screen and (min-width : 768px) {
         box-shadow: 2px -2px 6px rgba(0, 0, 0, 0.7) inset;
-
-        .instrument-image {
-            margin-right: 10px;
-        }
 
         .col-bookmark,
         .col-alert {

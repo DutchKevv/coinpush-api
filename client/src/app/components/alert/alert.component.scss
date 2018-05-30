@@ -7,12 +7,13 @@
 
 :host {
 	position: absolute;
-	top: 55px;
-	z-index: 200000;
-	display: flex;
-	left: 0;
-	right: 0;
-	opacity: 1;
+	z-index: 2000;
+	max-width: 50%;
+	// transform: translateX(-100%);
+	bottom: 30px;
+	opacity: 0;
+	animation: alertAnimationIn 1s forwards;
+	display: block;
 
 	@media only screen and (min-width : 768px) {
 		transform: translateX(-50%);
@@ -28,11 +29,10 @@
 .alert {
 	font-weight: bold;
 	text-align: center;
-	padding: 0 20px;
+	padding: 10px 20px;
 	width: 100%;
 	border: none;
 	border-radius: 0;
-	animation: fadeOut 1s 5s forwards;
 
 	@media only screen and (min-width : 768px) {
 		width: auto;
@@ -44,8 +44,7 @@
 	}
 
 	p {
-		line-height: 30px;
-		margin: 0 auto;
+		font-size: 12px;
 	}
 
 	.fa-close {
@@ -67,4 +66,26 @@
 .alert-danger {
 	background-color: #c51d1d;
 	color: $font-color-light;
+}
+
+@keyframes alertAnimationIn {
+	0% {
+		opacity: 0;
+		transform: translateX(-100vw);
+	}
+	100% {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+@keyframes alertAnimationOut {
+	0% {
+		opacity: 1;
+		left: 0;
+	}
+	100% {
+		opacity: 0;
+		left: -100%;
+	}
 }

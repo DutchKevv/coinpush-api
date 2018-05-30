@@ -11,10 +11,8 @@ import { SocketService } from "./services/socket.service";
 declare let window: any;
 declare let navigator: any;
 
-const _originalSize = window.innerWidth + window.innerHeight;
-
 @Component({
-	selector: 'app',
+	selector: 'body',
 	templateUrl: './app.component.html',
 	styleUrls: ['./app.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush
@@ -39,53 +37,53 @@ export class AppComponent implements OnInit {
 	private _timePeriodToExit = 2000;
 
 	/**
-	 * mobile nav menu back press close
+	 * hide banner on keyboard show
+	 * TODO - bullshit
 	 * @param event 
 	 */
 	@HostListener('window:resize', ['$event'])
 	onWindowResize(event) {
-		const size = window.innerWidth + window.innerHeight;
+		if (!app.platform.isApp) return;
 
-		if (app.platform.isApp) {
-			if (_originalSize !== size) {
-				document.body.querySelector('app').classList.remove('app');
-			} else {
-				document.body.querySelector('app').classList.add('app');
-				// app.repositionAds();
-			}
+		const size = window.innerWidth + window.innerHeightååååå;
+
+		if (app.platform.windowW !== window.innerWidth || window.innerHeight !== app.platform.windowH) {
+			document.body.querySelector('app').classList.remove('app');
+		} else {
+			document.body.querySelector('app').classList.add('app');
+			// app.repositionAds();
 		}
 	}
 
 	/**
-	 * mobile nav menu back press close
+	 * mobile nav menu back press close (android)
+	 * TODO - should be done by router events (popstate)
 	 * @param event 
 	 */
 	@HostListener('document:backbutton', ['$event'])
 	onBackButton(event) {
-		this._onBackKeyDown(event);
+		this._onClickMobileBackButton(event);
 		window.history.go(-1);
 	}
 
 	constructor(
-		public http: HttpClient,
 		public userService: UserService,
 		private _eventService: EventService,
 		private _cacheService: CacheService,
 		private _socketService: SocketService) {
-
+		this._cacheService.init(); // cacheService must init before eventService
+		this._eventService.init();
 	}
 
 	ngOnInit() {
-		this._cacheService.init(); // cacheService must init before eventService
-		this._eventService.init();
-		this._socketService.connect();
+		// initialize push messages
+		app.notification.init().catch(console.error);
 
-		if (this.userService.model.options._id) {
-			app.initNotifications().catch(console.error);
-		}
+		// open websocket
+		this._socketService.connect();
 	}
 
-	private _onBackKeyDown(event) {
+	private _onClickMobileBackButton(event) {
 		// TODO - Hack
 		if (!app.platform.isApp || window.location.hash !== '#/symbols')
 			return;

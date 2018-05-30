@@ -37,11 +37,8 @@ import { IndicatorService } from '../../services/indicator.service';
 import { app } from 'core/app';
 import { SymbolListService } from '../../services/symbol-list.service';
 
-const _originalSize = window.innerWidth + window.innerHeight;
-
 const SERIES_MAIN_NAME = 'main';
 const SERIES_VOLUME_NAME = 'volume';
-
 
 /**
  * custom highcharts label element
@@ -96,10 +93,9 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit {
 	private _scrollSpeedMax = 20;
 
 	private _chart: any;
-	private _mouseActive = true;
-	private _changeSubscription;
-	private _eventsSubscribtion;
-	private _activeSymbolSubscribtion;
+	private _priceChangeSub;
+	private _eventsSub;
+	private _activeSymbolSub;
 
 	private _indicatorIdCounter = 0;
 	private _lastFetchSub = null;
@@ -129,16 +125,6 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit {
 			clearTimeout(this._resizeTimeout);
 		}, 500);
 
-		// const size = window.innerWidth + window.innerHeight;
-
-		// if (app.platform.isApp) {
-		// 	if (_originalSize !== size) {
-		// 		this._toggleVisibility(false);
-		// 	} else {
-		// 		this._toggleVisibility(true);
-		// 	}
-		// }
-
 		return false;
 	}
 
@@ -154,29 +140,24 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit {
 	}
 
 	ngAfterViewInit() {
-		this._activeSymbolSubscribtion = this._symbolListService.activeSymbol$.subscribe((symbol: SymbolModel) => {
-			if (symbol) {
-				this.symbolModel = symbol;
+		this._activeSymbolSub = this._symbolListService.activeSymbol$.subscribe((symbolModel: SymbolModel) => {
+			this.symbolModel = symbolModel;
+
+			// toggle visibility
+			this._elementRef.nativeElement.classList.toggle('hidden', !this.symbolModel);
+
+			// re-render if new symbolModel
+			if (this.symbolModel)
 				this.init();
-				this._elementRef.nativeElement.classList.remove('hidden');
-			} else {
-				this._elementRef.nativeElement.classList.add('hidden')
-				this._destroyChart();
-			}
 		});
 
-		
-		this._changeSubscription = this._cacheService.changed$.subscribe(symbols => {
-			if (this.symbolModel && symbols.includes(this.symbolModel.options.name)) {
-				this._onPriceChange(true);
-			}
+		this._priceChangeSub = this._cacheService.changed$.subscribe((symbolModels: Array<SymbolModel>) => {
+			this.symbolModel && symbolModels.includes(this.symbolModel) && this._onPriceChange(true);
 		});
 
-		this._eventsSubscribtion = this._eventService.events$.subscribe(events => {
-			this._updateAlarms(events, true);
-		});
+		this._eventsSub = this._eventService.events$.subscribe((events: Array<EventModel>) => this._updateAlarms(events, true));
 
-		this.chartRef.nativeElement.addEventListener('mousewheel', this.onScroll.bind(this), false);
+		this.chartRef.nativeElement.addEventListener('mousewheel', this.onScroll.bind(this), {passive: true});
 	}
 
 	init() {
@@ -383,9 +364,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit {
 	 * @param event 
 	 */
 	public onScroll(event: MouseWheelEvent): boolean {
-		console.log('scroll!!');
 		event.stopPropagation();
-		event.preventDefault();
 
 		let shift = Math.ceil(this._calculateViewableBars() / this._scrollSpeedStep);
 
@@ -727,13 +706,13 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit {
 		if (this._lastFetchSub && this._lastFetchSub.unsubscribe)
 			this._lastFetchSub.unsubscribe();
 
-		if (this._activeSymbolSubscribtion && this._activeSymbolSubscribtion.unsubscribe)
-			this._activeSymbolSubscribtion.unsubscribe();
+		if (this._activeSymbolSub && this._activeSymbolSub.unsubscribe)
+			this._activeSymbolSub.unsubscribe();
 
-		if (this._changeSubscription && this._changeSubscription.unsubscribe)
-			this._changeSubscription.unsubscribe();
+		if (this._priceChangeSub && this._priceChangeSub.unsubscribe)
+			this._priceChangeSub.unsubscribe();
 
-		if (this._eventsSubscribtion && this._eventsSubscribtion.unsubscribe)
-			this._eventsSubscribtion.unsubscribe();
+		if (this._eventsSub && this._eventsSub.unsubscribe)
+			this._eventsSub.unsubscribe();
 	}
 }

@@ -9,6 +9,7 @@ import { EventModel } from '../models/event.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { map } from 'rxjs/operators';
+import { DateService } from './date.service';
 
 @Injectable({
 	providedIn: 'root',
@@ -21,7 +22,8 @@ export class EventService {
 		private _http: HttpClient,
 		private _alertService: AlertService,
 		private _userService: UserService,
-		private _cacheService: CacheService
+		private _cacheService: CacheService,
+		private _dateService: DateService
 	) { }
 
 	public init() {
@@ -97,7 +99,12 @@ export class EventService {
 			}
 		});
 
-		return this._http.get('/event', { params });
+		return this._http.get('/event', { params }).pipe(map(events => {
+			return events.map(event => {
+				event.triggeredDate = this._dateService.convertToTimePast(event.triggeredDate);
+				return event;
+			})
+		}));
 	}
 
 	/**
@@ -166,7 +173,7 @@ export class EventService {
 	private _initializeEvents() {
 		this.events$.next((app.data.events || []).map(event => new EventModel(
 			event._id,
-			event.createdAt,
+			this._dateService.convertToTimePast(event.createdAt),
 			event.symbol,
 			event.type,
 			event.alarm,

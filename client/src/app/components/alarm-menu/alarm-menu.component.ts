@@ -12,6 +12,9 @@ import { CacheService } from '../../services/cache.service';
 import { AuthenticationService } from '../../services/authenticate.service';
 import { EventModel } from '../../models/event.model';
 import { SymbolListService } from '../../services/symbol-list.service';
+import { DateService } from '../../services/date.service';
+
+import { map } from 'rxjs/operators';
 
 @Pipe({ name: 'alarmMenuActiveSymbolEvent' })
 export class AlarmMenuActiveSymbolEventPipe implements PipeTransform {
@@ -57,6 +60,7 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 		private _authenticationService: AuthenticationService,
 		private _userService: UserService,
 		private _cacheService: CacheService,
+		private _dateService: DateService,
 		private _changeDetectorRef: ChangeDetectorRef,
 		private _router: Router) {
 		// this._changeDetectorRef.detach();
@@ -164,7 +168,7 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 		if (this._symbolListService.activeSymbol) {
 			return this.eventService.events$.getValue().filter(event => event.symbol === this._symbolListService.activeSymbol.options.name);
 		}
-		
+
 		return [];
 	}
 

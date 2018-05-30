@@ -13,9 +13,9 @@ import { map } from 'rxjs/operators';
 })
 export class CacheService {
 
-	@Output() public changed$: EventEmitter<any[]> = new EventEmitter();
-	@Output() public favoritesLength$: BehaviorSubject<number> = new BehaviorSubject(0);
-	@Output() public symbols: Array<SymbolModel> = [];
+	public symbols: Array<SymbolModel> = [];
+	public changed$: EventEmitter<Array<SymbolModel>> = new EventEmitter();
+	public favoritesLength$: BehaviorSubject<number> = new BehaviorSubject(0);
 
 	constructor(
 		private _zone: NgZone,
@@ -27,20 +27,28 @@ export class CacheService {
 	public init() {
 		this._updateSymbols();
 
-		app.on('symbols-update', () => this._updateSymbols());
+		this._socketService.socket.on('ticks', (ticks: any) => {
+			const changedModels = [];
 
-		this._socketService.socket.on('ticks', ticks => {
-			for (let _symbol in ticks) {
-				let symbol = this.getSymbolByName(_symbol);
+			for (let symbolName in ticks) {
+				const symbolModel = this.getSymbolByName(symbolName);
 
-				if (symbol)
-					symbol.tick([ticks[_symbol]]);
+				if (symbolModel) {
+					symbolModel.tick(ticks[symbolName]);
+					changedModels.push(symbolModel);
+				} else {
+					console.warn('symbol not found : ' + symbolName);
+				}
 			}
 
-			this.changed$.next(Object.keys(ticks));
+			this.changed$.next(changedModels);
 		});
 	}
 
+	/**
+	 * 
+	 * @param params 
+	 */
 	public read(params: any): Observable<any> {
 		return this._http.get('/cache', { params: new HttpParams({ fromObject: params }) });
 	}
@@ -57,6 +65,10 @@ export class CacheService {
 		return number.toPrecision(8);
 	}
 
+	/**
+	 * 
+	 * @param symbol 
+	 */
 	public async toggleFavoriteSymbol(symbol: SymbolModel): Promise<boolean> {
 		try {
 			const result = await this._http.post('/favorite', {
@@ -80,31 +92,24 @@ export class CacheService {
 	}
 
 	private _updateSymbols() {
+		for (let key in app.data.symbols) {
+			const symbol = JSON.parse(app.data.symbols[key]);
+			const storedSymbol = this.getSymbolByName(symbol.name);
 
-		this._zone.runOutsideAngular(() => {
+			symbol.iFavorite = this._userService.model.options.favorites.includes(symbol.name);
 
-			for (let key in app.data.symbols) {
-				const symbol = JSON.parse(app.data.symbols[key]);
+			// update
+			if (storedSymbol)
+				Object.assign(storedSymbol.options, symbol);
 
-				const storedSymbol = this.getSymbolByName(symbol.name);
+			// create
+			else
+				this.symbols.push(new SymbolModel(symbol));
+		}
 
-				if (storedSymbol) {
+		this.favoritesLength$.next(this.symbols.filter(symbolModel => symbolModel.options.iFavorite).length);
 
-					Object.assign(storedSymbol.options, symbol);
-
-				} else {
-					symbol.iFavorite = this._userService.model.options.favorites.includes(symbol.name);
-
-					const symbolModel = new SymbolModel(symbol);
-					symbolModel.tick([]);
-					this.symbols.push(symbolModel);
-				}
-			}
-
-			this.favoritesLength$.next(this.symbols.filter(symbolModel => symbolModel.options.iFavorite).length);
-
-			delete app.data.symbols;
-		});
+		delete app.data.symbols;
 	}
 
 	public add(model) {

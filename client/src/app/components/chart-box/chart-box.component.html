@@ -85,7 +85,7 @@
 	</li>
 </ul>
 
-<div class="chart-overlay-error" [ngClass]="{active: hasError === true}">
+<div class="chart-overlay-error" *ngIf="hasError === true">
 	<p>
 		<span class="symbol-img-{{symbolModel.options.name}}" style="margin-right: 10px"></span>
 		<b>

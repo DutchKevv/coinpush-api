@@ -2,7 +2,7 @@ export class EventModel {
     
     constructor(
         public _id: string,
-        public createdAt: Date,
+        public createdAt: Date | string,
         public symbol: string,
         public type: number,
         public alarm: {

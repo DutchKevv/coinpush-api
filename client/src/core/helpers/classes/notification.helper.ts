@@ -18,6 +18,10 @@ export class NotificationHelper {
     }
 
     public async init(): Promise<void> {
+        // only if authenticated
+        if (!app.storage.profileData._id)
+            return;
+
         if (app.platform.isApp) {
             await this._loadApp();
         } else {

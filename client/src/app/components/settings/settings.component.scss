@@ -8,16 +8,20 @@
 @import '../../style/helpers/normalize';
 @import '../../style/variables/variables';
 
-::-webkit-input-placeholder { /* WebKit, Blink, Edge */
-	color:    #000;
-	font-style: italic;
-}
-
 :host {
-	background-color: $background-light2;
-	height: 100%;
-	width: 100%;
 	overflow: auto;
+	display: block;
+
+	height: 100%;
+    padding-top: 40px;
+
+    @media only screen and (min-width : 992px) { 
+        border-left: none;
+    }
+
+    @media screen and (min-width: 768px) {
+        padding-left: 250px;
+    }
 }
 
 nav {

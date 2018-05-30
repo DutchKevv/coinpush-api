@@ -40,7 +40,6 @@ export class FilterIFavoritePipe implements PipeTransform {
 
 export class InstrumentListComponent implements OnInit, OnDestroy {
 
-	@ViewChild('list') listRef: ElementRef;
 	@ViewChild('filter') filterRef: ElementRef;
 
 	public alarmButtonClicked$;
@@ -59,7 +58,8 @@ export class InstrumentListComponent implements OnInit, OnDestroy {
 		private _userService: UserService,
 		private _router: Router,
 		private _route: ActivatedRoute,
-		private _changeDetectorRef: ChangeDetectorRef
+		private _changeDetectorRef: ChangeDetectorRef,
+		private _elementRef: ElementRef
 	) {
 		// this._changeDetectorRef.detach();
 	}
@@ -69,10 +69,10 @@ export class InstrumentListComponent implements OnInit, OnDestroy {
 		this._filterSub = this._applicationRef.components[0].instance.filterClicked$.subscribe(state => this._toggleFilterNav(null, state));
 
 		// update header on selected symbol
-		this._activeSymbolSub = this.symbolListService.activeSymbol$.subscribe(() => this._updateHeaderTitle());
+		this._activeSymbolSub = this.symbolListService.activeSymbol$.subscribe((symbol: SymbolModel) => this._onActiveSymbolChange(symbol));
 
 		// apend list container to component
-		this.listRef.nativeElement.appendChild(this.symbolListService.containerEl);
+		this._elementRef.nativeElement.appendChild(this.symbolListService.containerEl);
 
 		if (app.storage.profileData.chartConfig) {
 			// check if still valid filter (could be old from localstorage)
@@ -269,6 +269,11 @@ export class InstrumentListComponent implements OnInit, OnDestroy {
 		];
 
 		return this.filterGroups;
+	}
+
+	private _onActiveSymbolChange(symbolModel: SymbolModel) {
+		this._updateHeaderTitle();
+		this._elementRef.nativeElement.parentNode.classList.toggle('active-symbol', !!symbolModel)
 	}
 
 	private _updateHeaderTitle() {

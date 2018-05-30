@@ -48,54 +48,10 @@
             border-radius: 50%;
         }
 
-        /* initial preload box */
-
-        #preload-box {
-            background: #222122;
-            color: white;
-            text-align: center;
+        body>.spinner {
             position: absolute;
-            top: 0;
-            bottom: 0;
-            display: flex;
-            flex-flow: column;
-            justify-content: center;
-            /* top: calc(50% - 120px); */
-            left: 0;
-            right: 0;
-            z-index: -100000000;
-            transition: opacity .4s ease;
-            opacity: 1;
-        }
-
-        #preload-box.fade-out {
-            animation: fadeOut .4s linear forwards;
-        }
-
-        #initialProgressBar {
-            border-bottom: 1px solid white;
-            border-top: 1px solid white;
-            width: 100%;
-            background: black;
-            margin-top: 40px;
-            position: relative;
-        }
-
-        #initialProgressBar span {
-            color: white;
-            text-align: center;
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-        }
-
-        #initialProgressBar div {
-            background: #0e474e;
-            width: 0;
-            transition: width .2s ease;
-            box-shadow: 0px 0px 30px rgba(255, 255, 255, 0.8);
+            top: calc(40% - 40px);
+            left: calc(50% - 40px);
         }
 
         .font-awesome-preload-trigger {
@@ -155,15 +111,27 @@
                 opacity: 0;
             }
         }
+
+        chart-overview {
+            padding-top: 40px;
+            height: 100%;
+            position: relative;
+        }
+
+        @media screen and (min-width: 768px) {
+            body>*:last-child {
+                padding-left: 250px;
+            }
+        }
     </style>
 
     <!-- <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script> -->
-    <script>
-        // (adsbygoogle = window.adsbygoogle || []).push({
-        //     google_ad_client: "ca-pub-1181429338292864",
-        //     enable_page_level_ads: true
-        // });
-    </script>
+    <!-- <script>
+        (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-1181429338292864",
+            enable_page_level_ads: true
+        });
+    </script> -->
 </head>
 
 <body>
@@ -173,12 +141,8 @@
         (adsbygoogle = window.adsbygoogle || []).push({});
     </script> -->
 
-    <app>
-        <i class="font-awesome-preload-trigger fa fa-square-o"></i>
-        <div style="position: absolute; top: calc(40% - 40px); left: calc(50% - 40px);">
-            <div class="spinner"></div>
-        </div>
-    </app>
+    <i class="font-awesome-preload-trigger fa fa-square-o"></i>
+    <div class="spinner"></div>
 
     <!-- inject:js:cordova -->
 
@@ -211,12 +175,16 @@
                 isReady$: Promise.resolve(),
                 version: '',
                 isSecure: location.protocol === 'https:',
-                isApp: document.URL.indexOf('http://') === -1 && document.URL.indexOf('https://') === -1,
-                isIos: /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream,
-                // isApp: !!window['_cordovaNative'],
-
-                isLocal: document.URL.indexOf('file://') > -1
+                isApp: document.URL.indexOf('file://') > -1,
+                isIOS: /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream,
+                isTouch: true,
+                windowW: window.innerWidth,
+                windowH: window.innerHeight
             };
+
+            // place after window.platform object init 
+            // so it can use window.platform variables (windowW, windowH) instead of checking agian (prevents 1 reflow)
+            window.platform.windowS = window.platform.windowW + window.platform.windowH;
 
             /**
              * 
@@ -254,7 +222,7 @@
             // special root class
             document.body.querySelector('app').classList.add('app');
 
-            if (window.platform.isIos) {
+            if (window.platform.isIOS) {
                 document.body.querySelector('app').classList.add('ios');
             }
         })();

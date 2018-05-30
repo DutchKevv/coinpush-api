@@ -65,7 +65,7 @@
     z-index: 122;
     top: 40px;
     left: 0;
-    bottom: 0;
+    height: calc(100vh - 40px);
     width: 100%;
     background: $background-light;
     -webkit-overflow-scrolling: touch;

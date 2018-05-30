@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, EventEmitter, Output, ViewChild, ElementRef, HostListener } from "@angular/core";
+import { Component, ChangeDetectionStrategy, EventEmitter, Output, ViewChild, ElementRef, HostListener, OnInit } from "@angular/core";
 import { Subject } from "rxjs";
 import { environment } from "environments/environment";
 import { UserService } from "../../services/user.service";
@@ -15,7 +15,7 @@ declare let navigator: any;
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class NavigationMenuComponent {
+export class NavigationMenuComponent implements OnInit {
 
 	public state: boolean = false;
 	public version = 'v0.0.2-' + (environment.production ? 'prod' : 'dev');
@@ -34,51 +34,31 @@ export class NavigationMenuComponent {
 		return false;
 	}
 
-
-	/**
-	 * mobile nav menu touch swipe
-	 * @param event
-	 */
-	@HostListener('touchstart', ['$event'])
-	onTouchStart(event) {
-		if (!this.state)
-			return;
-
-		this._touchStartX = event.touches[0].clientX;
-	}
-
-	/**
-	 * mobile nav menu touch swipe
-	 * @param event 
-	 */
-	@HostListener('touchmove', ['$event'])
-	onTouchMove(event) {
-		if (!this.state)
-			return;
-
-		const diff = event.touches[0].clientX - this._touchStartX;
-
-		this._updateNavPosition(diff * 2);
-	}
-
-	/**
-	 * mobile nav menu touch swipe
-	 * @param event 
-	 */
-	@HostListener('touchend', ['$event'])
-	onTouchEnd(event) {
-		if (!this.state)
-			return;
-
-		this._touchStartX = 0;
-
-		this.toggleNav(this._navBarPosition > -(this._navBarWidth / 2));
-	}
-
 	constructor(
 		public userService: UserService,
 		public authenticationService: AuthenticationService,
 		private _elementRf: ElementRef) {
+	}
+
+	ngOnInit() {
+		this._elementRf.nativeElement.addEventListener('touchstart', (event) => {
+			if (this.state)
+				this._touchStartX = event.touches[0].clientX;
+		}, { passive: true });
+
+		this._elementRf.nativeElement.addEventListener('touchmove', (event) => {
+			if (this.state) {
+				const diff = event.touches[0].clientX - this._touchStartX;
+				this._updateNavPosition(diff * 2);
+			}
+		}, { passive: true });
+
+		this._elementRf.nativeElement.addEventListener('touchend', (event) => {
+			if (this.state) {
+				this._touchStartX = 0;
+				this.toggleNav(this._navBarPosition > -(this._navBarWidth / 2));
+			}
+		}, { passive: true });
 	}
 
 	public toggleNav(state?: boolean) {

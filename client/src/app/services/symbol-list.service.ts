@@ -16,7 +16,7 @@ export class SymbolListService {
     public activeSymbol$: BehaviorSubject<SymbolModel> = new BehaviorSubject(null);
     public alarmButtonClicked$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
-    public containerEl: any = document.createElement('div');;
+    public containerEl: any = null;
     public isBuild = false;
 
     private _priceChangeSub;
@@ -29,30 +29,41 @@ export class SymbolListService {
         private _eventService: EventService,
         private _userService: UserService
     ) {
-        this._priceChangeSub = this._cacheService.changed$.subscribe(changedSymbols => this._onPriceChange(changedSymbols));
-        this._eventsChangeSub = this._eventService.events$.subscribe(changedSymbols => this._onEventsChange(changedSymbols));
+        this.init();
+    }
+
+    public init() {
+        // create container
+        this.containerEl = document.createElement('ul');
+        this.containerEl.className = 'instrument-list';
+
+        // add header
+        this.containerEl.innerHTML = _rowHeaderHTML;
+
+        // add onClick
+        this.containerEl.addEventListener('click', (event: PointerEvent) => this._onClickContainer(event), { passive: true });
+
+        // listen for events (prices, alarms)
+        this._priceChangeSub = this._cacheService.changed$.subscribe((changedSymbols: Array<SymbolModel>) => this._onPriceChange(changedSymbols));
+        this._eventsChangeSub = this._eventService.events$.subscribe((changedEvents: Array<EventModel>) => this._onEventsChange(changedEvents));
     }
 
     public scrollToTop(): void {
-        this.containerEl.parentNode.scrollTop = 0;
+        this.containerEl.scrollTop = 0;
     }
 
     /**
      * 
      * @param el 
+     * @param symbolModel 
      */
     public scrollIntoView(el?: any, symbolModel?: SymbolModel): void {
-		if (!el && !symbolModel) {
-			return console.warn('no element or symbolModel given');
-		}
-
 		const rect = el.getBoundingClientRect();
-		const isInView = (rect.top >= 0 && rect.left >= 0 && rect.bottom <= (el.parentNode.parentNode.offsetHeight + el.offsetHeight));
+		const isInView = (rect.top >= 0 && rect.left >= 0 && rect.bottom <= (el.parentNode.offsetHeight + el.offsetHeight));
 
-		if (!isInView) {
-			el.parentNode.parentNode.scrollTop = el.offsetTop - el.offsetHeight;
-		}
-	}
+		if (!isInView)
+			el.parentNode.scrollTop = el.offsetTop - el.offsetHeight;
+    }
 
     /**
      * 
@@ -61,33 +72,34 @@ export class SymbolListService {
      * @param rowEl 
      * @param emit 
      */
-    public toggleActive(state: boolean, symbol?: SymbolModel, rowEl?, emit: boolean = false): boolean {
-        rowEl = (rowEl || this._findRowByModel(symbol));
+    public toggleActive(state: boolean, symbol?: SymbolModel, rowEl?: HTMLElement, emit: boolean = false): boolean {
+        rowEl = rowEl || this._findRowByModel(symbol);
 
-        // remove [active] class from all rows
-        for (let i = 0, len = this.containerEl.children.length; i < len; i++)
-            if (rowEl !== this.containerEl.children[i])
-                this.containerEl.children[i].className = '';
+        // remove 'active' class from previous active row
+        if (this.activeSymbol) {
+            const activeRow = this._findRowByModel(this.activeSymbol);
+            activeRow && activeRow.classList.remove('active');
+        }
 
-        
-        // set [active] on selected row    
+        // add 'active' class to given row
         if (rowEl) {
-            state = typeof state === 'boolean' ? state : !rowEl.classList.contains('active');    
-            rowEl.classList.toggle('active', state);
+            state = typeof state === 'boolean' ? state : this.activeSymbol !== rowEl['data'].symbol;
 
             if (state) {
-                requestAnimationFrame(() => {
-                    setTimeout(() => this.scrollIntoView(rowEl), 0);
-                });
+                rowEl.classList.add('active')
+                requestAnimationFrame(() => setTimeout(() => this.scrollIntoView(rowEl), 0));
             }
-        } else {
+        }
+
+        // no row found, so force state to false
+        else {
             state = false;
         }
 
-        this.activeSymbol = state && rowEl ? rowEl.data.symbol : null;
+        this.activeSymbol = state ? rowEl['data'].symbol : null;
 
         if (emit) {
-            this.activeSymbol$.next(this.activeSymbol);
+            requestAnimationFrame(() => this.activeSymbol$.next(this.activeSymbol));
         }
         
         return state;
@@ -99,61 +111,66 @@ export class SymbolListService {
      * @param rowEl 
      * @param sendToServer 
      */
-    public toggleFavorite(symbol?: SymbolModel, rowEl?, sendToServer: boolean = false): Promise<boolean> {
+    public toggleFavorite(symbolModel?: SymbolModel, rowEl?: HTMLElement, sendToServer: boolean = false): Promise<boolean> {
 		if (sendToServer && !this._userService.model.options._id) {
 			this._authenticationService.showLoginRegisterPopup();
-			return;
+            return Promise.resolve(false);
 		}
 
-        (rowEl || this._findRowByModel(symbol)).children[0].classList.toggle('active-icon', !symbol.options.iFavorite);
+        (rowEl || this._findRowByModel(symbolModel)).children[0].classList.toggle('active-icon', !symbolModel.options.iFavorite);
 
-        if (sendToServer) {
-            return this._cacheService.toggleFavoriteSymbol(symbol);
+        if (sendToServer)
+            return this._cacheService.toggleFavoriteSymbol(symbolModel);
+        else
+            return Promise.resolve(symbolModel.options.iFavorite);
         }
-	}
 
     /**
      * 
      * @param symbols 
+     * @param forceRebuild 
      */
-    public build(symbols: Array<SymbolModel>, forceRebuild = false): void {
-        if (this.isBuild && !forceRebuild)
-            return;
+    public build(symbolModels: Array<SymbolModel>, forceRebuild: boolean = false): void {
+        // use cached list
+        if (this.isBuild && !forceRebuild) return;
 
-        this._clearContainer();
+        // delete all current rows
+        this._clear();
 
+        // get events
         const events = this._eventService.events$.getValue();
         
-        symbols.forEach(symbol => {
-            const rowEl: any = <HTMLElement>_rowEl.cloneNode(true);
-            rowEl.data = {
-                symbol
+        symbolModels.forEach((symbolModel: SymbolModel) => {
+            const rowEl: HTMLElement = <HTMLElement>_rowEl.cloneNode(true);
+            rowEl['data'] = {
+                symbol: symbolModel
             };
 
-            rowEl.onclick = this._onClick.bind(this);
-
             // static values
-            rowEl.children[1].children[0].className += ' symbol-img-' + symbol.options.name; // img
-            rowEl.children[1].children[1].innerText = symbol.options.displayName; // name
+            rowEl.children[1].className += ' symbol-img-' + symbolModel.options.name; // img
+            rowEl.children[2].children[0]['innerText'] = symbolModel.options.displayName; // name
 
-            // favorite
-            if (symbol.options.iFavorite) {
+            // favorite state
+            if (symbolModel.options.iFavorite) {
                 rowEl.children[0].className += ' active-icon';
             }
 
-            // alarm
-            if (events.some(event => event.symbol === symbol.options.name)) {
-                rowEl.children[3].className += ' active-icon';
+            // alarm state
+            if (events.some(event => event.symbol === symbolModel.options.name)) {
+                rowEl.children[4].className += ' active-icon';
             }
            
-            this._updatePrice(symbol, rowEl);
+            // current prices
+            this._updatePrice(symbolModel, rowEl);
 
+            // add to container
             this.containerEl.appendChild(rowEl);
         });
 
         this.isBuild = true;
 
-        this.scrollToTop();
+        // scroll back to top after re-build
+        // this.scrollToTop();
     }
 
     /**
@@ -161,40 +178,32 @@ export class SymbolListService {
      * @param symbol 
      * @param rowEl 
      */
-    private _updatePrice(symbol: SymbolModel, rowEl?) {
+    private _updatePrice(symbol: SymbolModel, rowEl?: HTMLElement) {
         rowEl = rowEl || this._findRowByModel(symbol);
 
-        // change only on price change
-        if (rowEl.data.lastPrice === symbol.options.bid) {
-            return;
-        }
-
-        // store new last price
-        rowEl.data.lastPrice = symbol.options.bid;
-
         // price
-        rowEl.children[1].children[2].innerText = symbol.options.bid;
+        rowEl.children[2].children[1]['innerText'] = symbol.options.bid;
 
-        // changed hour diff
-        rowEl.children[2].children[0].children[0].innerText = symbol.options.changedHAmount.toFixed(2) + '%';
-        rowEl.children[2].children[0].children[0].style.color = symbol.options.changedHAmount > 0 ? COLOR_GREEN : COLOR_RED;
+        // changed 1 hour diff
+        rowEl.children[3].children[0].children[0]['innerText'] = symbol.options.changedHAmount.toFixed(2) + '%';
+        rowEl.children[3].children[0].children[0]['style'].color = symbol.options.changedHAmount > 0 ? COLOR_GREEN : COLOR_RED;
 
-        // changed day diff
-        rowEl.children[2].children[0].children[1].innerText = symbol.options.changedDAmount.toFixed(2) + '%';
-        rowEl.children[2].children[0].children[1].style.color = symbol.options.changedDAmount > 0 ? COLOR_GREEN : COLOR_RED;
+        // changed 24 hour diff
+        rowEl.children[3].children[0].children[1]['innerText'] = symbol.options.changedDAmount.toFixed(2) + '%';
+        rowEl.children[3].children[0].children[1]['style'].color = symbol.options.changedDAmount > 0 ? COLOR_GREEN : COLOR_RED;
 
         // high / low
-        rowEl.children[2].children[1].children[0].innerText = symbol.options.highD + ' | ' + symbol.options.lowD;
+        rowEl.children[3].children[1]['innerText'] = symbol.options.highD + ' | ' + symbol.options.lowD;
     }
 
     /**
-     * 
+     * toggle alarm icon
      * @param events 
      */
     private _onEventsChange(events: Array<EventModel>): void {
-        for (let i = 0, len = this.containerEl.children.length; i < len; i++) {
+        for (let i = 1, len = this.containerEl.children.length; i < len; i++) {
             const rowEl = this.containerEl.children[i];
-            rowEl.children[3].classList.toggle('active-icon', rowEl.data.symbol.options.iAlarm);
+            rowEl.children[4].classList.toggle('active-icon', rowEl.data.symbol.options.iAlarm);
         }
     }
 
@@ -202,39 +211,40 @@ export class SymbolListService {
      * 
      * @param event 
      */
-    private _onClick(event): void {
-        event.preventDefault();
+    private _onClickContainer(event: PointerEvent): void {
+        // check if user clicked empty (container) space
+        if (event.target === event.currentTarget) return;
 
-        // favorite button
-        if (event.target.classList.contains('fa-star')) {
-            this.toggleFavorite(event.currentTarget.data.symbol, event.currentTarget, true);
-        }
+        // get row element
+        let rowEl = <HTMLElement>event.target;
+        while (!rowEl['data']) rowEl = <HTMLElement>rowEl.parentNode;
 
-        // alarm button
-        else if (event.target.classList.contains('fa-bell')) {
-            this.toggleActive(true, undefined, event.currentTarget, true);
+        // favorite
+        if ((<HTMLElement>event.target).classList.contains('fa-star'))
+            this.toggleFavorite(rowEl['data'].symbol, rowEl, true);
+
+        // alarm
+        else if ((<HTMLElement>event.target).classList.contains('fa-bell')) {
+            this.toggleActive(true, rowEl['data'].symbol, rowEl, true);
             this.alarmButtonClicked$.next(true);
         }
 
-        // row clicked
-        else {
-            this.toggleActive(undefined, undefined, event.currentTarget, true);
-        }
+        // row
+        else
+            this.toggleActive(undefined, rowEl['data'].symbol, rowEl, true);
     }
 
     /**
      * 
      * @param symbolNames 
      */
-    private _onPriceChange(symbolNames: Array<string>): void {
+    private _onPriceChange(symbolModels: Array<SymbolModel>): void {
         this._zone.runOutsideAngular(() => {
-            for (let i = 0, len = symbolNames.length; i < len; i++) {
-                const symbolName = symbolNames[i];
-                const symbolRow = this._findRowByName(symbolName);
+            for (let i = 1, len = symbolModels.length; i < len; ++i) {
+                const rowEl = this._findRowByModel(symbolModels[i]);
     
-                if (symbolRow) {
-                    this._updatePrice(symbolRow.data.symbol, symbolRow);
-                } 
+                if (rowEl)
+                    this._updatePrice(rowEl['data'].symbol, rowEl);
             }
         });
     }
@@ -243,28 +253,26 @@ export class SymbolListService {
      * 
      * @param symbol 
      */
-    private _findRowByModel(symbol: SymbolModel): any {
-        for (let i = 0, len = this.containerEl.children.length; i < len; i++) {
+    private _findRowByModel(symbol: SymbolModel): HTMLElement {
+        for (let i = 1, len = this.containerEl.children.length; i < len; ++i)
             if (this.containerEl.children[i].data.symbol === symbol)
                 return this.containerEl.children[i];
         }
-    }
 
     /**
      * 
      * @param name 
      */
-    private _findRowByName(name: string): any {
-        for (let i = 0, len = this.containerEl.children.length; i < len; i++) {
+    private _findRowByName(name: string): HTMLElement {
+        for (let i = 1, len = this.containerEl.children.length; i < len; i++) {
             if (this.containerEl.children[i].data.symbol.options.name === name)
                 return this.containerEl.children[i];
         }
     }
     
-    private _clearContainer(): void {
-        while (this.containerEl.firstChild) {
-            this.containerEl.removeChild(this.containerEl.firstChild);
-        }
+    private _clear(): void {
+        while (this.containerEl.children.length > 1)
+            this.containerEl.removeChild(this.containerEl.children[1]);
     }
 
     ngOnDestroy() {
@@ -287,31 +295,29 @@ const COLOR_GREEN = '#38cc38';
  * row 
  */
 const _rowHTML = `
-    <i class="fa fa-star col-bookmark"></i>
+    <i class="fa fa-star"></i>
+    <span class="instrument-image"></span>
     <div class="col-instrument">
-        <span class="instrument-image"></span>
         <p class="instrument-title">dd</p>
-        <span>bid</span>
+        <span></span>
     </div>
     <div class="col-changes">
-        <div class="col-1h">
-            <span class="changed-amount">
-                12
-            </span>
-            <span class="changed-amount">
-                12
-            </span>
-        </div>
         <div>
-            <span class="value-bid">
-                <i class="fa fa-exchange"></i>
-            </span>
+            <span></span>
+            <span></span>
         </div>
+        <div></div>
     </div>
-    <i class="fa fa-bell col-alert"></i>
+    <i class="fa fa-bell"></i>
 `;
-const _rowEl = document.createElement('a');
+const _rowEl = document.createElement('li');
 _rowEl.innerHTML = _rowHTML;
+
+const _rowHeaderHTML = `
+<li class="instrument-list-header">
+    <h4 class="col-instrument">Instrument Price</h4>
+    <h4 class="col-changes">1h / 24h</h4>
+</li>`
 
 function number_format(number, decimals, dec_point, thousands_sep) {
     var n = !isFinite(+number) ? 0 : +number,

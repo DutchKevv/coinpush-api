@@ -5,9 +5,10 @@
 @import 'style/helpers/normalize';
 
 :host {
-    display: flex;
+    // display: flex;
+    display: block;
     height: 100%;
-    width: 100%;
+    // width: 100%;
 
     &.app {
         position: relative;
@@ -17,14 +18,14 @@
             padding-bottom: calc(env(safe-area-inset-bottom) + 80px);
         }
     }
+
+    > * {
+       
+    }
 }
 
-.main-container {
-    flex: 1;
-    display: flex;
-    flex-flow: column;
-    position: relative;
-    overflow: hidden;
+router-outlet + * {
+   
 }
 
 .navigation-menu-overlay {

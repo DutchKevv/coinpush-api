@@ -1,16 +1,12 @@
 <app-alert></app-alert>
 
 <app-navigation-menu #nav></app-navigation-menu>
-
 <div (click)="header.navClicked$.emit(false)" class="navigation-menu-overlay" *ngIf="nav.state"></div>
 
-<main class="main-container">
+<app-header (navClicked$)="nav.toggleNav($event)" (filterClicked$)="filterClicked$.next($event)" [titleText$]="titleText$" #header></app-header>
 
-    <app-header (navClicked$)="nav.toggleNav($event)" (filterClicked$)="filterClicked$.next($event)" [titleText$]="titleText$" #header></app-header>
-    <!-- <div *ngIf="showBrowserAds" style="margin: 0 auto; border: 1px solid #5d5c5c;">
-        <ins class="adsbygoogle" style="display:inline-block;width:468px;height:60px" data-ad-client="ca-pub-1181429338292864" data-ad-slot="5593141995"></ins>
-    </div> -->
+<router-outlet class="main-container"></router-outlet>
 
-    <!-- page -->
-    <router-outlet></router-outlet>
-</main>
+<!-- <main >
+
+</main> -->

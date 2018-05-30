@@ -142,10 +142,6 @@ export class App extends MicroEvent {
         ]);
     }
 
-    public initNotifications(): Promise<void> {
-        return this.notification.init();
-    }
-
     private _waitUntilAllScriptsLoaded() {
         return new Promise((resolve, reject) => {
             const estimatedTime = (Date.now() - this.platform.startTime.getTime()) * 2.5;

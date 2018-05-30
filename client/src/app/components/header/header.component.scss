@@ -9,7 +9,11 @@
 $header-icon-padding-x: 8px;
 
 :host {
-    width: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 2;
     padding: 0;
     display: flex;
     border-bottom: 1px solid $border-color-grey;
@@ -17,7 +21,6 @@ $header-icon-padding-x: 8px;
     height: 40px;
     background: black;
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.4);
-	flex-shrink: 0;
 	
 	&.searchOpen {
 		.fa-filter,
@@ -30,6 +33,10 @@ $header-icon-padding-x: 8px;
 			display: block;
 		}
 	}
+
+	@media only screen and (min-width : 768px) {
+		left: 250px;
+	} 
 }
 
 .header-title {
@@ -136,7 +143,7 @@ $header-icon-padding-x: 8px;
 	position: absolute;
 	z-index: 122;
 	top: 40px;
-	bottom: 0;
+	height: calc(100vh - 40px);
 	left: 0;
 	width: 100%;
 	background: $background-light;
@@ -187,7 +194,7 @@ $header-icon-padding-x: 8px;
 @media only screen and (min-width : 768px) {
 	
 	:host {
-		background: transparent;
+		background: $background-light;
 		text-align: center;
 	}
 
@@ -196,7 +203,7 @@ $header-icon-padding-x: 8px;
 		width: 100%;
 		position: relative;
 		width: 400px;
-		left: calc(50% - 230px);
+		left: calc(50% - 100px - 250px);
 	}
 
 	span {
