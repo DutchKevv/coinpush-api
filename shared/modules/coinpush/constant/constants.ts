@@ -1,6 +1,13 @@
 export const
 
 	/**
+	 * CLIENT
+	 */
+
+	WINDOW_SIZE_MAX_MOBILE = 768,
+	WINDOW_SIZE_MAX_TABLET = 992,
+
+	/**
 	 * SYSTEM
 	 */
 	SYSTEM_STATE_BOOTING = -1,

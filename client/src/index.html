@@ -76,8 +76,8 @@
             border: 12px solid #4c4c4c;
             border-top: 12px solid #228b07;
             border-radius: 50%;
-            width: 60px;
-            height: 60px;
+            width: 40px;
+            height: 40px;
             opacity: 0;
             animation: spin 2s linear infinite, fade-in .8s linear .5s forwards;
         }
@@ -88,15 +88,6 @@
             }
             100% {
                 transform: rotate(360deg);
-            }
-        }
-
-        @keyframes fade-in {
-            0% {
-                opacity: 0;
-            }
-            100% {
-                opacity: 1;
             }
         }
 
@@ -185,6 +176,11 @@
             // place after window.platform object init 
             // so it can use window.platform variables (windowW, windowH) instead of checking agian (prevents 1 reflow)
             window.platform.windowS = window.platform.windowW + window.platform.windowH;
+
+            window.addEventListener('resize', () => {
+                app.platform.windowW = window.innerWidth,
+                app.platform.windowH = window.innerHeight
+            }, {passive: true});
 
             /**
              * 

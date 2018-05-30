@@ -1,8 +1,5 @@
 FROM mhart/alpine-node:10.2.1
 
-WORKDIR /usr/src/app/shared/
-COPY /shared .
-
 # shared
 WORKDIR /usr/src/app/shared/modules/coinpush
 COPY /shared/modules/coinpush .

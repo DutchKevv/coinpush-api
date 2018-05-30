@@ -7,7 +7,7 @@ import { CacheService } from '../../services/cache.service';
 import { SymbolModel } from "../../models/symbol.model";
 import { EventService } from '../../services/event.service';
 import { BehaviorSubject } from 'rxjs';
-import { CUSTOM_EVENT_TYPE_ALARM, CUSTOM_EVENT_TYPE_PRICE, CUSTOM_EVENT_TYPE_ALARM_NEW, CANDLE_DEFAULT_ROW_LENGTH } from 'coinpush/constant';
+import { CUSTOM_EVENT_TYPE_ALARM, CUSTOM_EVENT_TYPE_PRICE, CUSTOM_EVENT_TYPE_ALARM_NEW, CANDLE_DEFAULT_ROW_LENGTH, WINDOW_SIZE_MAX_MOBILE } from 'coinpush/constant';
 import { EventModel } from '../../models/event.model';
 
 // for some reason typescript gives all kind of errors when using the @types/node package
@@ -75,9 +75,11 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit {
 	// merge defaults with custom config
 	public config = Object.assign({
 		zoom: app.platform.isApp ? 2 : 1,
-		graphType: app.platform.isApp ? 'line' : 'candlestick',
+		graphType: app.platform.windowW < WINDOW_SIZE_MAX_MOBILE ? 'line' : 'candlestick',
 		timeFrame: 'H1'
-	}, app.storage.profileData.chartConfig || {});
+	}, app.storage.profileData.chartConfig || {}, {
+		graphType: app.platform.windowW < WINDOW_SIZE_MAX_MOBILE ? 'line' : 'candlestick',
+	});
 
 	// chart data
 	private _data = {
@@ -107,7 +109,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit {
 	 * @param event 
 	 */
 	@HostListener('window:resize', ['$event'])
-	onPopState(event) {
+	onResize(event) {
 		this._toggleVisibility(false);
 		this._toggleLoading(true);
 
@@ -117,6 +119,9 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit {
 
 		this._resizeTimeout = setTimeout(() => {
 			if (this._chart) {
+				if (app.platform.windowW < WINDOW_SIZE_MAX_MOBILE && this.config.graphType !== 'line')
+					this.changeGraphType('line', false);
+
 				this._chart.reflow();
 			}
 			this._toggleVisibility(true);
@@ -124,6 +129,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit {
 
 			clearTimeout(this._resizeTimeout);
 		}, 500);
+		console.log(WINDOW_SIZE_MAX_MOBILE);
 
 		return false;
 	}
@@ -157,7 +163,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit {
 
 		this._eventsSub = this._eventService.events$.subscribe((events: Array<EventModel>) => this._updateAlarms(events, true));
 
-		this.chartRef.nativeElement.addEventListener('mousewheel', this.onScroll.bind(this), {passive: true});
+		this.chartRef.nativeElement.addEventListener('mousewheel', this.onScroll.bind(this), { passive: true });
 	}
 
 	init() {
@@ -512,17 +518,17 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit {
 				offset = minOffset;
 
 			this._scrollOffset = offset;
-			
+
 			let firstBar = (data[data.length - viewable - offset] || data[0]),
 				lastBar = data[data.length - 1 - offset] || data[data.length - 1];
 
 			if (!firstBar || !lastBar)
 				return;
 
-				return {
-					min: firstBar[0],
-					max: lastBar[0]
-				}
+			return {
+				min: firstBar[0],
+				max: lastBar[0]
+			}
 		});
 	}
 
@@ -605,7 +611,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit {
 	private _calculateViewableBars(checkParent = true) {
 		let el = this._elementRef.nativeElement,
 			barW = 6 * (this.config.zoom || 1);
-			
+
 		return Math.floor(el.clientWidth / barW);
 	}
 

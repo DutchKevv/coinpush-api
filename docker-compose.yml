@@ -159,8 +159,10 @@ services:
       dockerfile: ./client/Dockerfile
     volumes:
       - ./static/clients:/usr/src/app/static/clients
-      # - ./shared:/usr/src/app/shared
+      - ./client/src:/usr/src/app/client/src
       - /usr/src/app/client/node_modules
+      - ./shared/modules/coinpush:/usr/src/app/shared/modules/coinpush
+      - /usr/src/app/shared/modules/coinpush/node_modules
   client-app:
     image: client-app
     container_name: client-app

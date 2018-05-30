@@ -2,6 +2,7 @@
 @import '~bootstrap/scss/_variables';
 @import '~bootstrap/scss/_mixins';
 @import '~bootstrap/scss/utilities/_display';
+@import '~bootstrap/scss/utilities/_visibility';
 @import '~bootstrap/scss/utilities/_clearfix';
 
 @import '../../style/variables/variables';
@@ -107,6 +108,7 @@
     line-height: 34px;
     text-align: left;
     padding-right: 20px;
+    margin-left: auto;
 }
 
 .chart-content {

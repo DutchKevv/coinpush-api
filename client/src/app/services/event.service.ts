@@ -99,7 +99,7 @@ export class EventService {
 			}
 		});
 
-		return this._http.get('/event', { params }).pipe(map(events => {
+		return this._http.get('/event', { params }).pipe(map((events: Array<any>) => {
 			return events.map(event => {
 				event.triggeredDate = this._dateService.convertToTimePast(event.triggeredDate);
 				return event;

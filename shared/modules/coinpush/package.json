@@ -21,13 +21,13 @@
     "socket.io-client": "^2.1.0",
     "socket.io-parser": "^3.2.0",
     "winston": "^2.4.2",
-    "@types/node": "10.0.0"
+    "@types/node": "10.0.0",
+    "tsc-watch": "^1.0.21",
+    "typescript": "^2.6.x"
   },
   "devDependencies": {
     "@types/mkdirp": "^0.5.2",
     "@types/redis": "^2.8.6",
-    "@types/winston": "^2.3.9",
-    "tsc-watch": "^1.0.21",
-    "typescript": "^2.6.x"
+    "@types/winston": "^2.3.9"
   }
 }

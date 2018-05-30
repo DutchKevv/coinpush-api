@@ -17,10 +17,10 @@
 			<option value="D" [selected]="config.timeFrame === 'D'">Day</option>
 		</select>
 	</li>
-	<li class="dropdown">
+	<li class="dropdown d-none d-xl-block">
 		<select (change)="changeGraphType($event.target.value)">
 			<option value="line" [selected]="config.graphType === 'line'">Line</option>
-			<option value="ohlc" [selected]="config.graphType === 'ohlc'">OHLC</option>
+			<option value="ohlc" [selected]="config.graphType === 'ohlc'">OHLC</option>sdf
 			<option value="candlestick" [selected]="config.graphType === 'candlestick'">Candle</option>
 		</select>
 	</li>
