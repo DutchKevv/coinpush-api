@@ -36,8 +36,16 @@
             margin-top: env(safe-area-inset-top);
         }
 
-        /* browser not supported */
+        body.app {
+            position: relative;
+            padding-bottom: 50px;
+        }
 
+        body.app.ios {
+            padding-bottom: calc(env(safe-area-inset-bottom) + 80px);
+        }
+
+        /* browser not supported */
         #bns-container {
             background: white;
             max-width: 800px;
@@ -48,7 +56,7 @@
             border-radius: 50%;
         }
 
-        body>.spinner {
+        body > .spinner {
             position: absolute;
             top: calc(40% - 40px);
             left: calc(50% - 40px);
@@ -79,7 +87,7 @@
             width: 40px;
             height: 40px;
             opacity: 0;
-            animation: spin 2s linear infinite, fade-in .8s linear .5s forwards;
+            animation: spin 2s linear infinite, fadeIn .8s linear .5s forwards;
         }
 
         @keyframes spin {
@@ -166,6 +174,7 @@
                 isReady$: Promise.resolve(),
                 version: '',
                 isSecure: location.protocol === 'https:',
+                // isApp: true,
                 isApp: document.URL.indexOf('file://') > -1,
                 isIOS: /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream,
                 isTouch: true,
@@ -216,10 +225,10 @@
             });
 
             // special root class
-            document.body.querySelector('app').classList.add('app');
+            document.body.classList.add('app');
 
             if (window.platform.isIOS) {
-                document.body.querySelector('app').classList.add('ios');
+                document.body.classList.add('ios');
             }
         })();
     </script>
