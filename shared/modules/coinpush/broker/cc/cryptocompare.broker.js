@@ -62,6 +62,8 @@ var CyrptoCompareApi = /** @class */ (function (_super) {
         _this.options = options;
         _this._activeSubs = [];
         _this._latestBtcUsd = 0;
+        _this._reconnectTimeout = null;
+        _this._reconnectTimeoutTime = 10000;
         _this._client = null;
         _this._setupSocketIO();
         _this._socket.emit('SubAdd', { subs: ["5~CCCAGG~BTC~USD"] });
@@ -338,20 +340,21 @@ var CyrptoCompareApi = /** @class */ (function (_super) {
     };
     CyrptoCompareApi.prototype._setupSocketIO = function () {
         var _this = this;
-        this._socket = io.connect('https://streamer.cryptocompare.com/', {
-            reconnectionAttempts: 10000,
-            timeout: 1000,
-        });
+        this._socket = io.connect('https://streamer.cryptocompare.com/');
         this._socket.on('connect', function () {
             util_log_1.log.info('CryptoCompare socket connected');
+            _this._socket.emit('SubAdd', { subs: ["5~CCCAGG~BTC~USD"] });
             _this._socket.emit('SubAdd', { subs: _this._activeSubs });
         });
         this._socket.on("disconnect", function (message) {
-            util_log_1.log.info('CryptoCompare socket disconnected, reconnecting');
-            _this._socket.connect();
+            util_log_1.log.info('CryptoCompare socket disconnected, reconnecting and relistening symbols');
+            clearTimeout(_this._reconnectTimeout);
+            _this._reconnectTimeout = setTimeout(function () { return _this._socket.connect(); }, _this._reconnectTimeoutTime);
         });
         this._socket.on("connect_error", function (error) {
             util_log_1.log.error('connect error!', error);
+            clearTimeout(_this._reconnectTimeout);
+            _this._reconnectTimeout = setTimeout(function () { return _this._socket.connect(); }, _this._reconnectTimeoutTime);
         });
         this._socket.on("m", function (message) {
             var messageType = message.substring(0, message.indexOf("~"));
@@ -377,11 +380,6 @@ var CyrptoCompareApi = /** @class */ (function (_super) {
             }
         });
     };
-    CyrptoCompareApi.FAVORITE_SYMBOLS = [
-        'EUR_USD',
-        'BCO_USD',
-        'NZD_AUD'
-    ];
     CyrptoCompareApi.FETCH_CHUNK_LIMIT = 2000;
     CyrptoCompareApi.WRITE_CHUNK_COUNT = 2000;
     return CyrptoCompareApi;

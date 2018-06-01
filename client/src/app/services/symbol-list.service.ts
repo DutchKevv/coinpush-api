@@ -315,7 +315,7 @@ _rowEl.innerHTML = _rowHTML;
 
 const _rowHeaderHTML = `
 <li class="instrument-list-header">
-    <h4 class="col-instrument">Instrument Price</h4>
+    <h4>Instrument Price</h4>
     <h4 class="col-changes">1h / 24h</h4>
 </li>`
 

@@ -15,25 +15,6 @@
     display: none;
 }
 
-.instrument-list-header {
-	font-size: 14px;
-	background: $background-th;
-	color: white;
-	padding: 5px 0;
-    height: 30px !important;
-
-    h4 {
-        &:first-child {
-            padding-left: 8%;
-        }
-
-        &:last-child {
-            margin-left: auto;
-            margin-right: 8%;
-        }
-    }
-}
-
 .instrument-list {
     width: 100%;
     overflow: auto;
@@ -45,6 +26,25 @@
         padding-top: 15px;
         display: flex;
         border-bottom: 1px solid $border-color-grey;
+
+        &.instrument-list-header {
+            font-size: 14px;
+            background: $background-th;
+            color: white;
+            padding: 6px 0;
+            height: 30px !important;
+        
+            h4 {
+                &:first-child {
+                    padding-left: 8%;
+                }
+        
+                &:last-child {
+                    margin-left: auto;
+                    margin-right: 8%;
+                }
+            }
+        }
     }
 
     .instrument-title {
