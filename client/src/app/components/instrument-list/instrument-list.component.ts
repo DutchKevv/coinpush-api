@@ -161,7 +161,8 @@ export class InstrumentListComponent implements OnInit, OnDestroy {
 				symbols = this.cacheService.symbols.filter(s => s.options.broker === BROKER_GENERAL_TYPE_OANDA);
 				break;
 			case 'forex popular':
-				symbols = this.cacheService.symbols.filter(s => s.options.broker === BROKER_GENERAL_TYPE_OANDA)
+				symbols = this.cacheService.symbols
+					.filter(s => s.options.broker === BROKER_GENERAL_TYPE_OANDA)
 					.sort((a, b) => a.options.volume - b.options.volume)
 					.slice(-DEFAULT_FILTER_POPULAR_LENGTH)
 					.reverse();
@@ -178,6 +179,13 @@ export class InstrumentListComponent implements OnInit, OnDestroy {
 				break;
 			case 'resources':
 				symbols = this.cacheService.symbols.filter(s => s.options.type === SYMBOL_CAT_TYPE_RESOURCE);
+				break;
+			case 'resources popular':
+				symbols = this.cacheService.symbols
+					.filter(s => s.options.type === SYMBOL_CAT_TYPE_RESOURCE)
+					.sort((a, b) => a.options.volume - b.options.volume)
+					.slice(-DEFAULT_FILTER_POPULAR_LENGTH)
+					.reverse();
 				break;
 			default:
 				symbols = [];

@@ -4,30 +4,6 @@
 @import 'style/variables/variables';
 @import 'style/helpers/normalize';
 
-:host {
-    // display: flex;
-    display: block;
-    height: 100%;
-    // width: 100%;
-
-    &.app {
-        position: relative;
-        padding-bottom: 50px;
-       
-        &.ios {
-            padding-bottom: calc(env(safe-area-inset-bottom) + 80px);
-        }
-    }
-
-    > * {
-       
-    }
-}
-
-router-outlet + * {
-   
-}
-
 .navigation-menu-overlay {
     background: rgba(0, 0, 0, 0.7);
     position: absolute;

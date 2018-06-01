@@ -17,12 +17,8 @@ export default class CyrptoCompareApi extends EventEmitter {
     private _socket: any;
     private _activeSubs: Array<string> = [];
     private _latestBtcUsd = 0;
-
-    public static readonly FAVORITE_SYMBOLS = [
-        'EUR_USD',
-        'BCO_USD',
-        'NZD_AUD'
-    ];
+    private _reconnectTimeout = null;
+    private _reconnectTimeoutTime = 10000;
 
     public static readonly FETCH_CHUNK_LIMIT = 2000;
     public static readonly WRITE_CHUNK_COUNT = 2000;
@@ -243,23 +239,26 @@ export default class CyrptoCompareApi extends EventEmitter {
     }
 
     private _setupSocketIO() {
-        this._socket = io.connect('https://streamer.cryptocompare.com/', {
-            reconnectionAttempts: 10000, // avoid having user reconnect manually in order to prevent dead clients after a server restart
-            timeout: 1000, // before connect_error and connect_timeout are emitted.
-        });
+        this._socket = io.connect('https://streamer.cryptocompare.com/');
 
         this._socket.on('connect', () => {
             log.info('CryptoCompare socket connected');
+            this._socket.emit('SubAdd', { subs: [`5~CCCAGG~BTC~USD`] });
             this._socket.emit('SubAdd', { subs: this._activeSubs });
         });
 
         this._socket.on("disconnect", (message) => {
-            log.info('CryptoCompare socket disconnected, reconnecting');
-            this._socket.connect();
+            log.info('CryptoCompare socket disconnected, reconnecting and relistening symbols');
+
+            clearTimeout(this._reconnectTimeout);
+            this._reconnectTimeout = setTimeout(() => this._socket.connect(), this._reconnectTimeoutTime);
         });
 
         this._socket.on("connect_error", (error) => {
             log.error('connect error!', error);
+
+            clearTimeout(this._reconnectTimeout);
+            this._reconnectTimeout = setTimeout(() => this._socket.connect(), this._reconnectTimeoutTime);
         });
 
         this._socket.on("m", (message) => {

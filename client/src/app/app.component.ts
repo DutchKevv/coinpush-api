@@ -48,9 +48,9 @@ export class AppComponent implements OnInit {
 		const size = window.innerWidth + window.innerHeightååååå;
 
 		if (app.platform.windowW !== window.innerWidth || window.innerHeight !== app.platform.windowH) {
-			document.body.querySelector('app').classList.remove('app');
+			document.body.classList.remove('app');
 		} else {
-			document.body.querySelector('app').classList.add('app');
+			document.body.classList.add('app');
 			// app.repositionAds();
 		}
 	}
