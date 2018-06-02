@@ -11,6 +11,8 @@ const config = require('../../../tradejs.config.js');
 
 const HISTORY_COUNT_DEFAULT = 400;
 
+log.error('kikaboe');
+
 export const cacheController = {
 
 	tickBuffer: {},

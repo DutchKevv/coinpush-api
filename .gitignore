@@ -6,7 +6,7 @@ temp.txt
 
 node_modules
 /_data
-/_logs
+_log
 
 npm-debug.log
 package-lock.json

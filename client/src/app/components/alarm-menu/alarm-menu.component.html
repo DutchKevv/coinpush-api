@@ -24,7 +24,7 @@
                 <div class="input-group" style="display: flex;">
                     <button type="button" class="btn btn-sm btn-danger btn-number" data-type="minus" [disabled]="saving === true" (touchstart)="onMouseDownNumberInput($event, -1)"
                         (mousedown)="onMouseDownNumberInput($event, -1)" (mouseout)="onMouseUpNumberInput($event, -1)" (touchend)="onMouseUpNumberInput($event, -1)"
-                        (mouseup)="onMouseUpNumberInput($event, -1)">
+                        (mouseup)="onMouseUpNumberInput($event, -1)" #minusBtn>
                         <i class="fa fa-minus"></i>
                     </button>
 
@@ -33,7 +33,7 @@
 
                     <button type="button" class="btn btn-sm btn-success btn-number" data-type="plus" [disabled]="saving === true" (touchstart)="onMouseDownNumberInput($event, 1)"
                         (mousedown)=" onMouseDownNumberInput($event, 1) " (mouseout)="onMouseUpNumberInput($event, 1)" (touchend)="onMouseUpNumberInput($event, 1)"
-                        (mouseup)="onMouseUpNumberInput($event, 1)">
+                        (mouseup)="onMouseUpNumberInput($event, 1)" #plusBtn>
                         <i class="fa fa-plus"></i>
                     </button>
                 </div>
