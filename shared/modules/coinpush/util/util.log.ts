@@ -4,7 +4,7 @@ import * as fs		from 'fs';
 import * as mkdirp	from 'mkdirp';
 
 const
-	PATH_SERVER_LOG = path.join(__dirname, '..', '..', '..', '..', '_log'),
+	PATH_SERVER_LOG = path.join(path.dirname(require.main.filename), '_log'),
 	PATH_SERVER_LOG_FILE = path.join(PATH_SERVER_LOG, 'server.txt'),
 	OWNER_MIN_LENGTH = 20;
 

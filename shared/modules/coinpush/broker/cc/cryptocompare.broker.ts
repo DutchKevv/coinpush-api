@@ -261,6 +261,14 @@ export default class CyrptoCompareApi extends EventEmitter {
             this._reconnectTimeout = setTimeout(() => this._socket.connect(), this._reconnectTimeoutTime);
         });
 
+        this._socket.on("reconnect_error", (error) => {
+            log.error('reconnect error!', error);
+
+            clearTimeout(this._reconnectTimeout);
+            this._reconnectTimeout = setTimeout(() => this._socket.connect(), this._reconnectTimeoutTime);
+        });
+
+        // on tick(s)
         this._socket.on("m", (message) => {
 
             const messageType = message.substring(0, message.indexOf("~"));

@@ -196,6 +196,10 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 		}
 	}
 
+	private _attachEventListeners() {
+		
+	}
+
 	private _toMinimumDuff(value: number, dir): number {
 		if (value < 0)
 			return 0;
