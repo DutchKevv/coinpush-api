@@ -356,6 +356,12 @@ var CyrptoCompareApi = /** @class */ (function (_super) {
             clearTimeout(_this._reconnectTimeout);
             _this._reconnectTimeout = setTimeout(function () { return _this._socket.connect(); }, _this._reconnectTimeoutTime);
         });
+        this._socket.on("reconnect_error", function (error) {
+            util_log_1.log.error('reconnect error!', error);
+            clearTimeout(_this._reconnectTimeout);
+            _this._reconnectTimeout = setTimeout(function () { return _this._socket.connect(); }, _this._reconnectTimeoutTime);
+        });
+        // on tick(s)
         this._socket.on("m", function (message) {
             var messageType = message.substring(0, message.indexOf("~"));
             var res = util_cc_1.CCC.CURRENT.unpack(message);

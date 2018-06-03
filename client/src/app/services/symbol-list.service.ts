@@ -178,9 +178,7 @@ export class SymbolListService {
      * @param symbol 
      * @param rowEl 
      */
-    private _updatePrice(symbol: SymbolModel, rowEl?: HTMLElement) {
-        rowEl = rowEl || this._findRowByModel(symbol);
-
+    private _updatePrice(symbol: SymbolModel, rowEl?: HTMLElement) {      
         // price
         rowEl.children[2].children[1]['innerText'] = symbol.options.bid;
 
@@ -240,7 +238,7 @@ export class SymbolListService {
      */
     private _onPriceChange(symbolModels: Array<SymbolModel>): void {
         this._zone.runOutsideAngular(() => {
-            for (let i = 1, len = symbolModels.length; i < len; ++i) {
+            for (let i = 0, len = symbolModels.length; i < len; ++i) {
                 const rowEl = this._findRowByModel(symbolModels[i]);
     
                 if (rowEl)
