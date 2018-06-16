@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { deviceController } from '../controllers/device.controller';
 
-const config = require('../../../tradejs.config.js');
+const config = require('../../../coinpush.config.js');
 const router = Router();
 
 /**

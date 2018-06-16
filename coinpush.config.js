@@ -26,29 +26,29 @@ const config = {
         },
         cache: {
             port: 3001,
-            connectionString: 'mongodb://mongodb:27017/tradejs-cache'
+            connectionString: 'mongodb://mongodb:27017/coinpush-cache'
         },
         order: {
             port: 3005,
-            connectionString: 'mongodb://mongodb:27017/tradejs-orders'
+            connectionString: 'mongodb://mongodb:27017/coinpush-orders'
         },
         broker: {
             port: 3006,
         },
         user: {
             port: 3008,
-            connectionString: 'mongodb://mongodb:27017/tradejs-user'
+            connectionString: 'mongodb://mongodb:27017/coinpush-user'
         },
         comment: {
             port: 3009,
-            connectionString: 'mongodb://mongodb:27017/tradejs-comment'
+            connectionString: 'mongodb://mongodb:27017/coinpush-comment'
         },
         notify: {
             port: 3010,
-            connectionString: 'mongodb://mongodb:27017/tradejs-notify'
+            connectionString: 'mongodb://mongodb:27017/coinpush-notify'
         },
         event: {
-            connectionString: 'mongodb://mongodb:27017/tradejs-event',
+            connectionString: 'mongodb://mongodb:27017/coinpush-event',
             port: 3011,
         },
         fe: {
@@ -124,13 +124,13 @@ const config = {
 
 // deepmerge config with custom config
 try {
-    if (fs.existsSync(path.join(__dirname, 'tradejs.config.custom.js'))) {
-        mergeDeep(config, require('./tradejs.config.custom'));
+    if (fs.existsSync(path.join(__dirname, 'coinpush.config.custom.js'))) {
+        mergeDeep(config, require('./coinpush.config.custom'));
     } else {
-        console.error('WARNING: missing \'tradejs.config.custom.js\'! \n');
+        console.error('WARNING: missing \'coinpush.config.custom.js\'! \n');
     }     
 } catch (error) {
-    console.error('WARNING: corrupt \'tradejs.config.custom.js\'! \n');
+    console.error('WARNING: corrupt \'coinpush.config.custom.js\'! \n');
     throw error;
 }
 

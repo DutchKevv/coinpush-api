@@ -7,7 +7,7 @@ import * as morgan from 'morgan';
 import { cacheController } from './controllers/cache.controller';
 import { symbolController } from './controllers/symbol.controller';
 import { BrokerMiddleware } from 'coinpush/broker';
-import { BROKER_GENERAL_TYPE_OANDA, BROKER_GENERAL_TYPE_CC } from 'coinpush/constant';
+import { BROKER_GENERAL_TYPE_OANDA, BROKER_GENERAL_TYPE_CC , BROKER_GENERAL_TYPE_IEX} from 'coinpush/constant';
 import { pubClient } from 'coinpush/redis';
 import { log } from 'coinpush/util/util.log';
 
@@ -18,7 +18,7 @@ process.on('unhandledRejection', (reason, p) => {
 });
 
 // configuration
-const config = require('../../tradejs.config.js');
+const config = require('../../coinpush.config.js');
 
 export const app = {
 
@@ -50,7 +50,8 @@ export const app = {
 		// cache + symbols syncing
 		await Promise.all([
 			cacheController.sync(BROKER_GENERAL_TYPE_OANDA).then(() => this.broker.openTickStream(['oanda'])),
-			cacheController.sync(BROKER_GENERAL_TYPE_CC).then(() => this.broker.openTickStream(['cc']))
+			cacheController.sync(BROKER_GENERAL_TYPE_CC).then(() => this.broker.openTickStream(['cc'])),
+			cacheController.sync(BROKER_GENERAL_TYPE_IEX).then(() => this.broker.openTickStream(['iex']))
 		]);
 
 		this._toggleSymbolUpdateInterval(true);

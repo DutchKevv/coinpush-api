@@ -1,5 +1,5 @@
 {
-  "name": "tradejs-user-server",
+  "name": "coinpush-user-server",
   "version": "0.0.1",
   "description": "Javascript Trading Client and Server",
   "repository": {
@@ -18,26 +18,26 @@
   "dependencies": {
     "@types/bcrypt": "^2.0.0",
     "@types/body-parser": "^1.17.0",
-    "@types/node": "latest",
-    "@types/express": "latest",
-    "@types/validator": "latest",
-    "@types/mongoose": "^5.0.14",
+    "@types/express": "^4.16.0",
+    "@types/mongoose": "^5.0.16",
+    "@types/node": "^10.3.3",
+    "@types/validator": "^9.4.1",
     "bcryptjs": "*",
     "body-parser": "^1.18.3",
     "coinpush": "file:../shared/modules/coinpush",
     "express": "^4.16.3",
     "helmet": "^3.12.1",
-    "jsonwebtoken": "^8.2.1",
+    "jsonwebtoken": "^8.3.0",
     "minimist": "^1.2.0",
-    "mongoose": "^5.1.2",
+    "mongoose": "^5.1.5",
     "mongoose-beautiful-unique-validation": "^7.1.1",
     "morgan": "^1.9.0",
     "request": "^2.87.0",
     "request-promise": "^4.2.2",
-    "typescript": "^2.8.3",
-    "validator": "^10.2.0"
+    "typescript": "^2.9.2",
+    "validator": "^10.3.0"
   },
   "devDependencies": {
-    "tsc-watch": "^1.0.21"
+    "tsc-watch": "^1.0.22"
   }
 }

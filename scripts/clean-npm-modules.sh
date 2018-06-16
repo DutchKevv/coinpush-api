@@ -13,7 +13,8 @@ done
     # echo 'balasdfadsf'
 # fi
 
-# cd ../client && rm -rf node_modules && rm -f package-lock.json && echo 'client cleaned'
+cd ../client && rm -rf node_modules && rm -f package-lock.json && echo 'client cleaned'
+cd ../client-app && rm -rf node_modules && rm -f package-lock.json && echo 'client-app cleaned'
 cd ../server-cache && rm -rf node_modules && rm -f package-lock.json && echo 'server-cache cleaned'
 cd ../server-comment && rm -rf node_modules && rm -f package-lock.json && echo 'server-comment cleaned'
 cd ../server-event && rm -rf node_modules && rm -f package-lock.json && echo 'server-event cleaned'

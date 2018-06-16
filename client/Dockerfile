@@ -1,4 +1,4 @@
-FROM mhart/alpine-node:10.2.1
+FROM mhart/alpine-node:10.4.1
 
 RUN npm set progress=false && npm config set depth 0 && npm cache clean --force
 

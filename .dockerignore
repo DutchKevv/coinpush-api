@@ -17,8 +17,8 @@
 
 ### root
 /_data
-!tradejs.config.js
-!tradejs.config.custom.js
+!coinpush.config.js
+!coinpush.config.custom.js
 
 ### shared
 !shared/modules/coinpush/**/*.js

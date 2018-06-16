@@ -3,7 +3,7 @@ import * as request from 'request-promise';
 import {userController} from './user.controller';
 import { IReqUser } from 'coinpush/interface/IReqUser.interface';
 
-const config = require('../../../tradejs.config.js');
+const config = require('../../../coinpush.config.js');
 
 export const eventController = {
 

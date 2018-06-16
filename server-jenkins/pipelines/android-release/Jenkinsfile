@@ -3,7 +3,7 @@ node {
         cleanWs()
     }
     stage('get source') {
-        git branch: 'development', url: 'https://github.com/DutchKevv/TradeJS'
+        git branch: 'development', url: 'https://github.com/DutchKevv/CoinPush'
     }
     stage('install & build client') {
         dir('client') {

@@ -2,9 +2,10 @@ import { EventEmitter } from 'events';
 import { log } from '../util/util.log';
 import { OandaApi} from './oanda/index';
 import CyrptoCompareApi from './cc/cryptocompare.broker';
-import { BROKER_GENERAL_TYPE_CC, BROKER_GENERAL_TYPE_OANDA } from '../constant';
+import { BROKER_GENERAL_TYPE_CC, BROKER_GENERAL_TYPE_OANDA, BROKER_GENERAL_TYPE_IEX } from '../constant';
+import IEXApi from './iex/iex';
 
-const config = require('../../../../tradejs.config.js');
+const config = require('../../../../coinpush.config.js');
 
 export class BrokerMiddleware extends EventEmitter {
 
@@ -19,11 +20,13 @@ export class BrokerMiddleware extends EventEmitter {
 
         this._installBrokerOanda();
         this._installBrokerCC();
+        this._installBrokerIEX();
     }
 
-    private _brokers: { oanda: OandaApi, cc: CyrptoCompareApi } = {
+    private _brokers: { oanda: OandaApi, cc: CyrptoCompareApi, iex: IEXApi} = {
         oanda: null,
-        cc: null
+        cc: null,
+        iex: null
     }
 
     public async getSymbols(): Promise<Array<any>> {
@@ -98,19 +101,26 @@ export class BrokerMiddleware extends EventEmitter {
         throw new Error('UNKOWN BROKER: ' + JSON.stringify(symbol, null, 2));
     }
 
-    public openTickStream(brokerNames: Array<string> = []): void {
-        const brokers = this.splitSymbolsToBrokers(this.symbols);
+    public openTickStream(brokerNames: Array<string> = ['oanda', 'cc', 'iex']): void {
         
-        if (!brokerNames.length || brokerNames.indexOf('oanda') > -1) {
+        const brokerSymbols = this.splitSymbolsToBrokers(this.symbols);
+        
+        if (brokerNames.includes('oanda')) {
             this._brokers.oanda.on('tick', tick => this.emit('tick', tick));
-            this._brokers.oanda.subscribePriceStream(brokers.oanda);
+            this._brokers.oanda.subscribePriceStream(brokerSymbols.oanda);
             log.info('Cache', 'oanda tick streams active');
         }
 
-        if (!brokerNames.length || brokerNames.indexOf('cc') > -1) {
+        if (brokerNames.includes('cc')) {
             this._brokers.cc.on('tick', tick => this.emit('tick', tick));
-            this._brokers.cc.subscribePriceStream(brokers.cc);
+            this._brokers.cc.subscribePriceStream(brokerSymbols.cc);
             log.info('Cache', 'cryptocompare tick streams active');
+        }
+
+        if (brokerNames.includes('iex')) {
+            this._brokers.iex.on('tick', tick => this.emit('tick', tick));
+            this._brokers.iex.subscribePriceStream(brokerSymbols.iex);
+            log.info('Cache', 'iex tick streams active');
         }
     }
 
@@ -118,10 +128,11 @@ export class BrokerMiddleware extends EventEmitter {
         return this.symbols.filter(symbol => symbol.broker === broker);
     }
 
-    public splitSymbolsToBrokers(symbols: Array<any>): { oanda: Array<string>, cc: Array<string> } {
+    public splitSymbolsToBrokers(symbols: Array<any>): { oanda: Array<string>, cc: Array<string> , iex: Array<string>} {
         return {
             oanda: symbols.filter(symbol => symbol.broker === BROKER_GENERAL_TYPE_OANDA),
-            cc: symbols.filter(symbol => symbol.broker === BROKER_GENERAL_TYPE_CC)
+            cc: symbols.filter(symbol => symbol.broker === BROKER_GENERAL_TYPE_CC),
+            iex: symbols.filter(symbol => symbol.broker === BROKER_GENERAL_TYPE_IEX)
         }
     }
 
@@ -140,6 +151,10 @@ export class BrokerMiddleware extends EventEmitter {
 
     private _installBrokerCC() {
         this._brokers.cc = new CyrptoCompareApi({});
+    }
+
+    private _installBrokerIEX() {
+        this._brokers.iex = new IEXApi({});
     }
 
     destroy() {

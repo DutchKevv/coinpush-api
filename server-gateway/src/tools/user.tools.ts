@@ -52,7 +52,7 @@ module.exports = {
 		const user = await userController.findById({ id }, id, {type: USER_FETCH_TYPE_PROFILE_SETTINGS});
 
 		if (!user || !user._id)
-			throw new Error('User not found in main tradejs-user collection');
+			throw new Error('User not found in main coinpush-user collection');
 
 		try {
 			await emailController.addUser({id}, user, true);

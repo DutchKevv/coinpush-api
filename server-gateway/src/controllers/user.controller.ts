@@ -6,7 +6,7 @@ import { IUser } from 'coinpush/interface/IUser.interface';
 import { downloadProfileImgFromUrl } from '../api/upload.api';
 import { commentController } from './comment.controller';
 
-const config = require('../../../tradejs.config.js');
+const config = require('../../../coinpush.config.js');
 
 export const userController = {
 

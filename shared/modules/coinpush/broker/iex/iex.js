@@ -51,13 +51,12 @@ var util_log_1 = require("../../util/util.log");
 var events_1 = require("events");
 var constant_1 = require("../../constant");
 var request = require("requestretry");
-var symbols_1 = require("./symbols");
+var symbols_active_1 = require("./symbols-active");
 var io = require("socket.io-client");
-var util_cc_1 = require("./util.cc");
-var currentPrice = {};
-var CyrptoCompareApi = /** @class */ (function (_super) {
-    __extends(CyrptoCompareApi, _super);
-    function CyrptoCompareApi(options) {
+var URL_PREFIX = 'https://ws-api.iextrading.com/1.0';
+var IEXApi = /** @class */ (function (_super) {
+    __extends(IEXApi, _super);
+    function IEXApi(options) {
         var _this = _super.call(this) || this;
         _this.options = options;
         _this._activeSubs = [];
@@ -66,83 +65,52 @@ var CyrptoCompareApi = /** @class */ (function (_super) {
         _this._reconnectTimeoutTime = 10000;
         _this._client = null;
         _this._setupSocketIO();
-        _this._socket.emit('SubAdd', { subs: ["5~CCCAGG~BTC~USD"] });
+        _this._connectSocketIO();
         return _this;
     }
-    CyrptoCompareApi.prototype.testConnection = function () {
+    IEXApi.prototype.testConnection = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 return [2 /*return*/, Promise.resolve(true)];
             });
         });
     };
-    CyrptoCompareApi.prototype.subscribePriceStream = function (symbols) {
-        //Format: {SubscriptionId}~{ExchangeName}~{FromSymbol}~{ToSymbol}
-        //Use SubscriptionId 0 for TRADE, 2 for CURRENT and 5 for CURRENTAGG
-        //For aggregate quote updates use CCCAGG as market
-        this._activeSubs = symbols.map(function (symbol) { return "5~CCCAGG~" + symbol.name + "~BTC"; });
-        this._socket.emit('SubAdd', { subs: this._activeSubs });
+    IEXApi.prototype.subscribePriceStream = function (symbols) {
+        this._activeSubs = symbols.map(function (symbol) { return symbol.name; });
+        this._socket.emit('subscribe', 'snap,fb,aig+');
+        this._socket.emit('subscribe', this._activeSubs);
     };
-    CyrptoCompareApi.prototype.unsubscribePriceStream = function (instruments) {
+    IEXApi.prototype.unsubscribePriceStream = function (instruments) {
         this._socket.disconnect();
         this._socket = null;
     };
-    CyrptoCompareApi.prototype.getSymbols = function () {
+    IEXApi.prototype.getSymbols = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var result, normalized, key, coin, error_1;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, request({
-                                uri: 'https://min-api.cryptocompare.com/data/all/coinlist',
-                                fullResponse: false,
-                                json: true
-                            })];
-                    case 1:
-                        result = _a.sent();
-                        normalized = [];
-                        for (key in result.Data) {
-                            coin = result.Data[key];
-                            if (symbols_1.symbols.indexOf(coin.Name) === -1)
-                                continue;
-                            SYMBOL_CAT_TYPE_COMPANY;
-                            normalized.push({
-                                type: constant_1.SYMBOL_CAT_TYPE_CRYPTO,
-                                name: coin.Name,
-                                displayName: coin.CoinName,
-                                img: 'https://www.cryptocompare.com' + coin.ImageUrl,
-                                broker: constant_1.BROKER_GENERAL_TYPE_CC
-                            });
-                        }
-                        return [2 /*return*/, normalized];
-                    case 2:
-                        error_1 = _a.sent();
-                        throw error_1;
-                    case 3: return [2 /*return*/];
-                }
+                return [2 /*return*/, Promise.resolve(symbols_active_1.activeSymbols)];
             });
         });
     };
-    CyrptoCompareApi.prototype.getCandles = function (symbol, timeFrame, from, until, count, onData) {
+    IEXApi.prototype.getCandles = function (symbol, timeFrame, from, until, count, onData) {
         return __awaiter(this, void 0, void 0, function () {
             var chunks, writeChunks, finished, url, _loop_1, this_1, i, len;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         until = until || Date.now() + (1000 * 60 * 60 * 24);
-                        chunks = util_date_1.splitToChunks(timeFrame, from, until, count, CyrptoCompareApi.FETCH_CHUNK_LIMIT), writeChunks = 0, finished = 0, url = '';
+                        chunks = util_date_1.splitToChunks(timeFrame, from, until, count, IEXApi.FETCH_CHUNK_LIMIT), writeChunks = 0, finished = 0, url = '';
                         if (!chunks.length)
                             return [2 /*return*/];
                         switch (timeFrame) {
                             case 'M1':
-                                url = 'https://min-api.cryptocompare.com/data/histominute?';
+                                url = URL_PREFIX + "/stock/" + symbol + "/chart/1d";
+                                url = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=MSFT&interval=1min&apikey=demo';
                                 break;
                             case 'H1':
-                                url = 'https://min-api.cryptocompare.com/data/histohour?';
+                                url = URL_PREFIX + "/stock/" + symbol + "/chart/1d";
                                 break;
                             case 'D':
-                                url = 'https://min-api.cryptocompare.com/data/histoday?';
+                                url = URL_PREFIX + "/stock/" + symbol + "/chart/1d";
                                 break;
                         }
                         _loop_1 = function (i, len) {
@@ -196,7 +164,7 @@ var CyrptoCompareApi = /** @class */ (function (_super) {
             });
         });
     };
-    CyrptoCompareApi.prototype.getCurrentPrices = function (symbols, toSymbol) {
+    IEXApi.prototype.getCurrentPrices = function (symbols, toSymbol) {
         if (toSymbol === void 0) { toSymbol = 'USD'; }
         return __awaiter(this, void 0, void 0, function () {
             var priceArr, i, len, result;
@@ -221,28 +189,16 @@ var CyrptoCompareApi = /** @class */ (function (_super) {
             });
         });
     };
-    CyrptoCompareApi.prototype.destroy = function () {
+    IEXApi.prototype.destroy = function () {
         if (this._client)
             this._client.kill();
         this._client = null;
     };
-    CyrptoCompareApi.prototype.orderTypeConstantToString = function (type) {
-        switch (type) {
-            case constant_1.ORDER_TYPE_MARKET:
-                return 'market';
-            case constant_1.ORDER_TYPE_LIMIT:
-                return 'limit';
-            case constant_1.ORDER_TYPE_STOP:
-                return 'stop';
-            case constant_1.ORDER_TYPE_IF_TOUCHED:
-                return 'marketIfTouched';
-        }
-    };
-    CyrptoCompareApi.prototype._doRequest = function (url, params, reattempt) {
+    IEXApi.prototype._doRequest = function (url, params, reattempt) {
         if (reattempt === void 0) { reattempt = 0; }
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
-            var result, error_2, calls;
+            var result, error_1, calls;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -258,7 +214,7 @@ var CyrptoCompareApi = /** @class */ (function (_super) {
                         result = _a.sent();
                         return [2 /*return*/, result];
                     case 2:
-                        error_2 = _a.sent();
+                        error_1 = _a.sent();
                         return [4 /*yield*/, this._getCallsInMinute()];
                     case 3:
                         calls = _a.sent();
@@ -279,15 +235,15 @@ var CyrptoCompareApi = /** @class */ (function (_super) {
                                 }); }, 1000);
                             })];
                     case 4: return [2 /*return*/, _a.sent()];
-                    case 5: throw error_2;
+                    case 5: throw error_1;
                     case 6: return [2 /*return*/];
                 }
             });
         });
     };
-    CyrptoCompareApi.prototype._getCallsInMinute = function () {
+    IEXApi.prototype._getCallsInMinute = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var result, error_3;
+            var result, error_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -301,85 +257,51 @@ var CyrptoCompareApi = /** @class */ (function (_super) {
                         result = _a.sent();
                         return [2 /*return*/, result];
                     case 2:
-                        error_3 = _a.sent();
-                        console.error(error_3);
+                        error_2 = _a.sent();
+                        console.error(error_2);
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }
             });
         });
     };
-    CyrptoCompareApi.prototype._setupSocketIO = function () {
+    IEXApi.prototype._setupSocketIO = function () {
         var _this = this;
-        this._socket = io.connect('https://streamer.cryptocompare.com/');
+        this._socket = io.connect('https://ws-api.iextrading.com/1.0/');
+        // Connect to the channel
         this._socket.on('connect', function () {
-            util_log_1.log.info('CryptoCompare socket connected');
-            _this._socket.emit('SubAdd', { subs: ["5~CCCAGG~BTC~USD"] });
-            _this._socket.emit('SubAdd', { subs: _this._activeSubs });
+            // Subscribe to topics (i.e. appl,fb,aig+)
+            _this._socket.emit('subscribe', 'snap,fb,aig+');
+            // Unsubscribe from topics (i.e. aig+)
+            // this._socket.emit('unsubscribe', 'aig+')
         });
         this._socket.on("disconnect", function (message) {
             util_log_1.log.info('CryptoCompare socket disconnected, reconnecting and relistening symbols');
             clearTimeout(_this._reconnectTimeout);
-            _this._reconnectTimeout = setTimeout(function () { return _this._socket.connect(); }, _this._reconnectTimeoutTime);
+            _this._reconnectTimeout = setTimeout(function () { return _this._connectSocketIO(); }, _this._reconnectTimeoutTime);
         });
         this._socket.on("connect_error", function (error) {
             util_log_1.log.error('connect error!', error);
             clearTimeout(_this._reconnectTimeout);
-            _this._reconnectTimeout = setTimeout(function () { return _this._socket.connect(); }, _this._reconnectTimeoutTime);
+            _this._reconnectTimeout = setTimeout(function () { return _this._connectSocketIO(); }, _this._reconnectTimeoutTime);
         });
         this._socket.on("reconnect_error", function (error) {
             util_log_1.log.error('reconnect error!', error);
             clearTimeout(_this._reconnectTimeout);
-            _this._reconnectTimeout = setTimeout(function () { return _this._socket.connect(); }, _this._reconnectTimeoutTime);
+            _this._reconnectTimeout = setTimeout(function () { return _this._connectSocketIO(); }, _this._reconnectTimeoutTime);
         });
-        // on tick(s)
-        this._socket.on("m", function (message) {
-            var messageType = message.substring(0, message.indexOf("~"));
-            var res = util_cc_1.CCC.CURRENT.unpack(message);
-            if (res.FROMSYMBOL === 'BTC') {
-                if (res.TOSYMBOL === 'BTC')
-                    return;
-                if (res.TOSYMBOL === 'USD')
-                    _this._latestBtcUsd = res.PRICE;
-            }
-            if (_this._latestBtcUsd && res.PRICE) {
-                if (!(res.FROMSYMBOL === 'BTC' && res.TOSYMBOL === 'USD')) {
-                    res.PRICE = parseFloat((res.PRICE * _this._latestBtcUsd)).toPrecision(6);
-                }
-                _this.emit('tick', {
-                    time: res.LASTUPDATE * 1000,
-                    instrument: res.FROMSYMBOL,
-                    bid: res.PRICE
-                });
-            }
-            else {
-                // console.log(res);
-            }
+        // Listen to the channel's messages
+        this._socket.on('message', function (message) {
+            console.log('MESSAGE!!!', message);
         });
     };
-    CyrptoCompareApi.FETCH_CHUNK_LIMIT = 2000;
-    CyrptoCompareApi.WRITE_CHUNK_COUNT = 2000;
-    return CyrptoCompareApi;
+    IEXApi.prototype._connectSocketIO = function () {
+        this._socket.connect();
+        // Subscribe to topics (i.e. appl,fb,aig+)
+        // this._socket.emit('subscribe', 'snap,fb,aig+')
+    };
+    IEXApi.FETCH_CHUNK_LIMIT = 2000;
+    IEXApi.WRITE_CHUNK_COUNT = 2000;
+    return IEXApi;
 }(events_1.EventEmitter));
-exports.default = CyrptoCompareApi;
-function dataUnpack(data) {
-    var from = data['FROMSYMBOL'];
-    var to = data['TOSYMBOL'];
-    var fsym = util_cc_1.CCC.STATIC.CURRENCY.getSymbol(from);
-    var tsym = util_cc_1.CCC.STATIC.CURRENCY.getSymbol(to);
-    var pair = from + to;
-    if (!currentPrice.hasOwnProperty(pair)) {
-        currentPrice[pair] = {};
-    }
-    for (var key in data) {
-        currentPrice[pair][key] = data[key];
-    }
-    if (currentPrice[pair]['LASTTRADEID']) {
-        currentPrice[pair]['LASTTRADEID'] = parseInt(currentPrice[pair]['LASTTRADEID']).toFixed(0);
-    }
-    currentPrice[pair]['CHANGE24HOUR'] = util_cc_1.CCC.convertValueToDisplay(tsym, (currentPrice[pair]['PRICE'] - currentPrice[pair]['OPEN24HOUR']));
-    currentPrice[pair]['CHANGE24HOURPCT'] = ((currentPrice[pair]['PRICE'] - currentPrice[pair]['OPEN24HOUR']) / currentPrice[pair]['OPEN24HOUR'] * 100).toFixed(2) + "%";
-    ;
-    // displayData(currentPrice[pair], from, tsym, fsym);
-}
-;
+exports.default = IEXApi;

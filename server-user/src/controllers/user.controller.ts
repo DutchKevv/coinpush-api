@@ -11,7 +11,7 @@ import {
 import { IReqUser } from "coinpush/interface/IReqUser.interface";
 import { IUser } from "coinpush/interface/IUser.interface";
 
-const config = require('../../../tradejs.config.js');
+const config = require('../../../coinpush.config.js');
 
 const RESET_PASSWORD_TOKEN_EXPIRE = 1000 * 60 * 60 * 24; // 24 hour
 

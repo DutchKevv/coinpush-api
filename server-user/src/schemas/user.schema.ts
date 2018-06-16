@@ -8,7 +8,7 @@ import { countries } from "coinpush/util/countries";
 import * as beautifyUnique from 'mongoose-beautiful-unique-validation';
 import { IReqUser } from 'coinpush/interface/IReqUser.interface';
 
-const config = require('../../../tradejs.config.js');
+const config = require('../../../coinpush.config.js');
 
 export const UserSchema = new Schema(
 	{

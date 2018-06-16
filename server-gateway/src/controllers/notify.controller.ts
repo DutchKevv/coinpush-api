@@ -1,7 +1,7 @@
 import * as request from 'request-promise';
 import { IReqUser } from 'coinpush/interface/IReqUser.interface';
 
-const config = require('../../../tradejs.config.js');
+const config = require('../../../coinpush.config.js');
 
 export const notifyController = {
 

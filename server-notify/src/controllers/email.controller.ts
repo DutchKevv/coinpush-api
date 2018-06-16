@@ -2,7 +2,7 @@ import * as nodeMailer from 'nodemailer';
 import { userController } from './user.controller';
 import { IUser } from 'coinpush/interface/IUser.interface';
 
-const config = require('../../../tradejs.config.js');
+const config = require('../../../coinpush.config.js');
 
 const transporter = nodeMailer.createTransport(config.email.account.noReply);
 

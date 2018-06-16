@@ -8,7 +8,7 @@ import { userController } from '../controllers/user.controller';
 import { G_ERROR_MAX_SIZE } from 'coinpush/constant';
 import { IReqUser } from 'coinpush/interface/IReqUser.interface';
 
-const config = require('../../../tradejs.config.js');
+const config = require('../../../coinpush.config.js');
 
 const upload = multer({ storage: multer.memoryStorage({}) });
 export const router = Router();

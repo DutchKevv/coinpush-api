@@ -13,7 +13,7 @@
     "url": "https://github.com/DutchKevv/CoinPush.git"
   },
   "keywords": [
-    "TradeJS",
+    "CoinPush",
     "Stock",
     "Forex",
     "Trade",
@@ -57,13 +57,13 @@
     "d-up": "docker-compose up",
     "d-prune": "docker system prune",
     "clean-client": "cd ./scripts && sh ./clean-npm-modules.sh",
+    "clean-npm-modules": "cd ./scripts && sh ./clean-npm-modules.sh",
     "clean-app": "cd ./scripts && sh ./clean-npm-modules.sh",
     "clean-server": "cd ./scripts && sh ./clean-npm-modules.sh",
     "clean-db": "",
     "clean-candles": "docker exec -it mongodb bash -c 'mongo < myFile.js'",
-    "_prod": "pm2 start ecosystem.config.js --env production && pm2 monit",
+    "update-npm-modules": "cd ./scripts && sh ./update-npm-modules.sh",
     "inc-build-number": "node ./scripts/inc-build-number.js",
-    "test": "echo $(pwd)",
     "get-ssl-cert": "docker run -v $(pwd)/server-nginx/ssl:/etc/letsencrypt -e http_proxy=$http_proxy -e domains=\"coinpush.app,jenkins.coinpush.app\" -e email=\"kewin@frontend-freelance.com\" -p 80:80 -p 443:443  --rm pierreprinetti/certbot:latest --expand"
   },
   "dependencies": {}

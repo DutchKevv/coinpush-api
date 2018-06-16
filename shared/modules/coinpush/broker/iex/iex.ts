@@ -4,15 +4,15 @@ import { splitToChunks, timeFrameSteps } from '../../util/util.date';
 import { stringify } from 'querystring';
 import { log } from '../../util/util.log';
 import { EventEmitter } from 'events';
-import { ORDER_TYPE_IF_TOUCHED, ORDER_TYPE_LIMIT, ORDER_TYPE_MARKET, ORDER_TYPE_STOP, BROKER_GENERAL_TYPE_CC, SYMBOL_CAT_TYPE_CRYPTO, ORDER_SIDE_BUY, CANDLE_DEFAULT_ROW_LENGTH } from '../../constant';
+import { BROKER_GENERAL_TYPE_CC, SYMBOL_CAT_TYPE_CRYPTO, CANDLE_DEFAULT_ROW_LENGTH } from '../../constant';
 import * as request from 'requestretry';
-import { symbols } from './symbols';
+import { symbolList } from './symbol-list';
+import { activeSymbols } from './symbols-active';
 import * as io from 'socket.io-client';
-import { CCC } from './util.cc';
 
-let currentPrice = {};
+const URL_PREFIX = 'https://ws-api.iextrading.com/1.0';
 
-export default class CyrptoCompareApi extends EventEmitter {
+export default class IEXApi extends EventEmitter {
 
     private _socket: any;
     private _activeSubs: Array<string> = [];
@@ -29,7 +29,7 @@ export default class CyrptoCompareApi extends EventEmitter {
         super();
 
         this._setupSocketIO();
-        this._socket.emit('SubAdd', { subs: [`5~CCCAGG~BTC~USD`] });
+        this._connectSocketIO();
     }
 
     public async testConnection(): Promise<boolean> {
@@ -37,11 +37,9 @@ export default class CyrptoCompareApi extends EventEmitter {
     }
 
     public subscribePriceStream(symbols: Array<any>): void {
-        //Format: {SubscriptionId}~{ExchangeName}~{FromSymbol}~{ToSymbol}
-        //Use SubscriptionId 0 for TRADE, 2 for CURRENT and 5 for CURRENTAGG
-        //For aggregate quote updates use CCCAGG as market
-        this._activeSubs = symbols.map(symbol => `5~CCCAGG~${symbol.name}~BTC`);
-        this._socket.emit('SubAdd', { subs: this._activeSubs });
+        this._activeSubs = symbols.map(symbol => symbol.name);
+        this._socket.emit('subscribe', 'snap,fb,aig+');
+        this._socket.emit('subscribe', this._activeSubs);
     }
 
     public unsubscribePriceStream(instruments) {
@@ -50,39 +48,12 @@ export default class CyrptoCompareApi extends EventEmitter {
     }
 
     public async getSymbols(): Promise<Array<any>> {
-        try {
-            const result = await request({
-                uri: 'https://min-api.cryptocompare.com/data/all/coinlist',
-                fullResponse: false,
-                json: true
-            });
-
-            const normalized = [];
-            for (let key in result.Data) {
-                const coin = result.Data[key];
-
-                if (symbols.indexOf(coin.Name) === -1)
-                    continue;
-                    SYMBOL_CAT_TYPE_COMPANY
-                normalized.push({
-                    type: SYMBOL_CAT_TYPE_CRYPTO,
-                    name: coin.Name,
-                    displayName: coin.CoinName,
-                    img: 'https://www.cryptocompare.com' + coin.ImageUrl,
-                    broker: BROKER_GENERAL_TYPE_CC
-                });
-            }
-
-            return normalized;
-
-        } catch (error) {
-            throw error;
-        }
+        return Promise.resolve(activeSymbols);
     }
 
     public async getCandles(symbol: string, timeFrame: string, from: number, until: number, count: number, onData: Function): Promise<void> {
         until = until || Date.now() + (1000 * 60 * 60 * 24);
-        let chunks = splitToChunks(timeFrame, from, until, count, CyrptoCompareApi.FETCH_CHUNK_LIMIT),
+        let chunks = splitToChunks(timeFrame, from, until, count, IEXApi.FETCH_CHUNK_LIMIT),
             writeChunks = 0,
             finished = 0,
             url = '';
@@ -92,13 +63,14 @@ export default class CyrptoCompareApi extends EventEmitter {
 
         switch (timeFrame) {
             case 'M1':
-                url = 'https://min-api.cryptocompare.com/data/histominute?';
+                url = `${URL_PREFIX}/stock/${symbol}/chart/1d`;
+                url = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=MSFT&interval=1min&apikey=demo';
                 break;
             case 'H1':
-                url = 'https://min-api.cryptocompare.com/data/histohour?';
+                url = `${URL_PREFIX}/stock/${symbol}/chart/1d`;
                 break;
             case 'D':
-                url = 'https://min-api.cryptocompare.com/data/histoday?';
+                url = `${URL_PREFIX}/stock/${symbol}/chart/1d`;
                 break;
         }
 
@@ -145,24 +117,10 @@ export default class CyrptoCompareApi extends EventEmitter {
     }
 
     public destroy(): void {
-
         if (this._client)
             this._client.kill();
 
         this._client = null;
-    }
-
-    private orderTypeConstantToString(type) {
-        switch (type) {
-            case ORDER_TYPE_MARKET:
-                return 'market';
-            case ORDER_TYPE_LIMIT:
-                return 'limit';
-            case ORDER_TYPE_STOP:
-                return 'stop';
-            case ORDER_TYPE_IF_TOUCHED:
-                return 'marketIfTouched';
-        }
     }
 
     private async _doRequest(url, params: any, reattempt = 0) {
@@ -206,86 +164,50 @@ export default class CyrptoCompareApi extends EventEmitter {
     }
 
     private _setupSocketIO() {
-        this._socket = io.connect('https://streamer.cryptocompare.com/');
+        this._socket = io.connect('https://ws-api.iextrading.com/1.0/');
 
+        // Connect to the channel
         this._socket.on('connect', () => {
-            log.info('CryptoCompare socket connected');
-            this._socket.emit('SubAdd', { subs: [`5~CCCAGG~BTC~USD`] });
-            this._socket.emit('SubAdd', { subs: this._activeSubs });
-        });
+
+            // Subscribe to topics (i.e. appl,fb,aig+)
+            this._socket.emit('subscribe', 'snap,fb,aig+')
+
+            // Unsubscribe from topics (i.e. aig+)
+            // this._socket.emit('unsubscribe', 'aig+')
+        })
 
         this._socket.on("disconnect", (message) => {
             log.info('CryptoCompare socket disconnected, reconnecting and relistening symbols');
 
             clearTimeout(this._reconnectTimeout);
-            this._reconnectTimeout = setTimeout(() => this._socket.connect(), this._reconnectTimeoutTime);
+            this._reconnectTimeout = setTimeout(() => this._connectSocketIO(), this._reconnectTimeoutTime);
         });
 
         this._socket.on("connect_error", (error) => {
             log.error('connect error!', error);
 
             clearTimeout(this._reconnectTimeout);
-            this._reconnectTimeout = setTimeout(() => this._socket.connect(), this._reconnectTimeoutTime);
+            this._reconnectTimeout = setTimeout(() => this._connectSocketIO(), this._reconnectTimeoutTime);
         });
 
         this._socket.on("reconnect_error", (error) => {
             log.error('reconnect error!', error);
 
             clearTimeout(this._reconnectTimeout);
-            this._reconnectTimeout = setTimeout(() => this._socket.connect(), this._reconnectTimeoutTime);
+            this._reconnectTimeout = setTimeout(() => this._connectSocketIO(), this._reconnectTimeoutTime);
         });
 
-        // on tick(s)
-        this._socket.on("m", (message) => {
-
-            const messageType = message.substring(0, message.indexOf("~"));
-            const res = CCC.CURRENT.unpack(message);
-
-            if (res.FROMSYMBOL === 'BTC') {
-                if (res.TOSYMBOL === 'BTC')
-                    return;
-
-                if (res.TOSYMBOL === 'USD')
-                    this._latestBtcUsd = res.PRICE;
-            }
-
-            if (this._latestBtcUsd && res.PRICE) {
-                if (!(res.FROMSYMBOL === 'BTC' && res.TOSYMBOL === 'USD')) {
-                    res.PRICE = parseFloat(<any>(res.PRICE * this._latestBtcUsd)).toPrecision(6);
-                }
-
-                this.emit('tick', {
-                    time: res.LASTUPDATE * 1000,
-                    instrument: res.FROMSYMBOL,
-                    bid: res.PRICE
-                });
-            } else {
-                // console.log(res);
-            }
+        // Listen to the channel's messages
+        this._socket.on('message', message => {
+            console.log('MESSAGE!!!', message);
+           
         });
+    }
+
+    private _connectSocketIO() {
+        this._socket.connect();
+
+        // Subscribe to topics (i.e. appl,fb,aig+)
+        // this._socket.emit('subscribe', 'snap,fb,aig+')
     }
 }
-
-
-function dataUnpack(data) {
-    var from = data['FROMSYMBOL'];
-    var to = data['TOSYMBOL'];
-    var fsym = CCC.STATIC.CURRENCY.getSymbol(from);
-    var tsym = CCC.STATIC.CURRENCY.getSymbol(to);
-    var pair = from + to;
-
-    if (!currentPrice.hasOwnProperty(pair)) {
-        currentPrice[pair] = {};
-    }
-
-    for (var key in data) {
-        currentPrice[pair][key] = data[key];
-    }
-
-    if (currentPrice[pair]['LASTTRADEID']) {
-        currentPrice[pair]['LASTTRADEID'] = parseInt(currentPrice[pair]['LASTTRADEID']).toFixed(0);
-    }
-    currentPrice[pair]['CHANGE24HOUR'] = CCC.convertValueToDisplay(tsym, (currentPrice[pair]['PRICE'] - currentPrice[pair]['OPEN24HOUR']));
-    currentPrice[pair]['CHANGE24HOURPCT'] = ((currentPrice[pair]['PRICE'] - currentPrice[pair]['OPEN24HOUR']) / currentPrice[pair]['OPEN24HOUR'] * 100).toFixed(2) + "%";;
-    // displayData(currentPrice[pair], from, tsym, fsym);
-};

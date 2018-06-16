@@ -4,7 +4,7 @@ import * as helmet from 'helmet';
 import * as morgan from 'morgan';
 import {json, urlencoded} from 'body-parser';
 
-const config = require('../../tradejs.config.js');
+const config = require('../../coinpush.config.js');
 const app = express();
 app.listen(config.server.user.port, '0.0.0.0', () => console.log(`\n User service started on      : 0.0.0.0:${config.server.user.port}`));
 

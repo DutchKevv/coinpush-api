@@ -1,6 +1,6 @@
 import * as request from 'request-promise';
 
-const config = require('../../../tradejs.config.js');
+const config = require('../../../coinpush.config.js');
 
 export const favoriteController = {
 

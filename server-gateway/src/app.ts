@@ -22,7 +22,7 @@ process.on('unhandledRejection', (reason, p) => {
 
 
 // configuration
-const config = require('../../tradejs.config.js');
+const config = require('../../coinpush.config.js');
 
 export const app = {
 

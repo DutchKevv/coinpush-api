@@ -54,8 +54,8 @@ services:
     volumes:
       - ./server-gateway/src:/usr/src/app/server-gateway/src
       - ./server-gateway/_log:/usr/src/app/server-gateway/_log
-      - ./tradejs.config.js:/usr/src/app/tradejs.config.js
-      - ./tradejs.config.custom.js:/usr/src/app/tradejs.config.custom.js
+      - ./coinpush.config.js:/usr/src/app/coinpush.config.js
+      - ./coinpush.config.custom.js:/usr/src/app/coinpush.config.custom.js
       - ./static/image:/usr/src/app/static/image
       - /usr/src/app/server-gateway/node_modules
       - /usr/src/app/shared/modules/coinpush/node_modules
@@ -73,8 +73,8 @@ services:
     volumes:
       - ./server-cache/src:/usr/src/app/server-cache/src
       - ./server-cache/_log:/usr/src/app/server-cache/_log
-      - ./tradejs.config.js:/usr/src/app/tradejs.config.js
-      - ./tradejs.config.custom.js:/usr/src/app/tradejs.config.custom.js
+      - ./coinpush.config.js:/usr/src/app/coinpush.config.js
+      - ./coinpush.config.custom.js:/usr/src/app/coinpush.config.custom.js
       - /usr/src/app/server-cache/node_modules
       - ./shared/modules/coinpush:/usr/src/app/shared/modules/coinpush
       - /usr/src/app/shared/modules/coinpush/node_modules
@@ -93,8 +93,8 @@ services:
     volumes:
       - ./server-user/src:/usr/src/app/server-user/src
       - ./server-user/_log:/usr/src/app/server-user/_log
-      - ./tradejs.config.js:/usr/src/app/tradejs.config.js
-      - ./tradejs.config.custom.js:/usr/src/app/tradejs.config.custom.js
+      - ./coinpush.config.js:/usr/src/app/coinpush.config.js
+      - ./coinpush.config.custom.js:/usr/src/app/coinpush.config.custom.js
       - /usr/src/app/server-user/node_modules
       - /usr/src/app/shared/modules/coinpush/node_modules
     links:
@@ -112,8 +112,8 @@ services:
     volumes:
       - ./server-notify/src:/usr/src/app/server-notify/src
       - ./server-notify/_log:/usr/src/app/server-notify/_log
-      - ./tradejs.config.js:/usr/src/app/tradejs.config.js
-      - ./tradejs.config.custom.js:/usr/src/app/tradejs.config.custom.js
+      - ./coinpush.config.js:/usr/src/app/coinpush.config.js
+      - ./coinpush.config.custom.js:/usr/src/app/coinpush.config.custom.js
       - /usr/src/app/server-notify/node_modules
       - /usr/src/app/shared/modules/coinpush/node_modules
     links:
@@ -131,8 +131,8 @@ services:
     volumes:
       - ./server-comment/src:/usr/src/app/server-comment/src
       - ./server-comment/_log:/usr/src/app/server-comment/_log
-      - ./tradejs.config.js:/usr/src/app/tradejs.config.js
-      - ./tradejs.config.custom.js:/usr/src/app/tradejs.config.custom.js
+      - ./coinpush.config.js:/usr/src/app/coinpush.config.js
+      - ./coinpush.config.custom.js:/usr/src/app/coinpush.config.custom.js
       - /usr/src/app/server-comment/node_modules
       - /usr/src/app/shared/modules/coinpush/node_modules
     links:
@@ -150,8 +150,8 @@ services:
     volumes:
       - ./server-event/src:/usr/src/app/server-event/src
       - ./server-event/_log:/usr/src/app/server-event/_log
-      - ./tradejs.config.js:/usr/src/app/tradejs.config.js
-      - ./tradejs.config.custom.js:/usr/src/app/tradejs.config.custom.js
+      - ./coinpush.config.js:/usr/src/app/coinpush.config.js
+      - ./coinpush.config.custom.js:/usr/src/app/coinpush.config.custom.js
       - /usr/src/app/server-event/node_modules
       - /usr/src/app/shared/modules/coinpush/node_modules
     links:

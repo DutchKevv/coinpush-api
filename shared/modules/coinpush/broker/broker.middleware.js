@@ -50,7 +50,8 @@ var util_log_1 = require("../util/util.log");
 var index_1 = require("./oanda/index");
 var cryptocompare_broker_1 = require("./cc/cryptocompare.broker");
 var constant_1 = require("../constant");
-var config = require('../../../../tradejs.config.js');
+var iex_1 = require("./iex/iex");
+var config = require('../../../../coinpush.config.js');
 var BrokerMiddleware = /** @class */ (function (_super) {
     __extends(BrokerMiddleware, _super);
     function BrokerMiddleware() {
@@ -58,10 +59,12 @@ var BrokerMiddleware = /** @class */ (function (_super) {
         _this._symbols = [];
         _this._brokers = {
             oanda: null,
-            cc: null
+            cc: null,
+            iex: null
         };
         _this._installBrokerOanda();
         _this._installBrokerCC();
+        _this._installBrokerIEX();
         return _this;
     }
     Object.defineProperty(BrokerMiddleware.prototype, "symbols", {
@@ -170,17 +173,22 @@ var BrokerMiddleware = /** @class */ (function (_super) {
     };
     BrokerMiddleware.prototype.openTickStream = function (brokerNames) {
         var _this = this;
-        if (brokerNames === void 0) { brokerNames = []; }
-        var brokers = this.splitSymbolsToBrokers(this.symbols);
-        if (!brokerNames.length || brokerNames.indexOf('oanda') > -1) {
+        if (brokerNames === void 0) { brokerNames = ['oanda', 'cc', 'iex']; }
+        var brokerSymbols = this.splitSymbolsToBrokers(this.symbols);
+        if (brokerNames.includes('oanda')) {
             this._brokers.oanda.on('tick', function (tick) { return _this.emit('tick', tick); });
-            this._brokers.oanda.subscribePriceStream(brokers.oanda);
+            this._brokers.oanda.subscribePriceStream(brokerSymbols.oanda);
             util_log_1.log.info('Cache', 'oanda tick streams active');
         }
-        if (!brokerNames.length || brokerNames.indexOf('cc') > -1) {
+        if (brokerNames.includes('cc')) {
             this._brokers.cc.on('tick', function (tick) { return _this.emit('tick', tick); });
-            this._brokers.cc.subscribePriceStream(brokers.cc);
+            this._brokers.cc.subscribePriceStream(brokerSymbols.cc);
             util_log_1.log.info('Cache', 'cryptocompare tick streams active');
+        }
+        if (brokerNames.includes('iex')) {
+            this._brokers.iex.on('tick', function (tick) { return _this.emit('tick', tick); });
+            this._brokers.iex.subscribePriceStream(brokerSymbols.iex);
+            util_log_1.log.info('Cache', 'iex tick streams active');
         }
     };
     BrokerMiddleware.prototype.getSymbolsByBroker = function (broker) {
@@ -189,7 +197,8 @@ var BrokerMiddleware = /** @class */ (function (_super) {
     BrokerMiddleware.prototype.splitSymbolsToBrokers = function (symbols) {
         return {
             oanda: symbols.filter(function (symbol) { return symbol.broker === constant_1.BROKER_GENERAL_TYPE_OANDA; }),
-            cc: symbols.filter(function (symbol) { return symbol.broker === constant_1.BROKER_GENERAL_TYPE_CC; })
+            cc: symbols.filter(function (symbol) { return symbol.broker === constant_1.BROKER_GENERAL_TYPE_CC; }),
+            iex: symbols.filter(function (symbol) { return symbol.broker === constant_1.BROKER_GENERAL_TYPE_IEX; })
         };
     };
     BrokerMiddleware.prototype._installBrokerOanda = function () {
@@ -206,6 +215,9 @@ var BrokerMiddleware = /** @class */ (function (_super) {
     };
     BrokerMiddleware.prototype._installBrokerCC = function () {
         this._brokers.cc = new cryptocompare_broker_1.default({});
+    };
+    BrokerMiddleware.prototype._installBrokerIEX = function () {
+        this._brokers.iex = new iex_1.default({});
     };
     BrokerMiddleware.prototype.destroy = function () {
     };

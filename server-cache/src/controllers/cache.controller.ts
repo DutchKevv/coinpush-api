@@ -7,11 +7,9 @@ import { BROKER_GENERAL_TYPE_CC, BROKER_GENERAL_TYPE_OANDA } from 'coinpush/cons
 import { timeFrameSteps } from 'coinpush/util/util.date';
 import { pubClient } from 'coinpush/redis';
 
-const config = require('../../../tradejs.config.js');
+const config = require('../../../coinpush.config.js');
 
 const HISTORY_COUNT_DEFAULT = 400;
-
-log.error('kikaboe');
 
 export const cacheController = {
 
