@@ -46,20 +46,20 @@ export class StorageHelper {
         return this._instance.setItem(key, value);
     }
 
-    public async updateProfile(value: any, newProfile: boolean = false): Promise<void> {
+    public async updateProfile(value: any, isNew: boolean = false): Promise<void> {
         if (!value) {
             throw new Error('No value given');
         }
 
         // userId must be known or given
-        if (!this.profileData._id && (newProfile && !value._id)) {
+        if (!this.profileData._id && (isNew && !value._id)) {
             throw new Error('Not loggedin and no [user]_id given in data object');
         }
 
         this.profileData = deepmerge.default.all([this.profileData, value]);
         await this.set(`user-profile-${this.profileData._id}`, this.profileData);
 
-        if (newProfile) {
+        if (isNew) {
             await this.set('last-user-id', this.profileData._id);
         }
     }

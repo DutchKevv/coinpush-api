@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import { deviceController } from '../controllers/device.controller';
 
-const config = require('../../../coinpush.config.js');
 const router = Router();
 
 /**

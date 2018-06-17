@@ -1,6 +1,5 @@
 import * as request from 'request-promise';
-
-const config = require('../../../coinpush.config.js');
+import { config } from 'coinpush/src/util/util-config';
 
 export const timelineController = {
 

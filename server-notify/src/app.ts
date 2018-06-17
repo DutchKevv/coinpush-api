@@ -4,9 +4,11 @@ import * as morgan from 'morgan';
 import * as mongoose from 'mongoose';
 import { json, urlencoded } from 'body-parser';
 import { notifyController } from './controllers/notify.controller';
-import { subClient } from 'coinpush/redis';
+import { subClient } from 'coinpush/src/redis';
+import { config } from 'coinpush/src/util/util-config';
+import { G_ERROR_DUPLICATE_CODE, G_ERROR_DUPLICATE_NAME } from 'coinpush/src/constant';
+import { log } from 'coinpush/src/util/util.log';
 
-const config = require('../../coinpush.config.js');
 const app = express();
 app.listen(config.server.notify.port, '0.0.0.0', () => console.log(`\n Notify service started on      : 0.0.0.0:${config.server.notify.port}`));
 
@@ -47,16 +49,23 @@ app.use('/mail', require('./api/email.api'));
 app.use('/user', require('./api/user.api'));
 app.use('/device', require('./api/device.api'));
 
-app.use((error, req, res, next) => {
-	console.log('asdfsdfasdfasdfasdfasdf', error);
-
-	if (res.headersSent)
+app.use((error, req, res, next) => {	
+	if (res.headersSent) {
+		log.error('API', error);
 		return next(error);
+	}
+		
+	// pre-handled error
+	if (error.statusCode)
+		return res.status(error.statusCode).send(error);
 
-	if (error && error.statusCode === 401)
-		return res.send(401);
+	// to-handle error
+	if (error.name === G_ERROR_DUPLICATE_NAME)
+		return res.status(409).send({ code: G_ERROR_DUPLICATE_CODE, field: Object.keys(error.errors)[0] });
 
-	res.status(500).send({ error });
+	// system error
+	log.error('API', error);
+	res.status(500).send(error || 'Unknown error');
 });
 
 subClient.subscribe("notify");

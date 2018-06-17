@@ -18,7 +18,7 @@ import { SymbolListService } from '../../services/symbol-list.service';
 import { AuthenticationService } from '../../services/authenticate.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { app } from '../../../core/app';
-import { SYMBOL_CAT_TYPE_RESOURCE, SYMBOL_CAT_TYPE_CRYPTO, BROKER_GENERAL_TYPE_OANDA, BROKER_GENERAL_TYPE_CC } from 'coinpush/constant';
+import { SYMBOL_CAT_TYPE_RESOURCE, SYMBOL_CAT_TYPE_CRYPTO, BROKER_GENERAL_TYPE_OANDA, BROKER_GENERAL_TYPE_CC } from 'coinpush/src/constant';
 import { EventService } from '../../services/event.service';
 
 const DEFAULT_FILTER_POPULAR_LENGTH = 40;

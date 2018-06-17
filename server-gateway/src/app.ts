@@ -6,11 +6,13 @@ import * as helmet from 'helmet';
 import * as morgan from 'morgan';
 import * as io from 'socket.io';
 import { symbolController } from './controllers/symbol.controller';
-import { BrokerMiddleware } from 'coinpush/broker';
-import { log } from 'coinpush/util/util.log';
-import { subClient } from 'coinpush/redis';
+import { BrokerMiddleware } from 'coinpush/src/broker';
+import { log } from 'coinpush/src/util/util.log';
+import { subClient } from 'coinpush/src/redis';
 import * as expressJwt from 'express-jwt';
 import * as jwt from 'jsonwebtoken';
+import { config } from 'coinpush/src/util/util-config';
+import { G_ERROR_MAX_SIZE, G_ERROR_UNKNOWN } from 'coinpush/src/constant';
 
 const PATH_WWW_BROWSER_NOT_SUPPORTED_FILE = path.join(__dirname, '../public/index.legacy.browser.html');
 
@@ -19,10 +21,6 @@ process.on('unhandledRejection', (reason, p) => {
 	console.log('Possibly Unhandled Rejection at: Promise ', p, ' reason: ', reason);
 	throw reason;
 });
-
-
-// configuration
-const config = require('../../coinpush.config.js');
 
 export const app = {
 
@@ -115,7 +113,7 @@ export const app = {
 				return json()(req, res, next);
 			};
 		};
-		
+
 		this.api.use(bodyParserJsonMiddleware());
 		this.api.use(morgan(process.env.NODE_ENV || 'dev'));
 		this.api.use(helmet());
@@ -132,10 +130,10 @@ export const app = {
 				return req.headers.authorization.split(' ')[1];
 		};
 
-		this.api.use(expressJwt({ 
-			secret: config.auth.jwt.secret, 
+		this.api.use(expressJwt({
+			secret: config.auth.jwt.secret,
 			getToken,
-			credentialsRequired: true 
+			credentialsRequired: true
 		}).unless(req => {
 			return (
 				(req.method === 'GET' && !req.originalUrl.startsWith('/api/v1/authenticate')) ||
@@ -165,7 +163,7 @@ export const app = {
 				next();
 			} else {
 				const token = getToken(req);
-		
+
 				if (token) {
 					jwt.verify(token, config.auth.jwt.secret, {}, (error, decoded) => {
 						if (error) {
@@ -188,7 +186,7 @@ export const app = {
 		 */
 		this.api.use((req, res, next) => {
 			if (req.headers.clientversion && req.headers.clientversion !== config.appVersion)
-				return res.status(400).send({reason: 'outdated'});
+				return res.status(400).send({ reason: 'outdated' });
 
 			next();
 		});
@@ -261,23 +259,44 @@ export const app = {
 		/**
 		 * error handling
 		 */
-		this.api.use((error, req, res, next) => {
-			if (res.headersSent)
+		this.api.use((error, req, res, next) => {			
+			if (res.headersSent) {
+				log.error('API', error);
 				return next(error);
-
-			if (error && error.statusCode) {
-				res.status(error.statusCode).send(error.error);
-
-				if (error.message)
-					console.error(error.message);
-
-				return;
 			}
-			console.error(error);
-			res.status(500).send('Error');
+			
+			// normal error object3
+			if (error && (error.code || error.statusCode)) {
+				// known error
+				if (error.statusCode) {
+					return res.status(error.statusCode).send(error.error || {
+						statusCode: error.statusCode,
+						message: error.message
+					});
+				}
+					
+				// custom error
+				switch (parseInt(error.code, 10)) {
+					case G_ERROR_MAX_SIZE:
+						res.status(413).send(error);
+						break;
+					default:
+						log.error('Upload API', error.message || error.error || 'Unknown error');
+						res.status(500).send({
+							code: G_ERROR_UNKNOWN,
+							message: 'Unknown error'
+						});
+				}
+			}
+
+			// unknown error
+			else {
+				log.error('API', error);
+				res.status(500).send('Unknown error');
+			}
 		});
 
-		const server = http.listen(config.server.gateway.port, '0.0.0.0', () => console.log(`\n Gateway service started on      : 0.0.0.0:${config.server.gateway.port}`));
+		const server = http.listen(config.server.gateway.port, '0.0.0.0', () => log.info('App', `Service started -> 0.0.0.0:${config.server.gateway.port}`));
 	},
 
 	_toggleWebSocketTickInterval(state: boolean) {

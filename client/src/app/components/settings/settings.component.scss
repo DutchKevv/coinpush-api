@@ -145,6 +145,7 @@ nav {
 .profile-image-box {
 	text-align: center;
 	margin-bottom: 30px;
+	position: relative;
 
 	.uploadInput {
 		width: 0.1px;
@@ -188,4 +189,36 @@ nav {
 		}
 	}
 
+}
+
+.spinner-box {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0, 0, 0, 0.85);
+	display: none;
+
+	&.active {
+		display: block;
+	}
+
+	span {
+		position: absolute;
+		margin-top: calc(50% - 20px);
+		font-size: 26px;
+		left: 0;
+		right: 0;
+		z-index: 5;
+	}
+}
+
+.spinner {
+	width: 100px;
+    height: 100px;
+	margin-top: calc(50% - 50px);
+	margin-left: calc(50% - 50px);
+	border-bottom-color: #228b07;
+	border-width: 20px;
 }

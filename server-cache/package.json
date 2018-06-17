@@ -6,12 +6,11 @@
     "type": "git",
     "url": "https://github.com/DutchKevv/CoinPush.git"
   },
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "install-shared": "cd ../shared/modules/coinpush && npm i",
-    "start": "tsc-watch --sourceMap --onSuccess \"node index.js\"",
+    "start": "tsc-watch --sourceMap --onSuccess \"node ./src/index.js\"",
     "build": "tsc",
-    "prod": "node index.js"
+    "prod": "node ./src/index.js"
   },
   "author": "H.K.Brandsma",
   "license": "ISC",

@@ -1,6 +1,5 @@
 import {Router} from 'express';
 import {userController} from '../controllers/user.controller';
-import { G_ERROR_DUPLICATE } from 'coinpush/constant';
 
 const router = Router();
 
@@ -33,14 +32,6 @@ router.post('/', async (req: any, res, next) => {
 	try {
 		res.send(await userController.create(req.user, req.body, req.query));
 	} catch (error) {
-		console.log(error);
-		console.log('asdasdsd');
-		if (error) {
-			if (error.name === 'ValidationError') {
-				res.status(409).send({ code: G_ERROR_DUPLICATE, field: Object.keys(error.errors)[0] });
-				return;
-			}
-		}
 		next(error);
 	}
 });

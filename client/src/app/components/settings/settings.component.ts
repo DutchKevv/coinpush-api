@@ -3,8 +3,8 @@ import {
 	ViewEncapsulation
 } from '@angular/core';
 import { UserService } from '../../services/user.service';
-import { FormBuilder } from '@angular/forms';
-import { USER_FETCH_TYPE_PROFILE_SETTINGS, G_ERROR_MAX_SIZE } from 'coinpush/constant';
+import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import { USER_FETCH_TYPE_PROFILE_SETTINGS, G_ERROR_MAX_SIZE } from 'coinpush/src/constant';
 import { UserModel } from '../../models/user.model';
 import { AuthenticationService } from '../../services/authenticate.service';
 import { AlertService } from '../../services/alert.service';
@@ -25,12 +25,13 @@ declare let $: any;
 export class SettingsComponent implements OnInit, OnDestroy {
 
 	public activeTab: string = 'profile';
-	public model: any;
+	public userModel: UserModel = this._userService.model;
 	public form: any;
 
 	@ViewChild('profileImg') profileImg: ElementRef;
 	@ViewChild('uploadBtn') uploadBtn: ElementRef;
 	@ViewChild('uploadImageHolder') uploadImageHolder: ElementRef;
+	@ViewChild('uploadImageLoading') uploadImageLoading: ElementRef;
 	@ViewChild('saveOptions') saveOptions: ElementRef;
 
 	countries = window['countries'];
@@ -45,15 +46,15 @@ export class SettingsComponent implements OnInit, OnDestroy {
 	}
 
 	// TODO: Gets called twice!
-	ngOnInit() {
-		this.model = this._userService.model;
-
+	async ngOnInit() {
 		this.form = this._formBuilder.group({
-			name: this._userService.model.get('name'),
-			email: this._userService.model.get('email'),
-			description: this._userService.model.get('description') || '',
-			country: this._userService.model.get('country'),
-			gender: this._userService.model.get('gender'),
+			name: new FormControl(this.userModel.get('name'), {
+				updateOn: 'blur'
+			}),
+			email: this.userModel.get('email'),
+			description: this.userModel.get('description') || '',
+			country: this.userModel.get('country'),
+			gender: this.userModel.get('gender'),
 			'settings.lowMargin': 0,
 			'settings.orderClosedByMarket': 0,
 			'settings.userFollowsMe': 0,
@@ -61,35 +62,33 @@ export class SettingsComponent implements OnInit, OnDestroy {
 			'settings.like': 0,
 			'settings.comment': 0,
 			'settings.summary': 0,
-		});
+		}, { updateOn: 'blur' });
 
-		this._userService.findById(this._userService.model.get('_id'), { type: USER_FETCH_TYPE_PROFILE_SETTINGS }).then((user: UserModel) => {
+		this.userModel = await this._userService.findById(this.userModel.get('_id'), { type: USER_FETCH_TYPE_PROFILE_SETTINGS }).toPromise();
 
-			this.form.setValue({
-				name: user.options.name,
-				email: user.options.email,
-				country: user.options.country,
-				description: user.options.description,
-				gender: user.options.gender,
-				'settings.lowMargin': +user.options.settings.lowMargin,
-				'settings.orderClosedByMarket': +user.options.settings.orderClosedByMarket,
-				'settings.userFollowsMe': +user.options.settings.userFollowsMe,
-				'settings.userCopiesMe': +user.options.settings.userCopiesMe,
-				'settings.like': +user.options.settings.like,
-				'settings.comment': +user.options.settings.like,
-				'settings.summary': +user.options.settings.summary,
-			}, { onlySelf: true });
+		this.form.setValue({
+			name: this.userModel.options.name,
+			email: this.userModel.options.email,
+			country: this.userModel.options.country,
+			description: this.userModel.options.description,
+			gender: this.userModel.options.gender,
+			'settings.lowMargin': +this.userModel.options.settings.lowMargin,
+			'settings.orderClosedByMarket': +this.userModel.options.settings.orderClosedByMarket,
+			'settings.userFollowsMe': +this.userModel.options.settings.userFollowsMe,
+			'settings.userCopiesMe': +this.userModel.options.settings.userCopiesMe,
+			'settings.like': +this.userModel.options.settings.like,
+			'settings.comment': +this.userModel.options.settings.like,
+			'settings.summary': +this.userModel.options.settings.summary,
+		}, { onlySelf: true, updateOn: 'blur' });
 
-			this.form.valueChanges.subscribe(data => {
-				const changes = {};
+		this.form.valueChanges.subscribe(data => {
+			const changes = {};
 
-				Object.keys(data).forEach(key => {
-					if (data[key] !== null)
-						changes[key] = data[key];
-				});
-
-				this._userService.update(changes);
+			Object.keys(data).forEach(key => {
+				if (data[key] !== null) changes[key] = data[key];
 			});
+
+			this._userService.update(changes, true, true, true);
 		});
 	}
 
@@ -130,44 +129,45 @@ export class SettingsComponent implements OnInit, OnDestroy {
 		if (input.files && input.files[0]) {
 			let reader = new FileReader();
 
+			// !local! image ready 
 			reader.onload = (e) => this.setProfileImgPreview(e.target['result']);
 
+			// read !local! image
 			reader.readAsDataURL(input.files[0]);
 		}
 	}
 
-	public saveProfileImg() {
+	public async saveProfileImg() {
 		this.toggleSaveOptionsVisibility(false);
+
+		this.uploadImageLoading.nativeElement.classList.add('active');
 
 		let data = new FormData();
 		data.append('image', this.uploadBtn.nativeElement.files.item(0));
 
-		this._http.post('/upload/profile', data).subscribe((result: any) => {
-			this._userService.update({ img: result.url }, false);
-		}, (result) => {
+		try {
+			// upload profile image
+			const result: any = await this._http.post('/upload/profile', data).toPromise();
+
+			// store locally (skip re-sending to server)
+			this._userService.update({ img: result.url }, false, true, true);
+
+		} catch (result) {
 			switch (result.status) {
 				case 413:
-					this._alertService.error('Max file size is 3MB');
+					this._alertService.error(result.error.message || 'Max file reached');
 					break;
 				default:
-					try {
-						const error = JSON.parse(result).error;
-
-						switch (error.code) {
-							case G_ERROR_MAX_SIZE:
-								this._alertService.error('Max file size is 10MB');
-								break;
-						}
-					} catch (catchError) {
-						this._alertService.error('Error uploading image');
-						console.error(result)
-					}
+					this._alertService.error('Error uploading image');
+					console.error(result)
 			}
-		});
+		} finally {
+			this.uploadImageLoading.nativeElement.classList.remove('active');
+		}
 	}
 
 	public resetProfileImg() {
-		this.setProfileImgPreview(this.model.options.img);
+		this.setProfileImgPreview(this.userModel.options.img);
 		this.uploadBtn.nativeElement.value = '';
 		this.toggleSaveOptionsVisibility(false);
 	}

@@ -57,6 +57,7 @@ router.put('/:id', async (req: any, res, next) => {
 	try {
 		res.send(await userController.update(req.user, req.params.id, req.body));
 	} catch (error) {
+		console.log('user user', typeof error);
 		next(error);
 	}
 });
@@ -66,7 +67,6 @@ router.put('/:id', async (req: any, res, next) => {
  */
 router.delete('/:id', async (req: any, res, next) => {
 	try {
-		console.log('user user', req.user, req.params.id);
 		res.send(await userController.remove(req.user, req.params.id));
 	} catch (error) {
 		next(error);

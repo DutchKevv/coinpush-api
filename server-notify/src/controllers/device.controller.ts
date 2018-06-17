@@ -4,9 +4,9 @@ import {
 	G_ERROR_EXPIRED,
 	G_ERROR_USER_NOT_FOUND,
 	REDIS_USER_PREFIX, USER_FETCH_TYPE_ACCOUNT_DETAILS, USER_FETCH_TYPE_PROFILE_SETTINGS, USER_FETCH_TYPE_SLIM,
-} from 'coinpush/constant';
-import { IReqUser } from "coinpush/interface/IReqUser.interface";
-import { IUser } from "coinpush/interface/IUser.interface";
+} from 'coinpush/src/constant';
+import { IReqUser } from "coinpush/src/interface/IReqUser.interface";
+import { IUser } from "coinpush/src/interface/IUser.interface";
 
 const RESET_PASSWORD_TOKEN_EXPIRE = 1000 * 60 * 60 * 24; // 24 hour
 

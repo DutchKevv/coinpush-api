@@ -64,7 +64,7 @@ export class CustomHttp implements HttpInterceptor {
 				this._authenticationService.showLoginRegisterPopup();
 				break;
 			case 409:
-				return throwError(error);
+				return throwError(error.error || error);
 			case 424:
 				if (confirm('New version available. Download now?')) {
 
@@ -73,7 +73,7 @@ export class CustomHttp implements HttpInterceptor {
 				}
 				break;
 			default:
-				return throwError(error);
+				return throwError(error.error || error);
 		}
 
 		return throwError(error);

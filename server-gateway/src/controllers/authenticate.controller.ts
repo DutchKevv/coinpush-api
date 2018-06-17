@@ -1,17 +1,16 @@
 import * as request from 'request-promise';
 import { FB, FacebookApiException } from 'fb';
 import { userController } from "./user.controller";
-import { G_ERROR_UNKNOWN } from "coinpush/constant";
-import { log } from 'coinpush/util/util.log';
-import { IUser } from 'coinpush/interface/IUser.interface';
-import { genderStringToConstant } from 'coinpush/util/util.convert';
+import { G_ERROR_UNKNOWN } from "coinpush/src/constant";
+import { log } from 'coinpush/src/util/util.log';
+import { IUser } from 'coinpush/src/interface/IUser.interface';
+import { genderStringToConstant } from 'coinpush/src/util/util.convert';
 import { deviceController } from './device.controller';
 import { symbolController } from './symbol.controller';
-import { IReqUser } from 'coinpush/interface/IReqUser.interface';
+import { IReqUser } from 'coinpush/src/interface/IReqUser.interface';
 import { notifyController } from './notify.controller';
 import { eventController } from './event.controller';
-
-const config = require('../../../coinpush.config.js');
+import { config } from 'coinpush/src/util/util-config';
 
 export const authenticateController = {
 

@@ -2,9 +2,11 @@ import * as express from 'express';
 import * as mongoose from 'mongoose';
 import * as helmet from 'helmet';
 import * as morgan from 'morgan';
-import {json, urlencoded} from 'body-parser';
+import { json, urlencoded } from 'body-parser';
+import { config } from 'coinpush/src/util/util-config';
+import { G_ERROR_DUPLICATE_CODE, G_ERROR_DUPLICATE_NAME } from 'coinpush/src/constant';
+import { log } from 'coinpush/src/util/util.log';
 
-const config = require('../../coinpush.config.js');
 const app = express();
 app.listen(config.server.user.port, '0.0.0.0', () => console.log(`\n User service started on      : 0.0.0.0:${config.server.user.port}`));
 
@@ -20,7 +22,7 @@ var connectMongo = () => {
 				console.error(error);
 				return reject(error);
 			}
-			
+
 			resolve();
 		});
 	});
@@ -34,7 +36,7 @@ connectMongo();
 app.use(morgan('dev'));
 app.use(helmet());
 app.use(json());
-app.use(urlencoded({extended: false}));
+app.use(urlencoded({ extended: false }));
 app.use((req, res, next) => {
 	res.header('Access-Control-Allow-Origin', '*');
 	res.header('Access-Control-Allow-Headers', '_id, Authorization, Origin, X-Requested-With, Content-Type, Accept');
@@ -45,7 +47,7 @@ app.use((req, res, next) => {
  * Add 'user' variable to request, holding userID
  */
 app.use((req: any, res, next) => {
-	req.user = {id: req.headers['_id']};
+	req.user = { id: req.headers['_id'] };
 	next();
 });
 
@@ -57,16 +59,20 @@ app.use('/authenticate', require('./api/authenticate.api'));
  * error handling
  */
 app.use((error, req, res, next) => {
-	console.error(error);
-	
-	if (res.headersSent)
+	if (res.headersSent) {
+		log.error('API', error);
 		return next(error);
+	}
 
-	if (error && error.statusCode === 401)
-		return res.send(401);
+	// pre-handled error
+	if (error.statusCode)
+		return res.status(error.statusCode).send(error);
 
-	if (error.error)
-		return res.status(500).send(error.error);
+	// to-handle error
+	if (error.name === G_ERROR_DUPLICATE_NAME)
+		return res.status(409).send({ code: G_ERROR_DUPLICATE_CODE, field: Object.keys(error.errors)[0] });
 
-	res.status(500).send(error);
+	// system error
+	log.error('API', error);
+	res.status(500).send(error || 'Unknown error');
 });

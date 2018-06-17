@@ -1,12 +1,11 @@
 import * as fs from 'fs';
 import * as mongoose from 'mongoose';
-import { log } from 'coinpush/util/util.log';
-import { timeFrameSteps } from 'coinpush/util/util.date'
+import { log } from 'coinpush/src/util/util.log';
+import { timeFrameSteps } from 'coinpush/src/util/util.date'
 import { CandleSchema } from '../schemas/candle.schema';
 import { Status } from '../schemas/status.schema';
 import { BulkWriteResult } from 'mongodb';
-
-const config = require('../../../coinpush.config.js');
+import { config } from 'coinpush/src/util/util-config';
 
 const READ_COUNT_DEFAULT = 400;
 

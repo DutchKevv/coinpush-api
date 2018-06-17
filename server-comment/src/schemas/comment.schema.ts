@@ -1,8 +1,6 @@
 import { Schema, model, Types } from 'mongoose';
 import { join } from 'path';
 
-const config = require('../../../coinpush.config.js');
-
 export const CommentSchema = new Schema({
 	createUser: {
 		type: Schema.Types.ObjectId,

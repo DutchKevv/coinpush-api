@@ -15,14 +15,12 @@
     "build-prod-verbose": "ng build --build-optimizer --prod --stats-json --output-hashing=none --verbose > build.txt",
     "load-symbol-images": "node ./tools/load-symbol-images.js",
     "build-spritesheet": "node ./tools/build-spritesheet.js",
-    "bundle-report": "webpack-bundle-analyzer ../static/clients/web/stats.json",
-    "install-shared": "cd ../shared/modules/coinpush && npm i",
-    "coinpush": "file:/usr/src/app/shared/modules/coinpush"
+    "bundle-report": "webpack-bundle-analyzer ../static/clients/web/stats.json"
   },
   "author": "HK Brandsma",
   "license": "Apache-2.0",
   "dependencies": {
-    "@angular-devkit/build-angular": "latest",
+    "@angular-devkit/build-angular": "^0.6.8",
     "@angular/cli": "6.1.0-rc.0",
     "@angular/common": "6.1.0-beta.1",
     "@angular/compiler": "6.1.0-beta.1",
@@ -41,7 +39,9 @@
     "rxjs": "6.2.1",
     "socket.io-client": "2.1.1",
     "typescript": "2.7.2",
-    "webpack-bundle-analyzer": "2.13.1",
     "zone.js": "0.8.26"
+  },
+  "devDependencies": {
+    "webpack-bundle-analyzer": "2.13.1"
   }
 }

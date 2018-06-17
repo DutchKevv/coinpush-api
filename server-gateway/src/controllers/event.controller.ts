@@ -1,9 +1,8 @@
 import * as request from 'request-promise';
-// import {BROKER_ERROR_NOT_ENOUGH_FUNDS} from 'coinpush/util/util.log';
+// import {BROKER_ERROR_NOT_ENOUGH_FUNDS} from 'coinpush/src/util/util.log';
 import {userController} from './user.controller';
-import { IReqUser } from 'coinpush/interface/IReqUser.interface';
-
-const config = require('../../../coinpush.config.js');
+import { IReqUser } from 'coinpush/src/interface/IReqUser.interface';
+import { config } from 'coinpush/src/util/util-config';
 
 export const eventController = {
 

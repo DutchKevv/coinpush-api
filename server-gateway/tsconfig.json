@@ -2,8 +2,11 @@
   "compilerOptions": {
     "target": "es2017",
     "lib": ["esnext"],
-    "moduleResolution": "node",
     "module": "commonjs",
     "pretty": true
-  }
+  },
+  "include": [
+    "./src/**/*.ts",
+    "./node_modules/coinpush/src/**/*.ts"
+  ]
 }

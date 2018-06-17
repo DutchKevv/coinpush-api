@@ -1,12 +1,12 @@
 import * as request from 'request-promise';
-import { USER_FETCH_TYPE_ACCOUNT_DETAILS, USER_FETCH_TYPE_FULL, USER_FETCH_TYPE_PROFILE_SETTINGS } from 'coinpush/constant';
+import { USER_FETCH_TYPE_ACCOUNT_DETAILS, USER_FETCH_TYPE_FULL, USER_FETCH_TYPE_PROFILE_SETTINGS } from 'coinpush/src/constant';
 import { emailController } from './email.controller';
-import { IReqUser } from 'coinpush/interface/IReqUser.interface';
-import { IUser } from 'coinpush/interface/IUser.interface';
+import { IReqUser } from 'coinpush/src/interface/IReqUser.interface';
+import { IUser } from 'coinpush/src/interface/IUser.interface';
 import { downloadProfileImgFromUrl } from '../api/upload.api';
 import { commentController } from './comment.controller';
-
-const config = require('../../../coinpush.config.js');
+import { config } from 'coinpush/src/util/util-config';
+import { log } from 'coinpush/src/util/util.log';
 
 export const userController = {
 
@@ -135,34 +135,39 @@ export const userController = {
 
 		}
 
-		const results = await Promise.all([
-			// user
-			request({
-				uri: config.server.user.apiUrl + '/user/' + userId,
-				headers: { '_id': reqUser.id },
-				method: 'PUT',
-				body: params,
-				json: true
-			}),
-
-			// comment
-			request({
-				uri: config.server.comment.apiUrl + '/user/' + userId,
-				headers: { '_id': reqUser.id },
-				method: 'PUT',
-				body: params,
-				json: true
-			}),
-
-			// notify
-			request({
-				uri: config.server.notify.apiUrl + '/user/' + userId,
-				headers: { '_id': reqUser.id },
-				method: 'PUT',
-				body: params,
-				json: true
-			})
-		]);
+		try {
+			await Promise.all([
+				// user
+				request({
+					uri: config.server.user.apiUrl + '/user/' + userId,
+					headers: { '_id': reqUser.id },
+					method: 'PUT',
+					body: params,
+					json: true
+				}),
+	
+				// comment
+				request({
+					uri: config.server.comment.apiUrl + '/user/' + userId,
+					headers: { '_id': reqUser.id },
+					method: 'PUT',
+					body: params,
+					json: true
+				}),
+	
+				// notify
+				request({
+					uri: config.server.notify.apiUrl + '/user/' + userId,
+					headers: { '_id': reqUser.id },
+					method: 'PUT',
+					body: params,
+					json: true
+				})
+			]);
+		} catch (error) {
+			console.log('asdfasdf', error);
+			throw error;
+		}
 	},
 
 	async updatePassword(reqUser: IReqUser, token, password): Promise<void> {

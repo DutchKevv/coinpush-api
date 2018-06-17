@@ -1,8 +1,6 @@
 import {Router} from 'express';
 import { eventController } from '../controllers/event.controller';
 
-const config = require('../../../coinpush.config.js');
-
 const router = Router();
 
 /**

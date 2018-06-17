@@ -7,13 +7,14 @@ RUN apk add --update \
     vips-tools vips-dev fftw-dev \
     && rm -rf /var/cache/apk/*
 
+# config
+COPY /_config /usr/src/app/_config
+
 # shared
-WORKDIR /usr/src/app/shared/modules/coinpush
-COPY /shared/modules/coinpush .
-RUN npm i
+COPY /shared/modules/coinpush /usr/src/app/shared/modules/coinpush
 
 # server
 WORKDIR /usr/src/app/server-gateway
-COPY /server-gateway/package*.json /server-gateway/tsconfig.json /server-gateway/index.ts ./
+COPY /server-gateway/package.json server-gateway/tsconfig.json ./
 RUN npm i
 COPY /server-gateway/src ./src

@@ -1,17 +1,16 @@
 import * as bcrypt from 'bcryptjs';
 import { Types } from 'mongoose';
 import * as jwt from 'jsonwebtoken';
-import { pubClient } from 'coinpush/redis';
+import { pubClient } from 'coinpush/src/redis';
 import { User, UserSchema } from '../schemas/user.schema';
 import {
 	G_ERROR_EXPIRED,
 	G_ERROR_USER_NOT_FOUND,
 	REDIS_USER_PREFIX, USER_FETCH_TYPE_ACCOUNT_DETAILS, USER_FETCH_TYPE_PROFILE_SETTINGS, USER_FETCH_TYPE_SLIM,
-} from 'coinpush/constant';
-import { IReqUser } from "coinpush/interface/IReqUser.interface";
-import { IUser } from "coinpush/interface/IUser.interface";
-
-const config = require('../../../coinpush.config.js');
+} from 'coinpush/src/constant';
+import { IReqUser } from "coinpush/src/interface/IReqUser.interface";
+import { IUser } from "coinpush/src/interface/IUser.interface";
+import { config } from 'coinpush/src/util/util-config';
 
 const RESET_PASSWORD_TOKEN_EXPIRE = 1000 * 60 * 60 * 24; // 24 hour
 

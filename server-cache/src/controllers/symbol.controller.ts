@@ -2,10 +2,10 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { cacheController } from './cache.controller';
 import { dataLayer } from "./cache.datalayer";
-import { SYMBOL_CAT_TYPE_OTHER } from "coinpush/constant";
 import { app } from '../app';
+import { log } from 'coinpush/src/util/util.log';
 
-const metaData = require('coinpush/broker/oanda/symbols-meta').meta;
+const metaData = require('coinpush/src/broker/oanda/symbols-meta').meta;
 
 /**
  * handle all symbol specific actions that do not concern fetching or writing data
@@ -38,19 +38,27 @@ export const symbolController = {
 	 */
 	async updateStartPrice(symbol) {
 		const results = await Promise.all([
-			cacheController.find({ symbol: symbol.name, timeFrame: 'H1', count: 1}), // 1 h
-			cacheController.find({ symbol: symbol.name, timeFrame: 'D', count: 1}) // 24 h
+			cacheController.find({ symbol: symbol.name, timeFrame: 'H1', count: 1 }), // 1 h
+			cacheController.find({ symbol: symbol.name, timeFrame: 'D', count: 1 }) // 24 h
 		]);
 
-		symbol.marks.H = {
-			time: results[0][0][0],
-			price: results[0][0][1]
-		}
-
-		symbol.marks.D = {
-			time: results[1][0][0],
-			price: results[1][0][1]
-		}
+		// hour
+		if (results[0][0])
+			symbol.marks.H = {
+				time: results[0][0][0],
+				price: results[0][0][1]
+			}
+		else
+			log.warn('SymbolController', 'no H1 candles for' + symbol.name);
+			
+		// day
+		if (results[1][0])
+			symbol.marks.D = {
+				time: results[1][0][0],
+				price: results[1][0][1]
+			}
+		else
+			log.warn('SymbolController', 'no D1 candles for' + symbol.name);
 	},
 
 	/**
@@ -65,7 +73,7 @@ export const symbolController = {
 
 		// find last 24 hours of bars
 		const barsAmount = 60 * 24; // 1440 M1 bars
-		const candles = await cacheController.find({ symbol: symbol.name, timeFrame: 'M1', count: barsAmount});
+		const candles = await cacheController.find({ symbol: symbol.name, timeFrame: 'M1', count: barsAmount });
 
 		if (!candles.length)
 			return;
@@ -75,7 +83,7 @@ export const symbolController = {
 		let low = 0;
 		let volume = 0;
 		let last = candles[0];
-		
+
 		for (let i = 0, len = candles.length; i < len; i++) {
 			const candle = candles[i];
 
@@ -87,7 +95,7 @@ export const symbolController = {
 			} else {
 				console.log('no volume', candle);
 			}
-			
+
 
 			if (cHigh > high)
 				high = cHigh;
@@ -113,13 +121,13 @@ export const symbolController = {
 		for (let i = 0, len = app.broker.symbols.length; i < len; i++) {
 			const symbol = app.broker.symbols[i];
 
-			const results = await cacheController.find({ symbol: symbol.name, timeFrame: 'M1', count: 1})
+			const results = await cacheController.find({ symbol: symbol.name, timeFrame: 'M1', count: 1 })
 
 			if (results.length) {
 				symbol.bid = results[0][4];
 			} else {
 				console.warn('unknown symbol: ' + symbol.displayName);
-			}	
+			}
 		}
 	}
 };

@@ -12,15 +12,18 @@ export class BaseModel {
 		this.__setInitialOptions(new.target, options);
 	}
 
-	public async init(): Promise<void> {}
+	public async init(): Promise<void> { }
 
 	public get(key?: string | number) {
 		return this.options[key];
 	}
 
-	public set(obj: any, triggerChange = true, triggerOptions = true) {
+	public set(obj: any, triggerOptions: boolean = false) {
 		Object.assign(this.options, obj);
-		// this.options$.next(this.options);
+
+		if (triggerOptions) {
+			this.options$.next(this.options);
+		}
 	}
 
 	private __setInitialOptions(target, options) {

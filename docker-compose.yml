@@ -24,7 +24,8 @@ services:
       - ./static:/usr/src/app/static
       - ./server-nginx/pages:/usr/src/app/server-nginx/pages
       # - ./server-nginx/config:/usr/src/app/server-nginx/config
-    # command:  sh -c "sed -i \"s/~~RUNNING_ENV_PLACEHOLDER~~/$${RUNNING_ENV}/g\" /etc/nginx/nginx.conf && nginx -g 'daemon off;'"
+    # depends_on:
+      # - gateway
   mongodb:
     image: mongo:latest
     container_name: "mongodb"
@@ -52,13 +53,12 @@ services:
     ports:
       - 3100
     volumes:
+      - ./_config:/usr/src/app/_config
       - ./server-gateway/src:/usr/src/app/server-gateway/src
       - ./server-gateway/_log:/usr/src/app/server-gateway/_log
-      - ./coinpush.config.js:/usr/src/app/coinpush.config.js
-      - ./coinpush.config.custom.js:/usr/src/app/coinpush.config.custom.js
       - ./static/image:/usr/src/app/static/image
       - /usr/src/app/server-gateway/node_modules
-      - /usr/src/app/shared/modules/coinpush/node_modules
+      # - /usr/src/app/shared/modules/coinpush/node_modules
     # links:
     #   - redis
   cache:
@@ -71,13 +71,12 @@ services:
     ports:
       - 3001
     volumes:
+      - ./_config:/usr/src/app/_config
       - ./server-cache/src:/usr/src/app/server-cache/src
       - ./server-cache/_log:/usr/src/app/server-cache/_log
-      - ./coinpush.config.js:/usr/src/app/coinpush.config.js
-      - ./coinpush.config.custom.js:/usr/src/app/coinpush.config.custom.js
+      - ./shared/modules/coinpush/src:/usr/src/app/shared/modules/coinpush/src
       - /usr/src/app/server-cache/node_modules
-      - ./shared/modules/coinpush:/usr/src/app/shared/modules/coinpush
-      - /usr/src/app/shared/modules/coinpush/node_modules
+      # - /usr/src/app/shared/modules/coinpush/node_modules
     links:
       - redis
       - mongodb
@@ -91,12 +90,11 @@ services:
     ports:
       - 3008
     volumes:
+      - ./_config:/usr/src/app/_config
       - ./server-user/src:/usr/src/app/server-user/src
       - ./server-user/_log:/usr/src/app/server-user/_log
-      - ./coinpush.config.js:/usr/src/app/coinpush.config.js
-      - ./coinpush.config.custom.js:/usr/src/app/coinpush.config.custom.js
       - /usr/src/app/server-user/node_modules
-      - /usr/src/app/shared/modules/coinpush/node_modules
+      # - /usr/src/app/shared/modules/coinpush/node_modules
     links:
       - redis
       - mongodb
@@ -110,12 +108,11 @@ services:
     ports:
       - 3010
     volumes:
+      - ./_config:/usr/src/app/_config
       - ./server-notify/src:/usr/src/app/server-notify/src
       - ./server-notify/_log:/usr/src/app/server-notify/_log
-      - ./coinpush.config.js:/usr/src/app/coinpush.config.js
-      - ./coinpush.config.custom.js:/usr/src/app/coinpush.config.custom.js
       - /usr/src/app/server-notify/node_modules
-      - /usr/src/app/shared/modules/coinpush/node_modules
+      # - /usr/src/app/shared/modules/coinpush/node_modules
     links:
       - redis
       - mongodb
@@ -129,12 +126,11 @@ services:
     ports:
       - 3009
     volumes:
+      - ./_config:/usr/src/app/_config
       - ./server-comment/src:/usr/src/app/server-comment/src
       - ./server-comment/_log:/usr/src/app/server-comment/_log
-      - ./coinpush.config.js:/usr/src/app/coinpush.config.js
-      - ./coinpush.config.custom.js:/usr/src/app/coinpush.config.custom.js
       - /usr/src/app/server-comment/node_modules
-      - /usr/src/app/shared/modules/coinpush/node_modules
+      # - /usr/src/app/shared/modules/coinpush/node_modules
     links:
       - redis
       - mongodb
@@ -148,12 +144,11 @@ services:
     ports:
       - 3011
     volumes:
+      - ./_config:/usr/src/app/_config
       - ./server-event/src:/usr/src/app/server-event/src
       - ./server-event/_log:/usr/src/app/server-event/_log
-      - ./coinpush.config.js:/usr/src/app/coinpush.config.js
-      - ./coinpush.config.custom.js:/usr/src/app/coinpush.config.custom.js
       - /usr/src/app/server-event/node_modules
-      - /usr/src/app/shared/modules/coinpush/node_modules
+      # - /usr/src/app/shared/modules/coinpush/node_modules
     links:
       - redis
       - mongodb
@@ -167,8 +162,8 @@ services:
       - ./static/clients:/usr/src/app/static/clients
       - ./client/src:/usr/src/app/client/src
       - /usr/src/app/client/node_modules
-      - ./shared/modules/coinpush:/usr/src/app/shared/modules/coinpush
-      - /usr/src/app/shared/modules/coinpush/node_modules
+      - ./shared/modules/coinpush/src:/usr/src/app/shared/modules/coinpush/src
+      # - /usr/src/app/shared/modules/coinpush/node_modules
   client-app:
     image: client-app
     container_name: client-app

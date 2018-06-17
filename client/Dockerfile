@@ -1,16 +1,11 @@
 FROM mhart/alpine-node:10.4.1
 
-RUN npm set progress=false && npm config set depth 0 && npm cache clean --force
-
 # shared
-WORKDIR /usr/src/app/shared/modules/coinpush
-COPY /shared/modules/coinpush .
-RUN cd /usr/src/app/shared/modules/coinpush && npm i
+COPY /shared/modules/coinpush /usr/src/app/shared/modules/coinpush
 
 # client
 WORKDIR /usr/src/app/client
-COPY /client/package*.json /client/angular.json ./
+COPY /client/*.json ./
 RUN npm i
-
 COPY /client/src ./src
 

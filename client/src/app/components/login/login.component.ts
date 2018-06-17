@@ -4,7 +4,7 @@ import { AuthenticationService } from '../../services/authenticate.service';
 import { AlertService } from '../../services/alert.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from '../../services/user.service';
-import { G_ERROR_DUPLICATE } from 'coinpush/constant';
+import { G_ERROR_DUPLICATE_CODE } from 'coinpush/src/constant';
 import { LocationStrategy } from '@angular/common';
 
 @Component({
@@ -78,7 +78,7 @@ export class LoginComponent implements OnInit {
 
 			if (error && error.code) {
 				switch (error.code) {
-					case G_ERROR_DUPLICATE:
+					case G_ERROR_DUPLICATE_CODE:
 						if (error.field === 'email')
 							this._alertService.error(`Email already used`);
 						break;
@@ -122,7 +122,7 @@ export class LoginComponent implements OnInit {
 
 			if (error && error.code) {
 				switch (error.code) {
-					case G_ERROR_DUPLICATE:
+					case G_ERROR_DUPLICATE_CODE:
 						if (error.field === 'email')
 							this._alertService.error(`Email already used`);
 						break;

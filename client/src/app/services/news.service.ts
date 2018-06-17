@@ -1,6 +1,6 @@
 import { Injectable, Output } from '@angular/core';
 import { UserModel } from '../models/user.model';
-import { USER_FETCH_TYPE_SLIM } from 'coinpush/constant';
+import { USER_FETCH_TYPE_SLIM } from 'coinpush/src/constant';
 
 const API_KEY = '4c6cf9f4344d4475949be83f9432db78';
 
