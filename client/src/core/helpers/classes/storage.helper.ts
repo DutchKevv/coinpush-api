@@ -57,6 +57,7 @@ export class StorageHelper {
             throw new Error('Not loggedin and no [user]_id given in data object');
         }
 
+        // merge 'fresh' profile data
         this.profileData = deepmerge.default.all([this.profileData, value]);
         await this.set(`user-profile-${this.profileData._id}`, this.profileData);
 
