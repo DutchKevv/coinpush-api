@@ -29,33 +29,30 @@ const config = {
         },
         cache: {
             port: 3001,
-            connectionString: 'mongodb://mongodb:27017/coinpush-cache'
+            connectionString: 'mongodb://root:example@host.docker.internal:27017/coinpush-cache'
         },
         order: {
             port: 3005,
-            connectionString: 'mongodb://mongodb:27017/coinpush-orders'
+            connectionString: 'mongodb://host.docker.internal:27017/coinpush-orders'
         },
         broker: {
             port: 3006,
         },
         user: {
             port: 3008,
-            connectionString: 'mongodb://mongodb:27017/coinpush-user'
+            connectionString: 'mongodb://host.docker.internal:27017/coinpush-user'
         },
         comment: {
             port: 3009,
-            connectionString: 'mongodb://mongodb:27017/coinpush-comment'
+            connectionString: 'mongodb://host.docker.internal:27017/coinpush-comment'
         },
         notify: {
             port: 3010,
-            connectionString: 'mongodb://mongodb:27017/coinpush-notify'
+            connectionString: 'mongodb://host.docker.internal:27017/coinpush-notify'
         },
         event: {
-            connectionString: 'mongodb://mongodb:27017/coinpush-event',
+            connectionString: 'mongodb://root:example@host.docker.internal:27017/coinpush-event',
             port: 3011,
-        },
-        fe: {
-            port: 4200,
         }
     },
     image: {
@@ -73,7 +70,7 @@ const config = {
         }
 
     },
-    broker: {
+    brokers: {
         oanda: {
             'environment': '', // Your environment
             'username': '', // Your username
@@ -94,18 +91,14 @@ const config = {
             }
         }
     },
-    ip: {
-        local: "",
-        prod: "",
-        devLocal: "0.0.0.0",
-        devApp: "10.0.2.2"
-    },
-    firebase: {
-        key: "" // Your firebase accound id (push messages)
+    push: {
+        firebase: {
+            key: "myFirebaseKey" // Your firebase accound id (push messages)
+        },
     },
     ip: {
         "local": "127.0.0.1",
-        "prod": "",
+        "prod": "coinpush.app",
         "devLocal": "127.0.0.1",
         "devApp": "10.0.2.2"
     },
@@ -121,7 +114,8 @@ const config = {
             profileURL: 'https://graph.facebook.com/v2.12/me?fields=first_name,last_name,email',
             profileFields: ['id', 'email', 'name'] // For requesting permissions from Facebook API
         }
-    }
+    },
+    clientVersion: "0.0.1"
 };
 
 // deepmerge config with custom config

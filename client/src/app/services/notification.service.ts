@@ -14,6 +14,7 @@ import { DateService } from './date.service';
 export class NotificationService {
 
 	public notifications = app.data.notifications;
+	public notifications$ = null;
 
 	public unreadCount$: BehaviorSubject<number> = new BehaviorSubject(parseInt(app.data.notifications.unreadCount, 10) || 0);
 
@@ -26,6 +27,7 @@ export class NotificationService {
 	}
 
 	init() {
+		this.notifications$ = this.findMany();
 		app.on('notification', (notification) => this._onNotification(notification));
 		// this._socketService.socket.on('notification', notification => this._onNotification(notification));
 	}

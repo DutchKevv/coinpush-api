@@ -1,4 +1,4 @@
-FROM mhart/alpine-node:10.4.1
+FROM mhart/alpine-node:10.7.0
 
 # shared
 COPY /shared/modules/coinpush /usr/src/app/shared/modules/coinpush

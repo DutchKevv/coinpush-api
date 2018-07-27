@@ -70,6 +70,6 @@
     <plugin name="cordova-plugin-device" spec="^2.0.2" />
     <plugin name="cordova-plugin-disable-ios11-statusbar" spec="^1.0.0" />
     <plugin name="cordova-plugin-keyboard" spec="^1.2.0" />
-    <engine name="android" spec="^7.1.0" />
     <engine name="ios" spec="^4.5.4" />
+    <engine name="android" spec="^7.0.0" />
 </widget>

@@ -3,7 +3,7 @@
     <span *ngIf="(notificationService.unreadCount$ | async) > 0" class="notification-unread-circle">{{notificationService.unreadCount$ | async}}</span>
 </a>
 <div class="notification-drop-down" *ngIf="open">
-    <ng-container *ngIf="notifications$ | async as notifications">
+    <ng-container *ngIf="notificationService.notifications$ | async as notifications">
         <div *ngIf="notifications.length; else noNotitifications" class="notification-drop-down-header else noNotitifications">
             <a (click)="onClickMarkAllAsRead($event)">mark all as read</a>
         </div>
@@ -18,7 +18,7 @@
     </ng-template>
 
     <div class="notification-drop-down-inner">
-        <div class="notification-drop-down-item" *ngFor="let notification of notifications$ | async" [ngClass]="{unread: !notification.isRead}">
+        <div class="notification-drop-down-item" *ngFor="let notification of notificationService.notifications$ | async" [ngClass]="{unread: !notification.isRead}">
             <a [routerLink]="['/user/' + notification.fromUserId._id]" *ngIf="notification.type === 'user-follow'" (click)="onClickNotification($event, notification)">
                 <img src="{{notification.fromUserId.img | NormalizeImgUrl: 'user'}}">
                 <div>

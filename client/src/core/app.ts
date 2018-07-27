@@ -4,6 +4,8 @@ import { StorageHelper } from "./helpers/classes/storage.helper";
 import address from './app.address';
 import { NotificationHelper } from "./helpers/classes/notification.helper";
 
+// const config = require('../custom_config.json');
+
 export class App extends MicroEvent {
 
     public platform = window['platform'];
@@ -70,7 +72,7 @@ export class App extends MicroEvent {
 
         document.addEventListener('onAdFailLoad', (error) => {
             console.log('Could not load ad', error);
-            
+
             if (++retry < 10) {
                 // setTimeout(() =>  this.loadAds(retry), 5000);
             }
@@ -80,66 +82,68 @@ export class App extends MicroEvent {
     /**
      * preload
      */
-    private _preload(): Promise<Array<any>> {
+    private _preload(): Promise<void> {
         const imageUrls = ['./spritesheet.png'];
+        const authUrl = this.address.apiUrl + 'authenticate?profile=true';
 
-        return Promise.all([
+        try {
+            Promise.all(
+                // images
+                imageUrls.map(imageUrl => {
+                    return new Promise(resolve => {
+                        let img = new Image();
+                        img.src = imageUrl;
+                        img.onload = img.onerror = resolve;
+                    });
+                })
+            );
+        } catch (error) {
+            console.error(error);
+        }
 
-            // images
-            ...imageUrls.map(imageUrl => {
-                return new Promise(resolve => {
-                    let img = new Image();
-                    img.src = imageUrl;
-                    img.onload = img.onerror = resolve;
-                });
-            }),
+        const headers: any = {
+            'cv': "0.0.2",
+            [this.storage.profileData.token ? 'authorization' : undefined]: 'Bearer ' + this.storage.profileData.token
+            // 'cv': config.clientVersion
+        };
 
-            // app data (user, symbols etc)
-            new Promise((resolve, reject) => {
-                const xhr = new XMLHttpRequest();
-                xhr.open('GET', this.address.apiUrl + 'authenticate?profile=true', true);
+        return fetch(authUrl, { headers }).then(async response => {
+            try {
+                this.data = await response.json();
 
-                // user authentication token
-                if (this.storage.profileData.token) {
-                    xhr.setRequestHeader('Authorization', 'Bearer ' + this.storage.profileData.token);
+                if (this.data.user) {
+                    // delete this.data.user.token;
+                    await this.storage.updateProfile(this.data.user);
+                    delete this.data.user;
                 }
-
-                // on progress
-                xhr.timeout = 10000;
-
-                xhr.onreadystatechange = async () => {
-                    if (xhr.readyState == 4) {
-                        if (xhr.status == 200) {
-                            this.data = JSON.parse(xhr.response);
-
-                            if (this.data.user) {
-                                await this.storage.updateProfile(this.data.user);
-                                delete this.data.user;
-                            }
-
-                            resolve();
-                        } else {
-                            switch (xhr.status) {
-                                case 401:
-                                    await this.storage.clearProfile(this.storage.profileData._id);
-                                    window.location.reload();
-                                    return;
-                                case 0:
-                                case 404:
-                                case 500:
-                                case 502:
-                                case 503:
-                                case 504:
-                                    console.error('servers cannot be reached');
-                                    return reject();
-                            }
+            } catch (error) {
+                console.error(error);
+            }
+            return this.data;
+        }).catch(async error => {
+            switch (error.status) {
+                case 400:
+                    if (error && error.reason) {
+                        switch (error.reason) {
+                            case 'clientVersion':
+                                this._onClientVersionError();
+                                break;
                         }
                     }
-                };
-
-                xhr.send();
-            })
-        ]);
+                    break;
+                case 401:
+                    await this.storage.clearProfile(this.storage.profileData._id);
+                    window.location.reload();
+                    return;
+                case 0:
+                case 404:
+                case 500:
+                case 502:
+                case 503:
+                case 504:
+                    console.error('servers cannot be reached');
+            }
+        });
     }
 
     private _waitUntilAllScriptsLoaded() {
@@ -156,6 +160,26 @@ export class App extends MicroEvent {
                 resolve();
             }, false);
         });
+    }
+
+    private _onClientVersionError() {
+        // App
+        if (app.platform.isApp) {
+            alert('please update app');
+        }
+        // browser
+        else {
+            const firstReload = !window.localStorage.getItem('reload-reason');
+
+            if (firstReload) {
+                alert('sdf')
+                window.localStorage.setItem('reload-reason', JSON.stringify({ reason: 'clientVersion' }));
+                window.location.reload();
+                return;
+            }
+
+            window.localStorage.removeItem('reload-reason');
+        }
     }
 }
 

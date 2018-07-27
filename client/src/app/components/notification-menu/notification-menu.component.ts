@@ -49,8 +49,8 @@ export class NotificationMenuComponent implements OnDestroy, OnInit {
 	}
 
 	async ngOnInit() {
-		const notifications = await this.notificationService.findMany().toPromise();
-		this.notifications$.next(notifications);
+		// const notifications = await this.notificationService.findMany().toPromise();
+		// this.notifications$.next(notifications);
 	}
 
 	public toggleNotificationMenu(state?: boolean) {

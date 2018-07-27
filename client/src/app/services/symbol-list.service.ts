@@ -21,6 +21,8 @@ export class SymbolListService {
 
     private _priceChangeSub;
     private _eventsChangeSub;
+    
+    private _noSymbolsHTML = (new DOMParser()).parseFromString('<h1>No symbols, system is updating</h1>', "text/xml");
 
     constructor(
         private _zone: NgZone,
@@ -136,6 +138,12 @@ export class SymbolListService {
 
         // delete all current rows
         this._clear();
+
+        // show no symbols (system error / updating / starting)
+        if (!symbolModels || !symbolModels.length) {
+
+            this.containerEl.appendChild();
+        }
 
         // get events
         const events = this._eventService.events$.getValue();

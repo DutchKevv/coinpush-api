@@ -51,7 +51,7 @@
 			</main>
 			<footer>
 				<div class="parent-buttons">
-					<a (click)="toggleLike(comment)" [ngClass]="{active: (comment.options$ | async).iLike}">
+					<a (click)="toggleLike(comment)" [ngClass]="{activeLike: (comment.options$ | async).iLike}">
 						<span *ngIf="(comment.options$ | async).iLike">I Like</span>
 						<span *ngIf="!(comment.options$ | async).iLike">like</span>
 						<span *ngIf="(comment.options$ | async).likeCount > 0">
@@ -76,10 +76,10 @@
 						<span [innerHtml]="child.options.content | parseCommentContent"></span>
 						<div class="child-buttons" style="display: flex">
 							<a (click)="toggleLike(child)" [ngClass]="{active: (child.options$ | async).iLike}">
-								<span *ngIf="(child.options$ | async).iLike">I Like -</span>
-								<span *ngIf="!(child.options$ | async).iLike">like -</span>
+								<span *ngIf="(child.options$ | async).iLike">I Like</span>
+								<span *ngIf="!(child.options$ | async).iLike">Like</span>
 								<span *ngIf="(child.options$ | async).likeCount > 0">
-									<i class="fa fa-thumbs-o-up"></i>{{(child.options$ | async).likeCount}} -
+									&nbsp;<i class="fa fa-thumbs-o-up"></i>&nbsp;- {{(child.options$ | async).likeCount}}
 								</span>
 							</a>
 							<span>&nbsp;{{child.options.fromNow}}</span>

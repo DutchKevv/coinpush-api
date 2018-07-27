@@ -113,7 +113,7 @@ class BrokerMiddleware extends events_1.EventEmitter {
                 util_log_1.log.error(error);
             }
         }
-        this._brokers.oanda = new index_1.OandaApi(util_config_1.config.broker.oanda);
+        this._brokers.oanda = new index_1.OandaApi(util_config_1.config.brokers.oanda);
         this._brokers.oanda.init();
     }
     _installBrokerCC() {

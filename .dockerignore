@@ -1,12 +1,12 @@
 ### global
+**/Dockerfile
+**/node_modules
 **/_log
 **/.git
 **/.gitignore
 **/.idea
 **/.vscode
 **/.DS_Store
-**/node_modules/
-**/*/node_modules/
 **/*.map
 **/*.md
 **/*.js
@@ -14,9 +14,6 @@
 **/*.txt
 **/*.log
 **/*.tmp
-
-### root
-/_data
 
 # mobile app
 client-app/.gradle

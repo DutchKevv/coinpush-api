@@ -1,11 +1,10 @@
-FROM mhart/alpine-node:10.4.1
+FROM mhart/alpine-node:10.7.0
 
 # shared
 COPY /shared/modules/coinpush /usr/src/app/shared/modules/coinpush
 
 # client
 WORKDIR /usr/src/app/client
-COPY /client/*.json ./
-RUN npm i
+COPY /client/package.json /client/angular.json ./
+RUN npm i --quiet --no-progress
 COPY /client/src ./src
-

@@ -9,7 +9,7 @@ import { IReqUser } from 'coinpush/src/interface/IReqUser.interface';
 import { pubClient } from 'coinpush/src/redis';
 import { config } from 'coinpush/src/util/util-config';
 
-const fcm = new FCM(config.firebase.key)
+const fcm = new FCM(config.push.firebase.key)
 
 export const notifyController = {
 

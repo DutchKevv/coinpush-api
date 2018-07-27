@@ -31,35 +31,42 @@ export class CustomHttp implements HttpInterceptor {
 	) { }
 
 	intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-		return next.handle(this._normalizeRequest(req)).pipe(catchError((event) => this.catch401(event)));
+		return next.handle(this._normalizeRequest(req)).pipe(catchError((event) => this._catchError(event)));
 	}
 
 	private _normalizeRequest(req: HttpRequest<any>): HttpRequest<any> {
 		if (!req.url.startsWith('http://') && !req.url.startsWith('https://'))
 			req = req.clone({ url: (app.address.apiUrl + req.url).replace(/([^:]\/)\/+/g, "$1") });
 
-		req = this._addHeaderJwt(req);
+		req = this._addHeaders(req);
 
 		return req;
 	}
 
-	private _addHeaderJwt(req: HttpRequest<any>): HttpRequest<any> {
+	private _addHeaders(req: HttpRequest<any>): HttpRequest<any> {
+		// alert( app.storage.profileData.token);
 		// add authorization header with jwt token
-		if (app.storage.profileData.token)
-			return req.clone({
-				setHeaders: {
-					Authorization: 'Bearer ' + app.storage.profileData.token,
-					clientversion: config.version
-				}
-			});
+		const userToken = app.storage.profileData.token;
+		const headers: any = {
+			setHeaders: {
+				cv: config.clientVersion || '0.0.1'
+			}
+		};
 
-		return req;
+		if (userToken)
+			headers.setHeaders.authorization = 'Bearer ' +userToken;
+
+		return req.clone(headers);
 	}
 
 	// Response Interceptor
-	private catch401(error: HttpErrorResponse): Observable<any> {
-		// Check if we had 401 response
+	private _catchError(error: HttpErrorResponse): Observable<any> {
+		// Check if we had error response
+		console.log('sdfasdf', error);
 		switch (error.status) {
+			case 400:
+				console.log(error);
+				return throwError(error.error || error);
 			case 401:
 				this._authenticationService.showLoginRegisterPopup();
 				break;

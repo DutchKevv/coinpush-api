@@ -26,7 +26,7 @@ export class SocketService {
     }
 
     public connect() {
-        this._socket.open();
+        // this._socket.open();
     }
 
     public disconnect() {

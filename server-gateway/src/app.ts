@@ -185,8 +185,9 @@ export const app = {
 		 * error - unauthorized
 		 */
 		this.api.use((req, res, next) => {
-			if (req.headers.clientversion && req.headers.clientversion !== config.appVersion)
-				return res.status(400).send({ reason: 'outdated' });
+			console.log(config.clientVersion);
+			if (!req.headers.cv || req.headers.cv !== config.clientVersion)
+				return res.status(400).send({ reason: 'clientVersion' });
 
 			next();
 		});

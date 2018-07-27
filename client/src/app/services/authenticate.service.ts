@@ -8,10 +8,9 @@ import { environment } from '../../environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 
-
 declare const window: any;
 
-const FB_APP_ID_PROD = '178901869390909';
+const FB_APP_ID_PROD = '691221981270027';
 const FB_APP_ID_DEV = '162805194523993';
 
 @Injectable({

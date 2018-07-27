@@ -24,17 +24,20 @@ services:
       - ./static:/usr/src/app/static
       - ./server-nginx/pages:/usr/src/app/server-nginx/pages
       # - ./server-nginx/config:/usr/src/app/server-nginx/config
-    # depends_on:
-      # - gateway
+    depends_on:
+      - gateway
+      - user
   mongodb:
     image: mongo:latest
     container_name: "mongodb"
     environment:
-      - MONGO_DATA_DIR=/data/db
-      - MONGO_LOG_DIR=/dev/null
+      MONGO_DATA_DIR: /data/db
+      MONGO_LOG_DIR: /dev/null
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
     volumes:
       - ./_data/db:/data/db
-    command: mongod --smallfiles --logpath=/dev/null
+    command: mongod --auth
   redis:
     restart: unless-stopped
     image: "redis"
@@ -79,7 +82,8 @@ services:
       # - /usr/src/app/shared/modules/coinpush/node_modules
     links:
       - redis
-      - mongodb
+      - gateway
+      # - mongodb
   user:
     restart: unless-stopped
     image: user
@@ -97,7 +101,8 @@ services:
       # - /usr/src/app/shared/modules/coinpush/node_modules
     links:
       - redis
-      - mongodb
+      - gateway
+      # - mongodb
   notify:
     restart: unless-stopped
     image: notify
@@ -115,7 +120,7 @@ services:
       # - /usr/src/app/shared/modules/coinpush/node_modules
     links:
       - redis
-      - mongodb
+      # - mongodb
   comment:
     restart: unless-stopped
     image: comment
@@ -133,7 +138,7 @@ services:
       # - /usr/src/app/shared/modules/coinpush/node_modules
     links:
       - redis
-      - mongodb
+      # - mongodb
   event:
     restart: unless-stopped
     image: event
@@ -151,7 +156,7 @@ services:
       # - /usr/src/app/shared/modules/coinpush/node_modules
     links:
       - redis
-      - mongodb
+      # - mongodb
   client:
     image: client
     container_name: client
@@ -160,7 +165,7 @@ services:
       dockerfile: ./client/Dockerfile
     volumes:
       - ./static/clients:/usr/src/app/static/clients
-      - ./client/src:/usr/src/app/client/src
+      - ./client:/usr/src/app/client
       - /usr/src/app/client/node_modules
       - ./shared/modules/coinpush/src:/usr/src/app/shared/modules/coinpush/src
       # - /usr/src/app/shared/modules/coinpush/node_modules
@@ -173,6 +178,3 @@ services:
     volumes:
       - ./client-app:/usr/src/app/client-app
       - ./static/clients/web:/usr/src/app/static/clients/web
-# volumes:
-#   jenkins_home:
-#     driver: local

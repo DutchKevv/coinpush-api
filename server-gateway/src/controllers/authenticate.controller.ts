@@ -77,11 +77,14 @@ export const authenticateController = {
 	},
 
 	async authenticateFacebook(reqUser: IReqUser, params: { token: string } = { token: undefined }) {
-		const facebookProfile = await FB.api('me', { fields: ['id', 'name', 'email', 'gender', 'locale'], access_token: params.token });
-
+		const facebookProfile = await FB.api('me', { 
+			fields: ['id', 'name', 'email', 'gender', 'locale'], access_token: params.token 
+		});
+		console.log('asfddfdb', facebookProfile);
 		if (facebookProfile && facebookProfile.id) {
 			// search in DB for user with facebookId
 			let user = (await userController.findByFacebookId(reqUser, facebookProfile.id))[0];
+		
 
 			// create new user if not founds
 			if (!user) {
@@ -90,7 +93,7 @@ export const authenticateController = {
 					name: facebookProfile.name,
 					// description: facebookProfile.about,
 					gender: genderStringToConstant(facebookProfile.gender),
-					country: facebookProfile.locale.split('_')[1],
+					country: facebookProfile.locale ? facebookProfile.locale.split('_')[1] : undefined,
 					imgUrl: 'https://graph.facebook.com/' + facebookProfile.id + '/picture?width=1000',
 					oauthFacebook: {
 						id: facebookProfile.id

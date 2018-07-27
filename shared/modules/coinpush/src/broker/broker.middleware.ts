@@ -144,7 +144,7 @@ export class BrokerMiddleware extends EventEmitter {
             }
         }
 
-        this._brokers.oanda = new OandaApi(config.broker.oanda);
+        this._brokers.oanda = new OandaApi(config.brokers.oanda);
         this._brokers.oanda.init();
     }
 
