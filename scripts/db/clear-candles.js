@@ -1,2 +1,2 @@
 conn = new Mongo();
-db = connect("localhost:27020/tradejs-cache");
+db = connect("localhost:27020/coinpush-cache");

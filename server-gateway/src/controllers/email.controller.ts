@@ -1,8 +1,7 @@
 import * as request from 'request-promise';
-import { IUser } from 'coinpush/interface/IUser.interface';
-import { IReqUser } from 'coinpush/interface/IReqUser.interface';
-
-const config = require('../../../tradejs.config.js');
+import { IUser } from 'coinpush/src/interface/IUser.interface';
+import { IReqUser } from 'coinpush/src/interface/IReqUser.interface';
+import { config } from 'coinpush/src/util/util-config';
 
 export const emailController = {
 

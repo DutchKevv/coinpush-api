@@ -1,6 +1,6 @@
-[![Build Status](https://travis-ci.org/DutchKevv/TradeJS.svg?branch=master)](https://travis-ci.org/DutchKevv/TradeJS)
+[![Build Status](https://travis-ci.org/DutchKevv/CoinPush.svg?branch=master)](https://travis-ci.org/DutchKevv/CoinPush)
 
-![Alt text](doc/logo/TradeJS-medium.png?raw=true "Title")
+![Alt text](doc/logo/CoinPush-medium.png?raw=true "Title")
 
 #Under heavy development! (14 05 2017))
 
@@ -22,7 +22,7 @@ Can be run as
 Make sure you have Docker installed
 ```
 git clone https://github.com/DutchKevv/CoinPush.git
-cd TradeJS
+cd CoinPush
 npm run d-up
 ```
 

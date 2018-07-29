@@ -1,6 +1,5 @@
 import { SymbolSyncer } from '../modules/symbol-syncer';
-
-const config = require('../../../tradejs.config.js');
+import { config } from 'coinpush/src/util/util-config';
 
 export const symbolController = {
 

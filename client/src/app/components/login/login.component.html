@@ -2,17 +2,18 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 *ngIf="formType === 'login'" class="modal-title">Login</h4>
-                <h4 *ngIf="formType === 'register'" class="modal-title">Register</h4>
-                <h4 *ngIf="formType === 'requestPasswordReset'" class="modal-title">Request password reset</h4>
-                <h4 *ngIf="formType === 'resetpassword'" class="modal-title">Update password</h4>
+                <h4 *ngIf="activeFormType === 'login'" class="modal-title">Login</h4>
+                <h4 *ngIf="activeFormType === 'register'" class="modal-title">Register</h4>
+                <h4 *ngIf="activeFormType === 'requestPasswordReset'" class="modal-title">Request password reset</h4>
+                <h4 *ngIf="activeFormType === 'resetpassword'" class="modal-title">Update password</h4>
+                <h4 *ngIf="activeFormType === 'addFacebookEmail'" class="modal-title">Add email address</h4>
                 <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <!-- login form -->
-                <form name="form" (ngSubmit)="loginForm.form.valid && login($event)" #loginForm="ngForm" *ngIf="formType === 'login'" novalidate>
+                <form name="form" (ngSubmit)="loginForm.form.valid && login($event)" #loginForm="ngForm" *ngIf="activeFormType === 'login'" novalidate>
                     <div class="form-group login-footer-buttons">
                         <button type="button" (click)="fbLogin(event)" class="btn btn-small btn-facebook">
                             <i class="fa fa-facebook-square align-middle" aria-hidden="true"></i>
@@ -43,8 +44,8 @@
 
                     <!-- footer buttons -->
                     <div class="form-group login-footer-buttons">
-                        <a (click)="formType = 'register'" class="btn btn-link" style="float:left">Register</a>
-                        <a (click)="formType = 'requestPasswordReset'" class="btn btn-link" style="float:left">Forgot password</a>
+                        <a (click)="activeFormType = 'register'" class="btn btn-link" style="float:left">Register</a>
+                        <a (click)="activeFormType = 'requestPasswordReset'" class="btn btn-link" style="float:left">Forgot password</a>
                         <button [disabled]="loading$ | async" class="btn btn-success pull-right">Login
                             <i class="fa fa-spinner" *ngIf="loading$ | async"></i>
                         </button>
@@ -52,7 +53,7 @@
                 </form>
 
                 <!-- register form -->
-                <form name="form" (ngSubmit)="registerForm.form.valid && register()" #registerForm="ngForm" *ngIf="formType === 'register'" novalidate>
+                <form name="form" (ngSubmit)="registerForm.form.valid && register()" #registerForm="ngForm" *ngIf="activeFormType === 'register'" novalidate>
                     <div class="form-group" [ngClass]="{ 'has-error': registerForm.submitted && !name.valid }">
                         <label>Name
                             <span *ngIf="registerForm.submitted && !name.valid" class="help-block">Name is required</span>
@@ -96,7 +97,7 @@
                         </small>
                     </div>
                     <div class="form-group">
-                        <a (click)="formType = 'login'" class="btn btn-link" style="float: left">Cancel</a>
+                        <a (click)="activeFormType = 'login'" class="btn btn-link" style="float: left">Cancel</a>
                         <button [disabled]="loading$ | async" class="btn btn-success">Register
                             <i class="fa fa-spinner" *ngIf="loading$ | async"></i>
                         </button>
@@ -104,7 +105,7 @@
                 </form>
 
                 <!-- request password reset form -->
-                <form *ngIf="formType === 'requestPasswordReset'" (ngSubmit)="requestPasswordResetForm.form.valid && requestPasswordReset($event)" #requestPasswordResetForm="ngForm">
+                <form *ngIf="activeFormType === 'requestPasswordReset'" (ngSubmit)="requestPasswordResetForm.form.valid && requestPasswordReset($event)" #requestPasswordResetForm="ngForm">
                     <div class="form-group">
                         <label for="requestPasswordResetEmail">Email</label>
                         <input [disabled]="loading$ | async" [(ngModel)]="requestPasswordResetModel.email" type="email" name="email" class="form-control" id="requestPasswordResetEmail" placeholder="Enter email address"
@@ -112,7 +113,7 @@
                     </div>
                     <!-- footer buttons -->
                     <div class="form-group login-footer-buttons">
-                        <a (click)="formType = 'login'" class="btn btn-link" style="float: left">Cancel</a>
+                        <a (click)="activeFormType = 'login'" class="btn btn-link" style="float: left">Cancel</a>
                         <button [disabled]="loading$ | async" class="btn btn-success pull-right">Reset
                             <i class="fa fa-spinner" *ngIf="loading$ | async"></i>
                         </button>
@@ -120,7 +121,7 @@
                 </form>
 
                 <!-- password reset form -->
-                <form *ngIf="formType === 'resetpassword'" (ngSubmit)="passwordResetForm.form.valid && resetPassword($event)" #passwordResetForm="ngForm">
+                <form *ngIf="activeFormType === 'resetpassword'" (ngSubmit)="passwordResetForm.form.valid && resetPassword($event)" #passwordResetForm="ngForm">
                     <div class="form-group" [ngClass]="{ 'has-error': passwordResetForm.submitted && !password.valid }">
                         <label for="password">Password
 
@@ -145,6 +146,33 @@
                         <button [disabled]="loading$ | async" class="btn btn-success pull-right">Reset
                             <i class="fa fa-spinner" *ngIf="loading$ | async"></i>
                         </button>
+                    </div>
+                </form>
+
+                <!-- missing facebook email address -->
+                <form *ngIf="activeFormType === 'addFacebookEmail'" (ngSubmit)="addFacebookEmailForm.form.valid && fbLogin(event, addFacebookEmailModel.email)" #addFacebookEmailForm="ngForm">
+                    <p style="font-size:12px">
+                        It appaers like you don't have an email address (confirmed) on Facebook. 
+                        Please confirm your Facebook email address or fill one in here.<br><br>
+                        Note: this will not be shared with Facebook or any other parties whatsoever. <br><br></p>
+                    
+                    <div class="form-group" [ngClass]="{ 'has-error': addFacebookEmailForm.submitted && !email.valid }">
+                        <label for="password">Email address
+                            <span *ngIf="addFacebookEmailForm.submitted && !email.valid" class="help-block">Email is required</span>
+                        </label>
+                        <input [disabled]="loading$ | async" id="email" type="email" class="form-control" name="email" [(ngModel)]="addFacebookEmailModel.email" #email="ngModel"
+                            autocomplete="on" required />
+                    </div>
+
+                    <!-- footer buttons -->
+                    <div class="form-group login-footer-buttons">
+                        <a (click)="activeFormType = 'login'" class="btn btn-link" style="float: left">Cancel</a>
+                        <button class="btn btn-link" style="padding-right: 0;">Continue <i class="fa fa-facebook-square align-middle" aria-hidden="true"></i>acebook login</button>
+                        <!-- <button type="button" (click)="fbLogin(event)" class="btn btn-small btn-facebook">
+                            <i class="fa fa-facebook-square align-middle" aria-hidden="true"></i>
+                            <span class="align-middle">Facebook</span>
+                            <i class="fa fa-spinner" *ngIf="loading$ | async"></i>                        
+                        </button> -->
                     </div>
                 </form>
             </div>

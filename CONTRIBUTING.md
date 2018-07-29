@@ -1,8 +1,8 @@
-# Contributing to TradeJS
+# Contributing to CoinPush
 
-TradeJS is under heavy development, and so there is no stable planning at this moment. Contribution is always more then welcome, but guarantees cannot be given.
+CoinPush is under heavy development, and so there is no stable planning at this moment. Contribution is always more then welcome, but guarantees cannot be given.
 
-We'd love you to contribute to our source code and to make TradeJS even better than it is
+We'd love you to contribute to our source code and to make CoinPush even better than it is
 today! Here are the guidelines we'd like you to follow:
 
  <!-- - [Code of Conduct](#coc) -->
@@ -17,11 +17,11 @@ today! Here are the guidelines we'd like you to follow:
 
 <!-- ## <a name="coc"></a> Code of Conduct -->
 
-<!-- Help us keep TradeJS open and inclusive. Please read and follow our [Code of Conduct][coc]. -->
+<!-- Help us keep CoinPush open and inclusive. Please read and follow our [Code of Conduct][coc]. -->
 
 <!-- ## <a name="question"></a> Got a Question or Problem? -->
 
-<!-- If you have questions about how to use TradeJS, please direct these to the [Google Group][groups] -->
+<!-- If you have questions about how to use CoinPush, please direct these to the [Google Group][groups] -->
 <!-- discussion list or [StackOverflow][stackoverflow]. We are also available on [IRC][irc] and -->
 <!-- [Gitter][gitter]. -->
 
@@ -66,7 +66,7 @@ understand if this isn't done the first few times.
 ### Submitting a Pull Request
 Before you submit your pull request consider the following guidelines:
 
-* Search [GitHub](https://github.com/DutchKevv/TradeJS/pulls) for an open or closed Pull Request
+* Search [GitHub](https://github.com/DutchKevv/CoinPush/pulls) for an open or closed Pull Request
   that relates to your submission. You don't want to duplicate effort.
 
 ### Code styling
@@ -80,18 +80,18 @@ TODO. For now please take a look around in the code, its pretty default.
   ```
      
      # terminal 1
-     cd [PATH_TO_TRADEJS]/client
+     cd [PATH_T]/client
      npm i (required once)
      npm start
      
      # terminal 2
-     cd [PATH_TO_TRADEJS]/server
+     cd [PATH_TO_CoinPush]/server
      npm i (required once)
      npm start
      
      ### For desktop app electron ->
      # terminal 3
-     cd [PATH_TO_TRADEJS]/electron
+     cd [PATH_TO_CoinPush]/electron
      npm i (required once)
      npm run start
     

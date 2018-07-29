@@ -1,5 +1,5 @@
 import { User } from '../schemas/user.schema';
-import { IReqUser } from "coinpush/interface/IReqUser.interface";
+import { IReqUser } from "coinpush/src/interface/IReqUser.interface";
 
 export const favoriteController = {
 

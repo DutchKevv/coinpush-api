@@ -13,14 +13,9 @@
 	display: block;
 
 	height: 100%;
-    padding-top: 40px;
 
     @media only screen and (min-width : 992px) { 
         border-left: none;
-    }
-
-    @media screen and (min-width: 768px) {
-        padding-left: 250px;
     }
 }
 
@@ -143,8 +138,9 @@ nav {
 }
 
 .profile-image-box {
-	text-align: center;
+	text-align: left;
 	margin-bottom: 30px;
+	position: relative;
 
 	.uploadInput {
 		width: 0.1px;
@@ -155,7 +151,7 @@ nav {
 		z-index: -1;
 	}
 
-	label {
+	.profileImg label {
 		font-size: 1.25em;
 		font-weight: 700;
 		color: white;
@@ -166,7 +162,8 @@ nav {
 		cursor: pointer;
 		border: 1px solid white;
 		background-color: transparent;
-
+		background-position: top;
+		
 		&:hover {
 			border: 1px solid black;
 		}
@@ -188,4 +185,36 @@ nav {
 		}
 	}
 
+}
+
+.spinner-box {
+	position: absolute;
+	top: 0;
+	left: 15px;
+	right: 0;
+	bottom: 0;
+	background: rgba(0, 0, 0, 0.85);
+	display: none;
+
+	&.active {
+		display: block;
+	}
+
+	span {
+		position: absolute;
+		margin-top: calc(50% - 20px);
+		font-size: 26px;
+		left: 0;
+		right: 0;
+		z-index: 5;
+	}
+}
+
+.spinner {
+	width: 100px;
+    height: 100px;
+	margin-top: calc(50% - 50px);
+	margin-left: calc(50% - 50px);
+	border-bottom-color: #228b07;
+	border-width: 20px;
 }

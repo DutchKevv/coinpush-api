@@ -13,4 +13,4 @@ package-lock.json
 *.map
 log.txt
 
-tradejs.config.custom.js
+coinpush.config.custom.js

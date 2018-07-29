@@ -1,15 +1,15 @@
 import * as nodeMailer from 'nodemailer';
 import { userController } from './user.controller';
-import { IUser } from 'coinpush/interface/IUser.interface';
+import { IUser } from 'coinpush/src/interface/IUser.interface';
 import * as FCM from 'fcm-node';
 import { User } from '../schemas/user.schema';
 import { Notification } from '../schemas/notification.schema';
-import { INotification } from 'coinpush/interface/notification.interface';
-import { IReqUser } from 'coinpush/interface/IReqUser.interface';
-import { pubClient } from 'coinpush/redis';
+import { INotification } from 'coinpush/src/interface/notification.interface';
+import { IReqUser } from 'coinpush/src/interface/IReqUser.interface';
+import { pubClient } from 'coinpush/src/redis';
+import { config } from 'coinpush/src/util/util-config';
 
-const config = require('../../../tradejs.config.js');
-const fcm = new FCM(config.firebase.key)
+const fcm = new FCM(config.push.firebase.key)
 
 export const notifyController = {
 

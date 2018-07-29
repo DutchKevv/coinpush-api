@@ -2,8 +2,8 @@ import { Schema, Types, model } from 'mongoose';
 import { isEmail } from 'validator';
 import { join } from 'path';
 import * as beautifyUnique from 'mongoose-beautiful-unique-validation';
-import { BROKER_GENERAL_TYPE_OANDA, LEVERAGE_TYPE_1, CUSTOM_EVENT_TYPE_ALARM_NEW, CUSTOM_EVENT_TYPE_ALARM, CUSTOM_EVENT_TYPE_PRICE } from 'coinpush/constant/constants';
-import { IUser } from "coinpush/interface/IUser.interface";
+import { BROKER_GENERAL_TYPE_OANDA, LEVERAGE_TYPE_1, CUSTOM_EVENT_TYPE_ALARM_NEW, CUSTOM_EVENT_TYPE_ALARM, CUSTOM_EVENT_TYPE_PRICE } from 'coinpush/src/constant/constants';
+import { IUser } from "coinpush/src/interface/IUser.interface";
 
 const EventSchema = new Schema(
     {

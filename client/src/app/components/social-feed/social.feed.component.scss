@@ -25,7 +25,6 @@
 	display: flex;
 	justify-content: space-between;
 	box-sizing: border-box;
-	padding: 20px 0;
 
 	p,
 	span,
@@ -240,6 +239,7 @@ app-comment-box {
 			color: black;
 
 			&.active,
+			&.activeLike,
 			&:hover {
 				//color: red;
 

@@ -5,10 +5,9 @@ import * as request from 'requestretry';
 import * as fs from 'fs';
 import { join, extname } from 'path';
 import { userController } from '../controllers/user.controller';
-import { G_ERROR_MAX_SIZE } from 'coinpush/constant';
-import { IReqUser } from 'coinpush/interface/IReqUser.interface';
-
-const config = require('../../../tradejs.config.js');
+import { G_ERROR_MAX_SIZE } from 'coinpush/src/constant';
+import { IReqUser } from 'coinpush/src/interface/IReqUser.interface';
+import { config } from 'coinpush/src/util/util-config';
 
 const upload = multer({ storage: multer.memoryStorage({}) });
 export const router = Router();
@@ -25,25 +24,27 @@ function normalizeProfileImg(filename) {
 };
 
 router.post('/profile', upload.single('image'), async (req: any, res, next) => {
-	try {
-		// Check max file size (in bytes)
-		if (req.file.size > config.image.maxUploadSize)
-			throw ({
-				code: G_ERROR_MAX_SIZE,
-				message: 'max file size is 10MB' // TODO hardcoded text
-			});
+	// Check max file size (in bytes)
+	if (req.file.size > config.image.maxUploadSize) {
+		return next({
+			code: G_ERROR_MAX_SIZE,
+			message: 'Max file size is : ' + Math.round(config.image.maxUploadSize / 1024 / 1024) + 'MB' // TODO hardcoded text
+		});
+	}
 
+	try {
 		const fileName = req.user.id + '_' + Date.now() + extname(req.file.originalname);
 		const fullPath = join(config.image.profilePath, fileName);
 
-		// resize and save
+		// resize / crop and save to disk
 		await sharp(req.file.buffer).resize(1000).max().toFile(fullPath);
 
-		// update user
+		// update user @ DB
 		await userController.update(req.user, req.user.id, { img: fileName });
 
-		// return full img url to client
+		// send img url
 		res.send({ url: fileName });
+		
 	} catch (error) {
 		console.error(error);
 		next(error);

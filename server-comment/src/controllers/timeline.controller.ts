@@ -1,10 +1,8 @@
 import { Comment } from '../schemas/comment.schema';
 import { Types } from 'mongoose';
-import { pubClient } from 'coinpush/redis';
+import { pubClient } from 'coinpush/src/redis';
 import { User } from '../schemas/user.schema';
-import { IReqUser } from 'coinpush/interface/IReqUser.interface';
-
-const config = require('../../../tradejs.config.js');
+import { IReqUser } from 'coinpush/src/interface/IReqUser.interface';
 
 export const timelineController = {
 

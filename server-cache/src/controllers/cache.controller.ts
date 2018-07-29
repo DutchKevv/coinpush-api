@@ -1,17 +1,15 @@
-import { log } from 'coinpush/util/util.log';
+import { log } from 'coinpush/src/util/util.log';
 import { dataLayer } from './cache.datalayer';
 import { symbolController } from './symbol.controller';
 import { app } from '../app';
 import { Status } from '../schemas/status.schema';
-import { BROKER_GENERAL_TYPE_CC, BROKER_GENERAL_TYPE_OANDA } from 'coinpush/constant';
-import { timeFrameSteps } from 'coinpush/util/util.date';
-import { pubClient } from 'coinpush/redis';
+import { BROKER_GENERAL_TYPE_CC, BROKER_GENERAL_TYPE_OANDA } from 'coinpush/src/constant';
+import { timeFrameSteps } from 'coinpush/src/util/util.date';
+import { pubClient } from 'coinpush/src/redis';
+import { config } from 'coinpush/src/util/util-config';
 
-const config = require('../../../tradejs.config.js');
 
 const HISTORY_COUNT_DEFAULT = 400;
-
-log.error('kikaboe');
 
 export const cacheController = {
 
@@ -58,7 +56,7 @@ export const cacheController = {
 		let symbolObj = app.broker.symbols.find(symbol => symbol.name === tick.instrument);
 
 		if (!symbolObj)
-			return log.warn('onTickReceive - symbol not found: ' + tick.instrument);
+			return log.warn('CacheController', 'onTickReceive - symbol not found: ' + tick.instrument);
 
 		this.tickBuffer[tick.instrument] = [tick.time, tick.bid];
 
@@ -87,7 +85,7 @@ export const cacheController = {
 
 		const results = await this._syncByStatuses(statuses);
 
-		log.info('cache', `syncing took ${Date.now() - now}ms`);
+		log.info('CacheController', `syncing took ${Date.now() - now}ms`);
 		// log.info('cache', `syncing took ${Date.now() - now}ms (oanda: ${results[0].time - now}ms | CC: ${results[1].time - now}ms)`);
 	},
 
@@ -104,7 +102,7 @@ export const cacheController = {
 		// TODO: get broker names from somewhere else then hardcoded (constants?)
 		const brokerName = statuses[0].broker === BROKER_GENERAL_TYPE_CC ? 'CryptoCompare' : 'Oanda';
 
-		log.info('cache', `syncing ${statuses.length} collections for broker ${brokerName}`);
+		log.info('CacheController', `syncing ${statuses.length} collections for broker ${brokerName}`);
 
 		// loop over each symbol
 		for (let i = 0, len = statuses.length; i < len; i++) {
@@ -135,7 +133,7 @@ export const cacheController = {
 						count: status.lastCandleTime ? undefined : HISTORY_COUNT_DEFAULT
 					});
 				} catch (error) {
-					log.error(error);
+					log.error('CacheController', error);
 				}
 			}
 

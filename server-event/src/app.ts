@@ -3,16 +3,16 @@ import * as express from 'express';
 import * as helmet from 'helmet';
 import * as morgan from 'morgan';
 import * as mongoose from 'mongoose';
-import { pubClient, subClient } from 'coinpush/redis';
+import { pubClient, subClient } from 'coinpush/src/redis';
+import { log } from 'coinpush/src/util/util.log';
 import { eventController } from './controllers/event.controller';
+import { config } from 'coinpush/src/util/util-config';
+
 // error catching
 process.on('unhandledRejection', (reason, p) => {
     console.log('Catched *global* Unhandled Rejection at: Promise ', p, ' reason: ', reason);
     throw reason;
 });
-
-// configuration
-const config = require('../../tradejs.config.js');
 
 export const app = {
 
@@ -53,7 +53,7 @@ export const app = {
 
     _setupApi(): void {
         this.api = express();
-        const server = this.api.listen(config.server.event.port, '0.0.0.0', () => console.log(`\n Event service started on      : 0.0.0.0:${config.server.event.port}`));
+        const server = this.api.listen(config.server.event.port, '0.0.0.0', () => log.info('App', `Service started on      : 0.0.0.0:${config.server.event.port}`));
 
         this.api.use(morgan('dev'));
         this.api.use(helmet());

@@ -6,19 +6,17 @@ import * as mongoose from 'mongoose';
 import * as morgan from 'morgan';
 import { cacheController } from './controllers/cache.controller';
 import { symbolController } from './controllers/symbol.controller';
-import { BrokerMiddleware } from 'coinpush/broker';
-import { BROKER_GENERAL_TYPE_OANDA, BROKER_GENERAL_TYPE_CC } from 'coinpush/constant';
-import { pubClient } from 'coinpush/redis';
-import { log } from 'coinpush/util/util.log';
+import { BrokerMiddleware } from 'coinpush/src/broker';
+import { BROKER_GENERAL_TYPE_OANDA, BROKER_GENERAL_TYPE_CC , BROKER_GENERAL_TYPE_IEX} from 'coinpush/src/constant';
+import { pubClient } from 'coinpush/src/redis';
+import { log } from 'coinpush/src/util/util.log';
+import { config } from 'coinpush/src/util/util-config';
 
 // error catching
 process.on('unhandledRejection', (reason, p) => {
 	console.log('Possibly Unhandled Rejection at: Promise ', p, ' reason: ', reason);
 	throw reason;
 });
-
-// configuration
-const config = require('../../tradejs.config.js');
 
 export const app = {
 
@@ -50,7 +48,8 @@ export const app = {
 		// cache + symbols syncing
 		await Promise.all([
 			cacheController.sync(BROKER_GENERAL_TYPE_OANDA).then(() => this.broker.openTickStream(['oanda'])),
-			cacheController.sync(BROKER_GENERAL_TYPE_CC).then(() => this.broker.openTickStream(['cc']))
+			cacheController.sync(BROKER_GENERAL_TYPE_CC).then(() => this.broker.openTickStream(['cc'])),
+			cacheController.sync(BROKER_GENERAL_TYPE_IEX).then(() => this.broker.openTickStream(['iex']))
 		]);
 
 		this._toggleSymbolUpdateInterval(true);
@@ -59,7 +58,7 @@ export const app = {
 	_setupApi(): void {
 		// http 
 		this.api = express();
-		const server = this.api.listen(config.server.cache.port, '0.0.0.0', () => console.log(`\n Cache service started on      : 0.0.0.0:${config.server.cache.port}`));
+		const server = this.api.listen(config.server.cache.port, '0.0.0.0', () => log.info('App', `Service started -> 0.0.0.0:${config.server.cache.port}`));
 
 		this.api.use(morgan('dev'));
 		this.api.use(helmet());
@@ -87,7 +86,7 @@ export const app = {
 				return;
 			}
 
-			res.status(500).send({ error });
+			res.status(500).send(error);
 		});
 	},
 

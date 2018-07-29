@@ -1,7 +1,6 @@
 import {Router} from 'express';
 import { eventController } from '../controllers/event.controller';
-
-const config = require('../../../tradejs.config.js');
+import { config } from 'coinpush/src/util/util-config';
 
 const router = Router();
 

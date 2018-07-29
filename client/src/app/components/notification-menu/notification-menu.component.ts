@@ -4,7 +4,7 @@ import { Router, NavigationStart } from '@angular/router';
 import { AuthenticationService } from '../../services/authenticate.service';
 import { UserService } from '../../services/user.service';
 import { BehaviorSubject } from 'rxjs';
-import { INotification } from 'coinpush/interface/notification.interface';
+import { INotification } from 'coinpush/src/interface/notification.interface';
 
 @Component({
 	selector: 'app-notification-menu',
@@ -49,8 +49,8 @@ export class NotificationMenuComponent implements OnDestroy, OnInit {
 	}
 
 	async ngOnInit() {
-		const notifications = await this.notificationService.findMany().toPromise();
-		this.notifications$.next(notifications);
+		// const notifications = await this.notificationService.findMany().toPromise();
+		// this.notifications$.next(notifications);
 	}
 
 	public toggleNotificationMenu(state?: boolean) {

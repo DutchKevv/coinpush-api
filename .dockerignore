@@ -1,35 +1,27 @@
 ### global
-**/_logs/
+**/Dockerfile
+**/node_modules
+**/_log
 **/.git
 **/.gitignore
 **/.idea
 **/.vscode
 **/.DS_Store
-**/node_modules/
-**/*/node_modules/
 **/*.map
 **/*.md
-# **/*.js
+**/*.js
 **/*.yml
 **/*.txt
+**/*.log
 **/*.tmp
-**/npm-debug.log
-
-### root
-/_data
-!tradejs.config.js
-!tradejs.config.custom.js
-
-### shared
-!shared/modules/coinpush/**/*.js
 
 # mobile app
 client-app/.gradle
 client-app/hooks/
-# client-app/platforms/
-# client-app/plugins/
+client-app/platforms/
+client-app/plugins/
 client-app/res/
 client-app/scripts/
 
-### cache
-cache/dump.rdb
+### redis
+**/dump.rdb

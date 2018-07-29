@@ -1,17 +1,16 @@
 import * as request from 'request-promise';
 import { FB, FacebookApiException } from 'fb';
 import { userController } from "./user.controller";
-import { G_ERROR_UNKNOWN } from "coinpush/constant";
-import { log } from 'coinpush/util/util.log';
-import { IUser } from 'coinpush/interface/IUser.interface';
-import { genderStringToConstant } from 'coinpush/util/util.convert';
+import { G_ERROR_UNKNOWN } from "coinpush/src/constant";
+import { log } from 'coinpush/src/util/util.log';
+import { IUser } from 'coinpush/src/interface/IUser.interface';
+import { genderStringToConstant } from 'coinpush/src/util/util.convert';
 import { deviceController } from './device.controller';
 import { symbolController } from './symbol.controller';
-import { IReqUser } from 'coinpush/interface/IReqUser.interface';
+import { IReqUser } from 'coinpush/src/interface/IReqUser.interface';
 import { notifyController } from './notify.controller';
 import { eventController } from './event.controller';
-
-const config = require('../../../tradejs.config.js');
+import { config } from 'coinpush/src/util/util-config';
 
 export const authenticateController = {
 
@@ -77,9 +76,13 @@ export const authenticateController = {
 		};
 	},
 
-	async authenticateFacebook(reqUser: IReqUser, params: { token: string } = { token: undefined }) {
-		const facebookProfile = await FB.api('me', { fields: ['id', 'name', 'email', 'gender', 'locale'], access_token: params.token });
+	async authenticateFacebook(reqUser: IReqUser, params: { token: string, email?: string } = { token: undefined }) {
+		const facebookProfile = await FB.api('me', { 
+			fields: ['id', 'name', 'email', 'gender', 'locale', 'location'], access_token: params.token 
+		});
 
+		console.log('params!!', params);
+		
 		if (facebookProfile && facebookProfile.id) {
 			// search in DB for user with facebookId
 			let user = (await userController.findByFacebookId(reqUser, facebookProfile.id))[0];
@@ -87,11 +90,11 @@ export const authenticateController = {
 			// create new user if not founds
 			if (!user) {
 				user = await userController.create({}, {
-					email: facebookProfile.email,
+					email: facebookProfile.email || params.email,
 					name: facebookProfile.name,
 					// description: facebookProfile.about,
 					gender: genderStringToConstant(facebookProfile.gender),
-					country: facebookProfile.locale.split('_')[1],
+					country: facebookProfile.locale ? facebookProfile.locale.split('_')[1] : undefined,
 					imgUrl: 'https://graph.facebook.com/' + facebookProfile.id + '/picture?width=1000',
 					oauthFacebook: {
 						id: facebookProfile.id
@@ -106,7 +109,7 @@ export const authenticateController = {
 		}
 
 		// handle error
-		if (facebookProfile && facebookProfile.error) {
+		else if (facebookProfile && facebookProfile.error) {
 			if (facebookProfile.error.code === 'ETIMEDOUT') {
 				console.log('request timeout');
 			}

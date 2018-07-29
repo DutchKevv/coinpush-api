@@ -1,6 +1,5 @@
 import * as mongoose from 'mongoose';
-
-const config = require('../../../tradejs.config.js');
+import { config } from 'coinpush/src/util/util-config';
 
 /**
  *  Database

@@ -53,18 +53,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "tradejs:build"
+            "browserTarget": "coinpush:build"
           },
           "configurations": {
             "prod": {
-              "browserTarget": "tradejs:build:prod"
+              "browserTarget": "coinpush:build:prod"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "tradejs:build"
+            "browserTarget": "coinpush:build"
           }
         },
         "lint": {
@@ -76,13 +76,13 @@
         }
       }
     },
-    "tradejs-e2e": {
+    "coinpush-e2e": {
       "root": "",
       "sourceRoot": "",
       "projectType": "application"
     }
   },
-  "defaultProject": "tradejs",
+  "defaultProject": "coinpush",
   "cli": {
     "warnings": {
       "typescriptMismatch": false

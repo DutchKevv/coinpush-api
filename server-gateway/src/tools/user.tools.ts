@@ -2,7 +2,7 @@ import * as faker from 'faker';
 import * as minimist from 'minimist';
 import { userController } from '../controllers/user.controller';
 import { emailController } from '../controllers/email.controller';
-import { USER_FETCH_TYPE_PROFILE_SETTINGS } from 'coinpush/constant';
+import { USER_FETCH_TYPE_PROFILE_SETTINGS } from 'coinpush/src/constant';
 
 const argv = minimist(process.argv.slice(2));
 
@@ -52,7 +52,7 @@ module.exports = {
 		const user = await userController.findById({ id }, id, {type: USER_FETCH_TYPE_PROFILE_SETTINGS});
 
 		if (!user || !user._id)
-			throw new Error('User not found in main tradejs-user collection');
+			throw new Error('User not found in main coinpush-user collection');
 
 		try {
 			await emailController.addUser({id}, user, true);

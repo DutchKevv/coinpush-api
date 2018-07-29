@@ -45,7 +45,7 @@ export class AppComponent implements OnInit {
 	onWindowResize(event) {
 		if (!app.platform.isApp) return;
 
-		const size = window.innerWidth + window.innerHeightååååå;
+		const size = window.innerWidth + window.innerHeight;
 
 		if (app.platform.windowW !== window.innerWidth || window.innerHeight !== app.platform.windowH) {
 			document.body.classList.remove('app');

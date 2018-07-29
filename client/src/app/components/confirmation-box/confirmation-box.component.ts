@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, ElementRef, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from '../../services/user.service';
-import { G_ERROR_DUPLICATE } from 'coinpush/constant';
 import { LocationStrategy } from '@angular/common';
 
 @Component({

@@ -181,7 +181,7 @@ export class Chart {
                     clearInterval(i);
                     resolve(el);
                 }
-            }, 100);
+            }, 20);
         });
     }
 }

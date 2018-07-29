@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, OnInit, OnDestroy, ChangeDetectorRe
 import { EventService } from "../../services/event.service";
 import { SymbolModel } from "../../models/symbol.model";
 import { SymbolListService } from "../../services/symbol-list.service";
-import { CUSTOM_EVENT_TYPE_ALARM_NEW } from 'coinpush/constant';
+import { CUSTOM_EVENT_TYPE_ALARM_NEW } from 'coinpush/src/constant';
 
 const DEFAULT_FILTER_POPULAR_LENGTH = 40;
 

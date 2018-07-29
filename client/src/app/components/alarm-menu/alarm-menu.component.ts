@@ -7,7 +7,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { SymbolModel } from '../../models/symbol.model';
 import { EventService } from '../../services/event.service';
 import { NgForm } from '@angular/forms';
-import { ALARM_TRIGGER_DIRECTION_DOWN, ALARM_TRIGGER_DIRECTION_UP, CUSTOM_EVENT_TYPE_ALARM } from 'coinpush/constant';
+import { ALARM_TRIGGER_DIRECTION_DOWN, ALARM_TRIGGER_DIRECTION_UP, CUSTOM_EVENT_TYPE_ALARM } from 'coinpush/src/constant';
 import { CacheService } from '../../services/cache.service';
 import { AuthenticationService } from '../../services/authenticate.service';
 import { EventModel } from '../../models/event.model';

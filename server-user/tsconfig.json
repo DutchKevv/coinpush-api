@@ -5,5 +5,10 @@
     "lib": ["esnext"],
     "module": "commonjs",
     "pretty": true
-  }
+  },
+  "include": [
+    "./index.ts",
+    "./src/**/*.ts",
+    "./node_modules/coinpush/src/**/*.ts"
+  ]
 }

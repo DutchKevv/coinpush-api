@@ -1,7 +1,6 @@
 import * as request from 'request-promise';
-import { IReqUser } from 'coinpush/interface/IReqUser.interface';
-
-const config = require('../../../tradejs.config.js');
+import { IReqUser } from 'coinpush/src/interface/IReqUser.interface';
+import { config } from 'coinpush/src/util/util-config';
 
 export const deviceController = {
 

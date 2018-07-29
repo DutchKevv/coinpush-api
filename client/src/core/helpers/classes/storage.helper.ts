@@ -43,23 +43,32 @@ export class StorageHelper {
     }
 
     public set(key: string, value: any): Promise<any> {
+        console.log(key, value, 2);
         return this._instance.setItem(key, value);
     }
 
-    public async updateProfile(value: any, newProfile: boolean = false): Promise<void> {
+    public async updateProfile(value: any, isNew: boolean = false): Promise<void> {
         if (!value) {
             throw new Error('No value given');
         }
 
         // userId must be known or given
-        if (!this.profileData._id && (newProfile && !value._id)) {
+        if (!this.profileData._id && (isNew && !value._id)) {
             throw new Error('Not loggedin and no [user]_id given in data object');
         }
 
+        // merge 'fresh' profile data
         this.profileData = deepmerge.default.all([this.profileData, value]);
+
+        // deepmerge does not keep unique array
+        if (value.favorites) {
+            this.profileData.favorites = value.favorites;
+            // this.profileData.favorites =  Array.from(new Set(this.profileData.favorites)); 
+        }
+
         await this.set(`user-profile-${this.profileData._id}`, this.profileData);
 
-        if (newProfile) {
+        if (isNew) {
             await this.set('last-user-id', this.profileData._id);
         }
     }

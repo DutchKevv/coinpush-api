@@ -8,6 +8,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { AuthenticationService } from './authenticate.service';
 
 import { map } from 'rxjs/operators';
+import { G_ERROR_DUPLICATE_FIELD } from 'coinpush/src/constant';
 
 @Injectable({
 	providedIn: 'root',
@@ -21,16 +22,19 @@ export class UserService {
 
 	constructor(
 		private _http: HttpClient,
-		private _alertService: AlertService) { }
+		private _alertService: AlertService) {
 
-	findById(id: string, options: any = {}): Promise<UserModel> {
+	}
+
+	public findById(id: string, options: any = {}): Observable<UserModel> {
 		const params = new HttpParams({
 			fromObject: options
 		});
-		return this._http.get('/user/' + id, { params }).pipe(map((res: Response) => new UserModel(res))).toPromise();
+		
+		return this._http.get('/user/' + id, { params }).pipe(map((res: Response) => new UserModel(res)));
 	}
 
-	getOverview(options: any = {}) {
+	public getOverview(options: any = {}): Promise<Array<any>> {
 		const params = new HttpParams({
 			fromObject: options
 		});
@@ -38,67 +42,71 @@ export class UserService {
 		return this._http.get('/user', { params: options }).pipe(map((users: any) => users.map(user => new UserModel(user)))).toPromise();
 	}
 
-	create(user) {
+	public create(user): Promise<any> {
 		return this._http.post('/user', user).toPromise();
 	}
 
-	async update(changes, toServer = true, showAlert: boolean = true) {
+	public async update(changes, saveOnServer = true, showAlert: boolean = true, triggerModelOptions: boolean = false): Promise<boolean> {
 		try {
-			this.model.set(changes);
+			this.model.set(changes, triggerModelOptions);
+			app.storage.updateProfile(this.model.options).catch(console.error);
 
-			if (toServer) {
+			if (saveOnServer) {
 				await this._http.put('/user/' + this.model.get('_id'), changes).toPromise();
 			}
-			
-			await app.storage.updateProfile(this.model.options);
-			
+
 			if (showAlert) {
 				this._alertService.success('Settings saved');
 			}
-		} catch (error) {
-			console.error(error);
-			this._alertService.error('Error saving settings');
-			throw error;
-		}
-	}
-
-	async toggleFollow(model: UserModel, state: boolean) {
-		try {
-			const result = <any>await this._http.post('/user/' + model.get('_id') + '/follow', null).toPromise();
-			let text;
-
-			if (result.state) {
-				model.options.followers.push([{
-					_id: this.model.get('user_id'),
-					name: this.model.get('name'),
-					img: this.model.get('profileImg'),
-				}]);
-				model.set({
-					iFollow: result.state,
-					followersCount: ++model.options.followersCount
-				});
-				text = `Now following ${model.options.name}`;
-			} else {
-				const index = model.options.followers.find(f => f._id === this.model.get('_id'));
-				model.options.followers.slice(index, 1);
-
-				model.set({
-					iFollow: result.state,
-					followersCount: --model.options.followersCount
-				});
-				text = `Stopped following ${model.options.name}`;
-			}
-			this._alertService.success(text);
 
 			return true;
 		} catch (error) {
-			console.error(error);
-			this._alertService.error(`An error occurred when following ${model.options.username}...`);
+			console.log(error)
+			if (error && error.code) {
+				switch (parseInt(error.code, 10)) {
+					case G_ERROR_DUPLICATE_FIELD:
+						if (error.field === 'email')
+							this._alertService.error(`Email address already used with an account on CoinPush`);
+						break;
+					default:
+						this._alertService.error(`Unknown error occured`);
+				}
+			} else {
+				this._alertService.error(`Unknown error occured`);
+			}
+
 			return false;
 		}
 	}
 
-	async remove() {
+	public async toggleFollow(model: UserModel, state: boolean): Promise<void> {
+		try {
+			const result = <any>await this._http.post('/user/' + model.get('_id') + '/follow', null).toPromise();
+
+			// DB state = following
+			if (result.state)
+				model.options.followers.push([this.model.options]);
+
+			// DB state != following
+			else
+				model.options.followers.slice(model.options.followers.findIndex(f => f._id === this.model.options._id), 1);
+
+			// update self
+			model.set({
+				iFollow: result.state,
+				followersCount: result.state ? ++model.options.followersCount : --model.options.followersCount
+			});
+
+			// show alert banner
+			this._alertService.success(`${result.state ? 'Now following' : 'Stopped following'} ${model.options.name}`);
+
+		} catch (error) {
+			console.error(error);
+			this._alertService.error(`Error occurred while following ${model.options.username}`);
+		}
+	}
+
+	public async remove() {
 		try {
 			await this._http.delete('/user/' + this.model.options._id).toPromise();
 			return true;
