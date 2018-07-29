@@ -5,8 +5,6 @@
 
 <app-header (navClicked$)="nav.toggleNav($event)" (filterClicked$)="filterClicked$.next($event)" [titleText$]="titleText$" #header></app-header>
 
-<router-outlet class="main-container"></router-outlet>
-
-<!-- <main >
-
-</main> -->
+<main class="main-container">
+    <router-outlet></router-outlet>
+</main>

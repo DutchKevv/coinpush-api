@@ -38,6 +38,7 @@
     "localforage": "1.7.2",
     "rxjs": "6.2.2",
     "socket.io-client": "2.1.1",
+    "time-ago": "^0.2.1",
     "typescript": "2.9",
     "zone.js": "0.8.26"
   },

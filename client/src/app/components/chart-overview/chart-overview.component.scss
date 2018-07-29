@@ -12,15 +12,12 @@
 :host {
     display: block;
     height: 100%;
-    padding-top: 40px;
+    width: 100%;
+    
     position: relative;
 
     @media only screen and (min-width : 992px) { 
         border-left: none;
-    }
-
-    @media screen and (min-width: 768px) {
-        padding-left: 250px;
     }
 }
 

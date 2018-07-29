@@ -28,14 +28,17 @@ export const
 	 */
 	G_ERROR_UNKNOWN = 0,
 	G_ERROR_EXPIRED = 1,
-	G_ERROR_DUPLICATE_CODE = 2,
-	G_ERROR_MAX_SIZE = 3,
+	G_ERROR_MAX_SIZE = 2,
+	G_ERROR_DUPLICATE_FIELD = 10,
+	G_ERROR_MISSING_FIELD = 11,
 	G_ERROR_USER_NOT_FOUND = 100,
 
 	/**
 	 * General mongo errors
 	 */
-	G_ERROR_DUPLICATE_NAME = 'ValidationError',
+	MONGO_ERROR_VALIDATION = 'ValidationError',
+	MONGO_ERROR_KIND_REQUIRED = 'required',
+	MONGO_ERROR_KIND_DUPLICATE = 'duplicate',
 
 	/**
 	 * ORDER

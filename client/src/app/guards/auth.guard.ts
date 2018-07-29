@@ -20,7 +20,7 @@ export class AuthGuard implements CanActivate {
 			case '/settings':
 			case '/user/undefined/feed':
 				if (!this._userService.model.options._id) {
-					this._authenticationService.showLoginRegisterPopup();
+					this._authenticationService.showLoginRegisterPopup(undefined, state.url);
 					return false;
 				}
 			default:

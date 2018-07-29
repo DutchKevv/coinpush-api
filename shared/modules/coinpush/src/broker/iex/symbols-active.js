@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const constants_1 = require("../../constant/constants");
+var constants_1 = require("../../constant/constants");
 exports.activeSymbols = [
     {
         type: constants_1.SYMBOL_CAT_TYPE_COMPANY,
@@ -21,4 +21,3 @@ exports.activeSymbols = [
         broker: constants_1.BROKER_GENERAL_TYPE_IEX
     }
 ];
-//# sourceMappingURL=symbols-active.js.map

@@ -30,7 +30,6 @@ export class NavigationMenuComponent implements OnInit {
 	 */
 	@HostListener('window:popstate', ['$event'])
 	onPopState(event) {
-		alert('')
 		this.toggleNav(false);
 		return false;
 	}

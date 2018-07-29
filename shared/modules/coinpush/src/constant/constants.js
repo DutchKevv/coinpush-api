@@ -11,11 +11,11 @@ exports.SYSTEM_STATE_BOOTING = -1, exports.SYSTEM_STATE_OK = 0, exports.SYSTEM_S
 /**
  * General error codes
  */
-exports.G_ERROR_UNKNOWN = 0, exports.G_ERROR_EXPIRED = 1, exports.G_ERROR_DUPLICATE_CODE = 2, exports.G_ERROR_MAX_SIZE = 3, exports.G_ERROR_USER_NOT_FOUND = 100, 
+exports.G_ERROR_UNKNOWN = 0, exports.G_ERROR_EXPIRED = 1, exports.G_ERROR_MAX_SIZE = 2, exports.G_ERROR_DUPLICATE_FIELD = 10, exports.G_ERROR_MISSING_FIELD = 11, exports.G_ERROR_USER_NOT_FOUND = 100, 
 /**
  * General mongo errors
  */
-exports.G_ERROR_DUPLICATE_NAME = 'ValidationError', 
+exports.MONGO_ERROR_VALIDATION = 'ValidationError', exports.MONGO_ERROR_KIND_REQUIRED = 'required', exports.MONGO_ERROR_KIND_DUPLICATE = 'duplicate', 
 /**
  * ORDER
  */
@@ -60,4 +60,3 @@ exports.ALARM_TRIGGER_TYPE_PRICE = 1, exports.ALARM_TRIGGER_TYPE_PERCENTAGE = 2,
  * CANDLES
  */
 exports.CANDLE_DEFAULT_ROW_LENGTH = 6;
-//# sourceMappingURL=constants.js.map

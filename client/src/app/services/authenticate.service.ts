@@ -86,7 +86,7 @@ export class AuthenticationService {
 	 * @param profile 
 	 * @param reload 
 	 */
-	async authenticate(email?: string, password?: string, token?: string, loadProfile = false, reload = false): Promise<boolean> {
+	async authenticate(email?: string, password?: string, token?: string, loadProfile = false, reload = false, redirectUrl?: string): Promise<boolean> {
 		if (!email && !password && !token) {
 			token = app.storage.profileData.token;
 
@@ -103,7 +103,7 @@ export class AuthenticationService {
 
 		try {
 			const params = new HttpParams({
-				fromObject: { profile: '0' }
+				fromObject: { profile: loadProfile.toString(), redirectUrl },
 			});
 
 			const result = <any>await this._http.post('/authenticate', postData, { params }).toPromise();
@@ -117,7 +117,7 @@ export class AuthenticationService {
 			await app.storage.set('last-user-id', result.user._id);
 
 			if (reload) {
-				this.reload();
+				this.reload(redirectUrl);
 			}
 
 			return true;
@@ -143,22 +143,28 @@ export class AuthenticationService {
 		}
 	}
 
-	public authenticateFacebook(): Promise<any> {
+	public authenticateFacebook(emailAddress?: string, redirectUrl?: string): Promise<any> {
 
 		return new Promise((resolve, reject) => {
-			const scope = 'email,public_profile,user_location,user_birthday';
+			const scope = ['email','public_profile'];
+			// const scope = 'email,public_profile,user_location,user_birthday';
 
 			// app
 			if (app.platform.isApp) {
-				window.facebookConnectPlugin.login(scope.split(','), async (response) => {
-					console.log(response)
+				window.facebookConnectPlugin.login(scope, async (response) => {
 					const token = response.authResponse.accessToken;
 
 					if (token) {
-						const authResult = <any>await this._http.post(`/authenticate/facebook`, { token }).toPromise();
+						const authResult = <any>await this._http.post(`/authenticate/facebook`, { token, email: emailAddress }).toPromise();
 						if (authResult && authResult.token) {
 							await app.storage.updateProfile({ _id: authResult._id, token: authResult.token }, true);
-							this.reload();
+
+							if (redirectUrl) {
+
+							} else {
+
+							}
+							this.reload(redirectUrl);
 						}
 					} else {
 						reject('inpcomplete response')
@@ -179,23 +185,20 @@ export class AuthenticationService {
 				// const clientId = environment.production ? FB_APP_ID_PROD : FB_APP_ID_DEV;
 				const clientId = FB_APP_ID_PROD;
 
-				const redirectUrl = app.address.hostUrl + '/index.redirect.facebook.html';
-				const loginUrl = `https://graph.facebook.com/oauth/authorize?client_id=${clientId}&response_type=token&redirect_uri=${redirectUrl}&scope=${scope}`;
+				const fbRedirectUrl = app.address.hostUrl + '/index.redirect.facebook.html';
+				const loginUrl = `https://graph.facebook.com/oauth/authorize?client_id=${clientId}&response_type=token&redirect_uri=${fbRedirectUrl}&scope=${scope.join()}`;
 
-				const self = this;
-				window.addEventListener('message', async function cb(message) {
-					window.removeEventListener('message', cb, false);
-					
+				window.addEventListener('message', async (message) => {
 					if (message.data.error)
 						return reject(message.error);
 
 					try {
-						const authResult = <any>await self._http.post(`/authenticate/facebook`, { token: message.data.token }).toPromise();
+						const authData = { token: message.data.token, email: emailAddress };
+						const authResult = <any>await this._http.post(`/authenticate/facebook`, authData).toPromise();
 
 						if (authResult && authResult.token && authResult._id) {
-
 							await app.storage.updateProfile({ _id: authResult._id, token: authResult.token }, true);
-							self.reload();
+							this.reload(redirectUrl);
 						} else {
 							reject('inpcomplete response')
 						}
@@ -203,7 +206,7 @@ export class AuthenticationService {
 						reject(error)
 					}
 
-				}, false);
+				}, { once: true });
 
 				const fbWindow = window.open(loginUrl, '_system');
 
@@ -238,22 +241,28 @@ export class AuthenticationService {
 		this.reload();
 	}
 
-	public async showLoginRegisterPopup(activeForm?: string) {
+	public async showLoginRegisterPopup(activeForm?: string, redirectUrl?: string) {
 		if (this.loginOpen)
 			return;
 
 		const modalRef = this._modalService.open(LoginComponent);
+		
 		if (activeForm) {
 			modalRef.componentInstance.formType = activeForm;
 		}
 
+		modalRef.componentInstance.redirectUrl = redirectUrl;
+
 		this.loginOpen = true;
 	}
 
-	public reload() {
+	public reload(redirectUrl?: string) {
 		if (app.platform.isApp) {
-			window.location = 'index.html';
+			window.location = 'index.html#' + redirectUrl;
 		} else {
+			if (redirectUrl)
+				window.location = '#' + redirectUrl;
+				
 			window.location.reload();
 		}
 	}

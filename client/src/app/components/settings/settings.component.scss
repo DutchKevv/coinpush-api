@@ -13,14 +13,9 @@
 	display: block;
 
 	height: 100%;
-    padding-top: 40px;
 
     @media only screen and (min-width : 992px) { 
         border-left: none;
-    }
-
-    @media screen and (min-width: 768px) {
-        padding-left: 250px;
     }
 }
 
@@ -143,7 +138,7 @@ nav {
 }
 
 .profile-image-box {
-	text-align: center;
+	text-align: left;
 	margin-bottom: 30px;
 	position: relative;
 
@@ -156,7 +151,7 @@ nav {
 		z-index: -1;
 	}
 
-	label {
+	.profileImg label {
 		font-size: 1.25em;
 		font-weight: 700;
 		color: white;
@@ -167,7 +162,8 @@ nav {
 		cursor: pointer;
 		border: 1px solid white;
 		background-color: transparent;
-
+		background-position: top;
+		
 		&:hover {
 			border: 1px solid black;
 		}
@@ -194,7 +190,7 @@ nav {
 .spinner-box {
 	position: absolute;
 	top: 0;
-	left: 0;
+	left: 15px;
 	right: 0;
 	bottom: 0;
 	background: rgba(0, 0, 0, 0.85);

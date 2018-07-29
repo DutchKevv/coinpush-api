@@ -19,10 +19,11 @@ services:
     # restart: unless-stopped
     build: ./server-nginx
     image: nginx
-    container_name: nginx  
+    container_name: nginx 
     volumes:
       - ./static:/usr/src/app/static
       - ./server-nginx/pages:/usr/src/app/server-nginx/pages
+      - ./server-nginx/ssl:/usr/src/app/server-nginx/ssl:ro
       # - ./server-nginx/config:/usr/src/app/server-nginx/config
     depends_on:
       - gateway
@@ -167,7 +168,7 @@ services:
       - ./static/clients:/usr/src/app/static/clients
       - ./client:/usr/src/app/client
       - /usr/src/app/client/node_modules
-      - ./shared/modules/coinpush/src:/usr/src/app/shared/modules/coinpush/src
+      # - ./shared/modules/coinpush/src:/usr/src/app/shared/modules/coinpush/src
       # - /usr/src/app/shared/modules/coinpush/node_modules
   client-app:
     image: client-app

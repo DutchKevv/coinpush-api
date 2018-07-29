@@ -23,7 +23,10 @@
     "NodeJS"
   ],
   "scripts": {
-    "copy-ssl": "cp -r /etc/letsencrypt/ ./server-nginx/ssl && chmod -R 777 ./server-nginx/ssl/",
+    "get-ssl-cert-prod": "docker run -v $(pwd)/server-nginx/ssl:/etc/letsencrypt -e http_proxy=$http_proxy -e domains=\"coinpush.app,jenkins.coinpush.app\" -e email=\"kewin@frontend-freelance.com\" -p 80:80 -p 443:443  --rm pierreprinetti/certbot:latest --expand",
+    "get-ssl-cert-dev": "docker run -v server-nginx/ssl:/etc/letsencrypt -e http_proxy=$http_proxy -e domains=\"localhost\" -e email=\"kewin@frontend-freelance.com\" -p 80:80 -p 443:443  --rm pierreprinetti/certbot:latest --expand",
+    "copy-ssl-cert-prod": "cp -r /etc/letsencrypt/ ./server-nginx/ssl && chmod -R 777 ./server-nginx/ssl/",
+    "copy-ssl-cert-dev": "cp -r /etc/letsencrypt/ ./server-nginx/ssl",
     "build-all": "docker-compose build",
     "build-client": "docker-compose build client",
     "build-client-app": "docker-compose build client-app",
@@ -59,7 +62,7 @@
     "d-up-all": "docker-compose up",
     "d-prune": "docker system prune",
     "d-log-all": "docker-compose logs --tail=30 -f",
-    "d-log-server": "docker-compose logs --tail=30 -f nginx notify user event cache comment",
+    "d-log-server": "docker-compose logs --tail=30 -f nginx notify user event cache comment gateway",
     "d-log-nginx": "docker-compose logs --tail=30 -f nginx",
     "clean-client": "cd ./scripts/npm && sh ./clean-modules.sh",
     "clean-npm-modules": "cd ./scripts/npm && node --experimental-modules clean-modules.mjs",
@@ -70,8 +73,7 @@
     "update-npm-modules": "cd ./scripts/npm && sh ./update-modules.sh",
     "install-npm-modules": "cd ./scripts/npm && node --experimental-modules install-modules.mjs",
     "inc-build-number": "node ./scripts/inc-build-number.js",
-    "prepare-dev": "cd ./scripts && node --experimental-modules prepare_dev.mjs",
-    "get-ssl-cert": "docker run -v $(pwd)/server-nginx/ssl:/etc/letsencrypt -e http_proxy=$http_proxy -e domains=\"coinpush.app,jenkins.coinpush.app\" -e email=\"kewin@frontend-freelance.com\" -p 80:80 -p 443:443  --rm pierreprinetti/certbot:latest --expand"
+    "prepare-dev": "cd ./scripts && node --experimental-modules prepare_dev.mjs"
   },
   "dependencies": {}
 }

@@ -5,8 +5,6 @@ services:
     ports:
       - "80:80"
       - "443:443"
-    volumes:
-      - ./server-nginx/ssl:/usr/src/app/server-nginx/ssl:ro
     build:
       args:
         RUNNING_ENV: prod
@@ -40,10 +38,7 @@ services:
     volumes:
       - /usr/src/app/server-comment/node_modules
   client:
-    privileged: true
     environment:
       - NODE_ENV=production
     command: npm run build-prod
-    volumes:
-      - /usr/src/app/client/src
   

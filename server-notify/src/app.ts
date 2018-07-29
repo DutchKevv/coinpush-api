@@ -6,7 +6,7 @@ import { json, urlencoded } from 'body-parser';
 import { notifyController } from './controllers/notify.controller';
 import { subClient } from 'coinpush/src/redis';
 import { config } from 'coinpush/src/util/util-config';
-import { G_ERROR_DUPLICATE_CODE, G_ERROR_DUPLICATE_NAME } from 'coinpush/src/constant';
+import { G_ERROR_DUPLICATE_FIELD, MONGO_ERROR_VALIDATION } from 'coinpush/src/constant';
 import { log } from 'coinpush/src/util/util.log';
 
 const app = express();
@@ -60,8 +60,8 @@ app.use((error, req, res, next) => {
 		return res.status(error.statusCode).send(error);
 
 	// to-handle error
-	if (error.name === G_ERROR_DUPLICATE_NAME)
-		return res.status(409).send({ code: G_ERROR_DUPLICATE_CODE, field: Object.keys(error.errors)[0] });
+	if (error.name === MONGO_ERROR_VALIDATION)
+		return res.status(409).send({ code: G_ERROR_DUPLICATE_FIELD, field: Object.keys(error.errors)[0] });
 
 	// system error
 	log.error('API', error);

@@ -4,7 +4,7 @@ import * as helmet from 'helmet';
 import * as morgan from 'morgan';
 import { json, urlencoded } from 'body-parser';
 import { config } from 'coinpush/src/util/util-config';
-import { G_ERROR_DUPLICATE_CODE, G_ERROR_DUPLICATE_NAME } from 'coinpush/src/constant';
+import { G_ERROR_DUPLICATE_FIELD, MONGO_ERROR_VALIDATION, MONGO_ERROR_KIND_DUPLICATE, MONGO_ERROR_KIND_REQUIRED, G_ERROR_UNKNOWN, G_ERROR_MISSING_FIELD } from 'coinpush/src/constant';
 import { log } from 'coinpush/src/util/util.log';
 
 const app = express();
@@ -69,8 +69,36 @@ app.use((error, req, res, next) => {
 		return res.status(error.statusCode).send(error);
 
 	// to-handle error
-	if (error.name === G_ERROR_DUPLICATE_NAME)
-		return res.status(409).send({ code: G_ERROR_DUPLICATE_CODE, field: Object.keys(error.errors)[0] });
+	console.log('ERROR OERODV22 ddSDV', error);
+	if (error.name === MONGO_ERROR_VALIDATION) {
+		const firstErrorField =  Object.keys(error.errors)[0];
+		const firstErrorKind = error.errors[firstErrorField].kind;
+		
+		// const errorObj = {};
+		// for (let field in error.errors) {
+		// 	if (errorObj[field])
+		// 		continue;
+				
+		// 	switch (error.errors[field].kind) {
+		// 		case MONGO_ERROR_KIND_REQUIRED:
+		// 			errorObj[field] = { code: G_ERROR_MISSING_FIELD, field };
+		// 		case MONGO_ERROR_KIND_DUPLICATE:
+		// 			errorObj[field] = { code: G_ERROR_DUPLICATE_FIELD, field };
+		// 	}
+		// }
+
+		// if (Object.keys(errorObj).length)
+		// 	return res.status(409).send(errorObj);
+
+		switch (firstErrorKind) {
+			case MONGO_ERROR_KIND_REQUIRED:
+				return res.status(409).send({ code: G_ERROR_MISSING_FIELD, field: firstErrorField });
+			case MONGO_ERROR_KIND_DUPLICATE:
+				return res.status(409).send({ code: G_ERROR_DUPLICATE_FIELD, field: firstErrorField });
+			default:
+				return res.status(500).send({ code: G_ERROR_UNKNOWN });
+		}
+	}
 
 	// system error
 	log.error('API', error);

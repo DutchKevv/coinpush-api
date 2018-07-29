@@ -1,7 +1,8 @@
 import {BaseModel} from './base.model';
-// import TimeAgo from 'javascript-time-ago';
+// import * as TimeAgo from 'javascript-time-ago';
+// import * as en from 'javascript-time-ago/locale/en'
 
-// const timeAgo = new TimeAgo('en-US');
+import * as TimeAgo2 from 'time-ago';
 
 export class CommentModel extends BaseModel {
 	public static readonly DEFAULTS: any = {
@@ -19,6 +20,6 @@ export class CommentModel extends BaseModel {
 	constructor(options: any) {
 		super(options);
 
-		// this.options.fromNow = timeAgo.format(this.options.created);
+		this.options.fromNow = TimeAgo2.ago(new Date(this.options.createdAt));
 	}
 }

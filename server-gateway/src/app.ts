@@ -266,8 +266,9 @@ export const app = {
 				return next(error);
 			}
 			
-			// normal error object3
+			// normal error objects
 			if (error && (error.code || error.statusCode)) {
+				
 				// known error
 				if (error.statusCode) {
 					return res.status(error.statusCode).send(error.error || {
@@ -282,7 +283,7 @@ export const app = {
 						res.status(413).send(error);
 						break;
 					default:
-						log.error('Upload API', error.message || error.error || 'Unknown error');
+						log.error('ErrorHandler', error.message || error.error || 'Unknown error');
 						res.status(500).send({
 							code: G_ERROR_UNKNOWN,
 							message: 'Unknown error'
@@ -292,7 +293,7 @@ export const app = {
 
 			// unknown error
 			else {
-				log.error('API', error);
+				// log.error('API', error);
 				res.status(500).send('Unknown error');
 			}
 		});

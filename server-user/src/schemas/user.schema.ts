@@ -47,7 +47,7 @@ export const UserSchema = new Schema(
 		},
 		country: {
 			type: String,
-			required: true,
+			default: 'US',
 			trim: true,
 			enum: countries.map(country => country.code)
 		},

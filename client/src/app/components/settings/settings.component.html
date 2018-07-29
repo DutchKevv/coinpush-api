@@ -16,15 +16,15 @@
 <!-- profile settings -->
 <div class="tab-container" *ngIf="activeTab === 'profile'">
     <form (change)="onChange($event.target)" [formGroup]="form" class="container">
-        <div class="form-box">
-            <div class="form-group">
+        <!-- <div class="form-box"> -->
+            <div class="form-group col-md-4">
                 <label for="country" class="form-control-label">Country</label>
                 <select id="country" formControlName="country" class="form-control">
                     <option *ngFor="let country of countries" [attr.value]="country.code" [innerHTML]="country.name"></option>
                 </select>
             </div>
 
-            <div class="form-group">
+            <div class="form-group col-md-4">
                 <label for="gender" class="form-control-label">Gender</label>
                 <select id="gender" formControlName="gender" class="form-control">
                     <option value="0">Unknown</option>
@@ -33,17 +33,17 @@
                     <option value="3">Highly confused</option>
                 </select>
             </div>
-        </div>
+        <!-- </div> -->
 
         <div class="form-box">
-            <div class="form-group profile-image-box">
+            <div class="form-group profile-image-box  col-md-4">
+                <label for="uploadProfileImg" class="form-control-label">Profile image</label>
                 <div class="profileImg">
 
                     <input accept="image/*" class="uploadInput" id="uploadProfileImg" type="file" #uploadBtn (change)="onChangeFileInput($event)">
                     <label class="uploadInputBtn" for="uploadProfileImg" [ngStyle]="{'background-image': 'url(' + (userModel.options.img | NormalizeImgUrl) + ')'}"
                         #uploadImageHolder></label>
                     <div class="spinner-box" #uploadImageLoading>
-                        <span>Uploading</span>
                         <div class="spinner"></div>
                     </div>
                     <div class="saveOptions hidden" #saveOptions>

@@ -8,7 +8,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { AuthenticationService } from './authenticate.service';
 
 import { map } from 'rxjs/operators';
-import { G_ERROR_DUPLICATE_CODE } from 'coinpush/src/constant';
+import { G_ERROR_DUPLICATE_FIELD } from 'coinpush/src/constant';
 
 @Injectable({
 	providedIn: 'root',
@@ -64,7 +64,7 @@ export class UserService {
 			console.log(error)
 			if (error && error.code) {
 				switch (parseInt(error.code, 10)) {
-					case G_ERROR_DUPLICATE_CODE:
+					case G_ERROR_DUPLICATE_FIELD:
 						if (error.field === 'email')
 							this._alertService.error(`Email address already used with an account on CoinPush`);
 						break;

@@ -82,13 +82,13 @@ export class App extends MicroEvent {
     /**
      * preload
      */
-    private _preload(): Promise<void> {
-        const imageUrls = ['./spritesheet.png'];
+    private async _preload(): Promise<void> {
+        const imageUrls = ['./spritesheet.png', './assets/image/cover.svg'];
         const authUrl = this.address.apiUrl + 'authenticate?profile=true';
 
+        // images
         try {
-            Promise.all(
-                // images
+            await Promise.all(
                 imageUrls.map(imageUrl => {
                     return new Promise(resolve => {
                         let img = new Image();
@@ -172,7 +172,6 @@ export class App extends MicroEvent {
             const firstReload = !window.localStorage.getItem('reload-reason');
 
             if (firstReload) {
-                alert('sdf')
                 window.localStorage.setItem('reload-reason', JSON.stringify({ reason: 'clientVersion' }));
                 window.location.reload();
                 return;

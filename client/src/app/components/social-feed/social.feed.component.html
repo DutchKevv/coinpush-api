@@ -1,4 +1,4 @@
-<div class="d-none d-lg-block">
+<div class="d-none d-lg-block" style="padding-top: 20px;">
 	<div class="info-box">
 		<header>Info</header>
 		<main>
@@ -27,7 +27,7 @@
 	</div> -->
 </div>
 
-<div class="feed-container" (scroll)="onScroll($event)">
+<div class="feed-container" (scroll)="onScroll($event)" style="padding-top: 20px;">
 	<div class="feed">
 		<app-comment-box *ngIf="!commentId" [userId]="userId" (newMessage)="addMessage($event)"></app-comment-box>
 
@@ -102,7 +102,7 @@
 	</div> -->
 </div>
 
-<div class="d-none d-lg-block">
+<div class="d-none d-lg-block" style="padding-top: 20px;">
 	<div class="info-box">
 		<header>Info</header>
 		<main>

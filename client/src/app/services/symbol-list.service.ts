@@ -22,7 +22,8 @@ export class SymbolListService {
     private _priceChangeSub;
     private _eventsChangeSub;
     
-    private _noSymbolsHTML = (new DOMParser()).parseFromString('<h1>No symbols, system is updating</h1>', "text/xml");
+    private _noSymbolsHTML = '<h3 style="margin-top: 20px; text-align:center">No symbols, system is probably updating</h3>';
+    private _noSymbolsEl = (new DOMParser()).parseFromString(this._noSymbolsHTML, "text/xml").firstChild;
 
     constructor(
         private _zone: NgZone,
@@ -141,8 +142,8 @@ export class SymbolListService {
 
         // show no symbols (system error / updating / starting)
         if (!symbolModels || !symbolModels.length) {
-
-            this.containerEl.appendChild();
+            // this.containerEl.appendChild(this._noSymbolsEl);
+            return;
         }
 
         // get events
@@ -178,7 +179,7 @@ export class SymbolListService {
         this.isBuild = true;
 
         // scroll back to top after re-build
-        // this.scrollToTop();
+        this.scrollToTop();
     }
 
     /**

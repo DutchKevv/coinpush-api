@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnInit, ElementRef, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthenticationService } from '../../services/authenticate.service';
 import { AlertService } from '../../services/alert.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from '../../services/user.service';
-import { G_ERROR_DUPLICATE_CODE } from 'coinpush/src/constant';
+import { G_ERROR_DUPLICATE_FIELD, G_ERROR_MISSING_FIELD } from 'coinpush/src/constant';
 import { LocationStrategy } from '@angular/common';
 
 @Component({
@@ -15,7 +15,9 @@ import { LocationStrategy } from '@angular/common';
 
 export class LoginComponent implements OnInit {
 
-	@Input() formType = 'login';
+	@Input() activeFormType = 'login';
+	@Input() redirectUrl = '';
+
 	@Output() public loading$: EventEmitter<boolean> = new EventEmitter;
 
 	loginModel = {
@@ -31,6 +33,9 @@ export class LoginComponent implements OnInit {
 	passwordResetModel = {
 		password: '',
 		passwordConf: ''
+	};
+	addFacebookEmailModel = {
+		email: ''
 	};
 
 	loading = false;
@@ -54,8 +59,12 @@ export class LoginComponent implements OnInit {
 		this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
 	}
 
-	async login(e) {
-		e.preventDefault();
+	/**
+	 * 
+	 * @param event
+	 */
+	public async login(event) {
+		event.preventDefault();
 
 		this.loading$.emit(true);
 		const result = await this.authenticationService.authenticate(this.loginModel.email, this.loginModel.password, null, false, true);
@@ -64,30 +73,42 @@ export class LoginComponent implements OnInit {
 			this.loading$.emit(false);
 	}
 
-	async fbLogin(event) {
+	/**
+	 * 
+	 * @param event 
+	 */
+	public async fbLogin(event, emailAddress?: string) {
 		if (event) {
 			event.preventDefault();
 			event.stopPropogation();
 		}
+
 		this.loading$.emit(true);
 
 		try {
-			await this.authenticationService.authenticateFacebook();
-		} catch (errorObj) {
-			const error = errorObj.error;
-
+			await this.authenticationService.authenticateFacebook(emailAddress, this.redirectUrl);
+		} catch (error) {
 			if (error && error.code) {
 				switch (error.code) {
-					case G_ERROR_DUPLICATE_CODE:
+					// duplicate field
+					case G_ERROR_DUPLICATE_FIELD:
 						if (error.field === 'email')
 							this._alertService.error(`Email already used`);
 						break;
+					// missing field
+					case G_ERROR_MISSING_FIELD:
+						if (error.field === 'email') {
+							this.activeFormType = 'addFacebookEmail';
+							this.changeDetectorRef.detectChanges();
+						}
+						break;
+					// unknown error
 					default:
-						console.error(errorObj);
+						console.error(error);
 						this._alertService.error(`Facebook login failed...`);
 				}
 			} else {
-				console.error(errorObj);
+				console.error(error);
 				this._alertService.error(`Facebook login failed...`);
 			}
 		} finally {
@@ -95,7 +116,10 @@ export class LoginComponent implements OnInit {
 		}
 	}
 
-	async register() {
+	/**
+	 * 
+	 */
+	public async register() {
 		this.loading$.emit(true);
 
 		if (this.registerModel.password !== this.registerModel.passwordConf) {
@@ -113,7 +137,7 @@ export class LoginComponent implements OnInit {
 			this.loginModel.password = this.registerModel.password;
 
 			// switch to login tab
-			this.formType = 'login';
+			this.activeFormType = 'login';
 			this.changeDetectorRef.detectChanges();
 		} catch (errorObj) {
 			this.loading$.emit(false);
@@ -122,7 +146,7 @@ export class LoginComponent implements OnInit {
 
 			if (error && error.code) {
 				switch (error.code) {
-					case G_ERROR_DUPLICATE_CODE:
+					case G_ERROR_DUPLICATE_FIELD:
 						if (error.field === 'email')
 							this._alertService.error(`Email already used`);
 						break;
@@ -137,7 +161,10 @@ export class LoginComponent implements OnInit {
 		}
 	}
 
-	async requestPasswordReset() {
+	/**
+	 * 
+	 */
+	public async requestPasswordReset() {
 		this.loading$.emit(true);
 
 		// store email to prevent 2 way binding altering with value
@@ -152,8 +179,13 @@ export class LoginComponent implements OnInit {
 		}
 	}
 
-	async resetPassword(e) {
-		e.preventDefault();
+	/**
+	 * 
+	 * @param event 
+	 */
+	public async resetPassword(event) {
+		event.preventDefault();
+
 		if (this.passwordResetModel.password !== this.passwordResetModel.passwordConf) {
 			this.loading$.emit(false);
 			this._alertService.error(`Passwords do not match`);

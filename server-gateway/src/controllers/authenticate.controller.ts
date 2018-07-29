@@ -76,20 +76,21 @@ export const authenticateController = {
 		};
 	},
 
-	async authenticateFacebook(reqUser: IReqUser, params: { token: string } = { token: undefined }) {
+	async authenticateFacebook(reqUser: IReqUser, params: { token: string, email?: string } = { token: undefined }) {
 		const facebookProfile = await FB.api('me', { 
-			fields: ['id', 'name', 'email', 'gender', 'locale'], access_token: params.token 
+			fields: ['id', 'name', 'email', 'gender', 'locale', 'location'], access_token: params.token 
 		});
-		console.log('asfddfdb', facebookProfile);
+
+		console.log('params!!', params);
+		
 		if (facebookProfile && facebookProfile.id) {
 			// search in DB for user with facebookId
 			let user = (await userController.findByFacebookId(reqUser, facebookProfile.id))[0];
-		
 
 			// create new user if not founds
 			if (!user) {
 				user = await userController.create({}, {
-					email: facebookProfile.email,
+					email: facebookProfile.email || params.email,
 					name: facebookProfile.name,
 					// description: facebookProfile.about,
 					gender: genderStringToConstant(facebookProfile.gender),
@@ -108,7 +109,7 @@ export const authenticateController = {
 		}
 
 		// handle error
-		if (facebookProfile && facebookProfile.error) {
+		else if (facebookProfile && facebookProfile.error) {
 			if (facebookProfile.error.code === 'ETIMEDOUT') {
 				console.log('request timeout');
 			}

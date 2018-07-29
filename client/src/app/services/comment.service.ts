@@ -6,13 +6,14 @@ import { UserService } from "./user.service";
 import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { map } from 'rxjs/operators';
+import { DateService } from './date.service';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class CommentService {
 
-	constructor(private _http: HttpClient, private _alertService: AlertService, private _userService: UserService) {
+	constructor(private _http: HttpClient, private _dateService: DateService, private _userService: UserService) {
 
 	}
 

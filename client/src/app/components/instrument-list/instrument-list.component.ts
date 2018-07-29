@@ -116,7 +116,9 @@ export class InstrumentListComponent implements OnInit, OnDestroy {
 		// if (filter === this.activeFilter)
 		// 	return;
 
-		app.storage.updateProfile({ chartConfig: { filter } }).catch(console.error);
+		if (!app.storage.profileData.chartConfig || app.storage.profileData.chartConfig.filter !== filter) {
+			app.storage.updateProfile({ chartConfig: { filter } }).catch(console.error);
+		}
 
 		// remove specific symbol in url
 		if (removeSymbolFromUrl && this._route.snapshot.queryParams['symbol']) {
