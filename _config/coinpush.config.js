@@ -6,20 +6,20 @@ const
     ENV_PRODUCTION = (process.env.NODE_ENV || '').startsWith('prod'),
     PATH_CONFIG_CUSTOM = path.join(__dirname, 'coinpush.config.custom.js');
 
-// let domain = {
-//     host: '0.0.0.0',
-//     apiUrl: 'http://0.0.0.0:4000',
-//     port: 4000
-// };
+let domain = {
+    host: 'localhost',
+    apiUrl: 'https://localhost',
+};
 
-// if (ENV_PRODUCTION) {
-//     domain = {
-//         host: 'coinpush.app',
-//         apiUrl: 'https://coinpush.app'
-//     };
-// }
+if (ENV_PRODUCTION) {
+    domain = {
+        host: 'coinpush.app',
+        apiUrl: 'https://coinpush.app'
+    };
+}
 
 const config = {
+    domain,
     server: {
         gateway: {
             port: 3100

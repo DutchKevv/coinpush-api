@@ -69,7 +69,6 @@ app.use((error, req, res, next) => {
 		return res.status(error.statusCode).send(error);
 
 	// to-handle error
-	console.log('ERROR OERODV22 ddSDV', error);
 	if (error.name === MONGO_ERROR_VALIDATION) {
 		const firstErrorField =  Object.keys(error.errors)[0];
 		const firstErrorKind = error.errors[firstErrorField].kind;

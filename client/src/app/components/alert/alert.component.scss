@@ -8,14 +8,12 @@
 :host {
 	position: absolute;
 	z-index: 2000;
-	max-width: 50%;
 	// transform: translateX(-100%);
-	bottom: 30px;
-	opacity: 0;
-	animation: alertAnimationIn 1s forwards;
+	bottom: 0;	
 	display: block;
+	width: 100%;
 
-	@media only screen and (min-width : 768px) {
+	@media only screen and (min-width : $grid-width-md) {
 		transform: translateX(-50%);
 		max-width: 500px;
 		left: 50%;
@@ -33,10 +31,11 @@
 	width: 100%;
 	border: none;
 	border-radius: 0;
+	opacity: 0;
+	animation: alertAnimationIn .5s ease forwards;
 
 	@media only screen and (min-width : 768px) {
 		width: auto;
-		border-radius: 4px;
 	}
 
 	i {

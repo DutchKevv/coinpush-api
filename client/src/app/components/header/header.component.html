@@ -2,14 +2,14 @@
 <i *ngIf="showBackButton === true" (click)="onClickBackButton()" class="fa fa-arrow-left d-lg-none"></i>
 
 <!-- mobile nav button -->
-<i (click)="navClicked$.next(true)" class="fa fa-navicon d-lg-none"></i>
+<i (click)="navClicked$.next(true)" class="fa fa-navicon d-xl-none"></i>
 
 <!-- notifications -->
 <app-notification-menu></app-notification-menu>
 
 <!-- filter (for symbol page) -->
 <a (click)="filterClicked$.next(!filterClicked$.getValue());" *ngIf="showFilterButton === true" class="filter-btn" [ngClass]="{active: (filterClicked$ | async) === true}">
-    <i class="fa fa-filter d-lg-none"></i>
+    <i class="fa fa-filter d-xl-none"></i>
 </a>
 
 <!-- title -->

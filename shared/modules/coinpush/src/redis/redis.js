@@ -1,15 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var redis_1 = require("redis");
-var util_log_1 = require("../util/util.log");
+const redis_1 = require("redis");
+const util_log_1 = require("../util/util.log");
 exports.defaults = {
     host: 'redis',
     port: 6379,
     reconnectAttempts: 1000
 };
-exports.createRedisClient = function (config) {
-    if (config === void 0) { config = {}; }
-    var client = redis_1.createClient({
+exports.createRedisClient = function (config = {}) {
+    const client = redis_1.createClient({
         host: config.host || exports.defaults.host,
         port: config.port || exports.defaults.port,
         retry_strategy: function (options) {
@@ -33,10 +32,11 @@ exports.createRedisClient = function (config) {
             return Math.min(options.attempt * 100, 3000);
         }
     });
-    client.on('connect', function () {
+    client.on('connect', () => {
         util_log_1.log.info('redis', 'client connected');
     });
     return client;
 };
 exports.pubClient = exports.createRedisClient();
 exports.subClient = exports.createRedisClient();
+//# sourceMappingURL=redis.js.map

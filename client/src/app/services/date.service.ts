@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import * as TimeAgo2 from 'time-ago';
 
 @Injectable({
 	providedIn: 'root'
@@ -6,11 +7,6 @@ import { Injectable } from '@angular/core';
 export class DateService {
 
 	convertToTimePast(date: any): string {
-        if (!(date instanceof Date)) {
-            date = new Date(date);
-        }
-
-        return '';
-        // return timeAgo.format(date);
+        return TimeAgo2.ago(date);
     }
 }

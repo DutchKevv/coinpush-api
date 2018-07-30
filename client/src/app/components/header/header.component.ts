@@ -74,7 +74,7 @@ export class HeaderComponent {
 		this._routerEventsSub = this._router.events.subscribe((event) => {
 			
 			if (event instanceof NavigationStart) {
-				const isHome = event.url === '/' || event.url === '/symbols';
+				const isHome = event.url === '/' || event.url.startsWith('/symbols');
 9
 				this.showBackButton = !isHome;
 				this.showFilterButton = isHome || event.url.includes('/symbols');
@@ -91,11 +91,12 @@ export class HeaderComponent {
 
 	public onClickBackButton() {
 		this._location.back();
-		this._changeDetectorRef.detectChanges();
+		
 		setTimeout(() => {
-			
-		}, 0);
-		// this._location.back();
+			requestAnimationFrame(() => {
+				this._changeDetectorRef.detectChanges();
+			})
+		}, 10);
 	}
 
 	public onSearchKeyUp(event): void {

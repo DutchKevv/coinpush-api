@@ -148,9 +148,8 @@ export const commentController = {
 	async toggleLike(reqUser, commentId) {
 		const { iLike, comment } = await (<any>Comment).toggleLike(reqUser.id, commentId);
 
-		if (comment && iLike) {
-			console.log(comment);
-
+		// do not send when liking own message
+		if (comment && iLike && comment.createUser !== reqUser.id) {
 			let pubOptions = {
 				type: comment.parentId ? 'comment-like' : 'post-like',
 				toUserId: comment.createUser,

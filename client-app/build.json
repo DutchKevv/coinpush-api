@@ -1,7 +1,7 @@
 {
     "android": {
         "release": {
-            "keystore": "key.keystore",
+            "keystore": "../../CoinPush.keystore",
             "storePassword": "Halo33221",
             "alias": "CoinPush",
             "password": "Halo33221"

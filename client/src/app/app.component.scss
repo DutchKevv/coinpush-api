@@ -15,7 +15,7 @@
 
     animation: fadeIn .2s;
 
-    @media screen and (min-width: 768px) {
+    @media screen and (min-width: $grid-width-xl) {
        display: none;
     }
 }
@@ -34,7 +34,7 @@
 .main-container {
     padding-top: 40px !important;
     height: 100%;
-    @media screen and (min-width: 768px) {
+    @media screen and (min-width: $grid-width-xl) {
         padding-left: 250px;
     }
 }

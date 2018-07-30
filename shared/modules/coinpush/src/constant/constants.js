@@ -15,7 +15,7 @@ exports.G_ERROR_UNKNOWN = 0, exports.G_ERROR_EXPIRED = 1, exports.G_ERROR_MAX_SI
 /**
  * General mongo errors
  */
-exports.MONGO_ERROR_VALIDATION = 'ValidationError', exports.MONGO_ERROR_KIND_REQUIRED = 'required', exports.MONGO_ERROR_KIND_DUPLICATE = 'duplicate', 
+exports.MONGO_ERROR_VALIDATION = 'ValidationError', exports.MONGO_ERROR_KIND_REQUIRED = 'required', exports.MONGO_ERROR_KIND_DUPLICATE = 'unique', 
 /**
  * ORDER
  */
@@ -60,3 +60,4 @@ exports.ALARM_TRIGGER_TYPE_PRICE = 1, exports.ALARM_TRIGGER_TYPE_PERCENTAGE = 2,
  * CANDLES
  */
 exports.CANDLE_DEFAULT_ROW_LENGTH = 6;
+//# sourceMappingURL=constants.js.map

@@ -37,7 +37,7 @@
         transition: transform .1s ease-in-out;
     }
 
-    @media only screen and (min-width : 992px) {
+    @media only screen and (min-width : $grid-width-xl) {
         margin-left: 10px;
 
         .fa-globe { 

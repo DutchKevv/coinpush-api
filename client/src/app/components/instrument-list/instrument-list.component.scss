@@ -161,7 +161,7 @@
         // }
     }
     
-    @media only screen and (min-width : 992px) {
+    @media only screen and (min-width : $grid-width-xl) {
         position: static;
         min-width: 200px;
         max-width: 200px;
