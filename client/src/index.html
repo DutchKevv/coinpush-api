@@ -19,6 +19,8 @@
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="assets/font-awesome/css/font-awesome.min.css">
+
+    <link rel="alternate" href="android-app://com.ff2.coinpush/https/coinpush.app/news/" />
     <style>
         html {
             height: 100%;
@@ -190,6 +192,10 @@
                 app.platform.windowW = window.innerWidth,
                 app.platform.windowH = window.innerHeight
             }, {passive: true});
+
+            universalLinks.subscribe('ul_myExampleEvent', function(event) {
+                alert('sdfsdf')
+            });
 
             /**
              * 

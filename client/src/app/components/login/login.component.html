@@ -24,15 +24,16 @@
 
                     <div class="form-group" [ngClass]="{ 'has-error': loginForm.submitted && !email.valid }">
                         <label class="form-control-label" for="email">Email
-                                <span *ngIf="loginForm.submitted && !email.valid" class="help-block">required</span>
+                            <span *ngIf="loginForm.submitted && email.errors?.email" class="help-block">invalid email</span>
+                            <span *ngIf="loginForm.submitted && email.errors?.required" class="help-block">required</span>
                         </label>
                         <input [disabled]="loading$ | async" [(ngModel)]="loginModel.email" type="email" name="email" [(ngModel)]="loginModel.email" #email="ngModel" class="form-control"
-                            id="email" placeholder="Enter email" required>
+                            id="email" placeholder="Enter email" required email >
                     </div>
 
                     <div class="form-group" [ngClass]="{ 'has-error': loginForm.submitted && !password.valid }">
                         <label class="form-control-label" for="password">Password
-                            <span *ngIf="loginForm.submitted && !password.valid" class="help-block">required</span>
+                            <span *ngIf="loginForm.submitted && password.invalid" class="help-block">required</span>
                         </label>
                         <input [disabled]="loading$ | async" [(ngModel)]="loginModel.password" type="password" name="password" [(ngModel)]="loginModel.password" #password="ngModel"
                             class="form-control" id="password" placeholder="Enter password" autocomplete="off" required>
@@ -56,7 +57,9 @@
                 <form name="form" (ngSubmit)="registerForm.form.valid && register()" #registerForm="ngForm" *ngIf="activeFormType === 'register'" novalidate>
                     <div class="form-group" [ngClass]="{ 'has-error': registerForm.submitted && !name.valid }">
                         <label>Name
-                            <span *ngIf="registerForm.submitted && !name.valid" class="help-block">Name is required</span>
+                            <span *ngIf="registerForm.submitted && name.errors?.required" class="help-block">required</span>
+                            <span *ngIf="registerForm.submitted && name.errors?.minlength" class="help-block">2 characters minimum</span>
+                            <span *ngIf="registerForm.submitted && name.errors?.maxlength" class="help-block">30 characters max</span>
                         </label>
                         <input [disabled]="loading$ | async" id="name" class="form-control" name="name" type="text" [(ngModel)]="registerModel.name" #name="ngModel" minlength="2" maxlength="30"
                             autocomplete="off" required />
@@ -66,29 +69,29 @@
                     </div>
                     <div class="form-group" [ngClass]="{ 'has-error': registerForm.submitted && !email.valid }">
                         <label for="email">Email
-                            <span *ngIf="registerForm.submitted && !email.valid" class="help-block">Email is required</span>
+                            <span *ngIf="registerForm.submitted && email.errors?.required" class="help-block">required</span>
+                            <span *ngIf="registerForm.submitted && email.errors?.email" class="help-block">invalid email</span>
                         </label>
                         <input [disabled]="loading$ | async" id="email" class="form-control" name="email" type="text" [(ngModel)]="registerModel.email" #email="ngModel" autocomplete="off"
-                            required/>
+                            required email/>
                     </div>
                     <div class="form-group" [ngClass]="{ 'has-error': registerForm.submitted && !password.valid }">
                         <label for="country">Country</label>
                         <select [disabled]="loading$ | async" class="form-control" id="country" [(ngModel)]="registerModel.country" name="country" autocomplete="off" required>
                             <option *ngFor="let country of countries" [attr.value]="country.code" [innerHTML]="country.name"></option>
                         </select>
-                        <div *ngIf="registerFormsubmitted && !country.valid" class="help-block">Country is required</div>
+                        <div *ngIf="registerFormsubmitted && country.invalid" class="help-block">required</div>
                     </div>
                     <div class="form-group" [ngClass]="{ 'has-error': registerForm.submitted && !password.valid }">
                         <label for="password">Password
-
-                            <span *ngIf="registerForm.submitted && !password.valid" class="help-block">Password is required</span>
+                            <span *ngIf="registerForm.submitted && password.invalid" class="help-block">required</span>
                         </label>
                         <input [disabled]="loading$ | async" id="password" type="password" class="form-control" name="password" [(ngModel)]="registerModel.password" #password="ngModel"
                             autocomplete="off" required minlength="4" />
                     </div>
-                    <div class="form-group" [ngClass]="{ 'has-error': registerForm.submitted && !passwordConf.valid }">
+                    <div class="form-group" [ngClass]="{ 'has-error': registerForm.submitted && passwordConf.invalid }">
                         <label for="passwordConf">Password confirmation
-                            <span *ngIf="registerForm.submitted && !passwordConf.valid" class="help-block">Password confirmation is required</span>
+                            <span *ngIf="registerForm.submitted && passwordConf.invalid" class="help-block">required</span>
                         </label>
                         <input [disabled]="loading$ | async" id="passwordConf" type="password" class="form-control" name="passwordConf" [(ngModel)]="registerModel.passwordConf"
                             #passwordConf="ngModel" autocomplete="off" required minlength="4" />

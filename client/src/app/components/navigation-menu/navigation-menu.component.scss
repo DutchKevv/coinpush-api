@@ -23,7 +23,7 @@
     bottom: 0;
     z-index: 1001;
 
-    @media only screen and (min-width : 992px) {
+    @media only screen and (min-width : $grid-width-xl) {
         position: fixed;
         left: 0;
         transform: none;

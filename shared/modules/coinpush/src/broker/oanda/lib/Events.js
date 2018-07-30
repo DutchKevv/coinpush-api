@@ -2,11 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 // Waits for wait ms for event to fire or calls listener with error, removing listener
 function waitFor(event, listener, context, wait) {
-    var timeout;
+    let timeout;
     if (!wait) {
         throw new Error("[FATAL] waitFor called without wait time");
     }
-    var handler = function () {
+    let handler = function () {
         clearTimeout(timeout);
         listener.apply(context, arguments);
     };
@@ -25,7 +25,7 @@ function listenFor(event, listener, context, duration) {
 }
 // Returns list off event handlers using same matching criteria as 'off' (excluding eventsAPI features)
 function getHandlers(name, callback, context) {
-    var events = [];
+    let events = [];
     if (!callback && !context) {
         if (name) {
             return (this._events && this._events[name]) || [];
@@ -59,3 +59,4 @@ function mixin(proto) {
     return proto;
 }
 exports.mixin = mixin;
+//# sourceMappingURL=Events.js.map

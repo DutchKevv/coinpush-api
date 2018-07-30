@@ -139,10 +139,8 @@ export class LoginComponent implements OnInit {
 			// switch to login tab
 			this.activeFormType = 'login';
 			this.changeDetectorRef.detectChanges();
-		} catch (errorObj) {
+		} catch (error) {
 			this.loading$.emit(false);
-
-			const error = errorObj.error;
 
 			if (error && error.code) {
 				switch (error.code) {

@@ -38,7 +38,7 @@ export const
 	 */
 	MONGO_ERROR_VALIDATION = 'ValidationError',
 	MONGO_ERROR_KIND_REQUIRED = 'required',
-	MONGO_ERROR_KIND_DUPLICATE = 'duplicate',
+	MONGO_ERROR_KIND_DUPLICATE = 'unique',
 
 	/**
 	 * ORDER

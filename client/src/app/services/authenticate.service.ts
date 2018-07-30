@@ -95,6 +95,10 @@ export class AuthenticationService {
 			}
 		}
 
+		if (email) {
+			email = email.toLowerCase().trim();
+		}
+
 		const postData = {
 			email,
 			password,
@@ -149,23 +153,28 @@ export class AuthenticationService {
 			const scope = ['email','public_profile'];
 			// const scope = 'email,public_profile,user_location,user_birthday';
 
+			if (emailAddress) {
+				emailAddress = emailAddress.toLowerCase().trim();
+			}
+
 			// app
 			if (app.platform.isApp) {
 				window.facebookConnectPlugin.login(scope, async (response) => {
 					const token = response.authResponse.accessToken;
 
 					if (token) {
-						const authResult = <any>await this._http.post(`/authenticate/facebook`, { token, email: emailAddress }).toPromise();
-						if (authResult && authResult.token) {
-							await app.storage.updateProfile({ _id: authResult._id, token: authResult.token }, true);
-
-							if (redirectUrl) {
-
-							} else {
-
+						try {
+							const authResult = <any>await this._http.post(`/authenticate/facebook`, { token, email: emailAddress }).toPromise();
+							if (authResult && authResult.token) {
+								await app.storage.updateProfile({ _id: authResult._id, token: authResult.token }, true);
+	
+								this.reload(redirectUrl);
+							
 							}
-							this.reload(redirectUrl);
+						} catch(error) {
+							return reject(error)
 						}
+						
 					} else {
 						reject('inpcomplete response')
 					}
@@ -246,9 +255,8 @@ export class AuthenticationService {
 			return;
 
 		const modalRef = this._modalService.open(LoginComponent);
-		
 		if (activeForm) {
-			modalRef.componentInstance.formType = activeForm;
+			modalRef.componentInstance.activeFormType = activeForm;
 		}
 
 		modalRef.componentInstance.redirectUrl = redirectUrl;

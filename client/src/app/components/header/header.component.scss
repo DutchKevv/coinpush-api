@@ -34,7 +34,7 @@ $header-icon-padding-x: 8px;
 		}
 	}
 
-	@media only screen and (min-width : 768px) {
+	@media only screen and (min-width : $grid-width-xl) {
 		left: 250px;
 	} 
 }
@@ -154,7 +154,7 @@ $header-icon-padding-x: 8px;
 		display: none;
 	}
 
-	@media only screen and (min-width : 768px) {
+	@media only screen and (min-width : $grid-width-xl) {
 		bottom: auto;
 		width: 400px;
 		left: calc(50% - 200px);
@@ -191,7 +191,17 @@ $header-icon-padding-x: 8px;
 	margin: 20px;
 }
 
-@media only screen and (min-width : 768px) {
+@media only screen and (min-width : $grid-width-lg) {
+	.search-container {
+		display: block;
+		width: 100%;
+		position: relative;
+		width: 400px;
+		left: calc(50% - 250px);
+	}
+}
+
+@media only screen and (min-width : $grid-width-xl) {
 	
 	:host {
 		background: $background-light;
@@ -199,10 +209,6 @@ $header-icon-padding-x: 8px;
 	}
 
 	.search-container {
-		display: block;
-		width: 100%;
-		position: relative;
-		width: 400px;
 		left: calc(50% - 100px - 250px);
 	}
 
