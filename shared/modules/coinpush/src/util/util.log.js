@@ -36,4 +36,3 @@ exports.log = {
         logger.error(formatString(owner, params));
     }
 };
-//# sourceMappingURL=util.log.js.map

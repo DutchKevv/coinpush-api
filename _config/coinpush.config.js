@@ -29,7 +29,7 @@ const config = {
         },
         cache: {
             port: 3001,
-            connectionString: 'mongodb://root:example@host.docker.internal:27017/coinpush-cache'
+            connectionString: 'mongodb://mongodb:27017/coinpush-cache'
         },
         order: {
             port: 3005,
@@ -44,7 +44,7 @@ const config = {
         },
         comment: {
             port: 3009,
-            connectionString: 'mongodb://host.docker.internal:27017/coinpush-comment'
+            connectionString: 'mongodb://mongodb:27017/coinpush-comment'
         },
         notify: {
             port: 3010,
