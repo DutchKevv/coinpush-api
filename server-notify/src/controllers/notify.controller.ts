@@ -146,7 +146,7 @@ export const notifyController = {
         return this.sendToUser(notification._id, notification.toUserId, title, '', data, user);
     },
 
-    async sendUserFollow(notification: INotification, user) {
+    async sendTypeUserFollow(notification: INotification, user) {
         const fromUser: any = await User.findById(notification.fromUserId, { name: 1 }).lean();
 
         const title = `${fromUser.name} started following you!`;
@@ -154,6 +154,20 @@ export const notifyController = {
         const data = {
             type: 'symbol-alarm',
             fromUser
+        };
+
+        return this.sendToUser(notification._id, notification.toUserId, title, '', data, user);
+    },
+
+    async sendTypeNewWallPost(notification: INotification, user) {
+        const fromUser: any = await User.findById(notification.fromUserId, { name: 1 }).lean();
+
+        const title = `${fromUser.name} posted on your wall!`;
+
+        const data = {
+            type: 'new-wall-post',
+            fromUser,
+            ...notification.data
         };
 
         return this.sendToUser(notification._id, notification.toUserId, title, '', data, user);
@@ -178,11 +192,12 @@ export const notifyController = {
                 await this.sendTypeSymbolAlarm(notification, user);
                 break;
             case 'user-follow':
-                await this.sendUserFollow(notification, user);
+                await this.sendTypeUserFollow(notification, user);
+                break;
+            case 'new-wall-post':
+                await this.sendTypeNewWallPost(notification, user);
                 break;
         }
-
-
     },
 
     async markUnread(reqUser: IReqUser, notificationId: string) {

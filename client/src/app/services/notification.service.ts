@@ -62,9 +62,9 @@ export class NotificationService {
 	}
 
 	public markAllAsRead(): Promise<Response> {
-		this.notifications.forEach((notification: INotification) => {
-			notification.isRead = true;
-		});
+		// this.notifications.forEach((notification: INotification) => {
+		// 	notification.isRead = true;
+		// });
 
 		return <any>this._http.put('/notify/unread', {}).toPromise();
 	}
@@ -92,6 +92,7 @@ export class NotificationService {
 			case 'post-comment':
 			case 'post-like':
 			case 'comment-like':
+			case 'new-wall-post':
 				this.unreadCount$.next(unreadValue + 1);
 
 				// jump to comment

@@ -109,19 +109,42 @@ export const commentController = {
 	 * @param options 
 	 */
 	async create(reqUser, options): Promise<any> {
+		// Posting on other user wall, otherwhise if own wall, set post as 'global' post (toUserId: undefined)
+		const toUserId = options.toUserId && options.toUserId !== reqUser.id ? options.toUserId : undefined;
+
 		const comment = <any>await Comment.create({
 			createUser: reqUser.id,
-			toUser: options.toUserId && options.toUserId !== reqUser.id ? options.toUserId : undefined,
+			toUser: toUserId,
 			// public: options.toUserId && options.toUserId !== reqUser.id ? undefined : true,
 			parentId: options.parentId,
 			content: options.content
 		});
 
-		if (options.parentId) {
+		// new post
+		if (!options.parentId) {
+
+			// only notify if posting on specific users wall
+			if (toUserId && toUserId !== reqUser.id) {
+				let pubOptions = {
+					type: 'new-wall-post',
+					toUserId: toUserId,
+					fromUserId: reqUser.id,
+					data: {
+						commentId: comment._id,
+						content: options.content.substring(0, 100) // Don't send entire message (is only for notification label)
+					}
+				};
+
+				pubClient.publish("notify", JSON.stringify(pubOptions));
+			}
+		}
+
+		// reaction on post
+		else {
 			const parent = <any>await Comment.findOneAndUpdate({ _id: comment.parentId }, { $inc: { childCount: 1 }, $addToSet: { children: comment._id } });
 
-			// notify if not responding on self
-			if (parent.createUser.toString() !== reqUser.id) {
+			// only notify if not reacting on self created post
+			if (parent && parent.createUser.toString() !== reqUser.id) {
 				let pubOptions = {
 					type: 'post-comment',
 					toUserId: parent.createUser,

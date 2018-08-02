@@ -72,8 +72,9 @@ export class NotificationMenuComponent implements OnDestroy, OnInit {
 		event.preventDefault();
 		event.stopPropagation();
 
-		this.notifications$.getValue().forEach(notification => notification.isRead = true);
+		this.notifications$.next(this.notifications$.getValue().map(notification => {notification.isRead = true; return notification}));
 		this.notificationService.markAllAsRead();
+		this._changeDetectorRef.detectChanges();
 
 	}
 

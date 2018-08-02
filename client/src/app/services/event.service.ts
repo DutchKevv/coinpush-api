@@ -146,6 +146,10 @@ export class EventService {
 		const event = this.events$.getValue().find(event => event._id === eventData.eventId);
 
 		if (event) {
+			// play sound
+			// const sound = new Audio('/assets/sound/cow.mp3');
+			// sound.play();
+
 			this.remove(event, false);
 		} else {
 			console.warn('event not found in cache');
