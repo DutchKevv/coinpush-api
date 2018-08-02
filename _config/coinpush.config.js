@@ -29,30 +29,30 @@ const config = {
         },
         cache: {
             port: 3001,
-            connectionString: 'mongodb://root:example@host.docker.internal:27017/coinpush-cache'
+            connectionString: 'mongodb://mongodb:27017/coinpush-cache'
         },
         order: {
             port: 3005,
-            connectionString: 'mongodb://host.docker.internal:27017/coinpush-orders'
+            connectionString: 'mongodb://mongodb:27017/coinpush-orders'
         },
         broker: {
             port: 3006,
         },
         user: {
             port: 3008,
-            connectionString: 'mongodb://host.docker.internal:27017/coinpush-user'
+            connectionString: 'mongodb://mongodb:27017/coinpush-user'
         },
         comment: {
             port: 3009,
-            connectionString: 'mongodb://host.docker.internal:27017/coinpush-comment',
-            connectionStringProd: 'mongodb://localhost:27017/coinpush-comment'
+            connectionString: 'mongodb://mongodb:27017/coinpush-comment',
+            connectionStringProd: 'mongodb://mongodb:27017/coinpush-comment'
         },
         notify: {
             port: 3010,
-            connectionString: 'mongodb://host.docker.internal:27017/coinpush-notify'
+            connectionString: 'mongodb://mongodb:27017/coinpush-notify'
         },
         event: {
-            connectionString: 'mongodb://root:example@host.docker.internal:27017/coinpush-event',
+            connectionString: 'mongodb://mongodb:27017/coinpush-event',
             port: 3011,
         }
     },
