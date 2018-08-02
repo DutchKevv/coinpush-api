@@ -137,31 +137,4 @@ for (let name in config.server)
     config.server[name].apiUrl = 'http://' + name + ':' + config.server[name].port;
 
 /**
- * Simple is object check.
- * @param item
- * @returns {boolean}
- */
-function isObject(item) {
-    return item !== null && typeof item === 'object' && !Array.isArray(item);
-}
 
-/**
- * Deep merge two objects.
- * @param target
- * @param source
-*/
-function mergeDeep(target, source) {
-    if (isObject(target) && isObject(source)) {
-        Object.keys(source).forEach(key => {
-            if (isObject(source[key])) {
-                if (!target[key]) Object.assign(target, { [key]: {} });
-                mergeDeep(target[key], source[key]);
-            } else {
-                Object.assign(target, { [key]: source[key] });
-            }
-        });
-    }
-    return target;
-}
-
-module.exports.config = config;

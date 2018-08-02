@@ -216,4 +216,3 @@ OandaApi.FAVORITE_SYMBOLS = [
 OandaApi.FETCH_CHUNK_LIMIT = 5000;
 OandaApi.WRITE_CHUNK_COUNT = 5000;
 exports.OandaApi = OandaApi;
-//# sourceMappingURL=index.js.map
