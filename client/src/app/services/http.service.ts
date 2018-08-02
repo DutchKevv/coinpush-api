@@ -62,13 +62,19 @@ export class CustomHttp implements HttpInterceptor {
 	// Response Interceptor
 	private _catchError(error: HttpErrorResponse): Observable<any> {
 		// Check if we had error response
-		console.log('sdfasdf', error);
 		switch (error.status) {
 			case 400:
 				console.log(error);
 				return throwError(error.error || error);
 			case 401:
-				this._authenticationService.showLoginRegisterPopup();
+				// user token invalid, so logout
+				if (this._authenticationService.loggedIn) {
+					this._authenticationService.logout();
+				}
+				// user should login
+				else {
+					this._authenticationService.showLoginRegisterPopup();
+				}
 				break;
 			case 409:
 				return throwError(error.error || error);

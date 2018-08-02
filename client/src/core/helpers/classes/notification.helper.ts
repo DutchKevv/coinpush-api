@@ -25,7 +25,7 @@ export class NotificationHelper {
         if (app.platform.isApp) {
             await this._loadApp();
         } else {
-            // await this._loadBrowser();
+            await this._loadBrowser();
         }
     }
 

@@ -36,6 +36,14 @@ messaging.setBackgroundMessageHandler(function (payload) {
       navigationUrl = `${self.location.origin}/#/symbols?symbol=${data.symbol}`;
       tag = 'symbol-alarm';
       break;
+    case 'post-like':
+      navigationUrl = `${self.location.origin}/#/comment/${data.parentId || data.commentId}`;
+      tag = 'post-like';
+      break;
+    case 'comment-like':
+      navigationUrl = `${self.location.origin}/#/comment/${data.parentId || data.commentId}`;
+      tag = 'comment-like';
+      break;
   }
 
   const notificationOptions = {
@@ -50,13 +58,10 @@ messaging.setBackgroundMessageHandler(function (payload) {
   return self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
-console.log(self.location.origin);
-
 // onclick handler
 self.addEventListener('notificationclick', function (event) {
 
   event.waitUntil(clients.matchAll({ type: 'window' }).then(windowClients => {
-    console.log('clientUrl', windowClients);
 
     const client = windowClients.find(windowClient => client.url.split('/#')[0] === domain);
 

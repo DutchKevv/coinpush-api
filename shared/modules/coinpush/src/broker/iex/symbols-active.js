@@ -21,3 +21,4 @@ exports.activeSymbols = [
         broker: constants_1.BROKER_GENERAL_TYPE_IEX
     }
 ];
+//# sourceMappingURL=symbols-active.js.map

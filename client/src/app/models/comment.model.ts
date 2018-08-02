@@ -5,6 +5,10 @@ import {BaseModel} from './base.model';
 import * as TimeAgo2 from 'time-ago';
 
 export class CommentModel extends BaseModel {
+	
+	private _fromNowInterval: number;
+	private _fromNowIntervalDelay: number = 5000;
+
 	public static readonly DEFAULTS: any = {
 		_id: null,
 		createUserId: null,
@@ -20,6 +24,20 @@ export class CommentModel extends BaseModel {
 	constructor(options: any) {
 		super(options);
 
-		this.options.fromNow = TimeAgo2.ago(new Date(this.options.createdAt));
+		this.options.fromNow = TimeAgo2.ago(this.options.createdAt);
+	}
+
+	public onDestroy() {
+		this._stopFromNowInterval();
+	}
+
+	private _startFromNowInterval() {
+		this._fromNowInterval = setInterval(() => {
+			this.options.fromNow = TimeAgo2.ago(this.options.createdAt);
+		}, this._fromNowIntervalDelay);	
+	}
+
+	private _stopFromNowInterval() {
+		clearInterval(this._fromNowIntervalDelay);
 	}
 }

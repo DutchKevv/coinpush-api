@@ -75,7 +75,7 @@
 						<a class="g-username" [routerLink]="['/user/', child.options.createUser._id]">{{child.options.createUser.name}}</a>
 						<span [innerHtml]="child.options.content | parseCommentContent"></span>
 						<div class="child-buttons" style="display: flex">
-							<a (click)="toggleLike(child)" [ngClass]="{active: (child.options$ | async).iLike}">
+							<a (click)="toggleLike(child)" [ngClass]="{activeLike: (child.options$ | async).iLike}">
 								<span *ngIf="(child.options$ | async).iLike">I Like</span>
 								<span *ngIf="!(child.options$ | async).iLike">Like</span>
 								<span *ngIf="(child.options$ | async).likeCount > 0">

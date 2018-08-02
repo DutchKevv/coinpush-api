@@ -164,3 +164,4 @@ class IEXApi extends events_1.EventEmitter {
 IEXApi.FETCH_CHUNK_LIMIT = 2000;
 IEXApi.WRITE_CHUNK_COUNT = 2000;
 exports.default = IEXApi;
+//# sourceMappingURL=iex.js.map

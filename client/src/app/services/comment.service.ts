@@ -27,7 +27,7 @@ export class CommentService {
 			...comment.body,
 			content,
 			isNew: true,
-			created: new Date(),
+			createdAt: new Date(),
 			toUser: toUserId,
 			parentId,
 			createUser: {

@@ -44,8 +44,6 @@ services:
       MONGO_LOG_DIR: /dev/null
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
-    volumes:
-      - ./_data/db:/data/db
     command: mongod --auth
   redis:
     restart: unless-stopped

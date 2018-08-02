@@ -244,9 +244,18 @@ export class AuthenticationService {
 	}
 
 	public async logout(): Promise<void> {
-		await this.removeDevice();
-		await app.storage.clearProfile();
+		try {
+			await this.removeDevice();
+		} catch (error) {
+			console.error(error);
+		}
 
+		try {
+			await app.storage.clearProfile();
+		} catch (error) {
+			console.error(error);
+		}
+		
 		this.reload();
 	}
 

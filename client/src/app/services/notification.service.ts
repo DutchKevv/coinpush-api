@@ -16,7 +16,7 @@ export class NotificationService {
 	public notifications = app.data.notifications;
 	public notifications$ = null;
 
-	public unreadCount$: BehaviorSubject<number> = new BehaviorSubject(parseInt(app.data.notifications.unreadCount, 10) || 0);
+	public unreadCount$: BehaviorSubject<number> = new BehaviorSubject(app.data.notifications ? parseInt(app.data.notifications.unreadCount, 10) : 0);
 
 	constructor(
 		private _http: HttpClient,

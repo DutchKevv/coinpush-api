@@ -11,6 +11,8 @@ services:
   mongodb:
     ports:
       - 27017
+    volumes:
+      - ./_data/db:/data/db
   gateway:
     environment:
       - NODE_ENV=production

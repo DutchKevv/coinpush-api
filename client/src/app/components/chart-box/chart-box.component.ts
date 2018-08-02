@@ -448,9 +448,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit {
 						resize: {
 							enabled: true
 						},
-						plotLines: [
-							this.getPlotLineOptions('cPrice', this.symbolModel.options.bid, CUSTOM_EVENT_TYPE_PRICE)
-						]
+						plotLines: [this.getPlotLineOptions('cPrice', this.symbolModel.options.bid, CUSTOM_EVENT_TYPE_PRICE)]
 						// plotLines: this._data.plotLines
 					},
 					{
@@ -541,6 +539,8 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit {
 			this._lastFetchSub.unsubscribe();
 
 		this._zone.runOutsideAngular(async () => {
+			const symbolModel = this.symbolModel.options.name;
+
 			this._toggleError(false);
 
 			this._lastFetchSub = this._cacheService.read({
@@ -549,7 +549,10 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit {
 				count: ChartBoxComponent.DEFAULT_CHUNK_LENGTH,
 				offset: this._offset
 			}).subscribe(data => {
-				const start = Date.now();
+				// Make sure symbol model is still the same
+				if (!this.symbolModel || this.symbolModel.options.name !== symbolModel) {
+					return;
+				}
 
 				this._prepareData(data);
 
