@@ -435,9 +435,9 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit {
 							align: 'left',
 							x: 6,
 							y: 8,
-							// formatter: function () {
-							// 	return self._cacheService.priceToFixed(this.value, self.symbolModel);
-							// }
+							formatter: function () {
+								return self._cacheService.priceToFixed(this.value, self.symbolModel);
+							}
 						},
 						title: {
 							text: null
@@ -449,7 +449,6 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit {
 							enabled: true
 						},
 						plotLines: [this.getPlotLineOptions('cPrice', this.symbolModel.options.bid, CUSTOM_EVENT_TYPE_PRICE)]
-						// plotLines: this._data.plotLines
 					},
 					{
 						opposite: true,

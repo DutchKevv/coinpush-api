@@ -56,7 +56,7 @@ export class CustomHttp implements HttpInterceptor {
 
 	// Response Interceptor
 	private _catchError(error: HttpErrorResponse): Observable<any> {
-		// Check if we had error response
+		// Check if we had error response]
 		switch (error.status) {
 			case 400:
 				console.log(error);

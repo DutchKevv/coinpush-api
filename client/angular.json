@@ -23,7 +23,9 @@
               "src/favicon.ico",
               "src/index.redirect.facebook.html",
               "src/google-services.json",
-              "src/manifest.json"
+              "src/manifest.json",
+              "src/robots.txt",
+              "src/sitemap.xml"
             ],
             "styles": [
               "src/app/style/sprite/spritesheet.css"
