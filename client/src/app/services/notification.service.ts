@@ -62,10 +62,9 @@ export class NotificationService {
 	}
 
 	public markAllAsRead(): Promise<Response> {
-		console.log(this.notifications);
-		// this.notifications.forEach((notification: INotification) => {
-		// 	notification.isRead = true;
-		// });
+		this.notifications.forEach((notification: INotification) => {
+			notification.isRead = true;
+		});
 
 		return <any>this._http.put('/notify/unread', {}).toPromise();
 	}

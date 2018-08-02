@@ -1,8 +1,8 @@
 <!-- back navigation button -->
-<i *ngIf="showBackButton === true" (click)="onClickBackButton()" class="fa fa-arrow-left d-lg-none"></i>
+<a *ngIf="showBackButton === true" (click)="onClickBackButton()" class="fa fa-arrow-left d-lg-none"></a>
 
 <!-- mobile nav button -->
-<i (click)="navClicked$.next(true)" class="fa fa-navicon d-xl-none"></i>
+<a (click)="navClicked$.next(true)" class="fa fa-navicon d-xl-none"></a>
 
 <!-- notifications -->
 <app-notification-menu></app-notification-menu>
