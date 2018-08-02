@@ -152,7 +152,7 @@ export const notifyController = {
         const title = `${fromUser.name} started following you!`;
 
         const data = {
-            type: 'symbol-alarm',
+            type: 'user-follow',
             fromUser
         };
 

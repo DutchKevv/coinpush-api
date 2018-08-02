@@ -107,6 +107,17 @@ export class NotificationService {
 				}
 
 				break;
+			case 'user-follow':
+				this.unreadCount$.next(unreadValue + 1);
+
+				// jump to comment
+				if (!notification.data.foreground) {
+					let routeString =  '#/user/' + notification.data.fromUser._id
+
+					window.location.hash = routeString;
+				}
+
+				break;
 			/**
 			 * SYMBOL ALARM
 			 */
