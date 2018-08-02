@@ -33,25 +33,26 @@ const config = {
         },
         order: {
             port: 3005,
-            connectionString: 'mongodb://host.docker.internal:27017/coinpush-orders'
+            connectionString: 'mongodb://mongodb:27017/coinpush-orders'
         },
         broker: {
             port: 3006,
         },
         user: {
             port: 3008,
-            connectionString: 'mongodb://host.docker.internal:27017/coinpush-user'
+            connectionString: 'mongodb://mongodb:27017/coinpush-user'
         },
         comment: {
             port: 3009,
-            connectionString: 'mongodb://mongodb:27017/coinpush-comment'
+            connectionString: 'mongodb://mongodb:27017/coinpush-comment',
+            connectionStringProd: 'mongodb://mongodb:27017/coinpush-comment'
         },
         notify: {
             port: 3010,
-            connectionString: 'mongodb://host.docker.internal:27017/coinpush-notify'
+            connectionString: 'mongodb://mongodb:27017/coinpush-notify'
         },
         event: {
-            connectionString: 'mongodb://root:example@host.docker.internal:27017/coinpush-event',
+            connectionString: 'mongodb://mongodb:27017/coinpush-event',
             port: 3011,
         }
     },
@@ -136,31 +137,4 @@ for (let name in config.server)
     config.server[name].apiUrl = 'http://' + name + ':' + config.server[name].port;
 
 /**
- * Simple is object check.
- * @param item
- * @returns {boolean}
- */
-function isObject(item) {
-    return item !== null && typeof item === 'object' && !Array.isArray(item);
-}
 
-/**
- * Deep merge two objects.
- * @param target
- * @param source
-*/
-function mergeDeep(target, source) {
-    if (isObject(target) && isObject(source)) {
-        Object.keys(source).forEach(key => {
-            if (isObject(source[key])) {
-                if (!target[key]) Object.assign(target, { [key]: {} });
-                mergeDeep(target[key], source[key]);
-            } else {
-                Object.assign(target, { [key]: source[key] });
-            }
-        });
-    }
-    return target;
-}
-
-module.exports.config = config;
