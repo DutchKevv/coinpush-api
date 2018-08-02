@@ -1,15 +1,10 @@
-import { Injectable, Injector } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Router } from '@angular/router';
 import { AuthenticationService } from './authenticate.service';
 import { app } from '../../core/app';
 import { HttpHeaders, HttpParams, HttpClient, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse, HttpInterceptor } from '@angular/common/http';
-import { map, catchError } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
-
-declare const require: any;
-
-const config = require('../../custom_config.json');
 
 export interface IRequestOptions {
 	headers?: HttpHeaders;
@@ -49,12 +44,12 @@ export class CustomHttp implements HttpInterceptor {
 		const userToken = app.storage.profileData.token;
 		const headers: any = {
 			setHeaders: {
-				cv: config.clientVersion || '0.0.1'
+				cv: '0.0.2' || '0.0.1'
 			}
 		};
 
 		if (userToken)
-			headers.setHeaders.authorization = 'Bearer ' +userToken;
+			headers.setHeaders.authorization = 'Bearer ' + userToken;
 
 		return req.clone(headers);
 	}
