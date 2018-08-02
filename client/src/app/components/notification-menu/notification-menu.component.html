@@ -77,6 +77,19 @@
                     </p>
                 </div>
             </a>
+            <a *ngIf="notification.type === 'new-wall-post'" [routerLink]="['/comment/' + notification.data.commentId]" (click)="onClickNotification($event, notification)">
+                <img src="{{notification.fromUserId.img | NormalizeImgUrl: 'user'}}">
+                <div>
+                    <p>
+                        <b>{{notification.fromUserId.name}}</b>
+                        posted on your wall
+                    </p>
+                    <p>{{notification.data.content}}</p>
+                    <p>
+                        <i class="fa fa-thumbs-up"></i>{{notification.fromNow}}
+                    </p>
+                </div>
+            </a>
         </div>
     </div>
 </div>

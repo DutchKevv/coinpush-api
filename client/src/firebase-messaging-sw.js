@@ -38,11 +38,17 @@ messaging.setBackgroundMessageHandler(function (payload) {
       break;
     case 'post-like':
       navigationUrl = `${self.location.origin}/#/comment/${data.parentId || data.commentId}`;
+      body = data.content;
       tag = 'post-like';
       break;
     case 'comment-like':
       navigationUrl = `${self.location.origin}/#/comment/${data.parentId || data.commentId}`;
+      body = data.content;
       tag = 'comment-like';
+      break;
+    case 'new-wall-post':
+      navigationUrl = `${self.location.origin}/#/comment/${data.parentId || data.commentId}`;
+      body = data.content;
       break;
   }
 
@@ -50,8 +56,9 @@ messaging.setBackgroundMessageHandler(function (payload) {
     body: body,
     data: data,
     icon: '/image/corp/icon.png',
+    sound: '/assets/sound/cow.mp3',
     requireInteraction: true,
-    tag: tag
+    // tag: tag
   };
 
   // show notification
