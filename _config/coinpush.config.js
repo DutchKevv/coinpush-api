@@ -44,7 +44,8 @@ const config = {
         },
         comment: {
             port: 3009,
-            connectionString: 'mongodb://host.docker.internal:27017/coinpush-comment'
+            connectionString: 'mongodb://host.docker.internal:27017/coinpush-comment',
+            connectionStringProd: 'mongodb://localhost:27017/coinpush-comment'
         },
         notify: {
             port: 3010,
