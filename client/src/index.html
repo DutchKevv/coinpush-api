@@ -21,6 +21,11 @@
     <link rel="stylesheet" href="assets/font-awesome/css/font-awesome.min.css">
 
     <link rel="alternate" href="android-app://com.ff2.coinpush/https/coinpush.app/news/" />
+
+    <script src="./assets/raven/raven.js"></script>
+    <script>
+        Raven.config('https://bcf86b58156e4ece81065d38dcd9e8bf@sentry.io/1254805').install();
+    </script>
     <style>
         html {
             height: 100%;
@@ -48,6 +53,7 @@
         }
 
         /* browser not supported */
+
         #bns-container {
             background: white;
             max-width: 800px;
@@ -58,10 +64,10 @@
             border-radius: 50%;
         }
 
-        body > .spinner {
+        body>.spinner {
             position: absolute;
-            top: calc(40% - 40px);
-            left: calc(50% - 40px);
+            top: calc(50% - 40px);
+            left: calc(50% - 30px);
         }
 
         .font-awesome-preload-trigger {
@@ -149,8 +155,7 @@
     <!-- inject:js:cordova -->
 
     <script>
-        // is browser supported
-        (function () {
+        Raven.context(function () {
             window.BROWSERSUPPORTED = function () {
                 try {
                     return !!class test { };
@@ -161,9 +166,7 @@
 
             if (!window.BROWSERSUPPORTED)
                 document.body.innerHTML = '<div id="bns-container"><h2>Whoops! Your browser is not supported.</h2><p>Please update to a more recent version of Chrome, Firefox or Edge</p></div>';
-        })();
 
-        (function () {
             if (!window.BROWSERSUPPORTED)
                 return;
 
@@ -190,12 +193,8 @@
 
             window.addEventListener('resize', () => {
                 app.platform.windowW = window.innerWidth,
-                app.platform.windowH = window.innerHeight
-            }, {passive: true});
-
-            universalLinks.subscribe('ul_myExampleEvent', function(event) {
-                alert('sdfsdf')
-            });
+                    app.platform.windowH = window.innerHeight
+            }, { passive: true });
 
             /**
              * 
@@ -205,6 +204,12 @@
             if (!window.platform.isApp) {
                 window.platform.isReady = true;
                 return;
+            }
+
+            if (window.universalLinks) {
+                window.universalLinks.subscribe('ul_myExampleEvent', function (event) {
+                    alert('sdfsdf')
+                });
             }
 
             /**
@@ -236,7 +241,10 @@
             if (window.platform.isIOS) {
                 document.body.classList.add('ios');
             }
-        })();
+        });
+
+        // is browser supported
+
     </script>
 </body>
 
