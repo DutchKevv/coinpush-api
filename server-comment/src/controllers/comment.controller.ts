@@ -150,8 +150,8 @@ export const commentController = {
 
 		
 		// do not send when liking own message
-		// if (comment && iLike && comment.createUser.toString() !== reqUser.id) {
-		if (comment && iLike) {
+		if (comment && iLike && comment.createUser.toString() !== reqUser.id) {
+		// if (comment && iLike) {
 			let pubOptions = {
 				type: comment.parentId ? 'comment-like' : 'post-like',
 				toUserId: comment.createUser,
