@@ -1,8 +1,8 @@
 import { Comment } from '../schemas/comment.schema';
 import { Types } from 'mongoose';
-import { pubClient } from 'coinpush/src/redis';
+import { pubClient } from '../../../shared/modules/coinpush/src/redis';
 import { User } from '../schemas/user.schema';
-import { IReqUser } from 'coinpush/src/interface/IReqUser.interface';
+import { IReqUser } from '../../../shared/modules/coinpush/src/interface/IReqUser.interface';
 
 export const commentController = {
 
@@ -144,7 +144,7 @@ export const commentController = {
 			const parent = <any>await Comment.findOneAndUpdate({ _id: comment.parentId }, { $inc: { childCount: 1 }, $addToSet: { children: comment._id } });
 
 			// only notify if not reacting on self created post
-			if (parent && parent.createUser.toString() !== reqUser.id) {
+			if (parent && parent.createUser && parent.createUser.toString() !== reqUser.id) {
 				let pubOptions = {
 					type: 'post-comment',
 					toUserId: parent.createUser,
@@ -163,6 +163,19 @@ export const commentController = {
 		return { _id: comment._id };
 	},
 
+	async createNewsArticle(options: any): Promise<any> {
+		const comment = <any>await Comment.create({
+			createCompany: options.source.id,
+			// public: options.toUserId && options.toUserId !== reqUser.id ? undefined : true,
+			parentId: options.parentId,
+			content: options.content,
+			title: options.title,
+			isNews: true,
+			url: options.url,
+			imgs: options.imgs
+		});
+	},
+
 	/**
 	 * 
 	 * @param reqUser 
@@ -171,9 +184,9 @@ export const commentController = {
 	async toggleLike(reqUser, commentId) {
 		const { iLike, comment } = await (<any>Comment).toggleLike(reqUser.id, commentId);
 
-		
 		// do not send when liking own message
-		if (comment && iLike && comment.createUser.toString() !== reqUser.id) {
+		if (comment && iLike && comment.createUser && comment.createUser.toString() !== reqUser.id) {
+
 		// if (comment && iLike) {
 			let pubOptions = {
 				type: comment.parentId ? 'comment-like' : 'post-like',

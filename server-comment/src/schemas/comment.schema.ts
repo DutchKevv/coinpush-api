@@ -1,11 +1,18 @@
-import { Schema, model, Types } from 'mongoose';
-import { join } from 'path';
+import { Schema, model } from 'mongoose';
 
 export const CommentSchema = new Schema({
 	createUser: {
 		type: Schema.Types.ObjectId,
-		required: true,
+		validate: [creatorValidator, 'createUser or createCompany must be set'],
 		ref: 'User'
+	},
+	createCompany: {
+		type: {
+			id: String,
+			name: String	
+		},
+		validate: [creatorValidator, 'createUser or createCompany must be set'],
+		ref: 'Company'
 	},
 	toUser: {
 		type: Schema.Types.ObjectId,
@@ -14,9 +21,18 @@ export const CommentSchema = new Schema({
 	parentId: {
 		type: Schema.Types.ObjectId,
 	},
+	title: {
+		type: String
+	},
 	content: {
 		type: String,
 		required: true
+	},
+	imgs: {
+		type: [String]
+	},
+	url: {
+		type: String
 	},
 	children: {
 		type: [Schema.Types.ObjectId],
@@ -35,12 +51,15 @@ export const CommentSchema = new Schema({
 		type: Number,
 		default: 0
 	},
-	public: {
+	isPublic: {
+		type: Boolean
+	},
+	isNews: {
 		type: Boolean
 	}
 }, {
-	timestamps: true
-});
+		timestamps: true
+	});
 
 CommentSchema.statics.addILike = async function (userId, comments: Array<any>): Promise<any> {
 
@@ -71,5 +90,10 @@ CommentSchema.statics.toggleLike = async function (userId, commentId: string): P
 
 	return { iLike: !isLiked, comment };
 };
+
+function creatorValidator() {
+	// `this` is the mongoose document
+	return !!(this.createUser || this.createCompany);
+}
 
 export const Comment = model('Comment', CommentSchema);

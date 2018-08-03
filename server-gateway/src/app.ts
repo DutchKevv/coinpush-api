@@ -185,7 +185,6 @@ export const app = {
 		 * error - unauthorized
 		 */
 		this.api.use((req, res, next) => {
-			console.log(config.clientVersion);
 			if (!req.headers.cv || req.headers.cv !== config.clientVersion)
 				return res.status(400).send({ reason: 'clientVersion' });
 
@@ -293,7 +292,7 @@ export const app = {
 
 			// unknown error
 			else {
-				// log.error('API', error);
+				log.error('API', error);
 				res.status(500).send('Unknown error');
 			}
 		});

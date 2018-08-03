@@ -1,9 +1,5 @@
-import {Schema, Types, model} from 'mongoose';
-import {join} from 'path';
+import {Schema, model} from 'mongoose';
 import * as beautifyUnique from 'mongoose-beautiful-unique-validation';
-import {BROKER_GENERAL_TYPE_OANDA, LEVERAGE_TYPE_1} from 'coinpush/src/constant';
-import {IUser} from "coinpush/src/interface/IUser.interface";
-import { config } from 'coinpush/src/util/util-config';
 
 const UserSchema = new Schema({
 	name: {
@@ -22,21 +18,6 @@ const UserSchema = new Schema({
 });
 
 UserSchema.plugin(beautifyUnique);
-
-UserSchema.statics.normalizeProfileImg = function (doc) {
-	// default img
-	if (!doc.createUser.img) {
-		doc.createUser.img = config.image.profileDefaultUrl;
-		return;
-	}
-
-	// external image
-	if (doc.createUser.img.startsWith('/') || doc.createUser.img.startsWith('http://') || doc.createUser.img.startsWith('https://'))
-		return;
-
-	// user image
-	doc.createUser.img = join(config.image.profileBaseUrl, doc.createUser.img);
-};
 
 UserSchema.statics.addDevice = async function(userId, device) {
     const prevUsers: any = await User.find({devices: {$elemMatch: {token: device.token}}}, {_id: 1}).lean();

@@ -18,7 +18,8 @@ export class CommentModel extends BaseModel {
 		iLike: false,
 		likeCount: 0,
 		isNew: false,
-		fromNow: ''
+		fromNow: '',
+		imgs: []
 	}
 
 	constructor(options: any) {

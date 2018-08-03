@@ -48,6 +48,10 @@
 	main {
 		padding: 10px;
 
+		img {
+			max-width: 100%;
+		}
+
 		p,
 		span {
 			color: $font-color-light;
@@ -163,9 +167,21 @@ app-comment-box {
 	}
 
 	main {
-		padding-top: 20px;
-		padding-bottom: 20px;
-		padding-left: 10px;
+		padding: 20px 10px;
+
+		.comment-image {
+			display: block;
+
+			img {
+				max-width: 100%;
+				margin-bottom: 20px;
+			}
+		}
+		
+		h2 {
+			color: #000;
+			margin-bottom: 20px;
+		}
 	}
 
 	footer {

@@ -33,19 +33,24 @@
 
 		<div *ngFor="let comment of comments$ | async; trackBy: trackByFn" class="comment-container" [ngClass]="{'fade-in': comment.options.isNew}">
 			<header>
-				<a [routerLink]="['/user/', comment.options.createUser._id]">
-					<img [attr.src]="comment.options.createUser.img | NormalizeImgUrl" />
+				<a [attr.href]="comment.options.createUser ? '#/user/' + comment.options.createUser?._id : null">
+					<img [attr.src]="comment.options.createUser?.img | NormalizeImgUrl" />
 				</a>
 				<div>
-					<a [routerLink]="['/user/', comment.options.createUser._id]" class="g-username">
-						{{comment.options.createUser.name}}
+					<a [attr.href]="comment.options.createUser ? '#/user/' + comment.options.createUser?._id : null" class="g-username">
+					<!-- <a [routerLink]="['/user/', comment.options.createUser?._id]" class="g-username"> -->
+						{{comment.options.createUser?.name || comment.options.createCompany.name}}
 					</a>
 					<a [routerLink]="['/comment/', comment.options._id]">{{comment.options.fromNow}}</a>
 					<!-- <a [routerLink]="['/comment/', comment.options._id]">{{comment.options.created | date:'shortTime'}}</a> -->
 				</div>
-				<i class="fa fa-ellipsis-v more-post-actions-button" (click)="showMorePostActions(comment)"></i>
+				<!-- <i class="fa fa-ellipsis-v more-post-actions-button" (click)="showMorePostActions(comment)"></i> -->
 			</header>
 			<main>
+				<h2 *ngIf="comment.options.title" [innerHtml]="comment.options.title"></h2>
+				<a *ngFor="let img of comment.options.imgs" [attr.href]="comment.options.url ? comment.options.url : null" target="_blank" class="comment-image">
+					<img [attr.src]="img">
+				</a>
 				<p [innerHtml]="comment.options.content | parseCommentContent"></p>
 				<a *ngIf="comment.options.content.length > 100" (click)="onClickShowMoreText(comment, $event)" class="showMoreTextButton">show more</a>
 			</main>
