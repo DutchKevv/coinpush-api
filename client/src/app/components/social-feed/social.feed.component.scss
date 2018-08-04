@@ -167,20 +167,25 @@ app-comment-box {
 	}
 
 	main {
-		padding: 20px 10px;
+		padding: 14px 20px;
 
 		.comment-image {
 			display: block;
 
 			img {
 				max-width: 100%;
-				margin-bottom: 20px;
+				width: 100%;
+				margin-bottom: 14px;
 			}
 		}
 		
 		h2 {
 			color: #000;
-			margin-bottom: 20px;
+			margin-bottom: 14px;
+		}
+
+		p {
+			font-size: 16px;
 		}
 	}
 

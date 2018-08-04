@@ -14,9 +14,8 @@ export const timelineController = {
 	async get(reqUser: IReqUser, params: { toUserId: string, offset: any, limit: any }) {
 		let comments = <Array<any>>await Comment
 			.find({
-				toUser: {
-					$eq: undefined
-				},
+				toUser: { $eq: undefined },
+				parentId: { $eq: undefined }
 			})
 			.skip(parseInt(params.offset, 10) || 0)
 			.limit(parseInt(params.limit, 10) || 10)
@@ -38,14 +37,14 @@ export const timelineController = {
 		return comments;
 	},
 
-    // /**
-    //  * TODO : optimize!!!!
-    //  * @param reqUser 
-    //  * @param params 
-    //  */
+	// /**
+	//  * TODO : optimize!!!!
+	//  * @param reqUser 
+	//  * @param params 
+	//  */
 	// async get(reqUser: IReqUser, params: any = {}): Promise<any> {
-        
-    //     let comments = <Array<any>>await Comment
+
+	//     let comments = <Array<any>>await Comment
 	// 		.find({toUser: { $exists: false}, parentId: { $eq: undefined } })
 	// 		// .find({public: true})
 	// 		.skip(parseInt(params.offset, 10) || 0)
@@ -63,9 +62,9 @@ export const timelineController = {
 	// 	comments.forEach((<any>User).normalizeProfileImg);
 
 	// 	return comments;
-    // },
-    
-    async findChildren(reqUser: IReqUser, parentId: string, params: any = {}) {
+	// },
+
+	async findChildren(reqUser: IReqUser, parentId: string, params: any = {}) {
 
 		const children = <Array<any>>await Comment
 			.find({ parentId: { $eq: Types.ObjectId(parentId) } })

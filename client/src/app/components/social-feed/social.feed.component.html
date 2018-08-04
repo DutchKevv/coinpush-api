@@ -52,7 +52,7 @@
 					<img [attr.src]="img">
 				</a>
 				<p [innerHtml]="comment.options.content | parseCommentContent"></p>
-				<a *ngIf="comment.options.content.length > 100" (click)="onClickShowMoreText(comment, $event)" class="showMoreTextButton">show more</a>
+				<a *ngIf="comment.options.content.length > 200" (click)="onClickShowMoreText(comment, $event)" class="showMoreTextButton">show more</a>
 			</main>
 			<footer>
 				<div class="parent-buttons">

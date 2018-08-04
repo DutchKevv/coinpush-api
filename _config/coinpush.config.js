@@ -29,29 +29,29 @@ const config = {
         },
         cache: {
             port: 3001,
-            connectionString: 'mongodb://mongodb:27017/coinpush-cache'
+            connectionString: 'mongodb://root:example@mongodb:27017/coinpush-cache?authSource=admin'
         },
         order: {
             port: 3005,
-            connectionString: 'mongodb://mongodb:27017/coinpush-orders'
+            connectionString: 'mongodb://root:example@mongodb:27017/coinpush-orders?authSource=admin'
         },
         broker: {
             port: 3006,
         },
         user: {
             port: 3008,
-            connectionString: 'mongodb://mongodb:27017/coinpush-user'
+            connectionString: 'mongodb://root:example@mongodb:27017/coinpush-user?authSource=admin'
         },
         comment: {
             port: 3009,
-            connectionString: 'mongodb://mongodb:27017/coinpush-comment'
+            connectionString: 'mongodb://root:example@mongodb:27017/coinpush-comment?authSource=admin'
         },
         notify: {
             port: 3010,
-            connectionString: 'mongodb://mongodb:27017/coinpush-notify'
+            connectionString: 'mongodb://root:example@mongodb:27017/coinpush-notify?authSource=admin'
         },
         event: {
-            connectionString: 'mongodb://mongodb:27017/coinpush-event',
+            connectionString: 'mongodb://root:example@mongodb:27017/coinpush-event?authSource=admin',
             port: 3011,
         }
     },

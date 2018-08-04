@@ -16,6 +16,7 @@ import { ProfileComponent } from "../profile/profile.component";
 import { UserModel } from '../../models/user.model';
 
 const MAX_COMMENT_LENGTH = 200;
+const SCROLL_LOAD_TRIGGER_OFFSET = 400;
 
 function linkify(inputText) {
 	var replacedText, replacePattern1, replacePattern2, replacePattern3;
@@ -177,10 +178,10 @@ export class SocialFeedComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 
 	public onScroll(event) {
-		if (!this._scrollActive)
+		if (!this._scrollActive || this.isLoading)
 			return;
 
-		if (event.target.scrollHeight - event.target.scrollTop !== event.target.clientHeight)
+		if (event.target.scrollHeight - event.target.scrollTop - SCROLL_LOAD_TRIGGER_OFFSET >= event.target.clientHeight)
 			return;
 
 		if (this.commentId)

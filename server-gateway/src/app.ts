@@ -115,12 +115,12 @@ export const app = {
 		};
 
 		this.api.use(bodyParserJsonMiddleware());
-		this.api.use(morgan(process.env.NODE_ENV || 'dev'));
+		this.api.use(morgan('dev'));
 		this.api.use(helmet());
 
 		this.api.use((req, res, next) => {
 			res.header('Access-Control-Allow-Origin', '*');
-			res.header('Access-Control-Allow-Headers', 'clientVersion, Authorization, Origin, X-Requested-With, Content-Type, Accept');
+			// res.header('Access-Control-Allow-Headers', 'clientVersion, Authorization, Origin, X-Requested-With, Content-Type, Accept');
 			next();
 		});
 
