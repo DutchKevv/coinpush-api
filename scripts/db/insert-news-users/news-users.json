@@ -1,0 +1,16 @@
+[
+    {
+        "name": "Crypto Coins News",
+        "id": "crypto-coins-news",
+        "email": "ccn-company@coinpush.app",
+        "img": "ccn.jpg",
+        "password": "test"
+    },
+    {
+        "name": "CoinDesk",
+        "id": "coindesk",
+        "email": "coindesk-company@coinpush.app",
+        "img": "coindesk.jpg",
+        "password": "test"
+    }
+]
