@@ -1377,4 +1377,3 @@ exports.symbols = [
         "name": "ZAR_JPY"
     }
 ];
-//# sourceMappingURL=symbols.js.map

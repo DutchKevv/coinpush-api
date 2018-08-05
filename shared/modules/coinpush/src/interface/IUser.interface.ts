@@ -5,6 +5,7 @@ export interface IUser {
 	balance?: number;
 	password?: string;
 	gender?: number;
+	companyId?: string;
 	country?: string;
 	language?: string;
 	img?: string;

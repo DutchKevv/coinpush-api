@@ -123,6 +123,7 @@ export const userController = {
 			img: params.img,
 			gender: params.gender,
 			password: params.password,
+			companyId: params.companyId,
 			country: params.country
 		};
 

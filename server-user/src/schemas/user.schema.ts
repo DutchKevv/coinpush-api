@@ -51,6 +51,11 @@ export const UserSchema = new Schema(
 			trim: true,
 			enum: countries.map(country => country.code)
 		},
+		companyId: {
+			type: String,
+			unique: true,
+			sparse: true
+		},
 		jobTitle: {
 			type: String,
 			required: false,
@@ -137,7 +142,8 @@ export const UserSchema = new Schema(
 );
 
 UserSchema.pre('validate', function(next) {
-    if (!this['password'] && (!this['oauthFacebook'] || !this['oauthFacebook']['id'])) {
+	console.log(this)
+    if (!this['password'] && (!this['companyId'] && (!this['oauthFacebook'] || !this['oauthFacebook']['id']))) {
         next(new Error('Password must be given'));
     } else {
         next();

@@ -3,16 +3,8 @@ import { Schema, model } from 'mongoose';
 export const CommentSchema = new Schema({
 	createUser: {
 		type: Schema.Types.ObjectId,
-		validate: [creatorValidator, 'createUser or createCompany must be set'],
+		required: true,
 		ref: 'User'
-	},
-	createCompany: {
-		type: {
-			id: String,
-			name: String	
-		},
-		validate: [creatorValidator, 'createUser or createCompany must be set'],
-		ref: 'Company'
 	},
 	toUser: {
 		type: Schema.Types.ObjectId,

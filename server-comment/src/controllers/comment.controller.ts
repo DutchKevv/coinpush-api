@@ -163,17 +163,9 @@ export const commentController = {
 		return { _id: comment._id };
 	},
 
-	async createNewsArticle(options: any): Promise<any> {
-		const comment = <any>await Comment.create({
-			createCompany: options.source.id,
-			// public: options.toUserId && options.toUserId !== reqUser.id ? undefined : true,
-			parentId: options.parentId,
-			content: options.content,
-			title: options.title,
-			isNews: true,
-			url: options.url,
-			imgs: options.imgs
-		});
+	createNewsArticle(options: any): Promise<any> {
+		Object.assign(options, {isNews: true});
+		return Comment.create(options);
 	},
 
 	/**

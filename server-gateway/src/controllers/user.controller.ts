@@ -50,7 +50,7 @@ export const userController = {
 	},
 
 	async create(reqUser: IReqUser, params: IUser, sendEmail = true): Promise<IUser> {
-		let user, notify;
+		let user;
 
 		try {
 
@@ -72,6 +72,7 @@ export const userController = {
 					img: user.img,
 					name: user.name,
 					email: user.email,
+					companyId: user.companyId,
 					language: user.language
 				}),
 				
@@ -79,6 +80,7 @@ export const userController = {
 				commentController.addUser({ id: user._id }, {
 					_id: user._id,
 					img: user.img,
+					companyId: user.companyId,
 					name: user.name,
 				})
 			]);
@@ -109,13 +111,11 @@ export const userController = {
 			return user;
 
 		} catch (error) {
-			console.error(error);
-
 			if (user && user._id) {
 				try {
 					await this.remove({ id: user._id }, user._id)
 				} catch (error) {
-					console.error(error);
+					log.error(error);
 				}
 			}
 

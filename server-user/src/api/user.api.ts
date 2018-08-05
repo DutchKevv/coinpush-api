@@ -44,20 +44,6 @@ router.post('/', async (req: any, res, next) => {
 	try {
 		res.send(await userController.create(req.user, req.body));
 	} catch (error) {
-
-		// if (error) {
-		// 	console.log('USER USER USER', error);
-		// 	switch (error.kind) {
-		// 		case 
-		// 	}
-
-		// 	if (error.name === G_ERROR_DUPLICATE_NAME) {
-		// 		console.log('validation error', error);
-		// 		res.status(409).send({ code: G_ERROR_DUPLICATE_FIELD, field: Object.keys(error.errors)[0] });
-		// 		return;
-		// 	}
-		// }
-
 		next(error);
 	}
 });

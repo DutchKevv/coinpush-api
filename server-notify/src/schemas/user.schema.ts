@@ -23,6 +23,11 @@ export const UserSchema = new Schema({
         type: String,
         trim: true
     },
+    companyId: {
+        type: String,
+        unique: true,
+        sparse: true
+    },
     devices: [{
         token: {
             type: String,

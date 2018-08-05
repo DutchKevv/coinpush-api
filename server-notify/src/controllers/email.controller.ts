@@ -21,7 +21,7 @@ export const emailController = {
 			const mailOptions = {
 				from: config.email.account.noReply.auth.user, // sender address
 				to: [user.email],
-				subject: `Hi there ${user.name} - CoinPush`,
+				subject: `CoinPush - Hi there ${user.name}`,
 				html: HTML
 			};
 
@@ -48,7 +48,7 @@ Click on <a href="${url}">this link</a> to reset your password. This link is val
 			const mailOptions = {
 				from: config.email.account.noReply.auth.user, // sender address
 				to: [user.email],
-				subject: 'Password reset',
+				subject: 'CoinPush - Password reset',
 				html: HTML // You can choose to send an HTML body instead
 			};
 

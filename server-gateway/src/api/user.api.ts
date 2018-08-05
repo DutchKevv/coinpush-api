@@ -43,6 +43,7 @@ router.post('/:id/follow', async (req: any, res, next) => {
  * Create
  */
 router.post('/', async (req: any, res, next) => {
+	
 	try {
 		res.send(await userController.create(req.user, req.body));
 	} catch (error) {

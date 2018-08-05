@@ -12,11 +12,7 @@ export const commentController = {
 			uri: config.server.comment.apiUrl + '/user',
 			headers: { '_id': params._id },
 			method: 'POST',
-			body: {
-				_id: params._id,
-				name: params.name,
-				img: params.img,
-			},
+			body: params,
 			json: true
 		});
 

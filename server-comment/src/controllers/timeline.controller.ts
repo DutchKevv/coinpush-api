@@ -12,6 +12,7 @@ export const timelineController = {
 	 * @param params 
 	 */
 	async get(reqUser: IReqUser, params: { toUserId: string, offset: any, limit: any }) {
+		console.log('asfdassdfsdf')
 		let comments = <Array<any>>await Comment
 			.find({
 				toUser: { $eq: undefined },
@@ -19,14 +20,14 @@ export const timelineController = {
 			})
 			.skip(parseInt(params.offset, 10) || 0)
 			.limit(parseInt(params.limit, 10) || 10)
-			.sort({ _id: -1 })
+			.sort({ createdAt: -1 })
 			.populate('createUser')
 			.populate('toUser')
 			.populate({
 				path: 'children',
 				populate: { path: 'createUser' },
 				options: {
-					sort: { created: -1 },
+					sort: { createdAt: -1 },
 					limit: 5
 				}
 			})

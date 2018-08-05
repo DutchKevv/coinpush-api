@@ -2,7 +2,7 @@ import * as express from 'express';
 import * as helmet from 'helmet';
 import * as morgan from 'morgan';
 import * as mongoose from 'mongoose';
-import {json, urlencoded} from 'body-parser';
+import { json, urlencoded } from 'body-parser';
 import { config } from '../../shared/modules/coinpush/src/util/util-config';
 import { log } from '../../shared/modules/coinpush/src/util/util.log';
 import { NewsAggregator } from './news/news.aggregator';
@@ -41,7 +41,7 @@ export const app = {
 		// 	req.user = {id: req.headers['_id']};
 		// 	next();
 		// });
-		
+
 		this.api.use('/user', require('./api/user.api'));
 		this.api.use('/comment', require('./api/comment.api'));
 		this.api.use('/timeline', require('./api/timeline.api'));
@@ -53,7 +53,7 @@ export const app = {
 			if (res.headersSent)
 				return next(error);
 
-				console.error(error);
+			console.error(error);
 
 			if (error && error.statusCode) {
 				res.status(error.statusCode).send(error.error);
@@ -78,7 +78,7 @@ export const app = {
 			mongoose.connect(config.server.comment.connectionString, (error) => {
 				if (error)
 					return reject(error);
-				
+
 				resolve();
 			});
 		});

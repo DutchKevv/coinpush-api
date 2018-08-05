@@ -8,6 +8,7 @@
   },
   "main": "index.js",
   "scripts": {
+    "postinstall": "npm run build",
     "start": "tsc-watch --sourceMap",
     "build": "tsc"
   },

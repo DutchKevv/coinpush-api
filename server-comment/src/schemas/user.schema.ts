@@ -9,7 +9,12 @@ const UserSchema = new Schema({
     },
     img: {
         type: String
-	},
+    },
+    companyId: {
+        type: String,
+        unique: true,
+        sparse: true
+    },
 	removed: {
 		type: Boolean
 	}

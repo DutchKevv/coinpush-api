@@ -29,7 +29,7 @@
 
 <div class="feed-container" (scroll)="onScroll($event)" style="padding-top: 20px;">
 	<div class="feed">
-		<app-comment-box *ngIf="!commentId" [userId]="userId" (newMessage)="addMessage($event)"></app-comment-box>
+		<!-- <app-comment-box *ngIf="!commentId" [userId]="userId" (newMessage)="addMessage($event)"></app-comment-box> -->
 
 		<div *ngFor="let comment of comments$ | async; trackBy: trackByFn" class="comment-container" [ngClass]="{'fade-in': comment.options.isNew}">
 			<header>
