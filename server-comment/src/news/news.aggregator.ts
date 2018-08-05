@@ -31,7 +31,6 @@ export class NewsAggregator {
     }
 
     public start() {
-        this._loopApis();
         this._loopInterval = setInterval(() => this._loopApis(), this._loopIntervalDelay);
     }
 
