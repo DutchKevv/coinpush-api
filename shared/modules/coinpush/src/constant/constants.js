@@ -60,3 +60,4 @@ exports.ALARM_TRIGGER_TYPE_PRICE = 1, exports.ALARM_TRIGGER_TYPE_PERCENTAGE = 2,
  * CANDLES
  */
 exports.CANDLE_DEFAULT_ROW_LENGTH = 6;
+//# sourceMappingURL=constants.js.map

@@ -25,6 +25,7 @@ messaging.setBackgroundMessageHandler(function (payload) {
 
   data = payload.data;
 
+  navigationUrl = '';
   let notificationTitle = data.title;
   let body = data.body;
   let tag = undefined;
@@ -50,6 +51,12 @@ messaging.setBackgroundMessageHandler(function (payload) {
       navigationUrl = `${self.location.origin}/#/comment/${data.parentId || data.commentId}`;
       body = data.content;
       break;
+    case 'post-comment':
+      navigationUrl = `${self.location.origin}/#/comment/${data.parentId || data.commentId}`;
+      break;
+    case 'user-follow':
+      navigationUrl = `${self.location.origin}/#/user/${data.fromUser._id}`;
+      break;
   }
 
   const notificationOptions = {
@@ -57,7 +64,7 @@ messaging.setBackgroundMessageHandler(function (payload) {
     data: data,
     icon: '/image/corp/icon.png',
     sound: '/assets/sound/cow.mp3',
-    requireInteraction: true,
+    requireInteraction: data.type === 'symbol-alarm',
     // tag: tag
   };
 

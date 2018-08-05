@@ -12,9 +12,19 @@
 	flex-flow: column;
     height: 100%;
     overflow: auto;
+    position: relative;
 }
 
 header {
+    box-shadow: 0px 7px 14px rgba(0, 0, 0, 0.5);
+    z-index: 2;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    z-index: 1;
+    transition: top 0.2s linear 0s;
+
     .profile-details {
         padding: 10px 20px;
         display: flex;

@@ -1,9 +1,8 @@
-import { ChangeDetectionStrategy, Component, OnInit, Output, ViewEncapsulation, ChangeDetectorRef, HostListener } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, ElementRef, ViewChild, ContentChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
-import { AlertService } from '../../services/alert.service';
 import { UserModel } from '../../models/user.model';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { SocialFeedComponent } from '../social-feed/social.feed.component';
 
 @Component({
 	selector: 'app-profile',
@@ -19,14 +18,17 @@ export class ProfileComponent implements OnInit {
 	public isSelf: boolean = true;
 
 	private _routeSub: any;
-
-	@Output() test;
+	private _onScrollBinded = null;
+	
+	@ViewChild('header') header;
+	@ContentChild(SocialFeedComponent) socialFeedComponent;
 
 	constructor(
 		public userService: UserService,
+		private _elementRef: ElementRef,
 		private _changeRef: ChangeDetectorRef,
 		private _route: ActivatedRoute) {
-
+			this._onScrollBinded = this._onScroll.bind(this);
 	}
 
 	ngOnInit() {
@@ -40,6 +42,14 @@ export class ProfileComponent implements OnInit {
 				this._loadUser(params['id']);
 			}
 		});
+
+		const interval = setInterval(() => {
+			const el = this._elementRef.nativeElement.querySelector('app-social-feed');
+			if (el) {
+				clearInterval(interval);
+				this._bindScroll(el.querySelector('.feed-container'));
+			}
+		}, 100);
 	}
 
 	public async toggleFollow(userModel: UserModel, state: boolean) {
@@ -53,8 +63,27 @@ export class ProfileComponent implements OnInit {
 		this._changeRef.detectChanges();
 	}
 
+	private _bindScroll(el) {
+		el.addEventListener('scroll', this._onScrollBinded, {passive: true});
+	}
+
+	private _unbindScroll() {
+		// this.socialFeedComponent.nativeElement.removeEventListener('scroll', this._onScrollBinded, {passive: true});
+	}
+
+	private _onScroll(event) {
+		let offset = (event.target.scrollTop);
+
+		if (offset > 100)
+			offset = 100;
+
+		this.header.nativeElement.style.top = -offset + 'px';
+	}
+
 	ngOnDestroy() {
 		if (this._routeSub)
 			this._routeSub.unsubscribe();
+
+		this._unbindScroll();
 	}
 }

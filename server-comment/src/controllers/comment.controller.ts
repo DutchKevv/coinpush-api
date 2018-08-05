@@ -143,7 +143,7 @@ export const commentController = {
 		else {
 			const parent = <any>await Comment.findOneAndUpdate({ _id: comment.parentId }, { $inc: { childCount: 1 }, $addToSet: { children: comment._id } });
 
-			// only notify if not reacting on self created post
+			// only notify parent creator, if it is not self
 			if (parent && parent.createUser && parent.createUser.toString() !== reqUser.id) {
 				let pubOptions = {
 					type: 'post-comment',
