@@ -77,7 +77,7 @@ export class ProfileComponent implements OnInit {
 		if (offset > 100)
 			offset = 100;
 
-		this.header.nativeElement.style.top = -offset + 'px';
+		this.header.nativeElement.style.transform = 'translateY(' + -offset + 'px)';
 	}
 
 	ngOnDestroy() {

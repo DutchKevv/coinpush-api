@@ -2,7 +2,9 @@
     <div class="profile-details" style="background: url(./assets/image/cover.svg) center/cover;">
         <img class="profileImg" [attr.src]="user.options.img ? (user.options.img | NormalizeImgUrl) : undefined">
         <div class="meta-data">
-            <h2>{{user.options.name || '&nbsp;'}}</h2>
+            <h3>{{user.options.name || '&nbsp;'}}</h3>
+            
+            
             <div class="profile-details-meta-container">
                 <button *ngIf="!isSelf && !user.options.iFollow" (click)="toggleFollow(user, true)" class="btn btn-sm btn-success ">Follow</button>
                 <button *ngIf="!isSelf && user.options.iFollow" (click)="toggleFollow(user, false)" class="btn btn-sm btn-danger ">UnFollow</button>
