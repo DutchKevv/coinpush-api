@@ -1,7 +1,6 @@
 import { Comment } from '../schemas/comment.schema';
 import { Types } from 'mongoose';
 import { pubClient } from '../../../shared/modules/coinpush/src/redis';
-import { User } from '../schemas/user.schema';
 import { IReqUser } from '../../../shared/modules/coinpush/src/interface/IReqUser.interface';
 
 export const commentController = {
@@ -19,7 +18,7 @@ export const commentController = {
 			.populate('toUser')
 			.populate({
 				options: {
-					sort: { created: -1 },
+					sort: { createdAt: -1 },
 					limit: 5
 				},
 				path: 'children',
@@ -57,14 +56,14 @@ export const commentController = {
 			})
 			.skip(parseInt(params.offset, 10) || 0)
 			.limit(parseInt(params.limit, 10) || 10)
-			.sort({ _id: -1 })
+			.sort({ createdAt: -1 })
 			.populate('createUser')
 			.populate('toUser')
 			.populate({
 				path: 'children',
 				populate: { path: 'createUser' },
 				options: {
-					sort: { created: -1 },
+					sort: { createdAt: -1 },
 					limit: 5
 				}
 			})
@@ -94,7 +93,7 @@ export const commentController = {
 
 		const children = <Array<any>>await Comment
 			.find({ parentId: { $eq: Types.ObjectId(parentId) } })
-			.sort({ _id: -1 })
+			.sort({ createdAt: -1 })
 			.skip(parseInt(params.offset, 10) || 0)
 			.limit(parseInt(params.limit, 10) || 5)
 			.populate('createUser')

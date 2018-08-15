@@ -1,3 +1,14 @@
+@import '~bootstrap/scss/_functions';
+@import '~bootstrap/scss/_variables';
+@import '~bootstrap/scss/_mixins';
+@import '~bootstrap/scss/_grid';
+@import '~bootstrap/scss/_buttons';
+@import '~bootstrap/scss/_forms';
+@import '~bootstrap/scss/_modal';
+@import '~bootstrap/scss/_close';
+@import '~bootstrap/scss/_transitions';
+
+@import '../../style/variables/variables';
 @import '../../style/helpers/normalize';
 
 .modal {

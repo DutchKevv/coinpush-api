@@ -12,13 +12,14 @@
 	flex-flow: column;
     height: 100%;
     overflow: auto;
+    -webkit-overflow-scrolling: touch;
     position: relative;
 }
 
 header {
     box-shadow: 0px 7px 14px rgba(0, 0, 0, 0.5);
     z-index: 2;
-    position: absolute;
+    position: sticky;
     top: 0px;
     left: 0px;
     right: 0px;
@@ -79,5 +80,9 @@ header {
                 }
             }
         }
+    }
+
+    @media only screen and (min-width : 768px) {
+        left: 250px;
     }
 }

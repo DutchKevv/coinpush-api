@@ -1,9 +1,16 @@
-@import '../../style/variables/variables';
-@import '../../style/helpers/normalize';
 @import '~bootstrap/scss/_functions';
 @import '~bootstrap/scss/_variables';
 @import '~bootstrap/scss/_mixins';
+@import '~bootstrap/scss/_grid';
+@import '~bootstrap/scss/_buttons';
+@import '~bootstrap/scss/_forms';
+@import '~bootstrap/scss/_modal';
+@import '~bootstrap/scss/_close';
+@import '~bootstrap/scss/_transitions';
 @import '~bootstrap/scss/utilities/_display';
+
+@import '../../style/variables/variables';
+@import '../../style/helpers/normalize';
 
 .g-username,
 .g-link {
@@ -81,10 +88,11 @@
 }
 
 .feed-container {
-	overflow: auto;
-	-webkit-overflow-scrolling: touch;
+	// overflow: auto;
+	// -webkit-overflow-scrolling: touch;
 	width: 100%;
 	margin-bottom: 0px;
+	padding-top: 10px;
 }
 
 .feed {
@@ -110,10 +118,6 @@ app-comment-box {
 	// &.fade-in {
 	// 	animation: fadeIn 1s; /* IE 10+, Fx 29+ */
 	// }
-
-	&:first-child {
-		margin-top: 80px;
-	}
 
 	header,
 	main,

@@ -33,7 +33,7 @@
             "scripts": []
           },
           "configurations": {
-            "prod": {
+            "production": {
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -46,7 +46,7 @@
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
+                  "with": "src/environments/environment.production.ts"
                 }
               ]
             }
@@ -58,8 +58,8 @@
             "browserTarget": "coinpush:build"
           },
           "configurations": {
-            "prod": {
-              "browserTarget": "coinpush:build:prod"
+            "production": {
+              "browserTarget": "coinpush:build:production"
             }
           }
         },

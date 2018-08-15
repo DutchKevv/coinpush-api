@@ -15,13 +15,7 @@ const routes: Routes = [
 	{ path: 'comment/:id', component: SocialFeedComponent, canActivate: [AuthGuard] },
 	{ path: 'user', component: UserOverviewComponent, canActivate: [AuthGuard] },
 	{ path: 'calendar', component: EventOverviewComponent, canActivate: [AuthGuard] },
-	{
-		path: 'user/:id', component: ProfileComponent, canActivate: [AuthGuard], children:
-			[
-				{ path: '', redirectTo: 'feed', pathMatch: 'full' },
-				{ path: 'feed', component: SocialFeedComponent }
-			]
-	},
+	{ path: 'user/:id', component: ProfileComponent, canActivate: [AuthGuard] },
 	{ path: 'symbols', component: ChartOverviewComponent, canActivate: [AuthGuard] },
 	{ path: 'settings', component: SettingsComponent, canActivate: [AuthGuard] },
 	{ path: '**', redirectTo: 'symbols', pathMatch: 'full' }

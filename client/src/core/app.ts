@@ -83,12 +83,12 @@ export class App extends MicroEvent {
      * preload
      */
     private async _preload(): Promise<void> {
-        const imageUrls = ['./spritesheet.png', './assets/image/cover.svg'];
+        const imageUrls = ['./spritesheet.png'];
         const authUrl = this.address.apiUrl + 'authenticate?profile=true';
 
         // images
         try {
-            await Promise.all(
+            Promise.all(
                 imageUrls.map(imageUrl => {
                     return new Promise(resolve => {
                         let img = new Image();

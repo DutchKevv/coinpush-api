@@ -1,16 +1,12 @@
-import { Component, OnInit, Output, ChangeDetectionStrategy, ChangeDetectorRef, EventEmitter, ViewChild, ElementRef, HostListener, Input } from '@angular/core';
+import { Component, Output, ChangeDetectionStrategy, ChangeDetectorRef, EventEmitter, ViewChild, ElementRef, HostListener, Input } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { CacheService } from '../../services/cache.service';
 import { Subject } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Location } from '@angular/common';
-import { AuthenticationService } from '../../services/authenticate.service';
-import { environment } from 'environments/environment';
-import { app } from '../../../core/app';
 import { Router, NavigationStart, NavigationEnd } from '@angular/router';
 
-declare let window: any;
-declare let navigator: any;
+let historyStart = history.length;
 
 @Component({
 	selector: 'app-header',
@@ -72,9 +68,10 @@ export class HeaderComponent {
 	ngOnInit() {
 
 		this._routerEventsSub = this._router.events.subscribe((event) => {
-			
+
 			if (event instanceof NavigationStart) {
-				const isHome = event.url === '/' || event.url.startsWith('/symbols');
+				// alert(window.location.href);
+				const isHome = event.url === '/' || event.url.includes('/symbols');
 9
 				this.showBackButton = !isHome;
 				this.showFilterButton = isHome || event.url.includes('/symbols');
@@ -82,7 +79,8 @@ export class HeaderComponent {
 				this._changeDetectorRef.detectChanges();
 			}
 
-			if (event instanceof NavigationEnd) {
+			else if (event instanceof NavigationEnd) {
+				
 				this.searchOpen = false;
 				this.filterClicked$.next(false);
 			}

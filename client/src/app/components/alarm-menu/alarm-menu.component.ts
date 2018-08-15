@@ -75,7 +75,7 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 		})
 	}
 
-	async ngOnChanges(changes: SimpleChanges) {
+	ngOnChanges(changes: SimpleChanges): void {
 		if (changes.symbol && changes.symbol.currentValue) {
 			this._unsubscribe();
 
@@ -90,7 +90,7 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 		}
 	}
 
-	public onMouseDownNumberInput(event, dir: number) {
+	public onMouseDownNumberInput(event, dir: number): void {
 		if (event) {
 			event.preventDefault();
 			event.stopPropagation();
@@ -101,7 +101,7 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 			this.updateSideMenuNumberInput(dir, true);
 	}
 
-	public onMouseUpNumberInput(event) {
+	public onMouseUpNumberInput(event): void {
 		if (event) {
 			event.preventDefault();
 			event.stopPropagation();
@@ -111,17 +111,17 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 		this._mouseDownTimeout = null;
 	}
 
-	public onChangeInputValue() {
+	public onChangeInputValue(): void {
 		this.inputValueChange.next(this.formModel.amount);
 	}
 
-	public async onClickRemoveEvent(event) {
+	public onClickRemoveEvent(event): void {
 		this.eventService.remove(event);
 
 		this._changeDetectorRef.detectChanges();
 	}
 
-	public async onFormSubmit() {
+	public async onFormSubmit(): Promise<void> {
 		if (!this._userService.model.options._id) {
 			this._authenticationService.showLoginRegisterPopup();
 			return;
@@ -159,7 +159,7 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 		}
 	}
 
-	public toggleTab(tab: string) {
+	public toggleTab(tab: string): void {
 		this.activeTab = tab;
 		this._changeDetectorRef.detectChanges();
 	}
@@ -172,7 +172,7 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 		return [];
 	}
 
-	public updateSideMenuNumberInput(dir: number, setRepeat: boolean = false, repeatTime: number = 1000) {
+	public updateSideMenuNumberInput(dir: number, setRepeat: boolean = false, repeatTime: number = 1000): void {
 		clearTimeout(this._mouseDownTimeout);
 		this._mouseDownTimeout = null;
 
@@ -217,12 +217,12 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 		return value;
 	}
 
-	private _unsubscribe() {
+	private _unsubscribe(): void {
 		if (this.historyEvents$ && this.historyEvents$.unsubscribe)
 			this.historyEvents$.unsubscribe();
 	}
 
-	toggleSaving(state?: boolean) {
+	public toggleSaving(state?: boolean): void {
 		this.saving = !!state;
 		this._changeDetectorRef.detectChanges();
 	}

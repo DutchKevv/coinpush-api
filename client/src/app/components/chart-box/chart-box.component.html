@@ -87,10 +87,10 @@
 
 <div class="chart-overlay-error" *ngIf="hasError === true">
 	<p>
-		<span class="symbol-img-{{symbolModel.options.name}}" style="margin-right: 10px"></span>
-		<b>
-			<i>{{symbolModel.options.displayName}}</i>
-		</b> is currently unavailable&nbsp;... Please try again later</p>
+		
+		<span class="symbol-not-available-error symbol-img-{{symbolModel.options.name}}"></span>
+		<b>{{symbolModel.options.displayName}}</b> is currently unavailable&nbsp;... Please try again later
+	</p>
 </div>
 
 <div class="chart-overlay-loading" #loading>

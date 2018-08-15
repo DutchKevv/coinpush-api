@@ -238,6 +238,12 @@
             display: inline-block;
         }
     }
+
+    .symbol-not-available-error {
+        display: block;
+        margin: 0 auto;
+        margin-bottom: 20px;
+    }
 }
 
 .chart-overlay-loading {

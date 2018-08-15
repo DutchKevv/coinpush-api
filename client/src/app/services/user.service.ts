@@ -1,11 +1,9 @@
-import { Injectable, Output } from '@angular/core';
+import { Injectable, Output, Injector } from '@angular/core';
 import { UserModel } from '../models/user.model';
 import { AlertService } from './alert.service';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { SymbolModel } from "../models/symbol.model";
+import { Observable } from 'rxjs';
 import { app } from '../../core/app';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { AuthenticationService } from './authenticate.service';
 
 import { map } from 'rxjs/operators';
 import { G_ERROR_DUPLICATE_FIELD } from 'coinpush/src/constant';
@@ -23,7 +21,6 @@ export class UserService {
 	constructor(
 		private _http: HttpClient,
 		private _alertService: AlertService) {
-
 	}
 
 	public findById(id: string, options: any = {}): Observable<UserModel> {
@@ -61,7 +58,7 @@ export class UserService {
 
 			return true;
 		} catch (error) {
-			console.log(error)
+			console.error(error)
 			if (error && error.code) {
 				switch (parseInt(error.code, 10)) {
 					case G_ERROR_DUPLICATE_FIELD:
@@ -80,6 +77,11 @@ export class UserService {
 	}
 
 	public async toggleFollow(model: UserModel, state: boolean): Promise<void> {
+		if (!this.model.options._id) {
+			// this._authenticationService.showLoginRegisterPopup();
+			// return;
+		}
+
 		try {
 			const result = <any>await this._http.post('/user/' + model.get('_id') + '/follow', null).toPromise();
 

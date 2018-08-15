@@ -4,11 +4,11 @@ import { AlertService } from "./alert.service";
 import { LoginComponent } from '../components/login/login.component';
 import { app } from '../../core/app';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { environment } from '../../environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 
 declare const window: any;
+
 
 const FB_APP_ID_PROD = '691221981270027';
 const FB_APP_ID_DEV = '162805194523993';
@@ -26,7 +26,6 @@ export class AuthenticationService {
 		private _userService: UserService,
 		private _alertService: AlertService,
 		private _modalService: NgbModal,
-		private _router: Router,
 		private _activetedRoute: ActivatedRoute,
 		private _http: HttpClient) {
 		this.init();
@@ -275,7 +274,7 @@ export class AuthenticationService {
 
 	public reload(redirectUrl?: string) {
 		if (app.platform.isApp) {
-			window.location = 'index.html#' + redirectUrl;
+			window.location = 'index.html' + redirectUrl ? `#${redirectUrl}` : '';
 		} else {
 			if (redirectUrl)
 				window.location = '#' + redirectUrl;

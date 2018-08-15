@@ -11,6 +11,8 @@ import { SocketService } from "./services/socket.service";
 declare let window: any;
 declare let navigator: any;
 
+let historyStart = history.length;
+
 @Component({
 	selector: 'body',
 	templateUrl: './app.component.html',
@@ -28,11 +30,7 @@ export class AppComponent implements OnInit {
 	@ViewChild(HeaderComponent) public header: ElementRef;
 
 	public showBrowserAds = !app.platform.isApp && app.platform.adsEnabled;
-	public showBackButton: boolean = false;
-
-	private _sub: any;
-	private _routerEventsSub: any;
-
+	
 	private _lastTimeBackPress = 0;
 	private _timePeriodToExit = 2000;
 
@@ -63,7 +61,9 @@ export class AppComponent implements OnInit {
 	@HostListener('document:backbutton', ['$event'])
 	onBackButton(event) {
 		this._onClickMobileBackButton(event);
-		window.history.go(-1);
+
+		if (history.length > historyStart)
+			window.history.go(-1);
 	}
 
 	constructor(
@@ -84,8 +84,7 @@ export class AppComponent implements OnInit {
 	}
 
 	private _onClickMobileBackButton(event) {
-		// TODO - Hack
-		if (!app.platform.isApp || window.location.hash !== '#/symbols')
+		if (history.length <= historyStart)
 			return;
 
 		event.preventDefault();
