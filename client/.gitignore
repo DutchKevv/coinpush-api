@@ -2,6 +2,7 @@ node_modules
 npm-debug.log
 
 src/address_overwrite.json
+tools/sprite/images
 
 *.map
 *.js

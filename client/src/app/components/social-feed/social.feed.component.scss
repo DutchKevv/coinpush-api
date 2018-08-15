@@ -9,6 +9,7 @@
 @import '~bootstrap/scss/_transitions';
 @import '~bootstrap/scss/utilities/_display';
 
+@import '../../style/sprite/spritesheet';
 @import '../../style/variables/variables';
 @import '../../style/helpers/normalize';
 
@@ -97,7 +98,7 @@
 
 .feed {
 	margin: 0 auto;
-	max-width: 500px;
+	max-width: 600px;
 }
 
 emoji-input{
@@ -205,6 +206,9 @@ app-comment-box {
 
 			a {
 				margin-right: 5px;
+				span {
+					color: black;
+				}
 			}
 
 			i {
@@ -267,7 +271,6 @@ app-comment-box {
 
 		a {
 			//margin-right: 10px;
-			color: black;
 
 			&.active,
 			&.activeLike,
@@ -283,6 +286,64 @@ app-comment-box {
 		}
 	}
 
+	&.comment-alert-container {
+		display: flex;
+    	background: transparent;
+		justify-content: space-between;
+		
+		.symbol-img {
+			flex-shrink: 0;
+			margin-right: 10px;
+		}
+		
+		.fa-arrow-up,
+		.fa-arrow-down {
+			margin-right: 6px;
+		}
+
+		.fa-arrow-up {
+			color: green;
+		}
+
+		.fa-arrow-down {
+			color: red;
+		}
+
+		a {
+			display: flex;
+			padding: 10px 6px;
+			background: white;
+			width: 48%;
+			font-weight: bold;
+
+			&:hover {
+				background: lightgray;
+				transition: background 1s;
+			}
+
+			&:first-child {
+				p:last-child {
+					color: green;
+					font-size: 14px;
+				}
+			}
+
+			&:last-child {
+				p:last-child {
+					color: red;
+					font-size: 14px;
+				}
+			}
+		}
+
+		span {
+			line-height: 30px;
+			font-weight: bold;
+			flex-grow: 1;
+			text-align: center;
+		}
+	}
+
 	.more-post-actions-button {
 		margin-left: auto;
 		font-size: 18px;
@@ -295,11 +356,6 @@ app-comment-box {
 		font-size: 18px;
 		margin-top: -10px;
 		cursor: pointer;
-	}
-
-	@media screen and (min-width: 768px) {
-		border-radius: 5px;
-		max-width: 500px;
 	}
 }
 

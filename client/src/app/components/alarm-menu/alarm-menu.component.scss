@@ -122,7 +122,7 @@ form {
 
         &.active {
             background-color: $background-th;
-            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.5);
+            box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.5);
         }
 
         &:hover {
@@ -135,7 +135,7 @@ form {
     margin: 0;
     border-radius: 0;
     border: none;
-    padding: 8px 20px;
+    padding: 7px 20px;
 
     i {
         font-size: 16px;

@@ -303,7 +303,7 @@ const COLOR_GREEN = '#38cc38';
  */
 const _rowHTML = `
     <i class="fa fa-star"></i>
-    <span class="instrument-image"></span>
+    <span class="symbol-img"></span>
     <div class="col-instrument">
         <p class="instrument-title">dd</p>
         <span></span>

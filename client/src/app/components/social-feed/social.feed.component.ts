@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, Pipe, PipeTransform, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, Pipe, PipeTransform, OnDestroy, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { ActivatedRoute, Router } from "@angular/router";
 import { CommentService } from "../../services/comment.service";
 import { BehaviorSubject } from "rxjs";
 import { CommentModel } from "../../models/comment.model";
+import { CacheService } from '../../services/cache.service';
 
 const MAX_COMMENT_LENGTH = 200;
 const SCROLL_LOAD_TRIGGER_OFFSET = 400;
@@ -76,7 +77,8 @@ export class SocialFeedComponent implements OnInit, OnDestroy {
 		public changeDetectorRef: ChangeDetectorRef,
 		public _router: Router,
 		public userService: UserService,
-		private _route: ActivatedRoute) {
+		private _route: ActivatedRoute,
+		private _cacheService: CacheService) {
 	}
 
 	ngOnInit() {
@@ -147,11 +149,11 @@ export class SocialFeedComponent implements OnInit, OnDestroy {
 	}
 
 	public showMorePostActions(comment: CommentModel) {
-		alert('more')
+		console.log('more')
 	}
 
 	public showMoreCommentActions(comment: CommentModel) {
-		alert('more')
+		console.log('more')
 	}
 
 	public trackByFn(index, item) {
@@ -171,11 +173,12 @@ export class SocialFeedComponent implements OnInit, OnDestroy {
 	}
 
 	private async _load(): Promise<void> {
+		const urlPath = this._route.snapshot.url[0].path;
 		let items = [];
 
 		this.isLoading = true;
 
-		switch (this._route.snapshot.url[0].path) {
+		switch (urlPath) {
 			case 'user':
 				items = await this.commentService.findByUserId(this.userId, this._offset);
 				break;
@@ -193,9 +196,26 @@ export class SocialFeedComponent implements OnInit, OnDestroy {
 			return;
 		}
 
+		// keep track of current offset
+		// TODO: Should be timestamp!
 		this._offset += items.length;
 
+		// add 'special' comments (alerts, advertising)
+		if (urlPath !== 'comment') {
+			this._mixComments(items);
+		}
+
 		this.comments$.next(this.comments$.getValue().concat(items));
+	}
+
+	/**
+	 * Add advertisings, alerts etc in between comments
+	 * @param comments 
+	 */
+	private _mixComments(comments: Array<CommentModel>): Array<CommentModel> {
+		this._mixRiserFallers(comments);
+		
+		return comments;
 	}
 
 	private _onScroll(event): void {
@@ -205,6 +225,27 @@ export class SocialFeedComponent implements OnInit, OnDestroy {
 
 	private _toggleLoading(state: boolean) {
 
+	}
+
+	private _mixRiserFallers(comments: Array<CommentModel>): void {
+		// risers and fallers
+		const sortedByDayAmount = this._cacheService.symbols.sort((a, b) => a.options.changedDAmount - b.options.changedDAmount);
+		const risers = sortedByDayAmount.slice(-20);
+		const fallers = sortedByDayAmount.slice(0, 20)
+		const randomUpSymbolModel = risers[Math.floor(Math.random()*risers.length)];
+		const randomDownSymbolModel = fallers[Math.floor(Math.random()*fallers.length)];
+		const randomKey = Math.floor(Math.random() * comments.length) + 1;
+
+		const commentModel = new CommentModel({
+			data: {
+				symbolUpModel: randomUpSymbolModel,
+				symbolDownModel: randomDownSymbolModel
+			},
+			type: 'intel-momentum',
+			content: ''
+		});
+		
+		comments.splice(randomKey, 0, commentModel);
 	}
 
 	ngOnDestroy() {

@@ -1,18 +1,34 @@
-import {BaseModel} from './base.model';
+import { BaseModel } from './base.model';
 // import * as TimeAgo from 'javascript-time-ago';
 // import * as en from 'javascript-time-ago/locale/en'
 
 import * as TimeAgo2 from 'time-ago';
 
+export interface IComment {
+	_id?: string;
+	createUser?: any;
+	createdAt?: string;
+	content: string;
+	children?: Array<CommentModel>;
+	iLike?: boolean;
+	likeCount?: 0;
+	isNew?: boolean;
+	isNews?: boolean;
+	fromNow?: string;
+	imgs?: Array<string>;
+	data?: any;
+	type?: string;
+}
+
 export class CommentModel extends BaseModel {
-	
+
 	private _fromNowInterval: number;
 	private _fromNowIntervalDelay: number = 5000;
 
-	public static readonly DEFAULTS: any = {
+	public static readonly DEFAULTS: IComment = {
 		_id: null,
-		createUserId: null,
-		created: null,
+		createUser: null,
+		createdAt: null,
 		content: '',
 		children: [],
 		iLike: false,
@@ -22,7 +38,7 @@ export class CommentModel extends BaseModel {
 		imgs: []
 	}
 
-	constructor(options: any) {
+	constructor(options: IComment) {
 		super(options);
 
 		this.options.fromNow = TimeAgo2.ago(this.options.createdAt);
@@ -35,7 +51,7 @@ export class CommentModel extends BaseModel {
 	private _startFromNowInterval() {
 		this._fromNowInterval = setInterval(() => {
 			this.options.fromNow = TimeAgo2.ago(this.options.createdAt);
-		}, this._fromNowIntervalDelay);	
+		}, this._fromNowIntervalDelay);
 	}
 
 	private _stopFromNowInterval() {

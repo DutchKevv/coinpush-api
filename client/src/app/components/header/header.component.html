@@ -25,7 +25,7 @@
         <h4>Symbols</h4>
         <!-- <h4 *ngIf="result.symbols.length">Symbols</h4> -->
         <a *ngFor="let symbol of result.symbols" [routerLink]="['/symbols']" [queryParams]="{symbol: symbol.options.name}">
-            <span class="symbol-img-{{symbol.options.name}}" style="margin-right: 10px;"></span>
+            <span class="symbol-img symbol-img-{{symbol.options.name}}" style="margin-right: 10px;"></span>
             <span>{{symbol.options.displayName}}</span>
         </a>
         <p class="dropdown-no-results-text" *ngIf="!result.symbols.length">No results</p>

@@ -15,15 +15,7 @@
     <preference name="KeyboardShrinksView" value="true" />
     <icon src="assets/icon/icon.png" />
     <content src="index.html" />
-    <access origin="http://10.0.2.2" />
-    <access origin="http://192.168.178.11" />
-    <access origin="https://coinpush.app" subdomains="true" />
-    <access origin="https://facebook.com" subdomains="true" />
-    <access origin="https://graph.facebook.com" subdomains="true" />
-    <access origin="https://connect.facebook.net" subdomains="true" />
-    <access origin="https://staticxx.facebook.com" subdomains="true" />
-    <access origin="https://media.coindesk.com" subdomains="true" />
-    <access origin="https://*.netdna-ssl.com" subdomains="true" />
+    <access origin="*" />
     <allow-navigation href="*" />
     <platform name="android">
         <resource-file src="www/google-services.json" target="/app/google-services.json" />

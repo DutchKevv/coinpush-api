@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { CommentModel } from '../models/comment.model';
+import { CommentModel, IComment } from '../models/comment.model';
 import { AlertService } from './alert.service';
 import { UserService } from "./user.service";
 import { app } from '../../core/app';
@@ -71,8 +71,9 @@ export class EventService {
 	 * @param id 
 	 */
 	public async findById(id: string): Promise<Array<CommentModel>> {
-		const result = <any>await this._http.get('/event/' + id)
-			.pipe(map(r => {
+		const result = <any>await this._http
+			.get('/event/' + id)
+			.pipe(map((r: IComment) => {
 				const model = new CommentModel(r);
 				model.options.children = model.options.children.map(c => new CommentModel(c));
 				return model;
