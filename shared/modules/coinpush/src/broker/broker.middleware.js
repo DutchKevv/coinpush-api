@@ -126,4 +126,3 @@ class BrokerMiddleware extends events_1.EventEmitter {
     }
 }
 exports.BrokerMiddleware = BrokerMiddleware;
-//# sourceMappingURL=broker.middleware.js.map
