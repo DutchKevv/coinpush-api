@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, Pipe, PipeTransform, OnDestroy, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, Pipe, PipeTransform, OnDestroy, ChangeDetectorRef, ViewEncapsulation, EventEmitter } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { ActivatedRoute, Router } from "@angular/router";
 import { CommentService } from "../../services/comment.service";
@@ -27,12 +27,12 @@ function linkify(inputText) {
 	return replacedText;
 }
 
-function getRandomNumber(until: number, without?: Array<number>) {
-	let number, maxtries = 10, i = 0;
+function getRandomNumber(until: number, without: Array<number> = []) {
+	let number, maxTries = 10, i = 0;
 
 	do {
 		number = Math.floor(Math.random() * until) + 1;
-	} while (i++ < maxtries && !without.includes(number));
+	} while (i++ < maxTries && without.includes(number));
 
 	return number;
 }
@@ -70,7 +70,7 @@ export class SocialFeedComponent implements OnInit, OnDestroy {
 	@Input() public scrollHandle: HTMLElement;
 
 	public comments$: BehaviorSubject<Array<CommentModel>> = new BehaviorSubject([]);
-	public isLoading: boolean = true;
+	public isLoading$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 	public filterModel: any = {
 		type: 'all'
 	};
@@ -186,7 +186,7 @@ export class SocialFeedComponent implements OnInit, OnDestroy {
 		const urlPath = this._route.snapshot.url[0].path;
 		let items = [];
 
-		this.isLoading = true;
+		this.isLoading$.next(true);
 
 		switch (urlPath) {
 			case 'user':
@@ -199,7 +199,7 @@ export class SocialFeedComponent implements OnInit, OnDestroy {
 				items = await this.commentService.findTimeline(this._offset);
 		}
 
-		this.isLoading = false;
+		this.isLoading$.next(false);
 
 		if (!items.length) {
 			this.unbindScroll();
@@ -227,15 +227,16 @@ export class SocialFeedComponent implements OnInit, OnDestroy {
 		const positions = [];
 		
 		while(risersFallersNr-- > 0) {
-			positions.push(getRandomNumber(comments.length, positions));
-			this._mixRiserFallers(comments, positions[positions.length - 1]);
+			const randomPosition = getRandomNumber(comments.length, positions);
+			positions.push(randomPosition);
+			this._mixRiserFallers(comments, randomPosition);
 		}
 		
 		return comments;
 	}
 
 	private _onScroll(event): void {
-		if (!this.isLoading && event.target.scrollHeight - event.target.scrollTop - SCROLL_LOAD_TRIGGER_OFFSET <= event.target.clientHeight)
+		if (!this.isLoading$.getValue() && event.target.scrollHeight - event.target.scrollTop - SCROLL_LOAD_TRIGGER_OFFSET <= event.target.clientHeight)
 			this._load();
 	}
 
@@ -245,7 +246,7 @@ export class SocialFeedComponent implements OnInit, OnDestroy {
 
 	// risers and fallers
 	private _mixRiserFallers(comments: Array<CommentModel>, position?: number): void {
-		position = position || getRandomNumber(comments.length) + 1;
+		position = position || getRandomNumber(comments.length);
 
 		const sortedByDayAmount = this._cacheService.symbols.sort((a, b) => a.options.changedDAmount - b.options.changedDAmount);
 		const risers = sortedByDayAmount.slice(-20);

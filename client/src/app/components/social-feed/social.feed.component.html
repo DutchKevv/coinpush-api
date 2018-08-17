@@ -145,10 +145,7 @@
 			</div>
 		</ng-container>
 	</div>
-	<!-- <div *ngIf="isLoading" class="spinner" style="margin: 20px auto;">
-		<div class="dot1"></div>
-		<div class="dot2"></div>
-	</div> -->
+	<div *ngIf="isLoading$ | async" class="spinner spinner-no-fade" style="margin: 40px auto;"></div>
 </div>
 <!-- 
 <div class="d-none d-lg-block" style="padding-top: 20px;">

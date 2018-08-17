@@ -7,6 +7,11 @@
     height: 60px;
     opacity: 0;
     animation: spin 2s linear infinite, fade-in .8s linear forwards;
+
+    &.spinner-no-fade {
+        animation: spin 2s linear infinite;
+        opacity: 1;
+    }
 }
 
 @keyframes spin {

@@ -12,6 +12,7 @@
 @import '../../style/sprite/spritesheet';
 @import '../../style/variables/variables';
 @import '../../style/helpers/normalize';
+@import '../../style/helpers/spinner';
 
 .g-username,
 .g-link {
@@ -145,9 +146,14 @@ app-comment-box {
 		padding: 5px;
 
 		div {
+			
 			a {
 				display: block;
-				margin-bottom: 2px;
+
+				&:first-child {
+					margin-bottom: 5px;
+					margin-top: 3px;
+				}
 			}
 
 			span {
@@ -176,7 +182,7 @@ app-comment-box {
 	}
 
 	main {
-		padding: 14px 20px;
+		padding: 14px 14px;
 
 		.comment-image {
 			display: block;
