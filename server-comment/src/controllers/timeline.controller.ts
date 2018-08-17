@@ -12,7 +12,6 @@ export const timelineController = {
 	 * @param params 
 	 */
 	async get(reqUser: IReqUser, params: { toUserId: string, offset: any, limit: any }) {
-		console.log('asfdassdfsdf')
 		let comments = <Array<any>>await Comment
 			.find({
 				toUser: { $eq: undefined },
