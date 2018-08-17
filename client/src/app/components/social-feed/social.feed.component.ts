@@ -6,8 +6,8 @@ import { BehaviorSubject } from "rxjs";
 import { CommentModel } from "../../models/comment.model";
 import { CacheService } from '../../services/cache.service';
 
-const MAX_COMMENT_LENGTH = 200;
-const SCROLL_LOAD_TRIGGER_OFFSET = 400;
+const MAX_COMMENT_LENGTH = 400;
+const SCROLL_LOAD_TRIGGER_OFFSET = 800;
 
 function linkify(inputText) {
 	var replacedText, replacePattern1, replacePattern2, replacePattern3;

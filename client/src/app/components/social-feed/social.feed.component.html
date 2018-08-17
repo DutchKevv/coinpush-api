@@ -92,7 +92,7 @@
 						<img [attr.src]="img">
 					</a>
 					<p [innerHtml]="comment.options.content | parseCommentContent"></p>
-					<a *ngIf="comment.options.content.length > 200" (click)="onClickShowMoreText(comment, $event)" class="showMoreTextButton">show
+					<a *ngIf="comment.options.content.length > 400" (click)="onClickShowMoreText(comment, $event)" class="showMoreTextButton">show
 						more
 					</a>
 				</main>
