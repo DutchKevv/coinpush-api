@@ -12,5 +12,12 @@
         "email": "coindesk-company@coinpush.app",
         "img": "coindesk.jpg",
         "password": "test"
+    },
+    {
+        "name": "IG",
+        "id": "ig",
+        "email": "ig@coinpush.app",
+        "img": "ig.png",
+        "password": "test"
     }
 ]

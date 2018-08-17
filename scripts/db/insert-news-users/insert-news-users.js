@@ -20,9 +20,9 @@ companies.forEach(company => {
     request.post('https://localhost/api/v1/user', { json: company, headers }, (error, response, body) => {
         if (error)
             return console.error(error);
-
+console.log(body);
         if (!body.token)
-            return;
+            return console.error('no user token!');
         
         switch (response.statusCode) {
             case 200:

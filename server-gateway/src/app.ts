@@ -292,8 +292,8 @@ export const app = {
 
 			// unknown error
 			else {
-				// log.error('API', error);
-				res.status(500).send('Unknown error');
+				log.error('API', error);
+				res.status(500).send('Unknown server error');
 			}
 		});
 

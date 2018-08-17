@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose';
 import * as bcrypt from 'bcryptjs';
 import { isEmail } from 'validator';
 import { join } from 'path';
-import { BROKER_GENERAL_TYPE_OANDA, USER_GENDER_UNKNOWN, USER_GENDER_MALE, USER_GENDER_FEMALE, USER_GENDER_OTHER } from 'coinpush/src/constant';
+import { USER_GENDER_UNKNOWN, USER_GENDER_MALE, USER_GENDER_FEMALE, USER_GENDER_OTHER } from 'coinpush/src/constant';
 import { IUser } from "coinpush/src/interface/IUser.interface";
 import { countries } from "coinpush/src/util/countries";
 import * as beautifyUnique from 'mongoose-beautiful-unique-validation';

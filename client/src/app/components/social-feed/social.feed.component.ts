@@ -213,7 +213,12 @@ export class SocialFeedComponent implements OnInit, OnDestroy {
 	 * @param comments 
 	 */
 	private _mixComments(comments: Array<CommentModel>): Array<CommentModel> {
-		this._mixRiserFallers(comments);
+		let risersFallersNr = Math.floor(comments.length / 5);
+		while(risersFallersNr--) {
+			this._mixRiserFallers(comments);
+			console.log('do!');
+		}
+		
 		
 		return comments;
 	}

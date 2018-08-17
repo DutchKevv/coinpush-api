@@ -25,7 +25,8 @@
               "src/google-services.json",
               "src/manifest.json",
               "src/robots.txt",
-              "src/sitemap.xml"
+              "src/sitemap.xml",
+              "src/app/style/sprite/spritesheet.png"
             ],
             "styles": [
               "src/app/style/sprite/spritesheet.css"

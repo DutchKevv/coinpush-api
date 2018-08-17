@@ -3,7 +3,7 @@ import { User } from "../schemas/user.schema";
 import { Comment } from "../schemas/comment.schema";
 import { CCNScraper } from "./scrapers/ccn.scraper";
 import { CoinDeskScraper } from "./scrapers/coindesk.scraper";
-import { Types } from "mongoose";
+import { IGScraper } from "./scrapers/ig.scraper";
 
 
 export interface IArticle {
@@ -31,6 +31,7 @@ export class NewsAggregator {
     }
 
     public start() {
+        this._loopApis();
         this._loopInterval = setInterval(() => this._loopApis(), this._loopIntervalDelay);
     }
 
@@ -73,5 +74,6 @@ export class NewsAggregator {
     private _installApis() {
         this._apis.push(new CCNScraper());
         this._apis.push(new CoinDeskScraper());
+        this._apis.push(new IGScraper());
     }
 }

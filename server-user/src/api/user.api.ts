@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import { userController } from '../controllers/user.controller';
-import { G_ERROR_DUPLICATE_FIELD } from 'coinpush/src/constant';
 
 const router = Router();
 
