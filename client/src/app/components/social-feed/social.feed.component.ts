@@ -28,11 +28,11 @@ function linkify(inputText) {
 }
 
 function getRandomNumber(until: number, without?: Array<number>) {
-	let number;
+	let number, maxtries = 10, i = 0;
 
 	do {
 		number = Math.floor(Math.random() * until) + 1;
-	} while (!without.includes(number));
+	} while (i++ < maxtries && !without.includes(number));
 
 	return number;
 }
@@ -225,8 +225,8 @@ export class SocialFeedComponent implements OnInit, OnDestroy {
 	private _mixComments(comments: Array<CommentModel>): Array<CommentModel> {
 		let risersFallersNr = Math.floor(comments.length / 5);
 		const positions = [];
-
-		while(risersFallersNr--) {
+		
+		while(risersFallersNr-- > 0) {
 			positions.push(getRandomNumber(comments.length, positions));
 			this._mixRiserFallers(comments, positions[positions.length - 1]);
 		}
