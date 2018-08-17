@@ -27,6 +27,16 @@ function linkify(inputText) {
 	return replacedText;
 }
 
+function getRandomNumber(until: number, without?: Array<number>) {
+	let number;
+
+	do {
+		number = Math.floor(Math.random() * until) + 1;
+	} while (!without.includes(number));
+
+	return number;
+}
+
 // function shortify(inputText: string) {
 // 	if (inputText.length > 100) {
 // 		const preText = inputText.substring(0, 100);
@@ -214,11 +224,12 @@ export class SocialFeedComponent implements OnInit, OnDestroy {
 	 */
 	private _mixComments(comments: Array<CommentModel>): Array<CommentModel> {
 		let risersFallersNr = Math.floor(comments.length / 5);
+		const positions = [];
+
 		while(risersFallersNr--) {
-			this._mixRiserFallers(comments);
-			console.log('do!');
+			positions.push(getRandomNumber(comments.length, positions));
+			this._mixRiserFallers(comments, positions[positions.length - 1]);
 		}
-		
 		
 		return comments;
 	}
@@ -232,14 +243,15 @@ export class SocialFeedComponent implements OnInit, OnDestroy {
 
 	}
 
-	private _mixRiserFallers(comments: Array<CommentModel>): void {
-		// risers and fallers
+	// risers and fallers
+	private _mixRiserFallers(comments: Array<CommentModel>, position?: number): void {
+		position = position || getRandomNumber(comments.length) + 1;
+
 		const sortedByDayAmount = this._cacheService.symbols.sort((a, b) => a.options.changedDAmount - b.options.changedDAmount);
 		const risers = sortedByDayAmount.slice(-20);
 		const fallers = sortedByDayAmount.slice(0, 20)
 		const randomUpSymbolModel = risers[Math.floor(Math.random()*risers.length)];
 		const randomDownSymbolModel = fallers[Math.floor(Math.random()*fallers.length)];
-		const randomKey = Math.floor(Math.random() * comments.length) + 1;
 
 		const commentModel = new CommentModel({
 			data: {
@@ -250,7 +262,7 @@ export class SocialFeedComponent implements OnInit, OnDestroy {
 			content: ''
 		});
 		
-		comments.splice(randomKey, 0, commentModel);
+		comments.splice(position, 0, commentModel);
 	}
 
 	ngOnDestroy() {
