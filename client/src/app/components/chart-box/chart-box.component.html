@@ -10,19 +10,19 @@
 			<i class="fa fa-search-plus"></i>
 		</button>
 	</li>
-	<li class="timeframe-buttons">
+	<!-- <li class="timeframe-buttons">
 		<a [ngClass]="{active: config.timeFrame === 'M1'}">1D</a>
 		<a [ngClass]="{active: config.timeFrame === 'M1'}">1W</a>
 		<a [ngClass]="{active: config.timeFrame === 'M1'}">1M</a>
 		<a [ngClass]="{active: config.timeFrame === 'M1'}">1Y</a>
-	</li>
-	<!-- <li class="dropdown">
+	</li> -->
+	<li class="dropdown">
 		<select (change)="toggleTimeFrame($event.target.value)">
 			<option value="M1" [selected]="config.timeFrame === 'M1'">Minute</option>
 			<option value="H1" [selected]="config.timeFrame === 'H1'">Hour</option>
 			<option value="D" [selected]="config.timeFrame === 'D'">Day</option>
 		</select>
-	</li> -->
+	</li>
 	<li class="dropdown d-none d-xl-block">
 		<select (change)="changeGraphType($event.target.value)">
 			<option value="line" [selected]="config.graphType === 'line'">Line</option>
