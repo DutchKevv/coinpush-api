@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, EventEmitter, ViewChild, Output, ElementRef, HostListener, OnInit } from "@angular/core";
+import { Component, ChangeDetectionStrategy, EventEmitter, ViewChild, Output, ElementRef, HostListener, OnInit, ChangeDetectorRef } from "@angular/core";
 import { Subject } from "rxjs";
 import { HeaderComponent } from "./components/header/header.component";
 import { app } from "core/app";
@@ -8,6 +8,7 @@ import { EventService } from "./services/event.service";
 import { CacheService } from "./services/cache.service";
 import { SocketService } from "./services/socket.service";
 import { AuthenticationService } from "./services/authenticate.service";
+import { Router, NavigationStart, NavigationEnd } from "@angular/router";
 
 declare let window: any;
 declare let navigator: any;
@@ -34,6 +35,7 @@ export class AppComponent implements OnInit {
 	
 	private _lastTimeBackPress = 0;
 	private _timePeriodToExit = 2000;
+	private _routerEventsSub;
 
 	/**
 	 * hide banner on keyboard show
@@ -72,7 +74,9 @@ export class AppComponent implements OnInit {
 		public authenticationService: AuthenticationService,
 		private _eventService: EventService,
 		private _cacheService: CacheService,
-		private _socketService: SocketService) {
+		private _socketService: SocketService,
+		private _router: Router,
+		private _changeDetectorRef: ChangeDetectorRef) {
 		this._cacheService.init(); // cacheService must init before eventService
 		this._eventService.init();
 	}
@@ -83,6 +87,12 @@ export class AppComponent implements OnInit {
 
 		// open websocket
 		this._socketService.connect();
+
+		this._routerEventsSub = this._router.events.subscribe((event) => {
+			if (event instanceof NavigationEnd) {
+				this._changeDetectorRef.detectChanges();
+			}
+		});
 	}
 
 	private _onClickMobileBackButton(event) {
