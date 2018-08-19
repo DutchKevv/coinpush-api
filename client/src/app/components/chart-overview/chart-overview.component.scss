@@ -44,7 +44,7 @@ app-instrument-list {
 
 app-chart-box {
     // flex: 1 1 100%;
-    height: 50%;
+    height: calc(50% - 10px);
     background: $background-dark;
     display: flex;
     flex-flow: column;

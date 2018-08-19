@@ -128,7 +128,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit {
 			this._toggleLoading(false);
 
 			clearTimeout(this._resizeTimeout);
-		}, 500);
+		}, 100);
 		console.log(WINDOW_SIZE_MAX_MOBILE);
 
 		return false;

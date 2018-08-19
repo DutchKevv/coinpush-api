@@ -149,7 +149,9 @@
 			</article>
 		</ng-container>
 	</div>
-	<div *ngIf="isLoading$ | async" class="spinner spinner-no-fade" style="margin: 40px auto;"></div>
+	<div *ngIf="isLoading$ | async" style="padding: 20px;">
+		<div class="spinner spinner-no-fade" style="margin: 0 auto;"></div>
+	</div>
 </div>
 <!-- 
 <div class="d-none d-lg-block" style="padding-top: 20px;">

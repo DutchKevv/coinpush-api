@@ -8,8 +8,9 @@
 :host {
 	position: absolute;
 	z-index: 2000;
-	// transform: translateX(-100%);
-	bottom: 0;	
+	bottom: 50px;
+	left: 0;
+	right: 0;
 	display: block;
 	width: 100%;
 
@@ -28,7 +29,6 @@
 	font-weight: bold;
 	text-align: center;
 	padding: 10px 20px;
-	width: 100%;
 	border: none;
 	border-radius: 0;
 	opacity: 0;

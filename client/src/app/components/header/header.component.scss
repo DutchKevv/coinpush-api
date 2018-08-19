@@ -20,7 +20,7 @@ $header-icon-padding-x: 12px;
     border-top: 1px solid $border-color-grey;
     height: 40px;
     background: black;
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 4px 7px rgba(100, 100, 100, 0.4);
 	
 	&.searchOpen {
 		.fa-filter,
@@ -47,6 +47,14 @@ $header-icon-padding-x: 12px;
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	font-size: 20px;
+}
+
+app-notification-menu {
+	margin-left: auto;
+
+	@media only screen and (min-width : $grid-width-xl) {
+		position: absolute;
+	} 
 }
 
 .fa {
@@ -209,7 +217,7 @@ $header-icon-padding-x: 12px;
 	}
 
 	.search-container {
-		left: calc(50% - 100px - 250px);
+		left: calc(50% - 210px);
 	}
 
 	span {
