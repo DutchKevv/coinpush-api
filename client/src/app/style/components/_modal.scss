@@ -29,7 +29,8 @@
     background: transparent;
     border-left: 0;
     border-right: 0;
-
+    border-radius: 0;
+    
     @media only screen and (min-width : 768px) {
 		border: 1px solid rgba(0, 0, 0, 0.2);
 	}
@@ -37,6 +38,7 @@
 
 .modal-header {
     background: #151414;
+    border-radius: 0;
     padding: 10px;
 
     .modal-title {
