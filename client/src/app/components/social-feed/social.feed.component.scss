@@ -111,7 +111,8 @@ app-comment-box {
 	margin-bottom: 20px;
 }
 
-.comment-container {
+
+article {
 	background: white;
 	margin-bottom: 15px;
 	font-size: 12px;
@@ -348,6 +349,11 @@ app-comment-box {
 			flex-grow: 1;
 			text-align: center;
 		}
+	}
+
+	&.comment-ad-container {
+		min-height: 300px;
+		text-align: center;
 	}
 
 	.more-post-actions-button {

@@ -3,7 +3,7 @@ import * as rr from 'requestretry';
 import { IArticle } from '../news.aggregator';
 
 const URL = 'https://www.ig.com/au/forex-news';
-const CONTENT_LENGTH = 250;
+const CONTENT_LENGTH = 500;
 
 export class IGScraper {
 

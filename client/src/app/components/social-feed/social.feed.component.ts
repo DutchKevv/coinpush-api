@@ -226,8 +226,8 @@ export class SocialFeedComponent implements OnInit, OnDestroy {
 	private _mixComments(comments: Array<CommentModel>): void {
 		let risersFallersNr = Math.floor(comments.length / 5);
 		const positions = [];
-		
-		while(risersFallersNr-- > 0) {
+
+		while (risersFallersNr-- > 0) {
 			const randomPosition = getRandomNumber(comments.length, positions);
 			positions.push(randomPosition);
 			this._mixRiserFallers(comments, randomPosition);
@@ -238,24 +238,35 @@ export class SocialFeedComponent implements OnInit, OnDestroy {
 
 	private _mixAds(comments: Array<CommentModel>): void {
 		if (app.platform.isApp) {
-			const banner = window['AdMob'].createBanner({
-				adSize: window['AdMob'].AD_SIZE.MEDIUM_RECTANGLE,
-				overlap: true,
-				// height: 60, // valid when set adSize 'CUSTOM'
-				adId: 'ca-app-pub-1181429338292864/6989656167',
-				position: window['AdMob'].AD_POSITION.BOTTOM_CENTER,
-				autoShow: true,
-				isTesting: true
+			// const banner = window['AdMob'].createBanner({
+			// 	adSize: window['AdMob'].AD_SIZE.MEDIUM_RECTANGLE,
+			// 	overlap: true,
+			// 	// height: 60, // valid when set adSize 'CUSTOM'
+			// 	adId: 'ca-app-pub-1181429338292864/6989656167',
+			// 	position: window['AdMob'].AD_POSITION.BOTTOM_CENTER,
+			// 	autoShow: true,
+			// 	isTesting: true
+			// });
+
+			// console.log(banner);
+		} else {
+			const ad = new CommentModel({
+				type: 'ad',
+				content: ''
 			});
 
-			console.log(banner);
-		} else {
+			comments.push(ad);
+
 			setTimeout(() => {
 				(window['adsbygoogle'] = window['adsbygoogle'] || []).push({
 					google_adtest: 'on'
 				});
+
+				// window['adsbygoogle'].push({
+				// 	google_adtest: 'on'
+				// });
 			}, 2000);
-			
+
 		}
 	}
 
@@ -266,8 +277,8 @@ export class SocialFeedComponent implements OnInit, OnDestroy {
 		const sortedByDayAmount = this._cacheService.symbols.sort((a, b) => a.options.changedDAmount - b.options.changedDAmount);
 		const risers = sortedByDayAmount.slice(-20);
 		const fallers = sortedByDayAmount.slice(0, 20)
-		const randomUpSymbolModel = risers[Math.floor(Math.random()*risers.length)];
-		const randomDownSymbolModel = fallers[Math.floor(Math.random()*fallers.length)];
+		const randomUpSymbolModel = risers[Math.floor(Math.random() * risers.length)];
+		const randomDownSymbolModel = fallers[Math.floor(Math.random() * fallers.length)];
 
 		const commentModel = new CommentModel({
 			data: {
@@ -277,7 +288,7 @@ export class SocialFeedComponent implements OnInit, OnDestroy {
 			type: 'intel-momentum',
 			content: ''
 		});
-		
+
 		comments.splice(position, 0, commentModel);
 	}
 
@@ -297,3 +308,13 @@ export class SocialFeedComponent implements OnInit, OnDestroy {
 			this._routeParamsSub.unsubscribe();
 	}
 }
+
+const AD_ARTICLE_HTML = `
+		<ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-1181429338292864"
+		 data-ad-slot="5683371400"></ins>
+		 `;
+
+const AD_FEED_HTML = `
+		<ins class="adsbygoogle" style="display:block;" data-ad-format="fluid" data-ad-layout-key="-6t+ed+2i-1n-4w" data-ad-client="ca-pub-1181429338292864"
+		  data-ad-slot="6793790015" data-adtest="on"></ins>
+		`;

@@ -53,7 +53,12 @@
 		<!-- <app-comment-box *ngIf="!commentId" [userId]="userId" (newMessage)="addMessage($event)"></app-comment-box> -->
 
 		<ng-container *ngFor="let comment of comments$ | async; trackBy: trackByFn">
-			<div *ngIf="comment.options.type === 'intel-momentum'" class="comment-container comment-alert-container">
+			<article *ngIf="comment.options.type === 'ad'" class="comment-ad-container">
+				(ad)
+				<ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-1181429338292864"
+				 data-ad-slot="5683371400"></ins>
+			</article>
+			<article *ngIf="comment.options.type === 'intel-momentum'" class="comment-alert-container">
 				<a [routerLink]="['/symbols']" [queryParams]="{symbol: comment.options.data.symbolUpModel.options.name}">
 					<i class="symbol-img symbol-img-{{comment.options.data.symbolUpModel.options.name}}"></i>
 					<div style="width: 100%">
@@ -70,12 +75,9 @@
 						<p><i class="fa fa-arrow-down"></i>{{comment.options.data.symbolDownModel.options.changedDAmount}}%</p>
 					</div>
 				</a>
-			</div>
+			</article>
 
-			<ins class="adsbygoogle" style="display:block;" data-ad-format="fluid" data-ad-layout-key="-6t+ed+2i-1n-4w" data-ad-client="ca-pub-1181429338292864"
-			 data-ad-slot="6793790015" data-adtest="on"></ins>
-
-			<article *ngIf="comment.options.type !== 'intel-momentum'" class="comment-container" [ngClass]="{'fade-in': comment.options.isNew}">
+			<article *ngIf="!comment.options.type" [ngClass]="{'fade-in': comment.options.isNew}">
 				<header>
 					<a [attr.href]="comment.options.createUser ? '#/user/' + comment.options.createUser?._id : null">
 						<img [attr.src]="comment.options.createUser?.img | NormalizeImgUrl" />
