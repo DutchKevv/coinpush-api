@@ -5,6 +5,7 @@ import { CommentService } from "../../services/comment.service";
 import { BehaviorSubject } from "rxjs";
 import { CommentModel } from "../../models/comment.model";
 import { CacheService } from '../../services/cache.service';
+import { app } from 'core/app';
 
 const MAX_COMMENT_LENGTH = 400;
 const SCROLL_LOAD_TRIGGER_OFFSET = 800;
@@ -222,7 +223,7 @@ export class SocialFeedComponent implements OnInit, OnDestroy {
 	 * Add advertisings, alerts etc in between comments
 	 * @param comments 
 	 */
-	private _mixComments(comments: Array<CommentModel>): Array<CommentModel> {
+	private _mixComments(comments: Array<CommentModel>): void {
 		let risersFallersNr = Math.floor(comments.length / 5);
 		const positions = [];
 		
@@ -231,17 +232,31 @@ export class SocialFeedComponent implements OnInit, OnDestroy {
 			positions.push(randomPosition);
 			this._mixRiserFallers(comments, randomPosition);
 		}
-		
-		return comments;
+
+		this._mixAds(comments);
 	}
 
-	private _onScroll(event): void {
-		if (!this.isLoading$.getValue() && event.target.scrollHeight - event.target.scrollTop - SCROLL_LOAD_TRIGGER_OFFSET <= event.target.clientHeight)
-			this._load();
-	}
+	private _mixAds(comments: Array<CommentModel>): void {
+		if (app.platform.isApp) {
+			const banner = window['AdMob'].createBanner({
+				adSize: window['AdMob'].AD_SIZE.MEDIUM_RECTANGLE,
+				overlap: true,
+				// height: 60, // valid when set adSize 'CUSTOM'
+				adId: 'ca-app-pub-1181429338292864/6989656167',
+				position: window['AdMob'].AD_POSITION.BOTTOM_CENTER,
+				autoShow: true,
+				isTesting: true
+			});
 
-	private _toggleLoading(state: boolean) {
-
+			console.log(banner);
+		} else {
+			setTimeout(() => {
+				(window['adsbygoogle'] = window['adsbygoogle'] || []).push({
+					google_adtest: 'on'
+				});
+			}, 2000);
+			
+		}
 	}
 
 	// risers and fallers
@@ -264,6 +279,15 @@ export class SocialFeedComponent implements OnInit, OnDestroy {
 		});
 		
 		comments.splice(position, 0, commentModel);
+	}
+
+	private _onScroll(event): void {
+		if (!this.isLoading$.getValue() && event.target.scrollHeight - event.target.scrollTop - SCROLL_LOAD_TRIGGER_OFFSET <= event.target.clientHeight)
+			this._load();
+	}
+
+	private _toggleLoading(state: boolean) {
+
 	}
 
 	ngOnDestroy() {

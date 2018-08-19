@@ -60,7 +60,7 @@
 						<p>{{comment.options.data.symbolUpModel.options.displayName}}</p>
 						<p><i class="fa fa-arrow-up"></i>{{comment.options.data.symbolUpModel.options.changedDAmount}}%</p>
 					</div>
-					
+
 				</a>
 
 				<a [routerLink]="['/symbols']" [queryParams]="{symbol: comment.options.data.symbolDownModel.options.name}">
@@ -72,7 +72,10 @@
 				</a>
 			</div>
 
-			<div *ngIf="comment.options.type !== 'intel-momentum'" class="comment-container" [ngClass]="{'fade-in': comment.options.isNew}">
+			<ins class="adsbygoogle" style="display:block;" data-ad-format="fluid" data-ad-layout-key="-6t+ed+2i-1n-4w" data-ad-client="ca-pub-1181429338292864"
+			 data-ad-slot="6793790015" data-adtest="on"></ins>
+
+			<article *ngIf="comment.options.type !== 'intel-momentum'" class="comment-container" [ngClass]="{'fade-in': comment.options.isNew}">
 				<header>
 					<a [attr.href]="comment.options.createUser ? '#/user/' + comment.options.createUser?._id : null">
 						<img [attr.src]="comment.options.createUser?.img | NormalizeImgUrl" />
@@ -131,7 +134,6 @@
 									</span>
 								</a>
 								<span>&nbsp;{{child.options.fromNow}}</span>
-								<!-- <span>&nbsp;{{child.options.created | date:'shortTime'}}</span> -->
 								<i class="fa fa-ellipsis-v more-comment-actions-button" (click)="showMoreCommentActions(child)"></i>
 							</div>
 						</div>
@@ -142,7 +144,7 @@
 						<input (keyup.enter)="respond($event, comment)" type="text" placeholder="Write a comment..." />
 					</div>
 				</footer>
-			</div>
+			</article>
 		</ng-container>
 	</div>
 	<div *ngIf="isLoading$ | async" class="spinner spinner-no-fade" style="margin: 40px auto;"></div>

@@ -1,4 +1,4 @@
-import { EventEmitter, Injectable, NgZone, Output } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { SymbolModel } from "../models/symbol.model";
 import { UserService } from './user.service';
 import { app } from '../../core/app';
@@ -18,7 +18,6 @@ export class CacheService {
 	public favoritesLength$: BehaviorSubject<number> = new BehaviorSubject(0);
 
 	constructor(
-		private _zone: NgZone,
 		private _userService: UserService,
 		private _socketService: SocketService,
 		private _http: HttpClient

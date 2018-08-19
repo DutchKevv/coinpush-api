@@ -27,3 +27,4 @@ function update() {
 exports.config = {};
 update();
 setInterval(update, UPDATE_INTERVAL);
+//# sourceMappingURL=util-config.js.map

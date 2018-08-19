@@ -54,27 +54,28 @@ export class App extends MicroEvent {
 
         if (/(android)/i.test(navigator.userAgent)) { // for android & amazon-fireos
             admobid.banner = 'ca-app-pub-1181429338292864/7213864636';
-            admobid.interstitial = 'ca-app-pub-1181429338292864/7213864636';
+            // admobid.banner = 'ca-app-pub-1181429338292864~6890431004';
+            admobid.interstitial = 'ca-app-pub-1181429338292864~6890431004';
         } else if (/(ipod|iphone|ipad)/i.test(navigator.userAgent)) { // for ios
-            admobid.banner = 'ca-app-pub-1181429338292864/7213864636';
-            admobid.interstitial = 'ca-app-pub-1181429338292864/7213864636';
+            admobid.banner = 'ca-app-pub-1181429338292864~6890431004';
+            admobid.interstitial = 'ca-app-pub-1181429338292864~6890431004';
         }
 
         window['AdMob'].createBanner({
-            adSize: 'BANNER',
+            adSize:  window['AdMob'].AD_SIZE.BANNER,
             overlap: true,
             // height: 60, // valid when set adSize 'CUSTOM'
             adId: admobid.banner,
             position: window['AdMob'].AD_POSITION.BOTTOM_CENTER,
             autoShow: true,
-            isTesting: false
+            isTesting: true
         });
 
         document.addEventListener('onAdFailLoad', (error) => {
             console.log('Could not load ad', error);
 
             if (++retry < 10) {
-                // setTimeout(() =>  this.loadAds(retry), 5000);
+                // setTimeout(() =>  this.loadAds(retry), 1000);
             }
         });
     }

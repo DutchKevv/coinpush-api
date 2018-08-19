@@ -18,7 +18,7 @@
     <meta name="msapplication-navbutton-color" content="#000000">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="shortcheaderut icon" href="favicon.ico" type="image/x-icon">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="assets/font-awesome/css/font-awesome.min.css">
 
@@ -123,13 +123,6 @@
     </style>
 
     <!-- inject:js:adsense -->
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    <script>
-        (adsbygoogle = window.adsbygoogle || []).push({
-            google_ad_client: "ca-pub-1181429338292864",
-            enable_page_level_ads: true
-        });
-    </script>
 </head>
 
 <body>
@@ -167,7 +160,6 @@
                 isReady: false,
                 isReady$: Promise.resolve(),
                 version: '',
-                isSecure: location.protocol === 'https:',
                 // isApp: true,
                 isApp: document.URL.indexOf('file://') > -1,
                 isIOS: /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream,
@@ -193,6 +185,18 @@
              * 
              */
             if (!window.platform.isApp) {
+                // google adsense for browser
+                const script = document.createElement('script');
+                script.async = true;
+                script.src = '//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
+                document.head.appendChild(script);
+
+                // (adsbygoogle = window.adsbygoogle || []).push({
+                //     google_ad_client: "ca-pub-1181429338292864",
+                //     enable_page_level_ads: true,
+                //     google_adtest: 'on'
+                // });
+
                 window.platform.isReady = true;
                 return;
             }

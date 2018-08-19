@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Location } from '@angular/common';
 import { Router, NavigationStart, NavigationEnd } from '@angular/router';
+import { BROKER_GENERAL_TYPE_CC, BROKER_GENERAL_TYPE_OANDA } from 'coinpush/src/constant';
 
 let historyStart = history.length;
 
@@ -17,12 +18,12 @@ let historyStart = history.length;
 
 export class HeaderComponent {
 	@Input() public titleText$: Subject<string>;
-	
+
 	@Output() public filterClicked$: BehaviorSubject<void | boolean> = new BehaviorSubject(false);
 	@Output() public navClicked$: EventEmitter<void | boolean> = new EventEmitter();
 	@Output() public searchResults$: BehaviorSubject<any> = new BehaviorSubject(null);
 	@Output() public searchOpen$: EventEmitter<boolean> = new EventEmitter();
-	
+
 	@ViewChild('dropdown') public dropdown: ElementRef;
 	@ViewChild('input') public inputRef: ElementRef;
 
@@ -63,7 +64,7 @@ export class HeaderComponent {
 		private _location: Location,
 		private _changeDetectorRef: ChangeDetectorRef,
 		private _elementRef: ElementRef
-	) {}
+	) { }
 
 	ngOnInit() {
 
@@ -71,8 +72,8 @@ export class HeaderComponent {
 
 			if (event instanceof NavigationStart) {
 				// alert(window.location.href);
-				const isHome = event.url === '/' || event.url.includes('/symbols');
-9
+				const isHome = event.url === '/' || (event.url.includes('/symbols') && !window.location.hash);
+				
 				this.showBackButton = !isHome;
 				this.showFilterButton = isHome || event.url.includes('/symbols');
 
@@ -80,7 +81,7 @@ export class HeaderComponent {
 			}
 
 			else if (event instanceof NavigationEnd) {
-				
+
 				this.searchOpen = false;
 				this.filterClicked$.next(false);
 			}
@@ -89,7 +90,7 @@ export class HeaderComponent {
 
 	public onClickBackButton() {
 		this._location.back();
-		
+
 		setTimeout(() => {
 			requestAnimationFrame(() => {
 				this._changeDetectorRef.detectChanges();
@@ -98,6 +99,8 @@ export class HeaderComponent {
 	}
 
 	public onSearchKeyUp(event): void {
+		this.toggleDropdownVisibility(true);
+
 		const value = event.target.value.trim();
 
 		if (!value.length) {
@@ -105,13 +108,13 @@ export class HeaderComponent {
 			return;
 		}
 
+		// get popular symbols
 		const currentResult = {
-			symbols: this._cacheService.getByText(value).slice(0, 5),
+			symbols: this._cacheService.getByText(value).sort((a, b) => b.options.volume - a.options.volume).slice(0, 5),
 			channels: [],
 			users: [],
 		};
 
-		this.toggleDropdownVisibility(true);
 		this.searchResults$.next(currentResult);
 
 		const params = new HttpParams({

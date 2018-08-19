@@ -1,7 +1,7 @@
 .symbol-img {
     width: 30px;
     height: 30px;
-	background: url('/app/style/sprite/spritesheet.png');
+	background: url('spritesheet.png');
 	display: inline-block;
 }
 
