@@ -14,6 +14,7 @@
 
     background: $background-light;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     width: 250px;
     min-width: 250px;
     display: none;

@@ -35,9 +35,16 @@
 
     .timeframe-buttons {
         display: flex;
+        margin-right: 20px;
 
         a {
-            padding: 5px;
+            padding: 5px 20px;
+            line-height: 25px;
+            border-right: 1px solid grey;
+            
+            &:hover {
+                background: #085963;
+            }
         }
     }
 
@@ -139,6 +146,7 @@
 
 .indicator-container {
     overflow: auto;
+    -webkit-overflow-scrolling: touch;
     padding: 5px 0;
     position: absolute;
     top: 0;

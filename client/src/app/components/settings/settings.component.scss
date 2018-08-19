@@ -10,6 +10,7 @@
 
 :host {
 	overflow: auto;
+	-webkit-overflow-scrolling: touch;
 	display: block;
 
 	height: 100%;

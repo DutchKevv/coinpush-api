@@ -103,6 +103,7 @@
 
 .notification-drop-down-inner {
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .notification-drop-down-item {

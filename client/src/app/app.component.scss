@@ -26,10 +26,19 @@ footer {
 
     a {
         color: white;
-        font-size: 30px;
         width: 25%;
         text-align: center;
-        padding-top: 10px;
+        padding-top: 8px;
+
+        i {
+            font-size: 24px;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        p {
+            font-size: 10px;
+        }
     }
 
     @media only screen and (min-width : $grid-width-xl) {

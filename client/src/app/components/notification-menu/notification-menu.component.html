@@ -62,13 +62,12 @@
                         <b>{{notification.fromUserId.name}}</b>
                         liked your comment
                     </p>
-                    <p>
-                        <i class="fa fa-thumbs-up"></i>{{notification.fromNow}}</p>
+                    <p><i class="fa fa-thumbs-up"></i>{{notification.fromNow}}</p>
                 </div>
             </a>
             <a *ngIf="notification.type === 'symbol-alarm'" [routerLink]="['/symbols']" [queryParams]="{ symbol: notification.data.symbol }"
                 (click)="onClickNotification($event, notification)">
-                <span class="notification-image symbol-img-{{notification.data.symbol}}"></span>
+                <span class="symbol-img notification-image symbol-img-{{notification.data.symbol}}"></span>
                 <div class="notification-content">
                     <p>{{notification.data.symbol}} - ${{notification.data.target}}</p>
                     <p>
