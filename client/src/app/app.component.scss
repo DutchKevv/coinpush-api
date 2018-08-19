@@ -5,7 +5,7 @@
 @import 'style/helpers/normalize';
 
 .main-container {
-    padding: 40px 0;
+    padding: 40px 0 50px 0;
     height: 100%;
     
     @media screen and (min-width: $grid-width-xl) {
