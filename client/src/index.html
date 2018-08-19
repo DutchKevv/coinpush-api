@@ -40,11 +40,6 @@
             margin-top: env(safe-area-inset-top);
         }
 
-        body.app {
-            position: relative;
-            padding-bottom: 50px;
-        }
-
         body.app.ios {
             padding-bottom: calc(env(safe-area-inset-bottom) + 80px);
         }
@@ -136,7 +131,6 @@
     </script>
 
     <!-- inject:js:cordova -->
-
     <script>
         Raven.context(function () {
             window.BROWSERSUPPORTED = function () {

@@ -86,8 +86,8 @@ export class SocialFeedComponent implements OnInit, OnDestroy {
 	constructor(
 		public commentService: CommentService,
 		public changeDetectorRef: ChangeDetectorRef,
-		public _router: Router,
 		public userService: UserService,
+		private _elementRef: ElementRef,
 		private _route: ActivatedRoute,
 		private _cacheService: CacheService) {
 	}
@@ -261,11 +261,7 @@ export class SocialFeedComponent implements OnInit, OnDestroy {
 				(window['adsbygoogle'] = window['adsbygoogle'] || []).push({
 					google_adtest: 'on'
 				});
-
-				// window['adsbygoogle'].push({
-				// 	google_adtest: 'on'
-				// });
-			}, 2000);
+			}, 1000);
 
 		}
 	}

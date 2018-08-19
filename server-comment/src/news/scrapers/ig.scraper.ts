@@ -3,7 +3,6 @@ import * as rr from 'requestretry';
 import { IArticle } from '../news.aggregator';
 
 const URL = 'https://www.ig.com/au/forex-news';
-const CONTENT_LENGTH = 500;
 
 export class IGScraper {
 
@@ -47,7 +46,7 @@ export class IGScraper {
                 url: article.url,
                 title: child$('.news_content .marketNameWrapper').text(),
                 imgs: article.imgs,
-                content: child$('.text').text().substring(0, CONTENT_LENGTH),
+                content: child$('.text').text(),
                 createdAt: article.createdAt
             };
 

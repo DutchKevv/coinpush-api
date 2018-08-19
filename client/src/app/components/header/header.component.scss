@@ -6,7 +6,7 @@
 @import '../../style/helpers/normalize';
 @import '../../style/variables/variables';
 
-$header-icon-padding-x: 8px;
+$header-icon-padding-x: 12px;
 
 :host {
 	position: fixed;
@@ -66,15 +66,15 @@ $header-icon-padding-x: 8px;
 .fa-arrow-left {
 	font-size: 28px;
     line-height: 28px;
-    padding: 0 10px;
+    padding: 0 12px;
     padding-top: 4px;
 }
 
-.fa-navicon {
-	font-size: 35px;
-	padding: 0 $header-icon-padding-x;
-	padding-top: 3px;
-}
+// .fa-navicon {
+// 	font-size: 35px;
+// 	padding: 0 $header-icon-padding-x;
+// 	padding-top: 3px;
+// }
 
 .filter-btn {
 	
@@ -100,7 +100,7 @@ $header-icon-padding-x: 8px;
 }
 
 .fa-search {
-	margin-right: 5px;
+	margin: 0 8px;
 	font-size: 30px;
 	padding-top: 3px;
 }

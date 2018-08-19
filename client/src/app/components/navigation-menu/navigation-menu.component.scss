@@ -2,32 +2,33 @@
 @import '../../style/variables/variables';
 
 :host {
-    &.show {
-        animation: moveIn .2s ease-in-out forwards;
+    // &.show {
+    //     animation: moveIn .2s ease-in-out forwards;
 
-        .nav-overlay {
-            display: block;
+    //     .nav-overlay {
+    //         display: block;
             
-            animation: fadeIn .3s;
-        }
-    }
+    //         animation: fadeIn .3s;
+    //     }
+    // }
 
     background: $background-light;
     overflow-y: auto;
     width: 250px;
     min-width: 250px;
-    display: block;
+    display: none;
     position: absolute;
     top: 0;
-    transform: translateX(-250px);
+    // transform: translateX(-250px);
     bottom: 0;
     z-index: 1001;
 
     @media only screen and (min-width : $grid-width-xl) {
+        display: block;
         position: fixed;
         left: 0;
-        transform: none;
-        transform: translateX(0px);
+        // transform: none;
+        // transform: translateX(0px);
     }
 }
 

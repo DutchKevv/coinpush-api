@@ -32,6 +32,7 @@ export class AuthenticationService {
 	}
 
 	init() {
+		this.loggedIn = !!this._userService.model.options._id;
 		this._activetedRoute.queryParamMap
 			// .distinctUntilChanged()
 			.subscribe((params: any) => {
@@ -149,7 +150,7 @@ export class AuthenticationService {
 	public authenticateFacebook(emailAddress?: string, redirectUrl?: string): Promise<any> {
 
 		return new Promise((resolve, reject) => {
-			const scope = ['email','public_profile'];
+			const scope = ['email', 'public_profile'];
 			// const scope = 'email,public_profile,user_location,user_birthday';
 
 			if (emailAddress) {
@@ -166,14 +167,14 @@ export class AuthenticationService {
 							const authResult = <any>await this._http.post(`/authenticate/facebook`, { token, email: emailAddress }).toPromise();
 							if (authResult && authResult.token) {
 								await app.storage.updateProfile({ _id: authResult._id, token: authResult.token }, true);
-	
+
 								this.reload(redirectUrl);
-							
+
 							}
-						} catch(error) {
+						} catch (error) {
 							return reject(error)
 						}
-						
+
 					} else {
 						reject('inpcomplete response')
 					}
@@ -254,11 +255,14 @@ export class AuthenticationService {
 		} catch (error) {
 			console.error(error);
 		}
-		
+
 		this.reload();
 	}
 
 	public async showLoginRegisterPopup(activeForm?: string, redirectUrl?: string) {
+		if (this.loggedIn)
+			throw new Error('Already logged in!');
+
 		if (this.loginOpen)
 			return;
 
@@ -278,7 +282,7 @@ export class AuthenticationService {
 		} else {
 			if (redirectUrl)
 				window.location = '#' + redirectUrl;
-				
+
 			window.location.reload();
 		}
 	}

@@ -1,10 +1,19 @@
 <app-alert></app-alert>
 
 <app-navigation-menu #nav></app-navigation-menu>
-<div (click)="header.navClicked$.emit(false)" class="navigation-menu-overlay" *ngIf="nav.state"></div>
+<!-- <div (click)="header.navClicked$.emit(false)" class="navigation-menu-overlay" *ngIf="nav.state"></div> -->
 
-<app-header (navClicked$)="nav.toggleNav($event)" (filterClicked$)="filterClicked$.next($event)" [titleText$]="titleText$" #header></app-header>
+<app-header (navClicked$)="nav.toggleNav($event)" (filterClicked$)="filterClicked$.next($event)" [titleText$]="titleText$"
+    #header></app-header>
 
 <main class="main-container">
     <router-outlet></router-outlet>
 </main>
+
+<footer>
+    <a class="fa fa-align-center" [routerLink]="['/timeline']" [routerLinkActive]="['active']"></a>
+    <a class="fa fa-bar-chart" [routerLink]="['/symbols']" [routerLinkActive]="['active']"></a>
+    <a class="fa fa-gears" [routerLink]="['/settings']" [routerLinkActive]="['active']"></a>
+    <a *ngIf="authenticationService.loggedIn" (click)="authenticationService.logout()" class="fa fa-sign-out"></a>
+    <a *ngIf="!authenticationService.loggedIn" (click)="authenticationService.showLoginRegisterPopup()" class="fa fa-sign-in"></a>
+</footer>

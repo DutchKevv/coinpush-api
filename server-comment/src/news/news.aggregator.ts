@@ -5,6 +5,7 @@ import { CCNScraper } from "./scrapers/ccn.scraper";
 import { CoinDeskScraper } from "./scrapers/coindesk.scraper";
 import { IGScraper } from "./scrapers/ig.scraper";
 
+const MAX_CONTENT_LENGTH = 700;
 
 export interface IArticle {
     createdAt: string;
@@ -31,7 +32,7 @@ export class NewsAggregator {
     }
 
     public start() {
-        // this._loopApis();
+        this._loopApis();
         this._loopInterval = setInterval(() => this._loopApis(), this._loopIntervalDelay);
     }
 
@@ -60,15 +61,30 @@ export class NewsAggregator {
                     return;
 
                 // foreach article create news post
-                articles.forEach((article, index) => {
-                    // console.log(article);
+                articles.forEach(article => {
                     article.createUser = companyUser._id;
+                    article.content = this._prettySubstring(article.content);
                     commentController.createNewsArticle(article).catch(console.error);
                 });
             } catch (error) {
                 console.error(error);
             }
         });
+    }
+
+    private _prettySubstring(text: string): string {
+        const lines = text.split('.'); 
+        let length = 0;
+
+
+        for (let i = 0, len = lines.length; i < len; i++) {
+            length += lines[i].length;
+            if (length > MAX_CONTENT_LENGTH) {
+                return lines.splice(-(lines.length - i)).join('.')
+            }
+        }
+
+        return text;
     }
 
     private _installApis() {

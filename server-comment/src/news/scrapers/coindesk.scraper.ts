@@ -3,7 +3,6 @@ import * as rr from 'requestretry';
 import { IArticle } from '../news.aggregator';
 
 const URL = 'https://www.coindesk.com';
-const CONTENT_LENGTH = 500;
 
 export class CoinDeskScraper {
 
@@ -45,7 +44,7 @@ export class CoinDeskScraper {
                 url: article.url,
                 title: $('.article-top-title').text(),
                 imgs: imgUrl ? [imgUrl]: undefined,
-                content: $('.article-content-container').text().substring(0, CONTENT_LENGTH),
+                content: $('.article-content-container').text(),
                 createdAt: article.createdAt
             }
         });

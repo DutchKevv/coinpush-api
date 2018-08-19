@@ -3,7 +3,6 @@ import * as rr from 'requestretry';
 import { IArticle } from '../news.aggregator';
 
 const URL = 'https://www.ccn.com';
-const CONTENT_LENGTH = 500;
 
 export class CCNScraper {
 
@@ -17,6 +16,7 @@ export class CCNScraper {
         const $ = cheerio.load(result.body);
 
         // get articleLink
+        
         const articles = [];
         $('.category-news header').each((index, el) => {
             const $el = $(el);
@@ -44,7 +44,7 @@ export class CCNScraper {
                 url: article.url,
                 title: $('article .entry-title').text(),
                 imgs: img ? [img] : undefined,
-                content: $('.entry-content > p').text().substring(0, CONTENT_LENGTH),
+                content: $('.entry-content > p').text(),
                 createdAt: article.createdAt
             }
         });

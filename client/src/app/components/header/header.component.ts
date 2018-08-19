@@ -71,8 +71,7 @@ export class HeaderComponent {
 		this._routerEventsSub = this._router.events.subscribe((event) => {
 
 			if (event instanceof NavigationStart) {
-				// alert(window.location.href);
-				const isHome = event.url === '/' || (event.url.includes('/symbols') && !window.location.hash);
+				const isHome = event.url === '/' || (event.url.includes('/symbols') && event.url.split('?').length === 1);
 				
 				this.showBackButton = !isHome;
 				this.showFilterButton = isHome || event.url.includes('/symbols');

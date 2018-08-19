@@ -7,6 +7,7 @@ import { UserService } from "./services/user.service";
 import { EventService } from "./services/event.service";
 import { CacheService } from "./services/cache.service";
 import { SocketService } from "./services/socket.service";
+import { AuthenticationService } from "./services/authenticate.service";
 
 declare let window: any;
 declare let navigator: any;
@@ -68,6 +69,7 @@ export class AppComponent implements OnInit {
 
 	constructor(
 		public userService: UserService,
+		public authenticationService: AuthenticationService,
 		private _eventService: EventService,
 		private _cacheService: CacheService,
 		private _socketService: SocketService) {
