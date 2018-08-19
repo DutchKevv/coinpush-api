@@ -183,7 +183,7 @@ article {
 	}
 
 	main {
-		padding: 14px 14px;
+		// padding: 14px 14px;
 
 		.comment-image {
 			display: block;
@@ -198,10 +198,13 @@ article {
 		h2 {
 			color: #000;
 			margin-bottom: 14px;
+			padding: 10px;
 		}
 
 		p {
 			font-size: 14px;
+			line-height: 20px;
+			padding: 10px;
 		}
 	}
 
@@ -373,4 +376,6 @@ article {
 
 .showMoreTextButton {
 	color: blue !important;
+	padding: 10px;
+	display: block;
 }

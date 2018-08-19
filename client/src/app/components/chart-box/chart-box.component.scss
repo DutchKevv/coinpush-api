@@ -33,6 +33,14 @@
     padding-left: 6px;
     background:black;
 
+    .timeframe-buttons {
+        display: flex;
+
+        a {
+            padding: 5px;
+        }
+    }
+
     > li {
         cursor: pointer;
 
