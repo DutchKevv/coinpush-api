@@ -2,9 +2,55 @@
 @import '~bootstrap/scss/_variables';
 @import '~bootstrap/scss/_mixins';
 
+@import '../../style/variables/variables';
+
 :host {
     display: block;
     height: 100%;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
+}
+
+.filter {
+    height: 100%;
+    border-right: 1px solid grey;
+    color: white;
+    padding: 20px;
+    margin-top: 0;
+    display: none;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+
+    h2 {
+        margin: 0 0 10px 0;
+    }
+
+    @media only screen and (min-width : $grid-width-xl) {
+        position: static;
+        min-width: 200px;
+        max-width: 200px;
+        display: block;
+        z-index: auto;
+        box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.5) inset;
+
+        a {
+            padding: 4px 20px;
+        }
+	}
+}
+
+.filter-row {
+    display: flex;
+    
+    input {
+        margin-right: 10px;
+    }
+
+    label {
+        cursor: pointer;
+
+        &:hover {
+
+        }
+    }
 }

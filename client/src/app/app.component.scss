@@ -28,10 +28,11 @@ footer {
         color: white;
         width: 25%;
         text-align: center;
-        padding-top: 8px;
+        padding-top: 6px;
+        transition: background-color .4s;
 
         i {
-            font-size: 24px;
+            font-size: 26px;
             display: block;
             margin-bottom: 2px;
         }

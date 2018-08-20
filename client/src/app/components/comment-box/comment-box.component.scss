@@ -6,6 +6,10 @@
 @import '../../style/variables/variables';
 @import '../../style/helpers/normalize';
 
+textarea::-webkit-input-placeholder {
+    color: black;
+}
+
 :host {
     width: 100%;
 }
@@ -20,7 +24,6 @@
     position: relative;
 
     @media only screen and (min-width : 768px) { 
-        border-radius: 4px;
         box-shadow: 0 0 16px rgba(0, 0, 0, 0.05);
         margin: 0 auto;
     }
@@ -31,10 +34,6 @@
     
     float: left;
     width: 100%;
-
-    @media only screen and (min-width : 768px) { 
-        border-radius: 4px;
-    }
 
     i {
         color: black;
@@ -56,7 +55,6 @@
 
 .status-upload form textarea {
     background: none repeat scroll 0 0 #fff;
-    border-radius: 4px 4px 0 0;
     color: #777777;
     float: left;
     font-family: Lato;

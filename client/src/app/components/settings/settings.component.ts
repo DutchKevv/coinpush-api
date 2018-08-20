@@ -1,10 +1,7 @@
-import {
-	ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild,
-	ViewEncapsulation
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { UserService } from '../../services/user.service';
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
-import { USER_FETCH_TYPE_PROFILE_SETTINGS, G_ERROR_MAX_SIZE } from 'coinpush/src/constant';
+import { FormBuilder, FormControl } from '@angular/forms';
+import { USER_FETCH_TYPE_PROFILE_SETTINGS } from 'coinpush/src/constant';
 import { UserModel } from '../../models/user.model';
 import { AuthenticationService } from '../../services/authenticate.service';
 import { AlertService } from '../../services/alert.service';
@@ -12,13 +9,10 @@ import { HttpClient } from '@angular/common/http';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmationBoxComponent } from '../confirmation-box/confirmation-box.component';
 
-declare let $: any;
-
 @Component({
 	selector: 'app-settings-overview',
 	styleUrls: ['./settings.component.scss'],
 	templateUrl: 'settings.component.html',
-	// encapsulation: ViewEncapsulation.Native,
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 
@@ -79,7 +73,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
 			'settings.like': +this.userModel.options.settings.like,
 			'settings.comment': +this.userModel.options.settings.like,
 			'settings.summary': +this.userModel.options.settings.summary,
-		}, { onlySelf: true, updateOn: 'blur' });
+		});
+		// }, { onlySelf: true, updateOn: 'blur' });
 
 		this.form.valueChanges.subscribe(data => {
 			const changes = {};
@@ -87,6 +82,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
 			Object.keys(data).forEach(key => {
 				if (data[key] !== null) changes[key] = data[key];
 			});
+
+			this.userModel.set(changes, false);
 
 			this._userService.update(changes, true, true, true);
 		});
@@ -181,8 +178,11 @@ export class SettingsComponent implements OnInit, OnDestroy {
 	}
 
 	public onChange(event) {
-		// this._userService.update(this.model);
-		console.log(event);
+		console.log(event);		
+	}
+
+	private _setFormValue() {
+		
 	}
 
 	async removeAccount() {

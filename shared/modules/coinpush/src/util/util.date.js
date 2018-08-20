@@ -1,17 +1,26 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.timeFrameSteps = {
-    // 'S5': 5000,
-    // 'S10': 10000,
-    // 'S15': 15000,
-    // 'S30': 30000,
-    'M1': 60000,
-    // 'M5': 300000,
-    // 'M15': 900000,
-    // 'M30': 1800000,
-    'H1': 3600000,
-    // 'H4': 14400000,
-    'D': 86400000
+    // S5: 5000,
+    // S10: 10000,
+    // S15: 15000,
+    // S30: 30000,
+    M1: 60000,
+    // M5: 300000,
+    // M15: 900000,
+    // M30: 1800000,
+    H1: 3600000,
+    D: 86400000
+    // H4: 14400000,
+};
+exports.clientTimeFrameSteps = {
+    M1: 60000,
+    H1: 3600000,
+    D: 86400000,
+    '1D': 86400000,
+    '1W': 604800000,
+    '1M': 2678400000,
+    '1Y': 31536000000
 };
 function getEstimatedTimeFromCount(timeFrame, count) {
     return exports.timeFrameSteps[timeFrame] * count;

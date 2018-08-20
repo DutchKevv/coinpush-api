@@ -1,34 +1,9 @@
 <ul class="header-buttons">
-	<li class="d-none d-xl-block">
-		<button (click)="setZoom(-1)" type="button" class="text-dark button-zoom-out btn-menu" aria-expanded="false">
-			<i class="fa fa-search-minus">
-			</i>
-		</button>
-	</li>
-	<li class="d-none d-xl-block">
-		<button (click)="setZoom(1)" type="button" class="text-dark btn-menu button-zoom-in" aria-expanded="false">
-			<i class="fa fa-search-plus"></i>
-		</button>
-	</li>
-	<!-- <li class="timeframe-buttons">
-		<a [ngClass]="{active: config.timeFrame === 'M1'}">1D</a>
-		<a [ngClass]="{active: config.timeFrame === 'M1'}">1W</a>
-		<a [ngClass]="{active: config.timeFrame === 'M1'}">1M</a>
-		<a [ngClass]="{active: config.timeFrame === 'M1'}">1Y</a>
-	</li> -->
-	<li class="dropdown">
-		<select (change)="toggleTimeFrame($event.target.value)">
-			<option value="M1" [selected]="config.timeFrame === 'M1'">Minute</option>
-			<option value="H1" [selected]="config.timeFrame === 'H1'">Hour</option>
-			<option value="D" [selected]="config.timeFrame === 'D'">Day</option>
-		</select>
-	</li>
-	<li class="dropdown d-none d-xl-block">
-		<select (change)="changeGraphType($event.target.value)">
-			<option value="line" [selected]="config.graphType === 'line'">Line</option>
-			<option value="ohlc" [selected]="config.graphType === 'ohlc'">OHLC</option>sdf
-			<option value="candlestick" [selected]="config.graphType === 'candlestick'">Candle</option>
-		</select>
+	<li class="timeframe-buttons">
+		<a [ngClass]="{active: config.timeFrame === '1D'}" (click)="toggleTimeFrame('1D')">1D</a>
+		<a [ngClass]="{active: config.timeFrame === '1W'}" (click)="toggleTimeFrame('1W')">1W</a>
+		<a [ngClass]="{active: config.timeFrame === '1M'}" (click)="toggleTimeFrame('1M')">1M</a>
+		<a [ngClass]="{active: config.timeFrame === '1Y'}" (click)="toggleTimeFrame('1Y')">1Y</a>
 	</li>
 	<li class="indicator-wrapper">
 		<a (click)="onClickIndicatorsButton()" class="indicator-button" [ngClass]="{active: indicatorContainerOpen}">FX</a>
@@ -83,17 +58,36 @@
 			</ul>
 		</div>
 	</li>
+	<li class="dropdown d-none d-xl-block">
+		<select (change)="changeGraphType($event.target.value)">
+			<option value="line" [selected]="config.graphType === 'line'">Line</option>
+			<option value="ohlc" [selected]="config.graphType === 'ohlc'">OHLC</option>sdf
+			<option value="candlestick" [selected]="config.graphType === 'candlestick'">Candle</option>
+		</select>
+	</li>
+	<!-- <li class="dropdown">
+		<select (change)="toggleTimeFrame($event.target.value)">
+			<option value="M1" [selected]="config.timeFrame === 'M1'">Minute</option>
+			<option value="H1" [selected]="config.timeFrame === 'H1'">Hour</option>
+			<option value="D" [selected]="config.timeFrame === 'D'">Day</option>
+		</select>
+	</li> -->
 	<li class="chart-title d-none d-xl-block">
 		{{symbolModel?.options.name}}
 	</li>
-	<li class="d-xl-block">
-		<i class="fa fa-window-close" (click)="onClickClose($event)"></i>
+	<li class="d-none d-xl-block">
+		<button (click)="setZoom(-1)" type="button" class="text-dark button-zoom-out btn-menu" aria-expanded="false">
+			<i class="fa fa-search-minus"></i>
+		</button>
+		<button (click)="setZoom(1)" type="button" class="text-dark btn-menu button-zoom-in" aria-expanded="false">
+			<i class="fa fa-search-plus"></i>
+		</button>
+		<i class="fa fa-times" (click)="onClickClose($event)"></i>
 	</li>
 </ul>
 
 <div class="chart-overlay-error" *ngIf="hasError === true">
 	<p>
-		
 		<span class="symbol-not-available-error symbol-img-{{symbolModel.options.name}}"></span>
 		<b>{{symbolModel.options.displayName}}</b> is currently unavailable&nbsp;... Please try again later
 	</p>

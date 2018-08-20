@@ -20,7 +20,7 @@
             <div class="form-group col-md-4">
                 <label for="country" class="form-control-label">Country</label>
                 <select id="country" formControlName="country" class="form-control">
-                    <option *ngFor="let country of countries" [attr.value]="country.code" [innerHTML]="country.name"></option>
+                    <option *ngFor="let country of countries" [attr.value]="country.code" [innerHTML]="country.name" [selected]="country.code === userModel.options.country"></option>
                 </select>
             </div>
 

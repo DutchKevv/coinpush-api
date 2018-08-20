@@ -3,11 +3,9 @@ import { dataLayer } from './cache.datalayer';
 import { symbolController } from './symbol.controller';
 import { app } from '../app';
 import { Status } from '../schemas/status.schema';
-import { BROKER_GENERAL_TYPE_CC, BROKER_GENERAL_TYPE_OANDA } from 'coinpush/src/constant';
+import { BROKER_GENERAL_TYPE_CC } from 'coinpush/src/constant';
 import { timeFrameSteps } from 'coinpush/src/util/util.date';
 import { pubClient } from 'coinpush/src/redis';
-import { config } from 'coinpush/src/util/util-config';
-
 
 const HISTORY_COUNT_DEFAULT = 400;
 
@@ -35,10 +33,9 @@ export const cacheController = {
 	 * @param params 
 	 * @param emitStatus 
 	 */
-	async fetch(params: { symbol: string, timeFrame: string, from: number, until: number, count: number }, emitStatus?: boolean): Promise<void | any> {
+	async fetch(params: { symbol: string, timeFrame: string, from: number, until: number, count: number }): Promise<void | any> {
 
 		await app.broker.getCandles(params.symbol, params.from, params.until, params.timeFrame, params.count, async (candles: Array<any>) => {
-
 			// Store candles in DB, wait until finished before continueing to the next, 
 			// prevents 'holes' in data when 1 failed in between
 			// TODO: Better way? This makes it slow

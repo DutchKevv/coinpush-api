@@ -1,13 +1,13 @@
 import * as fs from 'fs';
 import * as mongoose from 'mongoose';
 import { log } from 'coinpush/src/util/util.log';
-import { timeFrameSteps } from 'coinpush/src/util/util.date'
+import { timeFrameSteps, clientTimeFrameSteps } from 'coinpush/src/util/util.date'
 import { CandleSchema } from '../schemas/candle.schema';
 import { Status } from '../schemas/status.schema';
 import { BulkWriteResult } from 'mongodb';
 import { config } from 'coinpush/src/util/util-config';
 
-const READ_COUNT_DEFAULT = 400;
+const READ_COUNT_DEFAULT = 500;
 
 /**
  * handle all symbol specific actions that do concern writing data
@@ -21,17 +21,35 @@ export const dataLayer = {
 			throw new Error('Cache -> Read : No symbol given');
 
 		// timeFrame required
-		if (!params.timeFrame || typeof params.timeFrame !== 'string')
-			throw new Error('Cache -> Read : No timeFrame given');
+		if (!clientTimeFrameSteps[params.timeFrame])
+			throw new Error('Cache -> Read : No or illegal timeFrame given');
 
 		let timeFrame = params.timeFrame,
 			from = params.from,
 			until = params.until,
 			count = parseInt((<any>params.count), 10) || READ_COUNT_DEFAULT;
 
-
 		if (from && until)
 			throw new Error('dataLayer: "from" and "until" cannot both pe passes as params');
+
+		switch (timeFrame) {
+			case '1D':
+				timeFrame = 'H1';
+				count = 24;
+				break;
+			case '1W':
+				timeFrame = 'H1';
+				count = 168;
+				break;
+			case '1M':
+				timeFrame = 'H1';
+				count = 744;
+				break;
+			case '1Y':
+				timeFrame = 'D';
+				count = 365;
+				break;
+		}
 
 		const collectionName = this.getCollectionName(params.symbol, timeFrame);
 		const model = mongoose.model(collectionName, CandleSchema);
@@ -53,6 +71,8 @@ export const dataLayer = {
 
 		return rows.map(row => row.data);
 	},
+
+	// async readFixedTime() {}
 
 	async write(symbol, timeFrame, candles: Array<any>): Promise<BulkWriteResult> {
 		if (!candles.length)

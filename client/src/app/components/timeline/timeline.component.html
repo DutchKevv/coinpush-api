@@ -1,1 +1,8 @@
+<ul class="filter">
+    <h2>Sources</h2>
+    <li class="filter-row" *ngFor="let filter of filterList.sources">
+        <input type="checkbox" id="filterInput_{{filter.value}}" />
+        <label for="filterInput_{{filter.value}}">{{filter.name}}</label>
+    </li>
+</ul>
 <app-social-feed [scrollHandle]="elementRef.nativeElement"></app-social-feed>

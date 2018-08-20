@@ -11,24 +11,29 @@ import { UserService } from "../../services/user.service";
 	selector: 'app-comment-box',
 	styleUrls: ['./comment-box.component.scss'],
 	templateUrl: 'comment-box.component.html',
-	// encapsulation: ViewEncapsulation.Native,
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class CommentBoxComponent implements OnInit, OnDestroy {
 
 	@Input() userId: string;
-
 	@Output() public newMessage: EventEmitter<CommentModel> = new EventEmitter();
 
 	@ViewChild('content') private _contentRef: ElementRef;
 
+	public placeholderText: string = 'Share your ideas';
 
 	constructor(private _commentService: CommentService, private _userService: UserService) {
 	}
 
 	ngOnInit() {
+		// const isSelf = this.userId === this._userService.model.options._id;
 
+		// if (isSelf) {
+		// 	this.placeholderText = 'Share your thoughts';
+		// } else {
+		// 	this.placeholderText = 'Share your thoughts';
+		// }
 	}
 
 	public async post(): Promise<void> {

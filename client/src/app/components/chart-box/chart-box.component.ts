@@ -76,7 +76,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit {
 	public config = Object.assign({
 		zoom: app.platform.isApp ? 2 : 1,
 		graphType: app.platform.windowW < WINDOW_SIZE_MAX_MOBILE ? 'line' : 'candlestick',
-		timeFrame: 'H1'
+		timeFrame: '1D'
 	}, app.storage.profileData.chartConfig || {}, {
 		graphType: app.platform.windowW < WINDOW_SIZE_MAX_MOBILE ? 'line' : 'candlestick',
 	});
@@ -98,10 +98,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit {
 	private _priceChangeSub;
 	private _eventsSub;
 	private _activeSymbolSub;
-
-	private _indicatorIdCounter = 0;
 	private _lastFetchSub = null;
-
 	private _resizeTimeout = null;
 
 	/**
@@ -545,7 +542,6 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit {
 			this._lastFetchSub = this._cacheService.read({
 				symbol: this.symbolModel.options.name,
 				timeFrame: this.config.timeFrame,
-				count: ChartBoxComponent.DEFAULT_CHUNK_LENGTH,
 				offset: this._offset
 			}).subscribe(data => {
 				// Make sure symbol model is still the same

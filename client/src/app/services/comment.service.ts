@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CommentModel } from '../models/comment.model';
-import { AlertService } from './alert.service';
 import { UserService } from "./user.service";
 import { HttpClient, HttpParams } from '@angular/common/http';
 
@@ -13,7 +12,9 @@ import { DateService } from './date.service';
 })
 export class CommentService {
 
-	constructor(private _http: HttpClient, private _dateService: DateService, private _userService: UserService) {
+	constructor(
+		private _http: HttpClient,
+		private _userService: UserService) {
 
 	}
 
@@ -48,7 +49,7 @@ export class CommentService {
 			}
 		});
 
-		const result = <any>await this._http.get('/timeline', {params}).pipe(map((res: any) => {
+		const result = <any>await this._http.get('/timeline', { params }).pipe(map((res: any) => {
 			return res.map((object => {
 				const model = new CommentModel(object);
 				model.options.children = model.options.children.map(c => new CommentModel(c));
@@ -69,7 +70,7 @@ export class CommentService {
 			.toPromise();
 	}
 
-	async findByUserId(toUserId: string, offset: number = 0, limit: number = 5): Promise<Array<CommentModel>> {
+	async findByUserId(toUserId: string, offset: number = 0, limit: number = 5) {
 		const params = new HttpParams({
 			fromObject: {
 				toUserId: toUserId.toString(),
@@ -78,16 +79,14 @@ export class CommentService {
 			}
 		});
 
-		const result = await this._http.get('/comment', { params })
+		return this._http.get('/comment', { params })
 			.pipe(map((r: any) => {
 				return r.body.map(comment => {
 					const model = new CommentModel(comment);
 					model.options.children = model.options.children.map(c => new CommentModel(c));
 					return model;
 				});
-			}))
-			.toPromise();
-		return result;
+			})).toPromise();
 	}
 
 	async findChildren(parentId: string, offset: number = 0, limit: number = 5) {

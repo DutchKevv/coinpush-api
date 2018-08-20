@@ -86,7 +86,9 @@
 						<a [attr.href]="comment.options.createUser ? '#/user/' + comment.options.createUser?._id : null" class="g-username">
 							{{comment.options.createUser?.name || comment.options.createCompany.name}}
 						</a>
-						<a [routerLink]="['/comment/', comment.options._id]">{{comment.options.fromNow}}</a>
+						<a [routerLink]="['/comment/', comment.options._id]">
+							<time>{{comment.options.fromNow}}</time>
+						</a>
 					</div>
 					<!-- <i class="fa fa-ellipsis-v more-post-actions-button" (click)="showMorePostActions(comment)"></i> -->
 				</header>
@@ -135,7 +137,7 @@
 										<i class="fa fa-thumbs-o-up"></i>&nbsp;- {{(child.options$ | async).likeCount}}
 									</span>
 								</a>
-								<span>&nbsp;{{child.options.fromNow}}</span>
+								<time>&nbsp;{{child.options.fromNow}}</time>
 								<!-- <i class="fa fa-ellipsis-v more-comment-actions-button" (click)="showMoreCommentActions(child)"></i> -->
 							</div>
 						</div>

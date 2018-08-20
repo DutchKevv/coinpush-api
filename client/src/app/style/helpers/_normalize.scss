@@ -124,6 +124,10 @@ button .fa-spinner {
 	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
 }
 
+.active {
+	background-color: #085963;
+}
+
 @keyframes button-spinner {
     from { transform: scale(1) rotate(0deg); }
     to { transform: scale(1) rotate(360deg); }

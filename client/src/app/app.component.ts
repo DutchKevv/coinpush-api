@@ -87,12 +87,6 @@ export class AppComponent implements OnInit {
 
 		// open websocket
 		this._socketService.connect();
-
-		this._routerEventsSub = this._router.events.subscribe((event) => {
-			if (event instanceof NavigationEnd) {
-				this._changeDetectorRef.detectChanges();
-			}
-		});
 	}
 
 	private _onClickMobileBackButton(event) {

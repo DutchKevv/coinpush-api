@@ -10,7 +10,7 @@ import { EventOverviewComponent } from './components/event-overview/event-overvi
 import { TimelineComponent } from './components/timeline/timeline.component';
 
 const routes: Routes = [
-	{ path: '', redirectTo: 'symbols', pathMatch: 'full', canActivate: [AuthGuard] },
+	{ path: '', redirectTo: 'symbols', pathMatch: 'full'},
 	{ path: 'timeline', component: TimelineComponent, canActivate: [AuthGuard] },
 	{ path: 'comment/:id', component: SocialFeedComponent, canActivate: [AuthGuard] },
 	{ path: 'user', component: UserOverviewComponent, canActivate: [AuthGuard] },

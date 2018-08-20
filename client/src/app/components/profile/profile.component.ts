@@ -17,6 +17,7 @@ export class ProfileComponent implements OnInit {
 
 	private _routeSub: any;
 	private _onScrollBinded = null;
+	private _lastScrollPos = 0;
 
 	@ViewChild('header') header;
 
@@ -63,16 +64,25 @@ export class ProfileComponent implements OnInit {
 	}
 
 	private _unbindScroll() {
-		this.elementRef.nativeElement.removeEventListener('scroll', this._onScrollBinded, {passive: true});
+		this.elementRef.nativeElement.removeEventListener('scroll', this._onScrollBinded, { passive: true });
 	}
 
 	private _onScroll(event) {
-		let offset = event.target.scrollTop;
+		let offset, scrollOffset = event.target.scrollTop;
+		const isDirUp = this._lastScrollPos > scrollOffset;
+		this._lastScrollPos = scrollOffset;
 
-		if (offset > 100)
-			offset = 100;
+		if (!isDirUp && scrollOffset < 100)
+			return;
 
-		this.header.nativeElement.style.transform = 'translateY(' + -offset + 'px)';
+		scrollOffset = -(scrollOffset - 100);
+
+		if (scrollOffset < -200)
+			scrollOffset = -200;
+		else if (scrollOffset > 0)
+			scrollOffset = 0;
+
+		this.header.nativeElement.style.transform = 'translateY(' + scrollOffset + 'px)';
 	}
 
 	private _updateHeaderTitle(title?: string) {

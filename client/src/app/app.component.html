@@ -11,9 +11,9 @@
 </main>
 
 <footer>
-    <a [routerLink]="['/timeline']" [routerLinkActive]="['active']"><i class="fa fa-align-center"></i><p>news</p></a>
-    <a [routerLink]="['/symbols']" [routerLinkActive]="['active']"><i class="fa fa-bar-chart"></i><p>charts</p></a>
-    <a [routerLink]="['/settings']" [routerLinkActive]="['active']"><i class="fa fa-gears"></i><p>settings</p></a>
+    <a [routerLink]="['timeline']" [routerLinkActive]="['active']"><i class="fa fa-align-center"></i><p>news</p></a>
+    <a [routerLink]="['symbols']" [routerLinkActive]="['active']"><i class="fa fa-bar-chart"></i><p>charts</p></a>
+    <a [routerLink]="['settings']" [routerLinkActive]="['active']"><i class="fa fa-gears"></i><p>settings</p></a>
     <a *ngIf="authenticationService.loggedIn" (click)="authenticationService.logout()" ><i class="fa fa-sign-out"></i><p>logout</p></a>
     <a *ngIf="!authenticationService.loggedIn" (click)="authenticationService.showLoginRegisterPopup()"><i class="fa fa-sign-in"></i><p>login</p></a>
 </footer>
