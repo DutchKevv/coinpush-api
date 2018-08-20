@@ -1,4 +1,4 @@
-FROM mhart/alpine-node:10.8.0
+FROM mhart/alpine-node:10.9.0
 
 # Install Python + sharp image processing
 RUN apk add --no-cache make gcc g++ python

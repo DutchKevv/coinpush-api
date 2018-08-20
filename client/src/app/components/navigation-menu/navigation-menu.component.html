@@ -1,6 +1,5 @@
 <nav class="nav-main">
-    <a class="profile" style="padding-top: 0">
-    <!-- <a (click)="toggleNav( false)" [routerLink]="['/user/', userService.model.options._id]" [routerLinkActive]="['active']" class="profile" style="padding-top: 0"> -->
+    <a [routerLink]="['/user/', userService.model.options._id]" [routerLinkActive]="['active']" class="profile" style="padding-top: 0">
         <h6 class="version">
             <i>{{version}}</i>
         </h6>
@@ -8,15 +7,15 @@
         <!-- <img alt="profile-image" class="logo" width="70" height="70" [attr.src]="userService.model.options.img ? (userService.model.options.img | NormalizeImgUrl) : undefined"> -->
         <h4>{{userService.model.options.name}}</h4>
     </a>
-    <!-- <a (click)="toggleNav( false)" [routerLink]="['/calendar']" [routerLinkActive]="['active']">
+    <!-- <a [routerLink]="['/calendar']" [routerLinkActive]="['active']">
             <i class="fa fa-calendar"></i>
             <span>News (TODO)</span>
         </a> -->
-    <a (click)="toggleNav( false)" [routerLink]="['/timeline']" [routerLinkActive]="['active']">
+    <a [routerLink]="['/timeline']" [routerLinkActive]="['active']">
         <i class="fa fa-calendar"></i>
         <span>Timeline</span>
     </a>
-    <!-- <a (click)="toggleNav( false)" [routerLink]="['/user']" [routerLinkActive]="['active']">
+    <!-- <a [routerLink]="['/user']" [routerLinkActive]="['active']">
         <i class="fa fa-users"></i>
         <span>Users</span>
     </a> -->
