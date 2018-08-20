@@ -30,7 +30,7 @@
 </div>
 
 <!-- filter (for symbol page) -->
-<a (click)="filterClicked$.next(!filterClicked$.getValue());" *ngIf="showFilterButton === true" class="filter-btn" [ngClass]="{active: (filterClicked$ | async) === true}">
+<a (click)="filterClicked$.next();" *ngIf="showFilterButton === true" class="filter-btn" [ngClass]="{active: (filterClicked$ | async) === true}">
     <i class="fa fa-filter d-xl-none"></i>
 </a>
 

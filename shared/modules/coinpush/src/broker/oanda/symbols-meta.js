@@ -503,3 +503,4 @@ exports.meta = [
         "type": constants.SYMBOL_CAT_TYPE_FOREX
     }
 ];
+//# sourceMappingURL=symbols-meta.js.map

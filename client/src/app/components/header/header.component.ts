@@ -19,7 +19,7 @@ let historyStart = history.length;
 export class HeaderComponent {
 	@Input() public titleText$: Subject<string>;
 
-	@Output() public filterClicked$: BehaviorSubject<void | boolean> = new BehaviorSubject(false);
+	@Output() public filterClicked$: EventEmitter<void | boolean> = new EventEmitter(false);
 	@Output() public navClicked$: EventEmitter<void | boolean> = new EventEmitter();
 	@Output() public searchResults$: BehaviorSubject<any> = new BehaviorSubject(null);
 	@Output() public searchOpen$: EventEmitter<boolean> = new EventEmitter();
@@ -48,7 +48,7 @@ export class HeaderComponent {
 			this._changeDetectorRef.detectChanges();
 		}
 		if (!event.target.classList.contains('fa-filter')) {
-			this.filterClicked$.next(false);
+			this.filterClicked$.emit(false);
 			this._changeDetectorRef.detectChanges();
 		}
 
@@ -74,7 +74,7 @@ export class HeaderComponent {
 				const isHome = event.url === '/' || (event.url.includes('/symbols') && event.url.split('?').length === 1);
 				
 				this.showBackButton = !isHome;
-				this.showFilterButton = isHome || event.url.includes('/symbols');
+				this.showFilterButton = isHome || event.url.startsWith('/timeline');
 
 				this._changeDetectorRef.detectChanges();
 			}
@@ -82,7 +82,7 @@ export class HeaderComponent {
 			else if (event instanceof NavigationEnd) {
 
 				this.searchOpen = false;
-				this.filterClicked$.next(false);
+				this.filterClicked$.emit(false);
 			}
 		});
 	}
@@ -142,7 +142,7 @@ export class HeaderComponent {
 	}
 
 	public closeAllMenus() {
-		this.filterClicked$.next(false);
+		this.filterClicked$.emit(false);
 		this.navClicked$.emit(false);
 	}
 }

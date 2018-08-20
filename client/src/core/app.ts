@@ -15,6 +15,7 @@ export class App extends MicroEvent {
     public helpers = generalHelpers;
 
     public data: any = {
+        config: {},
         notifications: {
             unreadCount: 0
         }

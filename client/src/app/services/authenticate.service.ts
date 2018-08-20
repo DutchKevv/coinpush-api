@@ -278,7 +278,8 @@ export class AuthenticationService {
 
 	public reload(redirectUrl?: string) {
 		if (app.platform.isApp) {
-			window.location = 'index.html' + redirectUrl ? `#${redirectUrl}` : '';
+			alert('index.html' + (redirectUrl ? `#${redirectUrl}` : ''))
+			window.location = 'index.html' +  (redirectUrl ? `#${redirectUrl}` : '');
 		} else {
 			if (redirectUrl)
 				window.location = '#' + redirectUrl;

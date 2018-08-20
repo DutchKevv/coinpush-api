@@ -19,7 +19,8 @@ router.get('/:id', async (req: any, res, next) => {
  */
 router.get('/', async (req: any, res, next) => {
 	try {
-		res.send(await userController.findMany(req.user, req.query));
+		console.log(req.body)
+		res.send(await userController.findMany(req.user, req.body));
 	} catch (error) {
 		next(error);
 	}

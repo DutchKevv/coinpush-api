@@ -13,6 +13,7 @@ import * as expressJwt from 'express-jwt';
 import * as jwt from 'jsonwebtoken';
 import { config } from 'coinpush/src/util/util-config';
 import { G_ERROR_MAX_SIZE, G_ERROR_UNKNOWN } from 'coinpush/src/constant';
+import { userController } from './controllers/user.controller';
 
 const PATH_WWW_BROWSER_NOT_SUPPORTED_FILE = path.join(__dirname, '../public/index.legacy.browser.html');
 
@@ -28,6 +29,7 @@ export const app = {
 	api: null,
 	io: null,
 	broker: <BrokerMiddleware>null,
+	clientConfig: {},
 
 	_symbolUpdateTimeout: null,
 	_symbolUpdateTimeoutTime: 60 * 1000, // 1 minute
@@ -43,7 +45,13 @@ export const app = {
 		this._toggleWebSocketTickInterval();
 
 		// http / websocket api
+		this._setClientConfig();
 		this._setupApi();
+	},
+
+	async _setClientConfig() {
+		this.clientConfig.companyUsers = await userController.findMany({}, {companyId: true, fields: ['name', 'img']});
+		console.log(this.clientConfig.companyUsers, 2);
 	},
 
 	_setRedisListeners() {

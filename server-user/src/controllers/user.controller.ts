@@ -68,6 +68,11 @@ export const userController = {
 		if (params.facebookId)
 			where['oauthFacebook.id'] = { "$eq": params.facebookId }
 
+		// sources (companyId etc)
+		if (params.companyId) {
+			where['companyId'] = { $exists: true }
+		}
+
 		fields.followers = 1;
 		const users = <Array<IUser>>await User.find(where, fields).sort({ _id: sort }).limit(limit).lean();
 		users.forEach((user) => {

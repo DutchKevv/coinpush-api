@@ -39,7 +39,7 @@
     "build-prod-server": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml build redis gateway notify user event cache comment mongodb",
     "build-prod-nginx": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml build nginx",
     "start": "npm run d-up-all",
-    "start-server": "docker-compose up -d nginx redis gateway notify cache event comment user mongodb",
+    "start-server": "docker-compose up -d nginx redis gateway notify cache event comment user mongodb && npm run d-log-server",
     "start-client": "docker-compose up client",
     "start-jenkins": "docker-compose up jenkins",
     "start-nginx": "docker-compose up -d nginx",

@@ -75,11 +75,11 @@
 	<li class="chart-title d-none d-xl-block">
 		{{symbolModel?.options.name}}
 	</li>
-	<li class="d-none d-xl-block">
-		<button (click)="setZoom(-1)" type="button" class="text-dark button-zoom-out btn-menu" aria-expanded="false">
+	<li>
+		<button (click)="setZoom(-1)" type="button" class="text-dark button-zoom-out btn-menu d-none d-xl-block" aria-expanded="false">
 			<i class="fa fa-search-minus"></i>
 		</button>
-		<button (click)="setZoom(1)" type="button" class="text-dark btn-menu button-zoom-in" aria-expanded="false">
+		<button (click)="setZoom(1)" type="button" class="text-dark btn-menu button-zoom-in d-none d-xl-block" aria-expanded="false">
 			<i class="fa fa-search-plus"></i>
 		</button>
 		<i class="fa fa-times" (click)="onClickClose($event)"></i>

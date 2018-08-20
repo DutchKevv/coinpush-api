@@ -1,5 +1,5 @@
 import * as request from 'request-promise';
-import { FB, FacebookApiException } from 'fb';
+import { FB } from 'fb';
 import { userController } from "./user.controller";
 import { G_ERROR_UNKNOWN } from "coinpush/src/constant";
 import { log } from 'coinpush/src/util/util.log';
@@ -11,6 +11,7 @@ import { IReqUser } from 'coinpush/src/interface/IReqUser.interface';
 import { notifyController } from './notify.controller';
 import { eventController } from './event.controller';
 import { config } from 'coinpush/src/util/util-config';
+import { app } from '../app';
 
 export const authenticateController = {
 
@@ -67,6 +68,7 @@ export const authenticateController = {
 		]);
 
 		return {
+			config: app.clientConfig,
 			symbols: results[0],
 			notifications: {
 				unreadCount: userData[0]

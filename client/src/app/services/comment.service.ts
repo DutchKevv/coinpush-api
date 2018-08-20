@@ -41,11 +41,13 @@ export class CommentService {
 		return model;
 	}
 
-	public async findTimeline(offset: number = 0, limit: number = 10): Promise<Array<CommentModel>> {
+	public async findTimeline(options: {offset?: number, limit?: number, sources?: Array<any>} = {}): Promise<Array<CommentModel>> {
+
 		const params = new HttpParams({
 			fromObject: {
-				offset: offset.toString(),
-				limit: limit.toString()
+				offset: (options.offset || 0).toString(),
+				limit: (options.limit || 10).toString(),
+				sources: JSON.stringify(options.sources || undefined)
 			}
 		});
 

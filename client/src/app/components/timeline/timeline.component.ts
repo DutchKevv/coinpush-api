@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, OnInit, ElementRef, ApplicationRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ElementRef, ApplicationRef, ViewChild } from '@angular/core';
+import { FilterModel, SocialFeedComponent } from '../social-feed/social.feed.component';
 
 @Component({
 	selector: 'app-timeline',
@@ -9,26 +10,24 @@ import { ChangeDetectionStrategy, Component, OnInit, ElementRef, ApplicationRef 
 
 export class TimelineComponent implements OnInit {
 
-	public filterList = {
-		sources: [
-			{
-				name: 'Crypto Coins News',
-				value: 'ccn'
-			},
-			{
-				name: 'CoinDesk',
-				value: 'coindesk'
-			},
-			{
-				name: 'IG',
-				value: 'ig'
-			}
-		]
-	}
+	@ViewChild(SocialFeedComponent) private _socialFeedComponent: SocialFeedComponent;
+	@ViewChild('filter') private _filterEl;
+
+	public filterModel = new FilterModel();
 
 	constructor(public elementRef: ElementRef, applicationRef: ApplicationRef) {
 		applicationRef.components[0].instance.titleText$.next('News');
+		applicationRef.components[0].instance.header.filterClicked$.subscribe((value: boolean) => {
+			this._filterEl.nativeElement.classList.toggle('show', value);
+		});
 	}
 
-	ngOnInit() {}
+	ngOnInit() {
+		console.log(this.filterModel);
+	}
+
+	public onFormChange(event) {
+		this._socialFeedComponent.reload();
+		console.log(event);
+	}
 }

@@ -303,7 +303,7 @@ export class InstrumentListComponent implements OnInit, OnDestroy {
 	}
 
 	private _toggleFilterNav(event?, state?: boolean) {
-		this.filterRef.nativeElement.classList.toggle('show', !!state);
+		this.filterRef.nativeElement.classList.toggle('show', state);
 	}
 
 	private _getFilterObjectByName(filterName: string) {

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, Pipe, PipeTransform, OnDestroy, ChangeDetectorRef, ViewEncapsulation, EventEmitter } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, Pipe, PipeTransform, OnDestroy, ChangeDetectorRef, ViewEncapsulation, EventEmitter, OnChanges } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { ActivatedRoute, Router } from "@angular/router";
 import { CommentService } from "../../services/comment.service";
@@ -10,34 +10,6 @@ import { app } from 'core/app';
 const MAX_COMMENT_LENGTH = 400;
 const SCROLL_LOAD_TRIGGER_OFFSET = 800;
 
-function linkify(inputText) {
-	var replacedText, replacePattern1, replacePattern2, replacePattern3;
-
-	//URLs starting with http://, https://, or ftp://
-	replacePattern1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
-	replacedText = inputText.replace(replacePattern1, '<a href="$1" target="_blank" class="g-link">$1</a>');
-
-	//URLs starting with "www." (without // before it, or it'd re-link the ones done above).
-	replacePattern2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
-	replacedText = replacedText.replace(replacePattern2, '$1<a href="http://$2" target="_blank" class="g-link">$2</a>');
-
-	//Change email addresses to mailto:: links.
-	replacePattern3 = /(([a-zA-Z0-9\-\_\.])+@[a-zA-Z\_]+?(\.[a-zA-Z]{2,6})+)/gim;
-	replacedText = replacedText.replace(replacePattern3, '<a href="mailto:$1" class="g-link">$1</a>');
-
-	return replacedText;
-}
-
-function getRandomNumber(until: number, without: Array<number> = []) {
-	let number, maxTries = 10, i = 0;
-
-	do {
-		number = Math.floor(Math.random() * until) + 1;
-	} while (i++ < maxTries && without.includes(number));
-
-	return number;
-}
-
 // function shortify(inputText: string) {
 // 	if (inputText.length > 100) {
 // 		const preText = inputText.substring(0, 100);
@@ -47,18 +19,9 @@ function getRandomNumber(until: number, without: Array<number> = []) {
 // 	return inputText;
 // }
 
-@Pipe({ name: 'parseCommentContent' })
-export class ParseCommentContentPipe implements PipeTransform {
-	transform(value: string, field: string): string {
-		value = linkify(value);
-
-		if (value.length > MAX_COMMENT_LENGTH)
-			return value.substring(0, MAX_COMMENT_LENGTH) + ' ...';
-
-		return value;
-	}
+export class FilterModel {
+	sources = app.data.config.companyUsers.map(user => {user.enabled = true; return user});
 }
-
 
 @Component({
 	selector: 'app-social-feed',
@@ -66,15 +29,13 @@ export class ParseCommentContentPipe implements PipeTransform {
 	templateUrl: 'social.feed.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SocialFeedComponent implements OnInit, OnDestroy {
+export class SocialFeedComponent implements OnInit, OnDestroy, OnChanges {
 
 	@Input() public scrollHandle: HTMLElement;
+	@Input() public filterModel: FilterModel;
 
 	public comments$: BehaviorSubject<Array<CommentModel>> = new BehaviorSubject([]);
 	public isLoading$: BehaviorSubject<boolean> = new BehaviorSubject(false);
-	public filterModel: any = {
-		type: 'all'
-	};
 
 	public userId: string;
 	public commentId: string;
@@ -104,9 +65,11 @@ export class SocialFeedComponent implements OnInit, OnDestroy {
 
 		this._load();
 
-		if (this.scrollHandle) {
-			this.bindScroll(this.scrollHandle);
-		}
+		this.bindScroll(this.scrollHandle);
+	}
+
+	ngOnChanges(changes) {
+		console.log(changes);
 	}
 
 	public focusInput(event) {
@@ -129,8 +92,8 @@ export class SocialFeedComponent implements OnInit, OnDestroy {
 		this.changeDetectorRef.detectChanges();
 	}
 
-	public bindScroll(handle: HTMLElement) {
-		this.scrollHandle = handle;
+	public bindScroll(scrollHandle?: HTMLElement) {
+		this.scrollHandle = scrollHandle || this._elementRef.nativeElement;
 		this.scrollHandle.addEventListener('scroll', this._onScrollBinded, { passive: true });
 	}
 
@@ -183,6 +146,12 @@ export class SocialFeedComponent implements OnInit, OnDestroy {
 		event.target.parentNode.removeChild(event.target);
 	}
 
+	public reload(): Promise<void> {
+		this._offset = 0;
+		this.comments$.next([]);
+		return this._load();
+	}
+
 	private async _load(): Promise<void> {
 		const urlPath = this._route.snapshot.url[0].path;
 		let items = [];
@@ -197,7 +166,17 @@ export class SocialFeedComponent implements OnInit, OnDestroy {
 				items = [await this.commentService.findById(this.commentId)];
 				break;
 			default:
-				items = await this.commentService.findTimeline(this._offset);
+				// set filter options
+				const options: any = {
+					offset: this._offset
+				};
+
+				if (this.filterModel) {
+					options.sources = this.filterModel.sources.filter(source => source.enabled).map(source => source._id);
+					console.log(options.sources);
+				}
+
+				items = await this.commentService.findTimeline(options);
 		}
 
 		this.isLoading$.next(false);
@@ -305,6 +284,18 @@ export class SocialFeedComponent implements OnInit, OnDestroy {
 	}
 }
 
+@Pipe({ name: 'parseCommentContent' })
+export class ParseCommentContentPipe implements PipeTransform {
+	transform(value: string, field: string): string {
+		value = linkify(value);
+
+		if (value.length > MAX_COMMENT_LENGTH)
+			return value.substring(0, MAX_COMMENT_LENGTH) + ' ...';
+
+		return value;
+	}
+}
+
 const AD_ARTICLE_HTML = `
 		<ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-1181429338292864"
 		 data-ad-slot="5683371400"></ins>
@@ -314,3 +305,31 @@ const AD_FEED_HTML = `
 		<ins class="adsbygoogle" style="display:block;" data-ad-format="fluid" data-ad-layout-key="-6t+ed+2i-1n-4w" data-ad-client="ca-pub-1181429338292864"
 		  data-ad-slot="6793790015" data-adtest="on"></ins>
 		`;
+
+function linkify(inputText) {
+	var replacedText, replacePattern1, replacePattern2, replacePattern3;
+
+	//URLs starting with http://, https://, or ftp://
+	replacePattern1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
+	replacedText = inputText.replace(replacePattern1, '<a href="$1" target="_blank" class="g-link">$1</a>');
+
+	//URLs starting with "www." (without // before it, or it'd re-link the ones done above).
+	replacePattern2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
+	replacedText = replacedText.replace(replacePattern2, '$1<a href="http://$2" target="_blank" class="g-link">$2</a>');
+
+	//Change email addresses to mailto:: links.
+	replacePattern3 = /(([a-zA-Z0-9\-\_\.])+@[a-zA-Z\_]+?(\.[a-zA-Z]{2,6})+)/gim;
+	replacedText = replacedText.replace(replacePattern3, '<a href="mailto:$1" class="g-link">$1</a>');
+
+	return replacedText;
+}
+
+function getRandomNumber(until: number, without: Array<number> = []) {
+	let number, maxTries = 10, i = 0;
+
+	do {
+		number = Math.floor(Math.random() * until) + 1;
+	} while (i++ < maxTries && without.includes(number));
+
+	return number;
+}

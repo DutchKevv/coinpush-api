@@ -1,6 +1,5 @@
 import { Comment } from '../schemas/comment.schema';
 import { Types } from 'mongoose';
-import { pubClient } from '../../../shared/modules/coinpush/src/redis';
 import { User } from '../schemas/user.schema';
 import { IReqUser } from '../../../shared/modules/coinpush/src/interface/IReqUser.interface';
 
@@ -11,12 +10,24 @@ export const timelineController = {
 	 * @param reqUser 
 	 * @param params 
 	 */
-	async get(reqUser: IReqUser, params: { toUserId: string, offset: any, limit: any }) {
+	async get(reqUser: IReqUser, params: { toUserId: string, offset: any, limit: any, sources: any }) {
+
+		const findOptions: any = {
+			toUser: { $eq: undefined },
+			parentId: { $eq: undefined }
+		};
+
+		// filter options
+		if (params.sources) {
+			params.sources = JSON.parse(params.sources);
+
+			if (params.sources || params.sources.length) {
+				findOptions.createUser = {"$in": params.sources}
+			}
+		}
+
 		let comments = <Array<any>>await Comment
-			.find({
-				toUser: { $eq: undefined },
-				parentId: { $eq: undefined }
-			})
+			.find(findOptions)
 			.skip(parseInt(params.offset, 10) || 0)
 			.limit(parseInt(params.limit, 10) || 10)
 			.sort({ createdAt: -1 })

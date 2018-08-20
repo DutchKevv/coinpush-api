@@ -37,6 +37,7 @@ export const userController = {
 		return request({
 			uri: config.server.user.apiUrl + '/user/',
 			headers: { '_id': reqUser.id },
+			body: params,
 			json: true
 		})
 	},
