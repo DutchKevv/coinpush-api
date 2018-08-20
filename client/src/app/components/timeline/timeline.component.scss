@@ -20,8 +20,7 @@
     display: none;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
-    display: none;
-    
+
     h2 {
         margin: 0 0 10px 0;
     }
@@ -30,9 +29,10 @@
         position: static;
         min-width: 200px;
         max-width: 200px;
-        display: block;
+        // display: block;
         z-index: auto;
         box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.5) inset;
+        display: none;
 
         a {
             padding: 4px 20px;
