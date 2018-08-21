@@ -56,18 +56,18 @@ export class AppComponent implements OnInit {
 		}
 	}
 
-	/**
-	 * mobile nav menu back press close (android)
-	 * TODO - should be done by router events (popstate)
-	 * @param event 
-	 */
-	@HostListener('document:backbutton', ['$event'])
-	onBackButton(event) {
-		this._onClickMobileBackButton(event);
+	// /**
+	//  * mobile nav menu back press close (android)
+	//  * TODO - should be done by router events (popstate)
+	//  * @param event 
+	//  */
+	// @HostListener('document:backbutton', ['$event'])
+	// onBackButton(event) {
+	// 	this._onClickMobileBackButton(event);
 
-		if (history.length > historyStart)
-			window.history.go(-1);
-	}
+	// 	if (history.length > historyStart)
+	// 		window.history.go(-1);
+	// }
 
 	constructor(
 		public userService: UserService,

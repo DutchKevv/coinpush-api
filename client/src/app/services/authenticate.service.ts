@@ -159,17 +159,26 @@ export class AuthenticationService {
 
 			// app
 			if (app.platform.isApp) {
+				// login through cordova facebook plugin
 				window.facebookConnectPlugin.login(scope, async (response) => {
+
+					// get facebook unique accessToken
 					const token = response.authResponse.accessToken;
 
 					if (token) {
 						try {
+							// login add coinpush server with accessToken
 							const authResult = <any>await this._http.post(`/authenticate/facebook`, { token, email: emailAddress }).toPromise();
+							
 							if (authResult && authResult.token) {
+
+								// store token and _id locally
 								await app.storage.updateProfile({ _id: authResult._id, token: authResult.token }, true);
 
+								// reload app
 								this.reload(redirectUrl);
-
+							} else {
+								reject('token missing');
 							}
 						} catch (error) {
 							return reject(error)
@@ -278,7 +287,6 @@ export class AuthenticationService {
 
 	public reload(redirectUrl?: string) {
 		if (app.platform.isApp) {
-			alert('index.html' + (redirectUrl ? `#${redirectUrl}` : ''))
 			window.location = 'index.html' +  (redirectUrl ? `#${redirectUrl}` : '');
 		} else {
 			if (redirectUrl)

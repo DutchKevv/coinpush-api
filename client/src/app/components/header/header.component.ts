@@ -5,7 +5,6 @@ import { Subject } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Location } from '@angular/common';
 import { Router, NavigationStart, NavigationEnd } from '@angular/router';
-import { BROKER_GENERAL_TYPE_CC, BROKER_GENERAL_TYPE_OANDA } from 'coinpush/src/constant';
 
 let historyStart = history.length;
 
@@ -37,25 +36,25 @@ export class HeaderComponent {
 		users: []
 	};
 
-	/**
-	 * outside click for menus auto close
-	 * @param event 
-	 */
-	@HostListener('window:click', ['$event'])
-	onWindowClick(event) {
-		if (event.target.id !== 'mainSearchInput' && !event.target.classList.contains('fa-search')) {
-			this.toggleSearch(false);
-			this._changeDetectorRef.detectChanges();
-		}
-		if (!event.target.classList.contains('fa-filter')) {
-			this.filterClicked$.emit(false);
-			this._changeDetectorRef.detectChanges();
-		}
+	// /**
+	//  * outside click for menus auto close
+	//  * @param event 
+	//  */
+	// @HostListener('window:click', ['$event'])
+	// onWindowClick(event) {
+	// 	if (event.target.id !== 'mainSearchInput' && !event.target.classList.contains('fa-search')) {
+	// 		this.toggleSearch(false);
+	// 		this._changeDetectorRef.detectChanges();
+	// 	}
+	// 	if (!event.target.classList.contains('fa-filter')) {
+	// 		this.filterClicked$.emit(false);
+	// 		this._changeDetectorRef.detectChanges();
+	// 	}
 
-		if (this.dropdown) {
-			this.searchResults$.next(this._defaultSearchResults);
-		}
-	}
+	// 	if (this.dropdown) {
+	// 		this.searchResults$.next(this._defaultSearchResults);
+	// 	}
+	// }
 
 	constructor(
 		private _http: HttpClient,

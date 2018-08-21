@@ -219,11 +219,12 @@ export class SymbolListService {
      * @param event 
      */
     private _onClickContainer(event: PointerEvent): void {
-        // check if user clicked empty (container) space
-        if (event.target === event.currentTarget) return;
+         // get row element
+         let rowEl = <HTMLElement>event.target;
 
-        // get row element
-        let rowEl = <HTMLElement>event.target;
+        // check if user clicked empty (container) space
+        if (!rowEl || rowEl === event.currentTarget) return;
+
         while (!rowEl['data']) rowEl = <HTMLElement>rowEl.parentNode;
 
         // favorite

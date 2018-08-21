@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Output, OnDestroy, EventEmitter, OnInit, HostListener, ChangeDetectorRef } from '@angular/core';
 import { NotificationService } from '../../services/notification.service';
-import { Router, NavigationStart } from '@angular/router';
+import { Router, NavigationStart, NavigationExtras, ActivationEnd } from '@angular/router';
 import { AuthenticationService } from '../../services/authenticate.service';
 import { UserService } from '../../services/user.service';
 import { BehaviorSubject } from 'rxjs';
@@ -43,8 +43,10 @@ export class NotificationMenuComponent implements OnDestroy, OnInit {
 	) {
 		
 		this._routerEventsSub = this.router.events.subscribe((val) => {
-			if (val instanceof NavigationStart)
-				this.open = false;
+			if (val instanceof ActivationEnd) {
+				this.open = !!val.snapshot.queryParams['menu-n'];
+				this._changeDetectorRef.detectChanges();
+			}
 		});
 	}
 
@@ -60,10 +62,10 @@ export class NotificationMenuComponent implements OnDestroy, OnInit {
 			return;
 		}
 
-		this.open = typeof state === 'boolean' ? state : !this.open;
-
-		// reset counter when user opens menu
-		if (this.open) {
+		const open = typeof state === 'boolean' ? state : !this.open;
+		
+		if (open) {
+			this.router.navigate([this.router.url], {queryParams: {'menu-n': 1}});
 			this.notificationService.resetUnreadCounter();
 		}
 	}
