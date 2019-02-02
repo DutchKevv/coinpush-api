@@ -58,7 +58,7 @@ export class StorageHelper {
         }
 
         // merge 'fresh' profile data
-        this.profileData = deepmerge.default.all([this.profileData, value]);
+        this.profileData = deepmerge.all([this.profileData, value]);
 
         // deepmerge does not keep unique array
         if (value.favorites) {

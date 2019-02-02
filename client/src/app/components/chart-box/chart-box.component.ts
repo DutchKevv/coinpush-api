@@ -376,7 +376,7 @@ export class ChartBoxComponent implements OnDestroy, AfterViewInit {
 		else if (shift > this._scrollSpeedMax)
 			shift = this._scrollSpeedMax;
 
-		this._updateViewPort(event.wheelDelta > 0 ? -shift : shift, true);
+		this._updateViewPort(event['wheelDelta'] > 0 ? -shift : shift, true);
 
 		return false;
 	}

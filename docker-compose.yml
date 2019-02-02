@@ -1,33 +1,33 @@
 version: '3.3'
 
 services:
-  jenkins:
-    build: ./server-jenkins
-    image: jenkins
-    container_name: jenkins 
-    privileged: true
-    ports:
-      - "8080:8080"
-      - "50000:50000"  
-    volumes:
-      - ./server-jenkins/_data:/var/jenkins_home
-      - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      JENKINS_HOST_HOME: "./server-jenkins/_data"
-    tty: true
-  nginx:
-    # restart: unless-stopped
-    build: ./server-nginx
-    image: nginx
-    container_name: nginx 
-    volumes:
-      - ./static:/usr/src/app/static
-      - ./server-nginx/pages:/usr/src/app/server-nginx/pages
-      - ./server-nginx/ssl:/usr/src/app/server-nginx/ssl:ro
-      # - ./server-nginx/config:/usr/src/app/server-nginx/config
-    depends_on:
-      - gateway
-      - user
+  # jenkins:
+  #   build: ./server-jenkins
+  #   image: jenkins
+  #   container_name: jenkins 
+  #   privileged: true
+  #   ports:
+  #     - "8080:8080"
+  #     - "50000:50000"  
+  #   volumes:
+  #     - ./server-jenkins/_data:/var/jenkins_home
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #   environment:
+  #     JENKINS_HOST_HOME: "./server-jenkins/_data"
+  #   tty: true
+  # nginx:
+  #   # restart: unless-stopped
+  #   build: ./server-nginx
+  #   image: nginx
+  #   container_name: nginx 
+  #   volumes:
+  #     - ./static:/usr/src/app/static
+  #     - ./server-nginx/pages:/usr/src/app/server-nginx/pages
+  #     - ./server-nginx/ssl:/usr/src/app/server-nginx/ssl:ro
+  #     # - ./server-nginx/config:/usr/src/app/server-nginx/config
+  #   depends_on:
+  #     - gateway
+  #     - user
   mongodb:
     image: mongo:latest
     container_name: "mongodb"
@@ -53,7 +53,7 @@ services:
       context: ./
       dockerfile: ./server-gateway/Dockerfile
     ports:
-      - 3100
+      - 3100:3100
     volumes:
       - ./_config:/usr/src/app/_config
       - ./server-gateway/src:/usr/src/app/server-gateway/src
@@ -156,16 +156,16 @@ services:
     links:
       - redis
       # - mongodb
-  client:
-    image: client
-    container_name: client
+  cp-client:
+    image: cp-client
+    container_name: cp-client
     build:
       context: ./
       dockerfile: ./client/Dockerfile
     volumes:
       - ./static/clients:/usr/src/app/static/clients
-      - ./client:/usr/src/app/client
-      - /usr/src/app/client/node_modules
+      - ./client/src:/usr/src/app/client/src
+      # - /usr/src/app/client/node_modules
       # - ./shared/modules/coinpush/src:/usr/src/app/shared/modules/coinpush/src
       # - /usr/src/app/shared/modules/coinpush/node_modules
   client-app:

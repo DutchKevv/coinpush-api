@@ -55,7 +55,8 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "coinpush:build"
+            "browserTarget": "coinpush:build",
+            "aot": true
           },
           "configurations": {
             "production": {

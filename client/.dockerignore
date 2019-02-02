@@ -1,0 +1,15 @@
+### global
+**/Dockerfile
+**/node_modules
+**/_log
+**/.git
+**/.gitignore
+**/.idea
+**/.vscode
+**/.DS_Store
+**/*.map
+**/*.md
+**/*.yml
+**/*.txt
+**/*.log
+**/*.tmp

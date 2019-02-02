@@ -1,0 +1,21 @@
+{
+    "/ngapimock": {
+        "target": "http://localhost:3000"
+    },
+    "/mocking": {
+        "target": "http://localhost:3000",
+        "secure": false,
+        "logLevel": "debug"
+    },
+    "/api/*": {
+        "target": "http://localhost:4000",
+        "secure": false,
+        "logLevel": "debug"
+    },
+    "/socket.io/*": {
+        "target": "http://localhost:4000",
+        "secure": false,
+        "logLevel": "debug",
+        "ws":true
+    }
+}

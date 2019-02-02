@@ -150,6 +150,9 @@ export class SymbolListService {
         const events = this._eventService.events$.getValue();
         
         symbolModels.forEach((symbolModel: SymbolModel) => {
+            if (!symbolModel)
+                return;
+
             const rowEl: HTMLElement = <HTMLElement>_rowEl.cloneNode(true);
             rowEl['data'] = {
                 symbol: symbolModel

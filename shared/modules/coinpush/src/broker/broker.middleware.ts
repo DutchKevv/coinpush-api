@@ -17,7 +17,7 @@ export class BrokerMiddleware extends EventEmitter {
     constructor() {
         super();
 
-        // this._installBrokerOanda();
+        this._installBrokerOanda();
         this._installBrokerCC();
         this._installBrokerIEX();
     }

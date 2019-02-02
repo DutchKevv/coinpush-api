@@ -22,7 +22,7 @@ export interface IComment {
 
 export class CommentModel extends BaseModel {
 
-	private _fromNowInterval: number;
+	private _fromNowInterval: any;
 	private _fromNowIntervalDelay: number = 5000;
 
 	public static readonly DEFAULTS: IComment = {

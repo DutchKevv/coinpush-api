@@ -1,4 +1,4 @@
-FROM mhart/alpine-node:10.9.0
+FROM mhart/alpine-node:11.9.0
 
 RUN apk update && apk upgrade && \
     apk add --no-cache bash git openssh

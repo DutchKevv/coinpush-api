@@ -16,7 +16,7 @@ class BrokerMiddleware extends events_1.EventEmitter {
             cc: null,
             iex: null
         };
-        // this._installBrokerOanda();
+        this._installBrokerOanda();
         this._installBrokerCC();
         this._installBrokerIEX();
     }

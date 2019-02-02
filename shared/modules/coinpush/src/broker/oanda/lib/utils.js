@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function rateLimit(fn, context, rate, warningThreshold) {
-    let queue = [], timeout;
+    var queue = [], timeout;
     function next() {
         if (queue.length === 0) {
             timeout = null;
@@ -20,4 +20,3 @@ function rateLimit(fn, context, rate, warningThreshold) {
     };
 }
 exports.rateLimit = rateLimit;
-//# sourceMappingURL=utils.js.map
