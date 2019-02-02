@@ -79,8 +79,27 @@ export const commentController = {
 	 * @param reqUser 
 	 * @param userId 
 	 */
-	async findMany(reqUser, userId) {
-		return [];
+	async findMany(reqUser, params) {
+		let comments = <Array<any>>await Comment
+			.find({})
+			.skip(parseInt(params.offset, 10) || 0)
+			.limit(parseInt(params.limit, 10) || 10)
+			.sort({ createdAt: -1 })
+			.populate('createUser')
+			.populate('toUser')
+			.populate({
+				path: 'children',
+				populate: { path: 'createUser' },
+				options: {
+					sort: { createdAt: -1 },
+					limit: 5
+				}
+			})
+			.lean();
+
+		(<any>Comment).addILike(reqUser.id, comments);
+
+		return comments;
 	},
 
 	/**

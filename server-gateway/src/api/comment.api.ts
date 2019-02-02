@@ -22,7 +22,7 @@ router.get('/', async (req: any, res, next) => {
 		if (req.query.toUserId)
 			res.send(await commentController.findByUserId(req.user, req.query));
 		else
-			res.send([]);
+			res.send(await commentController.findMany(req.user, req.query));
 	} catch (error) {
 		next(error);
 	}

@@ -20,7 +20,7 @@ const SCROLL_LOAD_TRIGGER_OFFSET = 800;
 // }
 
 export class FilterModel {
-	sources = []; //app.data.config.companyUsers.map(user => {user.enabled = true; return user});
+	sources = app.data.config.companyUsers.map(user => {user.enabled = true; return user});
 }
 
 @Component({

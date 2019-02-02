@@ -3,7 +3,7 @@ import * as path from 'path';
 
 const folders = [
     'client',
-    'client-app',
+    // 'client-app',
     'server-cache',
     'server-comment',
     'server-event',

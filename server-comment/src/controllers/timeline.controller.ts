@@ -20,13 +20,13 @@ export const timelineController = {
 		// filter options
 		if (params.sources) {
 			params.sources = JSON.parse(params.sources);
-
-			if (params.sources || params.sources.length) {
+			
+			if (params.sources && params.sources.length) {
 				findOptions.createUser = {"$in": params.sources}
 			}
 		}
 
-		let comments = <Array<any>>await Comment
+		const comments = <Array<any>>await Comment
 			.find(findOptions)
 			.skip(parseInt(params.offset, 10) || 0)
 			.limit(parseInt(params.limit, 10) || 10)

@@ -21,11 +21,11 @@ export class CommentService {
 	async create(toUserId = null, parentId: string = null, content: string): Promise<CommentModel> {
 		const comment = <any>await this._http.post('/comment', { toUserId, parentId, content }).toPromise();
 
-		if (!comment || !comment.body)
+		if (!comment)
 			return;
 
 		const model = new CommentModel({
-			...comment.body,
+			...comment,
 			content,
 			isNew: true,
 			createdAt: new Date(),

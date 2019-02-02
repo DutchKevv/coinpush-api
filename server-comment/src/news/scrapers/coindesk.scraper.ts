@@ -20,7 +20,7 @@ export class CoinDeskScraper {
         $('.article-set .stream-article').each((index, el) => {
             const $el = $(el);
             const createdAt = $el.find('time').attr('datetime');
-            console.log(createdAt, fromDate);
+  
             if (createdAt && (!fromDate || new Date(createdAt) > fromDate)) {
                 const url = $el.attr('href');
 
@@ -40,7 +40,9 @@ export class CoinDeskScraper {
 
             // TODO: multiple
             let imgUrl = $('.coindesk-article-header-image picture img').attr('src');
-            imgUrl = imgUrl.substring(5, imgUrl.length).substring(0, imgUrl.length - 7);
+            // console.log(imgUrl);
+            // imgUrl = imgUrl.substring(0, imgUrl.length);
+            // imgUrl = imgUrl.substring(5, imgUrl.length).substring(0, imgUrl.length - 5);
 
             return {
                 url: article.url,

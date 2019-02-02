@@ -8,7 +8,8 @@ export const timelineController = {
 			uri: config.server.comment.apiUrl + '/timeline',
 			headers: { _id: reqUser.id },
 			qs: params,
-			json: true
+			json: true,
+			fullResponse: false
 		});
 	}
 };

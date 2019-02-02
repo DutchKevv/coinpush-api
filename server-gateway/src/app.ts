@@ -14,6 +14,7 @@ import * as jwt from 'jsonwebtoken';
 import { config } from 'coinpush/src/util/util-config';
 import { G_ERROR_MAX_SIZE, G_ERROR_UNKNOWN } from 'coinpush/src/constant';
 import { userController } from './controllers/user.controller';
+import * as request from 'requestretry';
 
 const PATH_WWW_BROWSER_NOT_SUPPORTED_FILE = path.join(__dirname, '../public/index.legacy.browser.html');
 
