@@ -17,17 +17,19 @@ export class CoinDeskScraper {
 
         // get articles
         const articles = [];
-        $('#content .article').each((index, el) => {
+        $('.article-set .stream-article').each((index, el) => {
             const $el = $(el);
-            const createdAt = $el.find('.timeauthor time').attr('datetime');
-           
+            const createdAt = $el.find('time').attr('datetime');
+            console.log(createdAt, fromDate);
             if (createdAt && (!fromDate || new Date(createdAt) > fromDate)) {
-                const url = $el.find('.picture a').attr('href');
+                const url = $el.attr('href');
 
                 if (url)
                     articles.push({url, createdAt});
                 else
                     console.log('could not find article url in: ' + URL);             
+            } else {
+                console.log('??')
             }
         });
 
@@ -37,14 +39,14 @@ export class CoinDeskScraper {
             const $ = cheerio.load(result.body);
 
             // TODO: multiple
-            let imgUrl = $('.article-top-image-section').css('background-image');
+            let imgUrl = $('.coindesk-article-header-image picture img').attr('src');
             imgUrl = imgUrl.substring(5, imgUrl.length).substring(0, imgUrl.length - 7);
 
             return {
                 url: article.url,
-                title: $('.article-top-title').text(),
+                title: $('.coindesk-article-header-image .meta').text(),
                 imgs: imgUrl ? [imgUrl]: undefined,
-                content: $('.article-content-container').text(),
+                content: $('.article-content').text(),
                 createdAt: article.createdAt
             }
         });

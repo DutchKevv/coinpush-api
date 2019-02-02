@@ -27,23 +27,23 @@ RUN apt-get update && apt-get install sshpass
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && apt-get install -yq nodejs build-essential
 
 # gradle
-RUN wget https://services.gradle.org/distributions/gradle-4.7-bin.zip && unzip -d /gradle gradle-4.7-bin.zip
+# RUN wget https://services.gradle.org/distributions/gradle-4.7-bin.zip && unzip -d /gradle gradle-4.7-bin.zip
 
 # Download Android SDK
 # RUN chmod +x "/usr/local/"
-RUN mkdir -p "$ANDROID_HOME" \
-    mkdir "$ANDROID_HOME" .android \
-    && cd "$ANDROID_HOME" \
-    && curl -o sdk.zip $SDK_URL \
-    && unzip sdk.zip \
-    && rm sdk.zip \
-    && yes | $ANDROID_HOME/tools/bin/sdkmanager --licenses
+# RUN mkdir -p "$ANDROID_HOME" \
+#     mkdir "$ANDROID_HOME" .android \
+#     && cd "$ANDROID_HOME" \
+#     && curl -o sdk.zip $SDK_URL \
+#     && unzip sdk.zip \
+#     && rm sdk.zip \
+#     && yes | $ANDROID_HOME/tools/bin/sdkmanager --licenses
 
-# Install Android Build Tool and Libraries
-RUN $ANDROID_HOME/tools/bin/sdkmanager --update
-RUN $ANDROID_HOME/tools/bin/sdkmanager "build-tools;${ANDROID_BUILD_TOOLS_VERSION}" \
-    "platforms;android-${ANDROID_VERSION}" \
-    "platform-tools"
+# # Install Android Build Tool and Libraries
+# RUN $ANDROID_HOME/tools/bin/sdkmanager --update
+# RUN $ANDROID_HOME/tools/bin/sdkmanager "build-tools;${ANDROID_BUILD_TOOLS_VERSION}" \
+#     "platforms;android-${ANDROID_VERSION}" \
+#     "platform-tools"
 
 # docker
 # RUN apt-get update

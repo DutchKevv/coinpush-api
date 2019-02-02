@@ -19,7 +19,7 @@ export const authenticateController = {
 			user = <IUser>await (<any>User).authenticate(params, fields);
 
 		if (user && user._id) {
-			user.token = jwt.sign({id: user._id}, config.auth.jwt.secret);
+			user.token = jwt.sign({id: user._id}, config.auth.jwt.secret || 'liefmeisje');
 			(<any>User).normalizeProfileImg(user);
 				
 		}

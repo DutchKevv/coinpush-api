@@ -16,7 +16,7 @@ class BrokerMiddleware extends events_1.EventEmitter {
             cc: null,
             iex: null
         };
-        this._installBrokerOanda();
+        // this._installBrokerOanda();
         this._installBrokerCC();
         this._installBrokerIEX();
     }
@@ -24,7 +24,7 @@ class BrokerMiddleware extends events_1.EventEmitter {
         return this._symbols;
     }
     async getSymbols() {
-        const results = await Promise.all([this._brokers.oanda.getSymbols(), this._brokers.cc.getSymbols()]);
+        const results = await Promise.all([this._brokers.cc.getSymbols()]);
         const sorted = [].concat(...results).sort((a, b) => {
             return a.displayName.localeCompare(b.displayName);
         });

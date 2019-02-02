@@ -104,7 +104,7 @@ export class App extends MicroEvent {
         }
 
         const headers: any = {
-            'cv': "0.0.2",
+            'cv': "1.0.3",
             [this.storage.profileData.token ? 'authorization' : undefined]: 'Bearer ' + this.storage.profileData.token
             // 'cv': config.clientVersion
         };

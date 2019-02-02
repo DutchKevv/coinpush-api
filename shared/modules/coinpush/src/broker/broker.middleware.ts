@@ -17,7 +17,7 @@ export class BrokerMiddleware extends EventEmitter {
     constructor() {
         super();
 
-        this._installBrokerOanda();
+        // this._installBrokerOanda();
         this._installBrokerCC();
         this._installBrokerIEX();
     }
@@ -29,7 +29,7 @@ export class BrokerMiddleware extends EventEmitter {
     }
 
     public async getSymbols(): Promise<Array<any>> {
-        const results = await Promise.all([this._brokers.oanda.getSymbols(), this._brokers.cc.getSymbols()]);
+        const results = await Promise.all([this._brokers.cc.getSymbols()]);
         
         const sorted = [].concat(...results).sort((a, b) => {
             return a.displayName.localeCompare(b.displayName);

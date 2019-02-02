@@ -1,4 +1,4 @@
-<!-- <div class="d-none d-lg-block" style="padding-top: 20px;">
+<div class="d-none d-lg-block" style="padding-top: 20px;">
 	<div class="info-box">
 		<header>Info</header>
 		<main>
@@ -15,7 +15,7 @@
 	</div>
 
 	<div class="info-box info-box-user-list">
-		<header>Followers ({{(user.options$ | async).followersCount}})</header>
+		<!-- <header>Followers ({{(user.options$ | async).followersCount}})</header>
 		<main>
 			<ul>
 				<li *ngFor="let follower of (user.options$ | async).followers ">
@@ -23,9 +23,9 @@
 					<span>{{follower.name}}</span>
 				</li>
 			</ul>
-		</main>
+		</main> -->
 	</div>
-</div> -->
+</div>
 
 <div class="feed-container">
 
@@ -50,7 +50,7 @@
 	<div class="feed">
 
 		<!-- Comment box-->
-		<!-- <app-comment-box *ngIf="!commentId" [userId]="userId" (newMessage)="addMessage($event)"></app-comment-box> -->
+		<app-comment-box *ngIf="!commentId" [userId]="userId" (newMessage)="addMessage($event)"></app-comment-box>
 
 		<ng-container *ngFor="let comment of comments$ | async; trackBy: trackByFn">
 			<article *ngIf="comment.options.type === 'ad'" class="comment-ad-container">

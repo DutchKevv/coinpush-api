@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import * as multer from 'multer';
-import * as sharp from 'sharp';
+// import * as sharp from 'sharp';
 import * as request from 'requestretry';
 import * as fs from 'fs';
 import { join, extname } from 'path';
@@ -37,7 +37,7 @@ router.post('/profile', upload.single('image'), async (req: any, res, next) => {
 		const fullPath = join(config.image.profilePath, fileName);
 
 		// resize / crop and save to disk
-		await sharp(req.file.buffer).resize(1000).max().toFile(fullPath);
+		// await sharp(req.file.buffer).resize(1000).max().toFile(fullPath);
 
 		// update user @ DB
 		await userController.update(req.user, req.user.id, { img: fileName });
@@ -52,17 +52,18 @@ router.post('/profile', upload.single('image'), async (req: any, res, next) => {
 });
 
 export function downloadProfileImgFromUrl(reqUser: IReqUser, url: string): Promise<string> {
-	const fileName = reqUser.id + '_' + Date.now() + '.png';
-	const fullPath = join(config.image.profilePath, fileName);
-	const resizeTransform = sharp().resize(1000).max();
+	return Promise.resolve('');
+	// const fileName = reqUser.id + '_' + Date.now() + '.png';
+	// const fullPath = join(config.image.profilePath, fileName);
+	// const resizeTransform = sharp().resize(1000).max();
 
-	return new Promise((resolve, reject) => {
-		request(url)
-			.pipe(resizeTransform)
-			.pipe(fs.createWriteStream(fullPath))
-			.on('close', () => resolve(fileName))
-			.on('error', reject);
-	});
+	// return new Promise((resolve, reject) => {
+	// 	request(url)
+	// 		.pipe(resizeTransform)
+	// 		.pipe(fs.createWriteStream(fullPath))
+	// 		.on('close', () => resolve(fileName))
+	// 		.on('error', reject);
+	// });
 }
 
 // export = router;

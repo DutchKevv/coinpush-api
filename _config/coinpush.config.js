@@ -104,12 +104,12 @@ const config = {
     },
     auth: {
         jwt: {
-            secret: '',
-            passwordResetSecret: ''
+            secret: 'liefmeisje',
+            passwordResetSecret: 'liefmeisje'
         },
         facebook: {
-            clientID: '', // your App ID
-            clientSecret: '', // your App Secret
+            clientID: 'liefmeisje', // your App ID
+            clientSecret: 'liefmeisje', // your App Secret
             callbackURL: 'http://localhost:8080/auth/facebook/callback',
             profileURL: 'https://graph.facebook.com/v2.12/me?fields=first_name,last_name,email',
             profileFields: ['id', 'email', 'name'] // For requesting permissions from Facebook API

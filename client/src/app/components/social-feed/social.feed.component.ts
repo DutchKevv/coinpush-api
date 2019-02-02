@@ -20,7 +20,7 @@ const SCROLL_LOAD_TRIGGER_OFFSET = 800;
 // }
 
 export class FilterModel {
-	sources = app.data.config.companyUsers.map(user => {user.enabled = true; return user});
+	sources = []; //app.data.config.companyUsers.map(user => {user.enabled = true; return user});
 }
 
 @Component({
@@ -231,7 +231,7 @@ export class SocialFeedComponent implements OnInit, OnDestroy, OnChanges {
 		} else {
 			const ad = new CommentModel({
 				type: 'ad',
-				content: ''
+				content: 'DFDFDF'
 			});
 
 			comments.push(ad);

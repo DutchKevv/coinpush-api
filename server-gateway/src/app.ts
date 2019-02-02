@@ -139,7 +139,7 @@ export const app = {
 		};
 
 		this.api.use(expressJwt({
-			secret: config.auth.jwt.secret,
+			secret: config.auth.jwt.secret || 'liefmeisje',
 			getToken,
 			credentialsRequired: true
 		}).unless(req => {
@@ -173,7 +173,7 @@ export const app = {
 				const token = getToken(req);
 
 				if (token) {
-					jwt.verify(token, config.auth.jwt.secret, {}, (error, decoded) => {
+					jwt.verify(token, config.auth.jwt.secret || 'liefmeisje', {}, (error, decoded) => {
 						if (error) {
 							res.status(401);
 						} else {
@@ -192,12 +192,12 @@ export const app = {
 		/**
 		 * error - unauthorized
 		 */
-		this.api.use((req, res, next) => {
-			if (!req.headers.cv || req.headers.cv !== config.clientVersion)
-				return res.status(400).send({ reason: 'clientVersion' });
+		// this.api.use((req, res, next) => {
+		// 	if (!req.headers.cv || req.headers.cv !== config.clientVersion)
+		// 		return res.status(400).send({ reason: 'clientVersion' });
 
-			next();
-		});
+		// 	next();
+		// });
 
 		// this.api.get('/', function (req, res, next) {
 		// 	res.send('This page has been viewed ' + 3 + ' times!');
