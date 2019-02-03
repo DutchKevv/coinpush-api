@@ -27,7 +27,7 @@ function getEstimatedTimeFromCount(timeFrame, count) {
 }
 exports.getEstimatedTimeFromCount = getEstimatedTimeFromCount;
 function splitToChunks(timeFrame, from, until, count, chunkLimit) {
-    var timeStep = this.timeFrameSteps[timeFrame] * chunkLimit, returnArr = [];
+    let timeStep = this.timeFrameSteps[timeFrame] * chunkLimit, returnArr = [];
     if (from && until) {
         while (from < until)
             returnArr.push({
@@ -53,7 +53,7 @@ function mergeRanges(ranges) {
     if (!(ranges && ranges.length))
         return [];
     // Stack of final ranges
-    var stack = [];
+    let stack = [];
     // Sort according to start value
     ranges.sort(function (a, b) {
         return a[0] - b[0];
@@ -61,7 +61,7 @@ function mergeRanges(ranges) {
     // Add first range to stack
     stack.push(ranges[0]);
     ranges.slice(1).forEach(function (range, i) {
-        var top = stack[stack.length - 1];
+        let top = stack[stack.length - 1];
         if (top[1] < range[0]) {
             // No overlap, push range onto stack
             stack.push(range);
@@ -76,3 +76,4 @@ function mergeRanges(ranges) {
     return stack;
 }
 exports.mergeRanges = mergeRanges;
+//# sourceMappingURL=util.date.js.map

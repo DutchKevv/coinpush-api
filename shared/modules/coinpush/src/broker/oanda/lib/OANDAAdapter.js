@@ -1,26 +1,13 @@
 "use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    }
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 Object.defineProperty(exports, "__esModule", { value: true });
-var querystring = require("querystring");
-var constants = require("../../../constant");
-var Events = require("./Events");
-var httpClient = require("./httpClient");
-var lodash_1 = require("lodash");
-var request = require("requestretry");
-var events_1 = require("events");
-var environments = {
+const querystring = require("querystring");
+const constants = require("../../../constant");
+const Events = require("./Events");
+const httpClient = require("./httpClient");
+const lodash_1 = require("lodash");
+const request = require("requestretry");
+const events_1 = require("events");
+let environments = {
     sandbox: {
         restHost: 'api-sandbox.oanda.com',
         streamHost: 'stream-sandbox.oanda.com',
@@ -37,41 +24,38 @@ var environments = {
         secure: true
     }
 };
-var maxSockets = 3, maxRequestsPerSecond = 15, maxRequestsWarningThreshold = 1000;
+let maxSockets = 3, maxRequestsPerSecond = 15, maxRequestsWarningThreshold = 1000;
 /*
  * config.environment
  * config.accessToken
  * config.username (Sandbox only)
  */
-var OandaAdapter = /** @class */ (function (_super) {
-    __extends(OandaAdapter, _super);
-    function OandaAdapter(config) {
-        var _this = _super.call(this) || this;
+class OandaAdapter extends events_1.EventEmitter {
+    constructor(config) {
+        super();
         config.environment = config.environment || 'practice';
         // this.accountId = accountId;
-        _this.accessToken = config.accessToken;
-        _this.restHost = environments[config.environment].restHost;
-        _this.streamHost = environments[config.environment].streamHost;
-        _this.secure = environments[config.environment].secure;
+        this.accessToken = config.accessToken;
+        this.restHost = environments[config.environment].restHost;
+        this.streamHost = environments[config.environment].streamHost;
+        this.secure = environments[config.environment].secure;
         if (config.environment === 'sandbox') {
-            _this.username = config.username;
+            this.username = config.username;
         }
         httpClient.setMaxSockets(maxSockets);
-        _this.subscriptions = {};
-        _this._eventsBuffer = [];
-        _this._pricesBuffer = [];
-        return _this;
+        this.subscriptions = {};
+        this._eventsBuffer = [];
+        this._pricesBuffer = [];
         // this._sendRESTRequest = utils.rateLimit(this._sendRESTRequest, this, 1000 / maxRequestsPerSecond, maxRequestsWarningThreshold);
     }
-    return OandaAdapter;
-}(events_1.EventEmitter));
+}
 exports.OandaAdapter = OandaAdapter;
 Events.mixin(OandaAdapter.prototype);
 /*
  * Subscribes to events for all accounts authorized by the token
  */
 OandaAdapter.prototype.subscribeEvents = function (listener, context) {
-    var existingSubscriptions = this.getHandlers('event');
+    let existingSubscriptions = this.getHandlers('event');
     this.removeListener('event', listener, context);
     this.on('event', listener, context);
     if (existingSubscriptions.length === 0) {
@@ -83,7 +67,7 @@ OandaAdapter.prototype.unsubscribeEvents = function (listener, context) {
     this._streamEvents();
 };
 OandaAdapter.prototype._streamEvents = function () {
-    var subscriptionCount = this.getHandlers('event').length;
+    let subscriptionCount = this.getHandlers('event').length;
     if (this.eventsRequest) {
         this.eventsRequest.abort();
     }
@@ -127,36 +111,35 @@ OandaAdapter.prototype._onEventsResponse = function (body, statusCode) {
     this.eventsTimeout = setTimeout(this._eventsHeartbeatTimeout.bind(this), 20000);
 };
 OandaAdapter.prototype._onEventsData = function (data) {
-    var _this = this;
     // Single chunks sometimes contain more than one event. Each always end with /r/n. Whole chunk therefore not JSON parsable, so must split.
     // Also, an event may be split accross data chunks, so must buffer.
     // console.log(data.toString());
-    data.toString().split(/\r\n/).forEach(function (line) {
-        var update;
+    data.toString().split(/\r\n/).forEach(line => {
+        let update;
         if (line) {
-            _this._eventsBuffer.push(line);
+            this._eventsBuffer.push(line);
             try {
-                update = JSON.parse(_this._eventsBuffer.join(''));
+                update = JSON.parse(this._eventsBuffer.join(''));
             }
             catch (error) {
-                if (_this._eventsBuffer.length <= 5) {
+                if (this._eventsBuffer.length <= 5) {
                     // Wait for next line.
                     return;
                 }
-                _this.emit('error', {
+                this.emit('error', {
                     code: constants.BROKER_ERROR_PARSE,
-                    message: "Unable to parse Oanda events subscription update. \n \n Error: \n " + error
+                    message: `Unable to parse Oanda events subscription update. \n \n Error: \n ${error}`
                 });
-                _this._eventsBuffer = [];
+                this._eventsBuffer = [];
                 return;
             }
-            _this._eventsBuffer = [];
+            this._eventsBuffer = [];
             if (update.heartbeat) {
-                clearTimeout(_this.eventsTimeout);
-                _this.eventsTimeout = setTimeout(_this._eventsHeartbeatTimeout.bind(_this), 20000);
+                clearTimeout(this.eventsTimeout);
+                this.eventsTimeout = setTimeout(this._eventsHeartbeatTimeout.bind(this), 20000);
                 return;
             }
-            _this.emit('event', update);
+            this.emit('event', update);
         }
     }, this);
 };
@@ -196,7 +179,7 @@ OandaAdapter.prototype.getInstruments = function (accountId, callback) {
     });
 };
 OandaAdapter.prototype.getPrices = function (symbol, callback) {
-    var multiple = Array.isArray(symbol);
+    let multiple = Array.isArray(symbol);
     if (multiple)
         symbol = symbol.join('%2C');
     this._sendRESTRequest({
@@ -212,17 +195,16 @@ OandaAdapter.prototype.getPrices = function (symbol, callback) {
     });
 };
 OandaAdapter.prototype.subscribePrices = function (accountId, symbols, listener) {
-    var _this = this;
-    symbols.forEach(function (symbol) {
-        var existingSubscriptions = _this.getHandlers('price/' + symbol);
+    symbols.forEach(symbol => {
+        let existingSubscriptions = this.getHandlers('price/' + symbol);
         // Price stream needs an accountId to be passed for streaming prices, though prices for a connection are same anyway
-        if (!_this.streamPrices) {
-            _this.streamPrices = lodash_1.throttle(_this._streamPrices.bind(_this, accountId));
+        if (!this.streamPrices) {
+            this.streamPrices = lodash_1.throttle(this._streamPrices.bind(this, accountId));
         }
-        _this.removeListener('price/' + symbol, listener);
-        _this.on('price/' + symbol, listener);
+        this.removeListener('price/' + symbol, listener);
+        this.on('price/' + symbol, listener);
         if (!existingSubscriptions.length)
-            _this.streamPrices();
+            this.streamPrices();
     });
 };
 OandaAdapter.prototype.unsubscribePrices = function (symbol, listener, context) {
@@ -230,9 +212,9 @@ OandaAdapter.prototype.unsubscribePrices = function (symbol, listener, context) 
 };
 // Kills rates streaming keep alive request for account and creates a new one whenever subsciption list changes. Should always be throttled.
 OandaAdapter.prototype._streamPrices = function (accountId) {
-    var changed;
+    let changed;
     this.priceSubscriptions = Object.keys(this.getHandlers()).reduce(function (memo, event) {
-        var match = event.match('^price/(.+)$');
+        let match = event.match('^price/(.+)$');
         if (match) {
             memo.push(match[1]);
         }
@@ -271,7 +253,7 @@ OandaAdapter.prototype._onPricesData = function (data) {
     // Each always end with /r/n. Whole chunk therefore not JSON parsable, so must split.
     // A tick may also be split accross data chunks, so must buffer
     data.toString('ascii').split(/\r\n/).forEach(function (line) {
-        var update;
+        let update;
         if (line) {
             this._pricesBuffer.push(line);
             try {
@@ -417,16 +399,15 @@ OandaAdapter.prototype.closeOrder = function (accountId, tradeId, callback) {
 };
 // old
 OandaAdapter.prototype._sendRESTRequestStream = function (request, callback, onData) {
-    var _this = this;
     request.hostname = this.restHost;
     request.headers = request.headers || {
         Authorization: 'Bearer ' + this.accessToken
     };
     request.secure = this.secure;
-    httpClient.sendRequest(request, function (error, body, httpCode) {
+    httpClient.sendRequest(request, (error, body, httpCode) => {
         if (!error)
             return callback(null, body);
-        var errorObject = {
+        let errorObject = {
             originalRequest: request.path,
             code: constants.BROKER_ERROR_UNKNOWN,
             httpCode: httpCode,
@@ -449,13 +430,12 @@ OandaAdapter.prototype._sendRESTRequestStream = function (request, callback, onD
                 }
             }
         }
-        _this.emit('error', errorObject);
+        this.emit('error', errorObject);
         callback(errorObject);
     }, onData);
 };
 // new
 OandaAdapter.prototype._sendRESTRequest = function (params, callback) {
-    var _this = this;
     request({
         uri: 'https://' + this.restHost + params.path,
         headers: params.headers || {
@@ -464,10 +444,10 @@ OandaAdapter.prototype._sendRESTRequest = function (params, callback) {
         method: params.method,
         body: params.data
     })
-        .then(function (result) { return callback(null, JSON.parse(result.body)); })
-        .catch(function (error) {
+        .then(result => callback(null, JSON.parse(result.body)))
+        .catch((error) => {
         console.log(error);
-        var errorObject = {
+        let errorObject = {
             originalRequest: params.path,
             code: constants.BROKER_ERROR_UNKNOWN,
             httpCode: error.statusCode,
@@ -490,7 +470,7 @@ OandaAdapter.prototype._sendRESTRequest = function (params, callback) {
                 }
             }
         }
-        _this.emit('error', errorObject);
+        this.emit('error', errorObject);
         callback(errorObject);
     });
 };
@@ -504,3 +484,4 @@ OandaAdapter.prototype.kill = function () {
     this.removeListener();
 };
 exports.Adapter = OandaAdapter;
+//# sourceMappingURL=OANDAAdapter.js.map
