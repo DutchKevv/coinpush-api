@@ -55,7 +55,6 @@ if (window.platform.isApp) {
 	}
 }
 else {
-	alert('sfsdf')
 	address.ip = prodApiIp;
 	address.host = prodApiProtocol;
 	address.ws = prodApiWsType;
