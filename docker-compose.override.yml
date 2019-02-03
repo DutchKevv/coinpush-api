@@ -49,6 +49,7 @@ services:
     command: npm start
     # command: sh -c "cd ../shared/modules/coinpush && npm run build && cd ../../../client && npm start"
     volumes:
+       - ./client/src:/usr/src/app/client/src
        - /usr/src/app/client/node_modules
 volumes:
   mongodata:

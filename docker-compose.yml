@@ -164,7 +164,6 @@ services:
       dockerfile: ./client/Dockerfile
     volumes:
       - ./static/clients:/usr/src/app/static/clients
-      - ./client/src:/usr/src/app/client/src
       # - /usr/src/app/client/node_modules
       # - ./shared/modules/coinpush/src:/usr/src/app/shared/modules/coinpush/src
       # - /usr/src/app/shared/modules/coinpush/node_modules
