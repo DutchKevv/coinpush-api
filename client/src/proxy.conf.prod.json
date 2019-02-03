@@ -1,0 +1,11 @@
+{
+    "/api/*": {
+        "target": "http://149.210.227.14:3100",
+        "secure": false
+    },
+    "/socket.io/*": {
+        "target": "http://149.210.227.14:3100",
+        "secure": false,
+        "ws": true
+    }
+}
