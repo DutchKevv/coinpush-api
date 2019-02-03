@@ -1,13 +1,6 @@
 version: '3.3'
 
-services:
-  # nginx:
-  #   ports:
-  #     - "4000:80"
-  #     - "443:443"
-  #   build:
-  #     args:
-  #       RUNNING_ENV: dev        
+services:    
   mongodb:
     ports:
       - "27017:27017"

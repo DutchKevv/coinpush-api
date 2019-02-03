@@ -1,33 +1,6 @@
 version: '3.3'
 
 services:
-  # jenkins:
-  #   build: ./server-jenkins
-  #   image: jenkins
-  #   container_name: jenkins 
-  #   privileged: true
-  #   ports:
-  #     - "8080:8080"
-  #     - "50000:50000"  
-  #   volumes:
-  #     - ./server-jenkins/_data:/var/jenkins_home
-  #     - /var/run/docker.sock:/var/run/docker.sock
-  #   environment:
-  #     JENKINS_HOST_HOME: "./server-jenkins/_data"
-  #   tty: true
-  # nginx:
-  #   # restart: unless-stopped
-  #   build: ./server-nginx
-  #   image: nginx
-  #   container_name: nginx 
-  #   volumes:
-  #     - ./static:/usr/src/app/static
-  #     - ./server-nginx/pages:/usr/src/app/server-nginx/pages
-  #     - ./server-nginx/ssl:/usr/src/app/server-nginx/ssl:ro
-  #     # - ./server-nginx/config:/usr/src/app/server-nginx/config
-  #   depends_on:
-  #     - gateway
-  #     - user
   mongodb:
     image: mongo:latest
     container_name: "mongodb"

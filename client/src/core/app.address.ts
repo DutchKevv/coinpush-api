@@ -3,16 +3,16 @@ import DEV_OVERWRITE from '../address_overwrite';
 
 declare let window: any;
 
+const androidEmulatorIp = '10.0.2.2';
+const iosEmulatorIp = 'localhost';
 const localApiIp = '127.0.0.1';
 const localApiPort = 3100;
 const localApiWsType = 'ws';
 const localApiProtocol = 'http';
-const androidEmulatorIp = '10.0.2.2';
-const iosEmulatorIp = 'localhost';
-const prodApiIp = '149.210.227.14';
-const prodApiPort = 3100;
+const prodApiIp = 'www.coinpush.app';
+const prodApiPort = undefined;
 const prodApiWsType = 'wss';
-const prodApiProtocol = 'http';
+const prodApiProtocol = 'https';
 
 const address = {
 	secure: true,
