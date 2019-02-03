@@ -10,7 +10,8 @@
   "main": "index.js",
   "scripts": {
     "start": "ng serve --proxy-config ./src/proxy.conf.json --host 0.0.0.0",
-    "build-prod": "ng build --prod --no-progress --base-href http://136.144.181.63:4100/apps/web",
+    "build-prod": "ng build --prod --no-progress",
+    "build-prod2": "ng build --prod --no-progress --base-href http://136.144.181.63:4100/apps/web/",
     "build-prod-stats": "ng build --build-optimizer --prod --aot --stats-json --output-hashing=none && npm run show-report",
     "build-prod-verbose": "ng build --build-optimizer --prod --stats-json --output-hashing=none --verbose > build.txt",
     "load-symbol-images": "node ./tools/load-symbol-images.js",
