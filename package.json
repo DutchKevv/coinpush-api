@@ -34,7 +34,7 @@
     "build-server": "docker-compose build mongodb redis gateway notify user event cache comment",
     "build-nginx": "docker-compose build nginx",
     "build-prod-all": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml build",
-    "build-prod-client": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml build --no-cache --force-rm cp-client",
+    "build-prod-client": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml build --no-cache cp-client",
     "build-prod-jenkins": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml build jenkins",
     "build-prod-server": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml build redis gateway notify user event cache comment mongodb",
     "build-prod-nginx": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml build nginx",
