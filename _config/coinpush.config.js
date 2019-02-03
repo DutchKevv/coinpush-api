@@ -98,7 +98,7 @@ const config = {
     },
     ip: {
         "local": "127.0.0.1",
-        "prod": "coinpush.app",
+        "prod": "www.coinpush.app",
         "devLocal": "127.0.0.1",
         "devApp": "10.0.2.2"
     },
