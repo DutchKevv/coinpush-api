@@ -39,13 +39,10 @@
     "start-mongo": "docker-compose up -d mongodb",
     "restart-server": "npm run kill-server && npm run start-server",
     "prod-client": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up cp-client",
-    "prod-client2": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up cp-client && npm run inc-build-number",
     "prod-jenkins": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d jenkins",
     "prod-server": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d redis gateway notify user event cache comment mongodb",
-    "prod-nginx": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d nginx",
     "prod-mongo": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d mongodb",
     "kill-server": "docker-compose kill redis gateway notify user event cache comment mongodb",
-    "kill-nginx": "docker-compose kill nginx",
     "d-rm-all": "docker-compose rm -f",
     "d-rm-server": "npm run d-kill-server && docker-compose rm gateway notify user event cache comment",
     "d-rmi-none": "docker rmi $(docker images --filter 'dangling=true' -q --no-trunc)",
@@ -57,8 +54,9 @@
     "d-prune": "docker system prune -f",
     "d-log": "docker-compose logs --tail=30 -f",
     "d-log-server": "docker-compose logs --tail=10 -f notify user event cache comment gateway",
-    "d-log-nginx": "docker-compose logs --tail=20 -f nginx",
     "d-log-mongo": "docker-compose logs --tail=20 -f mongodb",
+    "d-login": "docker login registry.juistbezorgd.nl -u madi -p Asante123",
+    "d-pull-service": "npm run d-login && docker pull registry.coinpush.app/$API_NAME && docker-compose kill $API_NAME && docker-compose -f ./docker-compose.yml -f ./docker-compose.prod.yml up -d $API_NAME",
     "clean-client": "cd ./scripts/npm && sh ./clean-modules.sh",
     "clean-app": "cd ./scripts/npm && sh ./clean-modules.sh",
     "clean-server": "cd ./scripts/npm && sh ./clean-modules.sh",
@@ -68,8 +66,7 @@
     "update-npm-modules": "cd ./scripts/npm && sh ./update-modules.sh",
     "install-npm-modules": "cd ./scripts/npm && node --experimental-modules install-modules.mjs",
     "inc-build-number": "node ./scripts/inc-build-number.js",
-    "prepare-dev": "cd ./scripts && node --experimental-modules prepare_dev.mjs",
-    "d-pull-service": "npm run d-login && docker pull registry.coinpush.app/$API_NAME && docker-compose kill $API_NAME && docker-compose -f ./docker-compose.yml -f ./docker-compose.prod.yml up -d $API_NAME"
+    "prepare-dev": "cd ./scripts && node --experimental-modules prepare_dev.mjs"
   },
   "dependencies": {}
 }
