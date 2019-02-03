@@ -6,7 +6,10 @@ declare let window: any;
 const localIp = '127.0.0.1';
 const androidEmulatorIp = '10.0.2.2';
 const iosEmulatorIp = 'localhost';
-const liveIp = 'coinpush.app';
+const prodApiIp = '149.210.227.14';
+const prodApiPort = 3100;
+const prodWsType = 'wss';
+const prodProtocol = 'http';
 
 const address = {
 	secure: true,
@@ -40,10 +43,10 @@ if (window.platform.isApp) {
 	
 	// REAL DEVICE
 	else {
-		address.ip = liveIp;
-		address.host = 'https';
-		address.ws = 'wss';
-		address.port = undefined;
+		address.ip = prodApiIp;
+		address.host = prodProtocol;
+		address.ws = prodWsType;
+		address.port = prodApiPort;
 
 		// merge custom app address options (for connecting from real device to dev machine in development)
 		if (!environment.production && DEV_OVERWRITE.app) {
