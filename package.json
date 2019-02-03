@@ -23,10 +23,6 @@
     "NodeJS"
   ],
   "scripts": {
-    "get-ssl-cert-prod": "docker run -v $(PWD}/server-nginx/ssl:/etc/letsencrypt -e http_proxy=$http_proxy -e domains=\"www.coinpush.app,coinpush.app,jenkins.coinpush.app\" -e email=\"kewin@frontend-freelance.com\" -p 80:80 -p 443:443  --rm pierreprinetti/certbot:latest --expand",
-    "get-ssl-cert-dev": "docker run -v C:/Users/User/Projects/CoinPush/server-nginx/ssl:/etc/letsencrypt -e http_proxy=$http_proxy -e domains=\"localhost\" -e email=\"kewin@frontend-freelance.com\" -p 80:80 -p 443:443  --rm pierreprinetti/certbot:latest --expand",
-    "copy-ssl-cert-prod": "cp -r /etc/letsencrypt/ ./server-nginx/ssl && chmod -R 777 ./server-nginx/ssl/",
-    "copy-ssl-cert-dev": "cp -r /etc/letsencrypt/ ./server-nginx/ssl",
     "build-all": "docker-compose build",
     "build-client": "docker-compose build --force-rm --no-cache cp-client",
     "build-client-app": "docker-compose build client-app",
