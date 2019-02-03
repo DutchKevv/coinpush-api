@@ -60,7 +60,7 @@ const config = {
         profilePath: path.join(__dirname, '../static/image/profile'),
         profileBaseUrl: '/image/profile/',
         profileDefaultPath: path.join(__dirname, '../static/image/default/profile/nl.png'),
-        profileDefaultUrl: '/assets/image/default-profile.jpg'
+        profileDefaultUrl: 'assets/image/default-profile.jpg'
     },
     redis: {
         host: '127.0.0.1',

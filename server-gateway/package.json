@@ -16,12 +16,14 @@
   "license": "ISC",
   "dependencies": {
     "@types/express": "4.16.1",
+    "@types/jsonwebtoken": "^8.3.0",
     "@types/mongoose": "5.3.12",
     "@types/node": "10.12.21",
     "@types/request": "^2.48.1",
     "@types/sharp": "0.21.2",
     "@types/validator": "10.9.0",
     "coinpush": "file:../shared/modules/coinpush",
+    "cors": "^2.8.5",
     "express": "4.16.4",
     "express-jwt": "5.3.1",
     "faker": "4.1.0",
@@ -38,6 +40,9 @@
     "typescript": "3.3.1"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.4",
+    "@types/helmet": "0.0.42",
+    "@types/morgan": "^1.7.35",
     "tsc-watch": "1.1.36"
   }
 }

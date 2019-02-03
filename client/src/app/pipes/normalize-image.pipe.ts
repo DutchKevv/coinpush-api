@@ -8,7 +8,7 @@ export class NormalizeImgUrlPipe implements PipeTransform {
 	transform(value: string, type: string = 'user'): string {
 		if (!value) {
 			if (type === 'user') {
-				value = '/assets/image/default-profile.jpg';
+				value = 'assets/image/default-profile.jpg';
 			} else {
 				return '';
 			}
@@ -18,8 +18,8 @@ export class NormalizeImgUrlPipe implements PipeTransform {
 			return value;
 
 		if (!value.startsWith('/'))
-			value = '/image/profile/' + value;
+			value = value;
 
-		return app.address.hostUrl + value;
+		return value;
 	}
 }

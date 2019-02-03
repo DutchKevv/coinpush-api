@@ -1,5 +1,4 @@
 import * as path from 'path';
-import { parse } from 'url';
 import { json } from 'body-parser';
 import * as express from 'express';
 import * as helmet from 'helmet';
@@ -15,6 +14,7 @@ import { config } from 'coinpush/src/util/util-config';
 import { G_ERROR_MAX_SIZE, G_ERROR_UNKNOWN } from 'coinpush/src/constant';
 import { userController } from './controllers/user.controller';
 import * as request from 'requestretry';
+import * as cors from 'cors';
 
 const PATH_WWW_BROWSER_NOT_SUPPORTED_FILE = path.join(__dirname, '../public/index.legacy.browser.html');
 
@@ -127,6 +127,8 @@ export const app = {
 		this.api.use(morgan('dev'));
 		this.api.use(helmet());
 
+		this.api.use(cors());
+
 		this.api.use((req, res, next) => {
 			res.header('Access-Control-Allow-Origin', '*');
 			// res.header('Access-Control-Allow-Headers', 'clientVersion, Authorization, Origin, X-Requested-With, Content-Type, Accept');
@@ -143,14 +145,14 @@ export const app = {
 			secret: config.auth.jwt.secret || 'liefmeisje',
 			getToken,
 			credentialsRequired: true
-		}).unless(req => {
+		}).unless((req) => {
 			return (
 				(req.method === 'GET' && !req.originalUrl.startsWith('/api/v1/authenticate')) ||
 				(req.originalUrl.startsWith('/api/v1/authenticate') && !getToken(req)) ||
 				(req.originalUrl === '/api/v1/user' && req.method === 'POST')
 			);
 		}));
-
+		
 		/**
 		 * error - unauthorized
 		 */

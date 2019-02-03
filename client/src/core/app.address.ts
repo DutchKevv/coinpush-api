@@ -4,6 +4,9 @@ import DEV_OVERWRITE from '../address_overwrite';
 declare let window: any;
 
 const localApiIp = '127.0.0.1';
+const localApiPort = 3100;
+const localApiWsType = 'ws';
+const localApiProtocol = 'http';
 const androidEmulatorIp = '10.0.2.2';
 const iosEmulatorIp = 'localhost';
 const prodApiIp = '149.210.227.14';
@@ -13,10 +16,10 @@ const prodApiProtocol = 'http';
 
 const address = {
 	secure: true,
-	host: location.protocol.replace(/:/g, ''),
+	host: localApiProtocol,
 	ip: localApiIp,
-	port: parseInt(location.port, 10) || undefined,
-	ws: '',
+	port: localApiPort,
+	ws: localApiWsType,
 	hostUrl: '',
 	apiUrl: ''
 }
@@ -35,10 +38,6 @@ if (window.platform.isApp) {
 		else {
 			address.ip = iosEmulatorIp;
 		}
-
-		address.host = 'http';
-		address.ws = 'ws';
-		address.port = 4000;
 	}
 
 	// REAL DEVICE
@@ -54,7 +53,7 @@ if (window.platform.isApp) {
 		}
 	}
 }
-else {
+else if (environment.production) {
 	address.ip = prodApiIp;
 	address.host = prodApiProtocol;
 	address.ws = prodApiWsType;
