@@ -68,7 +68,8 @@
     "update-npm-modules": "cd ./scripts/npm && sh ./update-modules.sh",
     "install-npm-modules": "cd ./scripts/npm && node --experimental-modules install-modules.mjs",
     "inc-build-number": "node ./scripts/inc-build-number.js",
-    "prepare-dev": "cd ./scripts && node --experimental-modules prepare_dev.mjs"
+    "prepare-dev": "cd ./scripts && node --experimental-modules prepare_dev.mjs",
+    "d-pull-service": "npm run d-login && docker pull registry.coinpush.app/$API_NAME && docker-compose kill $API_NAME && docker-compose -f ./docker-compose.yml -f ./docker-compose.prod.yml up -d $API_NAME"
   },
   "dependencies": {}
 }
