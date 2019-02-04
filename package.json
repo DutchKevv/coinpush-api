@@ -51,6 +51,8 @@
     "d-log": "docker-compose logs --tail=30 -f",
     "d-log-server": "docker-compose logs --tail=10 -f notify user event cache comment gateway",
     "d-log-mongo": "docker-compose logs --tail=20 -f mongodb",
+
+    
     "d-login": "docker login registry.coinpush.app -u kewin -p Bettie123!",
     "d-pull-service": "npm run d-login && docker pull registry.coinpush.app/$API_NAME && docker-compose kill $API_NAME && docker-compose -f ./docker-compose.yml -f ./docker-compose.prod.yml up -d $API_NAME",
     "clean-client": "cd ./scripts/npm && sh ./clean-modules.sh",
