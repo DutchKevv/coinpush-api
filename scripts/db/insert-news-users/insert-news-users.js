@@ -17,7 +17,7 @@ companies.forEach(company => {
     const img = company.img;
     delete company.img;
 
-    request.post('https://coinpush.app/api/v1/user', { json: company, headers }, (error, response, body) => {
+    request.post('https://www.coinpush.app/api/v1/user', { json: company, headers }, (error, response, body) => {
         if (error)
             return console.error(error);
 console.log(body);
@@ -29,7 +29,7 @@ console.log(body);
                 const authHeader = Object.assign({}, headers, {Authorization: 'Bearer ' + body.token});
 
                 // upload profile img
-                request.post('https://coinpush.app/api/v1/upload/profile', {
+                request.post('https://www.coinpush.app/api/v1/upload/profile', {
                     headers: authHeader,
                     formData: {
                         image: fs.createReadStream(path.join(__dirname, 'images', img))
