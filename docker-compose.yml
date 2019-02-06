@@ -9,6 +9,11 @@ services:
     - "5601:5601"
     - "9200:9200"
     - "5044:5044"
+    environment:
+      ELASTICSEARCH_START: 1
+      LOGSTASH_START: 0
+      KIBANA_START: 1
+      ES_CONNECT_RETRY: 90
     volumes:
     - ./server-elk/_data:/var/lib/elasticsearch
     depends_on:
