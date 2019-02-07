@@ -6,12 +6,13 @@ import { app } from '../../core/app';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
+import { environment } from 'environments/environment';
 
 declare const window: any;
 
 
-const FB_APP_ID_PROD = '691221981270027';
-const FB_APP_ID_DEV = '162805194523993';
+const FB_APP_ID_PROD = '391706548256074';
+const FB_APP_ID_DEV = '391706548256074';
 
 @Injectable({
 	providedIn: 'root',
@@ -200,8 +201,8 @@ export class AuthenticationService {
 				 * 
 				 * So for now using always prod
 				 **/
-				// const clientId = environment.production ? FB_APP_ID_PROD : FB_APP_ID_DEV;
-				const clientId = FB_APP_ID_PROD;
+				const clientId = environment.production ? FB_APP_ID_PROD : FB_APP_ID_DEV;
+				// const clientId = FB_APP_ID_PROD;
 
 				const fbRedirectUrl = app.address.hostUrl + '/index.redirect.facebook.html';
 				const loginUrl = `https://graph.facebook.com/oauth/authorize?client_id=${clientId}&response_type=token&redirect_uri=${fbRedirectUrl}&scope=${scope.join()}`;

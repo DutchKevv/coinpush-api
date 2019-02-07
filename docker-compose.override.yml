@@ -39,6 +39,8 @@ services:
   cp-client:
     environment:
       - NODE_ENV=development
+    ports:
+      - 4200:4200
     command: npm start
     # command: sh -c "cd ../shared/modules/coinpush && npm run build && cd ../../../client && npm start"
     volumes:

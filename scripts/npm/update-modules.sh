@@ -16,10 +16,10 @@ done
 cd ../
 
 # CLIENT (BROWSER) - skip TypeScript check cause Angular is fixed on TypeScript version
-cd ../client && ncu -u -a --reject typescript && echo 'client updated'
+# cd ../client && ncu -u -a --reject typescript && echo 'client updated'
 
 # MOBILE (APPS)
-cd ../client-app && ncu -u -a && echo 'client-app updated'
+# cd ../client-app && ncu -u -a && echo 'client-app updated'
 
 # SERVER (NodeJS microservices)
 cd ../server-cache && ncu -u -a && echo 'server-cache updated'
