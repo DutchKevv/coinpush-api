@@ -1,11 +1,15 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="com.ff2.coinpush" version="0.0.150" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>CoinPush</name>
-    <description>
-        Stock trading application with custom alarams
+    <description>
+
+        Stock trading application with custom alarams
+
     </description>
-    <author email="kewin@frontend-freelance.com" href="">
-        H.K.Brandsma
+    <author email="kewin@frontend-freelance.com" href="">
+
+        H.K.Brandsma
+
     </author>
     <preference name="android-targetSdkVersion" value="28" />
     <preference name="BackgroundColor" value="0xff222122" />
@@ -23,7 +27,7 @@
         <preference name="android-manifest/application/activity/@android:windowSoftInputMode" value="adjustPan" />
         <allow-intent href="market:*" />
         <config-file parent="/resources" target="./res/values/strings.xml">
-            <string name="fb_app_id">691221981270027</string>
+            <string name="fb_app_id">391706548256074</string>
             <string name="fb_app_name">CoinPush</string>
         </config-file>
         <config-file parent="/manifest" target="AndroidManifest.xml" xmlns:android="http://schemas.android.com/apk/res/android">
@@ -43,7 +47,7 @@
     <plugin name="cordova-plugin-admobpro" spec="2.31.6" />
     <plugin name="cordova-plugin-badge" spec="0.8.7" />
     <plugin name="cordova-plugin-facebook4" spec="2.2.0">
-        <variable name="APP_ID" value="691221981270027" />
+        <variable name="APP_ID" value="391706548256074" />
         <variable name="APP_NAME" value="“CoinPush”" />
         <variable name="ANDROID_SDK_VERSION" value="4.+" />
     </plugin>
