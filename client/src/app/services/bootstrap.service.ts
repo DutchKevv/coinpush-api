@@ -10,7 +10,7 @@ export class BootstrapService {
 
 	constructor(private _http: HttpClient) {
 
-	}h
+	}
 
 	/**
 	 * 

@@ -194,6 +194,7 @@ export class AuthenticationService {
 
 				
 			} 
+			
 			// browser
 			else {
 				/** TODO - TODO - TODO - TODO
@@ -206,7 +207,7 @@ export class AuthenticationService {
 				const clientId = environment.production ? FB_APP_ID_PROD : FB_APP_ID_DEV;
 				// const clientId = FB_APP_ID_PROD;
 
-				const fbRedirectUrl = app.address.hostUrl + '/index.redirect.facebook.html';
+				const fbRedirectUrl = environment.production ? app.address.hostUrl + '/index.redirect.facebook.html' : 'http://localhost:4200/index.redirect.facebook.html';
 				const loginUrl = `https://graph.facebook.com/oauth/authorize?client_id=${clientId}&response_type=token&redirect_uri=${fbRedirectUrl}&scope=${scope.join()}`;
 
 				window.addEventListener('message', async (message) => {
@@ -215,10 +216,10 @@ export class AuthenticationService {
 
 					try {
 						const authData = { token: message.data.token, email: emailAddress };
-						const authResult = <any>await this._http.post(`/authenticate/facebook`, authData).toPromise();
+						const user = <any>await this._http.post(`/authenticate/facebook`, authData).toPromise();
 
-						if (authResult && authResult.token) {
-							await app.storage.updateProfile({token: authResult.token }, true);
+						if (user && user.token) {
+							await app.storage.updateProfile(user, true);
 							this.reload(redirectUrl);
 						} else {
 							reject('inpcomplete response')

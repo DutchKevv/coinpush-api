@@ -5,7 +5,7 @@ declare let window: any;
 
 const androidEmulatorIp = '10.0.2.2';
 const iosEmulatorIp = 'localhost';
-const localApiIp = '127.0.0.1';
+const localApiIp = 'localhost';
 const localApiPort = 3100;
 const localApiWsType = 'ws';
 const localApiProtocol = 'http';
