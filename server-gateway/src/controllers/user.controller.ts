@@ -22,7 +22,7 @@ export const userController = {
 		return Object.assign(results[0] || {}, results[1] || {});
 	},
 
-	findByFacebookId(reqUser: IReqUser, facebookId) {
+	findByFacebookId(reqUser: IReqUser, facebookId: string) {
 		return request({
 			uri: config.server.user.apiUrl + '/user/',
 			headers: { '_id': reqUser.id },
@@ -33,7 +33,7 @@ export const userController = {
 		})
 	},
 
-	findMany(reqUser: IReqUser, params): Promise<Array<any>> {
+	findMany(reqUser: IReqUser, params: any): Promise<Array<any>> {
 		return request({
 			uri: config.server.user.apiUrl + '/user/',
 			headers: { '_id': reqUser.id },
@@ -42,7 +42,7 @@ export const userController = {
 		})
 	},
 
-	async getBalance(reqUser: IReqUser, userId) {
+	async getBalance(reqUser: IReqUser, userId: string) {
 		const user = await this._getUser(reqUser, userId, USER_FETCH_TYPE_ACCOUNT_DETAILS);
 
 		if (user) {

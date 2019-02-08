@@ -215,8 +215,8 @@ export class AuthenticationService {
 						const authData = { token: message.data.token, email: emailAddress };
 						const authResult = <any>await this._http.post(`/authenticate/facebook`, authData).toPromise();
 
-						if (authResult && authResult.token && authResult._id) {
-							await app.storage.updateProfile({ _id: authResult._id, token: authResult.token }, true);
+						if (authResult && authResult.token) {
+							await app.storage.updateProfile({token: authResult.token }, true);
 							this.reload(redirectUrl);
 						} else {
 							reject('inpcomplete response')
