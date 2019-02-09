@@ -1,11 +1,9 @@
 import * as _http from 'http';
-import { json, urlencoded } from 'body-parser';
 import * as express from 'express';
 import * as helmet from 'helmet';
 import * as mongoose from 'mongoose';
 import * as morgan from 'morgan';
 import { cacheController } from './controllers/cache.controller';
-import { symbolController } from './controllers/symbol.controller';
 import { BrokerMiddleware } from 'coinpush/src/broker';
 import { BROKER_GENERAL_TYPE_OANDA, BROKER_GENERAL_TYPE_CC , BROKER_GENERAL_TYPE_IEX} from 'coinpush/src/constant';
 import { pubClient } from 'coinpush/src/redis';
@@ -18,17 +16,16 @@ process.on('unhandledRejection', (reason, p) => {
 	throw reason;
 });
 
-export const app = {
+export class App {
 
-	db: null,
-	api: null,
-	io: null,
-	broker: <BrokerMiddleware>null,
+	db: mongoose.Connection;
+	api: any = null;
+	broker: BrokerMiddleware = null;
 
-	_symbolUpdateTimeout: null,
-	_symbolUpdateTimeoutTime: 60 * 1000, // 1 minute
-	_socketTickInterval: null,
-	_socketTickIntervalTime: 500,
+	_symbolUpdateTimeoutHandle: any;
+	_symbolUpdateInterval: number = 60 * 1000; // 1 minute
+	_socketTickInterval: any;
+	_socketTickIntervalTime: number = 500;
 
 	async init(): Promise<void> {
 		// database
@@ -53,7 +50,7 @@ export const app = {
 		]);
 
 		this._toggleSymbolUpdateInterval(true);
-	},
+	}
 
 	_setupApi(): void {
 		// http 
@@ -88,7 +85,7 @@ export const app = {
 
 			res.status(500).send(error);
 		});
-	},
+	}
 
 	_connectMongo() {
 		return new Promise((resolve, reject) => {
@@ -104,11 +101,11 @@ export const app = {
 				resolve();
 			});
 		});
-	},
+	}
 
 	_toggleSymbolUpdateInterval(state: boolean) {
 		if (!state)
-			return clearInterval(this._symbolUpdateInterval);
+			return clearInterval(this._symbolUpdateTimeoutHandle);
 
 		const timeoutFunc:any = async function() {
 			try {
@@ -124,8 +121,8 @@ export const app = {
 			}
 		}.bind(this);
 
-		this._symbolUpdateTimeout = setTimeout(() => timeoutFunc(), this._symbolUpdateTimeoutTime);
-	},
+		this._symbolUpdateTimeoutHandle = setTimeout(() => timeoutFunc(), this._symbolUpdateInterval);
+	}
 
 	_toggleWebSocketTickInterval(state: boolean) {
 		if (!state)
@@ -139,7 +136,7 @@ export const app = {
 
 			const symbolData = {};
 			for (let symbolName in cacheController.tickBuffer) {
-				const symbol = app.broker.symbols.find(symbol => symbol.name === symbolName);
+				const symbol = this.broker.symbols.find(symbol => symbol.name === symbolName);
 
 				if (symbol)
 					symbolData[symbolName] = JSON.stringify(symbol);

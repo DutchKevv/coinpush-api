@@ -14,12 +14,13 @@ process.on('unhandledRejection', (reason, p) => {
     throw reason;
 });
 
-export const app = {
+export class App {
 
-    api: null,
+    api: any;
+    db: mongoose.Connection;
 
-    _eventCheckTimeout: null,
-    _eventCheckTimeoutTime: 2000,
+    _eventCheckTimeout: any;
+    _eventCheckTimeoutTime: number = 2000;
 
     async init(): Promise<void> {
         await this._connectMongo();
@@ -27,7 +28,7 @@ export const app = {
         this._setRedisListener();
         this._toggleEventCheckTimeout();
         this._setupApi();
-    },
+    }
 
     _setRedisListener() {
         subClient.subscribe("ticks");
@@ -49,7 +50,7 @@ export const app = {
                     break;
             }
         });
-    },
+    }
 
     _setupApi(): void {
         this.api = express();
@@ -73,7 +74,7 @@ export const app = {
         this.api.use(urlencoded({ extended: false }));
 
         this.api.use('/event', require('./api/event.api'));
-    },
+    }
 
     _connectMongo() {
 		return new Promise((resolve, reject) => {
@@ -92,7 +93,7 @@ export const app = {
 
 			mongoose.connect(config.server.event.connectionString);
 		});
-	},
+	}
 
     _toggleEventCheckTimeout() {
 

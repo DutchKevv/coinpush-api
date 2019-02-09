@@ -46,7 +46,7 @@ services:
       - 3100:3100
     volumes:
       - ./_config:/usr/src/app/_config
-      - ./server-gateway/src:/usr/src/app/server-gateway/src
+      - ./server-gateway/dist:/usr/src/app/server-gateway/dist
       - ./server-gateway/_log:/usr/src/app/server-gateway/_log
       - ./static/image:/usr/src/app/static/image
       - /usr/src/app/server-gateway/node_modules
@@ -64,7 +64,7 @@ services:
       - 3001
     volumes:
       - ./_config:/usr/src/app/_config
-      - ./server-cache/src:/usr/src/app/server-cache/src
+      - ./server-cache/dist:/usr/src/app/server-cache/dist
       - ./server-cache/_log:/usr/src/app/server-cache/_log
       - ./shared/modules/coinpush/src:/usr/src/app/shared/modules/coinpush/src
       - /usr/src/app/server-cache/node_modules
@@ -84,7 +84,7 @@ services:
       - 3008
     volumes:
       - ./_config:/usr/src/app/_config
-      - ./server-user/src:/usr/src/app/server-user/src
+      - ./server-user/dist:/usr/src/app/server-user/dist
       - ./server-user/_log:/usr/src/app/server-user/_log
       - /usr/src/app/server-user/node_modules
       # - /usr/src/app/shared/modules/coinpush/node_modules
@@ -121,7 +121,7 @@ services:
       - 3009
     volumes:
       - ./_config:/usr/src/app/_config
-      - ./server-comment/src:/usr/src/app/server-comment/src
+      - ./server-comment/dist:/usr/src/app/server-comment/dist
       - ./server-comment/_log:/usr/src/app/server-comment/_log
       - /usr/src/app/server-comment/node_modules
       # - /usr/src/app/shared/modules/coinpush/node_modules

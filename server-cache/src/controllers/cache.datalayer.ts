@@ -1,11 +1,9 @@
-import * as fs from 'fs';
 import * as mongoose from 'mongoose';
 import { log } from 'coinpush/src/util/util.log';
 import { timeFrameSteps, clientTimeFrameSteps } from 'coinpush/src/util/util.date'
 import { CandleSchema } from '../schemas/candle.schema';
 import { Status } from '../schemas/status.schema';
 import { BulkWriteResult } from 'mongodb';
-import { config } from 'coinpush/src/util/util-config';
 
 const READ_COUNT_DEFAULT = 500;
 

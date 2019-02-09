@@ -1,8 +1,5 @@
-import * as fs from 'fs';
-import * as path from 'path';
 import { cacheController } from './cache.controller';
-import { dataLayer } from "./cache.datalayer";
-import { app } from '../app';
+import { app } from '../index';
 import { log } from 'coinpush/src/util/util.log';
 
 const metaData = require('coinpush/src/broker/oanda/symbols-meta').meta;

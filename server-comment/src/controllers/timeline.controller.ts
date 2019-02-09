@@ -1,7 +1,7 @@
 import { Comment } from '../schemas/comment.schema';
 import { Types } from 'mongoose';
 import { User } from '../schemas/user.schema';
-import { IReqUser } from '../../../shared/modules/coinpush/src/interface/IReqUser.interface';
+import { IReqUser } from 'coinpush/src/interface/IReqUser.interface';
 
 export const timelineController = {
 

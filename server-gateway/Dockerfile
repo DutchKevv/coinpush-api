@@ -1,4 +1,4 @@
-FROM mhart/alpine-node:10.9.0
+FROM mhart/alpine-node:11.9.0
 
 # config
 COPY /_config /usr/src/app/_config

@@ -1,12 +1,9 @@
-import { Types, DocumentQuery } from 'mongoose';
+import { DocumentQuery } from 'mongoose';
 import { User } from '../schemas/user.schema';
 import {
-	G_ERROR_EXPIRED,
 	G_ERROR_USER_NOT_FOUND,
-	REDIS_USER_PREFIX, USER_FETCH_TYPE_ACCOUNT_DETAILS, USER_FETCH_TYPE_PROFILE_SETTINGS, USER_FETCH_TYPE_SLIM,
-} from '../../../shared/modules/coinpush/src/constant';
-import { IReqUser } from "../../../shared/modules/coinpush/src/interface/IReqUser.interface";
-import { IUser } from "../../../shared/modules/coinpush/src/interface/IUser.interface";
+} from 'coinpush/src/constant';
+import { IReqUser } from "coinpush/src/interface/IReqUser.interface";
 
 const RESET_PASSWORD_TOKEN_EXPIRE = 1000 * 60 * 60 * 24; // 24 hour
 

@@ -1,14 +1,11 @@
 {
   "compilerOptions": {
-    "rootDir": "./src",
-    "target": "es2017",
+    "target": "es2018",
     "lib": ["esnext"],
     "module": "commonjs",
-    "pretty": true
+    "outDir": "./dist"
   },
   "include": [
-    "./index.ts",
-    "./src/**/*.ts",
-    "./node_modules/coinpush/src/**/*.ts"
+    "./src/**/*.ts"
   ]
 }

@@ -1,16 +1,20 @@
+# editors
 .DS_Store
 .idea/
 .vscode/
 .gradle
 temp.txt
 
+# dirs
 node_modules
+dist
+**/src/**/*.js
+**/src/**/*.map
 /_data
 _log
 
+# files
 npm-debug.log
 package-lock.json
 *.map
 log.txt
-
-coinpush.config.custom.js

@@ -11,7 +11,7 @@ import { IReqUser } from 'coinpush/src/interface/IReqUser.interface';
 import { notifyController } from './notify.controller';
 import { eventController } from './event.controller';
 import { config } from 'coinpush/src/util/util-config';
-import { app } from '../app';
+import { app } from '../index';
 
 export const authenticateController = {
 
@@ -113,59 +113,14 @@ export const authenticateController = {
 			});
 		}
 
-		console.log(user);
-
 		return {
 			_id: user._id,
 			token: user.token
 		};
-
-
-
-		// if (facebookProfile && facebookProfile.id) {
-
-
-		// 	// search in DB for user with facebookId
-		// 	let user = (await userController.findByFacebookId(reqUser, facebookProfile.id))[0];
-		// 	console.log('sfasdf', user)
-		// 	// create new user if not founds
-		// 	if (!user) {
-		// 		user = await userController.create({}, {
-		// 			email: facebookProfile.email || params.email,
-		// 			name: facebookProfile.name,
-		// 			// description: facebookProfile.about,
-		// 			gender: genderStringToConstant(facebookProfile.gender),
-		// 			country: facebookProfile.locale ? facebookProfile.locale.split('_')[1] : undefined,
-		// 			imgUrl: 'https://graph.facebook.com/' + facebookProfile.id + '/picture?width=1000',
-		// 			oauthFacebook: {
-		// 				id: facebookProfile.id
-		// 			}
-		// 		});
-		// 	}
-
-		// 	return {
-		// 		_id: user._id,
-		// 		token: user.token
-		// 	};
-		// }
-
-		// // handle error
-		// else if (facebookProfile && facebookProfile.error) {
-		// 	if (facebookProfile.error.code === 'ETIMEDOUT') {
-		// 		console.log('request timeout');
-		// 	}
-		// 	else {
-		// 		console.log('error', facebookProfile.error);
-		// 	}
-		// }
-		// else {
-		// 	console.log('asdf', facebookProfile);
-		// 	throw new Error('Invalid facebook response');
-		// }
 	},
 
 	async requestPasswordReset(reqUser, email: string): Promise<void> {
-		let user;
+		let user: IUser;
 
 		try {
 			user = await request({
