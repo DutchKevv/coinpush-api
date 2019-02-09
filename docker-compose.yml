@@ -11,13 +11,15 @@ services:
     - "5044:5044"
     environment:
       ELASTICSEARCH_START: 1
-      LOGSTASH_START: 0
+      LOGSTASH_START: 1
       KIBANA_START: 1
-      ES_CONNECT_RETRY: 90
+      ES_CONNECT_RETRY: 180
     volumes:
-    - ./server-elk/_data:/var/lib/elasticsearch
+      - ./server-elk/elasticsearch/_data:/var/lib/elasticsearch
+      - ./server-elk/logstash/_data:/usr/local/etc
+      - ./server-elk/logstash/conf.d:/etc/logstash/conf.d
     depends_on:
-    - mongodb
+      - mongodb
   mongodb:
     image: mongo:latest
     container_name: "mongodb"

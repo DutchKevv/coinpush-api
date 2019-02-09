@@ -1,10 +1,7 @@
 FROM sebp/elk:latest
 
-ENV LS_HOME /opt/logstash
-WORKDIR ${LS_HOME}
+WORKDIR /opt/logstash
 
-COPY /server-elk/plugins /src
+COPY logstash/plugins/mongodb.0.4.1.gem /etc/logstash/plugins/mongodb.0.4.1.gem
 
-RUN gosu logstash /opt/bin/logstash-plugin install /src/logstash-input-mongodb-0.4.1.gem &&\
-    gosu logstash mkdir /opt/logstash-mongodb &&\
-    gosu logstash /opt/bin/logstash -f config/input-mongodb-comments.conf
+RUN /opt/logstash/bin/logstash-plugin install /etc/logstash/plugins/mongodb.0.4.1.gem
