@@ -1,5 +1,4 @@
 import { SymbolSyncer } from '../modules/symbol-syncer';
-import { config } from 'coinpush/src/util/util-config';
 
 export const symbolController = {
 

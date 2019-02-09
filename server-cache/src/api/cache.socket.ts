@@ -1,7 +1,6 @@
-import {cacheController} from '../controllers/cache.controller'
-import { app } from '../app';
+import { cacheController } from '../controllers/cache.controller'
 
-module.exports = (socket) => {
+module.exports = (socket: any) => {
 
 	socket.on('read', async (params, cb: Function) => {
 		try {

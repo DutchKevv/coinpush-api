@@ -1,7 +1,7 @@
 import { log } from 'coinpush/src/util/util.log';
 import { dataLayer } from './cache.datalayer';
 import { symbolController } from './symbol.controller';
-import { app } from '../app';
+import { app } from '../index';
 import { Status } from '../schemas/status.schema';
 import { BROKER_GENERAL_TYPE_CC } from 'coinpush/src/constant';
 import { timeFrameSteps } from 'coinpush/src/util/util.date';

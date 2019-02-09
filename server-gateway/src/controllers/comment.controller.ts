@@ -1,5 +1,4 @@
 import * as request from 'requestretry';
-import { userController } from "./user.controller";
 import { IReqUser } from 'coinpush/src/interface/IReqUser.interface';
 import { IUser } from 'coinpush/src/interface/IUser.interface';
 import { config } from 'coinpush/src/util/util-config';

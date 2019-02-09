@@ -25,4 +25,12 @@ router.post('/', async (req: any, res, next) => {
 	}
 });
 
+router.post('/facebook', async (req: any, res, next) => {
+	try {
+		res.send(await authenticateController.authenticateFacebook(req.user, req.body));
+	} catch (error) {
+		next(error)
+	}
+});
+
 export = router;

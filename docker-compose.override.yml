@@ -10,21 +10,29 @@ services:
     environment:
       - NODE_ENV=development
     command: npm start
+    volumes:
+      - ./server-cache/src:/usr/src/app/server-cache/src
     # command: sh -c "cd ../shared/modules/coinpush && npm run build && cd ../../../server-cache && npm start"
   gateway:
     environment:
       - NODE_ENV=development
     command: npm start
     # command: sh -c "cd ../shared/modules/coinpush && npm run build && cd ../../../server-gateway && npm start"
+    volumes:
+      - ./server-gateway/src:/usr/src/app/server-gateway/src
   user:
     environment:
       - NODE_ENV=development
     command: npm start
+    volumes:
+      - ./server-user/src:/usr/src/app/server-user/src
     # command: sh -c "cd ../shared/modules/coinpush && npm run build && cd ../../../server-user && npm start"
   comment:
     environment:
       - NODE_ENV=development
     command: npm start
+    volumes:
+      - ./server-comment/src:/usr/src/app/server-comment/src
     # command: sh -c "cd ../shared/modules/coinpush && npm run build && cd ../../../server-comment && npm start"
   event:
     environment:
@@ -39,6 +47,8 @@ services:
   cp-client:
     environment:
       - NODE_ENV=development
+    ports:
+      - 4200:4200
     command: npm start
     # command: sh -c "cd ../shared/modules/coinpush && npm run build && cd ../../../client && npm start"
     volumes:

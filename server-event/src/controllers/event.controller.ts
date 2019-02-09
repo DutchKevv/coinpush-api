@@ -1,12 +1,11 @@
 import { Event } from '../schemas/event.schema';
-import * as mongoose from 'mongoose';
 import { CUSTOM_EVENT_TYPE_ALARM, ALARM_TRIGGER_TYPE_PRICE, ALARM_TRIGGER_TYPE_PERCENTAGE, ALARM_TRIGGER_DIRECTION_DOWN, ALARM_TRIGGER_DIRECTION_UP } from 'coinpush/src/constant';
 import { flatten } from 'lodash';
 import { pubClient } from 'coinpush/src/redis';
 
 export const eventController = {
 
-	findById(reqUser, params) {
+	findById(reqUser: any, params) {
 
 	},
 
@@ -85,8 +84,8 @@ export const eventController = {
 
 					let events = <any>flatten(await Promise.all(
 						[
-							Event.find({ triggered: false, symbol: symbol.name, 'alarm.dir': ALARM_TRIGGER_DIRECTION_UP, 'alarm.price': { $lt: symbol.highM } }),
-							Event.find({ triggered: false, symbol: symbol.name, 'alarm.dir': ALARM_TRIGGER_DIRECTION_DOWN, 'alarm.price': { $gt: symbol.lowM } }),
+							<any>Event.find({ triggered: false, symbol: symbol.name, 'alarm.dir': ALARM_TRIGGER_DIRECTION_UP, 'alarm.price': { $lt: symbol.highM } }),
+							<any>Event.find({ triggered: false, symbol: symbol.name, 'alarm.dir': ALARM_TRIGGER_DIRECTION_DOWN, 'alarm.price': { $gt: symbol.lowM } }),
 						]
 					));
 

@@ -1,6 +1,5 @@
-import {Router} from 'express';
-import {eventController} from "../controllers/event.controller";
-import { app } from '../app';
+import { Router } from 'express';
+import { eventController } from "../controllers/event.controller";
 
 const router = Router();
 
@@ -42,7 +41,7 @@ router.post('/', async (req: any, res, next) => {
  */
 router.put('/', (req: any, res, next) => {
 	try {
-		
+
 	} catch (error) {
 		next(error);
 	}

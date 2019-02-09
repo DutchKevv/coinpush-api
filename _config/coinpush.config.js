@@ -1,10 +1,6 @@
-const 
-    path    = require('path'),
-    fs      = require('fs');
+const path    = require('path')
 
-const
-    ENV_PRODUCTION = (process.env.NODE_ENV || '').startsWith('prod'),
-    PATH_CONFIG_CUSTOM = path.join(__dirname, 'coinpush.config.custom.js');
+const ENV_PRODUCTION = (process.env.NODE_ENV || '').startsWith('prod');
 
 let domain = {
     host: 'localhost',
@@ -108,28 +104,15 @@ const config = {
             passwordResetSecret: 'liefmeisje'
         },
         facebook: {
-            clientID: 'liefmeisje', // your App ID
-            clientSecret: 'liefmeisje', // your App Secret
-            callbackURL: 'http://localhost:8080/auth/facebook/callback',
+            clientID: '391706548256074', // your App ID
+            clientSecret: '339944e9235cd77f9f8d133ae23a519a ', // your App Secret
+            callbackURL: 'http://localhost:4200/auth/facebook/callback',
             profileURL: 'https://graph.facebook.com/v2.12/me?fields=first_name,last_name,email',
             profileFields: ['id', 'email', 'name'] // For requesting permissions from Facebook API
         }
     },
     clientVersion: "0.0.1"
 };
-
-// deepmerge config with custom config
-if (fs.existsSync(PATH_CONFIG_CUSTOM)) {
-    try {
-        mergeDeep(config, require(PATH_CONFIG_CUSTOM));
-    } catch (error) {
-        console.error('WARNING: corrupt \'coinpush.config.custom.js\'! \n');
-        throw error;
-    }
-} else {
-    console.warn('WARNING: missing \'coinpush.config.custom.js\' in the _config directory! \n');
-}
-
 
 // build full domain urls (ex: http://123.123.123.123:9999)
 for (let name in config.server)

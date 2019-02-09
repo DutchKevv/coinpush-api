@@ -1,41 +1,32 @@
-import * as path from 'path';
-import { json } from 'body-parser';
 import * as express from 'express';
 import * as helmet from 'helmet';
 import * as morgan from 'morgan';
 import * as io from 'socket.io';
+import * as expressJwt from 'express-jwt';
+import * as jwt from 'jsonwebtoken';
+import * as cors from 'cors';
+import { json } from 'body-parser';
 import { symbolController } from './controllers/symbol.controller';
 import { BrokerMiddleware } from 'coinpush/src/broker';
 import { log } from 'coinpush/src/util/util.log';
 import { subClient } from 'coinpush/src/redis';
-import * as expressJwt from 'express-jwt';
-import * as jwt from 'jsonwebtoken';
-import { config } from 'coinpush/src/util/util-config';
+import { config, ConfigHandler } from 'coinpush/src/util/util-config';
 import { G_ERROR_MAX_SIZE, G_ERROR_UNKNOWN } from 'coinpush/src/constant';
 import { userController } from './controllers/user.controller';
-import * as request from 'requestretry';
-import * as cors from 'cors';
 
-const PATH_WWW_BROWSER_NOT_SUPPORTED_FILE = path.join(__dirname, '../public/index.legacy.browser.html');
+export class App {
+	db: null;
+	api: any;
+	io: io.Server;
+	broker: BrokerMiddleware;
+	clientConfig: any = {};
 
-// error catching
-process.on('unhandledRejection', (reason, p) => {
-	console.log('Possibly Unhandled Rejection at: Promise ', p, ' reason: ', reason);
-	throw reason;
-});
+	configHandler: ConfigHandler = new ConfigHandler
 
-export const app = {
-
-	db: null,
-	api: null,
-	io: null,
-	broker: <BrokerMiddleware>null,
-	clientConfig: {},
-
-	_symbolUpdateTimeout: null,
-	_symbolUpdateTimeoutTime: 60 * 1000, // 1 minute
-	_socketTickInterval: null,
-	_socketTickIntervalTime: 500,
+	_symbolUpdateTimeout: null;
+	_symbolUpdateTimeoutTime: Number = 60 * 1000; // 1 minute
+	_socketTickInterval: any;
+	_socketTickIntervalTime: number = 500;
 
 	async init(): Promise<void> {
 		this._setRedisListeners();
@@ -48,12 +39,13 @@ export const app = {
 		// http / websocket api
 		this._setClientConfig();
 		this._setupApi();
-	},
+
+		this.configHandler.startPolling();
+	}
 
 	async _setClientConfig() {
 		this.clientConfig.companyUsers = await userController.findMany({}, {companyId: true, fields: ['name', 'img']});
-		console.log(this.clientConfig.companyUsers, 2);
-	},
+	}
 
 	_setRedisListeners() {
 		// if (!subClient.isConnected) {
@@ -74,7 +66,7 @@ export const app = {
 				case 'socket-notification':
 					const clients = this.io.sockets.sockets;
 					for (let key in clients) {
-						if (clients[key].userId === object.data.__userId)
+						if (clients[key]['userId'] === object.data.__userId)
 							clients[key].emit('notification', object.data);
 					}
 					break;
@@ -84,7 +76,7 @@ export const app = {
 					break;
 			}
 		});
-	},
+	}
 
 	_setupApi(): void {
 		// http 
@@ -103,19 +95,19 @@ export const app = {
 		// 	// call next() with an Error if you need to reject the connection.
 		// 	// next(new Error('Authentication error'));
 		// });
-		this.io.on('connection', socket => require('./api/socket.api')(socket));
+		this.io.on('connection', (socket: any) => require('./api/socket.api')(socket));
 
 		/**
 		 *
 		 * body parsing (json) - needs this middleware for form-multipart (file-upload) to work
 		 */
-		const isMultipartRequest = function (req) {
+		const isMultipartRequest = function (req: express.Request) {
 			let contentTypeHeader = req.headers['content-type'];
 			return contentTypeHeader && contentTypeHeader.indexOf('multipart') > -1;
 		};
 
 		const bodyParserJsonMiddleware = function () {
-			return function (req, res, next) {
+			return function (req: express.Request, res: express.Response, next: express.NextFunction) {
 				if (isMultipartRequest(req)) {
 					return next();
 				}
@@ -126,17 +118,16 @@ export const app = {
 		this.api.use(bodyParserJsonMiddleware());
 		this.api.use(morgan('dev'));
 		this.api.use(helmet());
-
 		this.api.use(cors());
 
-		this.api.use((req, res, next) => {
+		this.api.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
 			res.header('Access-Control-Allow-Origin', '*');
 			// res.header('Access-Control-Allow-Headers', 'clientVersion, Authorization, Origin, X-Requested-With, Content-Type, Accept');
 			next();
 		});
 
 		// use JWT auth to secure the api, the token can be passed in the authorization header or query string
-		const getToken = function (req) {
+		const getToken = function (req: express.Request) {
 			if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer')
 				return req.headers.authorization.split(' ')[1];
 		};
@@ -145,7 +136,7 @@ export const app = {
 			secret: config.auth.jwt.secret || 'liefmeisje',
 			getToken,
 			credentialsRequired: true
-		}).unless((req) => {
+		}).unless((req: express.Request) => {
 			return (
 				(req.method === 'GET' && !req.originalUrl.startsWith('/api/v1/authenticate')) ||
 				(req.originalUrl.startsWith('/api/v1/authenticate') && !getToken(req)) ||
@@ -156,7 +147,7 @@ export const app = {
 		/**
 		 * error - unauthorized
 		 */
-		this.api.use((err, req, res, next) => {
+		this.api.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
 			if (err.name === 'UnauthorizedError')
 				return res.status(401).send('invalid token...');
 
@@ -167,10 +158,10 @@ export const app = {
 		/**
 		 * set client user id for upcoming (proxy) requests
 		 */
-		this.api.use((req, res, next) => {
+		this.api.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
 
-			if (req.user) {
-				req.headers._id = req.user.id;
+			if (req['user']) {
+				req.headers._id = req['user'].id;
 				next();
 			} else {
 				const token = getToken(req);
@@ -180,12 +171,12 @@ export const app = {
 						if (error) {
 							res.status(401);
 						} else {
-							req.user = decoded;
+							req['user'] = decoded;
 							next();
 						}
 					});
 				} else {
-					req.user = {};
+					req['user'] = {};
 					next();
 				}
 			}
@@ -309,9 +300,9 @@ export const app = {
 		});
 
 		const server = http.listen(config.server.gateway.port, '0.0.0.0', () => log.info('App', `Service started -> 0.0.0.0:${config.server.gateway.port}`));
-	},
+	}
 
-	_toggleWebSocketTickInterval(state: boolean) {
+	_toggleWebSocketTickInterval(state?: boolean) {
 		if (!state)
 			return clearInterval(this._socketTickInterval);
 

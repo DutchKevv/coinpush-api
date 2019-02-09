@@ -11,7 +11,7 @@ import { IReqUser } from 'coinpush/src/interface/IReqUser.interface';
 import { notifyController } from './notify.controller';
 import { eventController } from './event.controller';
 import { config } from 'coinpush/src/util/util-config';
-import { app } from '../app';
+import { app } from '../index';
 
 export const authenticateController = {
 
@@ -56,12 +56,12 @@ export const authenticateController = {
 								if (++done === 2)
 									resolve();
 							});
-							
+
 							eventController.findMany({ id: user._id }).then(data => userData[1] = data).catch(console.error).finally(() => {
 								if (++done === 2)
 									resolve();
 							});
-						});			
+						});
 					}
 				}
 			})()
@@ -79,54 +79,48 @@ export const authenticateController = {
 	},
 
 	async authenticateFacebook(reqUser: IReqUser, params: { token: string, email?: string } = { token: undefined }) {
-		const facebookProfile = await FB.api('me', { 
-			fields: ['id', 'name', 'email', 'gender', 'locale', 'location'], access_token: params.token 
+		let facebookProfile: any;
+
+		try {
+			const fields = ['id', 'name', 'email', 'gender', 'locale', 'location'];
+			facebookProfile = await FB.api('me', { fields, access_token: params.token });
+		} catch (error) {
+			console.error(error);
+			throw error;
+		}
+
+		let user = await request({
+			uri: config.server.user.apiUrl + '/authenticate/facebook',
+			headers: {
+				_id: reqUser.id
+			},
+			method: 'POST',
+			body: params,
+			json: true
 		});
 
-		console.log('params!!', params);
-		
-		if (facebookProfile && facebookProfile.id) {
-			// search in DB for user with facebookId
-			let user = (await userController.findByFacebookId(reqUser, facebookProfile.id))[0];
-
-			// create new user if not founds
-			if (!user) {
-				user = await userController.create({}, {
-					email: facebookProfile.email || params.email,
-					name: facebookProfile.name,
-					// description: facebookProfile.about,
-					gender: genderStringToConstant(facebookProfile.gender),
-					country: facebookProfile.locale ? facebookProfile.locale.split('_')[1] : undefined,
-					imgUrl: 'https://graph.facebook.com/' + facebookProfile.id + '/picture?width=1000',
-					oauthFacebook: {
-						id: facebookProfile.id
-					}
-				});
-			}
-
-			return {
-				_id: user._id,
-				token: user.token
-			};
+		if (!user) {
+			user = await userController.create({}, {
+				email: facebookProfile.email || params.email,
+				name: facebookProfile.name,
+				// description: facebookProfile.about,
+				gender: genderStringToConstant(facebookProfile.gender),
+				country: facebookProfile.locale ? facebookProfile.locale.split('_')[1] : undefined,
+				imgUrl: 'https://graph.facebook.com/' + facebookProfile.id + '/picture?width=1000',
+				oauthFacebook: {
+					id: facebookProfile.id
+				}
+			});
 		}
 
-		// handle error
-		else if (facebookProfile && facebookProfile.error) {
-			if (facebookProfile.error.code === 'ETIMEDOUT') {
-				console.log('request timeout');
-			}
-			else {
-				console.log('error', facebookProfile.error);
-			}
-		}
-		else {
-			console.log('asdf', facebookProfile);
-			throw new Error('Invalid facebook response');
-		}
+		return {
+			_id: user._id,
+			token: user.token
+		};
 	},
 
 	async requestPasswordReset(reqUser, email: string): Promise<void> {
-		let user;
+		let user: IUser;
 
 		try {
 			user = await request({

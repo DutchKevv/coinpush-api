@@ -1,7 +1,7 @@
 import { Comment } from '../schemas/comment.schema';
 import { Types } from 'mongoose';
-import { pubClient } from '../../../shared/modules/coinpush/src/redis';
-import { IReqUser } from '../../../shared/modules/coinpush/src/interface/IReqUser.interface';
+import { pubClient } from 'coinpush/src/redis';
+import { IReqUser } from 'coinpush/src/interface/IReqUser.interface';
 
 export const commentController = {
 

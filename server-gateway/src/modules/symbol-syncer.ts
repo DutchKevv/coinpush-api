@@ -1,5 +1,5 @@
 
-import { pubClient, subClient } from 'coinpush/src/redis';
+import { pubClient } from 'coinpush/src/redis';
 import { EventEmitter } from 'events';
 
 const SYMBOL_INTERVAL = 10000;
