@@ -11,10 +11,11 @@ const
 	OWNER_MIN_LENGTH = 20;
 
 // create directory if not exists
-if (!fs.existsSync(PATH_LOG_DIR))
+if (!fs.existsSync(PATH_LOG_DIR)) {
 	fs.mkdirSync(PATH_LOG_DIR);
+}
 
-function formatString(ownerName, messages) {
+function formatString(ownerName: string, messages: string[]) {
 	return ownerName + ' : '.padStart(Math.max(OWNER_MIN_LENGTH - ownerName.length, 0)) + messages.join();
 }
 
@@ -29,20 +30,20 @@ const logger = winston.createLogger({
 // add console output in development mode
 if (!(process.env.NODE_ENV || '').startsWith('prod')) {
 	logger.add(new winston.transports.Console({
-	  format: winston.format.simple()
+		format: winston.format.simple()
 	}));
-  }
+}
 
 export const log = {
-	info(owner, ...params) {
+	info(owner: string, ...params): void {
 		logger.info(formatString(owner, params));
 	},
 
-	warn(owner, ...params) {
+	warn(owner: string, ...params): void {
 		logger.warn(formatString(owner, params));
 	},
 
-	error(owner, ...params) {
+	error(owner: string, ...params): void {
 		logger.error(formatString(owner, params));
 	}
 };

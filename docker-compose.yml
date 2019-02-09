@@ -52,7 +52,6 @@ services:
       - ./server-gateway/_log:/usr/src/app/server-gateway/_log
       - ./static/image:/usr/src/app/static/image
       - /usr/src/app/server-gateway/node_modules
-      # - /usr/src/app/shared/modules/coinpush/node_modules
     # links:
     #   - redis
   cache:
@@ -70,7 +69,6 @@ services:
       - ./server-cache/_log:/usr/src/app/server-cache/_log
       - ./shared/modules/coinpush/src:/usr/src/app/shared/modules/coinpush/src
       - /usr/src/app/server-cache/node_modules
-      # - /usr/src/app/shared/modules/coinpush/node_modules
     links:
       - redis
       - gateway
@@ -89,7 +87,6 @@ services:
       - ./server-user/dist:/usr/src/app/server-user/dist
       - ./server-user/_log:/usr/src/app/server-user/_log
       - /usr/src/app/server-user/node_modules
-      # - /usr/src/app/shared/modules/coinpush/node_modules
     links:
       - redis
       - gateway
@@ -105,13 +102,12 @@ services:
       - 3010
     volumes:
       - ./_config:/usr/src/app/_config
-      - ./server-notify/src:/usr/src/app/server-notify/src
+      - ./server-notify/dist:/usr/src/app/server-notify/dist
       - ./server-notify/_log:/usr/src/app/server-notify/_log
       - /usr/src/app/server-notify/node_modules
-      # - /usr/src/app/shared/modules/coinpush/node_modules
     links:
       - redis
-      # - mongodb
+      - mongodb
   comment:
     restart: unless-stopped
     image: registry.coinpush.app/comment
@@ -126,10 +122,9 @@ services:
       - ./server-comment/dist:/usr/src/app/server-comment/dist
       - ./server-comment/_log:/usr/src/app/server-comment/_log
       - /usr/src/app/server-comment/node_modules
-      # - /usr/src/app/shared/modules/coinpush/node_modules
     links:
       - redis
-      # - mongodb
+      - mongodb
   event:
     restart: unless-stopped
     image: registry.coinpush.app/event
@@ -141,13 +136,12 @@ services:
       - 3011
     volumes:
       - ./_config:/usr/src/app/_config
-      - ./server-event/src:/usr/src/app/server-event/src
+      - ./server-event/dist:/usr/src/app/server-event/dist
       - ./server-event/_log:/usr/src/app/server-event/_log
       - /usr/src/app/server-event/node_modules
-      # - /usr/src/app/shared/modules/coinpush/node_modules
     links:
       - redis
-      # - mongodb
+      - mongodb
   cp-client:
     image: registry.coinpush.app/client
     container_name: cp-client
@@ -155,10 +149,7 @@ services:
       context: ./
       dockerfile: ./client/Dockerfile
     volumes:
-      - ./static/clients:/usr/src/app/static/clients
-      # - /usr/src/app/client/node_modules
-      # - ./shared/modules/coinpush/src:/usr/src/app/shared/modules/coinpush/src
-      # - /usr/src/app/shared/modules/coinpush/node_modules
+      - /usr/src/app/client/node_modules
   client-app:
     image: registry.coinpush.app/client-app
     container_name: client-app

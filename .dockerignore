@@ -2,6 +2,7 @@
 **/Dockerfile
 **/node_modules
 **/_log
+**/npm-debug.log
 **/.git
 **/.gitignore
 **/.idea

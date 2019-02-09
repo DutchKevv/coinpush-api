@@ -1,8 +1,8 @@
-import { Router } from 'express';
 import * as multer from 'multer';
 import * as sharp from 'sharp';
 import * as request from 'requestretry';
 import * as fs from 'fs';
+import { Router } from 'express';
 import { join, extname } from 'path';
 import { userController } from '../controllers/user.controller';
 import { G_ERROR_MAX_SIZE } from 'coinpush/src/constant';
@@ -11,22 +11,11 @@ import { config } from 'coinpush/src/util/util-config';
 
 const CDN_URL = '';
 
-
 const upload = multer({ storage: multer.memoryStorage() });
 export const router = Router();
 
-function normalizeProfileImg(filename) {
-	if (filename) {
-		if (filename.indexOf('http://') > -1)
-			return filename;
-
-		return join(config.image.profileBaseUrl, filename);
-	}
-	else
-		return config.image.profileDefaultUrl;
-};
-
 router.post('/profile', upload.single('image'), async (req: any, res, next) => {
+	
 	// Check max file size (in bytes)
 	if (req.file.size > config.image.maxUploadSize) {
 		return next({

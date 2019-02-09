@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
-    "lib": ["es2017"],
-    "target": "es5",
-    "pretty": true
-  }
+    "target": "es2018",
+    "lib": ["es2018"],
+    "module": "commonjs",
+    "outDir": "./dist"
+  },
+  "include": [
+    "./src/**/*.ts"
+  ]
 }

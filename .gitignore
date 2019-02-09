@@ -8,6 +8,7 @@ temp.txt
 # dirs
 node_modules
 dist
+# server-*/dist
 **/src/**/*.js
 **/src/**/*.map
 /_data
