@@ -1,4 +1,7 @@
 FROM sebp/elk:latest
 
-ENV ES_HOME /opt/elasticsearch
-WORKDIR ${ES_HOME}
+WORKDIR /opt/logstash
+
+COPY logstash/plugins/mongodb.0.4.1.gem /etc/logstash/plugins/mongodb.0.4.1.gem
+
+RUN /opt/logstash/bin/logstash-plugin install /etc/logstash/plugins/mongodb.0.4.1.gem
