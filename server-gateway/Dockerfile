@@ -13,4 +13,4 @@ RUN npm i --quiet --no-progress
 COPY /server-gateway/src ./src
 
 # dist
-COPY /server-gateway/dist ./dist
+# COPY /server-gateway/dist ./dist

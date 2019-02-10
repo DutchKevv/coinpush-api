@@ -10,4 +10,4 @@ RUN npm i --quiet --no-progress
 COPY /server-user/src ./src
 
 # dist
-COPY /server-user/dist ./dist
+# COPY /server-user/dist ./dist

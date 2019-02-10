@@ -10,4 +10,4 @@ RUN npm i --quiet --no-progress
 COPY /server-comment/src ./src
 
 # dist
-COPY /server-comment/dist ./dist
+# COPY /server-comment/dist ./dist
