@@ -16,9 +16,6 @@ export class StorageHelper {
             // size: 10428800, // 10mb
             name: 'CoinPush',
             storeName: 'data'
-            // OR instead of passing the `driver` option,
-            // you can call `window.appStorage.setDriver()`
-            // right after `createInstance()`
         });
 
         await this._preloadData();
@@ -48,10 +45,6 @@ export class StorageHelper {
     }
 
     public async updateProfile(value: any, isNew: boolean = false): Promise<void> {
-        if (!value) {
-            throw new Error('No value given');
-        }
-
         // userId must be known or given
         if (!this.profileData._id && (isNew && !value._id)) {
             throw new Error('Not loggedin and no [user]_id given in data object');

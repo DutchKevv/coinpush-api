@@ -127,14 +127,15 @@
     <div class="spinner"></div>
 
     <!-- Javascript error reporting on Sentry-->
-    <script src="./assets/raven/raven.js"></script>
-    <script>
+    <!-- <script src="./assets/raven/raven.js"></script> -->
+    <!-- <script>
         Raven.config('https://bcf86b58156e4ece81065d38dcd9e8bf@sentry.io/1254805').install();
-    </script>
+    </script> -->
 
     <!-- inject:js:cordova -->
     <script>
-        Raven.context(function () {
+
+        function init() {
             window.BROWSERSUPPORTED = function () {
                 try {
                     return !!class test { };
@@ -232,10 +233,10 @@
             if (window.platform.isIOS) {
                 document.body.classList.add('ios');
             }
-        });
+        }
 
-        // is browser supported
-
+        // Raven.context(init());
+        init();
     </script>
 </body>
 
