@@ -1,5 +1,7 @@
 FROM mhart/alpine-node:11.9.0
 
+ARG env
+
 # config
 COPY /_config /usr/src/app/_config
 

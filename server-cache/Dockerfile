@@ -1,5 +1,7 @@
 FROM mhart/alpine-node:11.9.0
 
+ARG env
+
 # shared
 COPY /shared/modules/coinpush /usr/src/app/shared/modules/coinpush
 
