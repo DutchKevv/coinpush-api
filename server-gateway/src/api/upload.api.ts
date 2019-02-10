@@ -1,10 +1,9 @@
 import * as multer from 'multer';
-import * as sharp from 'sharp';
 import * as request from 'requestretry';
 import * as fs from 'fs';
 import * as path from 'path';
 import { Router } from 'express';
-import { join, extname } from 'path';
+import { extname } from 'path';
 import { userController } from '../controllers/user.controller';
 import { G_ERROR_MAX_SIZE } from 'coinpush/src/constant';
 import { IReqUser } from 'coinpush/src/interface/IReqUser.interface';
