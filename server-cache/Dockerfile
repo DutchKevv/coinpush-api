@@ -9,5 +9,5 @@ COPY /server-cache/package.json /server-cache/tsconfig.json ./
 RUN npm i --quiet --no-progress
 COPY /server-cache/src ./src
 
-# dist
-# COPY /server-cache/dist ./dist
+# dist build
+RUN if [ "$env" = "production" ] ; then npm run build && rm -rf src; fi

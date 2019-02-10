@@ -9,5 +9,5 @@ COPY /server-event/package.json /server-event/tsconfig.json ./
 RUN npm i --quiet --no-progress
 COPY /server-event/src ./src
 
-# dist
-# COPY /server-event/dist ./dist
+# dist build
+RUN if [ "$env" = "production" ] ; then npm run build && rm -rf src; fi

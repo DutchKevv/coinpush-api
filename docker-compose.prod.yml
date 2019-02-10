@@ -1,35 +1,61 @@
 version: '3.3'
 
 services:
+
   mongodb:
     ports:
       - 27017:27017
     volumes:
       - ./_data/db:/data/db
+
   gateway:
     environment:
       - NODE_ENV=production
     command: npm run prod
+    build:
+      args:
+        env: production
+
   cache:
     environment:
       - NODE_ENV=production
     command: npm run prod
+    build:
+      args:
+        env: production
+
   event:
     environment:
       - NODE_ENV=production
     command: npm run prod
+    build:
+      args:
+        env: production
+
   notify:
     environment:
       - NODE_ENV=production
     command: npm run prod
+    build:
+      args:
+        env: production
+
   user:
     environment:
       - NODE_ENV=production
     command: npm run prod
+    build:
+      args:
+        env: production
+
   comment:
     environment:
       - NODE_ENV=production
     command: npm run prod
+    build:
+      args:
+        env: production
+        
   cp-client:
     environment:
       - NODE_ENV=production

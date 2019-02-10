@@ -12,5 +12,5 @@ COPY /server-gateway/package.json server-gateway/tsconfig.json ./
 RUN npm i --quiet --no-progress
 COPY /server-gateway/src ./src
 
-# dist
-# COPY /server-gateway/dist ./dist
+# dist build
+RUN if [ "$env" = "production" ] ; then npm run build && rm -rf src; fi
