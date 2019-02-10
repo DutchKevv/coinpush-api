@@ -51,7 +51,6 @@ services:
       - ./server-gateway/dist:/usr/src/app/server-gateway/dist
       - ./server-gateway/.tmp:/usr/src/app/server-gateway/.tmp
       - ./server-gateway/_log:/usr/src/app/server-gateway/_log
-      - ./static/image:/usr/src/app/static/image
       - /usr/src/app/server-gateway/node_modules
     # links:
     #   - redis

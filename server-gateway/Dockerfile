@@ -11,3 +11,6 @@ WORKDIR /usr/src/app/server-gateway
 COPY /server-gateway/package.json server-gateway/tsconfig.json ./
 RUN npm i --quiet --no-progress
 COPY /server-gateway/src ./src
+
+# dist
+COPY /server-gateway/dist ./dist

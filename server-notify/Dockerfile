@@ -8,3 +8,6 @@ WORKDIR /usr/src/app/server-notify
 COPY /server-notify/package.json server-notify/tsconfig.json ./
 RUN npm i --quiet --no-progress
 COPY /server-notify/src ./src
+
+# dist
+COPY /server-notify/dist ./dist

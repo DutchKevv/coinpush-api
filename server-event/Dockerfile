@@ -8,3 +8,6 @@ WORKDIR /usr/src/app/server-event
 COPY /server-event/package.json /server-event/tsconfig.json ./
 RUN npm i --quiet --no-progress
 COPY /server-event/src ./src
+
+# dist
+COPY /server-event/dist ./dist
