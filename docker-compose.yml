@@ -49,6 +49,7 @@ services:
     volumes:
       - ./_config:/usr/src/app/_config
       - ./server-gateway/dist:/usr/src/app/server-gateway/dist
+      - ./server-gateway/.tmp:/usr/src/app/server-gateway/.tmp
       - ./server-gateway/_log:/usr/src/app/server-gateway/_log
       - ./static/image:/usr/src/app/static/image
       - /usr/src/app/server-gateway/node_modules
@@ -158,4 +159,3 @@ services:
       dockerfile: ./client-app/Dockerfile
     volumes:
       - ./client-app:/usr/src/app/client-app
-      - ./static/clients/web:/usr/src/app/static/clients/web

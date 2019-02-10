@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var constants_1 = require("../../constant/constants");
+const constants_1 = require("../../constant/constants");
 exports.activeSymbols = [
     {
         type: constants_1.SYMBOL_CAT_TYPE_COMPANY,

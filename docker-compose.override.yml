@@ -1,47 +1,73 @@
 version: '3.3'
 
-services:    
+services:
+
   mongodb:
     ports:
       - "27017:27017"
     volumes:
       - mongodata:/data/db
+    # networks:
+    #   - cp-net
+
+  # redis:
+  #   networks:
+  #     - cp-net
+
   gateway:
     environment:
       - NODE_ENV=development
     command: npm start
     volumes:
       - ./server-gateway/src:/usr/src/app/server-gateway/src
+    # networks:
+    #   - cp-net
+
   cache:
     environment:
       - NODE_ENV=development
     command: npm start
     volumes:
       - ./server-cache/src:/usr/src/app/server-cache/src
+    # networks:
+    #   - cp-net
+
   user:
     environment:
       - NODE_ENV=development
     command: npm start
     volumes:
       - ./server-user/src:/usr/src/app/server-user/src
+    # networks:
+    #   - cp-net
+
   comment:
     environment:
       - NODE_ENV=development
     command: npm start
     volumes:
       - ./server-comment/src:/usr/src/app/server-comment/src
+    # networks:
+    #   - cp-net
+
   event:
     environment:
       - NODE_ENV=development
     command: npm start
     volumes:
       - ./server-event/src:/usr/src/app/server-event/src
+    # networks:
+    #   - cp-net
+
   notify:
     environment:
       - NODE_ENV=development
     command: npm start
     volumes: 
       - ./server-notify/src:/usr/src/app/server-notify/src
+    # networks:
+    #   - cp-net
+
   cp-client:
     environment:
       - NODE_ENV=development
@@ -50,5 +76,10 @@ services:
     command: npm start
     volumes:
        - ./client/src:/usr/src/app/client/src
+
 volumes:
   mongodata:
+
+# networks:
+#   cp-net:
+#     driver: bridge

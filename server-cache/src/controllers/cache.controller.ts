@@ -106,7 +106,7 @@ export const cacheController = {
 			const now = Date.now();
 			const status = statuses[i];
 
-			let lastSyncTimestamp;
+			let lastSyncTimestamp: number;
 
 			for (let timeFrameKey in status.timeFrames) {
 				const timeFrameObj = status.timeFrames[timeFrameKey];

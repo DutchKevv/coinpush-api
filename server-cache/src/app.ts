@@ -49,7 +49,7 @@ export class App {
 			cacheController.sync(BROKER_GENERAL_TYPE_IEX).then(() => this.broker.openTickStream(['iex']))
 		]);
 
-		this._toggleSymbolUpdateInterval(true);
+		// this._toggleSymbolUpdateInterval(true);
 	}
 
 	_setupApi(): void {
@@ -110,7 +110,7 @@ export class App {
 		const timeoutFunc:any = async function() {
 			try {
 				await Promise.all([
-					cacheController.sync(BROKER_GENERAL_TYPE_OANDA),
+					// cacheController.sync(BROKER_GENERAL_TYPE_OANDA),
 					cacheController.sync(BROKER_GENERAL_TYPE_CC)
 				]);
 				console.log('SYNC DONE!!')

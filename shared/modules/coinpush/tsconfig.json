@@ -1,9 +1,8 @@
 {
   "compilerOptions": {
     "target": "es2018",
-    "lib": ["es2018"],
-    "module": "commonjs",
-    "outDir": "./dist"
+    "lib": ["esnext"],
+    "module": "commonjs"
   },
   "include": [
     "./src/**/*.ts"

@@ -1,9 +1,7 @@
-import { Schema, Types, model } from 'mongoose';
-import { isEmail } from 'validator';
-import { join } from 'path';
 import * as beautifyUnique from 'mongoose-beautiful-unique-validation';
-import { BROKER_GENERAL_TYPE_OANDA, LEVERAGE_TYPE_1, G_ERROR_USER_NOT_FOUND } from 'coinpush/src/constant';
-import { IUser } from "coinpush/src/interface/IUser.interface";
+import { Schema, model } from 'mongoose';
+import { isEmail } from 'validator';
+import { G_ERROR_USER_NOT_FOUND } from 'coinpush/src/constant';
 
 export const UserSchema = new Schema({
     email: {

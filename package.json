@@ -63,7 +63,8 @@
     "npm-update": "cd ./scripts/npm && sh ./update-modules.sh",
     "npm-install": "cd ./scripts/npm && node --experimental-modules install-modules.mjs",
     "inc-build-number": "node ./scripts/inc-build-number.js",
-    "prepare-dev": "cd ./scripts && node --experimental-modules prepare_dev.mjs"
+    "prepare-dev": "cd ./scripts && node --experimental-modules prepare_dev.mjs",
+    "kube-start": "minikube start --vm-driver hyperv --hyperv-virtual-switch \"coinpush-switch\"" 
   },
   "dependencies": {}
 }

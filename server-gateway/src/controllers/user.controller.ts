@@ -171,7 +171,7 @@ export const userController = {
 		}
 	},
 
-	async updatePassword(reqUser: IReqUser, token, password): Promise<void> {
+	async updatePassword(reqUser: IReqUser, token: string, password: string): Promise<void> {
 		const result = await request({
 			uri: config.server.user.apiUrl + '/user/password',
 			headers: { '_id': reqUser.id },

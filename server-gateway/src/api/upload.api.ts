@@ -2,6 +2,7 @@ import * as multer from 'multer';
 import * as sharp from 'sharp';
 import * as request from 'requestretry';
 import * as fs from 'fs';
+import * as path from 'path';
 import { Router } from 'express';
 import { join, extname } from 'path';
 import { userController } from '../controllers/user.controller';
@@ -9,13 +10,12 @@ import { G_ERROR_MAX_SIZE } from 'coinpush/src/constant';
 import { IReqUser } from 'coinpush/src/interface/IReqUser.interface';
 import { config } from 'coinpush/src/util/util-config';
 
-const CDN_URL = '';
-
-const upload = multer({ storage: multer.memoryStorage() });
 export const router = Router();
+const upload = multer({ dest: path.join(__dirname, '../../.tmp/') });
+
+const CDN_URL = process.env.NODE_ENV.startsWith('prod') ? 'https://www.cdn.coinpush.app' : 'http://host.docker.internal:4300'
 
 router.post('/profile', upload.single('image'), async (req: any, res, next) => {
-	
 	// Check max file size (in bytes)
 	if (req.file.size > config.image.maxUploadSize) {
 		return next({
@@ -26,23 +26,21 @@ router.post('/profile', upload.single('image'), async (req: any, res, next) => {
 
 	try {
 		const fileName = req.user.id + '_' + Date.now() + extname(req.file.originalname);
-		const fullPath = join(config.image.profilePath, fileName);
 
-		// resize / crop and upload to cdn
-		const file = await sharp(req.file.buffer).resize(1000);
-
-		console.log(file);
-		await request('https://www.cdn.coinpush.app/' + fileName, {
-			method: 'POST',
-		})
-		// await sharp(req.file.buffer).resize(1000).toFile(fullPath);
+		console.log(req.file.path);
+		await request(`${CDN_URL}/upload`, {
+			method: 'post',
+			formData: {
+				fileName: fileName,
+				image: fs.createReadStream(req.file.path)
+			}
+		});
 
 		// update user @ DB
 		await userController.update(req.user, req.user.id, { img: fileName });
 
-		// send img url
+		// return img url
 		res.send({ url: fileName });
-		
 	} catch (error) {
 		console.error(error);
 		next(error);

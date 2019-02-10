@@ -36,7 +36,7 @@ export class CacheService {
 					symbolModel.tick(ticks[symbolName]);
 					changedModels.push(symbolModel);
 				} else {
-					console.warn('onTick - symbol not found : ' + symbolName);
+					// console.warn('onTick - symbol not found : ' + symbolName);
 				}
 			}
 

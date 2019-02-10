@@ -15,6 +15,9 @@
   "author": "hk brandsma",
   "license": "ISC",
   "dependencies": {
+    "@types/node": "10.12.24",
+    "@types/redis": "^2.8.6",
+    "@types/winston": "^2.3.9",
     "redis": "2.8.0",
     "redis-commands": "1.4.0",
     "request": "^2.88.0",
@@ -23,11 +26,5 @@
     "tsc-watch": "^1.0.26",
     "typescript": "3.3.3",
     "winston": "3.2.1"
-  },
-  "devDependencies": {
-    "@types/node": "10.12.24",
-    "@types/redis": "^2.8.6",
-    "@types/request": "^2.48.1",
-    "@types/socket.io": "^2.1.2"
   }
 }
