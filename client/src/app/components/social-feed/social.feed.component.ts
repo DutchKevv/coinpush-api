@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, Pipe, PipeTransform, OnDestroy, ChangeDetectorRef, ViewEncapsulation, EventEmitter, OnChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, Pipe, PipeTransform, OnDestroy, ChangeDetectorRef, ViewEncapsulation, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { ActivatedRoute, Router } from "@angular/router";
 import { CommentService } from "../../services/comment.service";
@@ -68,8 +68,8 @@ export class SocialFeedComponent implements OnInit, OnDestroy, OnChanges {
 		this.bindScroll(this.scrollHandle);
 	}
 
-	ngOnChanges(changes) {
-		console.log(changes);
+	ngOnChanges(changes: SimpleChanges) {
+		
 	}
 
 	public focusInput(event) {
@@ -173,7 +173,6 @@ export class SocialFeedComponent implements OnInit, OnDestroy, OnChanges {
 
 				if (this.filterModel) {
 					options.sources = this.filterModel.sources.filter(source => source.enabled).map(source => source._id);
-					console.log(options.sources);
 				}
 
 				items = await this.commentService.findTimeline(options);

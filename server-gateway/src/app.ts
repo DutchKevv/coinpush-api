@@ -37,7 +37,7 @@ export class App {
 		this._toggleWebSocketTickInterval();
 
 		// http / websocket api
-		this._setClientConfig();
+		await this._setClientConfig();
 		this._setupApi();
 
 		this.configHandler.startPolling();

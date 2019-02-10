@@ -6,15 +6,15 @@ import { IReqUser } from 'coinpush/src/interface/IReqUser.interface';
 export const timelineController = {
 
 	/**
+	 * find public messages, messages from sources or people you follow
+	 * TODO - followers check
 	 * 
 	 * @param reqUser 
 	 * @param params 
 	 */
 	async get(reqUser: IReqUser, params: { toUserId: string, offset: any, limit: any, sources: any }) {
-
 		const findOptions: any = {
-			toUser: { $eq: undefined },
-			parentId: { $eq: undefined }
+			$or: [{ toUser: null, parentId: null }]
 		};
 
 		// filter options
@@ -22,7 +22,7 @@ export const timelineController = {
 			params.sources = JSON.parse(params.sources);
 			
 			if (params.sources && params.sources.length) {
-				findOptions.createUser = {"$in": params.sources}
+				findOptions.$or.push({ createUser: { "$in": params.sources } });
 			}
 		}
 

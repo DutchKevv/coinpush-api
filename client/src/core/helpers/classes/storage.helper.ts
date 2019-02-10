@@ -40,7 +40,6 @@ export class StorageHelper {
     }
 
     public set(key: string, value: any): Promise<any> {
-        console.log(key, value, 2);
         return this._instance.setItem(key, value);
     }
 
