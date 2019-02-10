@@ -10,4 +10,4 @@ RUN npm i --quiet --no-progress
 COPY /server-event/src ./src
 
 # dist
-COPY /server-event/dist ./dist
+# COPY /server-event/dist ./dist
