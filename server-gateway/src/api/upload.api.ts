@@ -13,7 +13,7 @@ import { config } from 'coinpush/src/util/util-config';
 export const router = Router();
 const upload = multer({ dest: path.join(__dirname, '../../.tmp/') });
 
-const CDN_URL = process.env.NODE_ENV.startsWith('prod') ? 'https://www.cdn.coinpush.app' : 'http://host.docker.internal:4300'
+const CDN_URL = process.env.NODE_ENV.startsWith('prod') ? 'https://www.static.coinpush.app:4300' : 'http://host.docker.internal:4300'
 
 router.post('/profile', upload.single('image'), async (req: any, res, next) => {
 	// Check max file size (in bytes)
@@ -27,7 +27,6 @@ router.post('/profile', upload.single('image'), async (req: any, res, next) => {
 	try {
 		const fileName = req.user.id + '_' + Date.now() + extname(req.file.originalname);
 
-		console.log(req.file.path);
 		await request(`${CDN_URL}/upload`, {
 			method: 'post',
 			formData: {
