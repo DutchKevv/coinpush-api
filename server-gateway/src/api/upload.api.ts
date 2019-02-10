@@ -12,7 +12,7 @@ import { config } from 'coinpush/src/util/util-config';
 export const router = Router();
 const upload = multer({ dest: path.join(__dirname, '../../.tmp/') });
 
-const CDN_URL = process.env.NODE_ENV.startsWith('prod') ? 'http://136.144.181.63:4300' : 'http://host.docker.internal:4300'
+const CDN_URL = (process.env.NODE_ENV || '').startsWith('prod') ? 'http://136.144.181.63:4300' : 'http://host.docker.internal:4300'
 
 router.post('/profile', upload.single('image'), async (req: any, res, next) => {
 	console.log('upload received', `${CDN_URL}/upload`);
