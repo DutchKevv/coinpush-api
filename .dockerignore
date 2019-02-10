@@ -1,7 +1,7 @@
 ### global
 **/Dockerfile
 **/node_modules
-**/dist
+# **/dist
 **/_log
 **/npm-debug.log
 **/.git
