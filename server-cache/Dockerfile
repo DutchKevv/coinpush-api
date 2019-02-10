@@ -10,4 +10,4 @@ RUN npm i --quiet --no-progress
 COPY /server-cache/src ./src
 
 # dist
-COPY /shared/modules/coinpush /usr/src/app/shared/modules/coinpush
+# COPY /shared/modules/coinpush /usr/src/app/shared/modules/coinpush
