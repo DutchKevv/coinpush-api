@@ -1,6 +1,7 @@
 version: '3.3'
 
 services:
+  
   elk:
     build: ./server-elk
     image: sebp/elk
@@ -20,6 +21,7 @@ services:
       - ./server-elk/logstash/conf.d:/etc/logstash/conf.d
     depends_on:
       - mongodb
+
   mongodb:
     image: mongo:latest
     container_name: "mongodb"
@@ -29,6 +31,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
     command: mongod --auth
+
   redis:
     restart: unless-stopped
     image: "redis"
@@ -37,6 +40,7 @@ services:
     container_name: redis
     volumes: 
       - ./_data/redis:/data
+
   gateway:
     restart: unless-stopped
     image: registry.coinpush.app/gateway
@@ -48,12 +52,12 @@ services:
       - 3100:3100
     volumes:
       - ./_config:/usr/src/app/_config
-      - ./server-gateway/dist:/usr/src/app/server-gateway/dist
       - ./server-gateway/.tmp:/usr/src/app/server-gateway/.tmp
       - ./server-gateway/_log:/usr/src/app/server-gateway/_log
       - /usr/src/app/server-gateway/node_modules
-    # links:
-    #   - redis
+    links:
+      - redis
+
   cache:
     restart: unless-stopped
     image: registry.coinpush.app/cache
@@ -65,14 +69,12 @@ services:
       - 3001
     volumes:
       - ./_config:/usr/src/app/_config
-      - ./server-cache/dist:/usr/src/app/server-cache/dist
       - ./server-cache/_log:/usr/src/app/server-cache/_log
-      - ./shared/modules/coinpush/src:/usr/src/app/shared/modules/coinpush/src
       - /usr/src/app/server-cache/node_modules
     links:
       - redis
-      - gateway
-      # - mongodb
+      - mongodb
+
   user:
     restart: unless-stopped
     image: registry.coinpush.app/user
@@ -84,13 +86,13 @@ services:
       - 3008
     volumes:
       - ./_config:/usr/src/app/_config
-      - ./server-user/dist:/usr/src/app/server-user/dist
       - ./server-user/_log:/usr/src/app/server-user/_log
       - /usr/src/app/server-user/node_modules
     links:
       - redis
       - gateway
-      # - mongodb
+      - mongodb
+
   notify:
     restart: unless-stopped
     image: registry.coinpush.app/notify
@@ -102,12 +104,12 @@ services:
       - 3010
     volumes:
       - ./_config:/usr/src/app/_config
-      - ./server-notify/dist:/usr/src/app/server-notify/dist
       - ./server-notify/_log:/usr/src/app/server-notify/_log
       - /usr/src/app/server-notify/node_modules
     links:
       - redis
       - mongodb
+
   comment:
     restart: unless-stopped
     image: registry.coinpush.app/comment
@@ -119,12 +121,12 @@ services:
       - 3009
     volumes:
       - ./_config:/usr/src/app/_config
-      - ./server-comment/dist:/usr/src/app/server-comment/dist
       - ./server-comment/_log:/usr/src/app/server-comment/_log
       - /usr/src/app/server-comment/node_modules
     links:
       - redis
       - mongodb
+
   event:
     restart: unless-stopped
     image: registry.coinpush.app/event
@@ -136,12 +138,12 @@ services:
       - 3011
     volumes:
       - ./_config:/usr/src/app/_config
-      - ./server-event/dist:/usr/src/app/server-event/dist
       - ./server-event/_log:/usr/src/app/server-event/_log
       - /usr/src/app/server-event/node_modules
     links:
       - redis
       - mongodb
+
   cp-client:
     image: registry.coinpush.app/client
     container_name: cp-client
@@ -150,6 +152,7 @@ services:
       dockerfile: ./client/Dockerfile
     volumes:
       - /usr/src/app/client/node_modules
+
   client-app:
     image: registry.coinpush.app/client-app
     container_name: client-app

@@ -30,7 +30,7 @@
     "build-server": "docker-compose build --parallel mongodb redis gateway notify user event cache comment",
     "build-prod": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml build --parallel",
     "build-prod-client": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml build --parallel cp-client",
-    "build-prod-server": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml build --parallel redis gateway notify user event cache comment mongodb",
+    "build-prod-server": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml build --parallel --no-cache redis gateway notify user event cache comment mongodb",
     "start": "echo ' ------------ RUN 'npm run start-client' OR 'npm run start-server' -------------- '",
     "server": "docker-compose up -d redis gateway notify cache event comment user mongodb && npm run d-log-server",
     "client": "docker-compose up cp-client",

@@ -7,12 +7,6 @@ services:
       - "27017:27017"
     volumes:
       - mongodata:/data/db
-    # networks:
-    #   - cp-net
-
-  # redis:
-  #   networks:
-  #     - cp-net
 
   gateway:
     environment:
@@ -20,8 +14,7 @@ services:
     command: npm start
     volumes:
       - ./server-gateway/src:/usr/src/app/server-gateway/src
-    # networks:
-    #   - cp-net
+      - ./server-gateway/dist:/usr/src/app/server-gateway/dist
 
   cache:
     environment:
@@ -29,8 +22,7 @@ services:
     command: npm start
     volumes:
       - ./server-cache/src:/usr/src/app/server-cache/src
-    # networks:
-    #   - cp-net
+      - ./server-cache/dist:/usr/src/app/server-cache/dist
 
   user:
     environment:
@@ -38,8 +30,7 @@ services:
     command: npm start
     volumes:
       - ./server-user/src:/usr/src/app/server-user/src
-    # networks:
-    #   - cp-net
+      - ./server-user/dist:/usr/src/app/server-user/dist
 
   comment:
     environment:
@@ -47,8 +38,7 @@ services:
     command: npm start
     volumes:
       - ./server-comment/src:/usr/src/app/server-comment/src
-    # networks:
-    #   - cp-net
+      - ./server-comment/dist:/usr/src/app/server-comment/dist
 
   event:
     environment:
@@ -56,8 +46,7 @@ services:
     command: npm start
     volumes:
       - ./server-event/src:/usr/src/app/server-event/src
-    # networks:
-    #   - cp-net
+      - ./server-event/dist:/usr/src/app/server-event/dist
 
   notify:
     environment:
@@ -65,8 +54,7 @@ services:
     command: npm start
     volumes: 
       - ./server-notify/src:/usr/src/app/server-notify/src
-    # networks:
-    #   - cp-net
+      - ./server-notify/dist:/usr/src/app/server-notify/dist
 
   cp-client:
     environment:
@@ -79,7 +67,3 @@ services:
 
 volumes:
   mongodata:
-
-# networks:
-#   cp-net:
-#     driver: bridge
