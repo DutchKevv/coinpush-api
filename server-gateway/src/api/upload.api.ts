@@ -16,6 +16,7 @@ const upload = multer({ dest: path.join(__dirname, '../../.tmp/') });
 const CDN_URL = process.env.NODE_ENV.startsWith('prod') ? 'http://136.144.181.63:4300' : 'http://host.docker.internal:4300'
 
 router.post('/profile', upload.single('image'), async (req: any, res, next) => {
+	console.log('upload received', `${CDN_URL}/upload`);
 	// Check max file size (in bytes)
 	if (req.file.size > config.image.maxUploadSize) {
 		return next({
@@ -48,15 +49,16 @@ router.post('/profile', upload.single('image'), async (req: any, res, next) => {
 });
 
 export function downloadProfileImgFromUrl(reqUser: IReqUser, url: string): Promise<string> {
-	const fileName = reqUser.id + '_' + Date.now() + '.png';
-	const fullPath = join(config.image.profilePath, fileName);
-	const resizeTransform = sharp().resize(1000);
+	return Promise.resolve('');
+	// const fileName = reqUser.id + '_' + Date.now() + '.png';
+	// const fullPath = join(config.image.profilePath, fileName);
+	// const resizeTransform = sharp().resize(1000);
 
-	return new Promise((resolve, reject) => {
-		request(url)
-			.pipe(resizeTransform)
-			.pipe(fs.createWriteStream(fullPath))
-			.on('close', () => resolve(fileName))
-			.on('error', reject);
-	});
+	// return new Promise((resolve, reject) => {
+	// 	request(url)
+	// 		.pipe(resizeTransform)
+	// 		.pipe(fs.createWriteStream(fullPath))
+	// 		.on('close', () => resolve(fileName))
+	// 		.on('error', reject);
+	// });
 }
