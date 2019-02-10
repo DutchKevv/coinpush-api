@@ -1,5 +1,5 @@
 import * as bcrypt from 'bcryptjs';
-import { Types } from 'mongoose';
+import { Types, Query } from 'mongoose';
 import * as jwt from 'jsonwebtoken';
 import { pubClient } from 'coinpush/src/redis';
 import { User, UserSchema } from '../schemas/user.schema';
@@ -24,7 +24,7 @@ export const userController = {
 
 		let REDIS_KEY = REDIS_USER_PREFIX + userId;
 		let fieldsArr = [];
-		let user;
+		let user: IUser;
 
 		switch (type) {
 			case USER_FETCH_TYPE_ACCOUNT_DETAILS:
@@ -50,7 +50,7 @@ export const userController = {
 		return user;
 	},
 
-	async findMany(reqUser, params) {
+	async findMany(reqUser: IReqUser, params: any): Promise<IUser[]> {
 		const limit = parseInt(params.limit, 10) || 20;
 		const sort = params.sort || -1;
 
@@ -65,9 +65,6 @@ export const userController = {
 		if (params.text)
 			where.name = { "$regex": params.text, "$options": "i" }
 
-		if (params.facebookId)
-			where['oauthFacebook.id'] = { "$eq": params.facebookId }
-
 		// sources (companyId etc)
 		if (params.companyId) {
 			where['companyId'] = { $exists: true }
@@ -80,11 +77,15 @@ export const userController = {
 			delete user['followers'];
 		});
 
-		// TODO - does not belong here
-		if (params.facebookId && users.length)
-			users[0].token = jwt.sign({id: users[0]._id}, config.auth.jwt.secret);
-
 		return users;
+	},
+
+	findByFacebookId(reqUser: IReqUser, facebookId: number): Promise<IUser> {
+		if (!facebookId) {
+			throw ({ message: 'facebookId is required' });
+		}
+
+		return <any>User.findOne({ 'oauthFacebook.id': facebookId }).lean();
 	},
 
 	async findByEmail(reqUser, email: string, fields: Array<string> = []) {
@@ -141,7 +142,7 @@ export const userController = {
 		}
 
 		const user = <IUser>(await User.create(userData)).toObject();
-		user.token = jwt.sign({id: user._id}, config.auth.jwt.secret)
+		user.token = jwt.sign({ id: user._id }, config.auth.jwt.secret)
 		return user;
 	},
 
@@ -235,6 +236,6 @@ export const userController = {
 		if (reqUser.id !== id)
 			throw ({ code: '???', message: 'Remove user - req.user.id and userId to not match' });
 
-		return this.update(reqUser, id, {removed: true});
+		return this.update(reqUser, id, { removed: true });
 	}
 };

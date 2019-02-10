@@ -14,8 +14,7 @@ import { G_ERROR_DUPLICATE_FIELD } from 'coinpush/src/constant';
 export class UserService {
 
 	public model: UserModel = new UserModel(Object.assign({
-		name: 'Anonymous',
-		img: '/assets/image/default-profile.jpg'
+		name: 'Anonymous'
 	}, app.storage.profileData || {}));
 
 	constructor(

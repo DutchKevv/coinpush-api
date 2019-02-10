@@ -10,7 +10,7 @@
   "scripts": {
     "start": "tsc-watch --sourceMap --onSuccess \"node ./dist/index.js\"",
     "build": "tsc",
-    "prod": "node ./dist/index.js"
+    "prod": "NODE_ENV=production node ./dist/index.js"
   },
   "author": "HK Brandsmsa",
   "license": "ISC",
@@ -29,8 +29,7 @@
     "request": "2.88.0",
     "request-promise": "4.2.2",
     "requestretry": "3.1.0",
-    "socket.io": "2.2.0",
-    "typescript": "3.3.1"
+    "socket.io": "2.2.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.4",
@@ -45,6 +44,7 @@
     "@types/request": "^2.48.1",
     "@types/socket.io": "^2.1.2",
     "@types/validator": "10.9.0",
-    "tsc-watch": "1.1.36"
+    "tsc-watch": "1.1.36",
+    "typescript": "3.3.1"
   }
 }

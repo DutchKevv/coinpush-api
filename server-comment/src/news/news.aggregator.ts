@@ -23,12 +23,8 @@ export class NewsAggregator {
     private _loopIntervalDelay: number = 1000 * 60 * 5 // 5 minutes
     private _lastCheck = null;
 
-    constructor() {
-        this._installApis();
-    }
-
-    public async init() {
-
+    public init(): Promise<void> {
+        return this._installApis();
     }
 
     public start() {
@@ -87,9 +83,13 @@ export class NewsAggregator {
         return text;
     }
 
-    private _installApis() {
+    private async _installApis(): Promise<void> {
         this._apis.push(new CCNScraper());
         this._apis.push(new CoinDeskScraper());
         this._apis.push(new IGScraper());
+
+        await Promise.all(this._apis.map(api => {
+            
+        }));
     }
 }

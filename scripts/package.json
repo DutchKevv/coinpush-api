@@ -4,7 +4,8 @@
   "description": "",
   "main": "inc-build-number.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "insert-news-users": "node ./db/insert-news-users/insert-news-users.js",
+    "insert-news-users-prod": "NODE_ENV=production node ./db/insert-news-users/insert-news-users.js"
   },
   "author": "",
   "license": "ISC",

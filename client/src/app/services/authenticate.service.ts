@@ -5,11 +5,10 @@ import { LoginComponent } from '../components/login/login.component';
 import { app } from '../../core/app';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { environment } from 'environments/environment';
 
 declare const window: any;
-
 
 const FB_APP_ID_PROD = '391706548256074';
 const FB_APP_ID_DEV = '391706548256074';
@@ -210,7 +209,7 @@ export class AuthenticationService {
 				const fbRedirectUrl = environment.production ? app.address.hostUrl + '/index.redirect.facebook.html' : 'http://localhost:4200/index.redirect.facebook.html';
 				const loginUrl = `https://graph.facebook.com/oauth/authorize?client_id=${clientId}&response_type=token&redirect_uri=${fbRedirectUrl}&scope=${scope.join()}`;
 
-				window.addEventListener('message', async (message) => {
+				window.addEventListener('message', async (message: any) => {
 					if (message.data.error)
 						return reject(message.error);
 
