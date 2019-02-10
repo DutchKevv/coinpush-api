@@ -9,14 +9,18 @@ import { G_ERROR_MAX_SIZE } from 'coinpush/src/constant';
 import { IReqUser } from 'coinpush/src/interface/IReqUser.interface';
 import { config } from 'coinpush/src/util/util-config';
 
+const PATH_TMP = path.join(__dirname, '../../.tmp/') ;
+const CDN_URL = (process.env.NODE_ENV || '').startsWith('prod') ? 'http://136.144.181.63:4300' : 'http://host.docker.internal:4300';
+
 export const router = Router();
-const upload = multer({ dest: path.join(__dirname, '../../.tmp/') });
+const upload = multer({ dest: PATH_TMP });
 
-const CDN_URL = (process.env.NODE_ENV || '').startsWith('prod') ? 'http://136.144.181.63:4300' : 'http://host.docker.internal:4300'
-
+/**
+ * TODO - Refactor. use streams instead of temp file
+ */
 router.post('/profile', upload.single('image'), async (req: any, res, next) => {
-	console.log('upload received', `${CDN_URL}/upload`);
-	// Check max file size (in bytes)
+
+	// check max file size (bytes)
 	if (req.file.size > config.image.maxUploadSize) {
 		return next({
 			code: G_ERROR_MAX_SIZE,
@@ -25,6 +29,7 @@ router.post('/profile', upload.single('image'), async (req: any, res, next) => {
 	}
 
 	try {
+		// file name as stored on cdn
 		const fileName = req.user.id + '_' + Date.now() + extname(req.file.originalname);
 
 		// upload to cdn
@@ -36,7 +41,7 @@ router.post('/profile', upload.single('image'), async (req: any, res, next) => {
 			}
 		});
 
-		// update user in db
+		// update user with new image in db
 		await userController.update(req.user, req.user.id, { img: fileName });
 
 		// return img url
@@ -47,17 +52,34 @@ router.post('/profile', upload.single('image'), async (req: any, res, next) => {
 	}
 });
 
-export function downloadProfileImgFromUrl(reqUser: IReqUser, url: string): Promise<string> {
-	return Promise.resolve('');
-	// const fileName = reqUser.id + '_' + Date.now() + '.png';
-	// const fullPath = join(config.image.profilePath, fileName);
-	// const resizeTransform = sharp().resize(1000);
+/**
+ * TODO - Refactor. use streams instead of temp file
+ * 
+ * @param reqUser 
+ * @param url 
+ */
+export function updateProfileImgFromUrl(reqUser: IReqUser, url: string): Promise<string> {
 
-	// return new Promise((resolve, reject) => {
-	// 	request(url)
-	// 		.pipe(resizeTransform)
-	// 		.pipe(fs.createWriteStream(fullPath))
-	// 		.on('close', () => resolve(fileName))
-	// 		.on('error', reject);
-	// });
+	return new Promise(async (resolve, reject) => {
+		const fileName = reqUser.id + '_' + Date.now() + '.png';
+		const fullPath = path.join(PATH_TMP, fileName);
+		
+		request(url)
+			.pipe(fs.createWriteStream(fullPath))
+			.on('close', () => {
+				
+				// upload to cdn
+				request(`${CDN_URL}/upload`, {
+					method: 'post',
+					formData: {
+						fileName: fileName,
+						image: fs.createReadStream(fullPath)
+					}
+				})
+				.then(() => userController.update(reqUser, reqUser.id, { img: fileName }))
+				.then(() => resolve(fileName))
+				.catch(reject);
+			})
+			.on('error', reject);
+	});
 }

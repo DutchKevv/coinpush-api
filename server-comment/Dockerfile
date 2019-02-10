@@ -12,4 +12,4 @@ RUN npm i --quiet --no-progress
 COPY /server-comment/src ./src
 
 # dist build
-RUN if [ "$env" = "production" ] ; then npm run build && rm -rf src; fi
+RUN if [ "$env" = "production" ] ; then npm run build && npm prune --production && rm -rf src; fi
