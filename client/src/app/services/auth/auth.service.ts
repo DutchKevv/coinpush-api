@@ -222,7 +222,7 @@ export class AuthService {
 				const clientId = environment.production ? FB_APP_ID_PROD : FB_APP_ID_DEV;
 				// const clientId = FB_APP_ID_PROD;
 
-				const fbRedirectUrl = environment.production ? '/index.redirect.facebook.html' : 'http://localhost:4200/index.redirect.facebook.html';
+				const fbRedirectUrl = environment.production ? 'https://www.coinpush.app/index.redirect.facebook.html' : 'http://localhost:4200/index.redirect.facebook.html';
 				const loginUrl = `https://graph.facebook.com/oauth/authorize?client_id=${clientId}&response_type=token&redirect_uri=${fbRedirectUrl}&scope=${scope.join()}`;
 
 				window.addEventListener('message', async (message: any) => {
