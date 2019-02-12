@@ -15,6 +15,7 @@ services:
       LOGSTASH_START: 1
       KIBANA_START: 1
       ES_CONNECT_RETRY: 180
+      LS_OPTS: "--config.reload.automatic"
     volumes:
       - ./server-elk/elasticsearch/_data:/var/lib/elasticsearch
       - ./server-elk/logstash/_data:/usr/local/etc
