@@ -70,7 +70,7 @@ export class CustomHttp implements HttpInterceptor {
 				return throwError(error.error || error);
 			case 401:
 				// user token invalid, so logout
-				if (this._authenticationService.loggedIn) {
+				if (this._accountService.isLoggedIn) {
 					this._authenticationService.logout();
 				}
 				// user should login

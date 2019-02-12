@@ -8,7 +8,7 @@
   },
   "main": "index.js",
   "scripts": {
-    "postinstall": "npm run build",
+    "postinstall2": "npm run build",
     "start": "tsc-watch --sourceMap",
     "build": "tsc"
   },
@@ -17,7 +17,6 @@
   "dependencies": {
     "@types/node": "10.12.24",
     "@types/redis": "^2.8.6",
-    "@types/winston": "^2.3.9",
     "redis": "2.8.0",
     "redis-commands": "1.4.0",
     "request": "^2.88.0",

@@ -17,8 +17,9 @@ export class DeviceService {
     ) {}
 
     public init() {
-        this._notificationService.firebaseToken$.subscribe(() => {
-            this.save();
+        this._notificationService.firebaseToken$.subscribe((token) => {
+            if (token)
+                this.save();
         })
     }
 

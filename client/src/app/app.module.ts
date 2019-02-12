@@ -26,14 +26,14 @@ import { NavigationMenuComponent } from './components/navigation-menu/navigation
 import { InstrumentListComponent, FilterIFavoritePipe } from './components/instrument-list/instrument-list.component';
 import { MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material';
 import { ModalComponent } from './components/modal/modal.component';
+import { HeaderComponentModule } from './components/header/header.component.module';
+import { NormalizeImageUrlPipeModule } from './pipes/normalize-image.pipe.module';
+import { NavigationMenuComponentModule } from './components/navigation-menu/navigation-menu.component.module';
 
 @NgModule({
 	declarations: [
 		AppComponent,
-		HeaderComponent,
-		NavigationMenuComponent,
 		AlarmMenuComponent,
-		NotificationMenuComponent,
 		ChartBoxComponent,
 		ChartOverviewComponent,
 		InstrumentListComponent,
@@ -47,8 +47,7 @@ import { ModalComponent } from './components/modal/modal.component';
 		SettingsComponent,
 		CommentBoxComponent,
 		TimelineComponent,
-		AlarmMenuActiveSymbolEventPipe,
-		NormalizeImgUrlPipe
+		AlarmMenuActiveSymbolEventPipe
 	],
 	imports: [
 		BrowserModule,
@@ -57,7 +56,10 @@ import { ModalComponent } from './components/modal/modal.component';
 		FormsModule,
 		ReactiveFormsModule,
 		HttpClientModule,
-		MatDialogModule
+		MatDialogModule,
+		HeaderComponentModule,
+		NavigationMenuComponentModule,
+		NormalizeImageUrlPipeModule
 	],
 	providers: [
 		{ provide: APP_INITIALIZER, useFactory: (config: BootstrapService) => () => config.load(), deps: [BootstrapService], multi: true },

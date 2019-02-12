@@ -1,4 +1,4 @@
-import { Injectable, Injector } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { StorageService } from '../storage.service';
 import { BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -13,13 +13,11 @@ export class AccountService {
 
     constructor(
         private _http: HttpClient,
-        private _injector: Injector
+        private _storageService: StorageService
     ) {}
     
     public async update(data: any, isNew: boolean = false, save: boolean = false): Promise<void> {		
-        const storageService = this._injector.get(StorageService);
-
-		data = await storageService.updateProfile(data, isNew);
+		data = await this._storageService.updateProfile(data, isNew);
 
         this.account$.next(data);
         

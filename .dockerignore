@@ -25,5 +25,7 @@ client-app/plugins/
 client-app/res/
 client-app/scripts/
 
+!**/shared/modules/coinpush/**/*.js
+
 ### redis
 **/dump.rdb

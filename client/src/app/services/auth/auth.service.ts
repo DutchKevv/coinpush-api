@@ -1,14 +1,11 @@
 import { EventEmitter, Injectable, Output } from '@angular/core';
-import { UserService } from '../user.service';
 import { AlertService } from "../alert.service";
 import { LoginComponent } from '../../components/login/login.component';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { ModalService } from '../modal/modal.service';
-import { NotificationService } from '../notification.service';
 import { DeviceService } from '../device/device.service';
-import { BehaviorSubject } from 'rxjs';
 import { StorageService } from '../storage.service';
 import { ConfigService } from '../config/config.service';
 import { AccountService } from '../account/account.service';
@@ -25,17 +22,12 @@ export class AuthService {
 
 	@Output() public loggedIn$: EventEmitter<boolean> = new EventEmitter(false);
 
-	
-
-	public loggedIn: boolean = false;
 	public loginOpen = false; // needed to prevent 401 request opening multiple login popups
 
 	constructor(
-		private _userService: UserService,
 		private _alertService: AlertService,
 		private _modalService: ModalService,
 		private _activetedRoute: ActivatedRoute,
-		private _notificationService: NotificationService,
 		private _deviceService: DeviceService,
 		private _storageService: StorageService,
 		private _configService: ConfigService,
@@ -45,8 +37,6 @@ export class AuthService {
 	}
 
 	init() {
-		this.loggedIn = this._accountService.isLoggedIn;
-
 		this._activetedRoute.queryParamMap
 			// .distinctUntilChanged()
 			.subscribe((params: any) => {
@@ -57,10 +47,6 @@ export class AuthService {
 							break;
 					}
 				}
-			});
-
-			this._notificationService.firebaseToken$.subscribe(() => {
-				this._deviceService.save()
 			});
 	}
 
@@ -260,7 +246,7 @@ export class AuthService {
 		}
 
 		try {
-			await this._storageService.clearProfile();
+			await this._storageService.clearProfile(this._accountService.account$.getValue()._id);
 		} catch (error) {
 			console.error(error);
 		}
@@ -269,10 +255,6 @@ export class AuthService {
 	}
 
 	public async showLoginRegisterPopup(activeForm?: string, redirectUrl?: string) {
-		if (this.loggedIn) {
-			throw new Error('Already logged in!');
-		}
-
 		const dialog = this._modalService.open({
 			component: LoginComponent
 		});

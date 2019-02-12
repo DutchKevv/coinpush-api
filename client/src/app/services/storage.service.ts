@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as localforage from "localforage";
 import * as deepmerge from "deepmerge";
-import { AccountService } from './account/account.service';
 
 @Injectable({
 	providedIn: 'root',
@@ -11,9 +10,7 @@ export class StorageService {
     private _localforage: any; 
     private _data: any = {};  
 
-	constructor(
-        private _accountService: AccountService
-    ) {}
+	constructor() {}
 
     async init(): Promise<void> {
         this._localforage = localforage.createInstance({
@@ -70,7 +67,7 @@ export class StorageService {
         return  this._data;
     }
 
-    public async clearProfile(userId = this._accountService.account$.getValue()._id): Promise<void> {
+    public async clearProfile(userId): Promise<void> {
         // create new profile
         if (!userId) {
             throw new Error('Not loggedin and no [user]_id given as argument');
