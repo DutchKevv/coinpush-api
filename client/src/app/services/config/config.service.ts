@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { environment } from '../../../environments/environment';
 
 export interface IAddress {
     cdn: {
@@ -32,7 +33,7 @@ export class ConfigService {
             prefix: '/api/v1/'
         },
         cdn: {
-            url: 'http://localhost:4100/'
+            url: environment.production ? 'https://www.static.coinpush.app/' : 'http://localhost:4100/'
         }
     };
 
