@@ -6,6 +6,7 @@ import { UserService } from '../../services/user.service';
 import { BehaviorSubject } from 'rxjs';
 import { UserModel } from '../../models/user.model';
 import { CacheService } from '../../services/cache.service';
+import { AccountService } from '../../services/account/account.service';
 
 const shuffleArray = (arr) => arr.sort(() => (Math.random() - 0.5));
 
@@ -25,10 +26,11 @@ export class UserOverviewComponent implements OnInit, OnDestroy {
 	public countries: any[] = window['countries'];
 	public symbols: any[] = this._cacheService.symbols;
 
-	public selfId = this._userService.model.options._id;
+	public selfId = this._accountService.account$.getValue()._id;
 
 	constructor(
 		private _userService: UserService,
+		private _accountService: AccountService,
 		private _cacheService: CacheService,
 		private _changeDetectorRef: ChangeDetectorRef) {
 	}

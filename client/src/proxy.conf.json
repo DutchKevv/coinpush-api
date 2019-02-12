@@ -13,7 +13,7 @@
         "logLevel": "debug"
     },
     "/socket.io/*": {
-        "target": "http://localhost:4000",
+        "target": "http://localhost:3100",
         "secure": false,
         "logLevel": "debug",
         "ws":true

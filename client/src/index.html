@@ -3,15 +3,14 @@
 
 <head>
     <title>CoinPush (Realtime Crypto,Bitcoin,Forex,Ripple,Stocks,News,PriceAlarms and more)</title>
-    <!-- <base href="../"> -->
     <meta charset="utf-8">
     <meta name="robots" content="index, follow">
     <meta name="googlebot" content="index, follow">
-    <meta name="description" content="CoinPush - A multi coin - realtime - Crypto, Bitcoin, Forex, Ripple, Stocks, News platform, set custom alarms and follow users."
-    />
+    <meta name="description"
+        content="CoinPush - A multi coin - realtime - Crypto, Bitcoin, Forex, Ripple, Stocks, News platform, set custom alarms and follow users." />
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="viewport" content="initial-scale=1, width=device-width, height=device-height, viewport-fit=cover, user-scalable=no">
-    <meta name="google-proof-for-mobile-app" content="com.ff2.coinpush">
+    <meta name="viewport"
+        content="initial-scale=1, width=device-width, height=device-height, viewport-fit=cover, user-scalable=no">
 
     <!-- URL bar background color | Chrome, FireFox OS, MS, Apple -->
     <meta name="theme-color" content="#000000">
@@ -20,10 +19,6 @@
 
     <link rel="shortcheaderut icon" href="favicon.ico" type="image/x-icon">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="assets/font-awesome/css/font-awesome.min.css">
-
-
-    
     <link rel="alternate" href="android-app://com.ff2.coinpush/https/coinpush.app/news/" />
     <style>
         html {
@@ -46,56 +41,17 @@
             padding-bottom: calc(env(safe-area-inset-bottom) + 80px);
         }
 
-        /* browser not supported */
-
-        #bns-container {
-            background: white;
-            max-width: 800px;
-            padding: 100px 20px;
-            margin: 50px auto;
-            box-shadow: 0px 0px 40px rgba(255, 255, 255, 0.5);
-            text-align: center;
-            border-radius: 50%;
-        }
-
-        body>.spinner {
+        body > .spinner {
             position: absolute;
             top: calc(50% - 40px);
             left: calc(50% - 30px);
-        }
-
-        .font-awesome-preload-trigger {
-            width: 0px;
-            height: 0px;
-            overflow: hidden;
-        }
-
-        .modal-backdrop {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: white;
-            opacity: 0.85;
-            z-index: 1002;
-        }
-
-        .spinner {
-            margin: 0 auto;
-            border: 8px solid #4c4c4c;
-            border-top: 8px solid #228b07;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            opacity: 0;
-            animation: spin 2s linear infinite, fadeIn .8s linear .5s forwards;
         }
 
         @keyframes spin {
             0% {
                 transform: rotate(0deg);
             }
+
             100% {
                 transform: rotate(360deg);
             }
@@ -112,18 +68,12 @@
                 opacity: 0;
             }
         }
-
-        chart-overview {
-            height: 100%;
-            position: relative;
-        }
     </style>
 
     <!-- inject:js:adsense -->
 </head>
 
 <body>
-    <i class="font-awesome-preload-trigger fa fa-square-o"></i>
     <div class="spinner"></div>
 
     <!-- Javascript error reporting on Sentry-->
@@ -134,109 +84,9 @@
 
     <!-- inject:js:cordova -->
     <script>
-
-        function init() {
-            window.BROWSERSUPPORTED = function () {
-                try {
-                    return !!class test { };
-                } catch (err) {
-                    return false;
-                }
-            }();
-
-            if (!window.BROWSERSUPPORTED)
-                document.body.innerHTML = '<div id="bns-container"><h2>Whoops! Your browser is not supported.</h2><p>Please update to a more recent version of Chrome, Firefox or Edge</p></div>';
-
-            if (!window.BROWSERSUPPORTED)
-                return;
-
-            // platform data
-            window.platform = {
-                adsEnabled: true,
-                startTime: new Date(),
-                isReady: false,
-                isReady$: Promise.resolve(),
-                version: '',
-                // isApp: true,
-                isApp: document.URL.indexOf('file://') > -1,
-                isIOS: /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream,
-                isTouch: true,
-                windowW: window.innerWidth,
-                windowH: window.innerHeight
-            };
-
-            // place after window.platform object init 
-            // so it can use window.platform variables (windowW, windowH) instead of checking agian (prevents 1 reflow)
-            window.platform.windowS = window.platform.windowW + window.platform.windowH;
-
-            window.addEventListener('resize', () => {
-                if (window.app) {
-                    window.app.platform.windowW = window.innerWidth,
-                        window.app.platform.windowH = window.innerHeight
-                }
-            }, { passive: true });
-
-            /**
-             * 
-             * browser browser browser browser browser browser 
-             * 
-             */
-            if (!window.platform.isApp) {
-                // google adsense for browser
-                const script = document.createElement('script');
-                script.async = true;
-                script.src = '//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
-                document.head.appendChild(script);
-
-                // (adsbygoogle = window.adsbygoogle || []).push({
-                //     google_ad_client: "ca-pub-1181429338292864",
-                //     enable_page_level_ads: true,
-                //     google_adtest: 'on'
-                // });
-
-                window.platform.isReady = true;
-                return;
-            }
-
-            if (window.universalLinks) {
-                window.universalLinks.subscribe('ul_myExampleEvent', function (event) {
-                    alert('sdfsdf')
-                });
-            }
-
-            /**
-             * 
-             * app app app app app app app app app app app
-             * 
-             */
-
-            // device ready listener
-            window.platform.isReady$ = new Promise((resolve, reject) => {
-                document.addEventListener("deviceready", function () {
-                    window.platform.isEmulator = (device && device.isVirtual) || navigator.platform === 'Linux i686';
-                    window.platform.isReady = true;
-                    window.app.init().catch(console.error);
-
-                    window.addEventListener('native.keyboardshow', function (e) {
-                        setTimeout(function () {
-                            document.activeElement.scrollIntoViewIfNeeded();
-                        }, 100);
-                    });
-
-                    resolve();
-                }, { once: true, passive: true });
-            });
-
-            // special root class
-            document.body.classList.add('app');
-
-            if (window.platform.isIOS) {
-                document.body.classList.add('ios');
-            }
-        }
-
-        // Raven.context(init());
-        init();
+        navigator.serviceWorker.addEventListener('message', function (event) {
+            console.log(111, event);
+        });
     </script>
 </body>
 

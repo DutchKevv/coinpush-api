@@ -2,11 +2,8 @@ import {
 	Component, OnInit, ElementRef, ChangeDetectionStrategy,
 	ViewChild,
 	ChangeDetectorRef,
-	AfterViewInit,
-	Output,
 	OnDestroy,
 	ApplicationRef,
-	EventEmitter,
 	ViewEncapsulation,
 	Pipe,
 	PipeTransform
@@ -15,11 +12,11 @@ import { CacheService } from '../../services/cache.service';
 import { UserService } from '../../services/user.service';
 import { SymbolModel } from '../../models/symbol.model';
 import { SymbolListService } from '../../services/symbol-list.service';
-import { AuthenticationService } from '../../services/authenticate.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { app } from '../../../core/app';
 import { SYMBOL_CAT_TYPE_RESOURCE, SYMBOL_CAT_TYPE_CRYPTO, BROKER_GENERAL_TYPE_OANDA, BROKER_GENERAL_TYPE_CC } from 'coinpush/src/constant';
 import { EventService } from '../../services/event.service';
+import { StorageService } from '../../services/storage.service';
+import { AccountService } from '../../services/account/account.service';
 
 const DEFAULT_FILTER_POPULAR_LENGTH = 40;
 
@@ -55,16 +52,14 @@ export class InstrumentListComponent implements OnInit, OnDestroy {
 		public cacheService: CacheService,
 		public symbolListService: SymbolListService,
 		private _applicationRef: ApplicationRef,
-		private _userService: UserService,
+		private _accountService: AccountService,
+		private _storageService: StorageService,
 		private _router: Router,
 		private _route: ActivatedRoute,
-		private _changeDetectorRef: ChangeDetectorRef,
 		private _elementRef: ElementRef
-	) {
-		// this._changeDetectorRef.detach();
-	}
+	) {}
 
-	ngOnInit() {
+	async ngOnInit() {
 		this.filterGroups = this._setFilterOptions();
 		this._filterSub = this._applicationRef.components[0].instance.filterClicked$.subscribe(state => this._toggleFilterNav(null, state));
 
@@ -74,10 +69,12 @@ export class InstrumentListComponent implements OnInit, OnDestroy {
 		// apend list container to component
 		this._elementRef.nativeElement.appendChild(this.symbolListService.containerEl);
 
-		if (app.storage.profileData.chartConfig) {
+		const localConfig = await this._storageService.getAccountData();
+
+		if (localConfig && localConfig.chartConfig) {
 			// check if still valid filter (could be old from localstorage)
-			if (!!this._getFilterObjectByName(app.storage.profileData.chartConfig.filter)) {
-				this.activeFilter = app.storage.profileData.chartConfig.filter;
+			if (!!this._getFilterObjectByName(localConfig.chartConfig.filter)) {
+				this.activeFilter = localConfig.chartConfig.filter;
 			}
 		}
 
@@ -112,12 +109,14 @@ export class InstrumentListComponent implements OnInit, OnDestroy {
 
 	}
 
-	public toggleActiveFilter(filter: string, removeSymbolFromUrl = true) {
+	public async toggleActiveFilter(filter: string, removeSymbolFromUrl = true) {
 		// if (filter === this.activeFilter)
 		// 	return;
 
-		if (!app.storage.profileData.chartConfig || app.storage.profileData.chartConfig.filter !== filter) {
-			app.storage.updateProfile({ chartConfig: { filter } }).catch(console.error);
+		const account = this._accountService.account$.getValue();
+		
+		if (!account.chartConfig || account.chartConfig.filter !== filter) {
+			this._accountService.update({ chartConfig: { filter } }).catch(console.error);
 		}
 
 		// remove specific symbol in url

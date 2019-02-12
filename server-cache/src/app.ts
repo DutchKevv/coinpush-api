@@ -89,14 +89,10 @@ export class App {
 
 	_connectMongo() {
 		return new Promise((resolve, reject) => {
-			// mongoose.set('debug', process.env.NODE_ENV === 'development');
-			(<any>mongoose).Promise = global.Promise; // Typescript quirk
-
 			this.db = mongoose.connection;
 
-			mongoose.connect(config.server.cache.connectionString, (error) => {
-				if (error)
-					return reject(error);
+			mongoose.connect(config.server.cache.connectionString, { useNewUrlParser: true }, (error) => {
+				if (error) return reject(error);
 				
 				resolve();
 			});

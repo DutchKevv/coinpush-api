@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, ElementR
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { UserModel } from '../../models/user.model';
+import { AccountService } from '../../services/account/account.service';
 
 @Component({
 	selector: 'app-profile',
@@ -22,8 +23,9 @@ export class ProfileComponent implements OnInit {
 	@ViewChild('header') header;
 
 	constructor(
-		public userService: UserService,
+		private userService: UserService,
 		public elementRef: ElementRef,
+		private _accountService: AccountService,
 		private _applicationRef: ApplicationRef,
 		private _changeRef: ChangeDetectorRef,
 		private _route: ActivatedRoute) {
@@ -52,7 +54,7 @@ export class ProfileComponent implements OnInit {
 
 	private async _loadUser(userId: string) {
 		this.user = await this.userService.findById(userId, { followers: 5 }).toPromise();
-		this.isSelf = userId === this.userService.model.options._id;
+		this.isSelf = userId === this._accountService.account$.getValue()._id;
 
 		this._updateHeaderTitle(this.user.options.name);
 

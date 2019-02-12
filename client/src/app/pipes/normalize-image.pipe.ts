@@ -1,10 +1,15 @@
 import { Pipe, PipeTransform } from "@angular/core";
-import { app } from "../../core/app";
+import { ConfigService } from "../services/config/config.service";
+import { normalizeUrl } from "../services/http.service";
 
 @Pipe({ 
 	name: 'NormalizeImgUrl' 
 })
 export class NormalizeImgUrlPipe implements PipeTransform {
+
+	constructor(
+		private _configService: ConfigService
+	) {}
 
 	transform(value: string, type: string = 'user'): string {
 		if (!value) {
@@ -18,9 +23,16 @@ export class NormalizeImgUrlPipe implements PipeTransform {
 		if (value.startsWith('http'))
 			return value;
 
-		if (!value.startsWith('/'))
-			value = '/image/profile/' + value;
+		if (!value.startsWith('/')) {
+			if (type === 'comment') {
+				value = '/image/comment/' + value;
+			} else {
+				value = '/image/profile/' + value;
+			}
+		}
+		
 
-		return app.address.cdnUrl + value;
+		return normalizeUrl(this._configService.address.cdn.url + value);
+		// return app.address.cdnUrl + value;
 	}
 }

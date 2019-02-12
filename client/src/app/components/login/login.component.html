@@ -1,122 +1,95 @@
-<div class="modal show fade" style="display: block;">
+<!-- login -->
+<form class="row table-nav" [formGroup]="loginForm" *ngIf="(activeForm$ | async) === 'login'">
+    <button (click)="fbLogin(event)" mat-button [disabled]="busy$ | async"
+        class="btn-facebook">Facebook</button>
+    <mat-form-field>
+        <input matInput type="text" formControlName=email required placeholder="Email" autofocus>
+    </mat-form-field>
+    <mat-form-field>
+        <input matInput type="password" formControlName=password required placeholder="Password">
+    </mat-form-field>
+</form>
+
+<!-- register -->
+<form class="row table-nav" [formGroup]="registerForm" *ngIf="(activeForm$ | async) === 'register'">
+    <mat-form-field>
+        <input matInput type="email" formControlName=email required placeholder="Email" autofocus>
+    </mat-form-field>
+    <mat-form-field>
+        <input matInput type="password" formControlName=password required placeholder="Password">
+    </mat-form-field>
+    <mat-form-field>
+        <input matInput type="password" formControlName=passwordConfirm required placeholder="Password confirmation">
+    </mat-form-field>
+    <mat-form-field>
+        <input matInput type="text" formControlName=name required placeholder="Username">
+    </mat-form-field>
+</form>
+
+<!-- missing facebook email address -->
+<form class="row table-nav" [formGroup]="addFacebookEmailForm" *ngIf="(activeForm$ | async) === 'addFacebookEmail'">
+    <p style="font-size:12px">
+        It appaers like you don't have an email address (confirmed) on Facebook.
+        Please confirm your Facebook email address or fill one in here.<br><br>
+        Note: this will not be shared with Facebook or any other parties whatsoever. <br><br></p>
+
+    <mat-form-field>
+        <input matInput type="email" formControlName=email required placeholder="Email" autofocus>
+    </mat-form-field>
+</form>
+
+<ng-template #modalFooter>
+    <mat-error *ngIf="error$ | async as error">
+        <mat-icon>error_outline</mat-icon>{{error}}
+    </mat-error>
+    <button mat-button mat-dialog-close [disabled]="busy$ | async">Cancel</button>
+
+    <ng-container *ngIf="activeForm$ | async as activeForm">
+        <button *ngIf="activeForm === 'login'" mat-button (click)="activeForm$.next('register')"
+            [disabled]="(busy$ | async)">Register</button>
+        <button *ngIf="activeForm === 'login'" mat-button mat-raised-button color="primary" (click)="login()"
+            [disabled]="!loginForm.valid || (busy$ | async)">
+            <mat-spinner *ngIf="busy$ | async" [diameter]=20></mat-spinner>Login
+        </button>
+        <button *ngIf="activeForm === 'register'" mat-button mat-raised-button color="primary" (click)="register()"
+            [disabled]="!registerForm.valid || (busy$ | async)">
+            <mat-spinner *ngIf="busy$ | async" [diameter]=20></mat-spinner>Register
+        </button>
+        <button *ngIf="activeForm === 'addFacebookEmail'" mat-button mat-raised-button color="primary" (click)="fbLogin(event, addFacebookEmailForm.value.email)"
+            [disabled]="!addFacebookEmailForm.valid || (busy$ | async)">
+            <mat-spinner *ngIf="busy$ | async" [diameter]=20></mat-spinner>Register
+        </button>
+    </ng-container>
+</ng-template>
+
+<div class="modal show fade" style="display: none;">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 *ngIf="activeFormType === 'login'" class="modal-title">Login</h4>
-                <h4 *ngIf="activeFormType === 'register'" class="modal-title">Register</h4>
-                <h4 *ngIf="activeFormType === 'requestPasswordReset'" class="modal-title">Request password reset</h4>
-                <h4 *ngIf="activeFormType === 'resetpassword'" class="modal-title">Update password</h4>
-                <h4 *ngIf="activeFormType === 'addFacebookEmail'" class="modal-title">Add email address</h4>
-                <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+                <h4 *ngIf="activeForm === 'login'" class="modal-title">Login</h4>
+                <h4 *ngIf="activeForm === 'register'" class="modal-title">Register</h4>
+                <h4 *ngIf="activeForm === 'requestPasswordReset'" class="modal-title">Request password reset</h4>
+                <h4 *ngIf="activeForm === 'resetpassword'" class="modal-title">Update password</h4>
+                <h4 *ngIf="activeForm === 'addFacebookEmail'" class="modal-title">Add email address</h4>
+                <button type="button" class="close" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <!-- login form -->
-                <form name="form" (ngSubmit)="loginForm.form.valid && login($event)" #loginForm="ngForm" *ngIf="activeFormType === 'login'" novalidate>
-                    <div class="form-group login-footer-buttons">
-                        <button type="button" (click)="fbLogin(event)" class="btn btn-small btn-facebook">
-                            <i class="fa fa-facebook-square align-middle" aria-hidden="true"></i>
-                            <span class="align-middle">Facebook</span>
-                            <i class="fa fa-spinner" *ngIf="loading$ | async"></i>                        
-                        </button>
-                    </div>
-
-                    <div class="form-group" [ngClass]="{ 'has-error': loginForm.submitted && !email.valid }">
-                        <label class="form-control-label" for="email">Email
-                            <span *ngIf="loginForm.submitted && email.errors?.email" class="help-block">invalid email</span>
-                            <span *ngIf="loginForm.submitted && email.errors?.required" class="help-block">required</span>
-                        </label>
-                        <input [disabled]="loading$ | async" [(ngModel)]="loginModel.email" type="email" name="email" [(ngModel)]="loginModel.email" #email="ngModel" class="form-control"
-                            id="email" placeholder="Enter email" required email >
-                    </div>
-
-                    <div class="form-group" [ngClass]="{ 'has-error': loginForm.submitted && !password.valid }">
-                        <label class="form-control-label" for="password">Password
-                            <span *ngIf="loginForm.submitted && password.invalid" class="help-block">required</span>
-                        </label>
-                        <input [disabled]="loading$ | async" [(ngModel)]="loginModel.password" type="password" name="password" [(ngModel)]="loginModel.password" #password="ngModel"
-                            class="form-control" id="password" placeholder="Enter password" autocomplete="off" required>
-                    </div>
-
-                    <div class="form-group">
-
-                    </div>
-
-                    <!-- footer buttons -->
-                    <div class="form-group login-footer-buttons">
-                        <a (click)="activeFormType = 'register'" class="btn btn-link" style="float:left">Register</a>
-                        <a (click)="activeFormType = 'requestPasswordReset'" class="btn btn-link" style="float:left">Forgot password</a>
-                        <button [disabled]="loading$ | async" class="btn btn-success pull-right">Login
-                            <i class="fa fa-spinner" *ngIf="loading$ | async"></i>
-                        </button>
-                    </div>
-                </form>
-
-                <!-- register form -->
-                <form name="form" (ngSubmit)="registerForm.form.valid && register()" #registerForm="ngForm" *ngIf="activeFormType === 'register'" novalidate>
-                    <div class="form-group" [ngClass]="{ 'has-error': registerForm.submitted && !name.valid }">
-                        <label>Name
-                            <span *ngIf="registerForm.submitted && name.errors?.required" class="help-block">required</span>
-                            <span *ngIf="registerForm.submitted && name.errors?.minlength" class="help-block">2 characters minimum</span>
-                            <span *ngIf="registerForm.submitted && name.errors?.maxlength" class="help-block">30 characters max</span>
-                        </label>
-                        <input [disabled]="loading$ | async" id="name" class="form-control" name="name" type="text" [(ngModel)]="registerModel.name" #name="ngModel" minlength="2" maxlength="30"
-                            autocomplete="off" required />
-                        <small class="form-text form-text-muted">
-                            min 2, max 30
-                        </small>
-                    </div>
-                    <div class="form-group" [ngClass]="{ 'has-error': registerForm.submitted && !email.valid }">
-                        <label for="email">Email
-                            <span *ngIf="registerForm.submitted && email.errors?.required" class="help-block">required</span>
-                            <span *ngIf="registerForm.submitted && email.errors?.email" class="help-block">invalid email</span>
-                        </label>
-                        <input [disabled]="loading$ | async" id="email" class="form-control" name="email" type="text" [(ngModel)]="registerModel.email" #email="ngModel" autocomplete="off"
-                            required email/>
-                    </div>
-                    <div class="form-group" [ngClass]="{ 'has-error': registerForm.submitted && !password.valid }">
-                        <label for="country">Country</label>
-                        <select [disabled]="loading$ | async" class="form-control" id="country" [(ngModel)]="registerModel.country" name="country" autocomplete="off" required>
-                            <option *ngFor="let country of countries" [attr.value]="country.code" [innerHTML]="country.name"></option>
-                        </select>
-                        <div *ngIf="registerFormsubmitted && country.invalid" class="help-block">required</div>
-                    </div>
-                    <div class="form-group" [ngClass]="{ 'has-error': registerForm.submitted && !password.valid }">
-                        <label for="password">Password
-                            <span *ngIf="registerForm.submitted && password.invalid" class="help-block">required</span>
-                        </label>
-                        <input [disabled]="loading$ | async" id="password" type="password" class="form-control" name="password" [(ngModel)]="registerModel.password" #password="ngModel"
-                            autocomplete="off" required minlength="4" />
-                    </div>
-                    <div class="form-group" [ngClass]="{ 'has-error': registerForm.submitted && passwordConf.invalid }">
-                        <label for="passwordConf">Password confirmation
-                            <span *ngIf="registerForm.submitted && passwordConf.invalid" class="help-block">required</span>
-                        </label>
-                        <input [disabled]="loading$ | async" id="passwordConf" type="password" class="form-control" name="passwordConf" [(ngModel)]="registerModel.passwordConf"
-                            #passwordConf="ngModel" autocomplete="off" required minlength="4" />
-                        <small class="form-text form-text-muted">
-                            Your password must be 4-20 characters long, contain letters and numbers, and may not contain spaces
-                        </small>
-                    </div>
-                    <div class="form-group">
-                        <a (click)="activeFormType = 'login'" class="btn btn-link" style="float: left">Cancel</a>
-                        <button [disabled]="loading$ | async" class="btn btn-success">Register
-                            <i class="fa fa-spinner" *ngIf="loading$ | async"></i>
-                        </button>
-                    </div>
-                </form>
 
                 <!-- request password reset form -->
-                <form *ngIf="activeFormType === 'requestPasswordReset'" (ngSubmit)="requestPasswordResetForm.form.valid && requestPasswordReset($event)" #requestPasswordResetForm="ngForm">
+                <form *ngIf="activeForm === 'requestPasswordReset'"
+                    (ngSubmit)="requestPasswordResetForm.form.valid && requestPasswordReset($event)"
+                    #requestPasswordResetForm="ngForm">
                     <div class="form-group">
                         <label for="requestPasswordResetEmail">Email</label>
-                        <input [disabled]="loading$ | async" [(ngModel)]="requestPasswordResetModel.email" type="email" name="email" class="form-control" id="requestPasswordResetEmail" placeholder="Enter email address"
-                            required>
+                        <input [disabled]="loading$ | async" [(ngModel)]="requestPasswordResetModel.email" type="email"
+                            name="email" class="form-control" id="requestPasswordResetEmail"
+                            placeholder="Enter email address" required>
                     </div>
                     <!-- footer buttons -->
                     <div class="form-group login-footer-buttons">
-                        <a (click)="activeFormType = 'login'" class="btn btn-link" style="float: left">Cancel</a>
+                        <a (click)="activeForm = 'login'" class="btn btn-link" style="float: left">Cancel</a>
                         <button [disabled]="loading$ | async" class="btn btn-success pull-right">Reset
                             <i class="fa fa-spinner" *ngIf="loading$ | async"></i>
                         </button>
@@ -124,23 +97,30 @@
                 </form>
 
                 <!-- password reset form -->
-                <form *ngIf="activeFormType === 'resetpassword'" (ngSubmit)="passwordResetForm.form.valid && resetPassword($event)" #passwordResetForm="ngForm">
+                <form *ngIf="activeForm === 'resetpassword'"
+                    (ngSubmit)="passwordResetForm.form.valid && resetPassword($event)" #passwordResetForm="ngForm">
                     <div class="form-group" [ngClass]="{ 'has-error': passwordResetForm.submitted && !password.valid }">
                         <label for="password">Password
 
-                            <span *ngIf="passwordResetForm.submitted && !password.valid" class="help-block">Password is required</span>
+                            <span *ngIf="passwordResetForm.submitted && !password.valid" class="help-block">Password is
+                                required</span>
                         </label>
-                        <input [disabled]="loading$ | async" id="password" type="password" class="form-control" name="password" [(ngModel)]="passwordResetModel.password" #password="ngModel"
+                        <input [disabled]="loading$ | async" id="password" type="password" class="form-control"
+                            name="password" [(ngModel)]="passwordResetModel.password" #password="ngModel"
                             autocomplete="off" required minlength="4" />
                     </div>
-                    <div class="form-group" [ngClass]="{ 'has-error': passwordResetForm.submitted && !passwordConf.valid }">
+                    <div class="form-group"
+                        [ngClass]="{ 'has-error': passwordResetForm.submitted && !passwordConf.valid }">
                         <label for="passwordConf">Password confirmation
-                            <span *ngIf="passwordResetForm.submitted && !passwordConf.valid" class="help-block">Password confirmation is required</span>
+                            <span *ngIf="passwordResetForm.submitted && !passwordConf.valid" class="help-block">Password
+                                confirmation is required</span>
                         </label>
-                        <input [disabled]="loading$ | async" id="passwordConf" type="password" class="form-control" name="passwordConf" [(ngModel)]="passwordResetModel.passwordConf"
-                            #passwordConf="ngModel" autocomplete="off" required minlength="4" />
+                        <input [disabled]="loading$ | async" id="passwordConf" type="password" class="form-control"
+                            name="passwordConf" [(ngModel)]="passwordResetModel.passwordConf" #passwordConf="ngModel"
+                            autocomplete="off" required minlength="4" />
                         <small class="form-text form-text-muted">
-                            Your password must be 4-20 characters long, contain letters and numbers, and may not contain spaces
+                            Your password must be 4-20 characters long, contain letters and numbers, and may not contain
+                            spaces
                         </small>
                     </div>
 
@@ -152,25 +132,17 @@
                     </div>
                 </form>
 
-                <!-- missing facebook email address -->
-                <form *ngIf="activeFormType === 'addFacebookEmail'" (ngSubmit)="addFacebookEmailForm.form.valid && fbLogin(event, addFacebookEmailModel.email)" #addFacebookEmailForm="ngForm">
-                    <p style="font-size:12px">
-                        It appaers like you don't have an email address (confirmed) on Facebook. 
-                        Please confirm your Facebook email address or fill one in here.<br><br>
-                        Note: this will not be shared with Facebook or any other parties whatsoever. <br><br></p>
-                    
-                    <div class="form-group" [ngClass]="{ 'has-error': addFacebookEmailForm.submitted && !email.valid }">
-                        <label for="password">Email address
-                            <span *ngIf="addFacebookEmailForm.submitted && !email.valid" class="help-block">Email is required</span>
-                        </label>
-                        <input [disabled]="loading$ | async" id="email" type="email" class="form-control" name="email" [(ngModel)]="addFacebookEmailModel.email" #email="ngModel"
-                            autocomplete="on" required />
-                    </div>
+
+                <form *ngIf="activeForm === 'addFacebookEmail'"
+                    (ngSubmit)="addFacebookEmailForm.form.valid && fbLogin(event, addFacebookEmailModel.email)"
+                    #addFacebookEmailForm="ngForm">
+
 
                     <!-- footer buttons -->
                     <div class="form-group login-footer-buttons">
-                        <a (click)="activeFormType = 'login'" class="btn btn-link" style="float: left">Cancel</a>
-                        <button class="btn btn-link" style="padding-right: 0;">Continue <i class="fa fa-facebook-square align-middle" aria-hidden="true"></i>acebook login</button>
+                        <a (click)="activeForm = 'login'" class="btn btn-link" style="float: left">Cancel</a>
+                        <button class="btn btn-link" style="padding-right: 0;">Continue <i
+                                class="fa fa-facebook-square align-middle" aria-hidden="true"></i>acebook login</button>
                         <!-- <button type="button" (click)="fbLogin(event)" class="btn btn-small btn-facebook">
                             <i class="fa fa-facebook-square align-middle" aria-hidden="true"></i>
                             <span class="align-middle">Facebook</span>

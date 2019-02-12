@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { UserService } from '../../services/user.service';
-import { FormBuilder, FormControl } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { USER_FETCH_TYPE_PROFILE_SETTINGS } from 'coinpush/src/constant';
 import { UserModel } from '../../models/user.model';
-import { AuthenticationService } from '../../services/authenticate.service';
+import { AuthService } from '../../services/auth/auth.service';
 import { AlertService } from '../../services/alert.service';
 import { HttpClient } from '@angular/common/http';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ConfirmationBoxComponent } from '../confirmation-box/confirmation-box.component';
+import { ModalService } from '../../services/modal/modal.service';
+import { AccountService } from '../../services/account/account.service';
 
 @Component({
 	selector: 'app-settings-overview',
@@ -19,8 +19,7 @@ import { ConfirmationBoxComponent } from '../confirmation-box/confirmation-box.c
 export class SettingsComponent implements OnInit, OnDestroy {
 
 	public activeTab: string = 'profile';
-	public userModel: UserModel = this._userService.model;
-	public form: any;
+	public form: FormGroup;
 
 	@ViewChild('profileImg') profileImg: ElementRef;
 	@ViewChild('uploadBtn') uploadBtn: ElementRef;
@@ -28,52 +27,49 @@ export class SettingsComponent implements OnInit, OnDestroy {
 	@ViewChild('uploadImageLoading') uploadImageLoading: ElementRef;
 	@ViewChild('saveOptions') saveOptions: ElementRef;
 
-	countries = window['countries'];
+	public countries = window['countries'];
+	public account = this._accountService.account$.getValue();
 
 	constructor(
 		private _http: HttpClient,
 		private _formBuilder: FormBuilder,
-		private _authenticationService: AuthenticationService,
+		private _authenticationService: AuthService,
 		private _userService: UserService,
-		private _modalService: NgbModal,
+		private _accountService: AccountService,
+		private _modalService: ModalService,
 		private _alertService: AlertService) {
 	}
 
 	// TODO: Gets called twice!
 	async ngOnInit() {
+		const account = this._accountService.account$.getValue();
+
 		this.form = this._formBuilder.group({
-			name: new FormControl(this.userModel.get('name'), {
+			name: new FormControl(account.name, {
 				updateOn: 'blur'
 			}),
-			email: this.userModel.get('email'),
-			description: this.userModel.get('description') || '',
-			country: this.userModel.get('country'),
-			gender: this.userModel.get('gender'),
-			'settings.lowMargin': 0,
-			'settings.orderClosedByMarket': 0,
-			'settings.userFollowsMe': 0,
-			'settings.userCopiesMe': 0,
-			'settings.like': 0,
-			'settings.comment': 0,
-			'settings.summary': 0,
+			email: [account.email],
+			description: [account.description || ''],
+			country: [account.country],
+			gender: [account.gender]
 		}, { updateOn: 'blur' });
 
-		this.userModel = await this._userService.findById(this.userModel.get('_id'), { type: USER_FETCH_TYPE_PROFILE_SETTINGS }).toPromise();
+		// this.userModel = await this._userService.findById(this.userModel.get('_id'), { type: USER_FETCH_TYPE_PROFILE_SETTINGS }).toPromise();
 
-		this.form.setValue({
-			name: this.userModel.options.name,
-			email: this.userModel.options.email,
-			country: this.userModel.options.country,
-			description: this.userModel.options.description,
-			gender: this.userModel.options.gender,
-			'settings.lowMargin': +this.userModel.options.settings.lowMargin,
-			'settings.orderClosedByMarket': +this.userModel.options.settings.orderClosedByMarket,
-			'settings.userFollowsMe': +this.userModel.options.settings.userFollowsMe,
-			'settings.userCopiesMe': +this.userModel.options.settings.userCopiesMe,
-			'settings.like': +this.userModel.options.settings.like,
-			'settings.comment': +this.userModel.options.settings.like,
-			'settings.summary': +this.userModel.options.settings.summary,
-		});
+		// this.form.setValue({
+		// 	name: this.userModel.options.name,
+		// 	email: this.userModel.options.email,
+		// 	country: this.userModel.options.country,
+		// 	description: this.userModel.options.description,
+		// 	gender: this.userModel.options.gender,
+		// 	'settings.lowMargin': +this.userModel.options.settings.lowMargin,
+		// 	'settings.orderClosedByMarket': +this.userModel.options.settings.orderClosedByMarket,
+		// 	'settings.userFollowsMe': +this.userModel.options.settings.userFollowsMe,
+		// 	'settings.userCopiesMe': +this.userModel.options.settings.userCopiesMe,
+		// 	'settings.like': +this.userModel.options.settings.like,
+		// 	'settings.comment': +this.userModel.options.settings.like,
+		// 	'settings.summary': +this.userModel.options.settings.summary,
+		// });
 		// }, { onlySelf: true, updateOn: 'blur' });
 
 		this.form.valueChanges.subscribe(data => {
@@ -83,9 +79,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 				if (data[key] !== null) changes[key] = data[key];
 			});
 
-			this.userModel.set(changes, false);
-
-			this._userService.update(changes, true, true, true);
+			this._accountService.update(changes, false, true);
 		});
 	}
 
@@ -96,26 +90,26 @@ export class SettingsComponent implements OnInit, OnDestroy {
 	public showDeleteAccountConfirmationBox() {
 		const self = this;
 
-		const modalRef = this._modalService.open(ConfirmationBoxComponent);
-		modalRef.componentInstance.title = 'Remove account';
-		modalRef.componentInstance.text = 'Do you really want to remove your account?';
-		modalRef.componentInstance.buttons = [
-			{
-				text: 'remove',
-				type: 'danger',
-				async onClick() {
-					await self.removeAccount();
-					modalRef.componentInstance.destroy();
-				}
-			},
-			{
-				text: 'cancel',
-				type: 'success',
-				onClick() {
-					modalRef.componentInstance.destroy();
-				}
-			}
-		];
+		// const modalRef = this._modalService.open(ConfirmationBoxComponent);
+		// modalRef.componentInstance.title = 'Remove account';
+		// modalRef.componentInstance.text = 'Do you really want to remove your account?';
+		// modalRef.componentInstance.buttons = [
+		// 	{
+		// 		text: 'remove',
+		// 		type: 'danger',
+		// 		async onClick() {
+		// 			await self.removeAccount();
+		// 			modalRef.componentInstance.destroy();
+		// 		}
+		// 	},
+		// 	{
+		// 		text: 'cancel',
+		// 		type: 'success',
+		// 		onClick() {
+		// 			modalRef.componentInstance.destroy();
+		// 		}
+		// 	}
+		// ];
 	}
 
 	public onChangeFileInput(event) {
@@ -147,7 +141,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 			const result: any = await this._http.post('/upload/profile', data).toPromise();
 
 			// store locally (skip re-sending to server)
-			this._userService.update({ img: result.url }, false, true, true);
+			this._accountService.update({ img: result.url }, false);
 
 		} catch (result) {
 			switch (result.status) {
@@ -164,7 +158,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 	}
 
 	public resetProfileImg() {
-		this.setProfileImgPreview(this.userModel.options.img);
+		this.setProfileImgPreview(this._accountService.account$.getValue().img);
 		this.uploadBtn.nativeElement.value = '';
 		this.toggleSaveOptionsVisibility(false);
 	}

@@ -33,7 +33,6 @@ services:
     command: mongod --auth
 
   redis:
-    restart: unless-stopped
     image: "redis"
     ports:
       - 6379
@@ -42,12 +41,11 @@ services:
       - ./_data/redis:/data
 
   gateway:
-    restart: unless-stopped
     image: registry.coinpush.app/gateway
     container_name: gateway
-    build:
-      context: ./
-      dockerfile: ./server-gateway/Dockerfile
+    build: 
+      context: .
+      dockerfile: server-gateway/Dockerfile
     ports:
       - 3100:3100
     volumes:
@@ -59,11 +57,10 @@ services:
       - redis
 
   cache:
-    restart: unless-stopped
     image: registry.coinpush.app/cache
     container_name: "cache"
     build:
-      context: ./
+      context: .
       dockerfile: server-cache/Dockerfile
     ports:
       - 3001
@@ -76,11 +73,10 @@ services:
       - mongodb
 
   user:
-    restart: unless-stopped
     image: registry.coinpush.app/user
     container_name: user
     build:
-      context: ./
+      context: .
       dockerfile: server-user/Dockerfile
     ports:
       - 3008
@@ -90,15 +86,13 @@ services:
       - /usr/src/app/server-user/node_modules
     links:
       - redis
-      - gateway
       - mongodb
 
   notify:
-    restart: unless-stopped
     image: registry.coinpush.app/notify
     container_name: notify
     build:
-      context: ./
+      context: .
       dockerfile: server-notify/Dockerfile
     ports:
       - 3010
@@ -111,11 +105,10 @@ services:
       - mongodb
 
   comment:
-    restart: unless-stopped
     image: registry.coinpush.app/comment
     container_name: comment
     build:
-      context: ./
+      context: .
       dockerfile: server-comment/Dockerfile
     ports:
       - 3009
@@ -128,11 +121,10 @@ services:
       - mongodb
 
   event:
-    restart: unless-stopped
     image: registry.coinpush.app/event
     container_name: event
     build:
-      context: ./
+      context: .
       dockerfile: server-event/Dockerfile
     ports:
       - 3011
@@ -148,16 +140,16 @@ services:
     image: registry.coinpush.app/client
     container_name: cp-client
     build:
-      context: ./
+      context: .
       dockerfile: ./client/Dockerfile
     volumes:
       - /usr/src/app/client/node_modules
 
-  client-app:
+  cp-app:
     image: registry.coinpush.app/client-app
     container_name: client-app
     build:
-      context: ./
+      context: .
       dockerfile: ./client-app/Dockerfile
     volumes:
       - ./client-app:/usr/src/app/client-app

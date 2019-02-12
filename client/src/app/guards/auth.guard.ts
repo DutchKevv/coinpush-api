@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, CanActivateChild } from '@angular/router';
 import { UserService } from '../services/user.service';
-import { AuthenticationService } from '../services/authenticate.service';
+import { AuthService } from '../services/auth/auth.service';
+import { AccountService } from '../services/account/account.service';
 
 @Injectable({
 	providedIn: 'root',
@@ -9,8 +10,8 @@ import { AuthenticationService } from '../services/authenticate.service';
 export class AuthGuard implements CanActivate {
 
 	constructor(
-		private _userService: UserService,
-		private _authenticationService: AuthenticationService
+		private _accountService: AccountService,
+		private _authenticationService: AuthService
 	) {
 
 	}
@@ -19,7 +20,7 @@ export class AuthGuard implements CanActivate {
 		switch (state.url) {
 			case '/settings':
 			case '/user/undefined/feed':
-				if (!this._userService.model.options._id) {
+				if (!this._accountService.isLoggedIn) {
 					this._authenticationService.showLoginRegisterPopup(undefined, state.url);
 					return false;
 				}
@@ -28,17 +29,4 @@ export class AuthGuard implements CanActivate {
 		}
 
 	}
-
-	// async canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-	// 	console.log(state);//'candidates'
-	// 	switch (state.url) {
-	// 		case '/settings':
-	// 			if (!this._userService.model.options._id) {
-	// 				this._authenticationService.showLoginRegisterPopup();
-	// 				return false;
-	// 			}
-	// 	}
-	// 	console.log(state);//'candidates'
-	// 	return true;
-	// }
 }

@@ -1,14 +1,17 @@
 import { Component, ChangeDetectionStrategy, EventEmitter, ViewChild, Output, ElementRef, HostListener, OnInit, ChangeDetectorRef } from "@angular/core";
 import { Subject } from "rxjs";
 import { HeaderComponent } from "./components/header/header.component";
-import { app } from "core/app";
-import { HttpClient } from "@angular/common/http";
 import { UserService } from "./services/user.service";
 import { EventService } from "./services/event.service";
 import { CacheService } from "./services/cache.service";
 import { SocketService } from "./services/socket.service";
-import { AuthenticationService } from "./services/authenticate.service";
+import { AuthService } from "./services/auth/auth.service";
 import { Router, NavigationStart, NavigationEnd } from "@angular/router";
+import { NotificationService } from "./services/notification.service";
+import { DeviceService } from "./services/device/device.service";
+import { AdsService } from "./services/ads/ads.service";
+import { ConfigService } from "./services/config/config.service";
+import { IndicatorService } from "./services/indicator.service";
 
 declare let window: any;
 declare let navigator: any;
@@ -31,8 +34,6 @@ export class AppComponent implements OnInit {
 
 	@ViewChild(HeaderComponent) public header: ElementRef;
 
-	public showBrowserAds = !app.platform.isApp && app.platform.adsEnabled;
-	
 	private _lastTimeBackPress = 0;
 	private _timePeriodToExit = 2000;
 	private _routerEventsSub;
@@ -44,11 +45,12 @@ export class AppComponent implements OnInit {
 	 */
 	@HostListener('window:resize', ['$event'])
 	onWindowResize(event) {
-		if (!app.platform.isApp) return;
+		if (!this._configService.platform.isApp) return;
 
-		const size = window.innerWidth + window.innerHeight;
+		const width = this._configService.viewport.width;
+		const height = this._configService.viewport.height;
 
-		if (app.platform.windowW !== window.innerWidth || window.innerHeight !== app.platform.windowH) {
+		if (width !== window.innerWidth || height !== window.innerHeight) {
 			document.body.classList.remove('app');
 		} else {
 			document.body.classList.add('app');
@@ -71,19 +73,28 @@ export class AppComponent implements OnInit {
 
 	constructor(
 		public userService: UserService,
-		public authenticationService: AuthenticationService,
+		public authenticationService: AuthService,
 		private _eventService: EventService,
 		private _cacheService: CacheService,
 		private _socketService: SocketService,
+		private _indicatorService: IndicatorService,
+		private _notificationService: NotificationService,
+		private _deviceService: DeviceService,
+		private _adsService: AdsService,
+		private _configService: ConfigService,
 		private _router: Router,
-		private _changeDetectorRef: ChangeDetectorRef) {
-		this._cacheService.init(); // cacheService must init before eventService
-		this._eventService.init();
-	}
+		private _changeDetectorRef: ChangeDetectorRef) {}
 
 	ngOnInit() {
-		// initialize push messages
-		app.notification.init().catch(console.error);
+		this._configService.init();
+		this._socketService.init();
+		this._notificationService.init().catch(console.error);
+		this._deviceService.init();
+		this._adsService.init();
+		this._indicatorService.init();
+
+		this._cacheService.init();
+		this._eventService.init();
 
 		// open websocket
 		this._socketService.connect();

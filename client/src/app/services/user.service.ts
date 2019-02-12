@@ -2,23 +2,24 @@ import { Injectable, Output, Injector } from '@angular/core';
 import { UserModel } from '../models/user.model';
 import { AlertService } from './alert.service';
 import { Observable } from 'rxjs';
-import { app } from '../../core/app';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { map } from 'rxjs/operators';
 import { G_ERROR_DUPLICATE_FIELD } from 'coinpush/src/constant';
+import { AccountService } from './account/account.service';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class UserService {
 
-	public model: UserModel = new UserModel(Object.assign({
-		name: 'Anonymous'
-	}, app.storage.profileData || {}));
+	// public model: UserModel = new UserModel(Object.assign({
+	// 	name: 'Anonymous'
+	// }, {}));
 
 	constructor(
 		private _http: HttpClient,
+		private _accountService: AccountService,
 		private _alertService: AlertService) {
 	}
 
@@ -42,41 +43,43 @@ export class UserService {
 		return this._http.post('/user', user).toPromise();
 	}
 
-	public async update(changes, saveOnServer = true, showAlert: boolean = true, triggerModelOptions: boolean = false): Promise<boolean> {
-		try {
-			this.model.set(changes, triggerModelOptions);
-			app.storage.updateProfile(this.model.options).catch(console.error);
+	// public async update(changes, saveOnServer = true, showAlert: boolean = true, triggerModelOptions: boolean = false): Promise<boolean> {
+	// 	try {
+	// 		this.model.set(changes, triggerModelOptions);
+	// 		// app.storage.updateProfile(this.model.options).catch(console.error);
 
-			if (saveOnServer) {
-				await this._http.put('/user/' + this.model.get('_id'), changes).toPromise();
-			}
+	// 		if (saveOnServer) {
+	// 			await this._http.put('/user/' + this.model.get('_id'), changes).toPromise();
+	// 		}
 
-			if (showAlert) {
-				this._alertService.success('Settings saved');
-			}
+	// 		if (showAlert) {
+	// 			this._alertService.success('Settings saved');
+	// 		}
 
-			return true;
-		} catch (error) {
-			console.error(error)
-			if (error && error.code) {
-				switch (parseInt(error.code, 10)) {
-					case G_ERROR_DUPLICATE_FIELD:
-						if (error.field === 'email')
-							this._alertService.error(`Email address already used with an account on CoinPush`);
-						break;
-					default:
-						this._alertService.error(`Unknown error occured`);
-				}
-			} else {
-				this._alertService.error(`Unknown error occured`);
-			}
+	// 		return true;
+	// 	} catch (error) {
+	// 		console.error(error)
+	// 		if (error && error.code) {
+	// 			switch (parseInt(error.code, 10)) {
+	// 				case G_ERROR_DUPLICATE_FIELD:
+	// 					if (error.field === 'email')
+	// 						this._alertService.error(`Email address already used with an account on CoinPush`);
+	// 					break;
+	// 				default:
+	// 					this._alertService.error(`Unknown error occured`);
+	// 			}
+	// 		} else {
+	// 			this._alertService.error(`Unknown error occured`);
+	// 		}
 
-			return false;
-		}
-	}
+	// 		return false;
+	// 	}
+	// }
 
 	public async toggleFollow(model: UserModel, state: boolean): Promise<void> {
-		if (!this.model.options._id) {
+		const account = this._accountService.account$.getValue();
+
+		if (!account._id) {
 			// this._authenticationService.showLoginRegisterPopup();
 			// return;
 		}
@@ -86,11 +89,11 @@ export class UserService {
 
 			// DB state = following
 			if (result.state)
-				model.options.followers.push([this.model.options]);
+				model.options.followers.push([account]);
 
 			// DB state != following
 			else
-				model.options.followers.slice(model.options.followers.findIndex(f => f._id === this.model.options._id), 1);
+				model.options.followers.slice(model.options.followers.findIndex(f => f._id === account._id), 1);
 
 			// update self
 			model.set({
@@ -108,8 +111,10 @@ export class UserService {
 	}
 
 	public async remove() {
+		const account = this._accountService.account$.getValue();
+
 		try {
-			await this._http.delete('/user/' + this.model.options._id).toPromise();
+			await this._http.delete('/user/' + account._id).toPromise();
 			return true;
 		} catch (error) {
 			console.error(error);

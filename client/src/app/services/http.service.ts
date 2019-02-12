@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AuthenticationService } from './authenticate.service';
-import { app } from '../../core/app';
+import { AuthService } from './auth/auth.service';
 import { HttpHeaders, HttpParams, HttpClient, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse, HttpInterceptor } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
+import { UserService } from './user.service';
+import { ConfigService } from './config/config.service';
+import { AccountService } from './account/account.service';
 
 export interface IRequestOptions {
 	headers?: HttpHeaders;
@@ -20,9 +22,11 @@ export interface IRequestOptions {
 	providedIn: 'root',
 })
 export class CustomHttp implements HttpInterceptor {
+	
 	constructor(
-		public http: HttpClient,
-		private _authenticationService: AuthenticationService
+		private _configService: ConfigService,
+		private _accountService: AccountService,
+		private _authenticationService: AuthService
 	) { }
 
 	intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -30,27 +34,30 @@ export class CustomHttp implements HttpInterceptor {
 	}
 
 	private _normalizeRequest(req: HttpRequest<any>): HttpRequest<any> {
-		if (!req.url.startsWith('http://') && !req.url.startsWith('https://'))
-			req = req.clone({ url: (app.address.apiUrl + req.url).replace(/([^:]\/)\/+/g, "$1") });
-
+		if (!req.url.startsWith('http://') && !req.url.startsWith('https://')) {
+			const url = normalizeUrl(this._configService.address.api.prefix + req.url);
+			req = req.clone({ url });
+		}
+		
 		req = this._addHeaders(req);
 
 		return req;
 	}
 
 	private _addHeaders(req: HttpRequest<any>): HttpRequest<any> {
-		// alert( app.storage.profileData.token);
+	
 		// add authorization header with jwt token
-		const userToken = app.storage.profileData.token;
+		const userToken = this._accountService.account$.getValue().token;
 		const headers: any = {
 			setHeaders: {
-				cv: '0.0.2' || '0.0.1'
+				cv: this._configService.version
 			}
 		};
 
-		if (userToken)
+		if (userToken) {
 			headers.setHeaders.authorization = 'Bearer ' + userToken;
-
+		}
+			
 		return req.clone(headers);
 	}
 
@@ -86,4 +93,8 @@ export class CustomHttp implements HttpInterceptor {
 
 		return throwError(error);
 	}
+}
+
+export function normalizeUrl(url: string): string {
+	return url.replace(/([^:]\/)\/+/g, "$1");
 }

@@ -1,12 +1,12 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { SymbolModel } from "../models/symbol.model";
 import { UserService } from './user.service';
-import { app } from '../../core/app';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { SocketService } from './socket.service';
 import { Observable, BehaviorSubject } from 'rxjs';
 
 import { map } from 'rxjs/operators';
+import { AccountService } from './account/account.service';
 
 @Injectable({
 	providedIn: 'root',
@@ -20,11 +20,12 @@ export class CacheService {
 	constructor(
 		private _userService: UserService,
 		private _socketService: SocketService,
+		private _accountService: AccountService,
 		private _http: HttpClient
 	) { }
 
 	public init() {
-		this._updateSymbols();
+		// this._updateSymbols();
 
 		this._socketService.socket.on('ticks', (ticks: any) => {
 			const changedModels = [];
@@ -90,12 +91,14 @@ export class CacheService {
 		}
 	}
 
-	private _updateSymbols() {
-		for (let key in app.data.symbols) {
-			const symbol = JSON.parse(app.data.symbols[key]);
-			const storedSymbol = this.getSymbolByName(symbol.name);
+	public setSymbols(symbols: any[]) {
+		const account =  this._accountService.account$.getValue();
 
-			symbol.iFavorite = this._userService.model.options.favorites.includes(symbol.name);
+		for (let key in symbols) {
+			const symbol = JSON.parse(symbols[key]);
+			const storedSymbol = this.getSymbolByName(symbol.name);
+			
+			symbol.iFavorite = account.favorites.includes(symbol.name);
 
 			// update
 			if (storedSymbol)
@@ -107,8 +110,6 @@ export class CacheService {
 		}
 
 		this.favoritesLength$.next(this.symbols.filter(symbolModel => symbolModel.options.iFavorite).length);
-
-		delete app.data.symbols;
 	}
 
 	public add(model) {

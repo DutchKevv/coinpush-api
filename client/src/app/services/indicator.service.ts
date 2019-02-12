@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
-import { app } from "core/app";
+import { StorageService } from "./storage.service";
+import { AccountService } from "./account/account.service";
 
 const SERIES_MAIN_NAME = 'main';
 const SERIES_VOLUME_NAME = 'volume';
@@ -19,9 +20,10 @@ export class IndicatorService {
 
 	public indicators: Array<IIndicator> = [];
 
-	constructor() {
-		this.init().catch(console.error);
-	}
+	constructor(
+		private _storageService: StorageService,
+		private _accountService: AccountService
+	) {}
 
 	public async init(): Promise<void> {
 		await this._loadLocal();
@@ -166,7 +168,7 @@ export class IndicatorService {
 
 	private async _loadLocal() {
 		try {
-			const indicators = JSON.parse(await app.storage.get('indicators')) || [];
+			const indicators = JSON.parse(await this._storageService.get('indicators')) || [];
 
 			// temp
 			indicators.forEach(indicator => {
@@ -181,7 +183,7 @@ export class IndicatorService {
 		}
 	}
 
-	private async _storeLocal(): Promise<void> {
-		await app.storage.updateProfile({chartConfig: {indicators: this.indicators}});
+	private _storeLocal(): Promise<any> {
+		return this._accountService.update({chartConfig: {indicators: this.indicators}});
 	}
 }

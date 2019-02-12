@@ -3,7 +3,6 @@
 @import '~bootstrap/scss/_mixins';
 @import '~bootstrap/scss/utilities/_display';
 
-@import '../../style/helpers/normalize';
 @import '../../style/variables/variables';
 
 $header-icon-padding-x: 12px;
@@ -35,7 +34,7 @@ $header-icon-padding-x: 12px;
 	}
 
 	@media only screen and (min-width : $grid-width-xl) {
-		left: 250px;
+		left: 200px;
 	} 
 }
 
@@ -205,7 +204,7 @@ app-notification-menu {
 		width: 100%;
 		position: relative;
 		width: 400px;
-		left: calc(50% - 250px);
+		left: calc(50% - 200px);
 	}
 }
 

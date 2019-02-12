@@ -1,7 +1,8 @@
 import { Component, ChangeDetectionStrategy, EventEmitter, Output, ViewChild, ElementRef, HostListener, OnInit } from "@angular/core";
-import { environment } from "environments/environment";
+import { environment } from "../../../environments/environment";
 import { UserService } from "../../services/user.service";
-import { AuthenticationService } from "../../services/authenticate.service";
+import { AuthService } from "../../services/auth/auth.service";
+import { AccountService } from "../../services/account/account.service";
 
 @Component({
 	selector: 'app-navigation-menu',
@@ -16,8 +17,8 @@ export class NavigationMenuComponent implements OnInit {
 	public version = 'v0.0.2-' + (environment.production ? 'prod' : 'dev');
 
 	constructor(
-		public userService: UserService,
-		public authenticationService: AuthenticationService) {
+		public accountService: AccountService,
+		public authenticationService: AuthService) {
 	}
 
 	ngOnInit() {

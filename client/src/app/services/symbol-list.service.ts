@@ -2,10 +2,11 @@ import { Injectable, EventEmitter, NgZone } from '@angular/core';
 import { SymbolModel } from '../models/symbol.model';
 import { BehaviorSubject } from 'rxjs';
 import { UserService } from './user.service';
-import { AuthenticationService } from './authenticate.service';
+import { AuthService } from './auth/auth.service';
 import { CacheService } from './cache.service';
 import { EventService } from './event.service';
 import { EventModel } from '../models/event.model';
+import { AccountService } from './account/account.service';
 
 @Injectable({
 	providedIn: 'root',
@@ -28,8 +29,9 @@ export class SymbolListService {
     constructor(
         private _zone: NgZone,
         private _cacheService: CacheService,
-        private _authenticationService: AuthenticationService,
+        private _authenticationService: AuthService,
         private _eventService: EventService,
+        private _accountService: AccountService,
         private _userService: UserService
     ) {
         this.init();
@@ -115,7 +117,7 @@ export class SymbolListService {
      * @param sendToServer 
      */
     public toggleFavorite(symbolModel?: SymbolModel, rowEl?: HTMLElement, sendToServer: boolean = false): Promise<boolean> {
-		if (sendToServer && !this._userService.model.options._id) {
+		if (sendToServer && !this._accountService.isLoggedIn) {
 			this._authenticationService.showLoginRegisterPopup();
             return Promise.resolve(false);
 		}

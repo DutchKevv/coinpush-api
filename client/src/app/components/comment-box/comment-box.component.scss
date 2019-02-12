@@ -4,7 +4,6 @@
 @import '~bootstrap/scss/_buttons';
 @import '~bootstrap/scss/utilities/_visibility';
 @import '../../style/variables/variables';
-@import '../../style/helpers/normalize';
 
 textarea::-webkit-input-placeholder {
     color: black;
@@ -124,4 +123,8 @@ textarea::-webkit-input-placeholder {
     padding: 20px;
     border: 1px solid $border-color-light;
     width: 250px;
+}
+
+.image-preview {
+    width: 80px;
 }
