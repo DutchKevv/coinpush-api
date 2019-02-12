@@ -1,0 +1,11 @@
+<div>
+  <h2 mat-dialog-title *ngIf="options.title">{{options.title}}</h2>
+  <ng-template #headerContainer></ng-template>
+  <mat-dialog-content>
+    {{options.message}}
+    <ng-template #contentContainer></ng-template>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <ng-template #footerContainer></ng-template>
+  </mat-dialog-actions>
+</div>

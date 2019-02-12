@@ -1,0 +1,20 @@
+.mat-tab-label-container {
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.mat-tab-label {
+    height: 36px !important;
+}
+
+.mat-tab-label-active {
+    background: #2672b3;
+    // border: 1px solid grey;
+    // border-radius: 4px 4px 0 0;
+    
+    opacity: 1 !important;
+    color: white;
+}
+
+.mat-tab-body-content {
+    overflow: hidden !important;
+}

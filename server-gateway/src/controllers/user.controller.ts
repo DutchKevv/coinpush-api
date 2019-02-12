@@ -3,7 +3,7 @@ import { USER_FETCH_TYPE_ACCOUNT_DETAILS, USER_FETCH_TYPE_FULL, USER_FETCH_TYPE_
 import { emailController } from './email.controller';
 import { IReqUser } from 'coinpush/src/interface/IReqUser.interface';
 import { IUser } from 'coinpush/src/interface/IUser.interface';
-import { downloadProfileImgFromUrl } from '../api/upload.api';
+import { updateProfileImgFromUrl } from '../api/upload.api';
 import { commentController } from './comment.controller';
 import { config } from 'coinpush/src/util/util-config';
 import { log } from 'coinpush/src/util/util.log';
@@ -86,14 +86,14 @@ export const userController = {
 				})
 			]);
 
-			// download (async) profile image (facebook etc)
+			// download profile image (facebook etc)
+			// do not throw if error happens
 			if (params.imgUrl) {
-				downloadProfileImgFromUrl({ id: user._id }, params.imgUrl)
-					.then((fileName: string) => {
-						if (typeof fileName === 'string' && fileName.length)
-							return this.update({ id: user._id }, user._id, { img: fileName })
-					})
-					.catch(console.error)
+				try {
+					await updateProfileImgFromUrl({ id: user._id }, params.imgUrl);
+				} catch (error) {
+					console.error(error);
+				}
 			}
 
 			// send newMember email
@@ -171,7 +171,7 @@ export const userController = {
 		}
 	},
 
-	async updatePassword(reqUser: IReqUser, token, password): Promise<void> {
+	async updatePassword(reqUser: IReqUser, token: string, password: string): Promise<void> {
 		const result = await request({
 			uri: config.server.user.apiUrl + '/user/password',
 			headers: { '_id': reqUser.id },

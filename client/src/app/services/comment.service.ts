@@ -6,6 +6,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { map } from 'rxjs/operators';
 import { DateService } from './date.service';
+import { AccountService } from './account/account.service';
 
 @Injectable({
 	providedIn: 'root',
@@ -14,12 +15,13 @@ export class CommentService {
 
 	constructor(
 		private _http: HttpClient,
-		private _userService: UserService) {
+		private _accountService: AccountService) {
 
 	}
 
-	async create(toUserId = null, parentId: string = null, content: string): Promise<CommentModel> {
-		const comment = <any>await this._http.post('/comment', { toUserId, parentId, content }).toPromise();
+	async create(toUserId = null, parentId: string = null, content: string, images: string[]): Promise<CommentModel> {
+		const comment = <any>await this._http.post('/comment', { toUserId, parentId, content, images }).toPromise();
+		const account = this._accountService.account$.getValue();
 
 		if (!comment)
 			return;
@@ -28,13 +30,14 @@ export class CommentService {
 			...comment,
 			content,
 			isNew: true,
+			imgs: images,
 			createdAt: new Date(),
 			toUser: toUserId,
 			parentId,
 			createUser: {
-				_id: this._userService.model.get('_id'),
-				name: this._userService.model.get('name'),
-				img: this._userService.model.get('img'),
+				_id: account._id,
+				name: account.name,
+				img: account.img,
 			}
 		});
 

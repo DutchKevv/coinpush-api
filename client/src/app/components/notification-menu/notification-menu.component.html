@@ -1,5 +1,5 @@
 <a class="globe-container" #globeContainer (click)="toggleNotificationMenu();" [ngClass]="{active: open}">
-    <i class="fa fa-globe"></i>
+    <mat-icon>notifications</mat-icon>
     <span *ngIf="(notificationService.unreadCount$ | async) > 0" class="notification-unread-circle">{{notificationService.unreadCount$ | async}}</span>
 </a>
 <div class="notification-drop-down" *ngIf="open">

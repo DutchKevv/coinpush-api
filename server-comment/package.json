@@ -25,7 +25,6 @@
     "morgan": "1.9.1",
     "request": "2.88.0",
     "requestretry": "3.1.0",
-    "typescript": "3.3.3",
     "validator": "10.11.0"
   },
   "devDependencies": {
@@ -35,6 +34,7 @@
     "@types/morgan": "^1.7.35",
     "@types/node": "10.12.24",
     "@types/validator": "10.9.0",
+    "typescript": "3.3.3",
     "tsc-watch": "1.1.37"
   }
 }

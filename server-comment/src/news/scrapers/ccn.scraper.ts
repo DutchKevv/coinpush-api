@@ -1,3 +1,4 @@
+import * as path from 'path';
 import * as cheerio from 'cheerio';
 import * as rr from 'requestretry';
 import { IArticle } from '../news.aggregator';
@@ -7,6 +8,14 @@ const URL = 'https://www.ccn.com';
 export class CCNScraper {
 
     public readonly ID: string = 'crypto-coins-news';
+
+    public userData =  {
+        "name": "Crypto Coins News",
+        "id": "crypto-coins-news",
+        "email": "ccn-company@coinpush.app",
+        "password": "test",
+        "img": path.join(__dirname, '../iamges/ccn.jpg'),
+    };
 
     async scrape(fromDate: string | number | Date): Promise<Array<IArticle>> {
         if (fromDate && !(fromDate instanceof Date))

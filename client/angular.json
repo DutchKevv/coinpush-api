@@ -14,22 +14,22 @@
             "outputPath": "../static/clients/web",
             "index": "src/index.html",
             "main": "src/main.ts",
-            "tsConfig": "src/tsconfig.json",
+            "tsConfig": "tsconfig.json",
             "polyfills": "src/polyfills.ts",
             "assets": [
-              "src/firebase-messaging-sw.js",
               "src/assets/",
-              "src/assets/policy.pdf",
+              "src/firebase-messaging-sw.js",
               "src/favicon.ico",
               "src/index.redirect.facebook.html",
               "src/google-services.json",
               "src/manifest.json",
               "src/robots.txt",
-              "src/sitemap.xml",
-              "src/app/style/sprite/spritesheet.png"
+              "src/sitemap.xml"
             ],
             "styles": [
-              "src/app/style/sprite/spritesheet.css"
+              "src/app/style/sprite/spritesheet.css",
+              "src/app/style/main.scss",
+              "src/assets/font-awesome/css/font-awesome.min.css"
             ],
             "scripts": []
           },
@@ -38,7 +38,7 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
+              "extractCss": false,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
@@ -57,7 +57,8 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
             "browserTarget": "coinpush:build",
-            "aot": true
+            "aot": true,
+            "proxyConfig": "src/proxy.conf.json"
           },
           "configurations": {
             "production": {

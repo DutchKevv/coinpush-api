@@ -1,16 +1,11 @@
 <nav class="nav-main">
-    <a [routerLink]="['/user/', userService.model.options._id]" [routerLinkActive]="['active']" class="profile" style="padding-top: 0">
+    <a [routerLink]="['/user/', accountService.account$.getValue()._id]" [routerLinkActive]="['active']" class="profile" style="padding-top: 0">
         <h6 class="version">
             <i>{{version}}</i>
         </h6>
-        <img alt="profile-image" class="logo" width="70" height="70" [attr.src]="(userService.model.options$ | async).img | NormalizeImgUrl">
-        <!-- <img alt="profile-image" class="logo" width="70" height="70" [attr.src]="userService.model.options.img ? (userService.model.options.img | NormalizeImgUrl) : undefined"> -->
-        <h4>{{userService.model.options.name}}</h4>
+        <img alt="profile-image" class="logo" width="70" height="70" [attr.src]="(accountService.account$ | async).img | NormalizeImgUrl">
+        <h4>{{(accountService.account$ | async).name}}</h4>
     </a>
-    <!-- <a [routerLink]="['/calendar']" [routerLinkActive]="['active']">
-            <i class="fa fa-calendar"></i>
-            <span>News (TODO)</span>
-        </a> -->
     <a [routerLink]="['/timeline']" [routerLinkActive]="['active']">
         <i class="fa fa-calendar"></i>
         <span>Timeline</span>
@@ -27,11 +22,11 @@
         <i class="fa fa-gears"></i>
         <span>Settings</span>
     </a>
-    <a *ngIf="userService.model.options._id" (click)="authenticationService.logout()">
+    <a *ngIf="accountService.account$.getValue()._id" (click)="authenticationService.logout()">
         <i class="fa fa-sign-out"></i>
         <span>Logout</span>
     </a>
-    <a *ngIf="!userService.model.options._id" (click)="authenticationService.showLoginRegisterPopup()">
+    <a *ngIf="!accountService.account$.getValue()._id" (click)="authenticationService.showLoginRegisterPopup()">
         <i class="fa fa-sign-out"></i>
         <span>Login</span>
     </a>

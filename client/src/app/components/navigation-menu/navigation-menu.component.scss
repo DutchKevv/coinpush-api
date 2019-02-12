@@ -1,4 +1,3 @@
-@import '../../style/helpers/normalize';
 @import '../../style/variables/variables';
 
 :host {
@@ -15,14 +14,14 @@
     background: $background-light;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    width: 250px;
-    min-width: 250px;
+    width: 200px;
+    min-width: 200px;
     display: none;
     position: absolute;
     top: 0;
     // transform: translateX(-250px);
     bottom: 0;
-    z-index: 1001;
+    z-index: 800;
 
     @media only screen and (min-width : $grid-width-xl) {
         display: block;

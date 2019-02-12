@@ -3,7 +3,6 @@
 @import '~bootstrap/scss/_mixins';
 @import '~bootstrap/scss/utilities/_display';
 
-@import '../../style/helpers/normalize';
 @import '../../style/variables/variables';
 
 $header-icon-padding-x: 12px;
@@ -16,8 +15,8 @@ $header-icon-padding-x: 12px;
 	z-index: 2;
     padding: 0;
     display: flex;
-    border-bottom: 1px solid $border-color-grey;
-    border-top: 1px solid $border-color-grey;
+    // border-bottom: 1px solid $border-color-grey;
+    // border-top: 1px solid $border-color-grey;
     height: 40px;
     background: black;
     box-shadow: 0 4px 7px rgba(0, 0, 0, 0.4);
@@ -35,7 +34,7 @@ $header-icon-padding-x: 12px;
 	}
 
 	@media only screen and (min-width : $grid-width-xl) {
-		left: 250px;
+		left: 200px;
 	} 
 }
 
@@ -57,7 +56,7 @@ app-notification-menu {
 	} 
 }
 
-.fa {
+mat-icon {
 	color: white;
 	font-size: 28px;
 	line-height: 31px;
@@ -71,7 +70,8 @@ app-notification-menu {
 	}
 }
 
-.fa-arrow-left {
+
+.backButton {
 	font-size: 28px;
     line-height: 28px;
     padding: 0 12px;
@@ -102,12 +102,12 @@ app-notification-menu {
 }
 
 .fa-ellipsis-v,
-.fa-search {
+.searchIcon {
 	margin-left: auto;
 	text-align: right;
 }
 
-.fa-search {
+.searchIcon {
 	margin: 0 8px;
 	font-size: 30px;
 	padding-top: 3px;
@@ -205,7 +205,12 @@ app-notification-menu {
 		width: 100%;
 		position: relative;
 		width: 400px;
-		left: calc(50% - 250px);
+		left: calc(50% - 200px);
+	}
+
+	.searchIcon,
+	.backButton {
+		display: none;
 	}
 }
 

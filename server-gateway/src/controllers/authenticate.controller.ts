@@ -95,11 +95,14 @@ export const authenticateController = {
 				_id: reqUser.id
 			},
 			method: 'POST',
-			body: params,
+			body: {
+				facebookId: facebookProfile.id
+			},
 			json: true
 		});
 
 		if (!user) {
+			console.log(' NO UESDFSDFFDSF SDFS DFF SDF SDF')
 			user = await userController.create({}, {
 				email: facebookProfile.email || params.email,
 				name: facebookProfile.name,

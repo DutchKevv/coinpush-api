@@ -1,9 +1,8 @@
-import { Schema, Types, model } from 'mongoose';
-import { isEmail } from 'validator';
-import { join } from 'path';
 import * as beautifyUnique from 'mongoose-beautiful-unique-validation';
-import { BROKER_GENERAL_TYPE_OANDA, LEVERAGE_TYPE_1, G_ERROR_USER_NOT_FOUND } from 'coinpush/src/constant';
-import { IUser } from "coinpush/src/interface/IUser.interface";
+import * as arrayUniquePlugin  from 'mongoose-unique-array';
+import { Schema, model } from 'mongoose';
+import { isEmail } from 'validator';
+import { G_ERROR_USER_NOT_FOUND } from 'coinpush/src/constant';
 
 export const UserSchema = new Schema({
     email: {
@@ -31,7 +30,7 @@ export const UserSchema = new Schema({
     devices: [{
         token: {
             type: String,
-            // unique: true
+            unique: true
         },
         name: {
             type: String,
@@ -83,15 +82,18 @@ export const UserSchema = new Schema({
 	timestamps: true
 });
 
+UserSchema.plugin(arrayUniquePlugin);
+UserSchema.plugin(beautifyUnique);
+
 UserSchema.statics.addDevice = async function (userId, device): Promise<void> {
     const prevUsers: any = await User.find({ devices: { $elemMatch: { token: device.token } } }, { _id: 1, devices: 1 });
-    console.log('device devi', device.token, userId);
+    console.log('device devi', JSON.stringify(prevUsers));
     // remove previous owners of token
     // TODO: really needed?
-    // await Promise.all(prevUsers.map(user => {
-    //     if (user._id !== userId)
-    //         return UserSchema.statics.removeDevice(userId, device);
-    // }));
+    await Promise.all(prevUsers.map(user => {
+        if (user._id !== userId)
+            return UserSchema.statics.removeDevice(userId, device);
+    }));
 
     if (prevUsers.length) {
         await Promise.all(prevUsers.map(user => {
@@ -123,7 +125,5 @@ UserSchema.statics.removeDevice = async function (userId, token) {
         // return User.update({_id: userId}, { $pull: { token: token } });
     }
 }
-
-UserSchema.plugin(beautifyUnique);
 
 export const User = model('User', UserSchema, 'users');

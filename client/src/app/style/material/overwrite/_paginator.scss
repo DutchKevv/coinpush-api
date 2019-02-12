@@ -1,0 +1,49 @@
+// hide the page-size and range-label until MdPaginatorIntl issue is fixed
+// https://github.com/angular/material2/pull/5726
+mat-paginator div.mat-paginator-page-size {
+    display: none;
+}
+
+// paginator
+button.mat-icon-button.mat-paginator-navigation-previous,
+button.mat-icon-button.mat-paginator-navigation-next {
+    border: 1px solid $color-vattenfall-blue;
+    border-radius: 3px;
+    height: 26px;
+    width: 26px;
+    line-height: 26px;
+    &[disabled] {
+        border: 1px solid #dcd7d3;
+    }
+    &.mat-paginator-navigation-previous {
+        order: 1;
+    }
+    &.mat-paginator-navigation-next {
+        order: 3;
+    }
+    & .mat-paginator-icon {
+        width: 18px;
+    }
+}
+
+.mat-paginator-range-label {
+    margin: 0 13px !important;
+    order: 2;
+}
+
+.mat-paginator-decrement {
+    margin-left: 6px !important;
+}
+
+.mat-paginator-increment {
+    margin-left: 10px !important;
+}
+
+.mat-paginator-container {
+  padding: 0 1px !important;
+  min-height: 30px !important;
+}
+
+.mat-paginator-range-actions {
+  min-height: 30px !important;
+}

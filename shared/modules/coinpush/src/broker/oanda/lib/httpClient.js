@@ -1,15 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var http = require("http");
-var https = require("https");
-var querystring = require("querystring");
-var httpAgent, httpsAgent, maxSockets = 3;
+const http = require("http");
+const https = require("https");
+const querystring = require("querystring");
+let httpAgent, httpsAgent, maxSockets = 3;
 function setMaxSockets(max) {
     maxSockets = max;
 }
 exports.setMaxSockets = setMaxSockets;
 function sendRequest(options, callback, onData) {
-    var request, keepAlive, timeout = options.timeout || 5000, data = options.data;
+    let request, keepAlive, timeout = options.timeout || 5000, data = options.data;
     keepAlive = options.headers && options.headers.Connection === 'Keep-Alive';
     // For non streaming connections, use HTTP Agent to pool persistent TCP sockets for HTTP requests
     if (!keepAlive) {

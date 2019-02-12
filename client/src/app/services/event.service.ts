@@ -3,7 +3,6 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { CommentModel, IComment } from '../models/comment.model';
 import { AlertService } from './alert.service';
 import { UserService } from "./user.service";
-import { app } from '../../core/app';
 import { CacheService } from './cache.service';
 import { EventModel } from '../models/event.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
@@ -27,10 +26,10 @@ export class EventService {
 	) { }
 
 	public init() {
-		this._initializeEvents();
+		// this._initializeEvents();
 		this._updateSymbolIAlarms();
 
-		app.on('event-triggered', event => this._onEventTriggered(event));
+		// app.on('price-alarm', event => this._onEventTriggered(event));
 	}
 
 	/**
@@ -175,8 +174,8 @@ export class EventService {
 	/**
 	 * 
 	 */
-	private _initializeEvents() {
-		this.events$.next((app.data.events || []).map(event => new EventModel(
+	private _initializeEvents(events: any[]) {
+		this.events$.next((events).map(event => new EventModel(
 			event._id,
 			this._dateService.convertToTimePast(event.createdAt),
 			event.symbol,
@@ -186,7 +185,5 @@ export class EventService {
 			event.triggeredDate,
 			event.removed
 		)));
-		
-		delete app.data.events
 	}
 }

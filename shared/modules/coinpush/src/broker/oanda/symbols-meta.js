@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var constants = require("../../constant");
+const constants = require("../../constant");
 exports.meta = [
     {
         "name": "AU200_AUD",

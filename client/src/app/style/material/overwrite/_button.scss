@@ -1,0 +1,11 @@
+.mat-button .mat-button-wrapper > span {
+    vertical-align: baseline;
+}
+
+.mat-button-ripple-round {
+    border-radius: 0 !important;
+}
+
+button[disabled] {
+    background: grey !important;
+}

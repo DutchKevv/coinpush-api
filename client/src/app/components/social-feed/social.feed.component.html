@@ -84,7 +84,7 @@
 					</a>
 					<div>
 						<a [attr.href]="comment.options.createUser ? '#/user/' + comment.options.createUser?._id : null" class="g-username">
-							{{comment.options.createUser?.name || comment.options.createCompany.name}}
+							{{comment.options.createUser?.name || comment.options.createCompany?.name}}
 						</a>
 						<a [routerLink]="['/comment/', comment.options._id]">
 							<time>{{comment.options.fromNow}}</time>
@@ -96,7 +96,7 @@
 					<h2 *ngIf="comment.options.title" [innerHtml]="comment.options.title"></h2>
 					<a *ngFor="let img of comment.options.imgs" [attr.href]="comment.options.url ? comment.options.url : null" target="_blank"
 					 class="comment-image">
-						<img [attr.src]="img">
+						<img [attr.src]="img | NormalizeImgUrl:'comment'">
 					</a>
 					<p [innerHtml]="comment.options.content | parseCommentContent"></p>
 					<a *ngIf="comment.options.content.length > 400" (click)="onClickShowMoreText(comment, $event)" class="showMoreTextButton">show
@@ -144,7 +144,7 @@
 					</div>
 
 					<div class="child-row comment-input">
-						<img [attr.src]="userService.model.options.img | NormalizeImgUrl">
+						<img [attr.src]="accountService.account$.getValue().img | NormalizeImgUrl">
 						<input (keyup.enter)="respond($event, comment)" type="text" placeholder="Write a comment..." />
 					</div>
 				</footer>

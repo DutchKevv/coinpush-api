@@ -129,10 +129,11 @@ export const commentController = {
 	async create(reqUser, options): Promise<any> {
 		// Posting on other user wall, otherwhise if own wall, set post as 'global' post (toUserId: undefined)
 		const toUserId = options.toUserId && options.toUserId !== reqUser.id ? options.toUserId : undefined;
-
+		console.log(options)
 		const comment = <any>await Comment.create({
 			createUser: reqUser.id,
 			toUser: toUserId,
+			imgs: options.images,
 			// public: options.toUserId && options.toUserId !== reqUser.id ? undefined : true,
 			parentId: options.parentId,
 			content: options.content

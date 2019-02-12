@@ -1,20 +1,19 @@
 import { ChangeDetectionStrategy, Component, Input, Output, ChangeDetectorRef, EventEmitter, SimpleChanges, OnChanges, OnDestroy, Pipe, PipeTransform, NgZone } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { UserService } from '../../services/user.service';
-import { AlertService } from '../../services/alert.service';
-import { UserModel } from '../../models/user.model';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { SymbolModel } from '../../models/symbol.model';
 import { EventService } from '../../services/event.service';
 import { NgForm } from '@angular/forms';
 import { ALARM_TRIGGER_DIRECTION_DOWN, ALARM_TRIGGER_DIRECTION_UP, CUSTOM_EVENT_TYPE_ALARM } from 'coinpush/src/constant';
 import { CacheService } from '../../services/cache.service';
-import { AuthenticationService } from '../../services/authenticate.service';
+import { AuthService } from '../../services/auth/auth.service';
 import { EventModel } from '../../models/event.model';
 import { SymbolListService } from '../../services/symbol-list.service';
 import { DateService } from '../../services/date.service';
 
 import { map } from 'rxjs/operators';
+import { AccountService } from '../../services/account/account.service';
 
 @Pipe({ name: 'alarmMenuActiveSymbolEvent' })
 export class AlarmMenuActiveSymbolEventPipe implements PipeTransform {
@@ -57,8 +56,9 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 	constructor(
 		public eventService: EventService,
 		private _symbolListService: SymbolListService,
-		private _authenticationService: AuthenticationService,
+		private _authenticationService: AuthService,
 		private _userService: UserService,
+		private _accountService: AccountService,
 		private _cacheService: CacheService,
 		private _dateService: DateService,
 		private _changeDetectorRef: ChangeDetectorRef,
@@ -122,7 +122,7 @@ export class AlarmMenuComponent implements OnChanges, OnDestroy {
 	}
 
 	public async onFormSubmit(): Promise<void> {
-		if (!this._userService.model.options._id) {
+		if (!this._accountService.isLoggedIn) {
 			this._authenticationService.showLoginRegisterPopup();
 			return;
 		}

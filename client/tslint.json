@@ -1,0 +1,200 @@
+{
+    "extends": [
+      "codelyzer",
+      "tslint-eslint-rules",
+      "tslint-consistent-codestyle",
+      "tslint-config-airbnb",
+      "rxjs-tslint-rules",
+      "tslint-config-prettier"
+    ],
+    "rulesDirectory": [
+      "node_modules/codelyzer"
+    ],
+    "rules": {
+      //--------------------------------------------------------------------//
+      //    Codelyzer core rules (version 4.3.0)
+      //    http://codelyzer.com/rules
+      //
+      //    ng2 styleguide recommendations
+      //    https://github.com/mgechev/codelyzer#recommended-configuration
+      //--------------------------------------------------------------------//
+  
+      "banana-in-box": true,
+      "templates-no-negated-async": true,
+      "directive-selector": [true, "attribute", [], "camelCase"], // no prefix for directives
+      "component-selector": [true, "element", ["soul"], "kebab-case"],
+      "max-inline-declarations": true,
+      "no-conflicting-life-cycle-hooks": true,
+      "use-input-property-decorator": true,
+      "use-output-property-decorator": true,
+      "use-host-property-decorator": true,
+      "use-view-encapsulation": true,
+      "no-attribute-parameter-decorator": true,
+      "no-input-rename": true,
+      "no-output-rename": true,
+      "no-output-on-prefix": true,
+      "no-forward-ref": true,
+      "use-life-cycle-interface": true,
+      "contextual-life-cycle": true,
+      "use-pipe-transform-interface": true,
+      "component-class-suffix": [true, "Component"],
+      "directive-class-suffix": [true, "Directive"],
+  
+      //--------------------------------------------------------------------//
+      //    tslint rxjs rules (version 4.0.2)
+      //    https://github.com/cartant/rxjs-tslint-rules
+      //--------------------------------------------------------------------//
+  
+      //--------------------------------------------------------------------//
+      //    tslint core rules (version 5.9.1)
+      //    https://palantir.github.io/tslint/rules
+      //--------------------------------------------------------------------//
+  
+      //---------------------
+      // Typescript specific
+      //---------------------
+      "adjacent-overload-signatures": true,
+      "ban-comma-operator": true,
+      "ban-types": [
+        true,
+        ["Object", "Use {} instead."],
+        ["String", "Use string instead"],
+        ["Number", "Use number instead"],
+        ["Boolean", "Use boolean instead"]
+      ],
+      "member-access": false,
+      "member-ordering": [
+        true,
+        {
+          "order": "fields-first"
+        }
+      ],
+      "no-empty-interface": true,
+      "no-inferrable-types": false,
+      "no-internal-module": true,
+      "no-namespace": true,
+      "no-non-null-assertion": true,
+      "no-parameter-reassignment": true,
+      "no-reference": true,
+      "no-var-requires": true,
+      "only-arrow-functions": [true, "allow-named-functions"],
+      "prefer-for-of": true,
+      "unified-signatures": true,
+  
+      //--------------------
+      // Functionality
+      //--------------------
+      "await-promise": true,
+      "ban": [true, "alert", "fit", "fdescribe", "only"],
+      "forin": true,
+      "import-blacklist": [true],
+      "label-position": true,
+      "no-arg": true,
+      "no-bitwise": true,
+      "no-conditional-assignment": true,
+      "no-console": [true],
+      "no-construct": true,
+      "no-debugger": true,
+      "no-duplicate-super": true,
+      "no-duplicate-switch-case": true,
+      "no-duplicate-variable": true,
+      "no-empty": false,
+      "no-eval": true,
+      "no-for-in-array": true,
+      "no-invalid-template-strings": true,
+      "no-misused-new": true,
+      "no-return-await": true,
+      "no-shadowed-variable": true,
+      "no-sparse-arrays": true,
+      "no-string-literal": false,
+      "no-string-throw": true,
+      "no-switch-case-fall-through": true,
+      "no-unsafe-finally": true,
+      "no-unused-expression": true,
+      "no-use-before-declare": true,
+      "no-var-keyword": true,
+      "prefer-object-spread": true,
+      "radix": true,
+      "strict-boolean-expressions": false, // AIRBNB OVERWRITES version 5.4.2
+      "triple-equals": true,
+      "use-isnan": true,
+  
+      //--------------------
+      // Maintainability
+      //--------------------
+      "object-literal-sort-keys": false,
+  
+      //--------------------
+      // Style
+      //--------------------
+      "callable-types": true,
+      "class-name": true,
+      "interface-over-type-literal": true,
+      "one-variable-per-declaration": true,
+      "ordered-imports": [
+        true,
+        {
+          "grouped-imports": true,
+          "import-sources-order": "case-insensitive",
+          "module-source-path": "basename",
+          "named-imports-order": "case-insensitive"
+        }
+      ],
+      "prefer-template": true,
+      "space-before-function-paren": [true, "never"], // AIRBNB OVERWRITES version 5.4.2
+      "variable-name": [
+        true,
+        "ban-keywords", // AIRBNB OVERWRITES version 5.4.2
+        "check-format",
+        "allow-pascal-case" // AIRBNB OVERWRITES version 5.4.2
+      ],
+      "whitespace": [
+        true,
+        "check-branch",
+        "check-decl",
+        "check-operator",
+        "check-preblock",
+        "check-separator", // AIRBNB OVERWRITES version 5.4.2
+        "check-type" // AIRBNB OVERWRITES version 5.4.2
+      ],
+  
+      //--------------------------------------------------------------------//
+      //    tslint-eslint-rules rules (version 5.1.0)
+      //    https://palantir.github.io/tslint/rules
+      //--------------------------------------------------------------------//
+  
+      //---------------------
+      // Possible Errors
+      //---------------------
+      "no-constant-condition": true,
+      "no-control-regex": true,
+      "no-duplicate-case": true,
+      "no-empty-character-class": true,
+      "no-ex-assign": true,
+      "no-extra-boolean-cast": true,
+  
+      //---------------------
+      // Best Practices
+      //---------------------
+      "no-multi-spaces": true,
+  
+      //---------------------
+      // Stylistic Issues
+      //---------------------
+      "brace-style": [
+        true,
+        "1tbs",
+        { "allowSingleLine": false } // AIRBNB OVERWRITES version 5.4.2
+      ],
+      "ter-func-call-spacing": [true, "never"],
+  
+      //--------------------------------------------------------------------//
+      //    tslint-consistent-codestyle rules (version 1.13.0)
+      //    https://github.com/ajafff/tslint-consistent-codestyle
+      //--------------------------------------------------------------------//
+      "const-parameters": true,
+      "no-else-after-return": true,
+      "no-unnecessary-else": true
+    }
+  }
+  

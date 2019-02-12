@@ -23,11 +23,10 @@ export class TimelineComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		console.log(this.filterModel);
+		
 	}
 
 	public onFormChange(event) {
 		this._socialFeedComponent.reload();
-		console.log(event);
 	}
 }

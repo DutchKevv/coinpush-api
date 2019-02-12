@@ -1,0 +1,20 @@
+@import '../../variables/variables';
+
+.mat-progress-spinner, .mat-spinner {
+    left: calc(50% - 20px);
+    top: calc(50% - 20px);
+
+    circle {
+        stroke: #3fb53f;
+    }
+}
+
+button .mat-progress-spinner, button .mat-spinner {
+    position: static;
+    display: inline-block;
+    margin-right: 15px;
+
+    circle {
+        stroke: green;
+    }
+}

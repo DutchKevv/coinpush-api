@@ -2,19 +2,20 @@
 .DS_Store
 .idea/
 .vscode/
-.gradle
-temp.txt
 
 # dirs
 node_modules
 dist
-**/src/**/*.js
-**/src/**/*.map
 /_data
+.tmp
 _log
+# server-*/dist
 
 # files
 npm-debug.log
 package-lock.json
 *.map
 log.txt
+**/src/**/*.js
+**/src/**/*.map
+.gradle

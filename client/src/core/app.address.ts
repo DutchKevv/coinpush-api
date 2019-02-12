@@ -5,23 +5,26 @@ declare let window: any;
 
 const androidEmulatorIp = '10.0.2.2';
 const iosEmulatorIp = 'localhost';
-const localApiIp = 'localhost';
-const localApiPort = 3100;
-const localApiWsType = 'ws';
-const localApiProtocol = 'http';
+const devApiIp = 'localhost';
+const devApiPort = 3100;
+const devApiWsType = 'ws';
+const devApiProtocol = 'http';
+const devCdnUrl = 'http://localhost:4100';
 const prodApiIp = 'www.coinpush.app';
 const prodApiPort = undefined;
 const prodApiWsType = 'wss';
 const prodApiProtocol = 'https';
+const prodCdnUrl = 'https://static.coinpush.app';
 
 const address = {
 	secure: true,
-	host: localApiProtocol,
-	ip: localApiIp,
-	port: localApiPort,
-	ws: localApiWsType,
+	host: devApiProtocol,
+	ip: devApiIp,
+	port: devApiPort,
+	ws: devApiWsType,
 	hostUrl: '',
-	apiUrl: ''
+	apiUrl: '',
+	cdnUrl: devCdnUrl
 }
 
 // APP
@@ -58,6 +61,7 @@ else if (environment.production) {
 	address.host = prodApiProtocol;
 	address.ws = prodApiWsType;
 	address.port = prodApiPort;
+	address.cdnUrl = prodCdnUrl;
 }
 
 // construct full domain url

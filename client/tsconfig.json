@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": false,
+    "lib": ["dom", "es2018"],
+    "target": "es5"
+  },
+  "include": [
+    "./src/**/*.ts",
+    "../shared/modules/coinpush/src/**/*.ts"
+  ],
+  "angularCompilerOptions": {
+    "entryModule": "app/app.module#AppModule",
+    "skipMetadataEmit": true,
+    "preserveWhitespaces": false
+  }
+}

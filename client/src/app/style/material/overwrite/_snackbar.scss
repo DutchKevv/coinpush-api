@@ -1,0 +1,15 @@
+snack-bar-container.mat-snack-bar-container {
+  background: none;
+  padding: 0;
+  min-height: 36px;
+  min-width: auto;
+  margin-bottom: 12px;
+  margin-right: 18px;
+
+  .cdk-global-overlay-wrapper {
+    justify-content: flex-end;
+    align-items: flex-end;
+  }
+}
+
+

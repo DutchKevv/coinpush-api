@@ -22,7 +22,6 @@
     "mongoose": "5.4.11",
     "mongoose-beautiful-unique-validation": "7.1.1",
     "morgan": "1.9.1",
-    "typescript": "3.3.3",
     "validator": "10.11.0"
   },
   "devDependencies": {
@@ -32,6 +31,7 @@
     "@types/morgan": "^1.7.35",
     "@types/node": "10.12.24",
     "@types/validator": "10.9.0",
+    "typescript": "3.3.3",
     "tsc-watch": "1.1.37"
   }
 }

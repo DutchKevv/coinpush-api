@@ -181,7 +181,6 @@ UserSchema.statics.normalize = function (user, doc) {
 	if (!doc)
 		throw new Error('UserSchema cannot normalize, doc missing');
 
-	UserSchema.statics.normalizeProfileImg(doc);
 	UserSchema.statics.setIFollow(user, doc);
 	return doc
 };
@@ -194,37 +193,6 @@ UserSchema.statics.setIFollow = function (reqUser: IReqUser, doc) {
 		doc.iFollow = doc.followers.map(f => f.toString()).indexOf(reqUser.id) > -1;
 
 	return this;
-};
-
-/**
- * Transform image filename to full url
- * @param filename
- * @returns {any}
- */
-UserSchema.statics.normalizeProfileImg = function (doc) {
-	if (!doc)
-		return;
-
-	// const domainPrefix = config.server.gateway.protocol + '://' + (process.env.NODE_ENV === 'production' ? config.ip.prod : config.ip.local + ':' + config.port);
-
-	// followers
-	if (doc.followers && doc.followers.length)
-		doc.followers.forEach(follower => UserSchema.statics.normalizeProfileImg(follower));
-
-	// default img
-	if (!doc.img) {
-		// doc.img = domainPrefix + config.image.profileDefaultUrl;
-		doc.img = config.image.profileDefaultUrl;
-		return;
-	}
-
-	// external image
-	if (doc.img.startsWith('/') || doc.img.startsWith('http://') || doc.img.startsWith('https://'))
-		return;
-
-	// user image
-	doc.img = join(config.image.profileBaseUrl, doc.img);
-	// doc.img = domainPrefix + join(config.image.profileBaseUrl, doc.img);
 };
 
 UserSchema.statics.setFavorite = async function (userId: string, symbol: string): Promise<void> {

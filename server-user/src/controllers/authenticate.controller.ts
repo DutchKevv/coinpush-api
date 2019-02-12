@@ -20,18 +20,17 @@ export const authenticateController = {
 
 		if (user && user._id) {
 			user.token = jwt.sign({ id: user._id }, config.auth.jwt.secret || 'liefmeisje');
-			// (<any>User).normalizeProfileImg(user);
 		}
 
 		return user;
 	},
 
-	async authenticateFacebook(reqUser: IReqUser, params: { facebookId: string }): Promise<IUser> {
-		const user: IUser = (await userController.findMany(reqUser, {facebookId: params.facebookId}))[0];
+	async authenticateFacebook(reqUser: IReqUser, params: { facebookId: number }): Promise<IUser> {
+		console.log(' FACEBOOK', params);
+		const user: IUser = await userController.findByFacebookId(reqUser, params.facebookId);
 
 		if (user && user._id) {
 			user.token = jwt.sign({ id: user._id }, config.auth.jwt.secret || 'liefmeisje');
-			// (<any>User).normalizeProfileImg(user);
 		}
 
 		return user;

@@ -49,7 +49,7 @@ export class App {
 			cacheController.sync(BROKER_GENERAL_TYPE_IEX).then(() => this.broker.openTickStream(['iex']))
 		]);
 
-		this._toggleSymbolUpdateInterval(true);
+		// this._toggleSymbolUpdateInterval(true);
 	}
 
 	_setupApi(): void {
@@ -89,14 +89,10 @@ export class App {
 
 	_connectMongo() {
 		return new Promise((resolve, reject) => {
-			// mongoose.set('debug', process.env.NODE_ENV === 'development');
-			(<any>mongoose).Promise = global.Promise; // Typescript quirk
-
 			this.db = mongoose.connection;
 
-			mongoose.connect(config.server.cache.connectionString, (error) => {
-				if (error)
-					return reject(error);
+			mongoose.connect(config.server.cache.connectionString, { useNewUrlParser: true }, (error) => {
+				if (error) return reject(error);
 				
 				resolve();
 			});
@@ -110,7 +106,7 @@ export class App {
 		const timeoutFunc:any = async function() {
 			try {
 				await Promise.all([
-					cacheController.sync(BROKER_GENERAL_TYPE_OANDA),
+					// cacheController.sync(BROKER_GENERAL_TYPE_OANDA),
 					cacheController.sync(BROKER_GENERAL_TYPE_CC)
 				]);
 				console.log('SYNC DONE!!')

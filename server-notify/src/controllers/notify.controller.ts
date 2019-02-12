@@ -1,12 +1,9 @@
-import * as nodeMailer from 'nodemailer';
-import { userController } from './user.controller';
 import { IUser } from 'coinpush/src/interface/IUser.interface';
 import * as FCM from 'fcm-node';
 import { User } from '../schemas/user.schema';
 import { Notification } from '../schemas/notification.schema';
 import { INotification } from 'coinpush/src/interface/notification.interface';
 import { IReqUser } from 'coinpush/src/interface/IReqUser.interface';
-import { pubClient } from 'coinpush/src/redis';
 import { config } from 'coinpush/src/util/util-config';
 
 const fcm = new FCM(config.push.firebase.key)
@@ -31,7 +28,7 @@ export const notifyController = {
             .lean();
     },
 
-    async create(notification): Promise<any> {
+    async create(notification: INotification): Promise<any> {
         const doc = await Notification.create(notification);
         return doc;
     },
@@ -44,7 +41,7 @@ export const notifyController = {
      * @param data 
      * @param user 
      */
-    async sendToUser(notificationId, userId, title, body, data: any = {}, user?: any) {
+    async sendToUser(notificationId: string, userId: string, title: string, body: any, data: any = {}, user?: any) {
         data.__userId = userId;
 
         user = user || await User.findById(userId);
@@ -52,7 +49,7 @@ export const notifyController = {
         if (!user)
             throw ({ code: 404 });
 
-        const GCMTokens = (user.devices || []).map(device => device.token).filter(token => !!token);
+        const GCMTokens = (user.devices || []).map((device: any) => device.token).filter((token: string) => !!token);
 
         const message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera)
             priority: 'high',
@@ -65,16 +62,19 @@ export const notifyController = {
             }
         }
 
-        // actually send the message
-        const sendResult = await new Promise((resolve, reject) => {
+        try {
+            // actually send the message
+            const sendResult = await new Promise((resolve, reject) => {
 
-            fcm.send(message, async (error, response) => {
-                if (error) {
-                    return reject(error);
-                } else {
+                fcm.send(message, async (error: any, response: any) => {
+                    console.log(error, response)
+                    if (error) {
+                        return reject(error);
+                    } 
+
                     // cleanup old tokens
                     if (response.failure > 0) {
-                        response.results.forEach((result, i) => {
+                        response.results.forEach((result: any, i: number) => {
                             if (result.error === 'NotRegistered')
                                 user.devices.splice(user.devices.findIndex(device => device.token === GCMTokens[i]), 1);
                             else
@@ -87,11 +87,14 @@ export const notifyController = {
                     await user.save();
 
                     resolve(response);
-                }
+                });
             });
-        });
 
-        return sendResult;
+            return sendResult;
+        } catch (error) {
+            // TODO
+            console.error(error);
+        }
     },
 
     async sendTypePostComment(notification: INotification, user) {
@@ -170,7 +173,7 @@ export const notifyController = {
             ...notification.data
         };
 
-        return this.sendToUser(notification._id, notification.toUserId, title, '', data, user);
+        return this.sendToUser(notification._id, notification.toUserId, title, data.content, data, user);
     },
 
     async parse(notification: INotification) {

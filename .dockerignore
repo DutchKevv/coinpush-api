@@ -1,7 +1,9 @@
 ### global
 **/Dockerfile
 **/node_modules
+**/dist
 **/_log
+**/npm-debug.log
 **/.git
 **/.gitignore
 **/.idea
@@ -22,6 +24,8 @@ client-app/platforms/
 client-app/plugins/
 client-app/res/
 client-app/scripts/
+
+!**/shared/modules/coinpush/**/*.js
 
 ### redis
 **/dump.rdb

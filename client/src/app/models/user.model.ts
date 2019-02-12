@@ -13,7 +13,8 @@ export class UserModel extends BaseModel {
 		leverage: LEVERAGE_TYPE_1,
 		iFollow: false,
 		transactions: 0,
-		profileImg: ''
+		profileImg: '',
+		token: ''
 	}
 
 }

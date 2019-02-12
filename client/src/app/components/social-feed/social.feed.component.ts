@@ -1,11 +1,12 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, Pipe, PipeTransform, OnDestroy, ChangeDetectorRef, ViewEncapsulation, EventEmitter, OnChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, Pipe, PipeTransform, OnDestroy, ChangeDetectorRef, ViewEncapsulation, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { UserService } from '../../services/user.service';
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { CommentService } from "../../services/comment.service";
 import { BehaviorSubject } from "rxjs";
 import { CommentModel } from "../../models/comment.model";
 import { CacheService } from '../../services/cache.service';
-import { app } from 'core/app';
+import { ConfigService } from '../../services/config/config.service';
+import { AccountService } from '../../services/account/account.service';
 
 const MAX_COMMENT_LENGTH = 400;
 const SCROLL_LOAD_TRIGGER_OFFSET = 800;
@@ -20,7 +21,8 @@ const SCROLL_LOAD_TRIGGER_OFFSET = 800;
 // }
 
 export class FilterModel {
-	sources = app.data.config.companyUsers.map(user => {user.enabled = true; return user});
+	sources = [];
+	// sources = app.data.config.companyUsers.map(user => {user.enabled = true; return user});
 }
 
 @Component({
@@ -47,8 +49,9 @@ export class SocialFeedComponent implements OnInit, OnDestroy, OnChanges {
 	constructor(
 		public commentService: CommentService,
 		public changeDetectorRef: ChangeDetectorRef,
-		public userService: UserService,
+		public accountService: AccountService,
 		private _elementRef: ElementRef,
+		private _configService: ConfigService,
 		private _route: ActivatedRoute,
 		private _cacheService: CacheService) {
 	}
@@ -68,8 +71,8 @@ export class SocialFeedComponent implements OnInit, OnDestroy, OnChanges {
 		this.bindScroll(this.scrollHandle);
 	}
 
-	ngOnChanges(changes) {
-		console.log(changes);
+	ngOnChanges(changes: SimpleChanges) {
+		
 	}
 
 	public focusInput(event) {
@@ -106,7 +109,7 @@ export class SocialFeedComponent implements OnInit, OnDestroy, OnChanges {
 	public async respond(event, parentModel: CommentModel) {
 		const input = event.currentTarget;
 		input.setAttribute('disabled', true);
-		const comment = await this.commentService.create(parentModel.options.toUser, parentModel.options._id, input.value);
+		const comment = await this.commentService.create(parentModel.options.toUser, parentModel.options._id, input.value, []);
 		input.removeAttribute('disabled');
 
 		if (!comment)
@@ -173,7 +176,6 @@ export class SocialFeedComponent implements OnInit, OnDestroy, OnChanges {
 
 				if (this.filterModel) {
 					options.sources = this.filterModel.sources.filter(source => source.enabled).map(source => source._id);
-					console.log(options.sources);
 				}
 
 				items = await this.commentService.findTimeline(options);
@@ -216,7 +218,7 @@ export class SocialFeedComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	private _mixAds(comments: Array<CommentModel>): void {
-		if (app.platform.isApp) {
+		if (this._configService.platform.isApp) {
 			// const banner = window['AdMob'].createBanner({
 			// 	adSize: window['AdMob'].AD_SIZE.MEDIUM_RECTANGLE,
 			// 	overlap: true,

@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, Output, OnDestroy, EventEmitter, OnInit, HostListener, ChangeDetectorRef } from '@angular/core';
 import { NotificationService } from '../../services/notification.service';
 import { Router, NavigationStart, NavigationExtras, ActivationEnd } from '@angular/router';
-import { AuthenticationService } from '../../services/authenticate.service';
+import { AuthService } from '../../services/auth/auth.service';
 import { UserService } from '../../services/user.service';
 import { BehaviorSubject } from 'rxjs';
 import { INotification } from 'coinpush/src/interface/notification.interface';
+import { AccountService } from '../../services/account/account.service';
 
 @Component({
 	selector: 'app-notification-menu',
@@ -38,8 +39,8 @@ export class NotificationMenuComponent implements OnDestroy, OnInit {
 		public notificationService: NotificationService,
 		public router: Router,
 		private _changeDetectorRef: ChangeDetectorRef,
-		private _authenticationSerice: AuthenticationService,
-		private _userService: UserService
+		private _authenticationSerice: AuthService,
+		private _accountService: AccountService
 	) {
 		
 		this._routerEventsSub = this.router.events.subscribe((val) => {
@@ -57,7 +58,7 @@ export class NotificationMenuComponent implements OnDestroy, OnInit {
 
 	public toggleNotificationMenu(state?: boolean) {
 		// Show login screen on open
-		if ((state === true || typeof state === 'undefined' && !this.open) && !this._userService.model.options._id) {
+		if ((state === true || typeof state === 'undefined' && !this.open) && !this._accountService.isLoggedIn) {
 			this._authenticationSerice.showLoginRegisterPopup();
 			return;
 		}

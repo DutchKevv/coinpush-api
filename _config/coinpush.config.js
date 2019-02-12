@@ -89,7 +89,7 @@ const config = {
     },
     push: {
         firebase: {
-            key: "myFirebaseKey" // Your firebase accound id (push messages)
+            key: "AAAAcOdrZII:APA91bHdt3bPaqUW4sWF7tht0xJs13B_X-4Svm4TlWeLnXXFoVsPxWRQGxUPdqudCP1OHkQ-IJCVO10DJKi8G2fLekqfpy0xAXGakQmj-7FZW3DwB18BxcHNIWlgNC9T3T1tbXEnbaxM"
         },
     },
     ip: {

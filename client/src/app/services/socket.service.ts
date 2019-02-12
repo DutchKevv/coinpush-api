@@ -1,7 +1,7 @@
 import { Injectable, Output } from '@angular/core';
 import * as io from 'socket.io-client';
 import { UserService } from './user.service';
-import { app } from '../../core/app';
+import { ConfigService } from './config/config.service';
 
 @Injectable({
     providedIn: 'root',
@@ -14,13 +14,18 @@ export class SocketService {
         return this._socket;
     }
 
-    constructor(private _userService: UserService) {
-        this._socket = io(this._getSocketUrl(), {
+    constructor(
+        private _userService: UserService,
+        private _configService: ConfigService
+    ) {}
+
+    public init(): void {
+        this._socket = io('', {
             reconnectionAttempts: 10000, // avoid having user reconnect manually in order to prevent dead clients after a server restart
             timeout: 10000, // before connect_error and connect_timeout are emitted.
             // transports: ['websocket'],
             // query: 'userId=' + this._userService.model.options._id,
-            secure: app.platform.isSecure,
+            secure: this._configService.platform.isSecure,
             autoConnect: false
         });
     }
@@ -31,12 +36,5 @@ export class SocketService {
 
     public disconnect() {
         this._socket.close();
-    }
-
-    private _bindOnBackground
-
-    private _getSocketUrl(): string {
-        return (app.address.host ? `${app.address.host}://` : '') + app.address.ip + (app.address.port ? ':' + app.address.port : '');
-        // return app.address.host + '://' + app.address.ip + (app.address.port ? ':' + app.address.port : '';
     }
 }
