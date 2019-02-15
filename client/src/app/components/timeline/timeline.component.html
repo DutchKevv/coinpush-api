@@ -1,9 +1,0 @@
-<form class="filter" (change)=onFormChange($event) #filter>
-    <h3>Sources</h3>
-
-    <label class="input-container filter-row" *ngFor="let filter of filterModel.sources">{{filter.name}}
-        <input type=checkbox [value]=filter._id [checked]=filter.enabled [name]=filter.name [(ngModel)]=filter.enabled >
-        <span class="checkmark"></span>
-    </label>
-</form>
-<app-social-feed [filterModel]=filterModel></app-social-feed>
