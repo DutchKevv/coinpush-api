@@ -1,9 +1,0 @@
-.idea
-
-/node_modules
-/www
-/platforms
-/plugins
-
-/adb0.log
-/npm-debug.log

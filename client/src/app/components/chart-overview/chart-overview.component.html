@@ -1,7 +1,0 @@
-<div class="instrument-list-outer">
-    <app-instrument-list #list></app-instrument-list>
-    <app-alarm-menu #alarmMenu *ngIf="(symbolListService.alarmButtonClicked$ | async) === true" class="side-menu open" [symbol]="symbolListService.activeSymbol$ | async"
-        (onDestroy)="symbolListService.alarmButtonClicked$.next(false); chart.removePlotLine('new-alarm')" (inputValueChange)="chart.updatePlotLine('new-alarm', $event, CUSTOM_EVENT_TYPE_ALARM_NEW, true)"></app-alarm-menu>
-</div>
-
-<app-chart-box #chart class="hidden"></app-chart-box>
