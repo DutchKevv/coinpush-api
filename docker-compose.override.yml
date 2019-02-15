@@ -55,15 +55,6 @@ services:
     volumes: 
       - ./server-notify/src:/usr/src/app/server-notify/src
       - ./server-notify/dist:/usr/src/app/server-notify/dist
-
-  cp-client:
-    environment:
-      - NODE_ENV=development
-    ports:
-      - 4200:4200
-    command: npm start
-    volumes:
-       - ./client/src:/usr/src/app/client/src
-
+      
 volumes:
   mongodata:

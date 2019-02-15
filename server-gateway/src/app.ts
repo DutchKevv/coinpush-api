@@ -61,7 +61,7 @@ export class App {
 
 		subClient.on('message', (channel, message) => {
 			const object = JSON.parse(message);
-			console.log('message', message);
+
 			switch (channel) {
 				case 'socket-notification':
 					const clients = this.io.sockets.sockets;
