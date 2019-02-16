@@ -37,7 +37,7 @@ export const timelineController = {
 				path: 'children',
 				populate: { path: 'createUser' },
 				options: {
-					sort: { createdAt: -1 },
+					sort: { createdAt: 1 },
 					limit: 5
 				}
 			})

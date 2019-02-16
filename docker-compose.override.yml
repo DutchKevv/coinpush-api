@@ -2,59 +2,92 @@ version: '3.3'
 
 services:
 
+  elk:
+    networks:
+      - cp-net
+      
   mongodb:
+    tty: true
     ports:
-      - "27017:27017"
+      - 27017:27017
     volumes:
       - mongodata:/data/db
+    networks:
+      - cp-net
+
+  redis:
+    networks:
+      - cp-net
 
   gateway:
+    tty: true
     environment:
       - NODE_ENV=development
     command: npm start
     volumes:
       - ./server-gateway/src:/usr/src/app/server-gateway/src
       - ./server-gateway/dist:/usr/src/app/server-gateway/dist
+    networks:
+      - cp-net
 
   cache:
+    tty: true
     environment:
       - NODE_ENV=development
     command: npm start
     volumes:
       - ./server-cache/src:/usr/src/app/server-cache/src
       - ./server-cache/dist:/usr/src/app/server-cache/dist
+    networks:
+      - cp-net
 
   user:
+    tty: true
     environment:
       - NODE_ENV=development
     command: npm start
     volumes:
       - ./server-user/src:/usr/src/app/server-user/src
       - ./server-user/dist:/usr/src/app/server-user/dist
+    networks:
+      - cp-net
 
   comment:
+    tty: true
     environment:
       - NODE_ENV=development
     command: npm start
     volumes:
       - ./server-comment/src:/usr/src/app/server-comment/src
       - ./server-comment/dist:/usr/src/app/server-comment/dist
+    networks:
+      - cp-net
 
   event:
+    tty: true
     environment:
       - NODE_ENV=development
     command: npm start
     volumes:
       - ./server-event/src:/usr/src/app/server-event/src
       - ./server-event/dist:/usr/src/app/server-event/dist
+    networks:
+      - cp-net
 
   notify:
+    tty: true
     environment:
       - NODE_ENV=development
     command: npm start
     volumes: 
       - ./server-notify/src:/usr/src/app/server-notify/src
       - ./server-notify/dist:/usr/src/app/server-notify/dist
+    networks:
+      - cp-net
       
 volumes:
   mongodata:
+    
+networks:
+  cp-net:
+    driver: bridge
