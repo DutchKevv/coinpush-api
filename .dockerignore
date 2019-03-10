@@ -17,15 +17,8 @@
 **/*.log
 **/*.tmp
 
-# mobile app
-client-app/.gradle
-client-app/hooks/
-client-app/platforms/
-client-app/plugins/
-client-app/res/
-client-app/scripts/
-
 !**/shared/modules/coinpush/**/*.js
+!**/_config/**/*.js
 
 ### redis
 **/dump.rdb

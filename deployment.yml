@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cp-api-pod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: coinpush
+  template:
+    metadata:
+      labels:
+        name: api
+        app: coinpush
+    spec:
+      volumes:
+        - name: shared
+          hostPath:
+            path: /mnt/coinpush-api/shared
+            type: Directory
+        - name: config
+          hostPath:
+            path: /mnt/coinpush-api/_config
+            type: Directory
+        - name: gateway-src
+          hostPath:
+            path: /mnt/coinpush-api/server-gateway/src
+            type: Directory
+        - name: user-src
+          hostPath:
+            path: /mnt/coinpush-api/server-user/src
+      containers:
+      - name: redis
+        image: redis
+        ports:
+          - containerPort: 6379
+      - name: gateway
+        imagePullPolicy: Never 
+        image: registry.coinpush.app/gateway
+        command: ["npm", "start"]
+        # command: ["npm", "run", "prod"]
+        ports:
+          - containerPort: 3100
+            hostPort: 3100
+        volumeMounts:
+          - name: shared
+            mountPath:  /usr/src/app/shared
+          - name: config
+            mountPath:  /usr/src/app/_config
+          - name: gateway-src
+            mountPath: /usr/src/app/server-gateway/src
+      - name: user
+        imagePullPolicy: Never 
+        image: registry.coinpush.app/user
+        command: ["npm", "start"]
+        # command: ["npm", "run", "prod"]
+        ports:
+          - containerPort: 3008
+        volumeMounts:
+          - name: config
+            mountPath: /usr/src/app/_config
+          - name: user-src
+            mountPath: /usr/src/app/server-user/src
+# ---
+# kind: Service
+# apiVersion: v1
+# metadata:
+#   name: cp-service
+# spec:
+#   selector:
+#     app: coinpush
+#   ports:
+#   - protocol: TCP
+#     port: 5000
+#     targetPort: 3101

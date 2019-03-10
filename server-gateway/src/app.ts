@@ -37,7 +37,7 @@ export class App {
 		this._toggleWebSocketTickInterval();
 
 		// http / websocket api
-		await this._setClientConfig();
+		// await this._setClientConfig();
 		this._setupApi();
 
 		this.configHandler.startPolling();
@@ -295,7 +295,7 @@ export class App {
 			}
 		});
 
-		const server = http.listen(config.server.gateway.port, '0.0.0.0', () => log.info('App', `Service started -> 0.0.0.0:${config.server.gateway.port}`));
+		const server = http.listen(config.server.gateway.port, () => log.info('App', `Service started -> 0.0.0.0:${config.server.gateway.port}`));
 	}
 
 	_toggleWebSocketTickInterval(state?: boolean) {

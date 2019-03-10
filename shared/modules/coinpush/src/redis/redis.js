@@ -3,12 +3,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const redis_1 = require("redis");
 const util_log_1 = require("../util/util.log");
 exports.defaults = {
-    host: 'redis',
+    host: 'localhost',
     port: 6379,
     reconnectAttempts: 1000
 };
 exports.createRedisClient = function (config = {}) {
-    const client = redis_1.createClient({
+    const options = {
         host: config.host || exports.defaults.host,
         port: config.port || exports.defaults.port,
         retry_strategy: function (options) {
@@ -31,7 +31,9 @@ exports.createRedisClient = function (config = {}) {
             // reconnect after 
             return Math.min(options.attempt * 100, 3000);
         }
-    });
+    };
+    console.log(options);
+    const client = redis_1.createClient(options);
     client.on('connect', () => {
         util_log_1.log.info('redis', 'client connected');
     });

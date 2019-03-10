@@ -2,14 +2,14 @@ import { createClient, RedisClient } from 'redis';
 import { log } from '../util/util.log';
 
 export const defaults = {
-    host: 'redis',
+    host: 'localhost',
     port: 6379,
     reconnectAttempts: 1000
 };
 
 export const createRedisClient = function (config: { host?: string, port?: number } = {}): RedisClient {
     
-    const client = createClient({
+    const options = {
         host: config.host || defaults.host,
         port: config.port || defaults.port,
         retry_strategy: function (options) {
@@ -33,7 +33,10 @@ export const createRedisClient = function (config: { host?: string, port?: numbe
             // reconnect after 
             return Math.min(options.attempt * 100, 3000);
         }
-    });
+    };
+
+    console.log(options);
+    const client = createClient(options);
 
     client.on('connect', () => {
         log.info('redis', 'client connected');

@@ -25,29 +25,29 @@ const config = {
         },
         cache: {
             port: 3001,
-            connectionString: 'mongodb://root:example@mongodb:27017/coinpush-cache?authSource=admin'
+            connectionString: 'mongodb://root:example@localhost:27017/coinpush-cache?authSource=admin'
         },
         order: {
             port: 3005,
-            connectionString: 'mongodb://root:example@mongodb:27017/coinpush-orders?authSource=admin'
+            connectionString: 'mongodb://root:example@localhost:27017/coinpush-orders?authSource=admin'
         },
         broker: {
             port: 3006,
         },
         user: {
             port: 3008,
-            connectionString: 'mongodb://root:example@mongodb:27017/coinpush-user?authSource=admin'
+            connectionString: 'mongodb://root:example@cp-mongo-sv:27017/coinpush-user?authSource=admin'
         },
         comment: {
             port: 3009,
-            connectionString: 'mongodb://root:example@mongodb:27017/coinpush-comment?authSource=admin'
+            connectionString: 'mongodb://root:example@localhost:27017/coinpush-comment?authSource=admin'
         },
         notify: {
             port: 3010,
-            connectionString: 'mongodb://root:example@mongodb:27017/coinpush-notify?authSource=admin'
+            connectionString: 'mongodb://root:example@localhost:27017/coinpush-notify?authSource=admin'
         },
         event: {
-            connectionString: 'mongodb://root:example@mongodb:27017/coinpush-event?authSource=admin',
+            connectionString: 'mongodb://root:example@localhost:27017/coinpush-event?authSource=admin',
             port: 3011,
         }
     },
@@ -116,7 +116,7 @@ const config = {
 
 // build full domain urls (ex: http://123.123.123.123:9999)
 for (let name in config.server)
-    config.server[name].apiUrl = 'http://' + name + ':' + config.server[name].port;
+    config.server[name].apiUrl = 'http://localhost:' + config.server[name].port;
 
 /**
  * Simple is object check.
