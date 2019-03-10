@@ -117,7 +117,7 @@ const config = {
 
 // build full domain urls (ex: http://123.123.123.123:9999)
 for (let name in config.server)
-    config.server[name].apiUrl = 'http://localhost:' + config.server[name].port;
+    config.server[name].apiUrl = 'http://' + name + ':' + config.server[name].port;
 
 /**
  * Simple is object check.

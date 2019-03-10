@@ -8,6 +8,7 @@ const router = Router();
  */
 router.get('/', async (req: any, res, next) => {
     try {
+        console.log('sadfsadf')
         res.send(await timelineController.get(req.user, req.query))
     } catch (error) {
         next(error);
