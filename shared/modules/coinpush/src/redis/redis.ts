@@ -2,7 +2,7 @@ import { createClient, RedisClient } from 'redis';
 import { log } from '../util/util.log';
 
 export const defaults = {
-    host: 'localhost',
+    host: 'redis',
     port: 6379,
     reconnectAttempts: 1000
 };

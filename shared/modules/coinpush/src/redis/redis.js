@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const redis_1 = require("redis");
 const util_log_1 = require("../util/util.log");
 exports.defaults = {
-    host: 'localhost',
+    host: 'redis',
     port: 6379,
     reconnectAttempts: 1000
 };
