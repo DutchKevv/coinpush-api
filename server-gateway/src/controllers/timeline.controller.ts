@@ -1,10 +1,10 @@
 import * as request from 'request-promise';
 import { config } from 'coinpush/src/util/util-config';
+import { userController } from './user.controller';
 
 export const timelineController = {
 
 	async get(reqUser, params?): Promise<any> {
-		console.log('asdfasdf');
 
 		let comments: [];
 
@@ -17,8 +17,11 @@ export const timelineController = {
 			});
 
 			comments = comments['hits']['hits'].map(comment => comment._source);
+
+			await this.setUsers(reqUser, comments);
+
 		} catch (error) {
-			console.error(error);
+			console.log('ELK ERROR - ', error);
 
 			comments = await request({
 				uri: config.server.comment.apiUrl + '/timeline',
@@ -31,5 +34,28 @@ export const timelineController = {
 
 
 		return comments;
+	},
+
+	async setUsers(reqUser, comments) {
+		let userIds = [];
+		comments.forEach((comment: any) => {
+			userIds.push(comment.createUser);
+
+			(comment.children || []).forEach((child: any) => {
+				userIds.push(child.createUser);
+			});
+		});
+
+		userIds = [...new Set(userIds)];
+
+		const users = await userController.findMany(reqUser, { userIds, fields: ['_id', 'name', 'img'] });
+
+		comments.forEach(comment => {
+			comment.createUser = users.find(user => user._id === comment.createUser);
+
+			(comment.children || []).forEach(child => {
+				child.createUser = users.find(user => user._id === child.createUser);
+			});
+		});
 	}
 };

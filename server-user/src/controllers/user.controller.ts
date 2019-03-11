@@ -59,11 +59,15 @@ export const userController = {
 		(params.fields || this.getAllowedFields).filter(field => this.getAllowedFields.includes(field)).forEach(field => fields[field] = 1);
 
 		const where: any = {};
+		console.log('oarasfdsdf', params)
+		if (params.userIds)
+			where._id = { $in: params.userIds }
+
 		if (params.email)
 			where.email = params.email;
 
 		if (params.text)
-			where.name = { "$regex": params.text, "$options": "i" }
+			where.name = { "$regex": params.text, "$options": "i" };
 
 		// sources (companyId etc)
 		if (params.companyId) {

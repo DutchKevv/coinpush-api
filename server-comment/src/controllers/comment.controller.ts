@@ -2,10 +2,13 @@ import { Comment } from '../schemas/comment.schema';
 import { Types } from 'mongoose';
 import { pubClient } from 'coinpush/src/redis';
 import { IReqUser } from 'coinpush/src/interface/IReqUser.interface';
+import * as request from 'requestretry';
+import { Request, RequestAPI } from 'request';
 
 export const commentController = {
 
 	/**
+	 * find a specific post by ID
 	 * 
 	 * @param reqUser 
 	 * @param id 
@@ -35,6 +38,8 @@ export const commentController = {
 	},
 
 	/**
+	 * 
+	 * find all posts directed to specific user
 	 * 
 	 * @param reqUser 
 	 * @param params 
@@ -75,6 +80,9 @@ export const commentController = {
 	},
 
 	/**
+	 * 
+	 * find many (old timeline?)
+	 * TODO - can be deleted I think
 	 * 
 	 * @param reqUser 
 	 * @param userId 
@@ -129,7 +137,7 @@ export const commentController = {
 	async create(reqUser, options): Promise<any> {
 		// Posting on other user wall, otherwhise if own wall, set post as 'global' post (toUserId: undefined)
 		const toUserId = options.toUserId && options.toUserId !== reqUser.id ? options.toUserId : undefined;
-		console.log(options)
+
 		const comment = <any>await Comment.create({
 			createUser: reqUser.id,
 			toUser: toUserId,
@@ -179,11 +187,33 @@ export const commentController = {
 			}
 		}
 
+		// save to elastic search
+		try {
+			const elkObject = {
+				mongo_id: comment._id,
+				content: comment.content,
+				createUser: comment.createUser._id,
+				createdAt: comment.createdAt,
+				title: comment.title,
+				likeCount: comment.likeCount,
+				childCount: comment.childCount
+			};
+
+			await request({
+				method: 'post',
+				uri: 'http://elk:9200/comments/doc',
+				body: elkObject,
+				json: true
+			});
+		} catch(error) {
+			console.error(error);
+		}
+
 		return { _id: comment._id };
 	},
 
 	createNewsArticle(options: any): Promise<any> {
-		Object.assign(options, {isNews: true});
+		options.isNews = true;
 		return Comment.create(options);
 	},
 
