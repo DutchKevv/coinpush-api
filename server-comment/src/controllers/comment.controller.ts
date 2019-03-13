@@ -4,6 +4,7 @@ import { pubClient } from 'coinpush/src/redis';
 import { IReqUser } from 'coinpush/src/interface/IReqUser.interface';
 import * as request from 'requestretry';
 import { Request, RequestAPI } from 'request';
+import { userController } from './user.controller';
 
 export const commentController = {
 
@@ -134,7 +135,7 @@ export const commentController = {
 	 * @param reqUser 
 	 * @param options 
 	 */
-	async create(reqUser, options): Promise<any> {
+	async create(reqUser: IReqUser, options): Promise<any> {
 		// Posting on other user wall, otherwhise if own wall, set post as 'global' post (toUserId: undefined)
 		const toUserId = options.toUserId && options.toUserId !== reqUser.id ? options.toUserId : undefined;
 
@@ -189,10 +190,16 @@ export const commentController = {
 
 		// save to elastic search
 		try {
+			const user = await userController.findById(reqUser, reqUser.id, { fields: ['name', 'img']});
+
 			const elkObject = {
 				mongo_id: comment._id,
 				content: comment.content,
-				createUser: comment.createUser._id,
+				createUser: {
+					_id: comment.createUser._id,
+					name: user.name,
+					img: user.img
+				},
 				createdAt: comment.createdAt,
 				title: comment.title,
 				likeCount: comment.likeCount,

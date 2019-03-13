@@ -11,15 +11,13 @@ export const timelineController = {
 		try {
 			comments = await request({
 				uri: 'http://elk:9200/comments/_search',
+				// uri: 'http://elk:9200/comments/_search?&sort=createdAt:desc',
 				headers: { _id: reqUser.id },
 				json: true,
 				fullResponse: false
 			});
 
 			comments = comments['hits']['hits'].map(comment => comment._source);
-
-			await this.setUsers(reqUser, comments);
-
 		} catch (error) {
 			console.log('ELK ERROR - ', error);
 

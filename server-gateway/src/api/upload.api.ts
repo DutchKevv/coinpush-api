@@ -10,7 +10,7 @@ import { IReqUser } from 'coinpush/src/interface/IReqUser.interface';
 import { config } from 'coinpush/src/util/util-config';
 
 const PATH_TMP = path.join(__dirname, '../../.tmp/') ;
-const CDN_URL = (process.env.NODE_ENV || '').startsWith('prod') ? 'http://136.144.181.63:4300' : 'http://host.docker.internal:4300';
+const CDN_URL = 'http://cp-upload:4300';
 
 export const router = Router();
 const upload = multer({ dest: PATH_TMP });
