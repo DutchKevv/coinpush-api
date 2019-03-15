@@ -6,7 +6,7 @@ import { Request } from 'request';
 
 export const commentController = {
 
-	async addUser(reqUser: IReqUser, params: IUser, updateWhenPresent = undefined): Promise<IUser> {
+	async addUser(reqUser: IReqUser, params: IUser): Promise<IUser> {
 
 		const user = await request({
 			uri: config.server.comment.apiUrl + '/user',

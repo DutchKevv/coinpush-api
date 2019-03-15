@@ -1,4 +1,4 @@
-FROM mhart/alpine-node:10.9.0
+FROM mhart/alpine-node:11.11.0
 
 ARG env
 

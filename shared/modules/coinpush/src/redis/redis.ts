@@ -35,7 +35,6 @@ export const createRedisClient = function (config: { host?: string, port?: numbe
         }
     };
 
-    console.log(options);
     const client = createClient(options);
 
     client.on('connect', () => {

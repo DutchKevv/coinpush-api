@@ -138,6 +138,7 @@ export class App {
 			credentialsRequired: true
 		}).unless((req: express.Request) => {
 			return (
+				(req.originalUrl.startsWith('/api/v1/admin')) ||
 				(req.method === 'GET' && !req.originalUrl.startsWith('/api/v1/authenticate')) ||
 				(req.originalUrl.startsWith('/api/v1/authenticate') && !getToken(req)) ||
 				(req.originalUrl === '/api/v1/user' && req.method === 'POST')
@@ -192,6 +193,12 @@ export class App {
 
 		// 	next();
 		// });
+
+		/**
+		 * symbol
+		 */
+		this.api.use('/api/v1/admin', require('./api/admin.api'));
+
 
 		/**
 		 * symbol

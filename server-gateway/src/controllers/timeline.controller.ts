@@ -1,13 +1,15 @@
 import * as request from 'request-promise';
 import { config } from 'coinpush/src/util/util-config';
 import { userController } from './user.controller';
+import { IReqUser } from 'coinpush/src/interface/IReqUser.interface';
 
 export const timelineController = {
 
-	async get(reqUser, params?): Promise<any> {
+	async get(reqUser: IReqUser, params?): Promise<any> {
 
 		let comments: [];
 
+		// first try elastic
 		try {
 			comments = await request({
 				uri: 'http://elk:9200/comments/_search',
@@ -17,8 +19,13 @@ export const timelineController = {
 				fullResponse: false
 			});
 
-			comments = comments['hits']['hits'].map(comment => comment._source);
-		} catch (error) {
+			comments = comments['hits']['hits'].map((comment) => {
+				comment._source._id = comment._source.mongo_id;
+				return comment._source;
+			});
+		} 
+		// fallback to mongo
+		catch (error) {
 			console.log('ELK ERROR - ', error);
 
 			comments = await request({

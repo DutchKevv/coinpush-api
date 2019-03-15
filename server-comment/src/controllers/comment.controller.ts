@@ -3,7 +3,6 @@ import { Types } from 'mongoose';
 import { pubClient } from 'coinpush/src/redis';
 import { IReqUser } from 'coinpush/src/interface/IReqUser.interface';
 import * as request from 'requestretry';
-import { Request, RequestAPI } from 'request';
 import { userController } from './user.controller';
 
 export const commentController = {
@@ -194,6 +193,7 @@ export const commentController = {
 
 			const elkObject = {
 				mongo_id: comment._id,
+				children: comment.children,
 				content: comment.content,
 				createUser: {
 					_id: comment.createUser._id,
